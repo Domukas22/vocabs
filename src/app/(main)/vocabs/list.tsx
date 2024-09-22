@@ -30,7 +30,6 @@ import { USE_toggle } from "@/src/hooks/USE_toggle";
 import MyVocabs_SUBNAV from "@/src/components/Subnav/MyVocabs_SUBNAV";
 import DisplaySettings_MODAL from "@/src/components/Modals/DisplaySettings_MODAL/DisplaySettings_MODAL";
 import ManageVocab_MODAL from "@/src/components/Modals/ManageVocab_MODAL/ManageVocab_MODAL";
-import { USE_langs } from "@/src/context/AllLangs_CONTEXT";
 
 export default function SingleList_PAGE() {
   const router = useRouter();
@@ -39,10 +38,36 @@ export default function SingleList_PAGE() {
   const [SHOW_displaySettings, TOGGLE_displaySettings] = USE_toggle(false);
   const [SHOW_vocabModal, TOGGLE_vocabModal] = USE_toggle(false);
 
+  const [displaySettings, SET_displaySettings] =
+    useState<DisplaySettings_MODEL>({
+      search: "",
+      sorting: "difficulty",
+      sortDirection: "ascending",
+      SHOW_image: false,
+      SHOW_listName: false,
+      SHOW_description: true,
+      SHOW_flags: true,
+      SHOW_difficulty: true,
+      frontLangId: "en",
+      difficultyFilters: [],
+    });
+
   const [vocabs, SET_vocabs] = useState<Vocab_MODEL[]>([]);
   const GET_vocabs = async () => {
     SET_loading(true);
-    const res = await FETCH_userVocabs({ list_id: selected_LIST.id });
+    const res = await FETCH_userVocabs({
+      filter: {
+        list_id: selected_LIST.id,
+        difficulties: displaySettings.difficultyFilters,
+        is_public: false,
+        is_publicly_visible: false,
+        search: displaySettings.search,
+      },
+      sort: {
+        type: displaySettings.sorting,
+        direction: displaySettings.sortDirection,
+      },
+    });
 
     SET_vocabs([...(res?.data || [])]);
     SET_loading(false);
@@ -55,7 +80,7 @@ export default function SingleList_PAGE() {
     return () => {
       supabase.removeChannel(subscription);
     };
-  }, []);
+  }, [displaySettings]);
 
   const [toEdit_VOCAB, SET_toEditVocab] = useState<Vocab_MODEL | null>(null);
   const [toEdit_TRANSLATIONS, SET_toEditTranslations] = useState<
@@ -87,20 +112,6 @@ export default function SingleList_PAGE() {
       TOGGLE_vocabModal();
     }
   }
-
-  const [displaySettings, SET_displaySettings] =
-    useState<DisplaySettings_MODEL>({
-      search: "",
-      sorting: "date",
-      sortDirection: "ascending",
-      SHOW_image: false,
-      SHOW_listName: false,
-      SHOW_description: true,
-      SHOW_flags: true,
-      SHOW_difficulty: true,
-      frontLangId: "en",
-      difficultyFilters: [],
-    });
 
   return (
     <Page_WRAP>

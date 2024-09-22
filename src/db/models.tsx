@@ -46,8 +46,8 @@ export interface Language_MODEL {
 // ------------------------------------------------
 export interface DisplaySettings_MODEL {
   search: string;
-  sorting: string;
-  sortDirection: string;
+  sorting: "shuffle" | "difficulty" | "date";
+  sortDirection: "ascending" | "descending";
   SHOW_image: boolean;
   SHOW_listName: boolean;
   SHOW_description: boolean;

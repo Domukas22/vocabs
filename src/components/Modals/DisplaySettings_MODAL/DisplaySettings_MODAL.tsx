@@ -72,17 +72,17 @@ export default function DisplaySettings_MODAL({
   }
 
   function FILTER_difficulty(difficulty: 1 | 2 | 3) {
-    // displaySettings?.difficultyFilters.includes(difficulty)
-    //   ? SET_displaySettings((p: DisplaySettings_MODEL) => ({
-    //       ...p,
-    //       difficultyFilters: p.difficultyFilters.filter(
-    //         (d) => d !== difficulty
-    //       ),
-    //     }))
-    //   : SET_displaySettings((p: DisplaySettings_MODEL) => ({
-    //       ...p,
-    //       difficultyFilters: [...p.difficultyFilterss, difficulty],
-    //     }));
+    displaySettings?.difficultyFilters.includes(difficulty)
+      ? SET_displaySettings((p: DisplaySettings_MODEL) => ({
+          ...p,
+          difficultyFilters: p.difficultyFilters.filter(
+            (d) => d !== difficulty
+          ),
+        }))
+      : SET_displaySettings((p: DisplaySettings_MODEL) => ({
+          ...p,
+          difficultyFilters: [...p.difficultyFilters, difficulty],
+        }));
   }
 
   return (

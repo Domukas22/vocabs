@@ -127,6 +127,7 @@ export default function SelectList_MODAL(props: SelectListModal_PROPS) {
             }
             renderItem={({ item }: { item: List_MODEL }) => (
               <Btn
+                key={item.id + "list btn" + item.name}
                 text={item.name}
                 onPress={() => {
                   SET_selectedModalList(item);
@@ -137,7 +138,7 @@ export default function SelectList_MODAL(props: SelectListModal_PROPS) {
                 text_STYLES={{ flex: 1 }}
               />
             )}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.id + "list btn" + item.name}
             style={{ padding: 12, flex: 1 }}
           />
         ) : (
