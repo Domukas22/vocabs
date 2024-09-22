@@ -2,13 +2,13 @@
 //
 //
 
-import Btn from "@/src/components/btn/btn";
+import Btn from "../../Btn/Btn";
 import Footer from "@/src/components/Footer/Footer";
 import Header from "@/src/components/Header/Header";
 import { ICON_X } from "@/src/components/icons/icons";
 
 import SearchBar from "@/src/components/SearchBar/SearchBar";
-import { Styled_TEXT } from "@/src/components/Styled_TEXT";
+import { Styled_TEXT } from "../../StyledText/StyledText";
 import Subnav from "@/src/components/Subnav/Subnav";
 
 import { MyColors } from "@/src/constants/MyColors";
@@ -19,46 +19,64 @@ import Simple_MODAL from "../Simple_MODAL/Simple_MODAL";
 import StyledTextInput from "@/src/components/StyledTextInput/StyledTextInput";
 import { BlurView } from "expo-blur";
 import { List_MODEL } from "@/src/db/models";
-import { Lists_DB } from "@/src/db";
+import { FETCH_lists } from "@/src/db/lists/fetch";
+import SUBSCRIBE_toLists from "@/src/db/lists/SUBSCRIBE_toLists";
+import { supabase } from "@/src/lib/supabase";
 
 interface SelectListModal_PROPS {
-  SHOW_modal: boolean;
+  open: boolean;
   TOGGLE_modal: () => void;
-  currentList_ID: string;
+  current_LIST: List_MODEL;
   SELECT_list: (list: List_MODEL) => void;
 }
 
 export default function SelectList_MODAL(props: SelectListModal_PROPS) {
-  const { SHOW_modal, TOGGLE_modal, currentList_ID, SELECT_list } = props;
-
-  const [modal_LISTS, SET_modalLists] = useState<List_MODEL[] | null>(null);
+  const { open, TOGGLE_modal, current_LIST, SELECT_list } = props;
 
   const [search, SET_search] = useState("");
   const [SHOW_createListModal, SET_createListModal] = useState(false);
 
   const [newListName, SET_newListName] = useState("");
+  const [selectedModal_LIST, SET_selectedModalList] =
+    useState<List_MODEL>(current_LIST);
 
   function TOGGLE_createListModal() {
     SET_newListName("");
     SET_createListModal((prev) => !prev);
   }
 
-  useEffect(() => {
-    const GET_lists = async () => {
-      const results = await Lists_DB.query();
-      SET_modalLists(results);
-    };
+  const [loading, SET_loading] = useState(false);
 
+  const [lists, SET_lists] = useState<List_MODEL[]>([]);
+  const GET_lists = async () => {
+    SET_loading(true);
+    const res = await FETCH_lists();
+    SET_lists([...(res?.data || [])]);
+    SET_loading(false);
+  };
+
+  useEffect(() => {
     GET_lists();
+
+    const subscription = SUBSCRIBE_toLists({ SET_lists });
+    return () => {
+      supabase.removeChannel(subscription);
+    };
   }, []);
 
+  const submit = () => {
+    if (current_LIST.id !== selectedModal_LIST.id) {
+      SELECT_list(selectedModal_LIST);
+    }
+    TOGGLE_modal();
+  };
+
+  useEffect(() => {
+    SET_selectedModalList(current_LIST);
+  }, [open]);
+
   return (
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={SHOW_modal}
-      style={{}}
-    >
+    <Modal animationType="slide" transparent={true} visible={open} style={{}}>
       <SafeAreaView
         style={{
           backgroundColor: MyColors.fill_bg,
@@ -82,12 +100,12 @@ export default function SelectList_MODAL(props: SelectListModal_PROPS) {
           <SearchBar value={search} SET_value={SET_search} />
         </Subnav>
 
-        {modal_LISTS ? (
+        {!loading && lists ? (
           <FlatList
             data={
               search === ""
-                ? modal_LISTS
-                : modal_LISTS.filter((list) =>
+                ? lists
+                : lists.filter((list) =>
                     list.name.toLowerCase().includes(search.toLowerCase())
                   )
             }
@@ -111,10 +129,10 @@ export default function SelectList_MODAL(props: SelectListModal_PROPS) {
               <Btn
                 text={item.name}
                 onPress={() => {
-                  SELECT_list(item);
+                  SET_selectedModalList(item);
                   SET_search("");
                 }}
-                type={item.id === currentList_ID ? "active" : "simple"}
+                type={item.id === selectedModal_LIST?.id ? "active" : "simple"}
                 style={{ flex: 1, marginBottom: 8 }}
                 text_STYLES={{ flex: 1 }}
               />
@@ -127,12 +145,13 @@ export default function SelectList_MODAL(props: SelectListModal_PROPS) {
         )}
 
         <Footer
-          btnLeft={
+          btnLeft={<Btn text="Cancel" onPress={TOGGLE_modal} type="simple" />}
+          btnRight={
             <Btn
-              text="Done"
-              onPress={TOGGLE_modal}
-              type="simple"
-              style={{ flex: 1 }}
+              text="Select list"
+              onPress={submit}
+              type="action"
+              style={{ flex: 1, marginTop: "auto" }}
             />
           }
         />

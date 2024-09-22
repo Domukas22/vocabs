@@ -4,11 +4,12 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Simple_MODAL from "../Simple_MODAL/Simple_MODAL";
-import languages, { languagesArr_PROPS } from "@/src/constants/languages";
-import Btn from "../../btn/btn";
+
+import Btn from "../../Btn/Btn";
 import { ICON_flag } from "../../icons/icons";
 import Block from "../../Block/Block";
 import StyledTextInput from "../../StyledTextInput/StyledTextInput";
+import { USE_langs } from "@/src/context/Langs_CONTEXT";
 
 interface TranslationTextModal_PROPS {
   text: string;
@@ -27,7 +28,8 @@ export default function TranslationText_MODAL({
 }: TranslationTextModal_PROPS) {
   const [_text, SET_text] = useState("");
   const [_lang_id, SET_langId] = useState("");
-  const lang = languages[lang_id];
+  const { languages } = USE_langs();
+  const lang = languages.find((l) => l.id === lang_id);
 
   const inputREF = useRef(null);
 

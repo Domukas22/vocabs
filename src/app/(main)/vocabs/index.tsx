@@ -12,7 +12,7 @@ import { ICON_X } from "@/src/components/icons/icons";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import { supabase } from "@/src/lib/supabase";
 import { useEffect, useState } from "react";
-import FETCH_userLists from "@/src/db/lists/FETCH_userLists";
+import { FETCH_listsWithPopulatedVocabs } from "@/src/db/lists/fetch";
 import Styled_FLATLIST from "@/src/components/Flatlists/Styled_FLATLIST/Styled_FLATLIST";
 import MyList_BTN from "@/src/components/MyList_BTN/MyList_BTN";
 import { List_MODEL } from "@/src/db/models";
@@ -23,6 +23,8 @@ import Simple_MODAL from "@/src/components/Modals/Simple_MODAL/Simple_MODAL";
 import CreateList_MODAL from "@/src/components/Modals/CreateList_MODAL";
 import SUBSCRIBE_toLists from "@/src/db/lists/SUBSCRIBE_toLists";
 import List_SKELETONS from "@/src/components/Skeletons/List_SKELETONS";
+import SUBSCRIBE_toVocabs from "@/src/db/vocabs/SUBSCRIBE_toVocabs";
+import SUBSCRIBE_toVocabsForLists from "@/src/db/lists/SUBSCRIBE_toVocabsForLists";
 
 export default function MyLists_PAGE() {
   const router = useRouter();
@@ -33,7 +35,7 @@ export default function MyLists_PAGE() {
   const [lists, SET_lists] = useState<List_MODEL[]>([]);
   const GET_lists = async () => {
     SET_loading(true);
-    const res = await FETCH_userLists();
+    const res = await FETCH_listsWithPopulatedVocabs();
     SET_lists([...(res?.data || [])]);
     SET_loading(false);
   };
@@ -42,8 +44,10 @@ export default function MyLists_PAGE() {
     GET_lists();
 
     const subscription = SUBSCRIBE_toLists({ SET_lists });
+    const vocabsSubscription = SUBSCRIBE_toVocabsForLists({ SET_lists });
     return () => {
       supabase.removeChannel(subscription);
+      supabase.removeChannel(vocabsSubscription);
     };
   }, []);
 

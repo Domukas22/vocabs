@@ -2,55 +2,87 @@
 //
 //
 
-import Btn from "@/src/components/btn/btn";
+import Btn from "../../Btn/Btn";
 import Footer from "@/src/components/Footer/Footer";
 import Header from "@/src/components/Header/Header";
-import { ICON_X } from "@/src/components/icons/icons";
+import { ICON_flag, ICON_X } from "@/src/components/icons/icons";
 
 import SearchBar from "@/src/components/SearchBar/SearchBar";
-import { Styled_TEXT } from "@/src/components/Styled_TEXT";
 import Subnav from "@/src/components/Subnav/Subnav";
 
 import { MyColors } from "@/src/constants/MyColors";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  FlatList,
   Modal,
   SafeAreaView,
-  View,
   ScrollView,
   Image,
+  View,
+  FlatList,
 } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import Simple_MODAL from "../Simple_MODAL/Simple_MODAL";
-import StyledTextInput from "@/src/components/StyledTextInput/StyledTextInput";
-import { BlurView } from "expo-blur";
 import languages from "@/src/constants/languages";
 
 import Block from "@/src/components/Block/Block";
+import { Language_MODEL } from "@/src/db/models";
+import Styled_FLATLIST from "../../Flatlists/Styled_FLATLIST/Styled_FLATLIST";
 
 interface SelectLanguagesModal_PROPS {
-  SHOW_selectLangModal: boolean;
-  TOGGLE_selectLangModal: () => void;
-  langIDs: string[];
-  HANDLE_lang: (id: string) => void;
+  open: boolean;
+  TOGGLE_modal: () => void;
+  activeLangIDs: string[] | [];
+  languages: Language_MODEL[];
+  HANLDE_languages: (newLangSelection: Language_MODEL[]) => void;
 }
 
 export default function SelectLanguages_MODAL(
   props: SelectLanguagesModal_PROPS
 ) {
-  const { SHOW_selectLangModal, TOGGLE_selectLangModal, langIDs, HANDLE_lang } =
+  const { open, TOGGLE_modal, activeLangIDs, languages, HANLDE_languages } =
     props;
-
   const [search, SET_search] = useState("");
 
+  const [modal_LANGS, SET_modalLangs] = useState(
+    languages.filter((l) => activeLangIDs.includes(l.id))
+  );
+
+  const searchedLangs =
+    search !== ""
+      ? languages.filter((lang) =>
+          lang.lang_in_en.toLowerCase().includes(search.toLowerCase())
+        )
+      : languages;
+
+  function SELECT_lang(incomdingLang: Language_MODEL) {
+    const alreadyHasLang = modal_LANGS?.some((l) => l.id === incomdingLang.id);
+
+    const tooManyLangSelected = modal_LANGS?.length >= 10;
+    const hasOnly2Translations = modal_LANGS?.length === 2;
+    if (!alreadyHasLang) {
+      console.log("fire");
+      if (tooManyLangSelected) return;
+
+      // add new lang
+      SET_modalLangs((prev) => [...prev, incomdingLang]);
+    } else {
+      if (hasOnly2Translations) return;
+
+      SET_modalLangs((prev) =>
+        prev.filter((lang) => lang.id !== incomdingLang.id)
+      );
+    }
+  }
+
+  const submit = () => {
+    HANLDE_languages(modal_LANGS);
+    TOGGLE_modal();
+  };
+
+  useEffect(() => {
+    SET_modalLangs(languages.filter((l) => activeLangIDs.includes(l.id)));
+  }, [open]);
+
   return (
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={SHOW_selectLangModal}
-      style={{}}
-    >
+    <Modal animationType="slide" transparent={true} visible={open} style={{}}>
       <SafeAreaView
         style={{
           backgroundColor: MyColors.fill_bg,
@@ -65,7 +97,7 @@ export default function SelectLanguages_MODAL(
             <Btn
               type="seethrough"
               iconLeft={<ICON_X big={true} rotate={true} />}
-              onPress={TOGGLE_selectLangModal}
+              onPress={TOGGLE_modal}
               style={{ borderRadius: 100 }}
             />
           }
@@ -74,146 +106,78 @@ export default function SelectLanguages_MODAL(
           <SearchBar value={search} SET_value={SET_search} />
         </Subnav>
 
-        <ScrollView style={{ flex: 1 }}>
-          {search === "" && (
-            <>
-              <Block label="Selected languages">
-                {Object.values(languages)
-                  .filter((lang) => langIDs?.includes(lang.id))
-                  .map((lang) => {
-                    return (
-                      <Btn
-                        iconLeft={
-                          <Image
-                            style={{
-                              width: 24,
-                              height: 16,
-                              borderRadius: 2,
-                              marginRight: 4,
-                            }}
-                            source={lang.image}
-                          />
-                        }
-                        iconRight={<ICON_X color="primary" rotate={true} />}
-                        text={lang.lang.en}
-                        onPress={() => HANDLE_lang(lang.id)}
-                        type="active"
-                        style={{ flex: 1 }}
-                        text_STYLES={{ flex: 1 }}
-                      />
-                    );
-                  })}
-              </Block>
-              <Block label="Other languages">
-                {Object.values(languages)
-                  .filter((lang) => !langIDs?.includes(lang.id))
-                  .map((lang, index) => {
-                    return (
-                      <Btn
-                        iconLeft={
-                          <Image
-                            style={{
-                              width: 24,
-                              height: 16,
-                              borderRadius: 2,
-                              marginRight: 4,
-                            }}
-                            source={lang.image}
-                          />
-                        }
-                        iconRight={<ICON_X />}
-                        text={lang.lang.en}
-                        onPress={() => HANDLE_lang(lang.id)}
-                        type="simple"
-                        style={{ flex: 1 }}
-                        text_STYLES={{ flex: 1 }}
-                        key={lang?.id + index}
-                      />
-                    );
-                  })}
-              </Block>
-            </>
-          )}
-          {search !== "" && (
-            <Block label="Other languages">
-              {Object.values(languages)
-                .filter((lang) =>
-                  lang.lang.en.toLowerCase().includes(search.toLowerCase())
-                )
-                .map((lang) => {
-                  return (
-                    <Btn
-                      iconLeft={
-                        <Image
-                          style={{
-                            width: 24,
-                            height: 16,
-                            borderRadius: 2,
-                            marginRight: 4,
-                          }}
-                          source={lang.image}
-                        />
-                      }
-                      iconRight={
-                        <ICON_X
-                          color={
-                            langIDs?.includes(lang.id) ? "primary" : "grey"
-                          }
-                          rotate={langIDs?.includes(lang.id)}
-                        />
-                      }
-                      text={lang?.lang.en}
-                      onPress={() => HANDLE_lang(lang.id)}
-                      type={langIDs?.includes(lang.id) ? "active" : "simple"}
-                      style={{ flex: 1 }}
-                      text_STYLES={{ flex: 1 }}
-                    />
-                  );
-                })}
-            </Block>
-          )}
-        </ScrollView>
+        <Styled_FLATLIST
+          data={searchedLangs}
+          renderItem={({ item }) => {
+            return (
+              <Btn
+                iconLeft={
+                  <View style={{ marginRight: 4 }}>
+                    <ICON_flag lang={item?.id} big={true} />
+                  </View>
+                }
+                iconRight={
+                  <ICON_X
+                    color={
+                      modal_LANGS.some((l) => l.id === item.id)
+                        ? "primary"
+                        : "grey"
+                    }
+                    rotate={modal_LANGS.some((l) => l.id === item.id)}
+                    big={true}
+                  />
+                }
+                text={item.lang_in_en}
+                onPress={() => SELECT_lang(item)}
+                type={
+                  modal_LANGS.some((l) => l.id === item.id)
+                    ? "active"
+                    : "simple"
+                }
+                style={{ flex: 1 }}
+                text_STYLES={{ flex: 1 }}
+              />
+            );
+          }}
+          keyExtractor={(item) => item.id}
+        />
 
         <Footer
-          btnLeft={
+          contentAbove={
+            <ScrollView
+              style={{
+                flexDirection: "row",
+                width: "100%",
+                gap: 8,
+                paddingLeft: 12,
+                paddingTop: 12,
+              }}
+              horizontal={true}
+            >
+              {modal_LANGS.map((lang) => (
+                <Btn
+                  iconLeft={<ICON_flag lang={lang.id} />}
+                  text={lang?.id?.toUpperCase()}
+                  iconRight={<ICON_X color="primary" rotate={true} />}
+                  onPress={() => SELECT_lang(lang)}
+                  type="active"
+                  tiny={true}
+                  style={{ marginRight: 8 }}
+                />
+              ))}
+            </ScrollView>
+          }
+          btnLeft={<Btn text="Cancel" onPress={TOGGLE_modal} />}
+          btnRight={
             <Btn
-              text="Done"
-              onPress={TOGGLE_selectLangModal}
-              type="simple"
+              text={`Save ${modal_LANGS?.length} languages`}
+              onPress={submit}
+              type="action"
               style={{ flex: 1 }}
             />
           }
         />
       </SafeAreaView>
     </Modal>
-  );
-}
-
-function Lang_BTN({ lang, langIDs, HANDLE_lang }) {
-  return (
-    <Btn
-      iconLeft={
-        <Image
-          style={{
-            width: 24,
-            height: 16,
-            borderRadius: 2,
-            marginRight: 4,
-          }}
-          source={lang.image}
-        />
-      }
-      iconRight={
-        <ICON_X
-          color={langIDs?.includes(lang.id) ? "primary" : "grey"}
-          rotate={langIDs?.includes(lang.id)}
-        />
-      }
-      text={lang?.lang.en}
-      onPress={() => HANDLE_lang(lang.id)}
-      type={langIDs?.includes(lang.id) ? "active" : "simple"}
-      style={{ flex: 1 }}
-      text_STYLES={{ flex: 1 }}
-    />
   );
 }

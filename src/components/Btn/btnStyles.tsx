@@ -19,6 +19,11 @@ const s = StyleSheet.create({
     flexDirection: "row",
     gap: 6,
   },
+  btnTiny: {
+    paddingVertical: 4,
+    paddingHorizontal: 10,
+    minHeight: 26,
+  },
 
   btn_text: {
     fontSize: 18,
@@ -42,8 +47,8 @@ const s = StyleSheet.create({
   action_text: {
     color: "#121212",
     // color: MyColors.text_black,
-    letterSpacing: -0.5,
-    fontFamily: "Nunito-ExtraBold",
+    letterSpacing: -0.2,
+    fontFamily: "Nunito-Bold",
   },
 
   active: {
@@ -133,6 +138,7 @@ const s = StyleSheet.create({
 
 const btnStyles = {
   default: s.btn,
+  tiny: s.btnTiny,
 
   simple: {
     btn: {

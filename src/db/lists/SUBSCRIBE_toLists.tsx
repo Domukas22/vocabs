@@ -11,7 +11,7 @@ export default function SUBSCRIBE_toLists({ SET_lists }) {
       "postgres_changes",
       { event: "*", schema: "public", table: "lists" },
       (payload) => {
-        console.log("Change received!", payload);
+        // console.log("List change received!", payload);
 
         // Handle insert, update, delete
         if (payload.eventType === "INSERT") {

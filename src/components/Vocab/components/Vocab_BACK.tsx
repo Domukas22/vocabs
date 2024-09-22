@@ -4,7 +4,7 @@
 
 import { MyColors } from "@/src/constants/MyColors";
 import { Translation_MODEL, Vocab_MODEL } from "@/src/db/models";
-import { Image, StyleSheet, View } from "react-native";
+import { ActivityIndicator, Image, StyleSheet, View } from "react-native";
 import Btn from "../../Btn/Btn";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 import languages from "@/src/constants/languages";
@@ -12,6 +12,8 @@ import { Styled_TEXT } from "../../StyledText/StyledText";
 import RENDER_textWithHighlights from "../../RENDER_textWithHighlights/RENDER_textWithHighlights";
 import { ICON_difficultyDot, ICON_flag, ICON_X } from "../../icons/icons";
 import { GET_langFlagUrl } from "@/src/constants/globalVars";
+import EDIT_vocabDifficulty from "@/src/db/vocabs/EDIT_vocabDifficulty";
+import USE_editVocabDifficulty from "@/src/db/vocabs/EDIT_vocabDifficulty";
 
 interface VocabBack_PROPS {
   vocab: Vocab_MODEL;
@@ -26,10 +28,14 @@ export default function Vocab_BACK({
 }: VocabBack_PROPS) {
   const [SHOW_difficultyEdits, TOGGLE_difficultyEdits] = USE_toggle(false);
 
-  function HANDLE_editDifficulty(difficulty: 1 | 2 | 3) {
-    if (vocab.difficulty !== difficulty) {
-      //   UPDATE_vocabDifficulty({ vocab, difficulty });
-      //   TOGGLE_difficultyEdits();
+  const { EDIT_color, LOADING_colorEdit } = USE_editVocabDifficulty(() =>
+    TOGGLE_difficultyEdits()
+  );
+
+  function HANDLE_editDifficulty(newDifficulty: 1 | 2 | 3) {
+    if (!LOADING_colorEdit.loading && vocab.difficulty !== newDifficulty) {
+      EDIT_color({ id: vocab.id, newDifficulty });
+      // TOGGLE_difficultyEdits();
     }
   }
 
@@ -100,21 +106,42 @@ export default function Vocab_BACK({
               type={vocab.difficulty === 1 ? "difficulty_1_active" : "simple"}
               style={{ flex: 1 }}
               onPress={() => HANDLE_editDifficulty(1)}
-              iconLeft={<ICON_difficultyDot difficulty={1} big={true} />}
+              iconLeft={
+                LOADING_colorEdit.loading &&
+                LOADING_colorEdit.difficulty === 1 ? (
+                  <ActivityIndicator color={MyColors.icon_difficulty_1} />
+                ) : (
+                  <ICON_difficultyDot difficulty={1} big={true} />
+                )
+              }
             />
 
             <Btn
               type={vocab.difficulty === 2 ? "difficulty_2_active" : "simple"}
               style={{ flex: 1 }}
               onPress={() => HANDLE_editDifficulty(2)}
-              iconLeft={<ICON_difficultyDot difficulty={2} big={true} />}
+              iconLeft={
+                LOADING_colorEdit.loading &&
+                LOADING_colorEdit.difficulty === 2 ? (
+                  <ActivityIndicator color={MyColors.icon_difficulty_2} />
+                ) : (
+                  <ICON_difficultyDot difficulty={2} big={true} />
+                )
+              }
             />
 
             <Btn
               type={vocab.difficulty === 3 ? "difficulty_3_active" : "simple"}
               style={{ flex: 1 }}
               onPress={() => HANDLE_editDifficulty(3)}
-              iconLeft={<ICON_difficultyDot difficulty={3} big={true} />}
+              iconLeft={
+                LOADING_colorEdit.loading &&
+                LOADING_colorEdit.difficulty === 3 ? (
+                  <ActivityIndicator color={MyColors.icon_difficulty_3} />
+                ) : (
+                  <ICON_difficultyDot difficulty={3} big={true} />
+                )
+              }
             />
             <Btn
               type="simple"

@@ -2,34 +2,34 @@
 //
 //
 
-import Btn from "@/src/components/btn/btn";
+import Btn from "@/src/components/Btn/Btn";
 import Footer from "../../Footer";
+import { ActivityIndicator } from "react-native";
 
 interface ManageVocabFooter_PROPS {
-  IS_edit: boolean;
-  reset: () => void;
-  create: () => void;
-  update: () => void;
+  onCancelPress: () => void;
+  onActionPress: () => void;
+  loading: boolean;
   btnText: string;
 }
 
 export default function ManageVocab_FOOTER({
-  IS_edit,
-  reset,
-  create,
-  update,
+  onCancelPress,
+  onActionPress,
+  loading,
   btnText,
 }: ManageVocabFooter_PROPS) {
   return (
     <Footer
-      btnLeft={<Btn text="Cancel" onPress={reset} type="simple" />}
+      btnLeft={<Btn text="Cancel" onPress={onCancelPress} type="simple" />}
       btnRight={
         <Btn
-          text={btnText}
+          text={!loading ? btnText : ""}
+          iconRight={loading ? <ActivityIndicator color={"black"} /> : null}
           onPress={() => {
-            IS_edit ? update() : create();
-            reset();
+            if (!loading) onActionPress();
           }}
+          stayPressed={loading}
           type="action"
           style={{ flex: 1 }}
         />

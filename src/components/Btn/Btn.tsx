@@ -25,6 +25,8 @@ type Btn = PressableProps & {
   iconLeft?: React.ReactNode;
   iconRight?: React.ReactNode;
   text_STYLES?: TextStyle;
+  stayPressed?: boolean;
+  tiny?: boolean;
 };
 
 export default function Btn({
@@ -35,6 +37,8 @@ export default function Btn({
   type = "simple",
   style,
   text_STYLES,
+  stayPressed = false,
+  tiny = false,
 }: Btn) {
   return (
     <Pressable
@@ -42,7 +46,10 @@ export default function Btn({
       style={({ pressed }) => [
         { fontFamily: "Nunito-Medium" },
         btnStyles.default,
-        pressed ? btnStyles[type].btn.press : btnStyles[type].btn.normal,
+        pressed || stayPressed
+          ? btnStyles[type].btn.press
+          : btnStyles[type].btn.normal,
+        tiny && btnStyles.tiny,
         style,
       ]}
     >

@@ -93,8 +93,8 @@ export default function SingleList_PAGE() {
       search: "",
       sorting: "date",
       sortDirection: "ascending",
-      SHOW_image: true,
-      SHOW_listName: true,
+      SHOW_image: false,
+      SHOW_listName: false,
       SHOW_description: true,
       SHOW_flags: true,
       SHOW_difficulty: true,
@@ -156,13 +156,13 @@ export default function SingleList_PAGE() {
         displaySettings={displaySettings}
         SET_displaySettings={SET_displaySettings}
       />
-      {/* <ManageVocab_MODAL
-        SHOW_modal={SHOW_vocabModal}
+      <ManageVocab_MODAL
+        open={SHOW_vocabModal}
         TOGGLE_modal={() => HANDLE_vocabModal({ clear: true })}
         toEdit_VOCAB={toEdit_VOCAB}
         toEdit_TRANSLATIONS={toEdit_TRANSLATIONS}
         selected_LIST={selected_LIST}
-      /> */}
+      />
     </Page_WRAP>
   );
 }

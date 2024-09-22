@@ -61,5 +61,5 @@ export interface DisplaySettings_MODEL {
 export interface TranslationCreation_PROPS {
   lang_id: string;
   text: string;
-  highlights: string;
+  highlights: number[];
 }
