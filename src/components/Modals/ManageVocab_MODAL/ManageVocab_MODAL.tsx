@@ -38,7 +38,6 @@ import SelectLanguages_MODAL from "../SelectLanguages_MODAL/SelectLanguages_MODA
 import languages, { languagesArr_PROPS } from "@/src/constants/languages";
 import {
   List_MODEL,
-  Translation_MODEL,
   TranslationCreation_PROPS,
   Vocab_MODEL,
 } from "@/src/db/models";
@@ -46,19 +45,13 @@ import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
 import CREATE_vocab, {
   CreateVocab_PROPS,
 } from "@/src/db/actions/vocabs/CREATE_vocab";
-import GET_langs from "@/src/utils/GET_defaultLanguages/GET_defaultLanguages";
+
 import { useToggle } from "@/src/hooks/useToggle/useToggle";
-import { Lists_DB, Translations_DB } from "@/src/db";
+
 import UPDATE_vocab, {
   UpdateVocab_PROPS,
 } from "@/src/db/actions/vocabs/UPDATE_vocab";
-import { Q } from "@nozbe/watermelondb";
-import HighlightableTextInput from "../../TEST";
-import Test2 from "../../TEST2";
-import SimpleRichTextEditor from "../../TEST2";
-import Simple_MODAL from "../Simple_MODAL/Simple_MODAL";
-import { preventAutoHideAsync } from "expo-splash-screen";
-import { text } from "@nozbe/watermelondb/decorators";
+
 import ManageVocab_FOOTER from "../../Footer/Variations/ManageVocab_FOOTER/ManageVocab_FOOTER";
 import VocabTranslation_INPUTS from "../../Block/Variations/VocabTranslation_INPUTS/VocabTranslation_INPUTS";
 import TranslationText_MODAL from "../TranslationText_MODAL/TranslationText_MODAL";

@@ -2,13 +2,14 @@
 //
 //
 
+import { GET_langFlagUrl } from "@/src/constants/globalVars";
 import languages from "@/src/constants/languages";
 import { MyColors } from "@/src/constants/MyColors";
 import { Image, StyleSheet, View } from "react-native";
 import Svg, { Path, Circle, Rect } from "react-native-svg";
 
 const sizing = {
-  normal: 24,
+  big: 24,
   small: 20,
 };
 
@@ -20,13 +21,13 @@ export function ICON_flag({
   lang?: string;
 }) {
   const _size = big
-    ? { width: sizing.small, height: 14 }
-    : { width: sizing.normal, height: 11 };
+    ? { width: sizing.big, height: 14 }
+    : { width: sizing.small, height: 11 };
 
   return (
     <Image
-      style={[_size, { borderRadius: 2 }]}
-      source={languages[lang].image}
+      style={[_size, { borderRadius: 3 }]}
+      source={{ uri: GET_langFlagUrl(lang) }}
     />
   );
 }
@@ -114,8 +115,8 @@ export function ICON_arrow({
   return (
     <Svg
       viewBox="0 0 22 12"
-      width={sizing.normal}
-      height={sizing.normal}
+      width={sizing.big}
+      height={sizing.big}
       fill="none"
       style={{ transform: [{ rotate }] }}
     >
@@ -128,12 +129,7 @@ export function ICON_arrow({
 }
 export function ICON_3dots() {
   return (
-    <Svg
-      width={sizing.normal}
-      height={sizing.normal}
-      viewBox="0 0 24 24"
-      fill="none"
-    >
+    <Svg width={sizing.big} height={sizing.big} viewBox="0 0 24 24" fill="none">
       <Circle cx="4" cy="12" r="2.5" fill={MyColors.icon_gray_light} />
       <Circle cx="12" cy="12" r="2.5" fill={MyColors.icon_gray_light} />
       <Circle cx="20" cy="12" r="2.5" fill={MyColors.icon_gray_light} />
@@ -146,12 +142,7 @@ export function ICON_profile({
   color?: "grey" | "primary";
 }) {
   return (
-    <Svg
-      width={sizing.normal}
-      height={sizing.normal}
-      viewBox="0 0 22 22"
-      fill="none"
-    >
+    <Svg width={sizing.big} height={sizing.big} viewBox="0 0 22 22" fill="none">
       <Path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -172,8 +163,8 @@ export function ICON_general({
     <Svg
       viewBox="0 0 177 177"
       fill="none"
-      width={sizing.normal}
-      height={sizing.normal}
+      width={sizing.big}
+      height={sizing.big}
     >
       <Path
         d="M88.5 0C137.379 0 177 39.6215 177 88.5C177 137.379 137.379 177 88.5 177C39.6215 177 0 137.379 0 88.5C0 39.6215 39.6215 0 88.5 0ZM88.5 17.7C69.7227 17.7 51.7144 25.1593 38.4368 38.4368C25.1593 51.7144 17.7 69.7227 17.7 88.5C17.7 107.277 25.1593 125.286 38.4368 138.563C51.7144 151.841 69.7227 159.3 88.5 159.3C107.277 159.3 125.286 151.841 138.563 138.563C151.841 125.286 159.3 107.277 159.3 88.5C159.3 69.7227 151.841 51.7144 138.563 38.4368C125.286 25.1593 107.277 17.7 88.5 17.7ZM48.675 75.225C52.1958 75.225 55.5723 76.6236 58.0618 79.1132C60.5514 81.6027 61.95 84.9793 61.95 88.5C61.95 92.0208 60.5514 95.3973 58.0618 97.8868C55.5723 100.376 52.1958 101.775 48.675 101.775C45.1543 101.775 41.7777 100.376 39.2882 97.8868C36.7986 95.3973 35.4 92.0208 35.4 88.5C35.4 84.9793 36.7986 81.6027 39.2882 79.1132C41.7777 76.6236 45.1543 75.225 48.675 75.225ZM88.5 75.225C92.0208 75.225 95.3973 76.6236 97.8868 79.1132C100.376 81.6027 101.775 84.9793 101.775 88.5C101.775 92.0208 100.376 95.3973 97.8868 97.8868C95.3973 100.376 92.0208 101.775 88.5 101.775C84.9793 101.775 81.6027 100.376 79.1132 97.8868C76.6236 95.3973 75.225 92.0208 75.225 88.5C75.225 84.9793 76.6236 81.6027 79.1132 79.1132C81.6027 76.6236 84.9793 75.225 88.5 75.225ZM128.325 75.225C131.846 75.225 135.222 76.6236 137.712 79.1132C140.201 81.6027 141.6 84.9793 141.6 88.5C141.6 92.0208 140.201 95.3973 137.712 97.8868C135.222 100.376 131.846 101.775 128.325 101.775C124.804 101.775 121.428 100.376 118.938 97.8868C116.449 95.3973 115.05 92.0208 115.05 88.5C115.05 84.9793 116.449 81.6027 118.938 79.1132C121.428 76.6236 124.804 75.225 128.325 75.225Z"
@@ -189,8 +180,8 @@ export function ICON_settings() {
     <Svg
       viewBox="0 0 107 113"
       fill="none"
-      width={sizing.normal}
-      height={sizing.normal}
+      width={sizing.big}
+      height={sizing.big}
     >
       <Path
         fillRule="evenodd"
@@ -204,8 +195,8 @@ export function ICON_settings() {
 export function ICON_about() {
   return (
     <Svg
-      width={sizing.normal}
-      height={sizing.normal}
+      width={sizing.big}
+      height={sizing.big}
       viewBox="0 0 145 113"
       fill="none"
     >
@@ -219,8 +210,8 @@ export function ICON_about() {
 export function ICON_premium() {
   return (
     <Svg
-      width={sizing.normal}
-      height={sizing.normal}
+      width={sizing.big}
+      height={sizing.big}
       viewBox="0 0 120 115"
       fill="none"
     >
@@ -234,8 +225,8 @@ export function ICON_premium() {
 export function ICON_checkmark() {
   return (
     <Svg
-      width={sizing.normal}
-      height={sizing.normal}
+      width={sizing.big}
+      height={sizing.big}
       viewBox="0 0 113 113"
       fill="none"
     >
@@ -251,8 +242,8 @@ export function ICON_checkmark() {
 export function ICON_privacyPolicy() {
   return (
     <Svg
-      width={sizing.normal}
-      height={sizing.normal}
+      width={sizing.big}
+      height={sizing.big}
       viewBox="0 0 94 113"
       fill="none"
     >
@@ -266,8 +257,8 @@ export function ICON_privacyPolicy() {
 export function ICON_contact() {
   return (
     <Svg
-      width={sizing.normal}
-      height={sizing.normal}
+      width={sizing.big}
+      height={sizing.big}
       viewBox="0 0 118 113"
       fill="none"
     >
@@ -284,12 +275,7 @@ export function ICON_vocabs({
   color?: "grey" | "primary";
 }) {
   return (
-    <Svg
-      width={sizing.normal}
-      height={sizing.normal}
-      viewBox="0 0 24 24"
-      fill="none"
-    >
+    <Svg width={sizing.big} height={sizing.big} viewBox="0 0 24 24" fill="none">
       <Rect
         x="2"
         y="2.5"
@@ -337,12 +323,7 @@ export function ICON_other({ color = "grey" }: { color?: "grey" | "primary" }) {
   const _color =
     color === "grey" ? MyColors.icon_gray_light : MyColors.icon_primary;
   return (
-    <Svg
-      width={sizing.normal}
-      height={sizing.normal}
-      viewBox="0 0 24 24"
-      fill="none"
-    >
+    <Svg width={sizing.big} height={sizing.big} viewBox="0 0 24 24" fill="none">
       <Circle cx="3" cy="4" r="2.5" fill={_color} />
       <Circle cx="12" cy="4" r="2.5" fill={_color} />
       <Circle cx="21" cy="4" r="2.5" fill={_color} />
@@ -364,8 +345,8 @@ export function ICON_search({
 }) {
   return (
     <Svg
-      width={big ? sizing.normal : sizing.small}
-      height={big ? sizing.normal : sizing.small}
+      width={big ? sizing.big : sizing.small}
+      height={big ? sizing.big : sizing.small}
       viewBox="0 0 22 22"
       fill="none"
     >
@@ -440,12 +421,7 @@ export function ICON_dropdownArrow() {
 }
 export function ICON_displaySettings() {
   return (
-    <Svg
-      width={sizing.normal}
-      height={sizing.normal}
-      viewBox="0 0 16 18"
-      fill="none"
-    >
+    <Svg width={sizing.big} height={sizing.big} viewBox="0 0 16 18" fill="none">
       <Path
         d="M5 2.00001C4.73478 2.00001 4.48043 2.10537 4.29289 2.2929C4.10536 2.48044 4 2.73479 4 3.00001C4 3.26523 4.10536 3.51958 4.29289 3.70712C4.48043 3.89465 4.73478 4.00001 5 4.00001C5.26522 4.00001 5.51957 3.89465 5.70711 3.70712C5.89464 3.51958 6 3.26523 6 3.00001C6 2.73479 5.89464 2.48044 5.70711 2.2929C5.51957 2.10537 5.26522 2.00001 5 2.00001ZM2.17 2.00001C2.3766 1.41448 2.75974 0.907443 3.2666 0.548799C3.77346 0.190154 4.37909 -0.00244141 5 -0.00244141C5.62091 -0.00244141 6.22654 0.190154 6.7334 0.548799C7.24026 0.907443 7.6234 1.41448 7.83 2.00001H15C15.2652 2.00001 15.5196 2.10537 15.7071 2.2929C15.8946 2.48044 16 2.73479 16 3.00001C16 3.26523 15.8946 3.51958 15.7071 3.70712C15.5196 3.89465 15.2652 4.00001 15 4.00001H7.83C7.6234 4.58554 7.24026 5.09258 6.7334 5.45122C6.22654 5.80986 5.62091 6.00246 5 6.00246C4.37909 6.00246 3.77346 5.80986 3.2666 5.45122C2.75974 5.09258 2.3766 4.58554 2.17 4.00001H1C0.734784 4.00001 0.48043 3.89465 0.292893 3.70712C0.105357 3.51958 0 3.26523 0 3.00001C0 2.73479 0.105357 2.48044 0.292893 2.2929C0.48043 2.10537 0.734784 2.00001 1 2.00001H2.17ZM11 8.00001C10.7348 8.00001 10.4804 8.10537 10.2929 8.2929C10.1054 8.48044 10 8.73479 10 9.00001C10 9.26523 10.1054 9.51958 10.2929 9.70712C10.4804 9.89465 10.7348 10 11 10C11.2652 10 11.5196 9.89465 11.7071 9.70712C11.8946 9.51958 12 9.26523 12 9.00001C12 8.73479 11.8946 8.48044 11.7071 8.2929C11.5196 8.10537 11.2652 8.00001 11 8.00001ZM8.17 8.00001C8.3766 7.41448 8.75974 6.90744 9.2666 6.5488C9.77346 6.19015 10.3791 5.99756 11 5.99756C11.6209 5.99756 12.2265 6.19015 12.7334 6.5488C13.2403 6.90744 13.6234 7.41448 13.83 8.00001H15C15.2652 8.00001 15.5196 8.10537 15.7071 8.2929C15.8946 8.48044 16 8.73479 16 9.00001C16 9.26523 15.8946 9.51958 15.7071 9.70712C15.5196 9.89465 15.2652 10 15 10H13.83C13.6234 10.5855 13.2403 11.0926 12.7334 11.4512C12.2265 11.8099 11.6209 12.0025 11 12.0025C10.3791 12.0025 9.77346 11.8099 9.2666 11.4512C8.75974 11.0926 8.3766 10.5855 8.17 10H1C0.734784 10 0.48043 9.89465 0.292893 9.70712C0.105357 9.51958 0 9.26523 0 9.00001C0 8.73479 0.105357 8.48044 0.292893 8.2929C0.48043 8.10537 0.734784 8.00001 1 8.00001H8.17ZM5 14C4.73478 14 4.48043 14.1054 4.29289 14.2929C4.10536 14.4804 4 14.7348 4 15C4 15.2652 4.10536 15.5196 4.29289 15.7071C4.48043 15.8947 4.73478 16 5 16C5.26522 16 5.51957 15.8947 5.70711 15.7071C5.89464 15.5196 6 15.2652 6 15C6 14.7348 5.89464 14.4804 5.70711 14.2929C5.51957 14.1054 5.26522 14 5 14ZM2.17 14C2.3766 13.4145 2.75974 12.9074 3.2666 12.5488C3.77346 12.1902 4.37909 11.9976 5 11.9976C5.62091 11.9976 6.22654 12.1902 6.7334 12.5488C7.24026 12.9074 7.6234 13.4145 7.83 14H15C15.2652 14 15.5196 14.1054 15.7071 14.2929C15.8946 14.4804 16 14.7348 16 15C16 15.2652 15.8946 15.5196 15.7071 15.7071C15.5196 15.8947 15.2652 16 15 16H7.83C7.6234 16.5855 7.24026 17.0926 6.7334 17.4512C6.22654 17.8099 5.62091 18.0025 5 18.0025C4.37909 18.0025 3.77346 17.8099 3.2666 17.4512C2.75974 17.0926 2.3766 16.5855 2.17 16H1C0.734784 16 0.48043 15.8947 0.292893 15.7071C0.105357 15.5196 0 15.2652 0 15C0 14.7348 0.105357 14.4804 0.292893 14.2929C0.48043 14.1054 0.734784 14 1 14H2.17Z"
         fill={MyColors.icon_gray_light}
@@ -471,6 +447,7 @@ const s = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     position: "relative",
+    overflow: "visible",
   },
   x_line: {
     height: 16,

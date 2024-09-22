@@ -3,17 +3,11 @@
 //
 
 import { MyColors } from "@/src/constants/MyColors";
-import { SHOW_image, Pressable, StyleSheet, Text, View } from "react-native";
-import { ICON_difficultyDot, ICON_flag, ICON_X } from "../icons/icons";
-import { useEffect, useMemo, useState } from "react";
-import Btn from "../Btn/Btn";
-import { Styled_TEXT } from "../StyledText/StyledText";
+import { StyleSheet, View } from "react-native";
 
-import languages from "@/src/constants/languages";
+import { Vocab_MODEL, List_MODEL, Translation_MODEL } from "@/src/db/models";
 
-import RENDER_textWithHighlights from "../RENDER_textWithHighlights/RENDER_textWithHighlights";
 import Vocab_FRONT from "./components/Vocab_FRONT/Vocab_FRONT";
-import { List_MODEL, Vocab_MODEL } from "@/src/db/lists/models";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 import { DisplaySettings_MODEL } from "@/src/db/models";
 import Vocab_BACK from "./components/Vocab_BACK";

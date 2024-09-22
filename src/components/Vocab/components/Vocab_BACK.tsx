@@ -10,7 +10,8 @@ import { USE_toggle } from "@/src/hooks/USE_toggle";
 import languages from "@/src/constants/languages";
 import { Styled_TEXT } from "../../StyledText/StyledText";
 import RENDER_textWithHighlights from "../../RENDER_textWithHighlights/RENDER_textWithHighlights";
-import { ICON_difficultyDot, ICON_X } from "../../icons/icons";
+import { ICON_difficultyDot, ICON_flag, ICON_X } from "../../icons/icons";
+import { GET_langFlagUrl } from "@/src/constants/globalVars";
 
 interface VocabBack_PROPS {
   vocab: Vocab_MODEL;
@@ -38,7 +39,7 @@ export default function Vocab_BACK({
         <View key={tr.text + vocab.id} style={s.bottomTr}>
           <View style={s.bottomVocabFlag_WRAP}>
             {/* <ICON_flag key={content.id + "/" + tr.lang} lang={tr.lang} /> */}
-            <Image
+            {/* <Image
               style={{
                 width: 24,
                 height: 16,
@@ -46,8 +47,9 @@ export default function Vocab_BACK({
                 marginRight: 4,
               }}
               // source={lang.image}
-              source={languages?.[tr?.lang_id].image}
-            />
+              source={{ uri: GET_langFlagUrl(tr.lang_id) }}
+            /> */}
+            <ICON_flag big={true} />
           </View>
           <Styled_TEXT
             type="vocabTitle"

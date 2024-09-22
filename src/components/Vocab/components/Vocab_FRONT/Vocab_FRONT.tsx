@@ -2,11 +2,12 @@
 //
 //
 
-import { ICON_difficultyDot } from "@/src/components/icons/icons";
+import { ICON_difficultyDot, ICON_flag } from "@/src/components/icons/icons";
 import RENDER_textWithHighlights from "@/src/components/RENDER_textWithHighlights/RENDER_textWithHighlights";
 import { Styled_TEXT } from "@/src/components/StyledText/StyledText";
 import { MyColors } from "@/src/constants/MyColors";
 import { DisplaySettings_MODEL, Vocab_MODEL } from "@/src/db/models";
+import { useMemo } from "react";
 import { Image, Pressable, StyleSheet } from "react-native";
 import { View } from "react-native";
 
@@ -36,6 +37,11 @@ export default function Vocab_FRONT({
     SHOW_flags,
     SHOW_difficulty,
   } = displaySettings;
+
+  const lang_IDs = useMemo(
+    () => vocab?.translations?.map((tr) => tr.lang_id) || [],
+    []
+  );
 
   return (
     <View>
@@ -70,9 +76,9 @@ export default function Vocab_FRONT({
               vocab?.translations &&
               vocab?.translations?.length > 0 && (
                 <RENDER_textWithHighlights
-                  text="Vocabs app is awesome"
-                  highlights={[14, 15, 16, 17, 18, 19, 20]}
-                  difficulty={2}
+                  text={vocab?.translations?.[0].text}
+                  highlights={vocab?.translations?.[0].highlights}
+                  difficulty={vocab.difficulty}
                 />
               )}
             {dummy && (
@@ -101,9 +107,10 @@ export default function Vocab_FRONT({
               (SHOW_flags || SHOW_difficulty) &&
               (vocab?.difficulty || true) && (
                 <View style={s.topIconWrap}>
-                  {SHOW_flags && (
-                    <Styled_TEXT type="label_small">{"Flags"}</Styled_TEXT>
-                  )}
+                  {SHOW_flags &&
+                    lang_IDs.map((lang) => (
+                      <ICON_flag key={lang} lang={lang} />
+                    ))}
                   {SHOW_difficulty && vocab?.difficulty && (
                     <ICON_difficultyDot difficulty={vocab?.difficulty} />
                   )}
@@ -112,7 +119,10 @@ export default function Vocab_FRONT({
             {dummy && (SHOW_flags || SHOW_difficulty) && (
               <View style={s.topIconWrap}>
                 {SHOW_flags && (
-                  <Styled_TEXT type="label_small">{"Flags"}</Styled_TEXT>
+                  <>
+                    <ICON_flag lang="en" />
+                    <ICON_flag lang="de" />
+                  </>
                 )}
                 {SHOW_difficulty && <ICON_difficultyDot difficulty={3} />}
               </View>

@@ -14,7 +14,7 @@ import {
   ICON_displaySettings,
   ICON_X,
 } from "@/src/components/icons/icons";
-import { Vocab_MODEL } from "@/src/db/lists/models";
+import { Vocab_MODEL } from "@/src/db/models";
 import { useEffect, useState } from "react";
 import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
 import SUBSCRIBE_toVocabs from "@/src/db/vocabs/SUBSCRIBE_toVocabs";
@@ -29,6 +29,8 @@ import SearchBar from "@/src/components/SearchBar/SearchBar";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 import MyVocabs_SUBNAV from "@/src/components/Subnav/MyVocabs_SUBNAV";
 import DisplaySettings_MODAL from "@/src/components/Modals/DisplaySettings_MODAL/DisplaySettings_MODAL";
+import ManageVocab_MODAL from "@/src/components/Modals/ManageVocab_MODAL/ManageVocab_MODAL";
+import { USE_langs } from "@/src/context/AllLangs_CONTEXT";
 
 export default function SingleList_PAGE() {
   const router = useRouter();
@@ -154,6 +156,13 @@ export default function SingleList_PAGE() {
         displaySettings={displaySettings}
         SET_displaySettings={SET_displaySettings}
       />
+      {/* <ManageVocab_MODAL
+        SHOW_modal={SHOW_vocabModal}
+        TOGGLE_modal={() => HANDLE_vocabModal({ clear: true })}
+        toEdit_VOCAB={toEdit_VOCAB}
+        toEdit_TRANSLATIONS={toEdit_TRANSLATIONS}
+        selected_LIST={selected_LIST}
+      /> */}
     </Page_WRAP>
   );
 }

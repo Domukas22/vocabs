@@ -16,7 +16,7 @@ export interface Vocab_MODEL {
   id: string;
   list_id: string;
   user_id: string;
-  difficulty: number;
+  difficulty: 1 | 2 | 3;
   description: string | "";
   image: string | "";
   is_public: boolean;
@@ -34,7 +34,18 @@ export interface Translation_MODEL {
   highlights: number[];
   created_at: string;
 }
+export interface Language_MODEL {
+  id: string;
+  image_url: string;
+  created_at: string;
+  lang_in_en: string;
+  lang_in_de: string;
+  country_in_en: string;
+  country_in_de: string;
+  available_as_in_app_lang: boolean;
+}
 
+// ------------------------------------------------
 export interface DisplaySettings_MODEL {
   search: string;
   sorting: string;
@@ -46,4 +57,9 @@ export interface DisplaySettings_MODEL {
   SHOW_difficulty: boolean;
   frontLangId: string;
   difficultyFilters: [1 | 2 | 3] | [];
+}
+export interface TranslationCreation_PROPS {
+  lang_id: string;
+  text: string;
+  highlights: string;
 }
