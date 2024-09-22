@@ -40,7 +40,7 @@ import Label from "../../Label/Label";
 
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
 import SelectLanguages_MODAL from "../SelectLanguages_MODAL/SelectLanguages_MODAL";
-import USE_upsertVocab from "@/src/db/vocabs/UPSERT_vocab";
+import USE_updateVocab from "@/src/db/vocabs/UPDATE_vocab";
 
 interface ManageVocabModal_PROPS {
   open: boolean;
@@ -70,10 +70,24 @@ export default function ManageVocab_MODAL(props: ManageVocabModal_PROPS) {
 
   const { user } = USE_auth();
   const { CREATE_newVocab, IS_creatingVocab } = USE_createVocab();
-  const { UPSERT_vocabAndTranslations, IS_upsertingVocab } = USE_upsertVocab();
+  const { UPDATE_existingVocab, IS_updatingVocab } = USE_updateVocab();
 
-  async function upsert() {
-    if (!IS_upsertingVocab) {
+  async function update() {
+    if (!IS_updatingVocab) {
+      await UPDATE_existingVocab({
+        vocab_id: vocab_ID,
+        user_id: user.id,
+        list_id: modal_LIST.id,
+        difficulty,
+        image,
+        description,
+        translations,
+        toggleFn: TOGGLE_modal,
+      });
+    }
+  }
+  async function create() {
+    if (!IS_creatingVocab) {
       await CREATE_newVocab({
         user_id: user.id,
         list_id: modal_LIST.id,
@@ -85,7 +99,6 @@ export default function ManageVocab_MODAL(props: ManageVocabModal_PROPS) {
       });
     }
   }
-
   // list_id, user_id, difficulty, description, image
   function EDIT_trText({
     lang_id,
@@ -358,7 +371,7 @@ export default function ManageVocab_MODAL(props: ManageVocabModal_PROPS) {
           {!toEdit_VOCAB && (
             <ManageVocab_FOOTER
               onCancelPress={TOGGLE_modal}
-              onActionPress={upsert}
+              onActionPress={create}
               loading={IS_creatingVocab}
               // loading={true}
               btnText={"Create vocab"}
@@ -368,9 +381,9 @@ export default function ManageVocab_MODAL(props: ManageVocabModal_PROPS) {
         {toEdit_VOCAB && (
           <ManageVocab_FOOTER
             onCancelPress={TOGGLE_modal}
-            loading={IS_upsertingVocab}
-            onActionPress={upsert}
-            btnText={"Save edits"}
+            loading={IS_updatingVocab}
+            onActionPress={update}
+            btnText={"Save vocab"}
           />
         )}
         <SelectList_MODAL
