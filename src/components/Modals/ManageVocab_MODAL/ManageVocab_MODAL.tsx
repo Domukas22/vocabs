@@ -37,9 +37,10 @@ import TranslationHighlights_MODAL from "../TranslationHighlights_MODAL/Translat
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import USE_createVocab from "@/src/db/vocabs/CREATE_vocab";
 import Label from "../../Label/Label";
-import USE_fetchLangs from "@/src/db/languages/FETCH_languages";
+
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
 import SelectLanguages_MODAL from "../SelectLanguages_MODAL/SelectLanguages_MODAL";
+import USE_upsertVocab from "@/src/db/vocabs/UPSERT_vocab";
 
 interface ManageVocabModal_PROPS {
   open: boolean;
@@ -69,34 +70,22 @@ export default function ManageVocab_MODAL(props: ManageVocabModal_PROPS) {
 
   const { user } = USE_auth();
   const { CREATE_newVocab, IS_creatingVocab } = USE_createVocab();
+  const { UPSERT_vocabAndTranslations, IS_upsertingVocab } = USE_upsertVocab();
 
-  function update() {
-    if (vocab_ID) {
-      // UPDATE_vocab({
-      //   id: vocab_ID,
-      //   list,
-      //   difficulty,
-      //   image,
-      //   description,
-      //   translations,
-      // });
-    }
-  }
-  async function create() {
-    console.log("fore1");
-    if (!IS_creatingVocab) {
-      console.log("fore2");
-
+  async function upsert() {
+    if (!IS_upsertingVocab) {
       await CREATE_newVocab({
         user_id: user.id,
         list_id: modal_LIST.id,
         difficulty,
         image,
         description,
+        translations,
         toggleFn: TOGGLE_modal,
       });
     }
   }
+
   // list_id, user_id, difficulty, description, image
   function EDIT_trText({
     lang_id,
@@ -111,11 +100,10 @@ export default function ManageVocab_MODAL(props: ManageVocabModal_PROPS) {
         tr.text = newText;
 
         const adjustedHighlights = tr.highlights
-          .split(",")
-          .filter(Boolean) // prevents [0] if the highlights string is empty
+
           .map((index) => Number(index))
-          .filter((h) => h <= newText.length - 1) // delete highlights which don't fit into the text
-          .join(",");
+          .filter((h) => h <= newText.length - 1); // delete highlights which don't fit into the text
+
         tr.highlights = adjustedHighlights;
       }
 
@@ -138,26 +126,10 @@ export default function ManageVocab_MODAL(props: ManageVocabModal_PROPS) {
     SET_translations(newTRs);
   }
 
-  function SELECT_lang(lang_id: string) {
-    const alreadyHasLang = translations?.some((tr) => tr.lang_id === lang_id);
-
-    if (!translations) return;
-
-    const tooManyLangSelected = translations?.length >= 10;
+  function REMOVE_lang(lang_id: string) {
     const hasOnly2Translations = translations?.length === 2;
-
-    if (!alreadyHasLang) {
-      if (tooManyLangSelected) return;
-
-      // add new lang
-      SET_translations((prev) => [
-        ...prev,
-        { lang_id, text: "", highlights: [] },
-      ]);
-    } else {
-      if (hasOnly2Translations) return;
-      SET_translations((prev) => prev.filter((tr) => tr.lang_id !== lang_id));
-    }
+    if (hasOnly2Translations) return;
+    SET_translations((prev) => prev?.filter((tr) => tr.lang_id !== lang_id));
   }
 
   const [SHOW_selectListModal, TOGGLE_selectListModal] = USE_toggle(false);
@@ -316,6 +288,7 @@ export default function ManageVocab_MODAL(props: ManageVocabModal_PROPS) {
                       <ICON_X rotate={true} color="primary" big={true} />
                     }
                     text_STYLES={{ flex: 1 }}
+                    onPress={() => REMOVE_lang(lang.id)}
                   />
                 );
               })}
@@ -385,34 +358,36 @@ export default function ManageVocab_MODAL(props: ManageVocabModal_PROPS) {
           {!toEdit_VOCAB && (
             <ManageVocab_FOOTER
               onCancelPress={TOGGLE_modal}
-              onActionPress={create}
+              onActionPress={upsert}
               loading={IS_creatingVocab}
               // loading={true}
               btnText={"Create vocab"}
             />
           )}
         </KeyboardAwareScrollView>
-        {/* {toEdit_VOCAB && (
+        {toEdit_VOCAB && (
           <ManageVocab_FOOTER
             onCancelPress={TOGGLE_modal}
-            onActionPress={update}
-            btnText={"Create vocab"}
+            loading={IS_upsertingVocab}
+            onActionPress={upsert}
+            btnText={"Save edits"}
           />
-        )} */}
+        )}
         <SelectList_MODAL
           open={SHOW_selectListModal}
           TOGGLE_modal={TOGGLE_selectListModal}
           current_LIST={modal_LIST}
           SELECT_list={SELECT_list}
         />
-        {/* <SelectLanguages_MODAL
+        <SelectLanguages_MODAL
           open={SHOW_selectLangModal}
           TOGGLE_modal={TOGGLE_selectLangModal}
           activeLangIDs={
             translations?.filter((t) => t.lang_id).map((t) => t.lang_id) || []
           }
           HANLDE_languages={HANLDE_languages}
-        /> */}
+          languages={languages}
+        />
 
         <TranslationText_MODAL
           text={
@@ -423,21 +398,22 @@ export default function ManageVocab_MODAL(props: ManageVocabModal_PROPS) {
           TOGGLE_open={TOGGLE_trTextModal}
           EDIT_tr={EDIT_trText}
         />
-        {/* 
+
         <TranslationHighlights_MODAL
           text={
             translations?.find((tr) => tr.lang_id === trModalLangId)?.text || ""
           }
           highlights={
             translations?.find((tr) => tr.lang_id === trModalLangId)
-              ?.highlights || ""
+              ?.highlights || []
           }
           lang_id={trModalLangId}
           IS_open={SHOW_trHighlightsModal}
           TOGGLE_open={TOGGLE_trHighlightsModal}
           EDIT_trHighlights={EDIT_trHighlights}
           difficulty={difficulty}
-        /> */}
+          languages={languages}
+        />
       </SafeAreaView>
     </Modal>
   );

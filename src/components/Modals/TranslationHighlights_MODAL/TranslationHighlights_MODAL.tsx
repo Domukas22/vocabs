@@ -5,16 +5,17 @@
 import { useEffect, useMemo, useState } from "react";
 import Simple_MODAL from "../Simple_MODAL/Simple_MODAL";
 import languages, { languagesArr_PROPS } from "@/src/constants/languages";
-import Btn from "../../btn/btn";
+import Btn from "../../Btn/Btn";
 import { ICON_flag, ICON_X } from "../../icons/icons";
 import Block from "../../Block/Block";
 import StyledTextInput from "../../StyledTextInput/StyledTextInput";
-import { Styled_TEXT } from "../../Styled_TEXT";
+import { Styled_TEXT } from "../../StyledText/StyledText";
 import { Modal, SafeAreaView, View } from "react-native";
 import { MyColors } from "@/src/constants/MyColors";
 import Header from "../../Header/Header";
 import Footer from "../../Footer/Footer";
 import Label from "../../Label/Label";
+import { Language_MODEL } from "@/src/db/models";
 
 interface TranslationHighlightsModal_PROPS {
   text: string;
@@ -30,6 +31,7 @@ interface TranslationHighlightsModal_PROPS {
     newHighlights: string;
   }) => void;
   difficulty: 1 | 2 | 3;
+  languages: Language_MODEL[];
 }
 
 export default function TranslationHighlights_MODAL({
@@ -40,20 +42,21 @@ export default function TranslationHighlights_MODAL({
   TOGGLE_open,
   EDIT_trHighlights,
   difficulty,
+  languages,
 }: TranslationHighlightsModal_PROPS) {
-  const [_highlights, SET_highlights] = useState("");
+  const [_highlights, SET_highlights] = useState([]);
   const [_lang_id, SET_langId] = useState("");
-  const lang: languagesArr_PROPS = languages[lang_id];
+  const lang = languages.find((l) => l.id === lang_id);
 
   function SUBMIT_highlights() {
     if (!lang || !lang.id) return;
     EDIT_trHighlights({ lang_id: lang.id, newHighlights: _highlights });
     TOGGLE_open();
-    SET_highlights("");
+    SET_highlights([]);
   }
 
   useEffect(() => {
-    SET_highlights(IS_open ? highlights || "" : "");
+    SET_highlights(IS_open ? highlights || [] : []);
 
     SET_langId(IS_open ? lang_id || "" : "");
   }, [IS_open, difficulty]);
@@ -73,7 +76,7 @@ export default function TranslationHighlights_MODAL({
         }}
       >
         <Header
-          title="Select a list"
+          title="Highlight your vocab"
           big={true}
           btnRight={
             <Btn
@@ -87,7 +90,7 @@ export default function TranslationHighlights_MODAL({
         <View style={{ flex: 1, padding: 16, gap: 8 }}>
           <Label
             labelIcon={<ICON_flag lang={lang?.id} />}
-            labelText={`Select highlights ${lang?.lang?.en}`}
+            labelText={`Select highlights ${lang?.lang_in_en}`}
           />
           <Styled_TEXT>{text}</Styled_TEXT>
           <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
@@ -123,35 +126,30 @@ function GET_highlightBtns({
   SET_highlights,
 }: {
   text: string;
-  highlights: string;
+  highlights: number[];
   difficulty: 1 | 2 | 3;
-  SET_highlights: React.Dispatch<React.SetStateAction<string>>;
+  SET_highlights: React.Dispatch<React.SetStateAction<number[]>>;
 }) {
-  const highlightedIndexes = highlights
-    .split(",")
-    .filter(Boolean) // prefents [0] if the highlights string is empty
-    .map((index) => Number(index));
-
   function HANDLE_index(index: number) {
     let updatedIndexes: number[];
-    if (highlightedIndexes.includes(index)) {
+    if (highlights.includes(index)) {
       // If index is already highlighted, remove it
 
-      updatedIndexes = highlightedIndexes.filter((i) => i !== index);
+      updatedIndexes = highlights?.filter((i) => i !== index);
     } else {
       // If index is not highlighted, add it
-      updatedIndexes = [...highlightedIndexes, index];
+      updatedIndexes = [...highlights, index];
     }
 
     // Update the highlights state with the new string
-    SET_highlights(updatedIndexes.join(","));
+    SET_highlights(updatedIndexes);
   }
 
   return text?.split("").map((letter, index) =>
     Highlight_BTN({
       letter,
       index,
-      active: highlightedIndexes.includes(index),
+      active: highlights.includes(index),
       difficulty,
       HANDLE_index,
     })
@@ -181,6 +179,7 @@ function Highlight_BTN({
 
   return (
     <Btn
+      key={"highlight btn" + index + letter}
       text={letter}
       type={btnType()}
       style={{ borderRadius: 0, width: "10%", paddingHorizontal: 0 }}

@@ -25,6 +25,7 @@ export default function Vocab_BACK({
   vocab,
   selectedList_NAME,
   TOGGLE_vocab,
+  HANDLE_vocabModal,
 }: VocabBack_PROPS) {
   const [SHOW_difficultyEdits, TOGGLE_difficultyEdits] = USE_toggle(false);
 
@@ -44,18 +45,7 @@ export default function Vocab_BACK({
       {vocab.translations?.map((tr, index) => (
         <View key={tr.text + vocab.id} style={s.bottomTr}>
           <View style={s.bottomVocabFlag_WRAP}>
-            {/* <ICON_flag key={content.id + "/" + tr.lang} lang={tr.lang} /> */}
-            {/* <Image
-              style={{
-                width: 24,
-                height: 16,
-                borderRadius: 2,
-                marginRight: 4,
-              }}
-              // source={lang.image}
-              source={{ uri: GET_langFlagUrl(tr.lang_id) }}
-            /> */}
-            <ICON_flag big={true} />
+            <ICON_flag big={true} lang={tr.lang_id} />
           </View>
           <Styled_TEXT
             type="vocabTitle"
@@ -70,8 +60,12 @@ export default function Vocab_BACK({
         </View>
       ))}
       <View style={s.bottomText_WRAP}>
-        <Styled_TEXT type="label_small">{selectedList_NAME}</Styled_TEXT>
-        <Styled_TEXT type="label_small">{vocab.description}</Styled_TEXT>
+        {selectedList_NAME && (
+          <Styled_TEXT type="label_small">{selectedList_NAME}</Styled_TEXT>
+        )}
+        {vocab.description && (
+          <Styled_TEXT type="label_small">{vocab.description}</Styled_TEXT>
+        )}
       </View>
       <View
         style={{
@@ -83,8 +77,9 @@ export default function Vocab_BACK({
             <Btn
               type="simple"
               style={{ flex: 1 }}
-              // onPress={() => EDIT_vocab({ vocab, translations })}
-              onPress={() => {}}
+              onPress={() =>
+                HANDLE_vocabModal({ vocab, translations: vocab.translations })
+              }
               text="Edit vocab"
               text_STYLES={{ textAlign: "center" }}
             />

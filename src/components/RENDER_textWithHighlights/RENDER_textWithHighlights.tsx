@@ -23,7 +23,7 @@ export default function RENDER_textWithHighlights({
       ? MyColors.text_difficulty_2
       : MyColors.text_difficulty_1;
 
-  const textDecorationLine = difficulty === 1 ? "line-through" : undefined;
+  const textDecorationLine = difficulty === 1 ? "underline" : undefined;
 
   return (
     <Styled_TEXT>

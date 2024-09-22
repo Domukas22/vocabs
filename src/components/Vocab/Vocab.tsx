@@ -14,7 +14,6 @@ import Vocab_BACK from "./components/Vocab_BACK";
 
 interface VocabProps {
   vocab: Vocab_MODEL;
-  translations: Translation_MODEL[];
   displaySettings: DisplaySettings_MODEL;
   selected_LIST: List_MODEL;
 }
@@ -22,9 +21,9 @@ interface VocabProps {
 // TOGGLE_vocabModal needs to also pass in th etranslations, so we dont have to pass them async and get a delayed manageVocabModal update
 export default function Vocab({
   vocab,
-  translations,
   displaySettings,
   selected_LIST,
+  HANDLE_vocabModal,
 }: VocabProps) {
   const [open, TOGGLE_vocab] = USE_toggle(false);
   const [SHOW_difficultyEdits, TOGGLE_difficultyEdits] = USE_toggle(false);
@@ -35,10 +34,6 @@ export default function Vocab({
       // TOGGLE_difficultyEdits();
     }
   }
-
-  const frontText =
-    translations?.find((tr) => tr.lang_id === displaySettings.frontLangId)
-      ?.text || translations?.[0]?.text;
 
   return (
     <View
@@ -63,6 +58,7 @@ export default function Vocab({
             vocab={vocab}
             selectedList_NAME={selected_LIST.name}
             TOGGLE_vocab={TOGGLE_vocab}
+            HANDLE_vocabModal={HANDLE_vocabModal}
           />
         ) : null}
       </View>

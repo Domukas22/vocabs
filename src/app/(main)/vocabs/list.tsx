@@ -140,9 +140,9 @@ export default function SingleList_PAGE() {
             <View>
               <Vocab
                 vocab={item}
-                translations={[]}
                 displaySettings={displaySettings}
                 selected_LIST={selected_LIST}
+                HANDLE_vocabModal={HANDLE_vocabModal}
               />
             </View>
           )}

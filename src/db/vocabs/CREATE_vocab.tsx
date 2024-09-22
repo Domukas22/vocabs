@@ -3,12 +3,14 @@
 ///
 import { supabase } from "@/src/lib/supabase";
 import { useState } from "react";
+import { TranslationCreation_PROPS } from "../models";
 interface VocabCreation_MODEL {
   user_id: string;
   list_id: string;
   difficulty?: 1 | 2 | 3;
   description?: string | "";
   image?: string | "";
+  translations: TranslationCreation_PROPS[];
   toggleFn: () => void;
 }
 
@@ -28,8 +30,11 @@ export default function USE_createVocab() {
       difficulty,
       description,
       image,
+      translations,
       toggleFn = () => {},
     } = props;
+
+    console.log(translations);
 
     if (!user_id) {
       console.log("🔴 User not defined when creating vocab 🔴");
@@ -65,26 +70,65 @@ export default function USE_createVocab() {
     try {
       SET_isCreatingVocab(true);
 
-      const { data, error } = await supabase
+      // Insert new vocab
+      const { data: vocabData, error: vocabError } = await supabase
         .from("vocabs")
         .insert([vocab_DATA])
-        .select();
+        .select()
+        .single();
 
-      if (error) {
-        console.log("🔴 Error creating vocab 🔴 : ", error);
+      if (vocabError) {
+        console.log("🔴 Error creating vocab 🔴 : ", vocabError);
         return {
           success: false,
           msg: "🔴 Error creating vocab 🔴",
         };
       }
 
+      // Create translations
+      const translationPromises = translations.map((translation) => {
+        const translation_DATA = {
+          vocab_id: vocabData.id, // Link translation to the created vocab
+          user_id: user_id,
+          lang_id: translation.lang_id,
+          text: translation.text,
+          highlights: translation.highlights,
+        };
+
+        return supabase
+          .from("translations")
+          .insert([translation_DATA])
+          .select();
+      });
+
+      const translationResults = await Promise.all(translationPromises);
+
+      // Check if any translation insertions failed
+      const failedTranslations = translationResults.filter(
+        ({ error }) => error
+      );
+
+      if (failedTranslations.length > 0) {
+        console.log(
+          "🔴 Error creating some translations 🔴",
+          failedTranslations
+        );
+        return {
+          success: false,
+          msg: "🔴 Error creating some translations 🔴",
+        };
+      }
+
       toggleFn();
-      return { success: true, data };
+      return {
+        success: true,
+        data: { vocabData, translations: translationResults },
+      };
     } catch (error) {
-      console.log("🔴 Error creating vocab 🔴 : ", error);
+      console.log("🔴 Error creating vocab or translations 🔴 : ", error);
       return {
         success: false,
-        msg: "🔴 Error creating vocab 🔴",
+        msg: "🔴 Error creating vocab or translations 🔴",
       };
     } finally {
       SET_isCreatingVocab(false);

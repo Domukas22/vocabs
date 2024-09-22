@@ -2,8 +2,6 @@
 //
 //
 
-import { useState } from "react";
-
 export interface List_MODEL {
   id: string;
   user_id: string;

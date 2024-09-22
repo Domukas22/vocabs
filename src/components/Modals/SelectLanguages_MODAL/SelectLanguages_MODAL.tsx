@@ -111,6 +111,7 @@ export default function SelectLanguages_MODAL(
           renderItem={({ item }) => {
             return (
               <Btn
+                key={"Select lang" + item.id + item.lang_in_en}
                 iconLeft={
                   <View style={{ marginRight: 4 }}>
                     <ICON_flag lang={item?.id} big={true} />
@@ -139,7 +140,7 @@ export default function SelectLanguages_MODAL(
               />
             );
           }}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => "Select lang" + item.id + item.lang_in_en}
         />
 
         <Footer
