@@ -2,22 +2,61 @@
 //
 //
 
-import { USE_toggle } from "@/src/hooks/USE_toggle";
+import { useReducer } from "react";
+
+// Define action types
+const TOGGLE_MODAL = "TOGGLE_MODAL";
+
+// Create the initial state for the modals
+const initialState = {
+  SHOW_selectListModal: false,
+  SHOW_selectLangModal: false,
+  SHOW_trTextModal: false,
+  SHOW_trHighlightsModal: false,
+};
+
+// Create a mapping between action names and state keys
+const modalActionMap = {
+  selectedList: "SHOW_selectListModal",
+  selectedLangs: "SHOW_selectLangModal",
+  trText: "SHOW_trTextModal",
+  trHighlights: "SHOW_trHighlightsModal",
+} as const; // `as const` to make the keys readonly
+
+// Define the reducer function
+export type VocabModal_ACTIONS = keyof typeof modalActionMap; // Strongly typed action names
+
+const modalReducer = (
+  state: typeof initialState,
+  action: { type: string; payload: VocabModal_ACTIONS }
+) => {
+  const stateKey = modalActionMap[action.payload];
+
+  if (!stateKey) return state; // Prevent invalid keys
+
+  switch (action.type) {
+    case TOGGLE_MODAL:
+      return {
+        ...state,
+        [stateKey]: !state[stateKey], // Toggle the value
+      };
+    default:
+      return state;
+  }
+};
 
 export default function USE_modalToggles() {
-  const [SHOW_selectListModal, TOGGLE_selectListModal] = USE_toggle(false);
-  const [SHOW_selectLangModal, TOGGLE_selectLangModal] = USE_toggle(false);
-  const [SHOW_trTextModal, TOGGLE_trTextModal] = USE_toggle(false);
-  const [SHOW_trHighlightsModal, TOGGLE_trHighlightsModal] = USE_toggle(false);
+  const [state, dispatch] = useReducer(modalReducer, initialState);
+
+  // Single toggle function that uses action names with full IntelliSense
+  const TOGGLE_modal = (modalName: VocabModal_ACTIONS) => {
+    dispatch({ type: TOGGLE_MODAL, payload: modalName });
+  };
 
   return {
-    SHOW_selectListModal,
-    SHOW_selectLangModal,
-    SHOW_trTextModal,
-    SHOW_trHighlightsModal,
-    TOGGLE_selectListModal,
-    TOGGLE_selectLangModal,
-    TOGGLE_trTextModal,
-    TOGGLE_trHighlightsModal,
+    modal_STATES: {
+      ...state,
+    },
+    TOGGLE_modal, // Use this function to toggle any modal with IntelliSense
   };
 }

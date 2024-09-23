@@ -6,10 +6,11 @@ import Block from "@/src/components/Block/Block";
 import Btn from "@/src/components/Btn/Btn";
 import { ICON_dropdownArrow } from "@/src/components/icons/icons";
 import Label from "@/src/components/Label/Label";
+import { VocabModal_ACTIONS } from "../hooks/USE_modalToggles";
 
 interface ListnInput_PROPS {
   list_NAME: string;
-  TOGGLE_modal: () => void;
+  TOGGLE_modal: (action: VocabModal_ACTIONS) => void;
 }
 
 export default function List_INPUT({
@@ -22,7 +23,7 @@ export default function List_INPUT({
       <Btn
         text={list_NAME || ""}
         iconRight={<ICON_dropdownArrow />}
-        onPress={TOGGLE_modal}
+        onPress={() => TOGGLE_modal("selectedList")}
         type="simple"
         style={{ flex: 1 }}
         text_STYLES={{ flex: 1 }}

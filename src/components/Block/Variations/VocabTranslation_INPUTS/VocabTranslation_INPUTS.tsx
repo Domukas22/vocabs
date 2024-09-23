@@ -17,28 +17,29 @@ import Label from "@/src/components/Label/Label";
 import USE_fetchLangs from "@/src/db/languages/FETCH_languages";
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
 import { Styled_TEXT } from "@/src/components/StyledText/StyledText";
+import { VocabModal_ACTIONS } from "@/src/components/Modals/ManageVocab_MODAL/hooks/USE_modalToggles";
 
 interface VocabTranslationInputs_PROPS {
-  languages: Language_MODEL[];
-  modal_TRs: TranslationCreation_PROPS[] | null;
+  languages: Language_MODEL[] | undefined;
+  modal_TRs: TranslationCreation_PROPS[] | undefined;
   modal_DIFF: 1 | 2 | 3;
-  SET_trInputLang: React.Dispatch<React.SetStateAction<string>>;
-  TOGGLE_trTextModal: () => void;
-  TOGGLE_trHighlightsModal: () => void;
+  SET_targetLang: React.Dispatch<
+    React.SetStateAction<Language_MODEL | undefined>
+  >;
+  TOGGLE_modal: (action: VocabModal_ACTIONS) => void;
 }
 
 export default function VocabTranslation_INPUTS({
   languages,
   modal_TRs,
   modal_DIFF,
-  SET_trInputLang,
-  TOGGLE_trTextModal,
-  TOGGLE_trHighlightsModal,
+  SET_targetLang,
+  TOGGLE_modal,
 }: VocabTranslationInputs_PROPS) {
   if (!modal_TRs) return <></>;
 
   return modal_TRs?.map((tr: TranslationCreation_PROPS, index) => {
-    const lang: Language_MODEL = languages.find(
+    const lang: Language_MODEL | undefined = languages.find(
       (lang) => lang.id === tr.lang_id
     );
 
@@ -55,8 +56,8 @@ export default function VocabTranslation_INPUTS({
         <Pressable
           style={({ pressed }) => [s.textBtn, pressed && s.textBtnPress]}
           onPress={() => {
-            SET_trInputLang(lang.id);
-            TOGGLE_trTextModal();
+            SET_targetLang(lang);
+            TOGGLE_modal("trText");
           }}
         >
           {tr.text && (
@@ -83,8 +84,8 @@ export default function VocabTranslation_INPUTS({
               text="Edit highlights"
               type="seethrough"
               onPress={() => {
-                SET_trInputLang(lang.id);
-                TOGGLE_trHighlightsModal();
+                SET_targetLang(lang);
+                TOGGLE_modal("trHighlights");
               }}
               style={{ flex: 1 }}
             />

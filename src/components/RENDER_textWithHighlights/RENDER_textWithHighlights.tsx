@@ -8,22 +8,22 @@ import { Styled_TEXT } from "../StyledText/StyledText";
 interface RenderTextWithhighlights_PROPS {
   text: string;
   highlights: number[];
-  difficulty: 1 | 2 | 3;
+  modal_DIFF: 1 | 2 | 3;
 }
 
 export default function RENDER_textWithHighlights({
   text,
   highlights,
-  difficulty,
+  modal_DIFF,
 }: RenderTextWithhighlights_PROPS) {
   const highlightTextColor =
-    difficulty === 3
+    modal_DIFF === 3
       ? MyColors.text_difficulty_3
-      : difficulty === 2
+      : modal_DIFF === 2
       ? MyColors.text_difficulty_2
       : MyColors.text_difficulty_1;
 
-  const textDecorationLine = difficulty === 1 ? "underline" : undefined;
+  const textDecorationLine = modal_DIFF === 1 ? "underline" : undefined;
 
   return (
     <Styled_TEXT>
@@ -34,11 +34,11 @@ export default function RENDER_textWithHighlights({
             key={index}
             style={[
               isHighlighted && { color: highlightTextColor },
-              isHighlighted && difficulty === 1 && { textDecorationLine },
+              isHighlighted && modal_DIFF === 1 && { textDecorationLine },
             ]}
             // style={[
             //   isHighlighted && { color },
-            //   difficulty === 1 && { textDecorationLine: "underline" },
+            //   modal_DIFF === 1 && { textDecorationLine: "underline" },
             // ]}
           >
             {letter}

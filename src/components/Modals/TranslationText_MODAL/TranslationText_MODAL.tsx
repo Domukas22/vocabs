@@ -11,46 +11,47 @@ import Block from "../../Block/Block";
 import StyledTextInput from "../../StyledTextInput/StyledTextInput";
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
 import DELETE_overflowHighlights from "../ManageVocab_MODAL/helpers/DELETE_overflowHighlights";
-import { TranslationCreation_PROPS } from "@/src/db/models";
+import { Language_MODEL, TranslationCreation_PROPS } from "@/src/db/models";
+import Label from "../../Label/Label";
 
-interface TranslationTextModal_PROPS {
-  text: string;
-  lang_id: string;
-  IS_open: boolean;
+interface TrTextModal_PROPS {
+  open: boolean;
   TOGGLE_open: () => void;
+  target_LANG: Language_MODEL | undefined;
   modal_TRs: TranslationCreation_PROPS[];
   SET_modalTRs: React.Dispatch<
     React.SetStateAction<TranslationCreation_PROPS[]>
   >;
 }
 
-export default function TranslationText_MODAL({
-  text,
-  lang_id,
-  IS_open,
+export default function TrText_MODAL({
+  target_LANG,
+  open,
   TOGGLE_open,
   modal_TRs,
   SET_modalTRs,
-}: TranslationTextModal_PROPS) {
+}: TrTextModal_PROPS) {
   const [_text, SET_text] = useState("");
-  const [_lang_id, SET_langId] = useState("");
-  const { languages } = USE_langs();
-  const lang = languages.find((l) => l.id === lang_id);
+  const [_lang, SET_lang] = useState<Language_MODEL | undefined>(null);
 
   const inputREF = useRef(null);
 
   function SUBMIT_tr() {
-    if (!lang || !lang.id) return;
-    EDIT_trText({ lang_id: lang.id, newText: _text });
+    if (!_lang || !_lang.id) return;
+    EDIT_trText({ lang_id: _lang.id, newText: _text });
     TOGGLE_open();
     SET_text("");
   }
 
   useEffect(() => {
-    if (IS_open) inputREF?.current?.focus();
-    SET_text(IS_open ? text || "" : "");
-    SET_langId(IS_open ? lang_id || "" : "");
-  }, [IS_open]);
+    if (open) inputREF?.current?.focus();
+
+    const text =
+      modal_TRs?.find((tr) => tr.lang_id === target_LANG?.id)?.text || "";
+
+    SET_text(open ? text || "" : "");
+    SET_lang(open ? target_LANG : null);
+  }, [open]);
 
   function EDIT_trText({
     lang_id,
@@ -81,7 +82,7 @@ export default function TranslationText_MODAL({
     <Simple_MODAL
       {...{
         title: "Edit modal_TRs",
-        IS_open: IS_open,
+        open: open,
         toggle: () => {
           SET_text(""), TOGGLE_open();
         },
@@ -105,10 +106,13 @@ export default function TranslationText_MODAL({
       }}
     >
       <Block
-        labelIcon={<ICON_flag lang={lang && lang.id} />}
-        label={`${lang && lang.id} translation *`}
+        labelIcon={_lang?.id ? <ICON_flag lang={_lang.id} /> : null}
+        label={`${_lang && _lang.id} translation *`}
         styles={{ padding: 20 }}
       >
+        <Label icon={_lang?.id ? <ICON_flag lang={_lang.id} /> : null}>
+          {`${_lang && _lang.lang_in_en} translation *`}
+        </Label>
         <StyledTextInput
           multiline={true}
           value={_text}

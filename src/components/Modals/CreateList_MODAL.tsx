@@ -36,7 +36,7 @@ export default function CreateList_MODAL({
   return (
     <Simple_MODAL
       title="Create a new list"
-      IS_open={open}
+      open={open}
       toggle={toggle}
       btnLeft={<Btn text="Cancel" onPress={HANLDE_toggle} />}
       btnRight={

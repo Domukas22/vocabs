@@ -8,7 +8,7 @@ import { useState } from "react";
 export default function USE_editVocabDifficulty(toggle: () => void = () => {}) {
   const [LOADING_colorEdit, setLoading] = useState<{
     loading: boolean;
-    difficulty: 1 | 2 | 3 | null;
+    difficulty: 1 | 2 | 3 | undefined;
   }>({
     loading: false,
     difficulty: null,

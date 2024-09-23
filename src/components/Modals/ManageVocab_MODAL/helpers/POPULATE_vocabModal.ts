@@ -11,7 +11,7 @@ import GET_defaultTranslations from "./GET_defaultTranslations";
 
 interface PopulateVocabModal_PROPS {
   list: List_MODEL;
-  vocab: Vocab_MODEL | null;
+  vocab: Vocab_MODEL | undefined;
   set_FNs: {
     SET_modalList: React.Dispatch<React.SetStateAction<List_MODEL>>;
     SET_modalDiff: React.Dispatch<React.SetStateAction<1 | 2 | 3>>;

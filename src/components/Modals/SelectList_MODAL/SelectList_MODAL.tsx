@@ -25,13 +25,13 @@ import { supabase } from "@/src/lib/supabase";
 
 interface SelectListModal_PROPS {
   open: boolean;
-  TOGGLE_modal: () => void;
+  TOGGLE_open: () => void;
   current_LIST: List_MODEL;
   SET_modalList: React.Dispatch<React.SetStateAction<List_MODEL>>;
 }
 
 export default function SelectList_MODAL(props: SelectListModal_PROPS) {
-  const { open, TOGGLE_modal, current_LIST, SET_modalList } = props;
+  const { open, TOGGLE_open, current_LIST, SET_modalList } = props;
 
   const [search, SET_search] = useState("");
   const [SHOW_createListModal, SET_createListModal] = useState(false);
@@ -68,7 +68,7 @@ export default function SelectList_MODAL(props: SelectListModal_PROPS) {
     if (current_LIST.id !== selectedModal_LIST.id) {
       SET_modalList(selectedModal_LIST);
     }
-    TOGGLE_modal();
+    TOGGLE_open();
   };
 
   useEffect(() => {
@@ -91,7 +91,7 @@ export default function SelectList_MODAL(props: SelectListModal_PROPS) {
             <Btn
               type="seethrough"
               iconLeft={<ICON_X big={true} rotate={true} />}
-              onPress={TOGGLE_modal}
+              onPress={TOGGLE_open}
               style={{ borderRadius: 100 }}
             />
           }
@@ -146,7 +146,7 @@ export default function SelectList_MODAL(props: SelectListModal_PROPS) {
         )}
 
         <Footer
-          btnLeft={<Btn text="Cancel" onPress={TOGGLE_modal} type="simple" />}
+          btnLeft={<Btn text="Cancel" onPress={TOGGLE_open} type="simple" />}
           btnRight={
             <Btn
               text="Select list"
@@ -161,7 +161,7 @@ export default function SelectList_MODAL(props: SelectListModal_PROPS) {
         {...{
           title: "Create a list",
 
-          IS_open: SHOW_createListModal,
+          open: SHOW_createListModal,
           toggle: TOGGLE_createListModal,
           btnLeft: (
             <Btn text="Cancel" onPress={TOGGLE_createListModal} type="simple" />

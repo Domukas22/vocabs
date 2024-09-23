@@ -8,19 +8,20 @@ import { ICON_flag, ICON_X } from "@/src/components/icons/icons";
 import Label from "@/src/components/Label/Label";
 import { Language_MODEL, TranslationCreation_PROPS } from "@/src/db/models";
 import { View } from "react-native";
+import { VocabModal_ACTIONS } from "../hooks/USE_modalToggles";
 
 interface ChosenLangsInputs_PROPS {
   modal_TRs: TranslationCreation_PROPS[];
   languages: Language_MODEL[];
   REMOVE_lang: (lang_id: string) => void;
-  TOGGLE_selectLangModal: () => void;
+  TOGGLE_modal: (action: VocabModal_ACTIONS) => void;
 }
 
 export default function ChosenLangs_INPUTS({
   modal_TRs,
   languages,
   REMOVE_lang,
-  TOGGLE_selectLangModal,
+  TOGGLE_modal,
 }: ChosenLangsInputs_PROPS) {
   return (
     <Block>
@@ -50,7 +51,7 @@ export default function ChosenLangs_INPUTS({
         iconLeft={<ICON_X color="primary" />}
         text="Select languages"
         type="seethrough_primary"
-        onPress={TOGGLE_selectLangModal}
+        onPress={() => TOGGLE_modal("selectedLangs")}
       />
     </Block>
   );

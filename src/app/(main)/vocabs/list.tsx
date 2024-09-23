@@ -82,7 +82,7 @@ export default function SingleList_PAGE() {
     };
   }, [displaySettings]);
 
-  const [toEdit_VOCAB, SET_toEditVocab] = useState<Vocab_MODEL | null>(null);
+  const [vocab, SET_toEditVocab] = useState<Vocab_MODEL | undefined>(undefined);
 
   function HANDLE_vocabModal({
     clear = false,
@@ -95,7 +95,7 @@ export default function SingleList_PAGE() {
       SET_toEditVocab(vocab);
       TOGGLE_vocabModal();
     } else if (clear) {
-      SET_toEditVocab(null);
+      SET_toEditVocab(undefined);
       TOGGLE_vocabModal();
     }
   }
@@ -157,7 +157,7 @@ export default function SingleList_PAGE() {
       <ManageVocab_MODAL
         open={SHOW_vocabModal}
         TOGGLE_modal={() => HANDLE_vocabModal({ clear: true })}
-        toEdit_VOCAB={toEdit_VOCAB}
+        vocab={vocab}
         selected_LIST={selected_LIST}
       />
     </Page_WRAP>

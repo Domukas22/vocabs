@@ -17,53 +17,54 @@ import Footer from "../../Footer/Footer";
 import Label from "../../Label/Label";
 import { Language_MODEL, TranslationCreation_PROPS } from "@/src/db/models";
 
-interface TranslationHighlightsModal_PROPS {
-  lang_id: string;
+interface TrHighlightsModal_PROPS {
   open: boolean;
   TOGGLE_open: () => void;
-  difficulty: 1 | 2 | 3;
-  languages: Language_MODEL[];
+  target_LANG: Language_MODEL | undefined;
+  modal_DIFF: 1 | 2 | 3;
   modal_TRs: TranslationCreation_PROPS[];
   SET_modalTRs: React.Dispatch<
     React.SetStateAction<TranslationCreation_PROPS[]>
   >;
 }
 
-export default function TranslationHighlights_MODAL({
-  lang_id,
+export default function TrHighlights_MODAL({
+  target_LANG,
   open,
   TOGGLE_open,
-  difficulty,
-  languages,
+  modal_DIFF,
   modal_TRs,
   SET_modalTRs,
-}: TranslationHighlightsModal_PROPS) {
+}: TrHighlightsModal_PROPS) {
   const [_highlights, SET_highlights] = useState([]);
-  const [_lang_id, SET_langId] = useState("");
-  const lang = languages.find((l) => l.id === lang_id);
-  const text = modal_TRs?.find((tr) => tr.lang_id === lang_id)?.text;
+  const [_lang, SET_lang] = useState<Language_MODEL | undefined>(undefined);
+  const text = modal_TRs?.find((tr) => tr.lang_id === target_LANG?.id)?.text;
 
   function SUBMIT_highlights() {
-    if (!lang || !lang.id) return;
-    EDIT_trHighlights({ lang_id: lang.id, newHighlights: _highlights });
+    console.log(_lang);
+
+    if (!_lang || !_lang.id) return;
+    EDIT_trHighlights({ lang_id: _lang.id, newHighlights: _highlights });
     TOGGLE_open();
     SET_highlights([]);
   }
 
   useEffect(() => {
     SET_highlights(
-      open ? modal_TRs?.find((tr) => tr.lang_id === lang_id)?.highlights : []
+      open
+        ? modal_TRs?.find((tr) => tr.lang_id === target_LANG.id)?.highlights
+        : []
     );
 
-    SET_langId(open ? lang_id || "" : "");
-  }, [open, difficulty]);
+    SET_lang(open ? target_LANG : null);
+  }, [open, modal_DIFF]);
 
   function EDIT_trHighlights({
     lang_id,
     newHighlights,
   }: {
     lang_id: string;
-    newHighlights: string;
+    newHighlights: number[];
   }) {
     if (!modal_TRs) return;
     const newTRs = modal_TRs.map((tr) => {
@@ -101,16 +102,15 @@ export default function TranslationHighlights_MODAL({
         />
         <View style={{ flex: 1, padding: 16, gap: 8 }}>
           <Label
-            labelIcon={<ICON_flag lang={lang?.id} />}
-            labelText={`Select highlights ${lang?.lang_in_en}`}
-          />
+            icon={_lang ? <ICON_flag lang={_lang.id} /> : null}
+          >{`Select highlights ${_lang?.lang_in_en}`}</Label>
           <Styled_TEXT>{text}</Styled_TEXT>
           <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
             {GET_highlightBtns({
               text,
               highlights: _highlights,
               SET_highlights,
-              difficulty,
+              modal_DIFF,
             })}
           </View>
         </View>
@@ -134,12 +134,12 @@ export default function TranslationHighlights_MODAL({
 function GET_highlightBtns({
   text,
   highlights,
-  difficulty,
+  modal_DIFF,
   SET_highlights,
 }: {
   text: string;
   highlights: number[];
-  difficulty: 1 | 2 | 3;
+  modal_DIFF: 1 | 2 | 3;
   SET_highlights: React.Dispatch<React.SetStateAction<number[]>>;
 }) {
   function HANDLE_index(index: number) {
@@ -162,7 +162,7 @@ function GET_highlightBtns({
       letter,
       index,
       active: highlights.includes(index),
-      difficulty,
+      modal_DIFF,
       HANDLE_index,
     })
   );
@@ -172,20 +172,20 @@ function Highlight_BTN({
   letter,
   index,
   active,
-  difficulty,
+  modal_DIFF,
   HANDLE_index,
 }: {
   letter: string;
   index: number;
   active: boolean;
-  difficulty: 1 | 2 | 3;
+  modal_DIFF: 1 | 2 | 3;
   HANDLE_index: (index: number) => void;
 }) {
   const btnType = () => {
     if (!active) return "simple";
-    if (active && difficulty === 1) return "difficulty_1_active";
-    if (active && difficulty === 2) return "difficulty_2_active";
-    if (active && difficulty === 3) return "difficulty_3_active";
+    if (active && modal_DIFF === 1) return "difficulty_1_active";
+    if (active && modal_DIFF === 2) return "difficulty_2_active";
+    if (active && modal_DIFF === 3) return "difficulty_3_active";
     return "simple";
   };
 

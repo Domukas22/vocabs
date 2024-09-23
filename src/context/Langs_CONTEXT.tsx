@@ -20,7 +20,7 @@ interface Language {
 interface LanguageContextType {
   languages: Language_MODEL[];
   ARE_languagesLoading: boolean;
-  languages_ERROR: string | null;
+  languages_ERROR: string | undefined;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(
@@ -35,7 +35,7 @@ export const Langs_PROVIDER: React.FC<LangsProviderProps> = ({ children }) => {
   const [languages, setLanguages] = useState<Language[]>([]);
   const [ARE_languagesLoading, SET_areLanguagesLoading] =
     useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | undefined>(null);
 
   useEffect(() => {
     const fetchLanguages = async () => {

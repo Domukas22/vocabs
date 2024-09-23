@@ -16,7 +16,7 @@ import { BlurView } from "expo-blur";
 interface SimpleModal_PROPS {
   children: React.ReactNode;
   title?: string;
-  IS_open: boolean;
+  open: boolean;
   toggle: () => void;
   btnLeft?: React.ReactNode;
   btnRight?: React.ReactNode;
@@ -26,7 +26,7 @@ export default function Simple_MODAL(props: SimpleModal_PROPS) {
   const {
     children,
     title = "Simple modal",
-    IS_open: SHOW_simpleModal,
+    open: SHOW_simpleModal,
     toggle: TOGGLE_simpleModal,
     btnLeft = <Btn text="Done" style={{ flex: 1 }} />,
     btnRight,

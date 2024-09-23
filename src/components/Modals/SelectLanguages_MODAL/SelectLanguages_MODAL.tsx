@@ -28,7 +28,7 @@ import Styled_FLATLIST from "../../Flatlists/Styled_FLATLIST/Styled_FLATLIST";
 
 interface SelectLanguagesModal_PROPS {
   open: boolean;
-  TOGGLE_modal: () => void;
+  TOGGLE_open: () => void;
   activeLangIDs: string[] | [];
   languages: Language_MODEL[];
   HANLDE_languages: (newLangSelection: Language_MODEL[]) => void;
@@ -37,7 +37,7 @@ interface SelectLanguagesModal_PROPS {
 export default function SelectLanguages_MODAL(
   props: SelectLanguagesModal_PROPS
 ) {
-  const { open, TOGGLE_modal, activeLangIDs, languages, HANLDE_languages } =
+  const { open, TOGGLE_open, activeLangIDs, languages, HANLDE_languages } =
     props;
   const [search, SET_search] = useState("");
 
@@ -74,7 +74,7 @@ export default function SelectLanguages_MODAL(
 
   const submit = () => {
     HANLDE_languages(modal_LANGS);
-    TOGGLE_modal();
+    TOGGLE_open();
   };
 
   useEffect(() => {
@@ -97,7 +97,7 @@ export default function SelectLanguages_MODAL(
             <Btn
               type="seethrough"
               iconLeft={<ICON_X big={true} rotate={true} />}
-              onPress={TOGGLE_modal}
+              onPress={TOGGLE_open}
               style={{ borderRadius: 100 }}
             />
           }
@@ -170,7 +170,7 @@ export default function SelectLanguages_MODAL(
               ))}
             </ScrollView>
           }
-          btnLeft={<Btn text="Cancel" onPress={TOGGLE_modal} />}
+          btnLeft={<Btn text="Cancel" onPress={TOGGLE_open} />}
           btnRight={
             <Btn
               text={`Save ${modal_LANGS?.length} languages`}
