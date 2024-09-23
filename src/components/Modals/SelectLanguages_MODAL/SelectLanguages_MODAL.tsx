@@ -107,6 +107,7 @@ export default function SelectLanguages_MODAL(
         </Subnav>
 
         <Styled_FLATLIST
+          gap={8}
           data={searchedLangs}
           renderItem={({ item }) => {
             return (
@@ -157,6 +158,7 @@ export default function SelectLanguages_MODAL(
             >
               {modal_LANGS.map((lang) => (
                 <Btn
+                  key={lang.id + "tiny selected lang buttons"}
                   iconLeft={<ICON_flag lang={lang.id} />}
                   text={lang?.id?.toUpperCase()}
                   iconRight={<ICON_X color="primary" rotate={true} />}

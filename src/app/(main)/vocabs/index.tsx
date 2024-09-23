@@ -22,7 +22,7 @@ import StyledTextInput from "@/src/components/StyledTextInput/StyledTextInput";
 import Simple_MODAL from "@/src/components/Modals/Simple_MODAL/Simple_MODAL";
 import CreateList_MODAL from "@/src/components/Modals/CreateList_MODAL";
 import SUBSCRIBE_toLists from "@/src/db/lists/SUBSCRIBE_toLists";
-import List_SKELETONS from "@/src/components/Skeletons/List_SKELETONS";
+import List_SKELETONS from "@/src/components/Modals/ManageVocab_MODAL/helpers/Skeletons/List_SKELETONS";
 import SUBSCRIBE_toVocabs from "@/src/db/vocabs/SUBSCRIBE_toVocabs";
 import SUBSCRIBE_toVocabsForLists from "@/src/db/lists/SUBSCRIBE_toVocabsForLists";
 

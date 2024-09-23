@@ -25,7 +25,6 @@ export default async function FETCH_userVocabs({
   sort,
 }: VocabFilter_PROPS) {
   try {
-    // Start the query with the 'vocabs' table
     let query = supabase.from("vocabs").select(
       `*,
          translations(*)
@@ -62,7 +61,7 @@ export default async function FETCH_userVocabs({
     }
 
     if (filter?.search) {
-      query = query.ilike("description", `%${filter.search}%`);
+      query = query.or(`description.ilike.%${filter.search}%`);
     }
 
     // Apply sorting

@@ -5,14 +5,12 @@ import { Stack } from "expo-router";
 
 export default function VocabsTab_LAYOUT() {
   return (
-    <Langs_PROVIDER>
-      <SelectedList_PROVIDER>
-        <Stack
-          screenOptions={{
-            headerShown: false,
-          }}
-        />
-      </SelectedList_PROVIDER>
-    </Langs_PROVIDER>
+    <SelectedList_PROVIDER>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+        }}
+      />
+    </SelectedList_PROVIDER>
   );
 }

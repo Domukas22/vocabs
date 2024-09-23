@@ -27,11 +27,11 @@ interface SelectListModal_PROPS {
   open: boolean;
   TOGGLE_modal: () => void;
   current_LIST: List_MODEL;
-  SELECT_list: (list: List_MODEL) => void;
+  SET_modalList: React.Dispatch<React.SetStateAction<List_MODEL>>;
 }
 
 export default function SelectList_MODAL(props: SelectListModal_PROPS) {
-  const { open, TOGGLE_modal, current_LIST, SELECT_list } = props;
+  const { open, TOGGLE_modal, current_LIST, SET_modalList } = props;
 
   const [search, SET_search] = useState("");
   const [SHOW_createListModal, SET_createListModal] = useState(false);
@@ -66,7 +66,7 @@ export default function SelectList_MODAL(props: SelectListModal_PROPS) {
 
   const submit = () => {
     if (current_LIST.id !== selectedModal_LIST.id) {
-      SELECT_list(selectedModal_LIST);
+      SET_modalList(selectedModal_LIST);
     }
     TOGGLE_modal();
   };

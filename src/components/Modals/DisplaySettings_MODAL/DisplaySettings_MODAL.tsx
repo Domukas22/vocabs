@@ -18,6 +18,7 @@ import { Modal, SafeAreaView, ScrollView, View } from "react-native";
 import Settings_TOGGLE from "../../Settings_TOGGLE/Settings_TOGGLE";
 import Vocab_FRONT from "../../Vocab/components/Vocab_FRONT/Vocab_FRONT";
 import { DisplaySettings_MODEL } from "@/src/db/models";
+import Label from "../../Label/Label";
 
 interface DisplaySettingsModal_PROPS {
   displaySettings: DisplaySettings_MODEL;
@@ -107,7 +108,8 @@ export default function DisplaySettings_MODAL({
         />
 
         <ScrollView style={{ flex: 1 }}>
-          <Block label="Sorting" row={false}>
+          <Block row={false}>
+            <Label>Sorting</Label>
             {/* <Btn
               text="Shuffle vocabs"
               iconRight={
@@ -209,7 +211,8 @@ export default function DisplaySettings_MODAL({
               </View>
             )}
           </Block>
-          <Block label="Filter by difficulty" row={false}>
+          <Block row={false}>
+            <Label>Filter by difficulty</Label>
             <Btn
               text="Easy"
               iconRight={
@@ -266,7 +269,8 @@ export default function DisplaySettings_MODAL({
             />
           </Block>
 
-          <Block label="Vocab preview" styles={{ gap: 40 }}>
+          <Block>
+            <Label>Vocab preview</Label>
             <View style={{ gap: 12 }}>
               <View
                 style={{

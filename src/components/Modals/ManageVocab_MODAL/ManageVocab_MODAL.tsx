@@ -5,28 +5,14 @@
 import Btn from "../../Btn/Btn";
 
 import Header from "@/src/components/Header/Header";
-import {
-  ICON_dropdownArrow,
-  ICON_flag,
-  ICON_image,
-  ICON_X,
-} from "@/src/components/icons/icons";
-import Block from "@/src/components/Block/Block";
-import StyledTextInput from "@/src/components/StyledTextInput/StyledTextInput";
+import { ICON_X } from "@/src/components/icons/icons";
 import { MyColors } from "@/src/constants/MyColors";
 import React, { useEffect, useState } from "react";
-import { Modal, SafeAreaView, View } from "react-native";
+import { Modal, SafeAreaView } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import SelectList_MODAL from "../SelectList_MODAL/SelectList_MODAL";
 
-import {
-  Language_MODEL,
-  List_MODEL,
-  TranslationCreation_PROPS,
-  Vocab_MODEL,
-} from "@/src/db/models";
-
-import CREATE_vocab from "@/src/db/vocabs/CREATE_vocab";
+import { Language_MODEL, List_MODEL, Vocab_MODEL } from "@/src/db/models";
 
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 
@@ -34,192 +20,98 @@ import ManageVocab_FOOTER from "../../Footer/Variations/ManageVocab_FOOTER/Manag
 import VocabTranslation_INPUTS from "../../Block/Variations/VocabTranslation_INPUTS/VocabTranslation_INPUTS";
 import TranslationText_MODAL from "../TranslationText_MODAL/TranslationText_MODAL";
 import TranslationHighlights_MODAL from "../TranslationHighlights_MODAL/TranslationHighlights_MODAL";
-import { USE_auth } from "@/src/context/Auth_CONTEXT";
-import USE_createVocab from "@/src/db/vocabs/CREATE_vocab";
-import Label from "../../Label/Label";
 
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
 import SelectLanguages_MODAL from "../SelectLanguages_MODAL/SelectLanguages_MODAL";
-import USE_updateVocab from "@/src/db/vocabs/UPDATE_vocab";
+import USE_manageVocabForm from "./hooks/USE_manageVocabform";
+import POPULATE_vocabModal from "./helpers/POPULATE_vocabModal";
+import CLEAR_vocabModal from "./helpers/CLEAR_vocabModal";
+import Difficulty_INPUTS from "./components/Difficulty_INPUTS";
+import Image_INPUT from "./components/Image_INPUT";
+import Description_INPUT from "./components/Description_INPUT";
+import List_INPUT from "./components/List_INPUT";
+import ChosenLangs_INPUTS from "./components/ChosenLangs_INPUTS";
+import USE_modalToggles from "./hooks/USE_modalToggles";
+import SELECT_languages from "./helpers/SELECT_languages";
 
 interface ManageVocabModal_PROPS {
   open: boolean;
   TOGGLE_modal: () => void;
   toEdit_VOCAB: Vocab_MODEL | null;
-  toEdit_TRANSLATIONS: TranslationCreation_PROPS[] | null;
   selected_LIST: List_MODEL;
 }
 
 export default function ManageVocab_MODAL(props: ManageVocabModal_PROPS) {
+  const { open, TOGGLE_modal, toEdit_VOCAB, selected_LIST } = props;
+  const [trInput_LANG, SET_trInputLang] = useState("");
+  const { languages } = USE_langs();
+
   const {
-    open,
+    modal_TRs,
+    modal_IMG,
+    modal_DESC,
+    modal_LIST,
+    modal_DIFF,
+    SET_modalTRs,
+    SET_modalImg,
+    SET_modalDesc,
+    SET_modalList,
+    SET_modalDiff,
+    CREATE_vocab,
+    UPDATE_vocab,
+    IS_creatingVocab,
+    IS_updatingVocab,
+  } = USE_manageVocabForm({
+    vocab: toEdit_VOCAB,
+    list: selected_LIST,
     TOGGLE_modal,
-    toEdit_VOCAB,
-    toEdit_TRANSLATIONS,
-    selected_LIST,
-  } = props;
+  });
 
-  const [vocab_ID, SET_VocabId] = useState<string | null>(null);
-  const [modal_LIST, SET_list] = useState<List_MODEL>(selected_LIST);
-  const [difficulty, SET_difficulty] = useState<1 | 2 | 3>(3);
-  const [image, SET_image] = useState("");
-  const [description, SET_description] = useState("");
-  const [translations, SET_translations] = useState<
-    TranslationCreation_PROPS[] | null
-  >(null);
-
-  const { user } = USE_auth();
-  const { CREATE_newVocab, IS_creatingVocab } = USE_createVocab();
-  const { UPDATE_existingVocab, IS_updatingVocab } = USE_updateVocab();
-
-  async function update() {
-    if (!IS_updatingVocab) {
-      await UPDATE_existingVocab({
-        vocab_id: vocab_ID,
-        user_id: user.id,
-        list_id: modal_LIST.id,
-        difficulty,
-        image,
-        description,
-        translations,
-        toggleFn: TOGGLE_modal,
-      });
-    }
-  }
-  async function create() {
-    if (!IS_creatingVocab) {
-      await CREATE_newVocab({
-        user_id: user.id,
-        list_id: modal_LIST.id,
-        difficulty,
-        image,
-        description,
-        translations,
-        toggleFn: TOGGLE_modal,
-      });
-    }
-  }
-  // list_id, user_id, difficulty, description, image
-  function EDIT_trText({
-    lang_id,
-    newText,
-  }: {
-    lang_id: string;
-    newText: string;
-  }) {
-    if (!translations) return;
-    const newTRs = translations.map((tr) => {
-      if (tr.lang_id === lang_id) {
-        tr.text = newText;
-
-        const adjustedHighlights = tr.highlights
-
-          .map((index) => Number(index))
-          .filter((h) => h <= newText.length - 1); // delete highlights which don't fit into the text
-
-        tr.highlights = adjustedHighlights;
-      }
-
-      return tr;
-    });
-    SET_translations(newTRs);
-  }
-  function EDIT_trHighlights({
-    lang_id,
-    newHighlights,
-  }: {
-    lang_id: string;
-    newHighlights: string;
-  }) {
-    if (!translations) return;
-    const newTRs = translations.map((tr) => {
-      if (tr.lang_id === lang_id) tr.highlights = newHighlights;
-      return tr;
-    });
-    SET_translations(newTRs);
-  }
+  const {
+    SHOW_selectListModal,
+    SHOW_selectLangModal,
+    SHOW_trTextModal,
+    SHOW_trHighlightsModal,
+    TOGGLE_selectListModal,
+    TOGGLE_selectLangModal,
+    TOGGLE_trTextModal,
+    TOGGLE_trHighlightsModal,
+  } = USE_modalToggles();
 
   function REMOVE_lang(lang_id: string) {
-    const hasOnly2Translations = translations?.length === 2;
+    const hasOnly2Translations = modal_TRs?.length === 2;
     if (hasOnly2Translations) return;
-    SET_translations((prev) => prev?.filter((tr) => tr.lang_id !== lang_id));
-  }
-
-  const [SHOW_selectListModal, TOGGLE_selectListModal] = USE_toggle(false);
-  const [SHOW_selectLangModal, TOGGLE_selectLangModal] = USE_toggle(false);
-
-  function CLEAR_form() {
-    SET_VocabId(null);
-    SET_list(selected_LIST);
-    SET_difficulty(3);
-    SET_image("");
-    SET_description("");
-  }
-
-  async function POPULATE_form() {
-    SET_VocabId(toEdit_VOCAB ? toEdit_VOCAB.id : null);
-    SET_list(selected_LIST);
-    SET_difficulty(toEdit_VOCAB?.difficulty ? toEdit_VOCAB.difficulty : 3);
-    SET_image(toEdit_VOCAB?.image ? toEdit_VOCAB.image : "");
-    SET_description(toEdit_VOCAB?.description ? toEdit_VOCAB.description : "");
-    SET_translations(
-      toEdit_TRANSLATIONS
-        ? toEdit_TRANSLATIONS
-        : [
-            { lang_id: "en", text: "", highlights: [] },
-            { lang_id: "de", text: "", highlights: [] },
-          ]
-    );
+    SET_modalTRs((prev) => prev?.filter((tr) => tr.lang_id !== lang_id));
   }
 
   useEffect(() => {
-    open ? POPULATE_form() : CLEAR_form();
+    open
+      ? POPULATE_vocabModal({
+          vocab: toEdit_VOCAB,
+          list: selected_LIST,
+          set_FNs: {
+            SET_modalList,
+            SET_modalDiff,
+            SET_modalImg,
+            SET_modalDesc,
+            SET_modalTRs,
+          },
+        })
+      : CLEAR_vocabModal({
+          SET_modalList,
+          SET_modalDiff,
+          SET_modalImg,
+          SET_modalDesc,
+          SET_modalTRs,
+        });
   }, [open]);
 
-  function SELECT_list(list: List_MODEL) {
-    SET_list(list);
-  }
-
-  const [trModalLangId, SET_trModalLangId] = useState("");
-  const [SHOW_trTextModal, TOGGLE_trTextModal] = USE_toggle(false);
-  const [SHOW_trHighlightsModal, TOGGLE_trHighlightsModal] = USE_toggle(false);
-  function HANLDE_trTextModal({
-    open,
-    lang_id,
-  }: {
-    open: boolean;
-    lang_id: string;
-  }) {
-    SET_trModalLangId(open ? lang_id : "");
-    TOGGLE_trTextModal();
-  }
-  function HANLDE_trhighlightsModal({
-    open,
-    lang_id,
-  }: {
-    open: boolean;
-    lang_id: string;
-  }) {
-    SET_trModalLangId(open ? lang_id : "");
-    TOGGLE_trHighlightsModal();
-  }
-
-  const { languages, ARE_languagesLoading, languages_ERROR } = USE_langs();
-
   function HANLDE_languages(newLangSelection: Language_MODEL[]) {
-    // if a tr doesn't have a lang included in the newSelection, delete it
-    let newTranslations = translations?.filter((tr) =>
-      newLangSelection.some((lang) => lang.id === tr.lang_id)
-    );
-
-    // add missing languages to the translations
-    newLangSelection.forEach((lang) => {
-      if (!newTranslations?.some((tr) => tr.lang_id === lang.id)) {
-        newTranslations?.push({ lang_id: lang.id, text: "", highlights: [] });
-      }
+    SELECT_languages({
+      newLangSelection,
+      modal_TRs,
+      SET_modalTRs,
     });
-
-    SET_translations(newTranslations);
   }
 
   return (
@@ -248,184 +140,84 @@ export default function ManageVocab_MODAL(props: ManageVocabModal_PROPS) {
           keyboardShouldPersistTaps="handled"
           contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }}
         >
-          <Block>
-            <Label>Vocab difficulty</Label>
-            <View style={{ flexDirection: "row", gap: 8, flex: 1 }}>
-              <Btn
-                text="Easy"
-                onPress={() => {
-                  SET_difficulty(1);
-                }}
-                type={difficulty === 1 ? "difficulty_1_active" : "simple"}
-                style={{ flex: 1 }}
-                text_STYLES={{ textAlign: "center" }}
-              />
-              <Btn
-                text="Medium"
-                onPress={() => {
-                  SET_difficulty(2);
-                }}
-                type={difficulty === 2 ? "difficulty_2_active" : "simple"}
-                style={{ flex: 1 }}
-                text_STYLES={{ textAlign: "center" }}
-              />
-              <Btn
-                text="Hard"
-                onPress={() => {
-                  SET_difficulty(3);
-                }}
-                type={difficulty === 3 ? "difficulty_3_active" : "simple"}
-                style={{ flex: 1 }}
-                text_STYLES={{ textAlign: "center" }}
-              />
-            </View>
-          </Block>
-          <Block>
-            <Label>Chosen languages</Label>
-            {translations &&
-              translations.map((tr) => {
-                const lang: Language_MODEL = languages.find(
-                  (l) => l.id === tr.lang_id
-                );
-                return (
-                  <Btn
-                    key={"chosen lang" + tr.text + tr.lang_id}
-                    type="active"
-                    iconLeft={
-                      <View style={{ marginRight: 4 }}>
-                        <ICON_flag lang={lang?.id} big={true} />
-                      </View>
-                    }
-                    text={lang?.lang_in_en}
-                    iconRight={
-                      <ICON_X rotate={true} color="primary" big={true} />
-                    }
-                    text_STYLES={{ flex: 1 }}
-                    onPress={() => REMOVE_lang(lang.id)}
-                  />
-                );
-              })}
-            <Btn
-              iconLeft={<ICON_X color="primary" />}
-              text="Select languages"
-              type="seethrough_primary"
-              onPress={TOGGLE_selectLangModal}
-            />
-          </Block>
-
-          <VocabTranslation_INPUTS
-            HANLDE_trTextModal={HANLDE_trTextModal}
-            HANLDE_trhighlightsModal={HANLDE_trhighlightsModal}
-            {...{ languages, translations, EDIT_tr: EDIT_trText, difficulty }}
+          <Difficulty_INPUTS {...{ modal_DIFF, SET_modalDiff }} />
+          <ChosenLangs_INPUTS
+            {...{ modal_TRs, languages, REMOVE_lang, TOGGLE_selectLangModal }}
           />
 
-          {/* <Btn
-            text="Edit language selection"
-            onPress={TOGGLE_selectLangModal}
-            type="seethrough_primary"
-            style={{ flex: 1, marginHorizontal: 12, marginTop: 16 }}
-          /> */}
+          <VocabTranslation_INPUTS
+            {...{
+              languages,
+              modal_TRs,
+              modal_DIFF,
+              SET_trInputLang,
+              TOGGLE_trTextModal,
+              TOGGLE_trHighlightsModal,
+            }}
+          />
+          <Image_INPUT {...{ modal_IMG, SET_modalImg }} />
+          <Description_INPUT {...{ modal_DESC, SET_modalDesc }} />
+          <List_INPUT
+            list_NAME={modal_LIST?.name}
+            TOGGLE_modal={TOGGLE_selectListModal}
+          />
 
-          <Block row={false}>
-            <Label>Image (optional)</Label>
-
-            <Btn
-              iconLeft={<ICON_image />}
-              text="Tap to upload image"
-              onPress={() => {}}
-              type="seethrough"
-              style={{
-                flex: 1,
-                height: 140,
-                flexDirection: "column",
-                gap: 8,
-              }}
-              text_STYLES={{
-                color: MyColors.text_white_06,
-                fontFamily: "Nunito-Light",
-              }}
-            />
-          </Block>
-          <Block>
-            <Label>Description (optional)</Label>
-            <StyledTextInput
-              multiline={true}
-              value={description || ""}
-              SET_value={(value: string) => SET_description(value)}
-              placeholder="Note down the place / movie / book so that you remember better..."
-            />
-          </Block>
-
-          <Block>
-            <Label>Vocab list</Label>
-            <Btn
-              text={modal_LIST?.name}
-              iconRight={<ICON_dropdownArrow />}
-              onPress={TOGGLE_selectListModal}
-              type="simple"
-              style={{ flex: 1 }}
-              text_STYLES={{ flex: 1 }}
-            />
-          </Block>
-
+          {/* When creating, the buttons are visible when scrolled to the bottom */}
           {!toEdit_VOCAB && (
             <ManageVocab_FOOTER
               onCancelPress={TOGGLE_modal}
-              onActionPress={create}
+              onActionPress={CREATE_vocab}
               loading={IS_creatingVocab}
-              // loading={true}
               btnText={"Create vocab"}
             />
           )}
         </KeyboardAwareScrollView>
+
+        {/* When editing, the buttons are always*/}
         {toEdit_VOCAB && (
           <ManageVocab_FOOTER
             onCancelPress={TOGGLE_modal}
             loading={IS_updatingVocab}
-            onActionPress={update}
+            onActionPress={UPDATE_vocab}
             btnText={"Save vocab"}
           />
         )}
-        <SelectList_MODAL
-          open={SHOW_selectListModal}
-          TOGGLE_modal={TOGGLE_selectListModal}
-          current_LIST={modal_LIST}
-          SELECT_list={SELECT_list}
-        />
+
         <SelectLanguages_MODAL
           open={SHOW_selectLangModal}
           TOGGLE_modal={TOGGLE_selectLangModal}
           activeLangIDs={
-            translations?.filter((t) => t.lang_id).map((t) => t.lang_id) || []
+            modal_TRs?.filter((t) => t.lang_id).map((t) => t.lang_id) || []
           }
-          HANLDE_languages={HANLDE_languages}
-          languages={languages}
+          {...{ languages, HANLDE_languages }}
+        />
+
+        <SelectList_MODAL
+          open={SHOW_selectListModal}
+          TOGGLE_modal={TOGGLE_selectListModal}
+          current_LIST={modal_LIST}
+          SET_modalList={SET_modalList}
         />
 
         <TranslationText_MODAL
           text={
-            translations?.find((tr) => tr.lang_id === trModalLangId)?.text || ""
+            modal_TRs?.find((tr) => tr.lang_id === trInput_LANG)?.text || ""
           }
-          lang_id={trModalLangId}
+          lang_id={trInput_LANG}
           IS_open={SHOW_trTextModal}
           TOGGLE_open={TOGGLE_trTextModal}
-          EDIT_tr={EDIT_trText}
+          modal_TRs={modal_TRs}
+          SET_modalTRs={SET_modalTRs}
         />
 
         <TranslationHighlights_MODAL
-          text={
-            translations?.find((tr) => tr.lang_id === trModalLangId)?.text || ""
-          }
-          highlights={
-            translations?.find((tr) => tr.lang_id === trModalLangId)
-              ?.highlights || []
-          }
-          lang_id={trModalLangId}
-          IS_open={SHOW_trHighlightsModal}
+          lang_id={trInput_LANG}
+          open={SHOW_trHighlightsModal}
           TOGGLE_open={TOGGLE_trHighlightsModal}
-          EDIT_trHighlights={EDIT_trHighlights}
-          difficulty={difficulty}
+          difficulty={modal_DIFF}
           languages={languages}
+          modal_TRs={modal_TRs}
+          SET_modalTRs={SET_modalTRs}
         />
       </SafeAreaView>
     </Modal>

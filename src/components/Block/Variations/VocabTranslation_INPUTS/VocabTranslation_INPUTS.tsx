@@ -19,36 +19,25 @@ import { USE_langs } from "@/src/context/Langs_CONTEXT";
 import { Styled_TEXT } from "@/src/components/StyledText/StyledText";
 
 interface VocabTranslationInputs_PROPS {
-  translations: TranslationCreation_PROPS[] | null;
-  EDIT_tr: ({ lang_id, newText }: { lang_id: string; newText: string }) => void;
-  HANLDE_trTextModal: ({
-    open,
-    lang_id,
-  }: {
-    open: boolean;
-    lang_id: string;
-  }) => void;
-  HANLDE_trhighlightsModal: ({
-    open,
-    lang_id,
-  }: {
-    open: boolean;
-    lang_id: string;
-  }) => void;
-  difficulty: 1 | 2 | 3;
   languages: Language_MODEL[];
+  modal_TRs: TranslationCreation_PROPS[] | null;
+  modal_DIFF: 1 | 2 | 3;
+  SET_trInputLang: React.Dispatch<React.SetStateAction<string>>;
+  TOGGLE_trTextModal: () => void;
+  TOGGLE_trHighlightsModal: () => void;
 }
 
 export default function VocabTranslation_INPUTS({
-  translations,
-  HANLDE_trTextModal,
-  HANLDE_trhighlightsModal,
-  difficulty,
   languages,
+  modal_TRs,
+  modal_DIFF,
+  SET_trInputLang,
+  TOGGLE_trTextModal,
+  TOGGLE_trHighlightsModal,
 }: VocabTranslationInputs_PROPS) {
-  if (!translations) return <></>;
+  if (!modal_TRs) return <></>;
 
-  return translations?.map((tr: TranslationCreation_PROPS, index) => {
+  return modal_TRs?.map((tr: TranslationCreation_PROPS, index) => {
     const lang: Language_MODEL = languages.find(
       (lang) => lang.id === tr.lang_id
     );
@@ -65,13 +54,16 @@ export default function VocabTranslation_INPUTS({
         >{`${lang?.lang_in_en} translation *`}</Label>
         <Pressable
           style={({ pressed }) => [s.textBtn, pressed && s.textBtnPress]}
-          onPress={() => HANLDE_trTextModal({ open: true, lang_id: lang.id })}
+          onPress={() => {
+            SET_trInputLang(lang.id);
+            TOGGLE_trTextModal();
+          }}
         >
           {tr.text && (
             <RENDER_textWithHighlights
               text={tr.text}
               highlights={tr.highlights}
-              difficulty={difficulty}
+              modal_DIFF={modal_DIFF}
             />
           )}
           {!tr.text && (
@@ -90,9 +82,10 @@ export default function VocabTranslation_INPUTS({
             <Btn
               text="Edit highlights"
               type="seethrough"
-              onPress={() =>
-                HANLDE_trhighlightsModal({ open: true, lang_id: lang.id })
-              }
+              onPress={() => {
+                SET_trInputLang(lang.id);
+                TOGGLE_trHighlightsModal();
+              }}
               style={{ flex: 1 }}
             />
           )}

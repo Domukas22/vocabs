@@ -8,17 +8,21 @@ import { useEffect } from "react";
 import { Auth_PROVIDER, USE_auth } from "../context/Auth_CONTEXT";
 import { supabase } from "../lib/supabase";
 import { FETCH_userData } from "../services/userService";
+import { Langs_PROVIDER, USE_langs } from "../context/Langs_CONTEXT";
 
 export default function _layout() {
   return (
     <Auth_PROVIDER>
-      <Main_LAYOUT />
+      <Langs_PROVIDER>
+        <Main_LAYOUT />
+      </Langs_PROVIDER>
     </Auth_PROVIDER>
   );
 }
 
 function Main_LAYOUT() {
   const { SET_auth, SET_userData } = USE_auth();
+  const { ARE_languagesLoading } = USE_langs();
   const router = useRouter();
   const [loaded] = useFonts({
     "Nunito-Black": require("@/src/assets/fonts/Nunito-Black.ttf"),
@@ -32,7 +36,7 @@ function Main_LAYOUT() {
 
   useEffect(() => {
     SplashScreen.hideAsync();
-    if (loaded) {
+    if (loaded && !ARE_languagesLoading) {
       // trigger every time user logs in/out or registers
       supabase.auth.onAuthStateChange((_event, session) => {
         if (session) {
@@ -46,7 +50,7 @@ function Main_LAYOUT() {
         }
       });
     }
-  }, [loaded]);
+  }, [loaded, ARE_languagesLoading]);
 
   async function GET_userData(user) {
     let res = await FETCH_userData(user?.id);

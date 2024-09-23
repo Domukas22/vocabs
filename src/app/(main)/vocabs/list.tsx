@@ -14,7 +14,7 @@ import {
   ICON_displaySettings,
   ICON_X,
 } from "@/src/components/icons/icons";
-import { Vocab_MODEL } from "@/src/db/models";
+import { TranslationCreation_PROPS, Vocab_MODEL } from "@/src/db/models";
 import { useEffect, useState } from "react";
 import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
 import SUBSCRIBE_toVocabs from "@/src/db/vocabs/SUBSCRIBE_toVocabs";
@@ -83,32 +83,19 @@ export default function SingleList_PAGE() {
   }, [displaySettings]);
 
   const [toEdit_VOCAB, SET_toEditVocab] = useState<Vocab_MODEL | null>(null);
-  const [toEdit_TRANSLATIONS, SET_toEditTranslations] = useState<
-    TranslationCreation_PROPS[] | null
-  >(null);
 
   function HANDLE_vocabModal({
     clear = false,
     vocab,
-    translations,
   }: {
     clear?: boolean;
     vocab?: Vocab_MODEL;
-    translations?: TranslationCreation_PROPS[];
   }) {
-    if (!clear && vocab && translations) {
-      const trs = translations?.map((tr) => ({
-        lang_id: tr.lang_id,
-        text: tr.text || "",
-        highlights: tr.highlights || "",
-      }));
-
+    if (!clear && vocab) {
       SET_toEditVocab(vocab);
-      SET_toEditTranslations(trs);
       TOGGLE_vocabModal();
     } else if (clear) {
       SET_toEditVocab(null);
-      SET_toEditTranslations(null);
       TOGGLE_vocabModal();
     }
   }
@@ -171,7 +158,6 @@ export default function SingleList_PAGE() {
         open={SHOW_vocabModal}
         TOGGLE_modal={() => HANDLE_vocabModal({ clear: true })}
         toEdit_VOCAB={toEdit_VOCAB}
-        toEdit_TRANSLATIONS={toEdit_TRANSLATIONS}
         selected_LIST={selected_LIST}
       />
     </Page_WRAP>

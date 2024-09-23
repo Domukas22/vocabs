@@ -18,7 +18,7 @@ import {
 
 type _TextInputProps = TextInputProps & {
   value: string;
-  SET_value: React.Dispatch<React.SetStateAction<string>>;
+  SET_value: (val: string) => void;
   placeholder: string;
   multiline?: boolean;
   _ref?: Ref<R_TextInput>;

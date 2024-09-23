@@ -9,6 +9,7 @@ import React, {
   ReactNode,
 } from "react";
 import { supabase } from "@/src/lib/supabase";
+import { Language_MODEL } from "../db/models";
 
 interface Language {
   id: string; // Adjust according to your schema
@@ -17,7 +18,7 @@ interface Language {
 }
 
 interface LanguageContextType {
-  languages: Language[];
+  languages: Language_MODEL[];
   ARE_languagesLoading: boolean;
   languages_ERROR: string | null;
 }

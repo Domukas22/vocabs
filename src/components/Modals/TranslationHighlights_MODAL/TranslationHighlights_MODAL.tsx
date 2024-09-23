@@ -15,38 +15,33 @@ import { MyColors } from "@/src/constants/MyColors";
 import Header from "../../Header/Header";
 import Footer from "../../Footer/Footer";
 import Label from "../../Label/Label";
-import { Language_MODEL } from "@/src/db/models";
+import { Language_MODEL, TranslationCreation_PROPS } from "@/src/db/models";
 
 interface TranslationHighlightsModal_PROPS {
-  text: string;
-  highlights: string;
   lang_id: string;
-  IS_open: boolean;
+  open: boolean;
   TOGGLE_open: () => void;
-  EDIT_trHighlights: ({
-    lang_id,
-    newHighlights,
-  }: {
-    lang_id: string;
-    newHighlights: string;
-  }) => void;
   difficulty: 1 | 2 | 3;
   languages: Language_MODEL[];
+  modal_TRs: TranslationCreation_PROPS[];
+  SET_modalTRs: React.Dispatch<
+    React.SetStateAction<TranslationCreation_PROPS[]>
+  >;
 }
 
 export default function TranslationHighlights_MODAL({
-  text,
-  highlights,
   lang_id,
-  IS_open,
+  open,
   TOGGLE_open,
-  EDIT_trHighlights,
   difficulty,
   languages,
+  modal_TRs,
+  SET_modalTRs,
 }: TranslationHighlightsModal_PROPS) {
   const [_highlights, SET_highlights] = useState([]);
   const [_lang_id, SET_langId] = useState("");
   const lang = languages.find((l) => l.id === lang_id);
+  const text = modal_TRs?.find((tr) => tr.lang_id === lang_id)?.text;
 
   function SUBMIT_highlights() {
     if (!lang || !lang.id) return;
@@ -56,16 +51,33 @@ export default function TranslationHighlights_MODAL({
   }
 
   useEffect(() => {
-    SET_highlights(IS_open ? highlights || [] : []);
+    SET_highlights(
+      open ? modal_TRs?.find((tr) => tr.lang_id === lang_id)?.highlights : []
+    );
 
-    SET_langId(IS_open ? lang_id || "" : "");
-  }, [IS_open, difficulty]);
+    SET_langId(open ? lang_id || "" : "");
+  }, [open, difficulty]);
+
+  function EDIT_trHighlights({
+    lang_id,
+    newHighlights,
+  }: {
+    lang_id: string;
+    newHighlights: string;
+  }) {
+    if (!modal_TRs) return;
+    const newTRs = modal_TRs.map((tr) => {
+      if (tr.lang_id === lang_id) tr.highlights = newHighlights;
+      return tr;
+    });
+    SET_modalTRs(newTRs);
+  }
 
   return (
     <Modal
       animationType="slide"
       transparent={true}
-      visible={IS_open && text !== ""}
+      visible={open && text !== ""}
       style={{}}
     >
       <SafeAreaView
