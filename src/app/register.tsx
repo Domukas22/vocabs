@@ -3,11 +3,11 @@
 //
 
 import { ActivityIndicator, Alert, View } from "react-native";
-import { Styled_TEXT } from "../components/StyledText/StyledText";
+import { Styled_TEXT } from "../components/Styled_TEXT/Styled_TEXT";
 import Page_WRAP from "../components/Page_WRAP/Page_WRAP";
 import { MyColors } from "../constants/MyColors";
 import Block from "../components/Block/Block";
-import StyledTextInput from "../components/StyledTextInput/StyledTextInput";
+import StyledText_INPUT from "../components/StyledText_INPUT/StyledText_INPUT";
 import { useState } from "react";
 import Label from "../components/Label/Label";
 import Btn from "../components/Btn/Btn";
@@ -58,7 +58,7 @@ export default function Register_PAGE() {
       </View>
       <Block noBorder>
         <Label labelText="What is your E-Mail?" />
-        <StyledTextInput
+        <StyledText_INPUT
           value={email}
           SET_value={SET_email}
           placeholder="email@gmail.com..."
@@ -66,7 +66,7 @@ export default function Register_PAGE() {
       </Block>
       <Block noBorder>
         <Label labelText="Create a password" />
-        <StyledTextInput
+        <StyledText_INPUT
           value={password}
           SET_value={SET_password}
           placeholder="myPassword..."

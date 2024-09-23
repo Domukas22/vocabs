@@ -2,7 +2,7 @@
 //
 //
 
-import Btn from "../../Btn/Btn";
+import Btn from "@/src/components/Btn/Btn";
 import Footer from "@/src/components/Footer/Footer";
 import Header from "@/src/components/Header/Header";
 import { ICON_flag, ICON_X } from "@/src/components/icons/icons";
@@ -24,7 +24,7 @@ import languages from "@/src/constants/languages";
 
 import Block from "@/src/components/Block/Block";
 import { Language_MODEL } from "@/src/db/models";
-import Styled_FLATLIST from "../../Flatlists/Styled_FLATLIST/Styled_FLATLIST";
+import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
 
 interface SelectLanguagesModal_PROPS {
   open: boolean;

@@ -3,16 +3,16 @@
 //
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import Simple_MODAL from "../Simple_MODAL/Simple_MODAL";
+import Simple_MODAL from "../../../../Simple_MODAL/Simple_MODAL";
 
-import Btn from "../../Btn/Btn";
-import { ICON_flag } from "../../icons/icons";
-import Block from "../../Block/Block";
-import StyledTextInput from "../../StyledTextInput/StyledTextInput";
+import Btn from "../../../../../Btn/Btn";
+import { ICON_flag } from "../../../../../icons/icons";
+import Block from "../../../../../Block/Block";
+import StyledText_INPUT from "../../../../../StyledText_INPUT/StyledText_INPUT";
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
-import DELETE_overflowHighlights from "../ManageVocab_MODAL/helpers/DELETE_overflowHighlights";
+import DELETE_overflowHighlights from "../../../helpers/DELETE_overflowHighlights";
 import { Language_MODEL, TranslationCreation_PROPS } from "@/src/db/models";
-import Label from "../../Label/Label";
+import Label from "../../../../../Label/Label";
 
 interface TrTextModal_PROPS {
   open: boolean;
@@ -113,7 +113,7 @@ export default function TrText_MODAL({
         <Label icon={_lang?.id ? <ICON_flag lang={_lang.id} /> : null}>
           {`${_lang && _lang.lang_in_en} translation *`}
         </Label>
-        <StyledTextInput
+        <StyledText_INPUT
           multiline={true}
           value={_text}
           SET_value={SET_text}

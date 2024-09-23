@@ -1,0 +1,12 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "greeting": "Hallo",
+  "welcome": "Willkommen in unserer App",
+  "test": "hallo there",
+  "header": {
+    "page_list": "Meine Listen"
+  },
+  "blockLabels": {
+    "uiLang": "App Sprache"
+  }
+}

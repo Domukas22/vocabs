@@ -10,25 +10,25 @@ import { MyColors } from "@/src/constants/MyColors";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Modal, SafeAreaView } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import SelectList_MODAL from "../SelectList_MODAL/SelectList_MODAL";
+import SelectList_MODAL from "./components/modals/SelectList_MODAL/SelectList_MODAL";
 
 import { Language_MODEL, List_MODEL, Vocab_MODEL } from "@/src/db/models";
 
 import ManageVocab_FOOTER from "../../Footer/Variations/ManageVocab_FOOTER/ManageVocab_FOOTER";
-import VocabTranslation_INPUTS from "../../Block/Variations/VocabTranslation_INPUTS/VocabTranslation_INPUTS";
-import TrText_MODAL from "../TranslationText_MODAL/TranslationText_MODAL";
-import TrHighlights_MODAL from "../TranslationHighlights_MODAL/TranslationHighlights_MODAL";
+import VocabTranslation_INPUTS from "./components/inputs/VocabTranslation_INPUTS/VocabTranslation_INPUTS";
+import TrText_MODAL from "./components/modals/TranslationText_MODAL/TranslationText_MODAL";
+import TrHighlights_MODAL from "./components/modals/TranslationHighlights_MODAL/TranslationHighlights_MODAL";
 
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
-import SelectLanguages_MODAL from "../SelectLanguages_MODAL/SelectLanguages_MODAL";
+import SelectLanguages_MODAL from "./components/modals/SelectLanguages_MODAL/SelectLanguages_MODAL";
 import USE_manageVocabModal from "./hooks/USE_manageVocabModal";
 import POPULATE_vocabModal from "./helpers/POPULATE_vocabModal";
 import CLEAR_vocabModal from "./helpers/CLEAR_vocabModal";
-import Difficulty_INPUTS from "./components/Difficulty_INPUTS";
-import Image_INPUT from "./components/Image_INPUT";
-import Description_INPUT from "./components/Description_INPUT";
-import List_INPUT from "./components/List_INPUT";
-import ChosenLangs_INPUTS from "./components/ChosenLangs_INPUTS";
+import Difficulty_INPUTS from "./components/inputs/Difficulty_INPUTS";
+import Image_INPUT from "./components/inputs/Image_INPUT";
+import Description_INPUT from "./components/inputs/Description_INPUT";
+import List_INPUT from "./components/inputs/List_INPUT";
+import ChosenLangs_INPUTS from "./components/inputs/ChosenLangs_INPUTS";
 import USE_modalToggles from "./hooks/USE_modalToggles";
 import GET_handledLangs from "./helpers/SELECT_languages";
 import GET_defaultTranslations from "./helpers/GET_defaultTranslations";
@@ -103,6 +103,7 @@ export default function ManageVocab_MODAL(props: ManageVocabModal_PROPS) {
           keyboardShouldPersistTaps="handled"
           contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }}
         >
+          {/* ------------------------------ INPUTS ------------------------------  */}
           <Difficulty_INPUTS {...{ modal_DIFF, SET_modalDiff }} />
           <ChosenLangs_INPUTS
             {...{ modal_TRs, languages, REMOVE_lang, TOGGLE_modal }}
@@ -123,7 +124,7 @@ export default function ManageVocab_MODAL(props: ManageVocabModal_PROPS) {
             list_NAME={modal_LIST?.name}
             TOGGLE_modal={TOGGLE_modal}
           />
-
+          {/* -------------------------------------------------------------------------  */}
           {/* When creating, the buttons are visible when scrolled to the bottom */}
           {!vocab && (
             <ManageVocab_FOOTER
@@ -145,6 +146,7 @@ export default function ManageVocab_MODAL(props: ManageVocabModal_PROPS) {
           />
         )}
 
+        {/* ------------------------------ MODALS ------------------------------  */}
         <SelectLanguages_MODAL
           open={modal_STATES.SHOW_selectLangModal}
           TOGGLE_open={() => TOGGLE_modal("selectedLangs")}

@@ -1,0 +1,9 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "header": {
+    "page_list": "My lists"
+  },
+  "blockLabels": {
+    "uiLang": "App language"
+  }
+}

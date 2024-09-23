@@ -4,10 +4,10 @@
 
 import { Language_MODEL, TranslationCreation_PROPS } from "@/src/db/models";
 import languages, { languagesArr_PROPS } from "@/src/constants/languages";
-import Block from "../../Block";
+import Block from "../../../../../Block/Block";
 import { ICON_flag } from "@/src/components/icons/icons";
 import Btn from "@/src/components/Btn/Btn";
-import StyledTextInput from "@/src/components/StyledTextInput/StyledTextInput";
+import StyledText_INPUT from "@/src/components/StyledText_INPUT/StyledText_INPUT";
 import React from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
@@ -16,7 +16,7 @@ import RENDER_textWithHighlights from "@/src/components/RENDER_textWithHighlight
 import Label from "@/src/components/Label/Label";
 import USE_fetchLangs from "@/src/db/languages/FETCH_languages";
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
-import { Styled_TEXT } from "@/src/components/StyledText/StyledText";
+import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { VocabModal_ACTIONS } from "@/src/components/Modals/ManageVocab_MODAL/hooks/USE_modalToggles";
 
 interface VocabTranslationInputs_PROPS {

@@ -3,7 +3,7 @@
 //
 
 import { MyColors } from "@/src/constants/MyColors";
-import { Styled_TEXT } from "../StyledText/StyledText";
+import { Styled_TEXT } from "../Styled_TEXT/Styled_TEXT";
 
 interface RenderTextWithhighlights_PROPS {
   text: string;

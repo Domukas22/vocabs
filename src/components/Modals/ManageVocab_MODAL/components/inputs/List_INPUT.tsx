@@ -6,7 +6,7 @@ import Block from "@/src/components/Block/Block";
 import Btn from "@/src/components/Btn/Btn";
 import { ICON_dropdownArrow } from "@/src/components/icons/icons";
 import Label from "@/src/components/Label/Label";
-import { VocabModal_ACTIONS } from "../hooks/USE_modalToggles";
+import { VocabModal_ACTIONS } from "../../hooks/USE_modalToggles";
 
 interface ListnInput_PROPS {
   list_NAME: string;

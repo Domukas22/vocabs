@@ -5,7 +5,7 @@
 import Block from "@/src/components/Block/Block";
 
 import Label from "@/src/components/Label/Label";
-import StyledTextInput from "@/src/components/StyledTextInput/StyledTextInput";
+import StyledText_INPUT from "@/src/components/StyledText_INPUT/StyledText_INPUT";
 
 interface DescriptionInput_PROPS {
   modal_DESC: string;
@@ -19,7 +19,7 @@ export default function Description_INPUT({
   return (
     <Block>
       <Label>Description (optional)</Label>
-      <StyledTextInput
+      <StyledText_INPUT
         multiline={true}
         value={modal_DESC || ""}
         SET_value={(value: string) => SET_modalDesc(value)}

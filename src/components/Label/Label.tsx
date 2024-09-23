@@ -5,7 +5,7 @@
 import { View } from "react-native";
 
 import React from "react";
-import { Styled_TEXT } from "../StyledText/StyledText";
+import { Styled_TEXT } from "../Styled_TEXT/Styled_TEXT";
 
 interface Label_PROPS {
   icon?: React.ReactNode;

@@ -4,13 +4,13 @@
 //
 
 import { Pressable, StyleSheet, View } from "react-native";
-import { Styled_TEXT } from "../StyledText/StyledText";
+import { Styled_TEXT } from "../Styled_TEXT/Styled_TEXT";
 
 import { MyColors } from "@/src/constants/MyColors";
 import { ICON_difficultyDot } from "../icons/icons";
 import { List_MODEL, Vocab_MODEL } from "@/src/db/lists/models";
 
-export default function MyList_BTN({
+export default function List_BTN({
   list,
 
   onPress,

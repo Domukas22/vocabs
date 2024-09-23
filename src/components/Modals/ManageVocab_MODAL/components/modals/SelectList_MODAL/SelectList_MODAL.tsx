@@ -2,21 +2,21 @@
 //
 //
 
-import Btn from "../../Btn/Btn";
+import Btn from "../../../../../Btn/Btn";
 import Footer from "@/src/components/Footer/Footer";
 import Header from "@/src/components/Header/Header";
 import { ICON_X } from "@/src/components/icons/icons";
 
 import SearchBar from "@/src/components/SearchBar/SearchBar";
-import { Styled_TEXT } from "../../StyledText/StyledText";
+import { Styled_TEXT } from "../../../../../Styled_TEXT/Styled_TEXT";
 import Subnav from "@/src/components/Subnav/Subnav";
 
 import { MyColors } from "@/src/constants/MyColors";
 import React, { useEffect, useState } from "react";
 import { FlatList, Modal, SafeAreaView, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import Simple_MODAL from "../Simple_MODAL/Simple_MODAL";
-import StyledTextInput from "@/src/components/StyledTextInput/StyledTextInput";
+import Simple_MODAL from "../../../../Simple_MODAL/Simple_MODAL";
+import StyledText_INPUT from "@/src/components/StyledText_INPUT/StyledText_INPUT";
 import { BlurView } from "expo-blur";
 import { List_MODEL } from "@/src/db/models";
 import { FETCH_lists } from "@/src/db/lists/fetch";
@@ -177,7 +177,7 @@ export default function SelectList_MODAL(props: SelectListModal_PROPS) {
         }}
       >
         <Styled_TEXT type="label">How will the new list be called?</Styled_TEXT>
-        <StyledTextInput
+        <StyledText_INPUT
           value={newListName}
           SET_value={SET_newListName}
           placeholder="F.e. German school vocabs..."

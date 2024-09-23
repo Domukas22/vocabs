@@ -8,7 +8,7 @@ import { ICON_flag, ICON_X } from "@/src/components/icons/icons";
 import Label from "@/src/components/Label/Label";
 import { Language_MODEL, TranslationCreation_PROPS } from "@/src/db/models";
 import { View } from "react-native";
-import { VocabModal_ACTIONS } from "../hooks/USE_modalToggles";
+import { VocabModal_ACTIONS } from "../../hooks/USE_modalToggles";
 
 interface ChosenLangsInputs_PROPS {
   modal_TRs: TranslationCreation_PROPS[];

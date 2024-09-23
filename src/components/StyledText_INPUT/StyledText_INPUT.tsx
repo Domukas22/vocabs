@@ -24,7 +24,7 @@ type _TextInputProps = TextInputProps & {
   _ref?: Ref<R_TextInput>;
 };
 
-export default function StyledTextInput({
+export default function StyledText_INPUT({
   value,
   SET_value,
   placeholder,

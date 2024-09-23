@@ -13,7 +13,7 @@ import { Image, ScrollView, StyleSheet } from "react-native";
 import { router } from "expo-router";
 
 import { View } from "react-native";
-import { Styled_TEXT } from "@/src/components/StyledText/StyledText";
+import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
 

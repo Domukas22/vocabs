@@ -6,7 +6,7 @@ import { Text, View } from "react-native";
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
 import Btn from "@/src/components/Btn/Btn";
 import { useRouter } from "expo-router";
-import { Styled_TEXT } from "@/src/components/StyledText/StyledText";
+import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import Header from "@/src/components/Header/Header";
 import {
   ICON_3dots,
@@ -21,7 +21,7 @@ import SUBSCRIBE_toVocabs from "@/src/db/vocabs/SUBSCRIBE_toVocabs";
 import FETCH_userVocabs from "@/src/db/vocabs/FETCH_userVocabs";
 import { supabase } from "@/src/lib/supabase";
 import List_SKELETONS from "@/src/components/Skeletons/List_SKELETONS";
-import Styled_FLATLIST from "@/src/components/Flatlists/Styled_FLATLIST/Styled_FLATLIST";
+import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
 import Vocab from "@/src/components/Vocab/Vocab";
 import { DisplaySettings_MODEL } from "@/src/db/models";
 import Subnav from "@/src/components/Subnav/Subnav";

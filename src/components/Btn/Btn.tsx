@@ -4,7 +4,7 @@
 
 import { MyColors } from "@/src/constants/MyColors";
 import { Pressable, StyleSheet, type TextStyle } from "react-native";
-import { Styled_TEXT } from "../StyledText/StyledText";
+import { Styled_TEXT } from "../Styled_TEXT/Styled_TEXT";
 import { PressableProps } from "react-native";
 import btnStyles from "./btnStyles";
 import { Href, Link } from "expo-router";

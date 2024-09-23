@@ -6,27 +6,29 @@ import { Alert, Text, View } from "react-native";
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
 import Btn from "@/src/components/Btn/Btn";
 import { useRouter } from "expo-router";
-import { Styled_TEXT } from "@/src/components/StyledText/StyledText";
+import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import Header from "@/src/components/Header/Header";
 import { ICON_X } from "@/src/components/icons/icons";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import { supabase } from "@/src/lib/supabase";
 import { useEffect, useState } from "react";
 import { FETCH_listsWithPopulatedVocabs } from "@/src/db/lists/fetch";
-import Styled_FLATLIST from "@/src/components/Flatlists/Styled_FLATLIST/Styled_FLATLIST";
-import MyList_BTN from "@/src/components/MyList_BTN/MyList_BTN";
+import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
+import List_BTN from "@/src/components/List_BTN/List_BTN";
 import { List_MODEL } from "@/src/db/models";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
-import StyledTextInput from "@/src/components/StyledTextInput/StyledTextInput";
+import StyledText_INPUT from "@/src/components/StyledText_INPUT/StyledText_INPUT";
 import Simple_MODAL from "@/src/components/Modals/Simple_MODAL/Simple_MODAL";
 import CreateList_MODAL from "@/src/components/Modals/CreateList_MODAL";
 import SUBSCRIBE_toLists from "@/src/db/lists/SUBSCRIBE_toLists";
-import List_SKELETONS from "@/src/components/Modals/ManageVocab_MODAL/helpers/Skeletons/List_SKELETONS";
+import List_SKELETONS from "@/src/components/Skeletons/List_SKELETONS";
 import SUBSCRIBE_toVocabs from "@/src/db/vocabs/SUBSCRIBE_toVocabs";
 import SUBSCRIBE_toVocabsForLists from "@/src/db/lists/SUBSCRIBE_toVocabsForLists";
+import { useTranslation } from "react-i18next";
 
 export default function MyLists_PAGE() {
+  const { t } = useTranslation();
   const router = useRouter();
   const { SET_selectedList } = USE_selectedList();
   const [SHOW_createListModal, TOGGLE_createListModal] = USE_toggle(false);
@@ -54,7 +56,8 @@ export default function MyLists_PAGE() {
   return (
     <Page_WRAP>
       <Header
-        title="My lists"
+        // title="My lists"
+        title={t("header.page_list")}
         big={true}
         btnRight={
           <Btn
@@ -72,7 +75,7 @@ export default function MyLists_PAGE() {
           data={lists}
           renderItem={({ item }: { item: List_MODEL }) => (
             <View>
-              <MyList_BTN
+              <List_BTN
                 list={item}
                 onPress={() => {
                   SET_selectedList(item);

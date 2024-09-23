@@ -14,7 +14,7 @@ import {
   ICON_contact,
   ICON_about,
 } from "@/src/components/icons/icons";
-import { Styled_TEXT } from "@/src/components/StyledText/StyledText";
+import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
 import { router } from "expo-router";
 import { Alert, ScrollView, Text, View } from "react-native";

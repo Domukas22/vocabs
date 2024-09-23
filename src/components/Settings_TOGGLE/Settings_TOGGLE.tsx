@@ -3,7 +3,7 @@
 //
 
 import { Pressable, PressableProps, StyleSheet, View } from "react-native";
-import { Styled_TEXT } from "../StyledText/StyledText";
+import { Styled_TEXT } from "../Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
 
 type Btn = PressableProps & {

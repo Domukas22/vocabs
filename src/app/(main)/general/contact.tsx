@@ -13,8 +13,8 @@ import { Image, StyleSheet, View } from "react-native";
 import { Link, router } from "expo-router";
 
 import Block from "@/src/components/Block/Block";
-import StyledTextInput from "@/src/components/StyledTextInput/StyledTextInput";
-import { Styled_TEXT } from "@/src/components/StyledText/StyledText";
+import StyledText_INPUT from "@/src/components/StyledText_INPUT/StyledText_INPUT";
+import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
 import Label from "@/src/components/Label/Label";
@@ -48,7 +48,7 @@ export default function Contact_PAGE() {
 
       <Block>
         <Label>What's on your mind?</Label>
-        <StyledTextInput
+        <StyledText_INPUT
           multiline={true}
           value={message}
           SET_value={SET_message}
@@ -57,7 +57,7 @@ export default function Contact_PAGE() {
       </Block>
       <Block>
         <Label>What is your name?</Label>
-        <StyledTextInput
+        <StyledText_INPUT
           value={name}
           SET_value={SET_name}
           placeholder="I'm Batman..."
@@ -65,7 +65,7 @@ export default function Contact_PAGE() {
       </Block>
       <Block>
         <Label>What E-mail can we reach you at?</Label>
-        <StyledTextInput
+        <StyledText_INPUT
           value={email}
           SET_value={SET_email}
           placeholder="email@gmail.com..."

@@ -7,7 +7,7 @@ import {
   ICON_checkmark,
 } from "@/src/components/icons/icons";
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
-import { Styled_TEXT } from "@/src/components/StyledText/StyledText";
+import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
 import { router, Link } from "expo-router";
 import React from "react";

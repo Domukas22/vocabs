@@ -4,7 +4,7 @@
 
 import { ICON_difficultyDot, ICON_flag } from "@/src/components/icons/icons";
 import RENDER_textWithHighlights from "@/src/components/RENDER_textWithHighlights/RENDER_textWithHighlights";
-import { Styled_TEXT } from "@/src/components/StyledText/StyledText";
+import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
 import { DisplaySettings_MODEL, Vocab_MODEL } from "@/src/db/models";
 import { useMemo } from "react";

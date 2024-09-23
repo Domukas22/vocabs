@@ -8,7 +8,7 @@ import { ActivityIndicator, Image, StyleSheet, View } from "react-native";
 import Btn from "../../Btn/Btn";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 import languages from "@/src/constants/languages";
-import { Styled_TEXT } from "../../StyledText/StyledText";
+import { Styled_TEXT } from "../../Styled_TEXT/Styled_TEXT";
 import RENDER_textWithHighlights from "../../RENDER_textWithHighlights/RENDER_textWithHighlights";
 import { ICON_difficultyDot, ICON_flag, ICON_X } from "../../icons/icons";
 import { GET_langFlagUrl } from "@/src/constants/globalVars";

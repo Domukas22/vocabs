@@ -3,18 +3,18 @@
 //
 
 import { useEffect, useMemo, useState } from "react";
-import Simple_MODAL from "../Simple_MODAL/Simple_MODAL";
+import Simple_MODAL from "../../../../Simple_MODAL/Simple_MODAL";
 import languages, { languagesArr_PROPS } from "@/src/constants/languages";
-import Btn from "../../Btn/Btn";
-import { ICON_flag, ICON_X } from "../../icons/icons";
-import Block from "../../Block/Block";
-import StyledTextInput from "../../StyledTextInput/StyledTextInput";
-import { Styled_TEXT } from "../../StyledText/StyledText";
+import Btn from "../../../../../Btn/Btn";
+import { ICON_flag, ICON_X } from "../../../../../icons/icons";
+import Block from "../../../../../Block/Block";
+import StyledText_INPUT from "../../../../../StyledText_INPUT/StyledText_INPUT";
+import { Styled_TEXT } from "../../../../../Styled_TEXT/Styled_TEXT";
 import { Modal, SafeAreaView, View } from "react-native";
 import { MyColors } from "@/src/constants/MyColors";
-import Header from "../../Header/Header";
-import Footer from "../../Footer/Footer";
-import Label from "../../Label/Label";
+import Header from "../../../../../Header/Header";
+import Footer from "../../../../../Footer/Footer";
+import Label from "../../../../../Label/Label";
 import { Language_MODEL, TranslationCreation_PROPS } from "@/src/db/models";
 
 interface TrHighlightsModal_PROPS {

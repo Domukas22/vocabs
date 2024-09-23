@@ -19,13 +19,21 @@ import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
 
 import Block from "@/src/components/Block/Block";
 import Settings_TOGGLE from "@/src/components/Settings_TOGGLE/Settings_TOGGLE";
-import { Styled_TEXT } from "@/src/components/StyledText/StyledText";
+import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import { supabase } from "@/src/lib/supabase";
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 export default function Settings_PAGE() {
   const [appLang, SET_appLang] = useState("en");
   const { user } = USE_auth();
+  const { t } = useTranslation();
+
+  const changeLanguage = (lng: string) => {
+    i18next.changeLanguage(lng);
+  };
+  const currentAppLanguage = i18next.language;
 
   return (
     <Page_WRAP>
@@ -59,23 +67,23 @@ export default function Settings_PAGE() {
         <Btn text="Edit" />
       </Block>
       <Block styles={{ gap: 12 }}>
-        <Styled_TEXT type="text_18_bold">In-app language</Styled_TEXT>
+        <Styled_TEXT type="text_18_bold">{t("blockLabels.uiLang")}</Styled_TEXT>
         <View style={{ flexDirection: "row", gap: 8 }}>
           <Btn
             text="English"
             iconRight={<ICON_flag lang="en" />}
             style={{ flex: 1 }}
             text_STYLES={{ flex: 1 }}
-            type={appLang === "en" ? "active" : "simple"}
-            onPress={() => SET_appLang("en")}
+            type={currentAppLanguage === "en" ? "active" : "simple"}
+            onPress={() => changeLanguage("en")}
           />
           <Btn
             text="German"
             iconRight={<ICON_flag lang="de" />}
             style={{ flex: 1 }}
             text_STYLES={{ flex: 1 }}
-            type={appLang === "de" ? "active" : "simple"}
-            onPress={() => SET_appLang("de")}
+            type={currentAppLanguage === "de" ? "active" : "simple"}
+            onPress={() => changeLanguage("de")}
           />
         </View>
       </Block>

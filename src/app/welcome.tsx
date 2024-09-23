@@ -5,7 +5,7 @@
 
 import { View } from "react-native";
 import Page_WRAP from "../components/Page_WRAP/Page_WRAP";
-import { Styled_TEXT } from "../components/StyledText/StyledText";
+import { Styled_TEXT } from "../components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "../constants/MyColors";
 import Btn from "../components/Btn/Btn";
 import { useRouter } from "expo-router";

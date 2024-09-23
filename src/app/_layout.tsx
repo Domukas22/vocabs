@@ -9,6 +9,7 @@ import { Auth_PROVIDER, USE_auth } from "../context/Auth_CONTEXT";
 import { supabase } from "../lib/supabase";
 import { FETCH_userData } from "../services/userService";
 import { Langs_PROVIDER, USE_langs } from "../context/Langs_CONTEXT";
+import "@/src/i18n";
 
 export default function _layout() {
   return (

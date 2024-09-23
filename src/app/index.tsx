@@ -3,7 +3,7 @@
 //
 
 import { Text, View } from "react-native";
-import { Styled_TEXT } from "../components/StyledText/StyledText";
+import { Styled_TEXT } from "../components/Styled_TEXT/Styled_TEXT";
 import Page_WRAP from "../components/Page_WRAP/Page_WRAP";
 import Btn from "../components/Btn/Btn";
 import { useRouter } from "expo-router";
