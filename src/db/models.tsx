@@ -49,7 +49,6 @@ export interface DisplaySettings_MODEL {
   sorting: "shuffle" | "difficulty" | "date";
   sortDirection: "ascending" | "descending";
   SHOW_image: boolean;
-  SHOW_listName: boolean;
   SHOW_description: boolean;
   SHOW_flags: boolean;
   SHOW_difficulty: boolean;

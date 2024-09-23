@@ -39,6 +39,9 @@ import USE_modalToggles from "./hooks/USE_modalToggles";
 import GET_handledLangs from "./helpers/SELECT_languages";
 import GET_defaultTranslations from "./helpers/GET_defaultTranslations";
 import { useTranslation } from "react-i18next";
+import USE_deleteVocab from "@/src/db/vocabs/USE_deleteExistingVocab";
+import Block from "../../Block/Block";
+import DeleteVocabConfirmation_MODAL from "../DeleteVocabConfirmation_MODAL/DeleteVocabConfirmation_MODAL";
 
 interface ManageVocabModal_PROPS {
   open: boolean;
@@ -66,8 +69,10 @@ export default function Vocab_MODAL(props: ManageVocabModal_PROPS) {
     SET_modalDiff,
     CREATE_vocab,
     UPDATE_vocab,
+    DELETE_vocab,
     IS_creatingVocab,
     IS_updatingVocab,
+    IS_deleting,
     CLEAR_modal,
     POPULATE_modal,
     REMOVE_lang,
@@ -134,6 +139,15 @@ export default function Vocab_MODAL(props: ManageVocabModal_PROPS) {
             list_NAME={modal_LIST?.name}
             TOGGLE_modal={TOGGLE_modal}
           />
+          {vocab && (
+            <Block>
+              <Btn
+                type="delete"
+                text={t("btn.deleteVocab")}
+                onPress={() => TOGGLE_modal("delete")}
+              />
+            </Block>
+          )}
           {/* -------------------------------------------------------------------------  */}
           {/* When creating, the buttons are visible when scrolled to the bottom */}
           {!vocab && (
@@ -180,6 +194,11 @@ export default function Vocab_MODAL(props: ManageVocabModal_PROPS) {
           open={modal_STATES.SHOW_trHighlightsModal}
           TOGGLE_open={() => TOGGLE_modal("trHighlights")}
           {...{ target_LANG, modal_DIFF, modal_TRs, SET_modalTRs }}
+        />
+        <DeleteVocabConfirmation_MODAL
+          open={modal_STATES.SHOW_deleteVocabModal && !!vocab}
+          TOGGLE_open={() => TOGGLE_modal("delete")}
+          _delete={DELETE_vocab}
         />
       </SafeAreaView>
     </Modal>

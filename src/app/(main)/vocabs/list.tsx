@@ -45,7 +45,6 @@ export default function SingleList_PAGE() {
       sorting: "difficulty",
       sortDirection: "ascending",
       SHOW_image: false,
-      SHOW_listName: false,
       SHOW_description: true,
       SHOW_flags: true,
       SHOW_difficulty: true,

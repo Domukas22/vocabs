@@ -48,12 +48,6 @@ export default function DisplaySettings_MODAL({
           SHOW_image: !p.SHOW_image,
         }));
         break;
-      case "listName":
-        SET_displaySettings((p: DisplaySettings_MODEL) => ({
-          ...p,
-          SHOW_listName: !p.SHOW_listName,
-        }));
-        break;
       case "desc":
         SET_displaySettings((p: DisplaySettings_MODEL) => ({
           ...p,
@@ -304,13 +298,7 @@ export default function DisplaySettings_MODAL({
                     toggle("image");
                   }}
                 />
-                <Settings_TOGGLE
-                  text={t("toggle.showListName")}
-                  active={displaySettings?.SHOW_listName}
-                  onPress={() => {
-                    toggle("listName");
-                  }}
-                />
+
                 <Settings_TOGGLE
                   text={t("toggle.showDescription")}
                   active={displaySettings?.SHOW_description}

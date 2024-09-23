@@ -28,6 +28,7 @@ import SUBSCRIBE_toVocabsForLists from "@/src/db/lists/SUBSCRIBE_toVocabsForList
 import { useTranslation } from "react-i18next";
 import Subnav from "@/src/components/Subnav/Subnav";
 import SearchBar from "@/src/components/SearchBar/SearchBar";
+import { MyColors } from "@/src/constants/MyColors";
 
 export default function MyLists_PAGE() {
   const { t } = useTranslation();
@@ -38,6 +39,9 @@ export default function MyLists_PAGE() {
   const { user } = USE_auth();
 
   const [search, SET_search] = useState("");
+  const [totalListCount, SET_totalListCount] = useState<number | undefined>(
+    undefined
+  );
 
   const [lists, SET_lists] = useState<List_MODEL[]>([]);
   const GET_lists = async () => {
@@ -48,6 +52,11 @@ export default function MyLists_PAGE() {
     });
     SET_lists([...(res?.data || [])]);
     SET_loading(false);
+
+    if (totalListCount === undefined) {
+      // only happens after the first fetch
+      SET_totalListCount([...(res?.data || [])].length);
+    }
   };
 
   useEffect(() => {
@@ -76,12 +85,15 @@ export default function MyLists_PAGE() {
           />
         }
       />
-      <Subnav>
-        <SearchBar value={search} SET_value={SET_search} />
-      </Subnav>
+
+      {totalListCount && totalListCount !== 0 && (
+        <Subnav>
+          <SearchBar value={search} SET_value={SET_search} />
+        </Subnav>
+      )}
 
       {loading ? <List_SKELETONS /> : null}
-      {!loading ? (
+      {!loading && lists.length > 0 ? (
         <Styled_FLATLIST
           data={lists}
           renderItem={({ item }: { item: List_MODEL }) => (
@@ -106,6 +118,51 @@ export default function MyLists_PAGE() {
           }
         />
       ) : null}
+      {!loading && totalListCount === 0 && (
+        <View style={{ padding: 12, gap: 12 }}>
+          <View
+            style={{
+              borderWidth: 1,
+              borderColor: MyColors.border_white_005,
+              alignItems: "center",
+              justifyContent: "center",
+              paddingVertical: 24,
+              borderRadius: 12,
+            }}
+          >
+            <Styled_TEXT style={{ color: MyColors.text_white_06 }}>
+              {t("label.youDontHaveAnyLists")}
+            </Styled_TEXT>
+          </View>
+          <Btn
+            text={t("btn.createList")}
+            iconLeft={<ICON_X color="primary" />}
+            type="seethrough_primary"
+            onPress={TOGGLE_createListModal}
+          />
+        </View>
+      )}
+      {!loading &&
+        totalListCount !== 0 &&
+        lists.length === 0 &&
+        search !== "" && (
+          <View style={{ padding: 12, gap: 12 }}>
+            <View
+              style={{
+                borderWidth: 1,
+                borderColor: MyColors.border_white_005,
+                alignItems: "center",
+                justifyContent: "center",
+                paddingVertical: 24,
+                borderRadius: 12,
+              }}
+            >
+              <Styled_TEXT style={{ color: MyColors.text_white_06 }}>
+                {t("label.noListsFound")}
+              </Styled_TEXT>
+            </View>
+          </View>
+        )}
       <CreateList_MODAL
         open={SHOW_createListModal}
         toggle={TOGGLE_createListModal}

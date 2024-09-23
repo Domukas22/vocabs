@@ -33,7 +33,9 @@
     "save": "Save",
     "editVocab": "Edit vocab",
     "close": "Close",
-    "confirmLogout": "Yes, logout"
+    "confirmLogout": "Yes, logout",
+    "deleteVocab": "Delete vocab",
+    "confirmVocabDelete": "Yes, delete"
   },
   "pages": {
     "about": {
@@ -114,7 +116,9 @@
     "chosenLangs": "Chosen languages",
     "uploadImage": "Image (optional)",
     "description": "Description (optional)",
-    "chosenList": "Chosen list"
+    "chosenList": "Chosen list",
+    "youDontHaveAnyLists": "You don't have any lists",
+    "noListsFound": "No lists found"
   },
   "modal": {
     "displaySettings": {
@@ -141,6 +145,9 @@
     },
     "logoutConfirmation": {
       "header": "Log out?"
+    },
+    "deleteVocabConfirmation": {
+      "header": "Delete vocab?"
     }
   },
   "difficulty": {

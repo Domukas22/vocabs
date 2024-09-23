@@ -13,6 +13,7 @@ const initialState = {
   SHOW_selectListModal: false,
   SHOW_trTextModal: false,
   SHOW_trHighlightsModal: false,
+  SHOW_deleteVocabModal: false,
 };
 
 // Create a mapping between action names and state keys
@@ -21,6 +22,7 @@ const modalActionMap = {
   selectedLangs: "SHOW_selectLangModal",
   trText: "SHOW_trTextModal",
   trHighlights: "SHOW_trHighlightsModal",
+  delete: "SHOW_deleteVocabModal",
 } as const; // `as const` to make the keys readonly
 
 // Define the reducer function

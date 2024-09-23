@@ -14,6 +14,7 @@ import USE_updateVocab from "@/src/db/vocabs/UPDATE_vocab";
 import { useCallback, useMemo, useState } from "react";
 import GET_defaultTranslations from "../helpers/GET_defaultTranslations";
 import GET_handledLangs from "../helpers/SELECT_languages";
+import USE_deleteExistingVocab from "@/src/db/vocabs/USE_deleteExistingVocab";
 interface ManageVocabModal_PROPS {
   TOGGLE_modal: () => void;
   vocab: Vocab_MODEL | undefined;
@@ -25,6 +26,7 @@ export default function USE_manageVocabModal(props: ManageVocabModal_PROPS) {
   const { user } = USE_auth();
   const { CREATE_newVocab, IS_creatingVocab } = USE_createVocab();
   const { UPDATE_existingVocab, IS_updatingVocab } = USE_updateVocab();
+  const { DELETE_existingVocab, IS_deleting } = USE_deleteExistingVocab();
 
   const [modal_LIST, SET_modalList] = useState<List_MODEL>(list);
   const [modal_DIFF, SET_modalDiff] = useState<1 | 2 | 3>(3);
@@ -42,7 +44,7 @@ export default function USE_manageVocabModal(props: ManageVocabModal_PROPS) {
   );
 
   async function UPDATE_vocab() {
-    if (!IS_updatingVocab && vocab) {
+    if (!IS_updatingVocab && !IS_creatingVocab && !IS_deleting && vocab) {
       await UPDATE_existingVocab({
         vocab_id: vocab.id,
         user_id: user.id,
@@ -56,7 +58,7 @@ export default function USE_manageVocabModal(props: ManageVocabModal_PROPS) {
     }
   }
   async function CREATE_vocab() {
-    if (!IS_creatingVocab) {
+    if (!IS_updatingVocab && !IS_creatingVocab && !IS_deleting && vocab) {
       await CREATE_newVocab({
         user_id: user.id,
         list_id: modal_LIST.id,
@@ -64,6 +66,14 @@ export default function USE_manageVocabModal(props: ManageVocabModal_PROPS) {
         image: modal_IMG,
         description: modal_DESC,
         translations: modal_TRs,
+        toggleFn: TOGGLE_modal,
+      });
+    }
+  }
+  async function DELETE_vocab() {
+    if (!IS_updatingVocab && !IS_creatingVocab && !IS_deleting && vocab) {
+      await DELETE_existingVocab({
+        vocab_id: vocab.id,
         toggleFn: TOGGLE_modal,
       });
     }
@@ -123,8 +133,10 @@ export default function USE_manageVocabModal(props: ManageVocabModal_PROPS) {
     SET_modalDiff,
     CREATE_vocab,
     UPDATE_vocab,
+    DELETE_vocab,
     IS_creatingVocab,
     IS_updatingVocab,
+    IS_deleting,
     CLEAR_modal,
     POPULATE_modal,
     REMOVE_lang,

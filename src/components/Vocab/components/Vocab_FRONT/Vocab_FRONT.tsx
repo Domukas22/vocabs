@@ -7,6 +7,7 @@ import RENDER_textWithHighlights from "@/src/components/RENDER_textWithHighlight
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
 import { DisplaySettings_MODEL, Vocab_MODEL } from "@/src/db/models";
+import i18next from "i18next";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Image, Pressable, StyleSheet } from "react-native";
@@ -31,19 +32,15 @@ export default function Vocab_FRONT({
   listName,
   dummy = false,
 }: VocabFront_PROPS) {
-  const {
-    SHOW_image,
-    SHOW_listName,
-    SHOW_description,
-    SHOW_flags,
-    SHOW_difficulty,
-  } = displaySettings;
+  const { SHOW_image, SHOW_description, SHOW_flags, SHOW_difficulty } =
+    displaySettings;
 
   const lang_IDs = useMemo(
     () => vocab?.translations?.map((tr) => tr.lang_id) || [],
     []
   );
   const { t } = useTranslation();
+  const appLang = useMemo(() => i18next.language, []);
 
   return (
     <View>
@@ -80,24 +77,19 @@ export default function Vocab_FRONT({
                 <RENDER_textWithHighlights
                   text={vocab?.translations?.[0].text}
                   highlights={vocab?.translations?.[0].highlights}
-                  difficulty={vocab.difficulty}
+                  modal_DIFF={vocab.difficulty}
                 />
               )}
             {dummy && (
               <RENDER_textWithHighlights
                 text={t("vocabDummy.translation")}
-                highlights={[14, 15, 16, 17, 18, 19, 20]}
-                difficulty={3}
+                highlights={
+                  appLang === "en"
+                    ? [14, 15, 16, 17, 18, 19, 20]
+                    : [15, 16, 17, 18]
+                }
+                modal_DIFF={3}
               />
-            )}
-
-            {!dummy && SHOW_listName && listName && (
-              <Styled_TEXT type="label_small">{listName}</Styled_TEXT>
-            )}
-            {dummy && SHOW_listName && (
-              <Styled_TEXT type="label_small">
-                {t("vocabDummy.listName")}
-              </Styled_TEXT>
             )}
 
             {!dummy && SHOW_description && vocab?.description && (

@@ -36,7 +36,9 @@
     "save": "Speichern",
     "editVocab": "Bearbeiten",
     "close": "Schließen",
-    "confirmLogout": "Ja, ausloggen"
+    "confirmLogout": "Ja, ausloggen",
+    "deleteVocab": "Vokabel löschen",
+    "confirmVocabDelete": "Ja, löschen"
   },
   "pages": {
     "about": {
@@ -117,7 +119,9 @@
     "chosenLangs": "Ausgewählte Sprachen",
     "uploadImage": "Bild (optional)",
     "description": "Beschreibung (optional)",
-    "chosenList": "Ausgewählte Liste"
+    "chosenList": "Ausgewählte Liste",
+    "youDontHaveAnyLists": "Du hast keine Listen",
+    "noListsFound": "Keine Listen gefunden"
   },
   "modal": {
     "displaySettings": {
@@ -144,6 +148,9 @@
     },
     "logoutConfirmation": {
       "header": "Ausloggen?"
+    },
+    "deleteVocabConfirmation": {
+      "header": "Vokabel löschen?"
     }
   },
   "difficulty": {

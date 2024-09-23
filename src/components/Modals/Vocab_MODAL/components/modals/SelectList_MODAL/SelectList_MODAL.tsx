@@ -23,6 +23,7 @@ import { FETCH_lists } from "@/src/db/lists/fetch";
 import SUBSCRIBE_toLists from "@/src/db/lists/SUBSCRIBE_toLists";
 import { supabase } from "@/src/lib/supabase";
 import { useTranslation } from "react-i18next";
+import CreateList_MODAL from "@/src/components/Modals/CreateList_MODAL";
 
 interface SelectListModal_PROPS {
   open: boolean;
@@ -154,33 +155,10 @@ export default function SelectList_MODAL(props: SelectListModal_PROPS) {
           }
         />
       </SafeAreaView>
-      <Simple_MODAL
-        {...{
-          title: "Create a list",
-
-          open: SHOW_createListModal,
-          toggle: TOGGLE_createListModal,
-          btnLeft: (
-            <Btn text="Cancel" onPress={TOGGLE_createListModal} type="simple" />
-          ),
-          btnRight: (
-            <Btn
-              text="Create list"
-              onPress={() => {}}
-              type="action"
-              style={{ flex: 1 }}
-            />
-          ),
-        }}
-      >
-        <Styled_TEXT type="label">How will the new list be called?</Styled_TEXT>
-        <StyledText_INPUT
-          value={newListName}
-          SET_value={SET_newListName}
-          placeholder="F.e. German school vocabs..."
-        />
-        <View style={{ flexDirection: "row", gap: 8 }}></View>
-      </Simple_MODAL>
+      <CreateList_MODAL
+        open={SHOW_createListModal}
+        toggle={TOGGLE_createListModal}
+      />
     </Modal>
   );
 }
