@@ -14,6 +14,7 @@ import { ICON_difficultyDot, ICON_flag, ICON_X } from "../../icons/icons";
 import { GET_langFlagUrl } from "@/src/constants/globalVars";
 import EDIT_vocabDifficulty from "@/src/db/vocabs/EDIT_vocabDifficulty";
 import USE_editVocabDifficulty from "@/src/db/vocabs/EDIT_vocabDifficulty";
+import { useTranslation } from "react-i18next";
 
 interface VocabBack_PROPS {
   vocab: Vocab_MODEL;
@@ -32,6 +33,8 @@ export default function Vocab_BACK({
   const { EDIT_color, LOADING_colorEdit } = USE_editVocabDifficulty(() =>
     TOGGLE_difficultyEdits()
   );
+
+  const { t } = useTranslation();
 
   function HANDLE_editDifficulty(newDifficulty: 1 | 2 | 3) {
     if (!LOADING_colorEdit.loading && vocab.difficulty !== newDifficulty) {
@@ -80,11 +83,11 @@ export default function Vocab_BACK({
               onPress={() =>
                 HANDLE_vocabModal({ vocab, translations: vocab.translations })
               }
-              text="Edit vocab"
+              text={t("btn.editVocab")}
               text_STYLES={{ textAlign: "center" }}
             />
 
-            <Btn type="simple" onPress={TOGGLE_vocab} text="Close" />
+            <Btn type="simple" onPress={TOGGLE_vocab} text={t("btn.close")} />
 
             <Btn
               type="simple"

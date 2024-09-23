@@ -19,17 +19,32 @@ export async function FETCH_lists() {
   }
 }
 
-export async function FETCH_listsWithPopulatedVocabs() {
+export async function FETCH_listsWithPopulatedVocabs({
+  user_id,
+  search,
+}: {
+  user_id: string;
+  search?: string;
+}) {
   try {
-    const { data, error } = await supabase.from("lists").select("*").select(`
-      *,
-      vocabs(*)
-    `);
+    // Build the query for filtering by user_id and optionally searching by name
+    let query = supabase
+      .from("lists")
+      .select("*, vocabs(*)") // Select lists with populated vocabs
+      .eq("user_id", user_id); // Filter lists by user_id
+
+    // Apply search filter if search term is provided
+    if (search) {
+      query = query.or(`name.ilike.%${search}%`);
+    }
+
+    const { data, error } = await query;
 
     if (error) {
       console.log("🔴 Error fetching user lists 🔴 : ", error);
       return { success: false, msg: "🔴 Error fetching user lists 🔴" };
     }
+
     return { success: true, data };
   } catch (error) {
     console.log("🔴 Error fetching user lists 🔴 : ", error);

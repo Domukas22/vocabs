@@ -21,6 +21,8 @@ import { Alert, ScrollView, Text, View } from "react-native";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import { supabase } from "@/src/lib/supabase";
 import { useTranslation } from "react-i18next";
+import LogoutConfirmation_MODAL from "@/src/components/Modals/LogoutConfirmation_MODAL/LogoutConfirmation_MODAL";
+import { USE_toggle } from "@/src/hooks/USE_toggle";
 
 export default function General_PAGE() {
   const { t } = useTranslation();
@@ -35,6 +37,9 @@ export default function General_PAGE() {
       SET_auth(null);
     }
   };
+
+  const [IS_logoutModalOpen, TOGGLE_logoutModal] = USE_toggle();
+
   return (
     <Page_WRAP>
       <Header title={t("page.general.header")} big={true} />
@@ -144,10 +149,15 @@ export default function General_PAGE() {
           <Btn
             text={t("page.general.btn.logout")}
             type="delete"
-            onPress={lougout}
+            onPress={TOGGLE_logoutModal}
           />
         </Block>
       </ScrollView>
+      <LogoutConfirmation_MODAL
+        open={IS_logoutModalOpen}
+        TOGGLE_open={TOGGLE_logoutModal}
+        logout={lougout}
+      />
     </Page_WRAP>
   );
 }

@@ -37,7 +37,7 @@ export default function SingleList_PAGE() {
   const { selected_LIST } = USE_selectedList();
   const [loading, SET_loading] = useState(false);
   const [SHOW_displaySettings, TOGGLE_displaySettings] = USE_toggle(false);
-  const [SHOW_vocabModal, TOGGLE_vocabModal] = USE_toggle(true);
+  const [SHOW_vocabModal, TOGGLE_vocabModal] = USE_toggle(false);
 
   const [displaySettings, SET_displaySettings] =
     useState<DisplaySettings_MODEL>({

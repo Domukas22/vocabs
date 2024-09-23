@@ -26,6 +26,8 @@ import List_SKELETONS from "@/src/components/Skeletons/List_SKELETONS";
 import SUBSCRIBE_toVocabs from "@/src/db/vocabs/SUBSCRIBE_toVocabs";
 import SUBSCRIBE_toVocabsForLists from "@/src/db/lists/SUBSCRIBE_toVocabsForLists";
 import { useTranslation } from "react-i18next";
+import Subnav from "@/src/components/Subnav/Subnav";
+import SearchBar from "@/src/components/SearchBar/SearchBar";
 
 export default function MyLists_PAGE() {
   const { t } = useTranslation();
@@ -33,11 +35,17 @@ export default function MyLists_PAGE() {
   const { SET_selectedList } = USE_selectedList();
   const [SHOW_createListModal, TOGGLE_createListModal] = USE_toggle(false);
   const [loading, SET_loading] = useState(false);
+  const { user } = USE_auth();
+
+  const [search, SET_search] = useState("");
 
   const [lists, SET_lists] = useState<List_MODEL[]>([]);
   const GET_lists = async () => {
     SET_loading(true);
-    const res = await FETCH_listsWithPopulatedVocabs();
+    const res = await FETCH_listsWithPopulatedVocabs({
+      user_id: user.id,
+      search,
+    });
     SET_lists([...(res?.data || [])]);
     SET_loading(false);
   };
@@ -51,7 +59,7 @@ export default function MyLists_PAGE() {
       supabase.removeChannel(subscription);
       supabase.removeChannel(vocabsSubscription);
     };
-  }, []);
+  }, [search]);
 
   return (
     <Page_WRAP>
@@ -68,6 +76,9 @@ export default function MyLists_PAGE() {
           />
         }
       />
+      <Subnav>
+        <SearchBar value={search} SET_value={SET_search} />
+      </Subnav>
 
       {loading ? <List_SKELETONS /> : null}
       {!loading ? (

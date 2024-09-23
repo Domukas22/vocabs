@@ -24,6 +24,8 @@ import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import { supabase } from "@/src/lib/supabase";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
+import LogoutConfirmation_MODAL from "@/src/components/Modals/LogoutConfirmation_MODAL/LogoutConfirmation_MODAL";
+import { USE_toggle } from "@/src/hooks/USE_toggle";
 
 export default function Settings_PAGE() {
   const { user } = USE_auth();

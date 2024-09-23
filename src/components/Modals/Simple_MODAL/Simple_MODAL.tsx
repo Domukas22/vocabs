@@ -14,7 +14,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { BlurView } from "expo-blur";
 
 interface SimpleModal_PROPS {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   title?: string;
   open: boolean;
   toggle: () => void;
@@ -79,7 +79,7 @@ export default function Simple_MODAL(props: SimpleModal_PROPS) {
                   style={{ borderRadius: 100 }}
                 />
               </View>
-              <View style={s.content}>{children}</View>
+              {children && <View style={s.content}>{children}</View>}
               <View style={s.footer}>
                 {!btnLeft && !btnRight && (
                   <Styled_TEXT type="label_small">

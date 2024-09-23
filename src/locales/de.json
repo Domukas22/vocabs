@@ -33,7 +33,10 @@
     "updateButtonAction": "Vokabel speichern",
     "confirmSelection": "Auswahl bestätigen",
     "saveTranslation": "Übersetzung speichern",
-    "save": "Speichern"
+    "save": "Speichern",
+    "editVocab": "Bearbeiten",
+    "close": "Schließen",
+    "confirmLogout": "Ja, ausloggen"
   },
   "pages": {
     "about": {
@@ -138,6 +141,9 @@
     },
     "editHighlights": {
       "header": "Markierungen bearbeiten"
+    },
+    "logoutConfirmation": {
+      "header": "Ausloggen?"
     }
   },
   "difficulty": {

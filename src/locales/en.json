@@ -30,7 +30,10 @@
     "updateButtonAction": "Save edits",
     "confirmSelection": "Confirm selection",
     "saveTranslation": "Save translation",
-    "save": "Save"
+    "save": "Save",
+    "editVocab": "Edit vocab",
+    "close": "Close",
+    "confirmLogout": "Yes, logout"
   },
   "pages": {
     "about": {
@@ -135,6 +138,9 @@
     },
     "editHighlights": {
       "header": "Edit highlights"
+    },
+    "logoutConfirmation": {
+      "header": "Log out?"
     }
   },
   "difficulty": {

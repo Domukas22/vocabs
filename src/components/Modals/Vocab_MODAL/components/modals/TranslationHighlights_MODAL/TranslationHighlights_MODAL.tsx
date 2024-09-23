@@ -89,7 +89,6 @@ export default function TrHighlights_MODAL({
       <SafeAreaView
         style={{
           backgroundColor: MyColors.fill_bg,
-
           flex: 1,
         }}
       >
