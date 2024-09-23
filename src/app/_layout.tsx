@@ -43,6 +43,7 @@ function Main_LAYOUT() {
         if (session) {
           SET_auth(session?.user);
           GET_userData(session?.user);
+          // router.push("/(main)/vocabs");
           router.push("/(main)/vocabs");
         } else {
           SET_auth(null);

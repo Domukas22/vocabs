@@ -9,6 +9,7 @@ import { Styled_TEXT } from "../Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
 import { ICON_difficultyDot } from "../icons/icons";
 import { List_MODEL, Vocab_MODEL } from "@/src/db/lists/models";
+import { useTranslation } from "react-i18next";
 
 export default function List_BTN({
   list,
@@ -18,6 +19,7 @@ export default function List_BTN({
   list: List_MODEL;
   onPress: () => void;
 }) {
+  const { t } = useTranslation();
   const { name } = list;
 
   const difficulties = list.vocabs?.reduce(
@@ -46,8 +48,8 @@ export default function List_BTN({
       </Styled_TEXT>
       <Styled_TEXT type="label_small" style={{ textAlign: "left" }}>
         {list.vocabs && list.vocabs?.length > 0
-          ? `${list.vocabs.length} vocabs`
-          : "Empty list"}
+          ? `${list.vocabs.length} ${t("other.vocabs")}`
+          : t("other.emptyList")}
       </Styled_TEXT>
       <View
         style={{ flexDirection: "row", gap: 8, justifyContent: "flex-end" }}

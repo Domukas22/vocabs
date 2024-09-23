@@ -7,7 +7,13 @@ import Btn from "../../Btn/Btn";
 import Header from "@/src/components/Header/Header";
 import { ICON_X } from "@/src/components/icons/icons";
 import { MyColors } from "@/src/constants/MyColors";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useTransition,
+} from "react";
 import { Modal, SafeAreaView } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import SelectList_MODAL from "./components/modals/SelectList_MODAL/SelectList_MODAL";
@@ -32,6 +38,7 @@ import ChosenLangs_INPUTS from "./components/inputs/ChosenLangs_INPUTS";
 import USE_modalToggles from "./hooks/USE_modalToggles";
 import GET_handledLangs from "./helpers/SELECT_languages";
 import GET_defaultTranslations from "./helpers/GET_defaultTranslations";
+import { useTranslation } from "react-i18next";
 
 interface ManageVocabModal_PROPS {
   open: boolean;
@@ -40,10 +47,11 @@ interface ManageVocabModal_PROPS {
   selected_LIST: List_MODEL;
 }
 
-export default function ManageVocab_MODAL(props: ManageVocabModal_PROPS) {
+export default function Vocab_MODAL(props: ManageVocabModal_PROPS) {
   const { open, TOGGLE_modal: TOGGLE_vocabModal, vocab, selected_LIST } = props;
   const { languages } = USE_langs();
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles();
+  const { t } = useTranslation();
 
   const {
     modal_TRs,
@@ -86,7 +94,9 @@ export default function ManageVocab_MODAL(props: ManageVocabModal_PROPS) {
         }}
       >
         <Header
-          title={vocab ? "Edit vocab" : "Create a new vocab"}
+          title={
+            vocab ? t("modal.vocab.headerEdit") : t("modal.vocab.headerCreate")
+          }
           big={true}
           btnRight={
             <Btn
@@ -130,8 +140,8 @@ export default function ManageVocab_MODAL(props: ManageVocabModal_PROPS) {
             <ManageVocab_FOOTER
               onCancelPress={TOGGLE_vocabModal}
               onActionPress={CREATE_vocab}
+              actionBtnText={t("btn.createButtonAction")}
               loading={IS_creatingVocab}
-              btnText={"Create vocab"}
             />
           )}
         </KeyboardAwareScrollView>
@@ -141,8 +151,8 @@ export default function ManageVocab_MODAL(props: ManageVocabModal_PROPS) {
           <ManageVocab_FOOTER
             onCancelPress={TOGGLE_vocabModal}
             loading={IS_updatingVocab}
+            actionBtnText={t("btn.updateButtonAction")}
             onActionPress={UPDATE_vocab}
-            btnText={"Save vocab"}
           />
         )}
 

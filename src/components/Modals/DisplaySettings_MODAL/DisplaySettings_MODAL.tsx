@@ -19,6 +19,7 @@ import Settings_TOGGLE from "../../Settings_TOGGLE/Settings_TOGGLE";
 import Vocab_FRONT from "../../Vocab/components/Vocab_FRONT/Vocab_FRONT";
 import { DisplaySettings_MODEL } from "@/src/db/models";
 import Label from "../../Label/Label";
+import { useTranslation } from "react-i18next";
 
 interface DisplaySettingsModal_PROPS {
   displaySettings: DisplaySettings_MODEL;
@@ -35,6 +36,8 @@ export default function DisplaySettings_MODAL({
   displaySettings,
   SET_displaySettings,
 }: DisplaySettingsModal_PROPS) {
+  const { t } = useTranslation();
+
   function toggle(
     propName: "image" | "listName" | "desc" | "flags" | "difficulty"
   ) {
@@ -95,7 +98,7 @@ export default function DisplaySettings_MODAL({
         }}
       >
         <Header
-          title="Display settings"
+          title={t("modal.displaySettings.header")}
           big={true}
           btnRight={
             <Btn
@@ -109,7 +112,7 @@ export default function DisplaySettings_MODAL({
 
         <ScrollView style={{ flex: 1 }}>
           <Block row={false}>
-            <Label>Sorting</Label>
+            <Label>{t("modal.displaySettings.label.sorting")}</Label>
             {/* <Btn
               text="Shuffle vocabs"
               iconRight={
@@ -125,7 +128,7 @@ export default function DisplaySettings_MODAL({
               text_STYLES={{ flex: 1 }}
             /> */}
             <Btn
-              text="By difficulty"
+              text={t("btn.sortByDifficulty")}
               iconRight={
                 <ICON_difficultyDot
                   big={true}
@@ -142,7 +145,7 @@ export default function DisplaySettings_MODAL({
               text_STYLES={{ flex: 1 }}
             />
             <Btn
-              text="By date added"
+              text={t("btn.sortByDate")}
               iconRight={
                 <ICON_calendar
                   color={
@@ -173,8 +176,8 @@ export default function DisplaySettings_MODAL({
                 <Btn
                   text={
                     displaySettings?.sorting === "difficulty"
-                      ? "Easy  -->  Hard"
-                      : "New  -->  Old"
+                      ? t("btn.easyToHard")
+                      : t("btn.newToOld")
                   }
                   onPress={() =>
                     SET_displaySettings((p) => ({
@@ -192,8 +195,8 @@ export default function DisplaySettings_MODAL({
                 <Btn
                   text={
                     displaySettings?.sorting === "difficulty"
-                      ? "Hard  -->  Easy"
-                      : "Old  -->  New"
+                      ? t("btn.hardToEasy")
+                      : t("btn.oldToNew")
                   }
                   onPress={() =>
                     SET_displaySettings((p) => ({
@@ -212,9 +215,9 @@ export default function DisplaySettings_MODAL({
             )}
           </Block>
           <Block row={false}>
-            <Label>Filter by difficulty</Label>
+            <Label>{t("label.filterByDifficulty")}</Label>
             <Btn
-              text="Easy"
+              text={t("difficulty.easy")}
               iconRight={
                 displaySettings?.difficultyFilters.includes(1) ? (
                   <ICON_X big={true} rotate={true} color="difficulty_1" />
@@ -232,7 +235,7 @@ export default function DisplaySettings_MODAL({
               text_STYLES={{ flex: 1 }}
             />
             <Btn
-              text="Medium"
+              text={t("difficulty.medium")}
               iconRight={
                 displaySettings?.difficultyFilters.includes(2) ? (
                   <ICON_X big={true} rotate={true} color="difficulty_2" />
@@ -250,7 +253,7 @@ export default function DisplaySettings_MODAL({
               text_STYLES={{ flex: 1 }}
             />
             <Btn
-              text="Hard"
+              text={t("difficulty.hard")}
               iconRight={
                 displaySettings?.difficultyFilters.includes(3) ? (
                   <ICON_X big={true} rotate={true} color="difficulty_3" />
@@ -270,7 +273,7 @@ export default function DisplaySettings_MODAL({
           </Block>
 
           <Block>
-            <Label>Vocab preview</Label>
+            <Label>{t("label.vocabPreview")}</Label>
             <View style={{ gap: 12 }}>
               <View
                 style={{
@@ -295,35 +298,35 @@ export default function DisplaySettings_MODAL({
                 }}
               >
                 <Settings_TOGGLE
-                  text="Show image"
+                  text={t("toggle.showImage")}
                   active={displaySettings?.SHOW_image}
                   onPress={() => {
                     toggle("image");
                   }}
                 />
                 <Settings_TOGGLE
-                  text="Show list name"
+                  text={t("toggle.showListName")}
                   active={displaySettings?.SHOW_listName}
                   onPress={() => {
                     toggle("listName");
                   }}
                 />
                 <Settings_TOGGLE
-                  text="Show description"
+                  text={t("toggle.showDescription")}
                   active={displaySettings?.SHOW_description}
                   onPress={() => {
                     toggle("desc");
                   }}
                 />
                 <Settings_TOGGLE
-                  text="Show flags"
+                  text={t("toggle.showFlags")}
                   active={displaySettings?.SHOW_flags}
                   onPress={() => {
                     toggle("flags");
                   }}
                 />
                 <Settings_TOGGLE
-                  text="Show difficulty"
+                  text={t("toggle.showDifficulty")}
                   active={displaySettings?.SHOW_difficulty}
                   onPress={() => {
                     toggle("difficulty");
@@ -338,7 +341,7 @@ export default function DisplaySettings_MODAL({
           btnLeft={
             <Btn
               type="simple"
-              text="Done"
+              text={t("btn.done")}
               onPress={TOGGLE_open}
               style={{ flex: 1 }}
               // text_STYLES={{ color: MyColors.text_white }}

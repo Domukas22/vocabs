@@ -13,6 +13,8 @@ import { USE_langs } from "@/src/context/Langs_CONTEXT";
 import DELETE_overflowHighlights from "../../../helpers/DELETE_overflowHighlights";
 import { Language_MODEL, TranslationCreation_PROPS } from "@/src/db/models";
 import Label from "../../../../../Label/Label";
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 interface TrTextModal_PROPS {
   open: boolean;
@@ -31,6 +33,8 @@ export default function TrText_MODAL({
   modal_TRs,
   SET_modalTRs,
 }: TrTextModal_PROPS) {
+  const appLang = useMemo(() => i18next.language, []);
+  const { t } = useTranslation();
   const [_text, SET_text] = useState("");
   const [_lang, SET_lang] = useState<Language_MODEL | undefined>(null);
 
@@ -81,14 +85,14 @@ export default function TrText_MODAL({
   return (
     <Simple_MODAL
       {...{
-        title: "Edit modal_TRs",
+        title: t("modal.editTr.header"),
         open: open,
         toggle: () => {
           SET_text(""), TOGGLE_open();
         },
         btnLeft: (
           <Btn
-            text="Cancel"
+            text={t("btn.cancel")}
             onPress={() => {
               SET_text(""), TOGGLE_open();
             }}
@@ -97,7 +101,7 @@ export default function TrText_MODAL({
         ),
         btnRight: (
           <Btn
-            text="Save translation"
+            text={t("btn.save")}
             onPress={SUBMIT_tr}
             type="action"
             style={{ flex: 1 }}
@@ -105,22 +109,23 @@ export default function TrText_MODAL({
         ),
       }}
     >
-      <Block
-        labelIcon={_lang?.id ? <ICON_flag lang={_lang.id} /> : null}
-        label={`${_lang && _lang.id} translation *`}
-        styles={{ padding: 20 }}
-      >
-        <Label icon={_lang?.id ? <ICON_flag lang={_lang.id} /> : null}>
-          {`${_lang && _lang.lang_in_en} translation *`}
-        </Label>
-        <StyledText_INPUT
-          multiline={true}
-          value={_text}
-          SET_value={SET_text}
-          placeholder="Your vocab..."
-          _ref={inputREF}
-        />
-      </Block>
+      {appLang === "en" && (
+        <Label icon={<ICON_flag lang={_lang?.id} />}>{`${_lang?.lang_in_en} ${t(
+          "word.translation"
+        )} *`}</Label>
+      )}
+      {appLang === "de" && (
+        <Label icon={<ICON_flag lang={_lang?.id} />}>{`${t(
+          "word.translation"
+        )} auf ${_lang?.lang_in_de}`}</Label>
+      )}
+      <StyledText_INPUT
+        multiline={true}
+        value={_text}
+        SET_value={SET_text}
+        placeholder={t("placeholder.translation")}
+        _ref={inputREF}
+      />
     </Simple_MODAL>
   );
 }

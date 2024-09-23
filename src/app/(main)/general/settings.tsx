@@ -11,7 +11,7 @@ import {
   ICON_flag,
 } from "@/src/components/icons/icons";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 
 import { router } from "expo-router";
@@ -26,14 +26,13 @@ import { useTranslation } from "react-i18next";
 import i18next from "i18next";
 
 export default function Settings_PAGE() {
-  const [appLang, SET_appLang] = useState("en");
   const { user } = USE_auth();
   const { t } = useTranslation();
 
   const changeLanguage = (lng: string) => {
     i18next.changeLanguage(lng);
   };
-  const currentAppLanguage = i18next.language;
+  const appLang = useMemo(() => i18next.language, []);
 
   return (
     <Page_WRAP>
@@ -74,7 +73,7 @@ export default function Settings_PAGE() {
             iconRight={<ICON_flag lang="en" />}
             style={{ flex: 1 }}
             text_STYLES={{ flex: 1 }}
-            type={currentAppLanguage === "en" ? "active" : "simple"}
+            type={appLang === "en" ? "active" : "simple"}
             onPress={() => changeLanguage("en")}
           />
           <Btn
@@ -82,7 +81,7 @@ export default function Settings_PAGE() {
             iconRight={<ICON_flag lang="de" />}
             style={{ flex: 1 }}
             text_STYLES={{ flex: 1 }}
-            type={currentAppLanguage === "de" ? "active" : "simple"}
+            type={appLang === "de" ? "active" : "simple"}
             onPress={() => changeLanguage("de")}
           />
         </View>

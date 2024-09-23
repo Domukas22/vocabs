@@ -20,8 +20,10 @@ import { router } from "expo-router";
 import { Alert, ScrollView, Text, View } from "react-native";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import { supabase } from "@/src/lib/supabase";
+import { useTranslation } from "react-i18next";
 
 export default function General_PAGE() {
+  const { t } = useTranslation();
   const vocabCount = 89;
   const { SET_auth } = USE_auth();
 
@@ -35,7 +37,7 @@ export default function General_PAGE() {
   };
   return (
     <Page_WRAP>
-      <Header title="General" big={true} />
+      <Header title={t("page.general.header")} big={true} />
 
       <ScrollView>
         <Block>
@@ -87,11 +89,11 @@ export default function General_PAGE() {
             </View>
             <View style={{ flexDirection: "row", gap: 8 }}>
               <Btn
-                text="Learn more"
+                text={t("page.general.btn.learnMore")}
                 onPress={() => router.push("/(main)/general/premium")}
               />
               <Btn
-                text="Get premium"
+                text={t("page.general.btn.getPremium")}
                 type="action"
                 style={{ flex: 1 }}
                 onPress={() => {}}
@@ -103,7 +105,7 @@ export default function General_PAGE() {
         <Block>
           <Btn
             iconLeft={<ICON_settings />}
-            text="Settings"
+            text={t("page.general.btn.settings")}
             iconRight={<ICON_arrow direction="right" />}
             onPress={() => router.push("/(main)/general/settings")}
             text_STYLES={{ flex: 1, marginLeft: 4 }}
@@ -115,30 +117,35 @@ export default function General_PAGE() {
             onPress={() => router.push("/(main)/general/premium")}
             text_STYLES={{ flex: 1, marginLeft: 4 }}
           />
-          <Btn
-            iconLeft={<ICON_privacyPolicy />}
-            text="Privacy policy"
-            iconRight={<ICON_arrow direction="right" />}
-            onPress={() => router.push("/(main)/general/privacy")}
-            text_STYLES={{ flex: 1, marginLeft: 4 }}
-          />
+
           <Btn
             iconLeft={<ICON_contact />}
-            text="Contact us"
+            text={t("page.general.btn.contact")}
             iconRight={<ICON_arrow direction="right" />}
             onPress={() => router.push("/(main)/general/contact")}
             text_STYLES={{ flex: 1, marginLeft: 4 }}
           />
           <Btn
             iconLeft={<ICON_about />}
-            text="About us"
+            text={t("page.general.btn.about")}
             iconRight={<ICON_arrow direction="right" />}
             onPress={() => router.push("/(main)/general/about")}
             text_STYLES={{ flex: 1, marginLeft: 4 }}
           />
+          <Btn
+            iconLeft={<ICON_privacyPolicy />}
+            text={t("page.general.btn.privacy")}
+            iconRight={<ICON_arrow direction="right" />}
+            onPress={() => router.push("/(main)/general/privacy")}
+            text_STYLES={{ flex: 1, marginLeft: 4 }}
+          />
         </Block>
         <Block styles={{ gap: 12 }}>
-          <Btn text="Log out" type="delete" onPress={lougout} />
+          <Btn
+            text={t("page.general.btn.logout")}
+            type="delete"
+            onPress={lougout}
+          />
         </Block>
       </ScrollView>
     </Page_WRAP>

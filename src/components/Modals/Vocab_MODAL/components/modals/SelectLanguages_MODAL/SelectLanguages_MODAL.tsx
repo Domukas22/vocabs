@@ -11,7 +11,7 @@ import SearchBar from "@/src/components/SearchBar/SearchBar";
 import Subnav from "@/src/components/Subnav/Subnav";
 
 import { MyColors } from "@/src/constants/MyColors";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Modal,
   SafeAreaView,
@@ -25,6 +25,8 @@ import languages from "@/src/constants/languages";
 import Block from "@/src/components/Block/Block";
 import { Language_MODEL } from "@/src/db/models";
 import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 interface SelectLanguagesModal_PROPS {
   open: boolean;
@@ -37,6 +39,7 @@ interface SelectLanguagesModal_PROPS {
 export default function SelectLanguages_MODAL(
   props: SelectLanguagesModal_PROPS
 ) {
+  const { t } = useTranslation();
   const { open, TOGGLE_open, activeLangIDs, languages, HANLDE_languages } =
     props;
   const [search, SET_search] = useState("");
@@ -81,6 +84,8 @@ export default function SelectLanguages_MODAL(
     SET_modalLangs(languages.filter((l) => activeLangIDs.includes(l.id)));
   }, [open]);
 
+  const appLang = useMemo(() => i18next.language, []);
+
   return (
     <Modal animationType="slide" transparent={true} visible={open} style={{}}>
       <SafeAreaView
@@ -91,7 +96,7 @@ export default function SelectLanguages_MODAL(
         }}
       >
         <Header
-          title="Select languages"
+          title={t("modal.selectLanguages.header")}
           big={true}
           btnRight={
             <Btn
@@ -129,7 +134,7 @@ export default function SelectLanguages_MODAL(
                     big={true}
                   />
                 }
-                text={item.lang_in_en}
+                text={appLang === "en" ? item.lang_in_en : item.lang_in_de}
                 onPress={() => SELECT_lang(item)}
                 type={
                   modal_LANGS.some((l) => l.id === item.id)
@@ -170,14 +175,23 @@ export default function SelectLanguages_MODAL(
               ))}
             </ScrollView>
           }
-          btnLeft={<Btn text="Cancel" onPress={TOGGLE_open} />}
+          btnLeft={<Btn text={t("btn.cancel")} onPress={TOGGLE_open} />}
           btnRight={
-            <Btn
-              text={`Save ${modal_LANGS?.length} languages`}
-              onPress={submit}
-              type="action"
-              style={{ flex: 1 }}
-            />
+            appLang === "en" ? (
+              <Btn
+                text={`Select ${modal_LANGS?.length} languages`}
+                onPress={submit}
+                type="action"
+                style={{ flex: 1 }}
+              />
+            ) : (
+              <Btn
+                text={`${modal_LANGS?.length} Sprachen wählen`}
+                onPress={submit}
+                type="action"
+                style={{ flex: 1 }}
+              />
+            )
           }
         />
       </SafeAreaView>

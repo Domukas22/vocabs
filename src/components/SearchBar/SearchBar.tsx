@@ -6,6 +6,7 @@ import { MyColors } from "@/src/constants/MyColors";
 import { useState } from "react";
 import { Pressable, StyleSheet, TextInput, View } from "react-native";
 import { ICON_search, ICON_X } from "../icons/icons";
+import { useTranslation } from "react-i18next";
 
 interface SearchBarProps {
   value: string;
@@ -16,7 +17,7 @@ interface SearchBarProps {
 
 export default function SearchBar({ value, SET_value }: SearchBarProps) {
   const [isFocused, setIsFocused] = useState(false);
-
+  const { t } = useTranslation();
   return (
     <View style={s.wrapper}>
       <View style={s.leftIconWrapper}>
@@ -24,7 +25,7 @@ export default function SearchBar({ value, SET_value }: SearchBarProps) {
       </View>
       <TextInput
         style={s.textInput}
-        placeholder="Search..."
+        placeholder={t("other.searchPlaceholder")}
         placeholderTextColor={MyColors.text_white_06}
         value={value}
         onChangeText={SET_value}

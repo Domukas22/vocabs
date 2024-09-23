@@ -6,6 +6,8 @@
 import Block from "@/src/components/Block/Block";
 import Btn from "@/src/components/Btn/Btn";
 import Label from "@/src/components/Label/Label";
+import { useTransition } from "react";
+import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 
 interface DifficultyInputs_PROPS {
@@ -17,12 +19,13 @@ export default function Difficulty_INPUTS({
   modal_DIFF,
   SET_modalDiff,
 }: DifficultyInputs_PROPS) {
+  const { t } = useTranslation();
   return (
     <Block>
-      <Label>Vocab difficulty</Label>
+      <Label>{t("label.selectDifficulty")}</Label>
       <View style={{ flexDirection: "row", gap: 8, flex: 1 }}>
         <Btn
-          text="Easy"
+          text={t("btn.difficulty.easy")}
           onPress={() => {
             SET_modalDiff(1);
           }}
@@ -31,7 +34,7 @@ export default function Difficulty_INPUTS({
           text_STYLES={{ textAlign: "center" }}
         />
         <Btn
-          text="Medium"
+          text={t("btn.difficulty.medium")}
           onPress={() => {
             SET_modalDiff(2);
           }}
@@ -40,7 +43,7 @@ export default function Difficulty_INPUTS({
           text_STYLES={{ textAlign: "center" }}
         />
         <Btn
-          text="Hard"
+          text={t("btn.difficulty.hard")}
           onPress={() => {
             SET_modalDiff(3);
           }}

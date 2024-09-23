@@ -16,6 +16,8 @@ import Header from "../../../../../Header/Header";
 import Footer from "../../../../../Footer/Footer";
 import Label from "../../../../../Label/Label";
 import { Language_MODEL, TranslationCreation_PROPS } from "@/src/db/models";
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 interface TrHighlightsModal_PROPS {
   open: boolean;
@@ -39,6 +41,9 @@ export default function TrHighlights_MODAL({
   const [_highlights, SET_highlights] = useState([]);
   const [_lang, SET_lang] = useState<Language_MODEL | undefined>(undefined);
   const text = modal_TRs?.find((tr) => tr.lang_id === target_LANG?.id)?.text;
+
+  const { t } = useTranslation();
+  const appLang = useMemo(() => i18next.language, []);
 
   function SUBMIT_highlights() {
     console.log(_lang);
@@ -89,7 +94,7 @@ export default function TrHighlights_MODAL({
         }}
       >
         <Header
-          title="Highlight your vocab"
+          title={t("modal.editHighlights.header")}
           big={true}
           btnRight={
             <Btn
@@ -101,10 +106,16 @@ export default function TrHighlights_MODAL({
           }
         />
         <View style={{ flex: 1, padding: 16, gap: 8 }}>
-          <Label
-            icon={_lang ? <ICON_flag lang={_lang.id} /> : null}
-          >{`Select highlights ${_lang?.lang_in_en}`}</Label>
-          <Styled_TEXT>{text}</Styled_TEXT>
+          {appLang === "en" && (
+            <Label icon={<ICON_flag lang={_lang?.id} />}>{`${
+              _lang?.lang_in_en
+            } ${t("word.highlights")}`}</Label>
+          )}
+          {appLang === "de" && (
+            <Label icon={<ICON_flag lang={_lang?.id} />}>{`${t(
+              "word.highlights"
+            )} auf ${_lang?.lang_in_de}`}</Label>
+          )}
           <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
             {GET_highlightBtns({
               text,
@@ -116,10 +127,12 @@ export default function TrHighlights_MODAL({
         </View>
 
         <Footer
-          btnLeft={<Btn text="Cancel" onPress={TOGGLE_open} type="simple" />}
+          btnLeft={
+            <Btn text={t("btn.cancel")} onPress={TOGGLE_open} type="simple" />
+          }
           btnRight={
             <Btn
-              text="Save highlights"
+              text={t("btn.confirmSelection")}
               onPress={SUBMIT_highlights}
               type="action"
               style={{ flex: 1 }}

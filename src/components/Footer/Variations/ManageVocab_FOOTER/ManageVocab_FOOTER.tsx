@@ -5,26 +5,30 @@
 import Btn from "@/src/components/Btn/Btn";
 import Footer from "../../Footer";
 import { ActivityIndicator } from "react-native";
+import { useTranslation } from "react-i18next";
 
 interface ManageVocabFooter_PROPS {
   onCancelPress: () => void;
   onActionPress: () => void;
   loading: boolean;
-  btnText: string;
+  actionBtnText: string;
 }
 
 export default function ManageVocab_FOOTER({
   onCancelPress,
   onActionPress,
   loading,
-  btnText,
+  actionBtnText,
 }: ManageVocabFooter_PROPS) {
+  const { t } = useTranslation();
   return (
     <Footer
-      btnLeft={<Btn text="Cancel" onPress={onCancelPress} type="simple" />}
+      btnLeft={
+        <Btn text={t("btn.cancel")} onPress={onCancelPress} type="simple" />
+      }
       btnRight={
         <Btn
-          text={!loading ? btnText : ""}
+          text={!loading ? actionBtnText : ""}
           iconRight={loading ? <ActivityIndicator color={"black"} /> : null}
           onPress={() => {
             if (!loading) onActionPress();

@@ -18,8 +18,10 @@ import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
 import Label from "@/src/components/Label/Label";
+import { useTranslation } from "react-i18next";
 
 export default function Contact_PAGE() {
+  const { t } = useTranslation();
   const [message, SET_message] = useState("");
   const [name, SET_name] = useState("");
   const [email, SET_email] = useState("");
@@ -27,7 +29,7 @@ export default function Contact_PAGE() {
   return (
     <Page_WRAP>
       <Header
-        title={"Contact us"}
+        title={t("pages.contact.header")}
         btnLeft={
           <Btn
             type="seethrough"
@@ -47,33 +49,33 @@ export default function Contact_PAGE() {
       />
 
       <Block>
-        <Label>What's on your mind?</Label>
+        <Label>{t("pages.contact.label.message")}</Label>
         <StyledText_INPUT
           multiline={true}
           value={message}
           SET_value={SET_message}
-          placeholder="Enter your message here..."
+          placeholder={t("pages.contact.placeholder.message")}
         />
       </Block>
       <Block>
-        <Label>What is your name?</Label>
+        <Label>{t("pages.contact.label.name")}</Label>
         <StyledText_INPUT
           value={name}
           SET_value={SET_name}
-          placeholder="I'm Batman..."
+          placeholder={t("pages.contact.placeholder.name")}
         />
       </Block>
       <Block>
-        <Label>What E-mail can we reach you at?</Label>
+        <Label>{t("pages.contact.label.email")}</Label>
         <StyledText_INPUT
           value={email}
           SET_value={SET_email}
-          placeholder="email@gmail.com..."
+          placeholder={t("pages.contact.placeholder.email")}
         />
       </Block>
 
       <Block>
-        <Btn text="Send my message" type="action" />
+        <Btn text={t("pages.contact.btn")} type="action" />
       </Block>
       <View
         style={{
@@ -83,12 +85,14 @@ export default function Contact_PAGE() {
           borderBottomColor: MyColors.border_white_005,
         }}
       >
-        <Styled_TEXT type="text_18_bold">Your message will reach:</Styled_TEXT>
+        <Styled_TEXT type="text_18_bold">
+          {t("pages.contact.info_block.title")}
+        </Styled_TEXT>
         <Styled_TEXT type="text_18_light">Domas Sirbike</Styled_TEXT>
         <Styled_TEXT type="text_18_light">domassirbike@gmail.com</Styled_TEXT>
         <Link href={"/(main)/general/about"}>
           <Styled_TEXT style={{ color: MyColors.text_primary }}>
-            About me
+            {t("pages.contact.info_block.about_link")}
           </Styled_TEXT>
         </Link>
       </View>

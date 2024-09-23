@@ -8,12 +8,13 @@ import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
 import { DisplaySettings_MODEL, Vocab_MODEL } from "@/src/db/models";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { Image, Pressable, StyleSheet } from "react-native";
 import { View } from "react-native";
 
 interface VocabFront_PROPS {
   displaySettings: DisplaySettings_MODEL;
-  listName: string;
+  listName?: string;
   visible?: boolean;
   vocab?: Vocab_MODEL;
   onPress?: () => void;
@@ -42,6 +43,7 @@ export default function Vocab_FRONT({
     () => vocab?.translations?.map((tr) => tr.lang_id) || [],
     []
   );
+  const { t } = useTranslation();
 
   return (
     <View>
@@ -83,7 +85,7 @@ export default function Vocab_FRONT({
               )}
             {dummy && (
               <RENDER_textWithHighlights
-                text="Vocabs app is awesome"
+                text={t("vocabDummy.translation")}
                 highlights={[14, 15, 16, 17, 18, 19, 20]}
                 difficulty={3}
               />
@@ -93,14 +95,18 @@ export default function Vocab_FRONT({
               <Styled_TEXT type="label_small">{listName}</Styled_TEXT>
             )}
             {dummy && SHOW_listName && (
-              <Styled_TEXT type="label_small">Name of the list</Styled_TEXT>
+              <Styled_TEXT type="label_small">
+                {t("vocabDummy.listName")}
+              </Styled_TEXT>
             )}
 
             {!dummy && SHOW_description && vocab?.description && (
               <Styled_TEXT type="label_small">{vocab.description}</Styled_TEXT>
             )}
             {dummy && SHOW_description && (
-              <Styled_TEXT type="label_small">Vocab description</Styled_TEXT>
+              <Styled_TEXT type="label_small">
+                {t("vocabDummy.description")}
+              </Styled_TEXT>
             )}
 
             {!dummy &&

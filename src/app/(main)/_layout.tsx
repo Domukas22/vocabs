@@ -9,9 +9,12 @@ import {
 } from "@/src/components/icons/icons";
 import { MyColors } from "@/src/constants/MyColors";
 import { Tabs } from "expo-router";
+import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 
 export default function TabLayout() {
+  const { t } = useTranslation();
+
   return (
     <Tabs
       screenOptions={{
@@ -39,7 +42,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="vocabs"
         options={{
-          title: "Vocabs",
+          title: t("tabs.vocabs"),
 
           tabBarIcon: ({ focused }) => (
             <View>
@@ -51,7 +54,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="explore"
         options={{
-          title: "Explore",
+          title: t("tabs.explore"),
           tabBarIcon: ({ focused }) => (
             <ICON_search
               big={true}
@@ -64,7 +67,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="general"
         options={{
-          title: "General",
+          title: t("tabs.general"),
           tabBarIcon: ({ focused }) => (
             <ICON_general color={focused ? "primary" : "grey"} />
           ),

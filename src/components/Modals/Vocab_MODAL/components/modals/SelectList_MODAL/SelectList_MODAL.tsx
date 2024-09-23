@@ -22,6 +22,7 @@ import { List_MODEL } from "@/src/db/models";
 import { FETCH_lists } from "@/src/db/lists/fetch";
 import SUBSCRIBE_toLists from "@/src/db/lists/SUBSCRIBE_toLists";
 import { supabase } from "@/src/lib/supabase";
+import { useTranslation } from "react-i18next";
 
 interface SelectListModal_PROPS {
   open: boolean;
@@ -31,6 +32,7 @@ interface SelectListModal_PROPS {
 }
 
 export default function SelectList_MODAL(props: SelectListModal_PROPS) {
+  const { t } = useTranslation();
   const { open, TOGGLE_open, current_LIST, SET_modalList } = props;
 
   const [search, SET_search] = useState("");
@@ -85,7 +87,7 @@ export default function SelectList_MODAL(props: SelectListModal_PROPS) {
         }}
       >
         <Header
-          title="Select a list"
+          title={t("modal.selectList.header")}
           big={true}
           btnRight={
             <Btn
@@ -109,17 +111,10 @@ export default function SelectList_MODAL(props: SelectListModal_PROPS) {
                     list.name.toLowerCase().includes(search.toLowerCase())
                   )
             }
-            ListHeaderComponent={
-              <Styled_TEXT type="label" style={{ paddingBottom: 8 }}>
-                {search
-                  ? `5 results for '${search}'`
-                  : "Select a list for your vocab"}
-              </Styled_TEXT>
-            }
             ListFooterComponent={
               <Btn
                 iconLeft={<ICON_X color="primary" />}
-                text="Create a new list"
+                text={t("btn.createList")}
                 onPress={TOGGLE_createListModal}
                 type="seethrough_primary"
                 style={{ flex: 1 }}
@@ -146,10 +141,12 @@ export default function SelectList_MODAL(props: SelectListModal_PROPS) {
         )}
 
         <Footer
-          btnLeft={<Btn text="Cancel" onPress={TOGGLE_open} type="simple" />}
+          btnLeft={
+            <Btn text={t("btn.cancel")} onPress={TOGGLE_open} type="simple" />
+          }
           btnRight={
             <Btn
-              text="Select list"
+              text={t("btn.confirmSelection")}
               onPress={submit}
               type="action"
               style={{ flex: 1, marginTop: "auto" }}

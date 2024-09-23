@@ -16,12 +16,14 @@ import { View } from "react-native";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
+import { useTranslation } from "react-i18next";
 
 export default function About_PAGE() {
+  const { t } = useTranslation();
   return (
     <Page_WRAP>
       <Header
-        title={"About us"}
+        title={t("header.page_about")}
         btnLeft={
           <Btn
             type="seethrough"
@@ -53,30 +55,8 @@ export default function About_PAGE() {
             source={require("@/src/assets/images/Domas.jpg")}
             style={{ width: 240, height: 240, borderRadius: 300 }}
           />
-          <Styled_TEXT type="text_28_bold">👋 Hi, ich bin Domas</Styled_TEXT>
-        </View>
-        <View
-          style={{
-            padding: 16,
-            gap: 16,
-            borderBottomWidth: 1,
-            borderBottomColor: MyColors.border_white_005,
-          }}
-        >
-          <Styled_TEXT>
-            This is a paragarph This is a paragarph This is a paragarph This is
-            a paragarph This is a paragarph This is a paragarph This is a
-            paragarph
-          </Styled_TEXT>
-          <Styled_TEXT>
-            This is a paragarph This is a paragarph This is a paragarph This is
-            a paragarph This is a paragarph This is a paragarph This is a
-            paragarph
-          </Styled_TEXT>
-          <Styled_TEXT>
-            This is a paragarph This is a paragarph This is a paragarph This is
-            a paragarph This is a paragarph This is a paragarph This is a
-            paragarph
+          <Styled_TEXT type="text_28_bold">
+            {t("pages.about.title")}
           </Styled_TEXT>
         </View>
         <View
@@ -87,9 +67,23 @@ export default function About_PAGE() {
             borderBottomColor: MyColors.border_white_005,
           }}
         >
-          <Styled_TEXT type="text_22_bold">Want to chat?</Styled_TEXT>
+          <Styled_TEXT>{t("pages.about.paragraph_1")}</Styled_TEXT>
+          <Styled_TEXT>{t("pages.about.paragraph_2")}</Styled_TEXT>
+          <Styled_TEXT>{t("pages.about.paragraph_3")}</Styled_TEXT>
+        </View>
+        <View
+          style={{
+            padding: 16,
+            gap: 16,
+            borderBottomWidth: 1,
+            borderBottomColor: MyColors.border_white_005,
+          }}
+        >
+          <Styled_TEXT type="text_22_bold">
+            {t("pages.about.contactQuestion")}
+          </Styled_TEXT>
           <Btn
-            text="Contact me right now"
+            text={t("pages.about.contactBtn")}
             iconRight={<ICON_arrow direction="right" />}
             text_STYLES={{ flex: 1 }}
             onPress={() => router.push("/(main)/general/contact")}

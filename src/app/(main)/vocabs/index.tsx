@@ -87,7 +87,7 @@ export default function MyLists_PAGE() {
           keyExtractor={(item) => item.id}
           ListFooterComponent={
             <Btn
-              text="Create a new list"
+              text={t("btn.createList")}
               iconLeft={<ICON_X color="primary" />}
               type="seethrough_primary"
               onPress={TOGGLE_createListModal}

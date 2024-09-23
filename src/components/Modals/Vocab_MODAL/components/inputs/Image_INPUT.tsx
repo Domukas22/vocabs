@@ -7,6 +7,7 @@ import Btn from "@/src/components/Btn/Btn";
 import { ICON_image } from "@/src/components/icons/icons";
 import Label from "@/src/components/Label/Label";
 import { MyColors } from "@/src/constants/MyColors";
+import { useTranslation } from "react-i18next";
 
 interface ImageInput_PROPS {
   modal_IMG: string;
@@ -17,13 +18,14 @@ export default function Image_INPUT({
   modal_IMG,
   SET_modalImg,
 }: ImageInput_PROPS) {
+  const { t } = useTranslation();
   return (
     <Block row={false}>
-      <Label>Image (optional)</Label>
+      <Label>{t("label.uploadImage")}</Label>
 
       <Btn
         iconLeft={<ICON_image />}
-        text="Tap to upload image"
+        text={t("btn.uploadImage")}
         onPress={() => {}}
         type="seethrough"
         style={{

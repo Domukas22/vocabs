@@ -1,9 +1,165 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "header": {
-    "page_list": "My lists"
+    "page_list": "My lists",
+    "page_about": "About us"
   },
   "blockLabels": {
     "uiLang": "App language"
+  },
+  "btn": {
+    "createList": "Create a new list",
+    "cancel": "Cancel",
+    "create": "Create",
+    "sortByDifficulty": "By difficulty",
+    "sortByDate": "By date",
+    "easyToHard": "Easy --> Hard",
+    "newToOld": "New --> Old",
+    "hardToEasy": "Hard --> Easy",
+    "oldToNew": "Old --> New",
+    "done": "Done",
+    "difficulty": {
+      "easy": "Easy",
+      "medium": "Medium",
+      "hard": "Hard"
+    },
+    "selectLangs": "Select languages",
+    "editHighlights": "Edit highlights",
+    "uploadImage": "Tap to upload image",
+    "createButtonAction": "Create vocab",
+    "updateButtonAction": "Save edits",
+    "confirmSelection": "Confirm selection",
+    "saveTranslation": "Save translation",
+    "save": "Save"
+  },
+  "pages": {
+    "about": {
+      "title": "👋 Hi, I am Domas",
+      "paragraph_1": "This is a paragraph in English.  This is a paragraph in English. This is a paragraph in English. This is a paragraph in English. This is a paragraph in English. This is a paragraph in English. This is a paragraph in English.",
+      "paragraph_2": "This is a paragraph in English.  This is a paragraph in English. This is a paragraph in English. This is a paragraph in English. This is a paragraph in English. This is a paragraph in English. This is a paragraph in English.",
+      "paragraph_3": "This is a paragraph in English.  This is a paragraph in English. This is a paragraph in English. This is a paragraph in English. This is a paragraph in English. This is a paragraph in English. This is a paragraph in English.",
+      "contactQuestion": "Want to chat?",
+      "contactBtn": "Contact me right now"
+    },
+    "contact": {
+      "header": "Contact us",
+      "label": {
+        "message": "What's on your mind? *",
+        "name": "What's your name? *",
+        "email": "What's your E-Mail? *"
+      },
+      "placeholder": {
+        "message": "Enter your message here...",
+        "name": "I'm Batman...",
+        "email": "email@gmail.com"
+      },
+      "btn": "Send my message",
+      "info_block": {
+        "title": "Your message will reach:",
+        "about_link": "Who is Domas?"
+      }
+    },
+    "premium": {
+      "bigTitle": "Get unlimited vocabs",
+      "paragraph_1": "With just a tiny, one-time payment, you'll be able to create an infinite amout of vocabs and enjoy everything this sexy app has to offer.",
+      "paragraph_2": {
+        "pre": "You'll also be supporting a ",
+        "link": "student",
+        "post": " who is trying to make ends meet and keep building cool stuff."
+      },
+      "actionBtn": "Get premium for €4.99",
+      "success": {
+        "title": "Your account is premium",
+        "dateTitle": "Payment date:",
+        "costTitle": "Payment amout:",
+        "paymentTypeTile": "Payment type:",
+        "littleText": "Thanks for supporting us! If you have any questions or ideas, feel free to ",
+        "littleTextLink": "send us a message"
+      }
+    }
+  },
+  "page": {
+    "general": {
+      "btn": {
+        "settings": "Settings",
+        "privacy": "Privacy policy",
+        "contact": "Contact us",
+        "about": "About us",
+        "logout": "Log out",
+        "learnMore": "Learn more",
+        "getPremium": "Get premium"
+      },
+      "header": "General"
+    }
+  },
+  "other": {
+    "searchPlaceholder": "Search...",
+    "createListPlaceholder": "German vocabs...",
+    "emptyList": "Empty list",
+    "vocabs": "vocabs"
+  },
+  "tabs": {
+    "vocabs": "Vocabs",
+    "explore": "Explore",
+    "general": "General"
+  },
+  "label": {
+    "createList": "Give your new list a name",
+    "filterByDifficulty": "Filter by difficulty",
+    "vocabPreview": "Vocab preview",
+    "selectDifficulty": "Vocab difficulty",
+    "chosenLangs": "Chosen languages",
+    "uploadImage": "Image (optional)",
+    "description": "Description (optional)",
+    "chosenList": "Chosen list"
+  },
+  "modal": {
+    "displaySettings": {
+      "header": "Display settings",
+      "label": {
+        "sorting": "Sort"
+      }
+    },
+    "vocab": {
+      "headerCreate": "Create a new vocab",
+      "headerEdit": "Edit translation"
+    },
+    "selectLanguages": {
+      "header": "Select languages"
+    },
+    "selectList": {
+      "header": "Select a list"
+    },
+    "editTr": {
+      "header": "Edit translation"
+    },
+    "editHighlights": {
+      "header": "Edit highlights"
+    }
+  },
+  "difficulty": {
+    "easy": "Easy",
+    "medium": "Medium",
+    "hard": "Hard"
+  },
+  "toggle": {
+    "showImage": "Show image",
+    "showListName": "Show list name",
+    "showDescription": "Show description",
+    "showFlags": "Show flags",
+    "showDifficulty": "Show difficulty"
+  },
+  "vocabDummy": {
+    "translation": "Vocabs app is awesome",
+    "listName": "Name of the list",
+    "description": "Vocab description"
+  },
+  "word": {
+    "translation": "translation",
+    "highlights": "highlights"
+  },
+  "placeholder": {
+    "translation": "Translation...",
+    "description": "Note down the place / movie / book so that you remember better..."
   }
 }

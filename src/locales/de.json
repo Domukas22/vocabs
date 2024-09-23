@@ -4,9 +4,165 @@
   "welcome": "Willkommen in unserer App",
   "test": "hallo there",
   "header": {
-    "page_list": "Meine Listen"
+    "page_list": "Meine Listen",
+    "page_about": "Über uns"
   },
   "blockLabels": {
     "uiLang": "App Sprache"
+  },
+  "btn": {
+    "createList": "Neue Liste erstellen",
+    "cancel": "Abbrechen",
+    "create": "Erstellen",
+    "sortByDifficulty": "Nach Schwierigkeit",
+    "sortByDate": "Nach Erstellungsdatum",
+    "easyToHard": "Einfach --> Schwierig",
+    "newToOld": "Neu --> Alt",
+    "hardToEasy": "Schwierig --> Einfach",
+    "oldToNew": "Alt --> Neu",
+    "done": "Fertig",
+    "difficulty": {
+      "easy": "Einfach",
+      "medium": "Mittel",
+      "hard": "Schwierig"
+    },
+    "selectLangs": "Sprachen auswählen",
+    "editHighlights": "Markierungen bearbeiten",
+    "uploadImage": "Tippe um Bild hochzuladen",
+    "createButtonAction": "Vokabel erstellen",
+    "updateButtonAction": "Vokabel speichern",
+    "confirmSelection": "Auswahl bestätigen",
+    "saveTranslation": "Übersetzung speichern",
+    "save": "Speichern"
+  },
+  "pages": {
+    "about": {
+      "title": "👋 Hi, ich bin Domas",
+      "paragraph_1": "Dies ist ein Satz auf Deuscth. Dies ist ein Satz auf Deuscth. Dies ist ein Satz auf Deuscth. Dies ist ein Satz auf Deuscth. Dies ist ein Satz auf Deuscth. Dies ist ein Satz auf Deuscth. Dies ist ein Satz auf Deuscth. ",
+      "paragraph_2": "Dies ist ein Satz auf Deuscth. Dies ist ein Satz auf Deuscth. Dies ist ein Satz auf Deuscth. Dies ist ein Satz auf Deuscth. Dies ist ein Satz auf Deuscth. Dies ist ein Satz auf Deuscth. Dies ist ein Satz auf Deuscth. ",
+      "paragraph_3": "Dies ist ein Satz auf Deuscth. Dies ist ein Satz auf Deuscth. Dies ist ein Satz auf Deuscth. Dies ist ein Satz auf Deuscth. Dies ist ein Satz auf Deuscth. Dies ist ein Satz auf Deuscth. Dies ist ein Satz auf Deuscth. ",
+      "contactQuestion": "Hast du eine Frage?",
+      "contactBtn": "Kontaktiere mich jetzt"
+    },
+    "contact": {
+      "header": "Kontaktiere uns",
+      "label": {
+        "message": "Was möchtest du sagen? *",
+        "name": "Wie heißt du? *",
+        "email": "Wie läuft deine E-Mail Adresse?"
+      },
+      "placeholder": {
+        "message": "Gebe deine Nachricht ein...",
+        "name": "Ich bin Batman...",
+        "email": "email@gmail.com"
+      },
+      "btn": "Meine Nachricht senden",
+      "info_block": {
+        "title": "Deine Nachricht erreicht:",
+        "about_link": "Wer ist Domas?"
+      }
+    },
+    "premium": {
+      "bigTitle": "Unbegrenzte Vocabs bekommen",
+      "paragraph_1": "Mit nur einer kleinen einmaligen Zahlung kannst du eine unbegrenzte Menge an Vokabeln erstellen und alles genießen, was diese sexy App zu bieten hat.",
+      "paragraph_2": {
+        "pre": "Darüber hinaus unterstützt du einen ",
+        "link": "Studenten",
+        "post": " der versucht, über die Runden zu kommen und weiterhin coole Sachen zu bauen."
+      },
+      "actionBtn": "Premium für €4.99 holen",
+      "success": {
+        "title": "Dein Profil ist premium",
+        "dateTitle": "Zahlungsdatum:",
+        "costTitle": "Zahlungsmenge:",
+        "paymentTypeTile": "Zahlungsart:",
+        "littleText": "Vielen Dank für deine Unterstützung! Wenn du Fragen oder Anregungen hast, ",
+        "littleTextLink": "sende uns eine Nachricht"
+      }
+    }
+  },
+  "page": {
+    "general": {
+      "btn": {
+        "settings": "Einstellungen",
+        "privacy": "Datenschutz",
+        "contact": "Kontaktiere uns",
+        "about": "Über uns",
+        "logout": "Ausloggen",
+        "learnMore": "Mehr erfahren",
+        "getPremium": "Premium holen"
+      },
+      "header": "Allgemeines"
+    }
+  },
+  "other": {
+    "searchPlaceholder": "Suchen...",
+    "createListPlaceholder": "Englische Vokabeln...",
+    "emptyList": "Leere Liste",
+    "vocabs": "Vokabeln"
+  },
+  "tabs": {
+    "vocabs": "Vokabeln",
+    "explore": "Erkunden",
+    "general": "Allgemeines"
+  },
+  "label": {
+    "createList": "Wie nennst du die neue Liste?",
+    "filterByDifficulty": "Nach Schwierigkeit filtern",
+    "vocabPreview": "Vorschau des Vokabels",
+    "selectDifficulty": "Schwierigkeit der Vokabel",
+    "chosenLangs": "Ausgewählte Sprachen",
+    "uploadImage": "Bild (optional)",
+    "description": "Beschreibung (optional)",
+    "chosenList": "Ausgewählte Liste"
+  },
+  "modal": {
+    "displaySettings": {
+      "header": "Anzeigeeinstellungen",
+      "label": {
+        "sorting": "Sortieren"
+      }
+    },
+    "vocab": {
+      "headerCreate": "Neue Vokabel erstellen",
+      "headerEdit": "Vokabel bearbeiten"
+    },
+    "selectLanguages": {
+      "header": "Sprachen auswählen"
+    },
+    "selectList": {
+      "header": "Wähle eine Liste"
+    },
+    "editTr": {
+      "header": "Übersetzung bearbeiten"
+    },
+    "editHighlights": {
+      "header": "Markierungen bearbeiten"
+    }
+  },
+  "difficulty": {
+    "easy": "Einfach",
+    "medium": "Mittel",
+    "hard": "Schwierig"
+  },
+  "toggle": {
+    "showImage": "Bild anzeigen",
+    "showDescription": "Beschreibung anzeigen",
+    "showListName": "Listenname anzeigen",
+    "showFlags": "Flaggen anzeigen",
+    "showDifficulty": "Schwierigkeit anzeigen"
+  },
+  "vocabDummy": {
+    "translation": "Vocabs app ist cool",
+    "listName": "Name der Liste",
+    "description": "Beschreibung des Vokabels"
+  },
+  "word": {
+    "translation": "Übersetzung",
+    "highlights": "Markierungen"
+  },
+  "placeholder": {
+    "translation": "Übersetzung...",
+    "description": "Notiere dir den Ort / Film / das Buch, damit du dich besser daran erinnerst..."
   }
 }

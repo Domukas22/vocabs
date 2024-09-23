@@ -7,6 +7,7 @@ import Btn from "@/src/components/Btn/Btn";
 import { ICON_dropdownArrow } from "@/src/components/icons/icons";
 import Label from "@/src/components/Label/Label";
 import { VocabModal_ACTIONS } from "../../hooks/USE_modalToggles";
+import { useTranslation } from "react-i18next";
 
 interface ListnInput_PROPS {
   list_NAME: string;
@@ -17,9 +18,10 @@ export default function List_INPUT({
   list_NAME,
   TOGGLE_modal,
 }: ListnInput_PROPS) {
+  const { t } = useTranslation();
   return (
     <Block>
-      <Label>Vocab list</Label>
+      <Label>{t("label.chosenList")}</Label>
       <Btn
         text={list_NAME || ""}
         iconRight={<ICON_dropdownArrow />}

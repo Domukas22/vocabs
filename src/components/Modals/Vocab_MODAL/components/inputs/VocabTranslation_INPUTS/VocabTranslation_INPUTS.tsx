@@ -8,7 +8,7 @@ import Block from "../../../../../Block/Block";
 import { ICON_flag } from "@/src/components/icons/icons";
 import Btn from "@/src/components/Btn/Btn";
 import StyledText_INPUT from "@/src/components/StyledText_INPUT/StyledText_INPUT";
-import React from "react";
+import React, { useMemo } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
 import { MyColors } from "@/src/constants/MyColors";
@@ -17,7 +17,9 @@ import Label from "@/src/components/Label/Label";
 import USE_fetchLangs from "@/src/db/languages/FETCH_languages";
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
-import { VocabModal_ACTIONS } from "@/src/components/Modals/ManageVocab_MODAL/hooks/USE_modalToggles";
+import { VocabModal_ACTIONS } from "@/src/components/Modals/Vocab_MODAL/hooks/USE_modalToggles";
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 interface VocabTranslationInputs_PROPS {
   languages: Language_MODEL[] | undefined;
@@ -37,6 +39,8 @@ export default function VocabTranslation_INPUTS({
   TOGGLE_modal,
 }: VocabTranslationInputs_PROPS) {
   if (!modal_TRs) return <></>;
+  const { t } = useTranslation();
+  const appLang = useMemo(() => i18next.language, []);
 
   return modal_TRs?.map((tr: TranslationCreation_PROPS, index) => {
     const lang: Language_MODEL | undefined = languages.find(
@@ -50,9 +54,16 @@ export default function VocabTranslation_INPUTS({
         labelIcon={<ICON_flag lang={tr?.lang_id} />}
         styles={{ padding: 20 }}
       >
-        <Label
-          icon={<ICON_flag lang={lang.id} />}
-        >{`${lang?.lang_in_en} translation *`}</Label>
+        {appLang === "en" && (
+          <Label icon={<ICON_flag lang={lang.id} />}>{`${lang?.lang_in_en} ${t(
+            "word.translation"
+          )} *`}</Label>
+        )}
+        {appLang === "de" && (
+          <Label icon={<ICON_flag lang={lang.id} />}>{`${t(
+            "word.translation"
+          )} auf ${lang?.lang_in_de} *`}</Label>
+        )}
         <Pressable
           style={({ pressed }) => [s.textBtn, pressed && s.textBtnPress]}
           onPress={() => {
@@ -72,7 +83,7 @@ export default function VocabTranslation_INPUTS({
               type="text_18_light"
               style={{ color: MyColors.text_white_06 }}
             >
-              Enter {lang?.lang_in_en} text...
+              {t("placeholder.translation")}
             </Styled_TEXT>
           )}
           {/* <Styled_TEXT>{tr.text}</Styled_TEXT> */}
@@ -81,7 +92,7 @@ export default function VocabTranslation_INPUTS({
           {/* <Btn text="Remove" type="seethrough" onPress={() => {}} /> */}
           {tr.text && (
             <Btn
-              text="Edit highlights"
+              text={t("btn.editHighlights")}
               type="seethrough"
               onPress={() => {
                 SET_targetLang(lang);

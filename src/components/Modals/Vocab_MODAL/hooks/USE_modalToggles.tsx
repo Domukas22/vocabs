@@ -9,8 +9,8 @@ const TOGGLE_MODAL = "TOGGLE_MODAL";
 
 // Create the initial state for the modals
 const initialState = {
-  SHOW_selectListModal: false,
   SHOW_selectLangModal: false,
+  SHOW_selectListModal: false,
   SHOW_trTextModal: false,
   SHOW_trHighlightsModal: false,
 };

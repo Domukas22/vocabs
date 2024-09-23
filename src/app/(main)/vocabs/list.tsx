@@ -29,14 +29,15 @@ import SearchBar from "@/src/components/SearchBar/SearchBar";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 import MyVocabs_SUBNAV from "@/src/components/Subnav/MyVocabs_SUBNAV";
 import DisplaySettings_MODAL from "@/src/components/Modals/DisplaySettings_MODAL/DisplaySettings_MODAL";
-import ManageVocab_MODAL from "@/src/components/Modals/ManageVocab_MODAL/ManageVocab_MODAL";
+import Vocab_MODAL from "@/src/components/Modals/Vocab_MODAL/Vocab_MODAL";
+import { useTranslation } from "react-i18next";
 
 export default function SingleList_PAGE() {
   const router = useRouter();
   const { selected_LIST } = USE_selectedList();
   const [loading, SET_loading] = useState(false);
   const [SHOW_displaySettings, TOGGLE_displaySettings] = USE_toggle(false);
-  const [SHOW_vocabModal, TOGGLE_vocabModal] = USE_toggle(false);
+  const [SHOW_vocabModal, TOGGLE_vocabModal] = USE_toggle(true);
 
   const [displaySettings, SET_displaySettings] =
     useState<DisplaySettings_MODEL>({
@@ -154,7 +155,7 @@ export default function SingleList_PAGE() {
         displaySettings={displaySettings}
         SET_displaySettings={SET_displaySettings}
       />
-      <ManageVocab_MODAL
+      <Vocab_MODAL
         open={SHOW_vocabModal}
         TOGGLE_modal={() => HANDLE_vocabModal({ clear: true })}
         vocab={vocab}
