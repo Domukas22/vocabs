@@ -19,7 +19,7 @@ export async function FETCH_lists() {
   }
 }
 
-export async function FETCH_listsWithPopulatedVocabs({
+export async function FETCH_privateLists({
   user_id,
   search,
 }: {
@@ -41,13 +41,16 @@ export async function FETCH_listsWithPopulatedVocabs({
     const { data, error } = await query;
 
     if (error) {
-      console.log("🔴 Error fetching user lists 🔴 : ", error);
-      return { success: false, msg: "🔴 Error fetching user lists 🔴" };
+      console.log("🔴 Error fetching populated user lists 🔴 : ", error);
+      return {
+        success: false,
+        msg: "🔴 Error fetching populated user lists 🔴",
+      };
     }
 
     return { success: true, data };
   } catch (error) {
-    console.log("🔴 Error fetching user lists 🔴 : ", error);
-    return { success: false, msg: "🔴 Error fetching user lists 🔴" };
+    console.log("🔴 Error fetching populated user lists 🔴 : ", error);
+    return { success: false, msg: "🔴 Error fetching  populateduser lists 🔴" };
   }
 }

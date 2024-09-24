@@ -5,6 +5,18 @@
 import { MyColors } from "@/src/constants/MyColors";
 import { StyleSheet } from "react-native";
 
+export type btnTypes =
+  | "simple"
+  | "simple_primary_text"
+  | "action"
+  | "active"
+  | "delete"
+  | "seethrough"
+  | "seethrough_primary"
+  | "difficulty_3_active"
+  | "difficulty_2_active"
+  | "difficulty_1_active";
+
 const s = StyleSheet.create({
   btn: {
     borderWidth: 1,
@@ -35,6 +47,13 @@ const s = StyleSheet.create({
 
   simple_press: {
     backgroundColor: MyColors.btn_3,
+  },
+
+  simple_primary_press: {
+    backgroundColor: MyColors.btn_active_press,
+  },
+  simple_primary_text: {
+    color: MyColors.text_primary,
   },
 
   action: {
@@ -146,6 +165,13 @@ const btnStyles = {
       press: s.simple_press,
     },
     text: {},
+  },
+  simple_primary_text: {
+    btn: {
+      normal: {},
+      press: s.simple_primary_press,
+    },
+    text: s.simple_primary_text,
   },
   action: {
     btn: {

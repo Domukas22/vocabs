@@ -67,7 +67,13 @@ export function ICON_X({
   big = false,
   rotate = false,
 }: {
-  color?: "grey" | "primary" | "difficulty_1" | "difficulty_2" | "difficulty_3";
+  color?:
+    | "grey"
+    | "primary"
+    | "difficulty_1"
+    | "difficulty_2"
+    | "difficulty_3"
+    | "admin";
   big?: boolean;
   rotate?: boolean;
 }) {
@@ -80,6 +86,8 @@ export function ICON_X({
       ? MyColors.icon_difficulty_2
       : color === "difficulty_3"
       ? MyColors.icon_difficulty_3
+      : color === "admin"
+      ? MyColors.icon_green
       : MyColors.icon_gray_light;
 
   return (

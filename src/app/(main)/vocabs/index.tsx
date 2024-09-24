@@ -12,7 +12,7 @@ import { ICON_X } from "@/src/components/icons/icons";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import { supabase } from "@/src/lib/supabase";
 import { useEffect, useState } from "react";
-import { FETCH_listsWithPopulatedVocabs } from "@/src/db/lists/fetch";
+import { FETCH_privateLists } from "@/src/db/lists/fetch";
 import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
 import List_BTN from "@/src/components/List_BTN/List_BTN";
 import { List_MODEL } from "@/src/db/models";
@@ -20,7 +20,7 @@ import { USE_toggle } from "@/src/hooks/USE_toggle";
 import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
 import StyledText_INPUT from "@/src/components/StyledText_INPUT/StyledText_INPUT";
 import Simple_MODAL from "@/src/components/Modals/Simple_MODAL/Simple_MODAL";
-import CreateList_MODAL from "@/src/components/Modals/CreateList_MODAL";
+import CreateList_MODAL from "@/src/components/Modals/CreateList_MODAL/CreateList_MODAL";
 import SUBSCRIBE_toLists from "@/src/db/lists/SUBSCRIBE_toLists";
 import List_SKELETONS from "@/src/components/Skeletons/List_SKELETONS";
 import SUBSCRIBE_toVocabs from "@/src/db/vocabs/SUBSCRIBE_toVocabs";
@@ -46,17 +46,19 @@ export default function MyLists_PAGE() {
   const [lists, SET_lists] = useState<List_MODEL[]>([]);
   const GET_lists = async () => {
     SET_loading(true);
-    const res = await FETCH_listsWithPopulatedVocabs({
+    const res = await FETCH_privateLists({
       user_id: user.id,
       search,
     });
     SET_lists([...(res?.data || [])]);
     SET_loading(false);
 
-    if (totalListCount === undefined) {
-      // only happens after the first fetch
-      SET_totalListCount([...(res?.data || [])].length);
-    }
+    // if (totalListCount === undefined) {
+    //   // only happens after the first fetch
+    //   console.log(res?.data);
+
+    //   SET_totalListCount(res?.data ? res?.data.length : 0);
+    // }
   };
 
   useEffect(() => {
@@ -69,6 +71,13 @@ export default function MyLists_PAGE() {
       supabase.removeChannel(vocabsSubscription);
     };
   }, [search]);
+
+  // useEffect(() => {
+  //   if (lists.length !== 0 && !loading) {
+  //     SET_selectedList(lists[1]);
+  //     router.push("/(main)/vocabs/list");
+  //   }
+  // }, [lists, loading]);
 
   return (
     <Page_WRAP>

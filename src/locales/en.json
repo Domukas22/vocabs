@@ -35,7 +35,10 @@
     "close": "Close",
     "confirmLogout": "Yes, logout",
     "deleteVocab": "Delete vocab",
-    "confirmVocabDelete": "Yes, delete"
+    "confirmVocabDelete": "Yes, delete",
+    "saveVocabToList": "Save to private list",
+    "editVocabAsAdmin": "Edit as admin",
+    "confirmAddinVocabToList": "Add to list"
   },
   "pages": {
     "about": {

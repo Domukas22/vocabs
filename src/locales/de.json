@@ -38,7 +38,10 @@
     "close": "Schließen",
     "confirmLogout": "Ja, ausloggen",
     "deleteVocab": "Vokabel löschen",
-    "confirmVocabDelete": "Ja, löschen"
+    "confirmVocabDelete": "Ja, löschen",
+    "saveVocabToList": "Zur privaten Liste hinfügen",
+    "editVocabAsAdmin": "Als Admin bearbeiten",
+    "confirmAddinVocabToList": "Zur Liste hinfügen"
   },
   "pages": {
     "about": {

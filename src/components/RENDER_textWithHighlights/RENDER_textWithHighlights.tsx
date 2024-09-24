@@ -8,7 +8,7 @@ import { Styled_TEXT } from "../Styled_TEXT/Styled_TEXT";
 interface RenderTextWithhighlights_PROPS {
   text: string;
   highlights: number[];
-  modal_DIFF: 1 | 2 | 3;
+  modal_DIFF: 0 | 1 | 2 | 3;
 }
 
 export default function RENDER_textWithHighlights({
@@ -21,7 +21,9 @@ export default function RENDER_textWithHighlights({
       ? MyColors.text_difficulty_3
       : modal_DIFF === 2
       ? MyColors.text_difficulty_2
-      : MyColors.text_difficulty_1;
+      : modal_DIFF === 1
+      ? MyColors.text_difficulty_1
+      : MyColors.text_primary;
 
   const textDecorationLine = modal_DIFF === 1 ? "underline" : undefined;
 

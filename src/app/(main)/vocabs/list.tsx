@@ -18,19 +18,20 @@ import { TranslationCreation_PROPS, Vocab_MODEL } from "@/src/db/models";
 import { useEffect, useState } from "react";
 import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
 import SUBSCRIBE_toVocabs from "@/src/db/vocabs/SUBSCRIBE_toVocabs";
-import FETCH_userVocabs from "@/src/db/vocabs/FETCH_userVocabs";
+import FETCH_privateUserVocabs from "@/src/db/vocabs/FETCH_privateUserVocabs";
 import { supabase } from "@/src/lib/supabase";
 import List_SKELETONS from "@/src/components/Skeletons/List_SKELETONS";
 import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
-import Vocab from "@/src/components/Vocab/Vocab";
+
 import { DisplaySettings_MODEL } from "@/src/db/models";
 import Subnav from "@/src/components/Subnav/Subnav";
 import SearchBar from "@/src/components/SearchBar/SearchBar";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
-import MyVocabs_SUBNAV from "@/src/components/Subnav/MyVocabs_SUBNAV";
-import DisplaySettings_MODAL from "@/src/components/Modals/DisplaySettings_MODAL/DisplaySettings_MODAL";
-import Vocab_MODAL from "@/src/components/Modals/Vocab_MODAL/Vocab_MODAL";
+import PrivateVocabs_SUBNAV from "@/src/components/Subnav/PrivateVocabs_SUBNAV";
+import PrivateVocabDisplaySettings_MODAL from "@/src/components/Modals/PrivateVocabDisplaySettings_MODAL/PrivateVocabDisplaySettings_MODAL";
+import PrivateVocab_MODAL from "@/src/components/Modals/Vocab_MODALS/PrivateVocab_MODAL/PrivateVocab_MODAL";
 import { useTranslation } from "react-i18next";
+import Private_VOCAB from "@/src/components/Vocab/Private_VOCAB/Private_VOCAB";
 
 export default function SingleList_PAGE() {
   const router = useRouter();
@@ -53,14 +54,12 @@ export default function SingleList_PAGE() {
     });
 
   const [vocabs, SET_vocabs] = useState<Vocab_MODEL[]>([]);
-  const GET_vocabs = async () => {
+  const GET_privateVocabs = async () => {
     SET_loading(true);
-    const res = await FETCH_userVocabs({
+    const res = await FETCH_privateUserVocabs({
       filter: {
         list_id: selected_LIST.id,
         difficulties: displaySettings.difficultyFilters,
-        is_public: false,
-        is_publicly_visible: false,
         search: displaySettings.search,
       },
       sort: {
@@ -74,7 +73,7 @@ export default function SingleList_PAGE() {
   };
 
   useEffect(() => {
-    GET_vocabs();
+    GET_privateVocabs();
 
     const subscription = SUBSCRIBE_toVocabs({ SET_vocabs });
     return () => {
@@ -91,6 +90,7 @@ export default function SingleList_PAGE() {
     clear?: boolean;
     vocab?: Vocab_MODEL;
   }) {
+    // return;
     if (!clear && vocab) {
       SET_toEditVocab(vocab);
       TOGGLE_vocabModal();
@@ -122,7 +122,7 @@ export default function SingleList_PAGE() {
         }
       />
 
-      <MyVocabs_SUBNAV
+      <PrivateVocabs_SUBNAV
         search={displaySettings.search}
         SET_search={(val) =>
           SET_displaySettings((prev) => ({ ...prev, search: val }))
@@ -135,26 +135,23 @@ export default function SingleList_PAGE() {
         <Styled_FLATLIST
           data={vocabs}
           renderItem={({ item }) => (
-            <View>
-              <Vocab
-                vocab={item}
-                displaySettings={displaySettings}
-                selected_LIST={selected_LIST}
-                HANDLE_vocabModal={HANDLE_vocabModal}
-              />
-            </View>
+            <Private_VOCAB
+              vocab={item}
+              displaySettings={displaySettings}
+              HANDLE_vocabModal={HANDLE_vocabModal}
+            />
           )}
           keyExtractor={(item) => item.id}
         />
       ) : null}
 
-      <DisplaySettings_MODAL
+      <PrivateVocabDisplaySettings_MODAL
         open={SHOW_displaySettings}
         TOGGLE_open={TOGGLE_displaySettings}
         displaySettings={displaySettings}
         SET_displaySettings={SET_displaySettings}
       />
-      <Vocab_MODAL
+      <PrivateVocab_MODAL
         open={SHOW_vocabModal}
         TOGGLE_modal={() => HANDLE_vocabModal({ clear: true })}
         vocab={vocab}

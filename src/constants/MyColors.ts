@@ -43,6 +43,7 @@ export const MyColors = {
   border_difficulty_2: primitives.yellow1,
   border_difficulty_1: primitives.white095,
   border_red: primitives.red1,
+  border_primary: primitives.primary1,
 
   // Fill colors
   fill_bg: primitives.dark1,

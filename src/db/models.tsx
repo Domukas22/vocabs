@@ -2,34 +2,16 @@
 //
 //
 
-export interface List_MODEL {
+export interface User_MODEL {
   id: string;
-  user_id: string;
-  name: string;
-  created_at: string;
+  email: string;
+  is_premum: boolean;
+  is_admin: boolean;
+  payment_date: string;
+  payment_amount: number;
+  payment_type: string;
+  app_lang_id: "en" | "de";
 
-  vocabs?: Vocab_MODEL[];
-}
-export interface Vocab_MODEL {
-  id: string;
-  list_id: string;
-  user_id: string;
-  difficulty: 1 | 2 | 3;
-  description: string | "";
-  image: string | "";
-  is_public: boolean;
-  is_publicly_visible: boolean;
-  created_at: string;
-
-  translations?: Translation_MODEL[];
-}
-export interface Translation_MODEL {
-  id: string;
-  user_id: string;
-  vocab_id: string;
-  lang_id: string;
-  text: string;
-  highlights: number[];
   created_at: string;
 }
 export interface Language_MODEL {
@@ -42,8 +24,54 @@ export interface Language_MODEL {
   country_in_de: string;
   available_as_in_app_lang: boolean;
 }
+export interface List_MODEL {
+  id: string;
+  user_id: string;
+  name: string;
+  created_at: string;
 
-// ------------------------------------------------
+  vocabs?: Vocab_MODEL[];
+}
+
+// --------------------------------------------------------------------------------------------
+export interface Vocab_MODEL {
+  id: string;
+  list_id: string;
+  user_id: string;
+  difficulty: 1 | 2 | 3;
+  description: string | "";
+  image: string | "";
+  created_at: string;
+
+  translations?: Translation_MODEL[];
+}
+export interface PublicVocab_MODEL {
+  id: string;
+  description: string | "";
+  image: string | "";
+  created_at: string;
+
+  public_translations?: Translation_MODEL[];
+}
+// --------------------------------------------------------------------------------------------
+export interface Translation_MODEL {
+  id: string;
+  user_id: string;
+  vocab_id: string;
+  lang_id: string;
+  text: string;
+  highlights: number[];
+  created_at: string;
+}
+export interface PublicTranslation_MODEL {
+  id: string;
+  public_vocab_id: string;
+  lang_id: string;
+  text: string;
+  highlights: number[];
+  created_at: string;
+}
+// --------------------------------------------------------------------------------------------
 export interface DisplaySettings_MODEL {
   search: string;
   sorting: "shuffle" | "difficulty" | "date";
@@ -54,6 +82,15 @@ export interface DisplaySettings_MODEL {
   SHOW_difficulty: boolean;
   frontLangId: string;
   difficultyFilters: [1 | 2 | 3] | [];
+}
+export interface PublicDisplaySettings_MODEL {
+  search: string;
+  sorting: "shuffle" | "difficulty" | "date";
+  sortDirection: "ascending" | "descending";
+  SHOW_image: boolean;
+  SHOW_description: boolean;
+  SHOW_flags: boolean;
+  frontLangId: string;
 }
 export interface TranslationCreation_PROPS {
   lang_id: string;
