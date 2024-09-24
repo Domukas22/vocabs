@@ -65,6 +65,8 @@ export default function MyLists_PAGE() {
     };
   }, [search]);
 
+  console.log(lists?.[0]?.vocabs);
+
   return (
     <Page_WRAP>
       <Header

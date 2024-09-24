@@ -24,11 +24,11 @@ export default function POPULATE_publicVocabValues({
   SET_modalLangs(
     vocab?.public_translations
       ? GET_langsFromTranslations(vocab.public_translations, languages)
-      : GET_defaultLangs({ languages, starter: ["en", "de", "fr", "lt"] })
+      : GET_defaultLangs({ languages, starter: ["en", "de"] })
   );
   SET_modalTRs(
     vocab?.public_translations
       ? vocab.public_translations
-      : GET_defaultTranslations(["en", "de", "fr", "lt"])
+      : GET_defaultTranslations(["en", "de"])
   );
 }

@@ -35,11 +35,11 @@ export default function POPULATE_privateVocabValues({
   SET_modalLangs(
     vocab?.translations
       ? GET_langsFromTranslations(vocab.translations, languages)
-      : GET_defaultLangs({ languages, starter: ["en", "de", "fr", "lt"] })
+      : GET_defaultLangs({ languages, starter: ["en", "de"] })
   );
   SET_modalTRs(
     vocab?.translations
       ? vocab.translations
-      : GET_defaultTranslations(["en", "de", "fr", "lt"])
+      : GET_defaultTranslations(["en", "de"])
   );
 }
