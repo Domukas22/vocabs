@@ -2,10 +2,10 @@
 //
 //
 
-import Block from "@/src/components/Block/Block";
-import Btn from "@/src/components/Btn/Btn";
-import { ICON_flag, ICON_X } from "@/src/components/icons/icons";
-import Label from "@/src/components/Label/Label";
+import Block from "@/src/components/Basic/Block/Block";
+import Btn from "@/src/components/Basic/Btn/Btn";
+import { ICON_flag, ICON_X } from "@/src/components/Basic/icons/icons";
+import Label from "@/src/components/Basic/Label/Label";
 import { Language_MODEL, TranslationCreation_PROPS } from "@/src/db/models";
 import { View } from "react-native";
 import { VocabModal_ACTIONS } from "../../hooks/USE_modalToggles";

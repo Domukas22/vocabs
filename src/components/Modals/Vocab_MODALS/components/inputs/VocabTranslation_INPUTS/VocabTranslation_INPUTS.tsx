@@ -4,19 +4,19 @@
 
 import { Language_MODEL, TranslationCreation_PROPS } from "@/src/db/models";
 import languages, { languagesArr_PROPS } from "@/src/constants/languages";
-import Block from "../../../../../Block/Block";
-import { ICON_flag } from "@/src/components/icons/icons";
-import Btn from "@/src/components/Btn/Btn";
-import StyledText_INPUT from "@/src/components/StyledText_INPUT/StyledText_INPUT";
+import Block from "../../../../../Basic/Block/Block";
+import { ICON_flag } from "@/src/components/Basic/icons/icons";
+import Btn from "@/src/components/Basic/Btn/Btn";
+import StyledText_INPUT from "@/src/components/Basic/StyledText_INPUT/StyledText_INPUT";
 import React, { useMemo } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
 import { MyColors } from "@/src/constants/MyColors";
-import RENDER_textWithHighlights from "@/src/components/RENDER_textWithHighlights/RENDER_textWithHighlights";
-import Label from "@/src/components/Label/Label";
+import Highlighted_TEXT from "@/src/components/Compound/Highlighted_TEXT/Highlighted_TEXT";
+import Label from "@/src/components/Basic/Label/Label";
 import USE_fetchLangs from "@/src/db/languages/FETCH_languages";
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
-import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
+import { Styled_TEXT } from "@/src/components/Basic/Styled_TEXT/Styled_TEXT";
 import {} from "@/src/components/Modals/Vocab_MODALS/hooks/USE_modalToggles";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
@@ -72,7 +72,7 @@ export default function VocabTranslation_INPUTS({
           }}
         >
           {tr.text && (
-            <RENDER_textWithHighlights
+            <Highlighted_TEXT
               text={tr.text}
               highlights={tr.highlights}
               modal_DIFF={modal_DIFF}

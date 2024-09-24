@@ -3,9 +3,9 @@
 //
 
 import { useState } from "react";
-import Btn from "../../Btn/Btn";
-import { Styled_TEXT } from "../../Styled_TEXT/Styled_TEXT";
-import StyledText_INPUT from "../../StyledText_INPUT/StyledText_INPUT";
+import Btn from "../../Basic/Btn/Btn";
+import { Styled_TEXT } from "../../Basic/Styled_TEXT/Styled_TEXT";
+import StyledText_INPUT from "../../Basic/StyledText_INPUT/StyledText_INPUT";
 import Simple_MODAL from "../Simple_MODAL/Simple_MODAL";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import CREATE_list from "@/src/db/lists/CREATE_list";

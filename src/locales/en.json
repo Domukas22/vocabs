@@ -120,7 +120,7 @@
     "uploadImage": "Image (optional)",
     "description": "Description (optional)",
     "chosenList": "Chosen list",
-    "youDontHaveAnyLists": "You don't have any lists",
+    "youDontHaveAnyLists": "You don't have any lists yet",
     "noListsFound": "No lists found"
   },
   "modal": {

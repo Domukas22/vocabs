@@ -5,14 +5,14 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Simple_MODAL from "../../../../Simple_MODAL/Simple_MODAL";
 
-import Btn from "../../../../../Btn/Btn";
-import { ICON_flag } from "../../../../../icons/icons";
-import Block from "../../../../../Block/Block";
-import StyledText_INPUT from "../../../../../StyledText_INPUT/StyledText_INPUT";
+import Btn from "../../../../../Basic/Btn/Btn";
+import { ICON_flag } from "../../../../../Basic/icons/icons";
+import Block from "../../../../../Basic/Block/Block";
+import StyledText_INPUT from "../../../../../Basic/StyledText_INPUT/StyledText_INPUT";
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
 import GET_highlightsWithoutOverflow from "../../../helpers/GET_highlightsWithoutOverflow";
 import { Language_MODEL, TranslationCreation_PROPS } from "@/src/db/models";
-import Label from "../../../../../Label/Label";
+import Label from "../../../../../Basic/Label/Label";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
 

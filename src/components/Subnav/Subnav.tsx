@@ -3,9 +3,9 @@
 //
 
 import { View } from "react-native";
-import SearchBar from "../SearchBar/SearchBar";
+import SearchBar from "../Compound/SearchBar/SearchBar";
 import Btn from "../btn/btn";
-import { ICON_displaySettings, ICON_X } from "../icons/icons";
+import { ICON_displaySettings, ICON_X } from "../Basic/icons/icons";
 import { MyColors } from "@/src/constants/MyColors";
 import React, { ReactNode } from "react";
 

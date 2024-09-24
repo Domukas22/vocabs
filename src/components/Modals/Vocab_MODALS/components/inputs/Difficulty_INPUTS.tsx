@@ -3,9 +3,9 @@
 //
 //
 
-import Block from "@/src/components/Block/Block";
-import Btn from "@/src/components/Btn/Btn";
-import Label from "@/src/components/Label/Label";
+import Block from "@/src/components/Basic/Block/Block";
+import Btn from "@/src/components/Basic/Btn/Btn";
+import Label from "@/src/components/Basic/Label/Label";
 import { useTransition } from "react";
 import { useTranslation } from "react-i18next";
 import { View } from "react-native";

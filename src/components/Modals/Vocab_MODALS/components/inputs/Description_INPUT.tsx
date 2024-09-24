@@ -2,10 +2,10 @@
 //
 //
 
-import Block from "@/src/components/Block/Block";
+import Block from "@/src/components/Basic/Block/Block";
 
-import Label from "@/src/components/Label/Label";
-import StyledText_INPUT from "@/src/components/StyledText_INPUT/StyledText_INPUT";
+import Label from "@/src/components/Basic/Label/Label";
+import StyledText_INPUT from "@/src/components/Basic/StyledText_INPUT/StyledText_INPUT";
 import { useTranslation } from "react-i18next";
 
 interface DescriptionInput_PROPS {

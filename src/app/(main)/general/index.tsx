@@ -2,10 +2,10 @@
 //
 //
 
-import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
-import Header from "@/src/components/Header/Header";
-import Btn from "@/src/components/Btn/Btn";
-import Block from "@/src/components/Block/Block";
+import Page_WRAP from "@/src/components/Compound/Page_WRAP/Page_WRAP";
+import Header from "@/src/components/Compound/Header/Header";
+import Btn from "@/src/components/Basic/Btn/Btn";
+import Block from "@/src/components/Basic/Block/Block";
 import {
   ICON_settings,
   ICON_arrow,
@@ -13,8 +13,8 @@ import {
   ICON_privacyPolicy,
   ICON_contact,
   ICON_about,
-} from "@/src/components/icons/icons";
-import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
+} from "@/src/components/Basic/icons/icons";
+import { Styled_TEXT } from "@/src/components/Basic/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
 import { router } from "expo-router";
 import { Alert, ScrollView, Text, View } from "react-native";

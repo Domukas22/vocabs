@@ -2,10 +2,10 @@
 //
 //
 
-import Block from "@/src/components/Block/Block";
-import Btn from "@/src/components/Btn/Btn";
-import { ICON_dropdownArrow } from "@/src/components/icons/icons";
-import Label from "@/src/components/Label/Label";
+import Block from "@/src/components/Basic/Block/Block";
+import Btn from "@/src/components/Basic/Btn/Btn";
+import { ICON_dropdownArrow } from "@/src/components/Basic/icons/icons";
+import Label from "@/src/components/Basic/Label/Label";
 import { VocabModal_ACTIONS } from "../../hooks/USE_modalToggles";
 import { useTranslation } from "react-i18next";
 

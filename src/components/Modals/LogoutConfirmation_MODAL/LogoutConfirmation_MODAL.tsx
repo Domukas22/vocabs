@@ -4,7 +4,7 @@
 
 import { useTranslation } from "react-i18next";
 import Simple_MODAL from "../Simple_MODAL/Simple_MODAL";
-import Btn from "../../Btn/Btn";
+import Btn from "../../Basic/Btn/Btn";
 
 interface LogoutConfirmationModal_PROPS {
   open: boolean;

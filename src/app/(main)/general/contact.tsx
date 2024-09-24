@@ -2,22 +2,22 @@
 //
 //
 
-import Btn from "@/src/components/Btn/Btn";
-import Header from "@/src/components/Header/Header";
+import Btn from "@/src/components/Basic/Btn/Btn";
+import Header from "@/src/components/Compound/Header/Header";
 
-import { ICON_3dots, ICON_arrow } from "@/src/components/icons/icons";
+import { ICON_3dots, ICON_arrow } from "@/src/components/Basic/icons/icons";
 
 import React, { useState } from "react";
 import { Image, StyleSheet, View } from "react-native";
 
 import { Link, router } from "expo-router";
 
-import Block from "@/src/components/Block/Block";
-import StyledText_INPUT from "@/src/components/StyledText_INPUT/StyledText_INPUT";
-import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
+import Block from "@/src/components/Basic/Block/Block";
+import StyledText_INPUT from "@/src/components/Basic/StyledText_INPUT/StyledText_INPUT";
+import { Styled_TEXT } from "@/src/components/Basic/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
-import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
-import Label from "@/src/components/Label/Label";
+import Page_WRAP from "@/src/components/Compound/Page_WRAP/Page_WRAP";
+import Label from "@/src/components/Basic/Label/Label";
 import { useTranslation } from "react-i18next";
 
 export default function Contact_PAGE() {

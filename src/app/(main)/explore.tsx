@@ -2,16 +2,16 @@
 //
 //
 
-import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
-import Header from "@/src/components/Header/Header";
-import Btn from "@/src/components/Btn/Btn";
-import { ICON_arrow, ICON_3dots } from "@/src/components/icons/icons";
+import Page_WRAP from "@/src/components/Compound/Page_WRAP/Page_WRAP";
+import Header from "@/src/components/Compound/Header/Header";
+import Btn from "@/src/components/Basic/Btn/Btn";
+import { ICON_arrow, ICON_3dots } from "@/src/components/Basic/icons/icons";
 import PrivateVocabDisplaySettings_MODAL from "@/src/components/Modals/PrivateVocabDisplaySettings_MODAL/PrivateVocabDisplaySettings_MODAL";
 import PrivateVocab_MODAL from "@/src/components/Modals/Vocab_MODALS/PrivateVocab_MODAL/PrivateVocab_MODAL";
-import List_SKELETONS from "@/src/components/Skeletons/List_SKELETONS";
-import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
-import PrivateVocabs_SUBNAV from "@/src/components/Subnav/PrivateVocabs_SUBNAV";
-import PublicVocab from "@/src/components/Vocab/PublicVocab/PublicVocab";
+import List_SKELETONS from "@/src/components/Basic/Skeletons/List_SKELETONS";
+import Styled_FLATLIST from "@/src/components/Basic/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
+import PrivateVocabs_SUBNAV from "@/src/components/Subnav/Variations/PrivateVocabs_SUBNAV";
+import PublicVocab from "@/src/components/Complex/Vocab/PublicVocab/PublicVocab";
 import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
 import {
   DisplaySettings_MODEL,
@@ -29,9 +29,9 @@ import { useRouter } from "expo-router";
 import { useState, useEffect } from "react";
 import { View } from "react-native";
 import USE_fetchPublicVocabs from "@/src/db/vocabs/FETCH_publicVocabs";
-import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
+import { Styled_TEXT } from "@/src/components/Basic/Styled_TEXT/Styled_TEXT";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
-import PublicVocabs_SUBNAV from "@/src/components/Subnav/PublicVocabs_SUBNAV";
+import PublicVocabs_SUBNAV from "@/src/components/Subnav/Variations/PublicVocabs_SUBNAV";
 import SavePublicVocabToList_MODAL from "@/src/components/Modals/Vocab_MODALS/components/modals/SavePublicVocabToList_MODAL/SavePublicVocabToList_MODAL";
 import USE_copyPublicVocab from "@/src/db/vocabs/USE_copyPublicVocab";
 import PublicVocabDisplaySettings_MODAL from "@/src/components/Modals/PublicVocabDisplaySettings_MODAL/PublicVocabDisplaySettings_MODAL";

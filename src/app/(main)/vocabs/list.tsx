@@ -3,35 +3,35 @@
 //
 
 import { Text, View } from "react-native";
-import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
-import Btn from "@/src/components/Btn/Btn";
+import Page_WRAP from "@/src/components/Compound/Page_WRAP/Page_WRAP";
+import Btn from "@/src/components/Basic/Btn/Btn";
 import { useRouter } from "expo-router";
-import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
-import Header from "@/src/components/Header/Header";
+import { Styled_TEXT } from "@/src/components/Basic/Styled_TEXT/Styled_TEXT";
+import Header from "@/src/components/Compound/Header/Header";
 import {
   ICON_3dots,
   ICON_arrow,
   ICON_displaySettings,
   ICON_X,
-} from "@/src/components/icons/icons";
+} from "@/src/components/Basic/icons/icons";
 import { TranslationCreation_PROPS, Vocab_MODEL } from "@/src/db/models";
 import { useEffect, useState } from "react";
 import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
 import SUBSCRIBE_toVocabs from "@/src/db/vocabs/SUBSCRIBE_toVocabs";
 import FETCH_privateUserVocabs from "@/src/db/vocabs/FETCH_privateUserVocabs";
 import { supabase } from "@/src/lib/supabase";
-import List_SKELETONS from "@/src/components/Skeletons/List_SKELETONS";
-import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
+import List_SKELETONS from "@/src/components/Basic/Skeletons/List_SKELETONS";
+import Styled_FLATLIST from "@/src/components/Basic/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
 
 import { DisplaySettings_MODEL } from "@/src/db/models";
 import Subnav from "@/src/components/Subnav/Subnav";
-import SearchBar from "@/src/components/SearchBar/SearchBar";
+import SearchBar from "@/src/components/Compound/SearchBar/SearchBar";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
-import PrivateVocabs_SUBNAV from "@/src/components/Subnav/PrivateVocabs_SUBNAV";
+import PrivateVocabs_SUBNAV from "@/src/components/Subnav/Variations/PrivateVocabs_SUBNAV";
 import PrivateVocabDisplaySettings_MODAL from "@/src/components/Modals/PrivateVocabDisplaySettings_MODAL/PrivateVocabDisplaySettings_MODAL";
 import PrivateVocab_MODAL from "@/src/components/Modals/Vocab_MODALS/PrivateVocab_MODAL/PrivateVocab_MODAL";
 import { useTranslation } from "react-i18next";
-import Private_VOCAB from "@/src/components/Vocab/Private_VOCAB/Private_VOCAB";
+import Private_VOCAB from "@/src/components/Complex/Vocab/Private_VOCAB/Private_VOCAB";
 
 export default function SingleList_PAGE() {
   const router = useRouter();

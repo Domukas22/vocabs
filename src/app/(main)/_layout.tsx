@@ -6,7 +6,7 @@ import {
   ICON_general,
   ICON_search,
   ICON_vocabs,
-} from "@/src/components/icons/icons";
+} from "@/src/components/Basic/icons/icons";
 import { MyColors } from "@/src/constants/MyColors";
 import { Tabs } from "expo-router";
 import { useTranslation } from "react-i18next";

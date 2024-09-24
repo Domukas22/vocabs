@@ -2,25 +2,25 @@
 //
 //
 
-import Btn from "../../Btn/Btn";
-import Footer from "@/src/components/Footer/Footer";
-import Header from "@/src/components/Header/Header";
+import Btn from "../../Basic/Btn/Btn";
+import Footer from "@/src/components/Compound/Footer/Footer";
+import Header from "@/src/components/Compound/Header/Header";
 import {
   ICON_calendar,
   ICON_difficultyDot,
   ICON_shuffle,
   ICON_X,
-} from "@/src/components/icons/icons";
-import Block from "@/src/components/Block/Block";
+} from "@/src/components/Basic/icons/icons";
+import Block from "@/src/components/Basic/Block/Block";
 import { MyColors } from "@/src/constants/MyColors";
 import React from "react";
 import { Modal, SafeAreaView, ScrollView, View } from "react-native";
-import Settings_TOGGLE from "../../Settings_TOGGLE/Settings_TOGGLE";
-import PrivateVocab_FRONT from "../../Vocab/Private_VOCAB/components/PrivateVocab_FRONT";
+import Settings_TOGGLE from "../../Compound/Settings_TOGGLE/Settings_TOGGLE";
+import PrivateVocab_FRONT from "../../Complex/Vocab/Private_VOCAB/components/PrivateVocab_FRONT";
 
-import Label from "../../Label/Label";
+import Label from "../../Basic/Label/Label";
 import { useTranslation } from "react-i18next";
-import PublicVocab_FRONT from "../../Vocab/PublicVocab/components/PublicVocab_FRONT";
+import PublicVocab_FRONT from "../../Complex/Vocab/PublicVocab/components/PublicVocab_FRONT";
 import { PublicDisplaySettings_MODEL } from "@/src/db/models";
 
 interface DisplaySettingsModal_PROPS {

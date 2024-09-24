@@ -1,13 +1,13 @@
-import Block from "@/src/components/Block/Block";
-import Btn from "@/src/components/Btn/Btn";
-import Header from "@/src/components/Header/Header";
+import Block from "@/src/components/Basic/Block/Block";
+import Btn from "@/src/components/Basic/Btn/Btn";
+import Header from "@/src/components/Compound/Header/Header";
 import {
   ICON_arrow,
   ICON_3dots,
   ICON_checkmark,
-} from "@/src/components/icons/icons";
-import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
-import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
+} from "@/src/components/Basic/icons/icons";
+import Page_WRAP from "@/src/components/Compound/Page_WRAP/Page_WRAP";
+import { Styled_TEXT } from "@/src/components/Basic/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
 import { router, Link } from "expo-router";
 import React from "react";

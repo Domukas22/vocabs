@@ -2,10 +2,10 @@
 //
 //
 
-import Btn from "../../../Btn/Btn";
+import Btn from "../../../Basic/Btn/Btn";
 
-import Header from "@/src/components/Header/Header";
-import { ICON_X } from "@/src/components/icons/icons";
+import Header from "@/src/components/Compound/Header/Header";
+import { ICON_X } from "@/src/components/Basic/icons/icons";
 import { MyColors } from "@/src/constants/MyColors";
 import React, {
   useCallback,
@@ -25,7 +25,7 @@ import {
   Vocab_MODEL,
 } from "@/src/db/models";
 
-import ManageVocab_FOOTER from "../../../Footer/Variations/ManageVocab_FOOTER/ManageVocab_FOOTER";
+import ManageVocab_FOOTER from "../../../Compound/Footer/Variations/ManageVocab_FOOTER/ManageVocab_FOOTER";
 import VocabTranslation_INPUTS from "../components/inputs/VocabTranslation_INPUTS/VocabTranslation_INPUTS";
 import TrText_MODAL from "../components/modals/TrText_MODAL/TrText_MODAL";
 import TrHighlights_MODAL from "../components/modals/TrHighlights_MODAL/TrHighlights_MODAL";
@@ -33,7 +33,7 @@ import TrHighlights_MODAL from "../components/modals/TrHighlights_MODAL/TrHighli
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
 import SelectLanguages_MODAL from "../components/modals/SelectLanguages_MODAL/SelectLanguages_MODAL";
 
-import USE_privateVocabActions from "../hooks/USE_privateVocabActions";
+import USE_privateVocabActions from "../PrivateVocab_MODAL/hooks/USE_privateVocabActions";
 
 import Difficulty_INPUTS from "../components/inputs/Difficulty_INPUTS";
 import Image_INPUT from "../components/inputs/Image_INPUT";
@@ -43,20 +43,20 @@ import ChosenLangs_INPUTS from "../components/inputs/ChosenLangs_INPUTS";
 
 import { useTranslation } from "react-i18next";
 
-import Block from "../../../Block/Block";
+import Block from "../../../Basic/Block/Block";
 import DeleteVocabConfirmation_MODAL from "../components/modals/DeleteVocabConfirmation_MODAL/DeleteVocabConfirmation_MODAL";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import USE_modalToggles from "../hooks/USE_modalToggles";
-import CLEAR_privateVocabValues from "../helpers/CLEAR_privateVocabValues";
+import CLEAR_privateVocabValues from "../PrivateVocab_MODAL/helpers/CLEAR_privateVocabValues";
 import GET_activeLangIDs from "../helpers/GET_activeLangIDs";
 import HANLDE_modalLangsAndTrs from "../helpers/HANLDE_modalLangsAndTrs";
-import POPULATE_privateVocabValues from "../helpers/POPULATE_privateVocabValues";
+import POPULATE_privateVocabValues from "../PrivateVocab_MODAL/helpers/POPULATE_privateVocabValues";
 import REMOVE_modalLangAndTr from "../helpers/REMOVE_modalLangAndTr";
-import USE_privateVocabValues from "../hooks/USE_privateVocabValues";
-import USE_publicVocabValues from "../hooks/USE_publicVocabValues";
-import USE_publicVocabActions from "../hooks/USE_publicVocabActions";
-import POPULATE_publicVocabValues from "../helpers/POPULATE_publicVocabValues";
-import CLEAR_publicVocabValues from "../helpers/CLEAR_publicVocabValues";
+import USE_privateVocabValues from "../PrivateVocab_MODAL/hooks/USE_privateVocabValues";
+import USE_publicVocabValues from "./hooks/USE_publicVocabValues";
+import USE_publicVocabActions from "./hooks/USE_publicVocabActions";
+import POPULATE_publicVocabValues from "./helpers/POPULATE_publicVocabValues";
+import CLEAR_publicVocabValues from "./helpers/CLEAR_publicVocabValues";
 
 interface PublicVocabVocabModal_PROPS {
   open: boolean;

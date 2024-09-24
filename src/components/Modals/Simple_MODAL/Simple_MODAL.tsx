@@ -2,9 +2,9 @@
 //
 //
 
-import Btn from "../../Btn/Btn";
-import { ICON_X } from "@/src/components/icons/icons";
-import { Styled_TEXT } from "../../Styled_TEXT/Styled_TEXT";
+import Btn from "../../Basic/Btn/Btn";
+import { ICON_X } from "@/src/components/Basic/icons/icons";
+import { Styled_TEXT } from "../../Basic/Styled_TEXT/Styled_TEXT";
 
 import { MyColors } from "@/src/constants/MyColors";
 

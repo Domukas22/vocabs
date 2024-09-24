@@ -2,10 +2,10 @@
 //
 //
 
-import Btn from "@/src/components/Btn/Btn";
-import Header from "@/src/components/Header/Header";
-import { ICON_arrow, ICON_3dots } from "@/src/components/icons/icons";
-import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
+import Btn from "@/src/components/Basic/Btn/Btn";
+import Header from "@/src/components/Compound/Header/Header";
+import { ICON_arrow, ICON_3dots } from "@/src/components/Basic/icons/icons";
+import Page_WRAP from "@/src/components/Compound/Page_WRAP/Page_WRAP";
 import { useRouter } from "expo-router";
 
 export default function Privacy_PAGE() {
