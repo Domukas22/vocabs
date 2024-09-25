@@ -8,6 +8,8 @@ import USE_updatePrivateVocab from "@/src/db/vocabs/USE_updatePrivateVocab";
 import USE_deletePrivateVocab from "@/src/db/vocabs/USE_deletePrivateVocab";
 import { PrivateVocabState_PROPS } from "./USE_privateVocabValues";
 import USE_zustandStore from "@/src/zustand_store";
+import { useToast } from "react-native-toast-notifications";
+import { useTranslation } from "react-i18next";
 
 interface privateVocabAction_PROPS {
   user: User_MODEL;
@@ -30,6 +32,8 @@ export default function USE_privateVocabActions({
 }: privateVocabAction_PROPS) {
   const { modal_TRs, modal_IMG, modal_DESC, modal_LIST, modal_DIFF } =
     modalValues;
+  const { t } = useTranslation();
+  const toast = useToast();
 
   const {
     CREATE_privateVocab_z,
@@ -64,6 +68,10 @@ export default function USE_privateVocabActions({
         );
         TOGGLE_vocabModal();
         HIGHLIGHT_vocab(vocab.id);
+        toast.show(t("notifications.vocabUpdated"), {
+          type: "custom_success",
+          duration: 2000,
+        });
       }
     }
   }
@@ -83,6 +91,10 @@ export default function USE_privateVocabActions({
         SET_vocabs((prev) => [newVocab.data, ...prev]);
         TOGGLE_vocabModal();
         HIGHLIGHT_vocab(newVocab.data.id);
+        toast.show(t("notifications.vocabCreated"), {
+          type: "custom_success",
+          duration: 2000,
+        });
       }
     }
   }
@@ -98,6 +110,10 @@ export default function USE_privateVocabActions({
         TOGGLE_vocabModal();
         HIGHLIGHT_vocab(vocab.id);
       }
+      toast.show(t("notifications.vocabDeleted"), {
+        type: "custom_success",
+        duration: 2000,
+      });
     }
   }
 

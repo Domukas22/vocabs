@@ -180,5 +180,10 @@
   "placeholder": {
     "translation": "Übersetzung...",
     "description": "Notiere dir den Ort / Film / das Buch, damit du dich besser daran erinnerst..."
+  },
+  "notifications": {
+    "vocabUpdated": "Vokabel aktualisiert",
+    "vocabCreated": "Neue Vokabel hinfzugefügt",
+    "vocabDeleted": "Vokabel gelöscht"
   }
 }

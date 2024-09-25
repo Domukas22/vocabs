@@ -32,7 +32,7 @@ import Subnav from "@/src/components/Subnav/Subnav";
 import SearchBar from "@/src/components/Compound/SearchBar/SearchBar";
 import { MyColors } from "@/src/constants/MyColors";
 import USE_zustandStore from "@/src/zustand_store";
-import Toast from "@/src/components/Basic/Toast/Toast";
+
 import { useToast } from "react-native-toast-notifications";
 
 export default function MyLists_PAGE() {
@@ -78,8 +78,6 @@ export default function MyLists_PAGE() {
     }
   }, [search, lists_z]);
 
-  const toast = useToast();
-
   return (
     <Page_WRAP>
       <Header
@@ -93,36 +91,6 @@ export default function MyLists_PAGE() {
             style={{ borderRadius: 100 }}
           />
         }
-      />
-      <Btn
-        onPress={() =>
-          toast.show("Hello World", {
-            type: "custom_success",
-            duration: 3000,
-          })
-        }
-        text="Success"
-        style={{ borderRadius: 100, marginBottom: 40 }}
-      />
-      <Btn
-        onPress={() =>
-          toast.show("Hello World", {
-            type: "custom_error",
-            duration: 3000,
-          })
-        }
-        text="Error"
-        style={{ borderRadius: 100, marginBottom: 40 }}
-      />
-      <Btn
-        onPress={() =>
-          toast.show("Hello World", {
-            type: "custom_warning",
-            duration: 3000,
-          })
-        }
-        text="Warning"
-        style={{ borderRadius: 100, marginBottom: 40 }}
       />
 
       {totalListCount > 6 && (

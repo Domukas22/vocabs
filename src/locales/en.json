@@ -177,5 +177,10 @@
   "placeholder": {
     "translation": "Translation...",
     "description": "Note down the place / movie / book so that you remember better..."
+  },
+  "notifications": {
+    "vocabUpdated": "Vocab updated",
+    "vocabCreated": "New vocab created",
+    "vocabDeleted": "Vocab deleted"
   }
 }

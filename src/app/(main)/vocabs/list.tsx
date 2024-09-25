@@ -34,7 +34,6 @@ import { useTranslation } from "react-i18next";
 import Private_VOCAB from "@/src/components/Complex/Vocab/Private_VOCAB/Private_VOCAB";
 
 import { MyColors } from "@/src/constants/MyColors";
-import Toast from "@/src/components/Basic/Toast/Toast";
 
 export default function SingleList_PAGE() {
   const router = useRouter();
@@ -91,6 +90,32 @@ export default function SingleList_PAGE() {
     }
   }
 
+  const [filtered_Vocabs, SET_filteredVocabs] = useState<Vocab_MODEL[]>(vocabs);
+  const [search, SET_search] = useState("");
+
+  useEffect(() => {
+    // When `search` changes, filter lists based on the search query
+    if (displaySettings.search === "") {
+      // If there's no search term, show all lists
+      SET_filteredVocabs(vocabs);
+    } else {
+      // Filter the lists based on the search term (case-insensitive)
+      SET_filteredVocabs(
+        vocabs.filter(
+          (vocab) =>
+            vocab.description
+              ?.toLowerCase()
+              .includes(displaySettings.search.toLowerCase()) ||
+            vocab.translations?.some((tr) =>
+              tr.text
+                .toLowerCase()
+                .includes(displaySettings.search.toLowerCase())
+            )
+        )
+      );
+    }
+  }, [displaySettings.search, vocabs]);
+
   return (
     <Page_WRAP>
       <Header
@@ -121,9 +146,9 @@ export default function SingleList_PAGE() {
         TOGGLE_displaySettings={TOGGLE_displaySettings}
         HANDLE_vocabModal={HANDLE_vocabModal}
       />
-      {vocabs && vocabs.length > 0 ? (
+      {filtered_Vocabs && filtered_Vocabs.length > 0 ? (
         <Styled_FLATLIST
-          data={vocabs}
+          data={filtered_Vocabs}
           renderItem={({ item }) => (
             <Private_VOCAB
               key={"Vocab" + item.id}
