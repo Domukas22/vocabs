@@ -27,6 +27,7 @@ const primitives = {
   red1: "#ff9191",
   red2: "#6d3c3c",
   red3: "#412929",
+  red4: "#412929",
   yellow1: "#e7d991",
   yellow2: "#726834",
   yellow3: "#4b472f",
@@ -43,6 +44,7 @@ export const MyColors = {
   border_difficulty_2: primitives.yellow1,
   border_difficulty_1: primitives.white095,
   border_red: primitives.red1,
+  border_yellow: primitives.yellow1,
   border_primary: primitives.primary1,
 
   // Fill colors
@@ -50,12 +52,15 @@ export const MyColors = {
   fill_bg_light: primitives.dark2,
   fill_bg_dark_seethrough: primitives.dark_seethrough,
   fill_green: primitives.green1,
+  fill_red_dark: primitives.red4,
+  fill_yellow_dark: primitives.yellow3,
 
   // Icon colors
   icon_primary: primitives.primary1,
   icon_gray: primitives.grey1,
   icon_gray_light: primitives.grey2,
   icon_green: primitives.green1,
+  icon_red: primitives.red1,
   icon_difficulty_3: primitives.red1,
   icon_difficulty_2: primitives.yellow1,
   icon_difficulty_1: primitives.grey2,
@@ -93,6 +98,8 @@ export const MyColors = {
   text_difficulty_1: primitives.white095,
 
   text_green: primitives.green1,
+  text_red: primitives.red1,
+  text_yellow: primitives.yellow1,
   text_white: primitives.white095,
   text_white_06: primitives.white06,
 

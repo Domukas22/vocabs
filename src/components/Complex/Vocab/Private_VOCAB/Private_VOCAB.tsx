@@ -24,6 +24,7 @@ interface VocabProps {
     clear?: boolean;
     vocab?: Vocab_MODEL;
   }) => void;
+  highlightedVocab_ID: string;
 }
 
 // TOGGLE_vocabModal needs to also pass in th etranslations, so we dont have to pass them async and get a delayed manageVocabModal update
@@ -31,6 +32,7 @@ export default function Private_VOCAB({
   vocab,
   displaySettings,
   HANDLE_vocabModal,
+  highlightedVocab_ID,
 }: VocabProps) {
   const [open, TOGGLE_vocab] = USE_toggle(false);
   const [SHOW_difficultyEdits, TOGGLE_difficultyEdits] = USE_toggle(false);
@@ -50,6 +52,10 @@ export default function Private_VOCAB({
         open && vocab.difficulty === 1 && s.vocab_open_difficulty_1,
         open && vocab.difficulty === 2 && s.vocab_open_difficulty_2,
         open && vocab.difficulty === 3 && s.vocab_open_difficulty_3,
+        highlightedVocab_ID === vocab.id && {
+          borderColor: MyColors.border_green,
+          backgroundColor: MyColors.btn_green,
+        },
       ]}
     >
       <View>
@@ -58,6 +64,7 @@ export default function Private_VOCAB({
           vocab={vocab}
           displaySettings={displaySettings}
           onPress={TOGGLE_vocab}
+          highlighted={highlightedVocab_ID === vocab.id}
         />
         {open ? (
           <PrivateVocab_BACK

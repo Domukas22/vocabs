@@ -55,6 +55,7 @@ interface ManageVocabModal_PROPS {
   vocab: Vocab_MODEL | undefined;
   selected_LIST: List_MODEL;
   SET_vocabs: React.Dispatch<React.SetStateAction<Vocab_MODEL[]>>;
+  HIGHLIGHT_vocab: (id: string) => void;
 }
 
 export default function PrivateVocab_MODAL(props: ManageVocabModal_PROPS) {
@@ -64,6 +65,7 @@ export default function PrivateVocab_MODAL(props: ManageVocabModal_PROPS) {
     vocab,
     selected_LIST,
     SET_vocabs,
+    HIGHLIGHT_vocab,
   } = props;
   const { languages } = USE_langs();
   const { t } = useTranslation();
@@ -113,6 +115,7 @@ export default function PrivateVocab_MODAL(props: ManageVocabModal_PROPS) {
     TOGGLE_vocabModal,
     TOGGLE_modal,
     SET_vocabs,
+    HIGHLIGHT_vocab,
   });
 
   const POPULATE_modal = useCallback(() => {

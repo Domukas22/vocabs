@@ -9,8 +9,8 @@ import { Image, StyleSheet, View } from "react-native";
 import Svg, { Path, Circle, Rect } from "react-native-svg";
 
 const sizing = {
-  big: 24,
   small: 20,
+  big: 24,
 };
 
 export function ICON_flag({
@@ -73,7 +73,8 @@ export function ICON_X({
     | "difficulty_1"
     | "difficulty_2"
     | "difficulty_3"
-    | "admin";
+    | "admin"
+    | "white";
   big?: boolean;
   rotate?: boolean;
 }) {
@@ -88,6 +89,8 @@ export function ICON_X({
       ? MyColors.icon_difficulty_3
       : color === "admin"
       ? MyColors.icon_green
+      : color === "white"
+      ? "white"
       : MyColors.icon_gray_light;
 
   return (
@@ -230,7 +233,7 @@ export function ICON_premium() {
     </Svg>
   );
 }
-export function ICON_checkmark() {
+export function ICON_premiumCheckmark() {
   return (
     <Svg
       width={sizing.big}
@@ -447,6 +450,77 @@ export function ICON_image() {
     </Svg>
   );
 }
+export function ICON_toastNotification({
+  type = "success",
+}: {
+  type: "success" | "error" | "warning";
+}) {
+  return (
+    <View
+      style={{
+        borderRadius: 50,
+        width: sizing.big,
+        height: sizing.big,
+        justifyContent: "center",
+        alignItems: "center",
+        borderWidth: 2,
+        borderColor:
+          type === "error"
+            ? MyColors.border_red
+            : type === "warning"
+            ? MyColors.border_yellow
+            : MyColors.border_green,
+      }}
+    >
+      {type === "success" && (
+        <Svg width={10} height={10} viewBox="0 0 9 10" fill="none">
+          <Path
+            d="M1 5.21053L3.8 9L8 1"
+            stroke={MyColors.border_green}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </Svg>
+      )}
+      {type === "error" && (
+        <Svg width={10} height={10} viewBox="0 0 12 12" fill="none">
+          <Path
+            d="M2 2L6 6M10 10L6 6M6 6L2 10M6 6L10 2"
+            stroke={MyColors.border_red}
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </Svg>
+      )}
+      {type === "warning" && (
+        <Svg width="4" height="12" viewBox="0 0 4 12" fill="none">
+          <Rect
+            x="0.875"
+            y="8.875"
+            width="2.25"
+            height="2.25"
+            rx="1.125"
+            fill={MyColors.border_yellow}
+            stroke={MyColors.border_yellow}
+            stroke-width="0.25"
+          />
+          <Rect
+            x="0.875"
+            y="0.875"
+            width="2.25"
+            height="6.25"
+            rx="1.125"
+            fill={MyColors.border_yellow}
+            stroke={MyColors.border_yellow}
+            strokeWidth="0.25"
+          />
+        </Svg>
+      )}
+    </View>
+  );
+}
 
 const s = StyleSheet.create({
   icon: {
@@ -474,4 +548,6 @@ const s = StyleSheet.create({
   x_line_rotate: {
     transform: [{ rotate: "90deg" }],
   },
+
+  toast: {},
 });

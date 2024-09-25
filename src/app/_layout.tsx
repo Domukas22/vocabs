@@ -9,14 +9,33 @@ import { Auth_PROVIDER, USE_auth } from "../context/Auth_CONTEXT";
 import { supabase } from "../lib/supabase";
 import { FETCH_userData } from "../services/userService";
 import { Langs_PROVIDER, USE_langs } from "../context/Langs_CONTEXT";
+import { ToastProvider } from "react-native-toast-notifications";
 import "@/src/i18n";
-import { User_MODEL } from "../db/models";
+import { View } from "react-native";
+import { Styled_TEXT } from "../components/Basic/Styled_TEXT/Styled_TEXT";
+import { MyColors } from "../constants/MyColors";
+import { ICON_toastNotification } from "../components/Basic/icons/icons";
+import Custom_TOAST from "../components/Basic/Custom_TOAST/Custom_TOAST";
 
 export default function _layout() {
   return (
     <Auth_PROVIDER>
       <Langs_PROVIDER>
-        <Main_LAYOUT />
+        <ToastProvider
+          renderType={{
+            custom_success: (toast) => (
+              <Custom_TOAST type="success" text={toast?.message} />
+            ),
+            custom_error: (toast) => (
+              <Custom_TOAST type="error" text={toast?.message} />
+            ),
+            custom_warning: (toast) => (
+              <Custom_TOAST type="warning" text={toast?.message} />
+            ),
+          }}
+        >
+          <Main_LAYOUT />
+        </ToastProvider>
       </Langs_PROVIDER>
     </Auth_PROVIDER>
   );

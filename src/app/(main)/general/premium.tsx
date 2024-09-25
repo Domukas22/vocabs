@@ -4,7 +4,7 @@ import Header from "@/src/components/Compound/Header/Header";
 import {
   ICON_arrow,
   ICON_3dots,
-  ICON_checkmark,
+  ICON_premiumCheckmark,
 } from "@/src/components/Basic/icons/icons";
 import Page_WRAP from "@/src/components/Compound/Page_WRAP/Page_WRAP";
 import { Styled_TEXT } from "@/src/components/Basic/Styled_TEXT/Styled_TEXT";
@@ -77,7 +77,7 @@ export default function Billing_PAGE() {
                   marginTop: 4,
                 }}
               >
-                <ICON_checkmark />
+                <ICON_premiumCheckmark />
               </View>
             </Block>
             <Block>

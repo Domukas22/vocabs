@@ -2,7 +2,7 @@
 //
 //
 
-import { Text, View } from "react-native";
+import { Button, Text, View } from "react-native";
 import Page_WRAP from "@/src/components/Compound/Page_WRAP/Page_WRAP";
 import Btn from "@/src/components/Basic/Btn/Btn";
 import { useRouter } from "expo-router";
@@ -33,6 +33,9 @@ import PrivateVocab_MODAL from "@/src/components/Modals/Vocab_MODALS/PrivateVoca
 import { useTranslation } from "react-i18next";
 import Private_VOCAB from "@/src/components/Complex/Vocab/Private_VOCAB/Private_VOCAB";
 
+import { MyColors } from "@/src/constants/MyColors";
+import Toast from "@/src/components/Basic/Toast/Toast";
+
 export default function SingleList_PAGE() {
   const router = useRouter();
   const { selected_LIST } = USE_selectedList();
@@ -59,6 +62,17 @@ export default function SingleList_PAGE() {
   const [target_VOCAB, SET_targetVocab] = useState<Vocab_MODEL | undefined>(
     undefined
   );
+
+  const [highlightedVocab_ID, SET_highlightedVocabId] = useState("");
+
+  const HIGHLIGHT_vocab = (id: string) => {
+    if (!highlightedVocab_ID) {
+      SET_highlightedVocabId(id);
+      setTimeout(() => {
+        SET_highlightedVocabId("");
+      }, 2000);
+    }
+  };
 
   function HANDLE_vocabModal({
     clear = false,
@@ -112,12 +126,14 @@ export default function SingleList_PAGE() {
           data={vocabs}
           renderItem={({ item }) => (
             <Private_VOCAB
+              key={"Vocab" + item.id}
               vocab={item}
               displaySettings={displaySettings}
               HANDLE_vocabModal={HANDLE_vocabModal}
+              highlightedVocab_ID={highlightedVocab_ID}
             />
           )}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => "Vocab" + item.id}
         />
       ) : null}
 
@@ -133,6 +149,7 @@ export default function SingleList_PAGE() {
         vocab={target_VOCAB}
         selected_LIST={selected_LIST}
         SET_vocabs={SET_vocabs}
+        HIGHLIGHT_vocab={HIGHLIGHT_vocab}
       />
     </Page_WRAP>
   );

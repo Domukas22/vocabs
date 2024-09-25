@@ -16,6 +16,7 @@ interface privateVocabAction_PROPS {
   SET_vocabs: React.Dispatch<React.SetStateAction<Vocab_MODEL[]>>;
   TOGGLE_vocabModal: () => void;
   TOGGLE_modal: (whichModalToToggle: string) => void;
+  HIGHLIGHT_vocab: (id: string) => void;
 }
 
 export default function USE_privateVocabActions({
@@ -25,6 +26,7 @@ export default function USE_privateVocabActions({
   TOGGLE_vocabModal,
   SET_vocabs,
   TOGGLE_modal,
+  HIGHLIGHT_vocab,
 }: privateVocabAction_PROPS) {
   const { modal_TRs, modal_IMG, modal_DESC, modal_LIST, modal_DIFF } =
     modalValues;
@@ -61,6 +63,7 @@ export default function USE_privateVocabActions({
           })
         );
         TOGGLE_vocabModal();
+        HIGHLIGHT_vocab(vocab.id);
       }
     }
   }
@@ -79,6 +82,7 @@ export default function USE_privateVocabActions({
         CREATE_privateVocab_z(modal_LIST.id, newVocab.data);
         SET_vocabs((prev) => [newVocab.data, ...prev]);
         TOGGLE_vocabModal();
+        HIGHLIGHT_vocab(newVocab.data.id);
       }
     }
   }
@@ -92,6 +96,7 @@ export default function USE_privateVocabActions({
         SET_vocabs((vocabs) => vocabs.filter((v) => v.id !== vocab.id));
         TOGGLE_modal("delete");
         TOGGLE_vocabModal();
+        HIGHLIGHT_vocab(vocab.id);
       }
     }
   }

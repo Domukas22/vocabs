@@ -23,6 +23,7 @@ interface VocabFront_PROPS {
   onPress?: () => void;
   disablePressAnimation?: boolean;
   dummy?: boolean;
+  highlighted: boolean;
 }
 
 export default function PrivateVocab_FRONT({
@@ -32,6 +33,7 @@ export default function PrivateVocab_FRONT({
   onPress,
   disablePressAnimation = false,
   dummy = false,
+  highlighted = false,
 }: VocabFront_PROPS) {
   const { SHOW_image, SHOW_description, SHOW_flags, SHOW_difficulty } =
     displaySettings;
@@ -50,7 +52,7 @@ export default function PrivateVocab_FRONT({
           { backgroundColor: MyColors.btn_2 },
           pressed &&
             !disablePressAnimation && { backgroundColor: MyColors.btn_3 },
-          // Pressed and non-pressed styles
+          highlighted && { backgroundColor: MyColors.btn_green },
         ]}
         onPress={onPress}
       >
