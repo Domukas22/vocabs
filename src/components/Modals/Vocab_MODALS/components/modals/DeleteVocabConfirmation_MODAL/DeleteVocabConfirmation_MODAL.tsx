@@ -5,17 +5,20 @@
 import { useTranslation } from "react-i18next";
 import Simple_MODAL from "../../../../Simple_MODAL/Simple_MODAL";
 import Btn from "../../../../../Basic/Btn/Btn";
+import { ActivityIndicator } from "react-native";
 
 interface DeleteVocabConfirmationModal_PROPS {
   open: boolean;
   TOGGLE_open: () => void;
   _delete: () => void;
+  IS_deleting: boolean;
 }
 
 export default function DeleteVocabConfirmation_MODAL({
   open,
   TOGGLE_open,
   _delete,
+  IS_deleting,
 }: DeleteVocabConfirmationModal_PROPS) {
   const { t } = useTranslation();
 
@@ -30,7 +33,8 @@ export default function DeleteVocabConfirmation_MODAL({
         ),
         btnRight: (
           <Btn
-            text={t("btn.confirmVocabDelete")}
+            text={!IS_deleting ? t("btn.confirmVocabDelete") : ""}
+            iconRight={IS_deleting ? <ActivityIndicator color="black" /> : null}
             onPress={_delete}
             type="action"
             style={{ flex: 1 }}

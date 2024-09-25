@@ -3,7 +3,8 @@
 ///
 import { supabase } from "@/src/lib/supabase";
 import { useState } from "react";
-import { TranslationCreation_PROPS } from "../models";
+import { TranslationCreation_PROPS, Vocab_MODEL } from "../models";
+import USE_zustandStore from "@/src/zustand_store";
 interface VocabCreation_MODEL {
   user_id: string;
   list_id: string;
@@ -11,7 +12,6 @@ interface VocabCreation_MODEL {
   description?: string | "";
   image?: string | "";
   translations: TranslationCreation_PROPS[];
-  toggleFn: () => void;
 }
 
 export default function USE_createPrivateVocab() {
@@ -24,15 +24,8 @@ export default function USE_createPrivateVocab() {
     data?: any;
     msg?: string;
   }> => {
-    const {
-      user_id,
-      list_id,
-      difficulty,
-      description,
-      image,
-      translations,
-      toggleFn = () => {},
-    } = props;
+    const { user_id, list_id, difficulty, description, image, translations } =
+      props;
 
     console.log(translations);
 
@@ -119,10 +112,14 @@ export default function USE_createPrivateVocab() {
         };
       }
 
-      toggleFn();
+      const newVocab: Vocab_MODEL = {
+        ...vocabData,
+        translations: translationResults.flatMap((x) => x.data),
+      };
+
       return {
         success: true,
-        data: { vocabData, translations: translationResults },
+        data: newVocab,
       };
     } catch (error) {
       console.log("🔴 Error creating vocab or translations 🔴 : ", error);

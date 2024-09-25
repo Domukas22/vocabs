@@ -10,6 +10,8 @@ import Simple_MODAL from "../Simple_MODAL/Simple_MODAL";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import CREATE_list from "@/src/db/lists/CREATE_list";
 import { useTranslation } from "react-i18next";
+import USE_createList from "@/src/db/lists/CREATE_list";
+import { ActivityIndicator } from "react-native";
 
 interface CreateListModal_PROPS {
   open: boolean;
@@ -23,6 +25,8 @@ export default function CreateList_MODAL({
   const [newList_NAME, SET_newListName] = useState("");
   const { user } = USE_auth();
   const { t } = useTranslation();
+
+  const { CREATE_list, IS_creatingList, createList_ERROR } = USE_createList();
 
   const create = async () => {
     if (!newList_NAME || !user.id) return;
@@ -43,7 +47,10 @@ export default function CreateList_MODAL({
       btnLeft={<Btn text={t("btn.cancel")} onPress={HANLDE_toggle} />}
       btnRight={
         <Btn
-          text={t("btn.create")}
+          text={!IS_creatingList ? t("btn.create") : ""}
+          iconRight={
+            IS_creatingList ? <ActivityIndicator color="black" /> : null
+          }
           type="action"
           style={{ flex: 1 }}
           onPress={create}

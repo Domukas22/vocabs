@@ -32,7 +32,7 @@ interface LangsProviderProps {
 }
 
 export const Langs_PROVIDER: React.FC<LangsProviderProps> = ({ children }) => {
-  const [languages, setLanguages] = useState<Language[]>([]);
+  const [languages, setLanguages] = useState<Language_MODEL[]>([]);
   const [ARE_languagesLoading, SET_areLanguagesLoading] =
     useState<boolean>(true);
   const [error, setError] = useState<string | undefined>(null);

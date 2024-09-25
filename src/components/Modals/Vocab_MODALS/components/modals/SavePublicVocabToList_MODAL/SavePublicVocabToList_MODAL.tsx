@@ -25,8 +25,7 @@ import Simple_MODAL from "../../../../Simple_MODAL/Simple_MODAL";
 import StyledText_INPUT from "@/src/components/Basic/StyledText_INPUT/StyledText_INPUT";
 import { BlurView } from "expo-blur";
 import { List_MODEL, PublicVocab_MODEL } from "@/src/db/models";
-import { FETCH_lists, FETCH_privateLists } from "@/src/db/lists/fetch";
-import SUBSCRIBE_toLists from "@/src/db/lists/SUBSCRIBE_toLists";
+
 import { supabase } from "@/src/lib/supabase";
 import { useTranslation } from "react-i18next";
 import CreateList_MODAL from "@/src/components/Modals/CreateList_MODAL/CreateList_MODAL";
@@ -50,41 +49,41 @@ export default function SavePublicVocabToList_MODAL({
 }: SelectListModal_PROPS) {
   const { t } = useTranslation();
 
-  const [search, SET_search] = useState("");
-  const [selectedModal_LIST, SET_selectedModalList] = useState<
-    List_MODEL | undefined
-  >(undefined);
-  const [SHOW_createListModal, TOGGLE_createListModal] = USE_toggle(false);
+  // const [search, SET_search] = useState("");
+  // const [selectedModal_LIST, SET_selectedModalList] = useState<
+  //   List_MODEL | undefined
+  // >(undefined);
+  // const [SHOW_createListModal, TOGGLE_createListModal] = USE_toggle(false);
 
-  const [loading, SET_loading] = useState(false);
+  // const [loading, SET_loading] = useState(false);
 
-  const [lists, SET_lists] = useState<List_MODEL[]>([]);
-  const GET_lists = async () => {
-    SET_loading(true);
-    const res = await FETCH_privateLists({ user_id, search: "" });
-    SET_lists([...(res?.data || [])]);
-    SET_loading(false);
-  };
+  // const [lists, SET_lists] = useState<List_MODEL[]>([]);
+  // const GET_lists = async () => {
+  //   SET_loading(true);
+  //   const res = await FETCH_privateLists({ user_id, search: "" });
+  //   SET_lists([...(res?.data || [])]);
+  //   SET_loading(false);
+  // };
 
-  const { COPY_privateVocab, IS_copyingVocab } = USE_copyPublicVocab({
-    vocab: targetSave_VOCAB,
-    list_id: selectedModal_LIST?.id,
-    user_id,
-    toggleFn: TOGGLE_open,
-  });
+  // const { COPY_privateVocab, IS_copyingVocab } = USE_copyPublicVocab({
+  //   vocab: targetSave_VOCAB,
+  //   list_id: selectedModal_LIST?.id,
+  //   user_id,
+  //   toggleFn: TOGGLE_open,
+  // });
 
-  const submit = () => {
-    if (!IS_copyingVocab) COPY_privateVocab();
-  };
+  // const submit = () => {
+  //   if (!IS_copyingVocab) COPY_privateVocab();
+  // };
 
-  useEffect(() => {
-    GET_lists();
+  // useEffect(() => {
+  //   GET_lists();
 
-    const subscription = SUBSCRIBE_toLists({ SET_lists });
-    return () => {
-      supabase.removeChannel(subscription);
-    };
-  }, []);
+  //   const subscription = SUBSCRIBE_toLists({ SET_lists });
+  //   return () => {
+  //     supabase.removeChannel(subscription);
+  //   };
+  // }, []);
 
   return (
     <Modal animationType="slide" transparent={true} visible={open} style={{}}>
@@ -107,7 +106,7 @@ export default function SavePublicVocabToList_MODAL({
             />
           }
         />
-        <Subnav>
+        {/* <Subnav>
           <SearchBar value={search} SET_value={SET_search} />
         </Subnav>
 
@@ -161,12 +160,12 @@ export default function SavePublicVocabToList_MODAL({
               style={{ flex: 1, marginTop: "auto" }}
             />
           }
-        />
+        />  */}
       </SafeAreaView>
-      <CreateList_MODAL
+      {/* <CreateList_MODAL
         open={SHOW_createListModal}
         toggle={TOGGLE_createListModal}
-      />
+        /> */}
     </Modal>
   );
 }

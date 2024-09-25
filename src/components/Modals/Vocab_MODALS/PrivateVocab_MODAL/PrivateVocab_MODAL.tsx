@@ -54,10 +54,17 @@ interface ManageVocabModal_PROPS {
   TOGGLE_modal: () => void;
   vocab: Vocab_MODEL | undefined;
   selected_LIST: List_MODEL;
+  SET_vocabs: React.Dispatch<React.SetStateAction<Vocab_MODEL[]>>;
 }
 
 export default function PrivateVocab_MODAL(props: ManageVocabModal_PROPS) {
-  const { open, TOGGLE_modal: TOGGLE_vocabModal, vocab, selected_LIST } = props;
+  const {
+    open,
+    TOGGLE_modal: TOGGLE_vocabModal,
+    vocab,
+    selected_LIST,
+    SET_vocabs,
+  } = props;
   const { languages } = USE_langs();
   const { t } = useTranslation();
   const { user } = USE_auth();
@@ -104,6 +111,8 @@ export default function PrivateVocab_MODAL(props: ManageVocabModal_PROPS) {
       modal_LANGS,
     },
     TOGGLE_vocabModal,
+    TOGGLE_modal,
+    SET_vocabs,
   });
 
   const POPULATE_modal = useCallback(() => {
@@ -187,7 +196,12 @@ export default function PrivateVocab_MODAL(props: ManageVocabModal_PROPS) {
             <Btn
               type="seethrough"
               iconLeft={<ICON_X big={true} rotate={true} />}
-              onPress={TOGGLE_vocabModal}
+              onPress={() =>
+                !IS_creatingVocab &&
+                !IS_updatingVocab &&
+                !IS_deleting &&
+                TOGGLE_vocabModal()
+              }
               style={{ borderRadius: 100 }}
             />
           }
@@ -232,7 +246,12 @@ export default function PrivateVocab_MODAL(props: ManageVocabModal_PROPS) {
           {/* When creating, the buttons are visible when scrolled to the bottom */}
           {!vocab && (
             <ManageVocab_FOOTER
-              onCancelPress={TOGGLE_vocabModal}
+              onCancelPress={() =>
+                !IS_creatingVocab &&
+                !IS_updatingVocab &&
+                !IS_deleting &&
+                TOGGLE_vocabModal()
+              }
               onActionPress={CREATE_vocab}
               actionBtnText={t("btn.createButtonAction")}
               loading={IS_creatingVocab}
@@ -243,7 +262,12 @@ export default function PrivateVocab_MODAL(props: ManageVocabModal_PROPS) {
         {/* When editing, the buttons are sticky at the bottom*/}
         {vocab && (
           <ManageVocab_FOOTER
-            onCancelPress={TOGGLE_vocabModal}
+            onCancelPress={() =>
+              !IS_creatingVocab &&
+              !IS_updatingVocab &&
+              !IS_deleting &&
+              TOGGLE_vocabModal()
+            }
             loading={IS_updatingVocab}
             actionBtnText={t("btn.updateButtonAction")}
             onActionPress={UPDATE_vocab}
@@ -271,8 +295,9 @@ export default function PrivateVocab_MODAL(props: ManageVocabModal_PROPS) {
 
         <DeleteVocabConfirmation_MODAL
           open={modal_STATES.delete && !!vocab}
-          TOGGLE_open={() => TOGGLE_modal("delete")}
+          TOGGLE_open={() => !IS_deleting && TOGGLE_modal("delete")}
           _delete={DELETE_vocab}
+          IS_deleting={IS_deleting}
         />
         <SelectList_MODAL
           open={modal_STATES.selectedList}

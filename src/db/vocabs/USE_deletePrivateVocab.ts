@@ -4,16 +4,15 @@
 
 import { useState } from "react";
 import { supabase } from "@/src/lib/supabase"; // Adjust this import based on your project structure
+import USE_zustandStore from "@/src/zustand_store";
 
 export default function USE_deletePrivateVocab() {
   const [IS_deleting, SET_isDeleting] = useState(false);
 
   const DELETE_privateVocab = async ({
     vocab_id,
-    toggleFn = () => {},
   }: {
     vocab_id: string;
-    toggleFn?: () => void;
   }): Promise<{
     success: boolean;
     msg?: string;
@@ -57,11 +56,11 @@ export default function USE_deletePrivateVocab() {
         };
       }
 
-      toggleFn(); // Trigger any optional callback, e.g., UI refresh
       return {
         success: true,
         msg: "✅ Vocab and translations deleted successfully ✅",
       };
+      // ---------------------------------------------------------------
     } catch (error) {
       console.log("🔴 Error deleting vocab or translations 🔴 : ", error);
       return {

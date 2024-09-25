@@ -29,7 +29,7 @@ export default function Highlighted_TEXT({
 
   return (
     <Styled_TEXT>
-      {text.split("").map((letter, index) => {
+      {text?.split("").map((letter, index) => {
         const isHighlighted = highlights.includes(index);
         return (
           <Styled_TEXT

@@ -10,6 +10,7 @@ import { supabase } from "../lib/supabase";
 import { FETCH_userData } from "../services/userService";
 import { Langs_PROVIDER, USE_langs } from "../context/Langs_CONTEXT";
 import "@/src/i18n";
+import { User_MODEL } from "../db/models";
 
 export default function _layout() {
   return (
@@ -24,6 +25,7 @@ export default function _layout() {
 function Main_LAYOUT() {
   const { SET_auth, SET_userData } = USE_auth();
   const { ARE_languagesLoading } = USE_langs();
+
   const router = useRouter();
   const [loaded] = useFonts({
     "Nunito-Black": require("@/src/assets/fonts/Nunito-Black.ttf"),

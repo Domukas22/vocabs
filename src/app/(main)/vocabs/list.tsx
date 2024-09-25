@@ -18,7 +18,7 @@ import { TranslationCreation_PROPS, Vocab_MODEL } from "@/src/db/models";
 import { useEffect, useState } from "react";
 import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
 import SUBSCRIBE_toVocabs from "@/src/db/vocabs/SUBSCRIBE_toVocabs";
-import FETCH_privateUserVocabs from "@/src/db/vocabs/FETCH_privateUserVocabs";
+
 import { supabase } from "@/src/lib/supabase";
 import List_SKELETONS from "@/src/components/Basic/Skeletons/List_SKELETONS";
 import Styled_FLATLIST from "@/src/components/Basic/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
@@ -36,9 +36,12 @@ import Private_VOCAB from "@/src/components/Complex/Vocab/Private_VOCAB/Private_
 export default function SingleList_PAGE() {
   const router = useRouter();
   const { selected_LIST } = USE_selectedList();
-  const [loading, SET_loading] = useState(false);
   const [SHOW_displaySettings, TOGGLE_displaySettings] = USE_toggle(false);
   const [SHOW_vocabModal, TOGGLE_vocabModal] = USE_toggle(false);
+
+  const [vocabs, SET_vocabs] = useState<Vocab_MODEL[]>(
+    selected_LIST?.vocabs || []
+  );
 
   const [displaySettings, SET_displaySettings] =
     useState<DisplaySettings_MODEL>({
@@ -53,35 +56,9 @@ export default function SingleList_PAGE() {
       difficultyFilters: [],
     });
 
-  const [vocabs, SET_vocabs] = useState<Vocab_MODEL[]>([]);
-  const GET_privateVocabs = async () => {
-    SET_loading(true);
-    const res = await FETCH_privateUserVocabs({
-      filter: {
-        list_id: selected_LIST.id,
-        difficulties: displaySettings.difficultyFilters,
-        search: displaySettings.search,
-      },
-      sort: {
-        type: displaySettings.sorting,
-        direction: displaySettings.sortDirection,
-      },
-    });
-
-    SET_vocabs([...(res?.data || [])]);
-    SET_loading(false);
-  };
-
-  useEffect(() => {
-    GET_privateVocabs();
-
-    const subscription = SUBSCRIBE_toVocabs({ SET_vocabs });
-    return () => {
-      supabase.removeChannel(subscription);
-    };
-  }, [displaySettings]);
-
-  const [vocab, SET_toEditVocab] = useState<Vocab_MODEL | undefined>(undefined);
+  const [target_VOCAB, SET_targetVocab] = useState<Vocab_MODEL | undefined>(
+    undefined
+  );
 
   function HANDLE_vocabModal({
     clear = false,
@@ -92,10 +69,10 @@ export default function SingleList_PAGE() {
   }) {
     // return;
     if (!clear && vocab) {
-      SET_toEditVocab(vocab);
+      SET_targetVocab(vocab);
       TOGGLE_vocabModal();
     } else if (clear) {
-      SET_toEditVocab(undefined);
+      SET_targetVocab(undefined);
       TOGGLE_vocabModal();
     }
   }
@@ -130,8 +107,7 @@ export default function SingleList_PAGE() {
         TOGGLE_displaySettings={TOGGLE_displaySettings}
         HANDLE_vocabModal={HANDLE_vocabModal}
       />
-      {loading ? <List_SKELETONS /> : null}
-      {!loading ? (
+      {vocabs && vocabs.length > 0 ? (
         <Styled_FLATLIST
           data={vocabs}
           renderItem={({ item }) => (
@@ -154,8 +130,9 @@ export default function SingleList_PAGE() {
       <PrivateVocab_MODAL
         open={SHOW_vocabModal}
         TOGGLE_modal={() => HANDLE_vocabModal({ clear: true })}
-        vocab={vocab}
+        vocab={target_VOCAB}
         selected_LIST={selected_LIST}
+        SET_vocabs={SET_vocabs}
       />
     </Page_WRAP>
   );

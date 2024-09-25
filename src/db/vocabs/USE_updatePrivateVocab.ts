@@ -3,7 +3,8 @@
 //
 import { supabase } from "@/src/lib/supabase";
 import { useState } from "react";
-import { TranslationCreation_PROPS } from "../models";
+import { TranslationCreation_PROPS, Vocab_MODEL } from "../models";
+import USE_zustandStore from "@/src/zustand_store";
 
 interface VocabUpdate_MODEL {
   vocab_id: string; // Added vocab_id for identifying the vocab to update
@@ -13,7 +14,6 @@ interface VocabUpdate_MODEL {
   description?: string | "";
   image?: string | "";
   translations: TranslationCreation_PROPS[];
-  toggleFn: () => void;
 }
 
 export default function USE_updatePrivateVocab() {
@@ -34,7 +34,6 @@ export default function USE_updatePrivateVocab() {
       description,
       image,
       translations,
-      toggleFn = () => {},
     } = props;
 
     if (!vocab_id) {
@@ -149,10 +148,14 @@ export default function USE_updatePrivateVocab() {
         };
       }
 
-      toggleFn();
+      const updatedVocab: Vocab_MODEL = {
+        ...updatedVocabData,
+        translations: translationResults.flatMap((x) => x.data),
+      };
+
       return {
         success: true,
-        data: { updatedVocabData, translations: translationResults },
+        data: updatedVocab,
       };
     } catch (error) {
       console.log("🔴 Error updating vocab or translations 🔴 : ", error);

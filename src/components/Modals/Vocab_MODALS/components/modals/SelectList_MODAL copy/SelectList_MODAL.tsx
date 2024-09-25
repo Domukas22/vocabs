@@ -60,10 +60,10 @@ export default function SelectList_MODAL(props: SelectListModal_PROPS) {
   useEffect(() => {
     GET_lists();
 
-    const subscription = SUBSCRIBE_toLists({ SET_lists });
-    return () => {
-      supabase.removeChannel(subscription);
-    };
+    // const subscription = SUBSCRIBE_toLists({ SET_lists });
+    // return () => {
+    //   supabase.removeChannel(subscription);
+    // };
   }, []);
 
   const submit = () => {

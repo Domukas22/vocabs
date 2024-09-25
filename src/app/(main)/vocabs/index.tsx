@@ -12,20 +12,21 @@ import { ICON_arrow, ICON_X } from "@/src/components/Basic/icons/icons";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import { supabase } from "@/src/lib/supabase";
 import { useEffect, useState } from "react";
-import USE_fetchUserLists, { FETCH_privateLists } from "@/src/db/lists/fetch";
+import USE_fetchUserLists from "@/src/db/lists/USE_fetchUserLists/USE_fetchUserLists";
 import Styled_FLATLIST from "@/src/components/Basic/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
 import List_BTN from "@/src/components/Complex/List_BTN/List_BTN";
 import { List_MODEL } from "@/src/db/models";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
 import CreateList_MODAL from "@/src/components/Modals/CreateList_MODAL/CreateList_MODAL";
-import SUBSCRIBE_toLists from "@/src/db/lists/SUBSCRIBE_toLists";
+
 import List_SKELETONS from "@/src/components/Basic/Skeletons/List_SKELETONS";
-import SUBSCRIBE_toVocabsForLists from "@/src/db/lists/SUBSCRIBE_toVocabsForLists";
+
 import { useTranslation } from "react-i18next";
 import Subnav from "@/src/components/Subnav/Subnav";
 import SearchBar from "@/src/components/Compound/SearchBar/SearchBar";
 import { MyColors } from "@/src/constants/MyColors";
+import USE_zustandStore from "@/src/zustand_store";
 
 export default function MyLists_PAGE() {
   const { t } = useTranslation();
@@ -33,9 +34,9 @@ export default function MyLists_PAGE() {
   const { SET_selectedList } = USE_selectedList();
   const [SHOW_createListModal, TOGGLE_createListModal] = USE_toggle(false);
   const { user } = USE_auth();
+  const { lists_z, SET_lists_z } = USE_zustandStore();
 
   const [search, SET_search] = useState("");
-  const [lists, SET_lists] = useState<List_MODEL[]>([]);
   const [totalListCount, SET_totalListCount] = useState<number>(0);
 
   const { FETCH_userLists, ARE_userListsLoading, userLists_ERROR } =
@@ -43,29 +44,32 @@ export default function MyLists_PAGE() {
 
   const GET_lists = async () => {
     const result = await FETCH_userLists({ user_id: user.id, search });
-    SET_lists([...(result?.data || [])]);
-    if (!totalListCount) SET_totalListCount([...(result?.data || [])].length);
+    if (result.success) {
+      SET_lists_z(result.data);
+      if (!totalListCount) SET_totalListCount(result.data.length);
+    }
   };
+
+  const [filtered_LISTS, SET_filteredLsits] = useState<List_MODEL[]>(lists_z);
 
   useEffect(() => {
     GET_lists();
+  }, []);
 
-    // Subscribe to lists and vocabs updates
-    const unsubscribeLists = SUBSCRIBE_toLists({
-      SET_lists,
-      totalListCount,
-      SET_totalListCount,
-    });
-    const unsubscribeVocabs = SUBSCRIBE_toVocabsForLists({ SET_lists });
-
-    // Cleanup subscriptions on unmount
-    return () => {
-      unsubscribeLists();
-      unsubscribeVocabs();
-    };
-  }, [search]);
-
-  console.log(lists?.[0]?.vocabs);
+  useEffect(() => {
+    // When `search` changes, filter lists based on the search query
+    if (search === "") {
+      // If there's no search term, show all lists
+      SET_filteredLsits(lists_z);
+    } else {
+      // Filter the lists based on the search term (case-insensitive)
+      SET_filteredLsits(
+        lists_z.filter((list) =>
+          list.name.toLowerCase().includes(search.toLowerCase())
+        )
+      );
+    }
+  }, [search, lists_z]);
 
   return (
     <Page_WRAP>
@@ -90,9 +94,9 @@ export default function MyLists_PAGE() {
 
       {ARE_userListsLoading ? <List_SKELETONS /> : null}
 
-      {!ARE_userListsLoading && lists.length > 0 ? (
+      {!ARE_userListsLoading && filtered_LISTS.length > 0 ? (
         <Styled_FLATLIST
-          data={lists}
+          data={filtered_LISTS}
           renderItem={({ item }: { item: List_MODEL }) => (
             <List_BTN
               list={item}
@@ -104,12 +108,14 @@ export default function MyLists_PAGE() {
           )}
           keyExtractor={(item) => item.id}
           ListFooterComponent={
-            <Btn
-              text={t("btn.createList")}
-              iconLeft={<ICON_X color="primary" />}
-              type="seethrough_primary"
-              onPress={TOGGLE_createListModal}
-            />
+            search === "" ? (
+              <Btn
+                text={t("btn.createList")}
+                iconLeft={<ICON_X color="primary" />}
+                type="seethrough_primary"
+                onPress={TOGGLE_createListModal}
+              />
+            ) : null
           }
         />
       ) : !ARE_userListsLoading ? (
