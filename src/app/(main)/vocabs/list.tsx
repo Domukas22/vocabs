@@ -3,47 +3,68 @@
 //
 
 import { Button, Text, View } from "react-native";
-import Page_WRAP from "@/src/components/Compound/Page_WRAP/Page_WRAP";
-import Btn from "@/src/components/Basic/Btn/Btn";
-import { useRouter } from "expo-router";
-import { Styled_TEXT } from "@/src/components/Basic/Styled_TEXT/Styled_TEXT";
-import Header from "@/src/components/Compound/Header/Header";
+import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
 import {
-  ICON_3dots,
-  ICON_arrow,
-  ICON_displaySettings,
-  ICON_X,
-} from "@/src/components/Basic/icons/icons";
-import { TranslationCreation_PROPS, Vocab_MODEL } from "@/src/db/models";
-import { useEffect, useState } from "react";
+  MyVocab_MODAL,
+  MyVocabDisplaySettings_MODAL,
+  MyVocabs_HEADER,
+  MyVocabs_SUBNAV,
+  MyVocabs_FLATLIST,
+} from "@/src/features/2_vocabs";
+import { useRouter } from "expo-router";
+// import Btn from "@/src/components/Btn/Btn";
+// import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
+// import Header from "@/src/components/Header/Header";
+// import {
+//   ICON_3dots,
+//   ICON_arrow,
+//   ICON_displaySettings,
+//   ICON_X,
+// } from "@/src/components/icons/icons";
+// import { TranslationCreation_PROPS, Vocab_MODEL } from "@/src/db/models";
+// import { useEffect, useMemo, useState } from "react";
 import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
-import SUBSCRIBE_toVocabs from "@/src/db/vocabs/SUBSCRIBE_toVocabs";
-
-import { supabase } from "@/src/lib/supabase";
-import List_SKELETONS from "@/src/components/Basic/Skeletons/List_SKELETONS";
-import Styled_FLATLIST from "@/src/components/Basic/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
-
-import { DisplaySettings_MODEL } from "@/src/db/models";
-import Subnav from "@/src/components/Subnav/Subnav";
-import SearchBar from "@/src/components/Compound/SearchBar/SearchBar";
+import { DisplaySettings_MODEL, Vocab_MODEL } from "@/src/db/models";
+import { useMemo, useState } from "react";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
-import PrivateVocabs_SUBNAV from "@/src/components/Subnav/Variations/PrivateVocabs_SUBNAV";
-import PrivateVocabDisplaySettings_MODAL from "@/src/components/Modals/PrivateVocabDisplaySettings_MODAL/PrivateVocabDisplaySettings_MODAL";
-import PrivateVocab_MODAL from "@/src/components/Modals/Vocab_MODALS/PrivateVocab_MODAL/PrivateVocab_MODAL";
-import { useTranslation } from "react-i18next";
-import Private_VOCAB from "@/src/components/Complex/Vocab/Private_VOCAB/Private_VOCAB";
+import ListSettings_MODAL from "@/src/features/1_lists/components/ListSettings_MODAL/ListSettings_MODAL";
+import { USE_auth } from "@/src/context/Auth_CONTEXT";
 
-import { MyColors } from "@/src/constants/MyColors";
+// import SUBSCRIBE_toVocabs from "@/src/db/vocabs/SUBSCRIBE_toVocabs";
+
+// import { supabase } from "@/src/lib/supabase";
+// import List_SKELETONS from "@/src/components/Skeletons/List_SKELETONS";
+// import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
+
+// import { DisplaySettings_MODEL } from "@/src/db/models";
+// import Subnav from "@/src/components/Subnav/Subnav";
+// import SearchBar from "@/src/components/SearchBar/SearchBar";
+// import { USE_toggle } from "@/src/hooks/USE_toggle";
+// import e3 from "@/src/components/Subnav/Variations/PrivateVocabs_SUBNAV";
+// import PrivateVocabDisplaySettings_MODAL from "@/src/components/Modals/Big_MODAL/Variations/PrivateVocabDisplaySettings_MODAL/PrivateVocabDisplaySettings_MODAL";
+// import PrivateVocab_MODAL from "@/src/components/Modals/Vocab_MODALS/PrivateVocab_MODAL/PrivateVocab_MODAL";
+// import { useTranslation } from "react-i18next";
+// import Private_VOCAB from "@/src/components/Vocab/Private_VOCAB/Private_VOCAB";
+
+// import { MyColors } from "@/src/constants/MyColors";
 
 export default function SingleList_PAGE() {
   const router = useRouter();
   const { selected_LIST } = USE_selectedList();
   const [SHOW_displaySettings, TOGGLE_displaySettings] = USE_toggle(false);
   const [SHOW_vocabModal, TOGGLE_vocabModal] = USE_toggle(false);
+  const [SHOW_listSettingsModal, TOGGLE_listSettingsModal] = USE_toggle(false);
+  const { user } = USE_auth();
 
   const [vocabs, SET_vocabs] = useState<Vocab_MODEL[]>(
     selected_LIST?.vocabs || []
   );
+  // // const [filtered_VOCABS, SET_filteredVocabs] = useState<Vocab_MODEL[]>(vocabs);
+  const [target_VOCAB, SET_targetVocab] = useState<Vocab_MODEL | undefined>(
+    undefined
+  );
+  const [highlightedVocab_ID, SET_highlightedVocabId] = useState("");
+  const [IS_listNameHighlighted, SET_isListNameHightighted] = useState(false);
 
   const [displaySettings, SET_displaySettings] =
     useState<DisplaySettings_MODEL>({
@@ -58,12 +79,6 @@ export default function SingleList_PAGE() {
       difficultyFilters: [],
     });
 
-  const [target_VOCAB, SET_targetVocab] = useState<Vocab_MODEL | undefined>(
-    undefined
-  );
-
-  const [highlightedVocab_ID, SET_highlightedVocabId] = useState("");
-
   const HIGHLIGHT_vocab = (id: string) => {
     if (!highlightedVocab_ID) {
       SET_highlightedVocabId(id);
@@ -72,7 +87,14 @@ export default function SingleList_PAGE() {
       }, 2000);
     }
   };
-
+  const HIGHLIGHT_listName = () => {
+    if (!IS_listNameHighlighted) {
+      SET_isListNameHightighted(true);
+      setTimeout(() => {
+        SET_isListNameHightighted(false);
+      }, 2000);
+    }
+  };
   function HANDLE_vocabModal({
     clear = false,
     vocab,
@@ -90,85 +112,52 @@ export default function SingleList_PAGE() {
     }
   }
 
-  const [filtered_Vocabs, SET_filteredVocabs] = useState<Vocab_MODEL[]>(vocabs);
-  const [search, SET_search] = useState("");
+  // const filtered_VOCABS = useMemo(
+  //   () => filtered_VOCABS({ vocabs, settings: displaySettings }),
+  //   [displaySettings, vocabs]
+  // );
 
-  useEffect(() => {
-    // When `search` changes, filter lists based on the search query
-    if (displaySettings.search === "") {
-      // If there's no search term, show all lists
-      SET_filteredVocabs(vocabs);
-    } else {
-      // Filter the lists based on the search term (case-insensitive)
-      SET_filteredVocabs(
-        vocabs.filter(
-          (vocab) =>
-            vocab.description
-              ?.toLowerCase()
-              .includes(displaySettings.search.toLowerCase()) ||
-            vocab.translations?.some((tr) =>
-              tr.text
-                .toLowerCase()
-                .includes(displaySettings.search.toLowerCase())
-            )
-        )
-      );
-    }
-  }, [displaySettings.search, vocabs]);
+  const filtered_VOCABS = vocabs;
 
   return (
     <Page_WRAP>
-      <Header
-        title={selected_LIST.name || "none"}
-        btnLeft={
-          <Btn
-            type="seethrough"
-            iconLeft={<ICON_arrow />}
-            onPress={() => router.back()}
-            style={{ borderRadius: 100 }}
-          />
-        }
-        btnRight={
-          <Btn
-            type="seethrough"
-            iconLeft={<ICON_3dots />}
-            onPress={() => {}}
-            style={{ borderRadius: 100 }}
-          />
-        }
+      <View></View>
+      <MyVocabs_HEADER
+        list_NAME={selected_LIST.name}
+        btnBack_ACTION={() => router.back()}
+        btnDots_ACTION={TOGGLE_listSettingsModal}
+        IS_listNameHighlighted={IS_listNameHighlighted}
       />
-
-      <PrivateVocabs_SUBNAV
+      <MyVocabs_SUBNAV
         search={displaySettings.search}
-        SET_search={(val) =>
+        SET_search={(val: string) =>
           SET_displaySettings((prev) => ({ ...prev, search: val }))
         }
-        TOGGLE_displaySettings={TOGGLE_displaySettings}
-        HANDLE_vocabModal={HANDLE_vocabModal}
+        {...{
+          TOGGLE_displaySettings,
+          HANDLE_vocabModal,
+        }}
       />
-      {filtered_Vocabs && filtered_Vocabs.length > 0 ? (
-        <Styled_FLATLIST
-          data={filtered_Vocabs}
-          renderItem={({ item }) => (
-            <Private_VOCAB
-              key={"Vocab" + item.id}
-              vocab={item}
-              displaySettings={displaySettings}
-              HANDLE_vocabModal={HANDLE_vocabModal}
-              highlightedVocab_ID={highlightedVocab_ID}
-            />
-          )}
-          keyExtractor={(item) => "Vocab" + item.id}
+      {filtered_VOCABS && filtered_VOCABS.length > 0 ? (
+        <MyVocabs_FLATLIST
+          vocabs={filtered_VOCABS}
+          SHOW_bottomBtn={true}
+          {...{
+            highlightedVocab_ID,
+            TOGGLE_vocabModal,
+            HANDLE_vocabModal,
+            displaySettings,
+          }}
         />
       ) : null}
-
-      <PrivateVocabDisplaySettings_MODAL
+      <MyVocabDisplaySettings_MODAL
         open={SHOW_displaySettings}
         TOGGLE_open={TOGGLE_displaySettings}
         displaySettings={displaySettings}
         SET_displaySettings={SET_displaySettings}
       />
-      <PrivateVocab_MODAL
+
+      <MyVocab_MODAL
         open={SHOW_vocabModal}
         TOGGLE_modal={() => HANDLE_vocabModal({ clear: true })}
         vocab={target_VOCAB}
@@ -176,6 +165,77 @@ export default function SingleList_PAGE() {
         SET_vocabs={SET_vocabs}
         HIGHLIGHT_vocab={HIGHLIGHT_vocab}
       />
+      <ListSettings_MODAL
+        list={selected_LIST}
+        open={SHOW_listSettingsModal}
+        TOGGLE_open={TOGGLE_listSettingsModal}
+        user_id={user.id}
+        backToIndex={() => router.back()}
+        HIGHLIGHT_listName={HIGHLIGHT_listName}
+      />
     </Page_WRAP>
   );
 }
+
+// function FILTER_vocabs({
+//   vocabs,
+//   settings,
+// }: {
+//   vocabs: Vocab_MODEL[];
+//   settings: DisplaySettings_MODEL;
+// }) {
+//   const { search, sorting, sortDirection, frontLangId, difficultyFilters } =
+//     settings;
+
+//   let result = [...vocabs];
+
+//   // Filter by difficulties
+//   if (difficultyFilters && difficultyFilters.length > 0) {
+//     result = result.filter((vocab) =>
+//       difficultyFilters.includes(vocab?.difficulty)
+//     );
+//   }
+
+//   // Filter by search query (matching description or translations)
+//   if (search) {
+//     const searchLower = search.toLowerCase();
+//     result = result.filter(
+//       (vocab) =>
+//         vocab.description?.toLowerCase().includes(searchLower) ||
+//         vocab.translations?.some((translation) =>
+//           translation.text?.toLowerCase().includes(searchLower)
+//         )
+//     );
+//   }
+
+//   // Sorting
+//   if (sorting) {
+//     result = result.sort((a, b) => {
+//       let comparison = 0;
+
+//       switch (sorting) {
+//         case "difficulty":
+//           comparison = a.difficulty - b.difficulty;
+//           break;
+//         case "date":
+//           comparison =
+//             new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+//           break;
+//         case "shuffle":
+//           comparison = Math.random() - 0.5; // Randomize order
+//           break;
+//         default:
+//           break;
+//       }
+
+//       // Apply sorting direction
+//       if (sortDirection === "descending") {
+//         comparison = -comparison;
+//       }
+
+//       return comparison;
+//     });
+//   }
+
+//   return result;
+// }

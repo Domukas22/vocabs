@@ -4,10 +4,10 @@
 //
 
 import { View } from "react-native";
-import Page_WRAP from "../components/Compound/Page_WRAP/Page_WRAP";
-import { Styled_TEXT } from "../components/Basic/Styled_TEXT/Styled_TEXT";
+import Page_WRAP from "../components/Page_WRAP/Page_WRAP";
+import { Styled_TEXT } from "../components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "../constants/MyColors";
-import Btn from "../components/Basic/Btn/Btn";
+import Btn from "../components/Btn/Btn";
 import { useRouter } from "expo-router";
 
 export default function Welcome_PAGE() {

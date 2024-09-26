@@ -29,6 +29,7 @@ export interface List_MODEL {
   user_id: string;
   name: string;
   created_at: string;
+  default_TRs: string[];
 
   vocabs?: Vocab_MODEL[];
 }

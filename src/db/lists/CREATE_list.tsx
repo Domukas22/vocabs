@@ -3,8 +3,7 @@
 //
 import { useState } from "react";
 import { supabase } from "@/src/lib/supabase";
-import USE_zustandStore from "@/src/zustand_store";
-import { List_MODEL } from "../models";
+import USE_zustand from "@/src/zustand";
 
 export interface CreateList_PROPS {
   name: string;
@@ -15,7 +14,7 @@ export default function USE_createList() {
   const [IS_creatingList, SET_creatingList] = useState(false);
   const [createList_ERROR, SET_createListError] = useState<string | null>(null);
 
-  const { CREATE_privateList_z } = USE_zustandStore();
+  const { z_CREATE_privateList } = USE_zustand();
 
   const CREATE_list = async ({
     name,
@@ -41,8 +40,8 @@ export default function USE_createList() {
         return { success: false, msg: "🔴 Error creating list 🔴" };
       }
 
-      CREATE_privateList_z(data);
-      // Update zustand store with new list data
+      z_CREATE_privateList(data);
+      console.log("🟢 List created 🟢");
 
       return { success: true, data };
     } catch (error) {

@@ -3,14 +3,14 @@
 //
 
 import { ActivityIndicator, Alert, View } from "react-native";
-import { Styled_TEXT } from "../components/Basic/Styled_TEXT/Styled_TEXT";
-import Page_WRAP from "../components/Compound/Page_WRAP/Page_WRAP";
+import { Styled_TEXT } from "../components/Styled_TEXT/Styled_TEXT";
+import Page_WRAP from "../components/Page_WRAP/Page_WRAP";
 import { MyColors } from "../constants/MyColors";
-import Block from "../components/Basic/Block/Block";
-import StyledText_INPUT from "../components/Basic/StyledText_INPUT/StyledText_INPUT";
+import Block from "../components/Block/Block";
+import StyledText_INPUT from "../components/StyledText_INPUT/StyledText_INPUT";
 import { useState } from "react";
-import Label from "../components/Basic/Label/Label";
-import Btn from "../components/Basic/Btn/Btn";
+import Label from "../components/Label/Label";
+import Btn from "../components/Btn/Btn";
 import { Link, useRouter } from "expo-router";
 import { supabase } from "../lib/supabase";
 

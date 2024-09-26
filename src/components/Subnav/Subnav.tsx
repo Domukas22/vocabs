@@ -3,24 +3,30 @@
 //
 
 import { View } from "react-native";
-import SearchBar from "../Compound/SearchBar/SearchBar";
-import Btn from "../btn/btn";
-import { ICON_displaySettings, ICON_X } from "../Basic/icons/icons";
 import { MyColors } from "@/src/constants/MyColors";
 import React, { ReactNode } from "react";
 
-export default function Subnav({ children }: { children: ReactNode }) {
+export default function Subnav({
+  children,
+  noPadding = false,
+}: {
+  children: ReactNode;
+  noPadding?: boolean;
+}) {
   return (
     <View
-      style={{
-        flexDirection: "row",
-        gap: 8,
-        flexWrap: "wrap",
-        paddingHorizontal: 12,
-        paddingVertical: 8,
-        borderBottomWidth: 1,
-        borderColor: MyColors.border_white_005,
-      }}
+      style={[
+        {
+          flexDirection: "row",
+          gap: 8,
+          flexWrap: "wrap",
+          paddingHorizontal: 12,
+          paddingVertical: 8,
+          borderBottomWidth: 1,
+          borderColor: MyColors.border_white_005,
+        },
+        noPadding && { paddingHorizontal: 0, paddingVertical: 0 },
+      ]}
     >
       {children}
     </View>

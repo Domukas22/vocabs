@@ -2,29 +2,29 @@
 //
 //
 
-import Btn from "@/src/components/Basic/Btn/Btn";
-import Header from "@/src/components/Compound/Header/Header";
+import Btn from "@/src/components/Btn/Btn";
+import Header from "@/src/components/Header/Header";
 
 import {
   ICON_3dots,
   ICON_arrow,
   ICON_flag,
-} from "@/src/components/Basic/icons/icons";
+} from "@/src/components/icons/icons";
 
 import React, { useMemo, useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 
 import { router } from "expo-router";
-import Page_WRAP from "@/src/components/Compound/Page_WRAP/Page_WRAP";
+import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
 
-import Block from "@/src/components/Basic/Block/Block";
-import Settings_TOGGLE from "@/src/components/Compound/Settings_TOGGLE/Settings_TOGGLE";
-import { Styled_TEXT } from "@/src/components/Basic/Styled_TEXT/Styled_TEXT";
+import Block from "@/src/components/Block/Block";
+import Settings_TOGGLE from "@/src/components/Settings_TOGGLE/Settings_TOGGLE";
+import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import { supabase } from "@/src/lib/supabase";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
-import LogoutConfirmation_MODAL from "@/src/components/Modals/LogoutConfirmation_MODAL/LogoutConfirmation_MODAL";
+import LogoutConfirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/LogoutConfirmation_MODAL/LogoutConfirmation_MODAL";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 
 export default function Settings_PAGE() {
@@ -63,7 +63,10 @@ export default function Settings_PAGE() {
       >
         <View style={{ flex: 1 }}>
           <Styled_TEXT type="text_18_bold">Email</Styled_TEXT>
-          <Styled_TEXT>{user?.email || "---"}</Styled_TEXT>
+          <Styled_TEXT>
+            asdasdasdasdasdasdasdasdadawdawdasdasdawdawd
+          </Styled_TEXT>
+          {/* <Styled_TEXT>{user?.email || "---"}</Styled_TEXT> */}
         </View>
         <Btn text="Edit" />
       </Block>

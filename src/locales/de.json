@@ -5,7 +5,8 @@
   "test": "hallo there",
   "header": {
     "page_list": "Meine Listen",
-    "page_about": "Über uns"
+    "page_about": "Über uns",
+    "listSettings": "Liste Einstellungen"
   },
   "blockLabels": {
     "uiLang": "App Sprache"
@@ -38,10 +39,14 @@
     "close": "Schließen",
     "confirmLogout": "Ja, ausloggen",
     "deleteVocab": "Vokabel löschen",
-    "confirmVocabDelete": "Ja, löschen",
+    "confirmDelete": "Ja, löschen",
     "saveVocabToList": "Zur privaten Liste hinfügen",
     "editVocabAsAdmin": "Als Admin bearbeiten",
-    "confirmAddinVocabToList": "Zur Liste hinfügen"
+    "confirmAddinVocabToList": "Zur Liste hinfügen",
+    "sortByShuffling": "Zufällig mischen",
+    "createVocab": "Vokabel erstellen",
+    "deleteList": "Liste löschen",
+    "confirmListRename": "Name speichern"
   },
   "pages": {
     "about": {
@@ -124,7 +129,11 @@
     "description": "Beschreibung (optional)",
     "chosenList": "Ausgewählte Liste",
     "youDontHaveAnyLists": "Du hast noch keine Listen",
-    "noListsFound": "Keine Listen gefunden"
+    "noListsFound": "Keine Listen gefunden",
+    "sortDirection": "Sortierungs Richtung",
+    "listName": "Listen Name",
+    "defaultVocabLangs": "Sprachen, die beim Erstellen eines neuen Vokabulars standardmäßig ausgewählt werden",
+    "editListName": "Nenne die Liste um"
   },
   "modal": {
     "displaySettings": {
@@ -154,6 +163,10 @@
     },
     "deleteVocabConfirmation": {
       "header": "Vokabel löschen?"
+    },
+    "listSettings": {
+      "deleteListconfirmation": "List löschen?",
+      "renameListModalTitle": "Liste umbenennen"
     }
   },
   "difficulty": {
@@ -179,11 +192,16 @@
   },
   "placeholder": {
     "translation": "Übersetzung...",
-    "description": "Notiere dir den Ort / Film / das Buch, damit du dich besser daran erinnerst..."
+    "description": "Notiere dir den Ort / Film / das Buch, damit du dich besser daran erinnerst...",
+    "enterNewListName": "Französische Vokabeln..."
   },
   "notifications": {
     "vocabUpdated": "Vokabel aktualisiert",
     "vocabCreated": "Neue Vokabel hinfzugefügt",
-    "vocabDeleted": "Vokabel gelöscht"
+    "vocabDeleted": "Vokabel gelöscht",
+    "listDeleted": "Liste gelöscht",
+    "listRenamed": "Liste umbennant",
+    "defaultTRsUpdated": "Standardübersetzungen der Liste aktualisiert",
+    "vocabDifficultyUpdated": "Schwierigkeit der Vokabel aktualisiert"
   }
 }

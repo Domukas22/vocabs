@@ -48,6 +48,7 @@ export const MyColors = {
   border_primary: primitives.primary1,
 
   // Fill colors
+  fill_primary: primitives.primary1,
   fill_bg: primitives.dark1,
   fill_bg_light: primitives.dark2,
   fill_bg_dark_seethrough: primitives.dark_seethrough,

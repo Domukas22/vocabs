@@ -3,7 +3,7 @@
 //
 
 import { supabase } from "@/src/lib/supabase";
-import USE_zustandStore from "@/src/zustand_store";
+import USE_zustand from "@/src/zustand_store";
 import { useState } from "react";
 
 export async function FETCH_lists() {

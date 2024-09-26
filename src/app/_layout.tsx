@@ -12,10 +12,10 @@ import { Langs_PROVIDER, USE_langs } from "../context/Langs_CONTEXT";
 import { ToastProvider } from "react-native-toast-notifications";
 import "@/src/i18n";
 import { View } from "react-native";
-import { Styled_TEXT } from "../components/Basic/Styled_TEXT/Styled_TEXT";
+import { Styled_TEXT } from "../components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "../constants/MyColors";
-import { ICON_toastNotification } from "../components/Basic/icons/icons";
-import Custom_TOAST from "../components/Basic/Custom_TOAST/Custom_TOAST";
+import { ICON_toastNotification } from "../components/icons/icons";
+import Custom_TOAST from "../components/Custom_TOAST/Custom_TOAST";
 
 export default function _layout() {
   return (

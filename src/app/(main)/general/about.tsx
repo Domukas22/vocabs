@@ -2,10 +2,10 @@
 //
 //
 
-import Btn from "@/src/components/Basic/Btn/Btn";
-import Header from "@/src/components/Compound/Header/Header";
+import Btn from "@/src/components/Btn/Btn";
+import Header from "@/src/components/Header/Header";
 
-import { ICON_3dots, ICON_arrow } from "@/src/components/Basic/icons/icons";
+import { ICON_3dots, ICON_arrow } from "@/src/components/icons/icons";
 
 import React from "react";
 import { Image, ScrollView, StyleSheet } from "react-native";
@@ -13,9 +13,9 @@ import { Image, ScrollView, StyleSheet } from "react-native";
 import { router } from "expo-router";
 
 import { View } from "react-native";
-import { Styled_TEXT } from "@/src/components/Basic/Styled_TEXT/Styled_TEXT";
+import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
-import Page_WRAP from "@/src/components/Compound/Page_WRAP/Page_WRAP";
+import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
 import { useTranslation } from "react-i18next";
 
 export default function About_PAGE() {

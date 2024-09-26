@@ -2,156 +2,82 @@
 //
 //
 
-import { Button, View } from "react-native";
-import Page_WRAP from "@/src/components/Compound/Page_WRAP/Page_WRAP";
-import Btn from "@/src/components/Basic/Btn/Btn";
+import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
 import { useRouter } from "expo-router";
-import { Styled_TEXT } from "@/src/components/Basic/Styled_TEXT/Styled_TEXT";
-import Header from "@/src/components/Compound/Header/Header";
-import {
-  ICON_arrow,
-  ICON_premiumCheckmark,
-  ICON_toastNotification,
-  ICON_X,
-} from "@/src/components/Basic/icons/icons";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
-import { supabase } from "@/src/lib/supabase";
-import { useEffect, useState } from "react";
-import USE_fetchUserLists from "@/src/db/lists/USE_fetchUserLists/USE_fetchUserLists";
-import Styled_FLATLIST from "@/src/components/Basic/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
-import List_BTN from "@/src/components/Complex/List_BTN/List_BTN";
+import { useEffect, useMemo, useState } from "react";
+
 import { List_MODEL } from "@/src/db/models";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
-import CreateList_MODAL from "@/src/components/Modals/CreateList_MODAL/CreateList_MODAL";
 
-import List_SKELETONS from "@/src/components/Basic/Skeletons/List_SKELETONS";
+import {
+  CreateList_MODAL,
+  List_SKELETONS,
+  MyLists_BOTTOM,
+  MyLists_FLATLIST,
+  MyLists_HEADER,
+  MyLists_SUBNAV,
+  FETCH_myLists,
+} from "@/src/features/1_lists";
 
-import { useTranslation } from "react-i18next";
-import Subnav from "@/src/components/Subnav/Subnav";
-import SearchBar from "@/src/components/Compound/SearchBar/SearchBar";
-import { MyColors } from "@/src/constants/MyColors";
-import USE_zustandStore from "@/src/zustand_store";
+import { Button } from "react-native";
+import FILTER_lists from "@/src/features/1_lists/utils/FILTER_lists";
 
-import { useToast } from "react-native-toast-notifications";
+import USE_zustand from "@/src/zustand";
 
 export default function MyLists_PAGE() {
-  const { t } = useTranslation();
   const router = useRouter();
-  const { SET_selectedList } = USE_selectedList();
   const [SHOW_createListModal, TOGGLE_createListModal] = USE_toggle(false);
+  const { SET_selectedList } = USE_selectedList();
   const { user } = USE_auth();
-  const { lists_z, SET_lists_z } = USE_zustandStore();
-
   const [search, SET_search] = useState("");
-  const [totalListCount, SET_totalListCount] = useState<number>(0);
 
-  const { FETCH_userLists, ARE_userListsLoading, userLists_ERROR } =
-    USE_fetchUserLists();
+  const {
+    z_lists,
+    z_ARE_listsLoading,
+    z_SET_lists,
+    z_SET_listsLoading,
+    z_SET_listsError,
+  } = USE_zustand();
 
-  const GET_lists = async () => {
-    const result = await FETCH_userLists({ user_id: user.id, search });
-    if (result.success) {
-      SET_lists_z(result.data);
-      if (!totalListCount) SET_totalListCount(result.data.length);
-    }
-  };
-
-  const [filtered_LISTS, SET_filteredLsits] = useState<List_MODEL[]>(lists_z);
+  const filtered_LISTS = useMemo(
+    () => FILTER_lists({ search, lists: z_lists }),
+    [search, z_lists]
+  );
 
   useEffect(() => {
-    GET_lists();
+    console.log("FIRE HERE");
+
+    (async () =>
+      FETCH_myLists({
+        user_id: user.id,
+        z: {
+          z_SET_lists,
+          z_SET_listsLoading,
+          z_SET_listsError,
+        },
+      }))();
   }, []);
-
-  useEffect(() => {
-    // When `search` changes, filter lists based on the search query
-    if (search === "") {
-      // If there's no search term, show all lists
-      SET_filteredLsits(lists_z);
-    } else {
-      // Filter the lists based on the search term (case-insensitive)
-      SET_filteredLsits(
-        lists_z.filter((list) =>
-          list.name.toLowerCase().includes(search.toLowerCase())
-        )
-      );
-    }
-  }, [search, lists_z]);
 
   return (
     <Page_WRAP>
-      <Header
-        title={t("header.page_list")}
-        big={true}
-        btnRight={
-          <Btn
-            type="seethrough_primary"
-            iconLeft={<ICON_X color="primary" big={true} />}
-            onPress={TOGGLE_createListModal}
-            style={{ borderRadius: 100 }}
-          />
-        }
-      />
+      <MyLists_HEADER {...{ TOGGLE_createListModal }} />
 
-      {totalListCount > 6 && (
-        <Subnav>
-          <SearchBar value={search} SET_value={SET_search} />
-        </Subnav>
-      )}
-
-      {ARE_userListsLoading ? <List_SKELETONS /> : null}
-
-      {!ARE_userListsLoading && filtered_LISTS.length > 0 ? (
-        <Styled_FLATLIST
-          data={filtered_LISTS}
-          renderItem={({ item }: { item: List_MODEL }) => (
-            <List_BTN
-              list={item}
-              onPress={() => {
-                SET_selectedList(item);
-                router.push("/(main)/vocabs/list");
-              }}
-            />
-          )}
-          keyExtractor={(item) => item.id}
-          ListFooterComponent={
-            search === "" ? (
-              <Btn
-                text={t("btn.createList")}
-                iconLeft={<ICON_X color="primary" />}
-                type="seethrough_primary"
-                onPress={TOGGLE_createListModal}
-              />
-            ) : null
-          }
+      {z_lists.length > 5 && <MyLists_SUBNAV {...{ search, SET_search }} />}
+      {z_ARE_listsLoading ? <List_SKELETONS /> : null}
+      {!z_ARE_listsLoading && filtered_LISTS.length > 0 ? (
+        <MyLists_FLATLIST
+          lists={filtered_LISTS}
+          SELECT_list={(list: List_MODEL) => {
+            SET_selectedList(list);
+            router.push("/(main)/vocabs/list");
+          }}
+          SHOW_bottomBtn={search === ""}
+          TOGGLE_createListModal={TOGGLE_createListModal}
         />
-      ) : !ARE_userListsLoading ? (
-        <View style={{ padding: 12, gap: 12 }}>
-          <View
-            style={{
-              borderWidth: 1,
-              borderColor: MyColors.border_white_005,
-              alignItems: "center",
-              justifyContent: "center",
-              paddingVertical: 24,
-              borderRadius: 12,
-            }}
-          >
-            <Styled_TEXT style={{ color: MyColors.text_white_06 }}>
-              {search === ""
-                ? t("label.youDontHaveAnyLists")
-                : t("label.noListsFound")}
-            </Styled_TEXT>
-          </View>
-          {search === "" && (
-            <Btn
-              text={t("btn.createList")}
-              iconLeft={<ICON_X color="primary" />}
-              type="seethrough_primary"
-              onPress={TOGGLE_createListModal}
-            />
-          )}
-        </View>
+      ) : !z_ARE_listsLoading ? (
+        <MyLists_BOTTOM {...{ search, TOGGLE_createListModal }} />
       ) : null}
 
       <CreateList_MODAL

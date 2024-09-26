@@ -3,9 +3,9 @@
 //
 
 import { TranslationCreation_PROPS, Vocab_MODEL } from "@/src/db/models";
-import Btn from "../../Basic/Btn/Btn";
-import { ICON_displaySettings, ICON_X } from "../../Basic/icons/icons";
-import SearchBar from "../../Compound/SearchBar/SearchBar";
+import Btn from "../../Btn/Btn";
+import { ICON_displaySettings, ICON_X } from "../../icons/icons";
+import SearchBar from "../../SearchBar/SearchBar";
 import Subnav from "../Subnav";
 
 interface MyVocabsSubnav_PROPS {

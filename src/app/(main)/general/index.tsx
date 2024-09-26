@@ -2,10 +2,10 @@
 //
 //
 
-import Page_WRAP from "@/src/components/Compound/Page_WRAP/Page_WRAP";
-import Header from "@/src/components/Compound/Header/Header";
-import Btn from "@/src/components/Basic/Btn/Btn";
-import Block from "@/src/components/Basic/Block/Block";
+import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
+import Header from "@/src/components/Header/Header";
+import Btn from "@/src/components/Btn/Btn";
+import Block from "@/src/components/Block/Block";
 import {
   ICON_settings,
   ICON_arrow,
@@ -13,16 +13,17 @@ import {
   ICON_privacyPolicy,
   ICON_contact,
   ICON_about,
-} from "@/src/components/Basic/icons/icons";
-import { Styled_TEXT } from "@/src/components/Basic/Styled_TEXT/Styled_TEXT";
+} from "@/src/components/icons/icons";
+import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
 import { router } from "expo-router";
 import { Alert, ScrollView, Text, View } from "react-native";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import { supabase } from "@/src/lib/supabase";
 import { useTranslation } from "react-i18next";
-import LogoutConfirmation_MODAL from "@/src/components/Modals/LogoutConfirmation_MODAL/LogoutConfirmation_MODAL";
+import LogoutConfirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/LogoutConfirmation_MODAL/LogoutConfirmation_MODAL";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
+import Confirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
 
 export default function General_PAGE() {
   const { t } = useTranslation();
@@ -153,10 +154,14 @@ export default function General_PAGE() {
           />
         </Block>
       </ScrollView>
-      <LogoutConfirmation_MODAL
+
+      {/* ----- LOGOUT confirmation ----- */}
+      <Confirmation_MODAL
         open={IS_logoutModalOpen}
-        TOGGLE_open={TOGGLE_logoutModal}
-        logout={lougout}
+        toggle={TOGGLE_logoutModal}
+        title={t("modal.logoutConfirmation.header")}
+        action={lougout}
+        actionBtnText={t("btn.confirmLogout")}
       />
     </Page_WRAP>
   );
