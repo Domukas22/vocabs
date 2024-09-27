@@ -43,7 +43,8 @@
     "sortByShuffling": "Shuffle randomly",
     "createVocab": "Create vocab",
     "deleteList": "Delelte list",
-    "confirmListRename": "Save name"
+    "confirmListRename": "Save name",
+    "confirmListSelection": "Select list"
   },
   "pages": {
     "about": {
@@ -181,7 +182,8 @@
   "vocabDummy": {
     "translation": "Vocabs app is awesome",
     "listName": "Name of the list",
-    "description": "Vocab description"
+    "description": "Vocab description",
+    "title": "Vocabs app is awesome"
   },
   "word": {
     "translation": "translation",
@@ -199,6 +201,10 @@
     "listDeleted": "List deleted",
     "listRenamed": "Renamed list",
     "defaultTRsUpdated": "Default list translations updated ",
-    "vocabDifficultyUpdated": "Updated vocab difficulty"
+    "vocabDifficultyUpdated": "Updated vocab difficulty",
+    "vocabCopied": "The vocab was added to your list",
+    "publicVocabCreated": "Public vocab created",
+    "publicVocabUpdated": "Public vocab updated",
+    "publicVocabDeleted": "Public vocab deleted"
   }
 }

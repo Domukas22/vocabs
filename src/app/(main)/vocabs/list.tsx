@@ -24,7 +24,7 @@ import { useRouter } from "expo-router";
 // import { TranslationCreation_PROPS, Vocab_MODEL } from "@/src/db/models";
 // import { useEffect, useMemo, useState } from "react";
 import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
-import { DisplaySettings_MODEL, Vocab_MODEL } from "@/src/db/models";
+import { MyVocabDisplaySettings_PROPS, Vocab_MODEL } from "@/src/db/models";
 import { useMemo, useState } from "react";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 import ListSettings_MODAL from "@/src/features/1_lists/components/ListSettings_MODAL/ListSettings_MODAL";
@@ -36,7 +36,7 @@ import { USE_auth } from "@/src/context/Auth_CONTEXT";
 // import List_SKELETONS from "@/src/components/Skeletons/List_SKELETONS";
 // import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
 
-// import { DisplaySettings_MODEL } from "@/src/db/models";
+// import { MyVocabDisplaySettings_PROPS } from "@/src/db/models";
 // import Subnav from "@/src/components/Subnav/Subnav";
 // import SearchBar from "@/src/components/SearchBar/SearchBar";
 // import { USE_toggle } from "@/src/hooks/USE_toggle";
@@ -67,15 +67,15 @@ export default function SingleList_PAGE() {
   const [IS_listNameHighlighted, SET_isListNameHightighted] = useState(false);
 
   const [displaySettings, SET_displaySettings] =
-    useState<DisplaySettings_MODEL>({
-      search: "",
-      sorting: "difficulty",
-      sortDirection: "ascending",
-      SHOW_image: false,
+    useState<MyVocabDisplaySettings_PROPS>({
+      SHOW_image: true,
       SHOW_description: true,
       SHOW_flags: true,
       SHOW_difficulty: true,
-      frontLangId: "en",
+      frontTrLang_ID: "en",
+      sorting: "difficulty",
+      sortDirection: "ascending",
+      search: "",
       difficultyFilters: [],
     });
 
@@ -102,7 +102,6 @@ export default function SingleList_PAGE() {
     clear?: boolean;
     vocab?: Vocab_MODEL;
   }) {
-    // return;
     if (!clear && vocab) {
       SET_targetVocab(vocab);
       TOGGLE_vocabModal();
@@ -117,13 +116,12 @@ export default function SingleList_PAGE() {
   //   [displaySettings, vocabs]
   // );
 
-  const filtered_VOCABS = vocabs;
+  console.log("LIST pageds");
 
   return (
     <Page_WRAP>
-      <View></View>
       <MyVocabs_HEADER
-        list_NAME={selected_LIST.name}
+        list_NAME={selected_LIST?.name && selected_LIST.name}
         btnBack_ACTION={() => router.back()}
         btnDots_ACTION={TOGGLE_listSettingsModal}
         IS_listNameHighlighted={IS_listNameHighlighted}
@@ -138,9 +136,9 @@ export default function SingleList_PAGE() {
           HANDLE_vocabModal,
         }}
       />
-      {filtered_VOCABS && filtered_VOCABS.length > 0 ? (
+      {vocabs && vocabs.length > 0 ? (
         <MyVocabs_FLATLIST
-          vocabs={filtered_VOCABS}
+          vocabs={vocabs}
           SHOW_bottomBtn={true}
           {...{
             highlightedVocab_ID,
@@ -182,9 +180,9 @@ export default function SingleList_PAGE() {
 //   settings,
 // }: {
 //   vocabs: Vocab_MODEL[];
-//   settings: DisplaySettings_MODEL;
+//   settings: MyVocabDisplaySettings_PROPS;
 // }) {
-//   const { search, sorting, sortDirection, frontLangId, difficultyFilters } =
+//   const { search, sorting, sortDirection, frontTrLang_ID, difficultyFilters } =
 //     settings;
 
 //   let result = [...vocabs];

@@ -8,7 +8,6 @@ interface PublicVocabCreation_MODEL {
   description?: string | "";
   image?: string | "";
   translations: TranslationCreation_PROPS[];
-  toggleFn: () => void;
 }
 
 export default function USE_createPublicVocab() {
@@ -21,7 +20,7 @@ export default function USE_createPublicVocab() {
     data?: any;
     msg?: string;
   }> => {
-    const { description, image, translations, toggleFn = () => {} } = props;
+    const { description, image, translations } = props;
 
     const vocab_DATA: {
       difficulty?: number;
@@ -83,7 +82,6 @@ export default function USE_createPublicVocab() {
         };
       }
 
-      toggleFn();
       return {
         success: true,
         data: { vocabData, translations: translationResults },

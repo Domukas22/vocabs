@@ -65,7 +65,8 @@ function Main_LAYOUT() {
           SET_auth(session?.user);
           GET_userData(session?.user);
           // router.push("/(main)/vocabs");
-          router.push("/(main)/vocabs");
+          router.push("/(main)/explore");
+          console.log("LOOOOOG");
         } else {
           SET_auth(null);
           router.push("/welcome");

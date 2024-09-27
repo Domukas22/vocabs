@@ -3,60 +3,93 @@
 //
 import { supabase } from "@/src/lib/supabase";
 import { useState } from "react";
-import { TranslationCreation_PROPS } from "../models";
+import { TranslationCreation_PROPS, Vocab_MODEL } from "../../../../db/models";
 
-interface UpdatePublicVocab_PROPS {
-  public_vocab_id: string; // Added vocab_id for identifying the vocab to update
+interface VocabUpdate_MODEL {
+  vocab_id: string; // Added vocab_id for identifying the vocab to update
+  user_id: string;
+  list_id: string;
+  difficulty?: 1 | 2 | 3;
   description?: string | "";
   image?: string | "";
   translations: TranslationCreation_PROPS[];
 }
 
-export default function USE_updatePublicVocab() {
-  const [IS_updatingPublicVocab, SET_isUpdatingPublicVocab] = useState(false);
+export default function USE_updateMyVocab() {
+  const [IS_updatingVocab, SET_isUpdatingVocab] = useState(false);
 
-  const UPDATE_publicVocab = async (
-    props: UpdatePublicVocab_PROPS
+  const UPDATE_privateVocab = async (
+    props: VocabUpdate_MODEL
   ): Promise<{
     success: boolean;
     data?: any;
     msg?: string;
   }> => {
-    const { public_vocab_id, description, image, translations } = props;
+    const {
+      vocab_id, // Used to identify the vocab to update
+      user_id,
+      list_id,
+      difficulty,
+      description,
+      image,
+      translations,
+    } = props;
 
-    if (!public_vocab_id) {
-      console.log("🔴 Vocab ID not defined when updating public vocab 🔴");
+    if (!vocab_id) {
+      console.log("🔴 Vocab ID not defined when updating vocab 🔴");
       return {
         success: false,
-        msg: "🔴 Vocab ID not defined when updating public vocab 🔴",
+        msg: "🔴 Vocab ID not defined when updating vocab 🔴",
+      };
+    }
+
+    if (!user_id) {
+      console.log("🔴 User not defined when updating vocab 🔴");
+      return {
+        success: false,
+        msg: "🔴 User not defined when updating vocab 🔴",
+      };
+    }
+
+    if (!list_id) {
+      console.log("🔴 List not defined when updating vocab 🔴");
+      return {
+        success: false,
+        msg: "🔴 List not defined when updating vocab 🔴",
       };
     }
 
     const vocab_DATA: {
+      list_id: string;
+      user_id: string;
       difficulty?: number;
       description?: string;
       image?: string;
-    } = {};
+    } = {
+      list_id,
+      user_id,
+    };
 
+    if (difficulty) vocab_DATA.difficulty = difficulty;
     if (description) vocab_DATA.description = description;
     if (image) vocab_DATA.image = image;
 
     try {
-      SET_isUpdatingPublicVocab(true);
+      SET_isUpdatingVocab(true);
 
       // Update the vocab
       const { data: updatedVocabData, error: vocabError } = await supabase
-        .from("public_vocabs")
+        .from("vocabs")
         .update(vocab_DATA)
-        .eq("id", public_vocab_id) // Find vocab by its ID
+        .eq("id", vocab_id) // Find vocab by its ID
         .select()
         .single();
 
       if (vocabError) {
-        console.log("🔴 Error updating public vocab 🔴 : ", vocabError);
+        console.log("🔴 Error updating vocab 🔴 : ", vocabError);
         return {
           success: false,
-          msg: "🔴 Error updating public vocab 🔴",
+          msg: "🔴 Error updating vocab 🔴",
         };
       }
 
@@ -65,14 +98,14 @@ export default function USE_updatePublicVocab() {
         const existingTranslation = await supabase
           .from("translations")
           .select("id")
-          .eq("public_vocab_id", public_vocab_id)
+          .eq("vocab_id", vocab_id)
           .eq("lang_id", translation.lang_id)
           .single();
 
         if (existingTranslation.data) {
           // Update the existing translation
           return supabase
-            .from("public_translations")
+            .from("translations")
             .update({
               text: translation.text,
               highlights: translation.highlights,
@@ -82,10 +115,11 @@ export default function USE_updatePublicVocab() {
         } else {
           // Insert a new translation if it doesn't exist
           return supabase
-            .from("public_translations")
+            .from("translations")
             .insert([
               {
-                public_vocab_id,
+                vocab_id: vocab_id,
+                user_id: user_id,
                 lang_id: translation.lang_id,
                 text: translation.text,
                 highlights: translation.highlights,
@@ -104,32 +138,34 @@ export default function USE_updatePublicVocab() {
 
       if (failedTranslations.length > 0) {
         console.log(
-          "🔴 Error updating some public translations 🔴",
+          "🔴 Error updating some translations 🔴",
           failedTranslations
         );
         return {
           success: false,
-          msg: "🔴 Error updating some public translations 🔴",
+          msg: "🔴 Error updating some translations 🔴",
         };
       }
 
+      const updatedVocab: Vocab_MODEL = {
+        ...updatedVocabData,
+        translations: translationResults.flatMap((x) => x.data),
+      };
+
       return {
         success: true,
-        data: { updatedVocabData, translations: translationResults },
+        data: updatedVocab,
       };
     } catch (error) {
-      console.log(
-        "🔴 Error updating public vocab or translations 🔴 : ",
-        error
-      );
+      console.log("🔴 Error updating vocab or translations 🔴 : ", error);
       return {
         success: false,
-        msg: "🔴 Error updating public vocab or translations 🔴",
+        msg: "🔴 Error updating vocab or translations 🔴",
       };
     } finally {
-      SET_isUpdatingPublicVocab(false);
+      SET_isUpdatingVocab(false);
     }
   };
 
-  return { UPDATE_publicVocab, IS_updatingPublicVocab };
+  return { UPDATE_privateVocab, IS_updatingVocab };
 }

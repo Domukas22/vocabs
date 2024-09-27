@@ -3,28 +3,33 @@
 //
 import { supabase } from "@/src/lib/supabase";
 import { useState } from "react";
-import { TranslationCreation_PROPS } from "../models";
+import { TranslationCreation_PROPS, Vocab_MODEL } from "../../../../db/models";
 
-interface UpdatePublicVocab_PROPS {
-  public_vocab_id: string; // Added vocab_id for identifying the vocab to update
+interface PublicVocabUpdate_MODEL {
+  vocab_id: string;
   description?: string | "";
   image?: string | "";
   translations: TranslationCreation_PROPS[];
 }
 
-export default function USE_updatePublicVocab() {
+export default function USE_updateMyVocab() {
   const [IS_updatingPublicVocab, SET_isUpdatingPublicVocab] = useState(false);
 
   const UPDATE_publicVocab = async (
-    props: UpdatePublicVocab_PROPS
+    props: PublicVocabUpdate_MODEL
   ): Promise<{
     success: boolean;
     data?: any;
     msg?: string;
   }> => {
-    const { public_vocab_id, description, image, translations } = props;
+    const {
+      vocab_id, // Used to identify the vocab to update
+      description,
+      image,
+      translations,
+    } = props;
 
-    if (!public_vocab_id) {
+    if (!vocab_id) {
       console.log("🔴 Vocab ID not defined when updating public vocab 🔴");
       return {
         success: false,
@@ -33,7 +38,6 @@ export default function USE_updatePublicVocab() {
     }
 
     const vocab_DATA: {
-      difficulty?: number;
       description?: string;
       image?: string;
     } = {};
@@ -48,7 +52,7 @@ export default function USE_updatePublicVocab() {
       const { data: updatedVocabData, error: vocabError } = await supabase
         .from("public_vocabs")
         .update(vocab_DATA)
-        .eq("id", public_vocab_id) // Find vocab by its ID
+        .eq("id", vocab_id)
         .select()
         .single();
 
@@ -63,9 +67,9 @@ export default function USE_updatePublicVocab() {
       // Upsert (insert or update) translations
       const translationPromises = translations.map(async (translation) => {
         const existingTranslation = await supabase
-          .from("translations")
+          .from("public_translations")
           .select("id")
-          .eq("public_vocab_id", public_vocab_id)
+          .eq("public_vocab_id", vocab_id)
           .eq("lang_id", translation.lang_id)
           .single();
 
@@ -85,7 +89,7 @@ export default function USE_updatePublicVocab() {
             .from("public_translations")
             .insert([
               {
-                public_vocab_id,
+                public_vocab_id: vocab_id,
                 lang_id: translation.lang_id,
                 text: translation.text,
                 highlights: translation.highlights,
@@ -104,18 +108,23 @@ export default function USE_updatePublicVocab() {
 
       if (failedTranslations.length > 0) {
         console.log(
-          "🔴 Error updating some public translations 🔴",
+          "🔴 Error updating some translations 🔴",
           failedTranslations
         );
         return {
           success: false,
-          msg: "🔴 Error updating some public translations 🔴",
+          msg: "🔴 Error updating some translations 🔴",
         };
       }
 
+      const updatedVocab: Vocab_MODEL = {
+        ...updatedVocabData,
+        translations: translationResults.flatMap((x) => x.data),
+      };
+
       return {
         success: true,
-        data: { updatedVocabData, translations: translationResults },
+        data: updatedVocab,
       };
     } catch (error) {
       console.log(

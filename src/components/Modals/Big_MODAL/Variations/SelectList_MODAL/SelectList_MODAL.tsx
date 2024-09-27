@@ -12,60 +12,47 @@ import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import Subnav from "@/src/components/Subnav/Subnav";
 
 import { MyColors } from "@/src/constants/MyColors";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { FlatList, Modal, SafeAreaView, View } from "react-native";
 import { List_MODEL } from "@/src/db/models";
 import { FETCH_lists } from "@/src/db/lists/fetch";
 import { useTranslation } from "react-i18next";
 import CreateList_MODAL from "@/src/features/1_lists/components/CreateList_MODAL/CreateList_MODAL";
+import USE_zustand from "@/src/zustand";
+import FILTER_lists from "@/src/features/1_lists/utils/FILTER_lists";
+import { USE_toggle } from "@/src/hooks/USE_toggle";
 interface SelectListModal_PROPS {
   open: boolean;
-  TOGGLE_open: () => void;
-  current_LIST: List_MODEL;
-  SET_modalList: React.Dispatch<React.SetStateAction<List_MODEL>>;
+  title: string;
+  current_LIST?: List_MODEL | undefined;
+  submit_ACTION: (list: List_MODEL) => void;
+  cancel_ACTION: () => void;
+  IS_inAction: boolean;
 }
 
-export default function SelectList_MODAL(props: SelectListModal_PROPS) {
+export default function SelectPrivateList_MODAL({
+  open,
+  title = "INTERT MODAL TITLE",
+  current_LIST,
+  submit_ACTION,
+  cancel_ACTION,
+  IS_inAction,
+}: SelectListModal_PROPS) {
   const { t } = useTranslation();
-  const { open, TOGGLE_open, current_LIST, SET_modalList } = props;
 
   const [search, SET_search] = useState("");
-  const [SHOW_createListModal, SET_createListModal] = useState(false);
+  const [SHOW_createListModal, TOGGLE_createListModal] = USE_toggle(false);
 
-  const [newListName, SET_newListName] = useState("");
-  const [selectedModal_LIST, SET_selectedModalList] =
-    useState<List_MODEL>(current_LIST);
+  const [selectedModal_LIST, SET_selectedModalList] = useState<
+    List_MODEL | undefined
+  >(current_LIST);
 
-  function TOGGLE_createListModal() {
-    SET_newListName("");
-    SET_createListModal((prev) => !prev);
-  }
+  const { z_lists, z_ARE_listsLoading } = USE_zustand();
 
-  const [loading, SET_loading] = useState(false);
-
-  const [lists, SET_lists] = useState<List_MODEL[]>([]);
-  const GET_lists = async () => {
-    SET_loading(true);
-    const res = await FETCH_lists();
-    SET_lists([...(res?.data || [])]);
-    SET_loading(false);
-  };
-
-  useEffect(() => {
-    GET_lists();
-
-    // const subscription = SUBSCRIBE_toLists({ SET_lists });
-    // return () => {
-    //   supabase.removeChannel(subscription);
-    // };
-  }, []);
-
-  const submit = () => {
-    if (current_LIST.id !== selectedModal_LIST.id) {
-      SET_modalList(selectedModal_LIST);
-    }
-    TOGGLE_open();
-  };
+  const filtered_LISTS = useMemo(
+    () => FILTER_lists({ search, lists: z_lists }),
+    [search, z_lists]
+  );
 
   useEffect(() => {
     SET_selectedModalList(current_LIST);
@@ -81,13 +68,13 @@ export default function SelectList_MODAL(props: SelectListModal_PROPS) {
         }}
       >
         <Header
-          title={t("modal.selectList.header")}
+          title={title}
           big={true}
           btnRight={
             <Btn
               type="seethrough"
               iconLeft={<ICON_X big={true} rotate={true} />}
-              onPress={TOGGLE_open}
+              onPress={cancel_ACTION}
               style={{ borderRadius: 100 }}
             />
           }
@@ -96,12 +83,12 @@ export default function SelectList_MODAL(props: SelectListModal_PROPS) {
           <SearchBar value={search} SET_value={SET_search} />
         </Subnav>
 
-        {!loading && lists ? (
+        {!z_ARE_listsLoading && z_lists.length > 0 ? (
           <FlatList
             data={
               search === ""
-                ? lists
-                : lists.filter((list) =>
+                ? z_lists
+                : filtered_LISTS.filter((list) =>
                     list.name.toLowerCase().includes(search.toLowerCase())
                   )
             }
@@ -136,14 +123,18 @@ export default function SelectList_MODAL(props: SelectListModal_PROPS) {
 
         <Footer
           btnLeft={
-            <Btn text={t("btn.cancel")} onPress={TOGGLE_open} type="simple" />
+            <Btn text={t("btn.cancel")} onPress={cancel_ACTION} type="simple" />
           }
           btnRight={
             <Btn
-              text={t("btn.confirmSelection")}
-              onPress={submit}
+              text={t("btn.confirmListSelection")}
+              onPress={() => {
+                if (!IS_inAction && selectedModal_LIST)
+                  submit_ACTION(selectedModal_LIST);
+              }}
               type="action"
               style={{ flex: 1, marginTop: "auto" }}
+              stayPressed={IS_inAction}
             />
           }
         />

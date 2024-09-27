@@ -4,7 +4,12 @@
 
 // zustand_store.js
 import { create } from "zustand";
-import { List_MODEL, Translation_MODEL, Vocab_MODEL } from "./db/models";
+import {
+  List_MODEL,
+  PublicVocab_MODEL,
+  Translation_MODEL,
+  Vocab_MODEL,
+} from "./db/models";
 interface ZustandStore {
   z_lists: List_MODEL[];
   z_SET_lists: (fetchedLists: List_MODEL[]) => void;
@@ -33,12 +38,33 @@ interface ZustandStore {
     updatedVocabData: Vocab_MODEL
   ) => void;
   z_DELETE_privateVocab: (list_id: string, vocab_id: string) => void;
+
+  z_publicVocabs: PublicVocab_MODEL[];
+  z_SET_publicVocabs: (lists: PublicVocab_MODEL[]) => void;
+  z_ARE_publicVocabsLoading: boolean;
+  z_SET_publicVocabsLoading: (bool: boolean) => void;
+  z_publicVocabs_ERROR: any;
+  z_SET_publicVocabsError: (error: any) => void;
+
+  z_CREATE_publicVocab: ({ newVocab }: { newVocab: PublicVocab_MODEL }) => void;
+  z_UPDATE_publicVocab: ({
+    vocab_id,
+    updatedVocabData,
+  }: {
+    vocab_id: string;
+    updatedVocabData: PublicVocab_MODEL;
+  }) => void;
+  z_DELETE_publicVocab: ({
+    targetVocab_ID,
+  }: {
+    targetVocab_ID: string;
+  }) => void;
 }
 
 const USE_zustand = create<ZustandStore>((set) => ({
   // State to store user lists with vocabs and translations
   z_lists: [],
-  z_SET_lists: (fetchedLists) => set({ z_lists: fetchedLists }), // only for initial fetch from server
+  z_SET_lists: (lists) => set({ z_lists: lists }), // only for initial fetch from server
 
   z_ARE_listsLoading: false,
   z_SET_listsLoading: (bool) => set({ z_ARE_listsLoading: bool }),
@@ -114,7 +140,10 @@ const USE_zustand = create<ZustandStore>((set) => ({
           return {
             ...list,
             vocabs: list.vocabs?.map((vocab) => {
-              if (vocab.id === vocab_id) vocab.difficulty = new_DIFFICULTY;
+              if (vocab.id === vocab_id) {
+                vocab.difficulty = new_DIFFICULTY;
+                console.log("Change:", vocab.translations?.[0]?.text);
+              }
               return vocab;
             }),
           };
@@ -134,6 +163,38 @@ const USE_zustand = create<ZustandStore>((set) => ({
         }
         return list; // Return the list as is if it doesn't match
       }),
+    }));
+  },
+
+  z_publicVocabs: [],
+  z_SET_publicVocabs: (vocabs) => set({ z_publicVocabs: vocabs }), // only for initial fetch from server
+
+  z_ARE_publicVocabsLoading: false,
+  z_SET_publicVocabsLoading: (bool) => set({ z_ARE_listsLoading: bool }),
+
+  z_publicVocabs_ERROR: null,
+  z_SET_publicVocabsError: (error) => set({ z_lists_ERROR: error }),
+
+  z_CREATE_publicVocab: ({ newVocab }) => {
+    set((state) => ({
+      z_publicVocabs: [newVocab, ...state.z_publicVocabs],
+    }));
+  },
+  z_UPDATE_publicVocab: ({ vocab_id, updatedVocabData }) => {
+    set((state) => ({
+      z_publicVocabs: state.z_publicVocabs.map((vocab) => {
+        if (vocab.id === vocab_id) {
+          return updatedVocabData;
+        }
+        return vocab;
+      }),
+    }));
+  },
+  z_DELETE_publicVocab: ({ targetVocab_ID }) => {
+    set((state) => ({
+      z_publicVocabs: state.z_publicVocabs.filter(
+        (v) => v.id !== targetVocab_ID
+      ),
     }));
   },
 }));

@@ -73,28 +73,28 @@ export interface PublicTranslation_MODEL {
   created_at: string;
 }
 // --------------------------------------------------------------------------------------------
-export interface DisplaySettings_MODEL {
-  search: string;
-  sorting: "shuffle" | "difficulty" | "date";
-  sortDirection: "ascending" | "descending";
-  SHOW_image: boolean;
-  SHOW_description: boolean;
-  SHOW_flags: boolean;
-  SHOW_difficulty: boolean;
-  frontLangId: string;
-  difficultyFilters: [1 | 2 | 3] | [];
-}
-export interface PublicDisplaySettings_MODEL {
-  search: string;
-  sorting: "shuffle" | "difficulty" | "date";
-  sortDirection: "ascending" | "descending";
-  SHOW_image: boolean;
-  SHOW_description: boolean;
-  SHOW_flags: boolean;
-  frontLangId: string;
-}
+
 export interface TranslationCreation_PROPS {
   lang_id: string;
   text: string;
   highlights: number[];
+}
+// ------------------------------------------------------------
+export interface MyVocabDisplaySettings_PROPS {
+  SHOW_image: boolean;
+  SHOW_description: boolean;
+  SHOW_flags: boolean;
+  SHOW_difficulty: boolean;
+  frontTrLang_ID: string;
+  sorting: "shuffle" | "difficulty" | "date";
+  sortDirection: "ascending" | "descending";
+  search: string;
+  difficultyFilters: (1 | 2 | 3)[];
+}
+export interface PublicVocabDisplaySettings_PROPS {
+  SHOW_image: boolean;
+  SHOW_description: boolean;
+  SHOW_flags: boolean;
+  frontTrLang_ID: string;
+  search: string;
 }

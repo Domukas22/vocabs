@@ -63,10 +63,8 @@ export default function Settings_PAGE() {
       >
         <View style={{ flex: 1 }}>
           <Styled_TEXT type="text_18_bold">Email</Styled_TEXT>
-          <Styled_TEXT>
-            asdasdasdasdasdasdasdasdadawdawdasdasdawdawd
-          </Styled_TEXT>
-          {/* <Styled_TEXT>{user?.email || "---"}</Styled_TEXT> */}
+
+          <Styled_TEXT>{user?.email || "---"}</Styled_TEXT>
         </View>
         <Btn text="Edit" />
       </Block>

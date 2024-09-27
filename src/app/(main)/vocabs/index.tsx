@@ -47,8 +47,6 @@ export default function MyLists_PAGE() {
   );
 
   useEffect(() => {
-    console.log("FIRE HERE");
-
     (async () =>
       FETCH_myLists({
         user_id: user.id,
@@ -79,7 +77,6 @@ export default function MyLists_PAGE() {
       ) : !z_ARE_listsLoading ? (
         <MyLists_BOTTOM {...{ search, TOGGLE_createListModal }} />
       ) : null}
-
       <CreateList_MODAL
         open={SHOW_createListModal}
         toggle={TOGGLE_createListModal}

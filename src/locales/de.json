@@ -46,7 +46,8 @@
     "sortByShuffling": "Zufällig mischen",
     "createVocab": "Vokabel erstellen",
     "deleteList": "Liste löschen",
-    "confirmListRename": "Name speichern"
+    "confirmListRename": "Name speichern",
+    "confirmListSelection": "List auswählen"
   },
   "pages": {
     "about": {
@@ -184,7 +185,8 @@
   "vocabDummy": {
     "translation": "Vocabs app ist cool",
     "listName": "Name der Liste",
-    "description": "Beschreibung des Vokabels"
+    "description": "Beschreibung des Vokabels",
+    "title": "Vocabs app is mega"
   },
   "word": {
     "translation": "Übersetzung",
@@ -202,6 +204,10 @@
     "listDeleted": "Liste gelöscht",
     "listRenamed": "Liste umbennant",
     "defaultTRsUpdated": "Standardübersetzungen der Liste aktualisiert",
-    "vocabDifficultyUpdated": "Schwierigkeit der Vokabel aktualisiert"
+    "vocabDifficultyUpdated": "Schwierigkeit der Vokabel aktualisiert",
+    "vocabCopied": "Die Vokabel wurde in deine Liste hingefügt",
+    "publicVocabCreated": "Öffentliches Vokabel erstellt",
+    "publicVocabUpdated": "Öffentliches Vokabel bearbeitet",
+    "publicVocabDeleted": "Öffentliches Vokabel gelöscht"
   }
 }
