@@ -68,7 +68,7 @@ export default function SingleList_PAGE() {
 
   const [displaySettings, SET_displaySettings] =
     useState<MyVocabDisplaySettings_PROPS>({
-      SHOW_image: true,
+      SHOW_image: false,
       SHOW_description: true,
       SHOW_flags: true,
       SHOW_difficulty: true,

@@ -65,7 +65,7 @@ export default function MyVocabSorting_BLOCKS({
         type={displaySettings?.sorting === "date" ? "active" : "simple"}
         style={{ flex: 1 }}
         text_STYLES={{ flex: 1 }}
-      />{" "}
+      />
     </Block>
   );
 }

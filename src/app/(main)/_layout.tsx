@@ -22,10 +22,13 @@ export default function TabLayout() {
         tabBarItemStyle: {
           paddingBottom: 16,
           paddingTop: 8,
+          height: 80,
         },
         tabBarStyle: {
           borderTopWidth: 1,
-          height: 80,
+          height: 100,
+          minHeight: 100,
+
           backgroundColor: MyColors.fill_bg,
           borderTopColor: MyColors.border_white_005,
           alignItems: "flex-start",
