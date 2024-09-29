@@ -1,4 +1,3 @@
-import { LanguagesProvider } from "@/src/context/AllLangs_CONTEXT";
 import { Langs_PROVIDER } from "@/src/context/Langs_CONTEXT";
 import { SelectedList_PROVIDER } from "@/src/context/SelectedList_CONTEXT";
 import { Stack } from "expo-router";

@@ -3,43 +3,30 @@
 //
 
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
-import Header from "@/src/components/Header/Header";
-import Btn from "@/src/components/Btn/Btn";
-import { ICON_arrow, ICON_3dots } from "@/src/components/icons/icons";
-
-import { CreateList_MODAL, List_SKELETONS } from "@/src/features/1_lists";
+import { List_SKELETONS } from "@/src/features/1_lists";
 import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
-import PrivateVocabs_SUBNAV from "@/src/components/Subnav/Variations/PrivateVocabs_SUBNAV";
-import Public_VOCAB from "@/src/features/2_vocabs/Public_VOCAB/Public_VOCAB";
-import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
+import Public_VOCAB from "@/src/features/2_vocabs/components/Public_VOCAB/Public_VOCAB";
+
 import {
   List_MODEL,
   MyVocabDisplaySettings_PROPS,
-  PublicVocab_MODEL,
-  PublicVocabDisplaySettings_PROPS,
   User_MODEL,
   Vocab_MODEL,
 } from "@/src/db/models";
 
-import SUBSCRIBE_toVocabs from "@/src/db/vocabs/SUBSCRIBE_toVocabs";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
-import { supabase } from "@/src/lib/supabase";
 import { useRouter } from "expo-router";
 import { useState, useEffect } from "react";
-import { View } from "react-native";
 
-import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
-import PublicVocabs_SUBNAV from "@/src/components/Subnav/Variations/PublicVocabs_SUBNAV";
-import SavePublicVocabToList_MODAL from "@/src/features/2_vocabs/Public_VOCAB/components/SavePublicVocabToList_MODAL/SavePublicVocabToList_MODAL";
-import USE_copyPublicVocab from "@/src/db/vocabs/USE_copyPublicVocab";
-import PublicVocabDisplaySettings_MODAL from "@/src/features/2_vocabs/Public_VOCAB/components/PublicVocabDisplaySettings_MODAL/PublicVocabDisplaySettings_MODAL";
-import PublicVocab_MODAL from "@/src/features/2_vocabs/Public_VOCAB/components/PublicVocab_MODAL/PublicVocab_MODAL";
+
+import PublicVocabDisplaySettings_MODAL from "@/src/features/2_vocabs/components/Public_VOCAB/components/PublicVocabDisplaySettings_MODAL/PublicVocabDisplaySettings_MODAL";
+
 import USE_zustand from "@/src/zustand";
-import FETCH_publicVocabs from "@/src/features/2_vocabs/Public_VOCAB/utils/FETCH_publicVocabs";
-import PublicVocabs_HEADER from "@/src/features/2_vocabs/Public_VOCAB/components/PublicVocabs_HEADER";
+import FETCH_publicVocabs from "@/src/features/2_vocabs/components/Public_VOCAB/utils/FETCH_publicVocabs";
+import PublicVocabs_HEADER from "@/src/features/2_vocabs/components/Public_VOCAB/components/PublicVocabs_HEADER";
 import SelectMyList_MODAL from "@/src/features/1_lists/components/SelectMyList_MODAL/SelectMyList_MODAL";
-import USE_createMyVocab from "@/src/features/2_vocabs/My_VOCAB/hooks/USE_createVocab";
+
 import { useToast } from "react-native-toast-notifications";
 import { useTranslation } from "react-i18next";
 import { Vocab_MODAL } from "@/src/features/2_vocabs";

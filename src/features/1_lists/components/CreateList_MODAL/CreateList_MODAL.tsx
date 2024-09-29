@@ -8,9 +8,9 @@ import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import StyledText_INPUT from "../../../../components/StyledText_INPUT/StyledText_INPUT";
 import Small_MODAL from "../../../../components/Modals/Small_MODAL/Small_MODAL";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
-import CREATE_list from "@/src/db/lists/CREATE_list";
+
 import { useTranslation } from "react-i18next";
-import USE_createList from "@/src/db/lists/CREATE_list";
+import USE_createList from "../../utils/CREATE_list";
 import { ActivityIndicator } from "react-native";
 
 interface CreateListModal_PROPS {
