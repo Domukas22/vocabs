@@ -19,8 +19,8 @@ import Notification_BOX from "../components/Notification_BOX/Notification_BOX";
 
 export default function _layout() {
   return (
-    <Auth_PROVIDER>
-      <Langs_PROVIDER>
+    <Langs_PROVIDER>
+      <Auth_PROVIDER>
         <ToastProvider
           renderType={{
             custom_success: (toast) => (
@@ -33,17 +33,18 @@ export default function _layout() {
               <Notification_BOX type="warning" text={toast?.message} />
             ),
           }}
+          style={{ bottom: 400 }}
         >
           <Main_LAYOUT />
         </ToastProvider>
-      </Langs_PROVIDER>
-    </Auth_PROVIDER>
+      </Auth_PROVIDER>
+    </Langs_PROVIDER>
   );
 }
 
 function Main_LAYOUT() {
   const { SET_auth, SET_userData } = USE_auth();
-  const { ARE_languagesLoading } = USE_langs();
+  const { ARE_languagesLoading, languages } = USE_langs();
 
   const router = useRouter();
   const [loaded] = useFonts({
@@ -58,7 +59,7 @@ function Main_LAYOUT() {
 
   useEffect(() => {
     SplashScreen.hideAsync();
-    if (loaded && !ARE_languagesLoading) {
+    if (loaded && !ARE_languagesLoading && languages?.length > 0) {
       // trigger every time user logs in/out or registers
       supabase.auth.onAuthStateChange(async (_event, session) => {
         if (session) {
@@ -72,6 +73,8 @@ function Main_LAYOUT() {
       });
     }
   }, [loaded, ARE_languagesLoading]);
+
+  console.log("langs: ", languages?.length);
 
   async function GET_userData(user) {
     let res = await FETCH_userData(user?.id);

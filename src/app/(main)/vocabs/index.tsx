@@ -14,7 +14,7 @@ import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
 import {
   CreateList_MODAL,
   List_SKELETONS,
-  MyLists_BOTTOM,
+  EmptyFlatList_BOTTM,
   MyLists_FLATLIST,
   MyLists_HEADER,
   MyLists_SUBNAV,
@@ -25,6 +25,7 @@ import { Button } from "react-native";
 import FILTER_lists from "@/src/features/1_lists/utils/FILTER_lists";
 
 import USE_zustand from "@/src/zustand";
+import { useTranslation } from "react-i18next";
 
 export default function MyLists_PAGE() {
   const router = useRouter();
@@ -32,6 +33,7 @@ export default function MyLists_PAGE() {
   const { SET_selectedList } = USE_selectedList();
   const { user } = USE_auth();
   const [search, SET_search] = useState("");
+  const { t } = useTranslation();
 
   const {
     z_lists,
@@ -75,7 +77,16 @@ export default function MyLists_PAGE() {
           TOGGLE_createListModal={TOGGLE_createListModal}
         />
       ) : !z_ARE_listsLoading ? (
-        <MyLists_BOTTOM {...{ search, TOGGLE_createListModal }} />
+        <EmptyFlatList_BOTTM
+          emptyBox_TEXT={
+            search === ""
+              ? t("label.youDontHaveAnyLists")
+              : t("label.noListsFound")
+          }
+          {...{ search, TOGGLE_createListModal }}
+          btn_TEXT={t("btn.createList")}
+          btn_ACTION={TOGGLE_createListModal}
+        />
       ) : null}
       <CreateList_MODAL
         open={SHOW_createListModal}

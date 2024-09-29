@@ -112,7 +112,9 @@ export default function Login_PAGE() {
                   value={value}
                   error={!!errors.email}
                   props={{ keyboardType: "email-address" }}
-                  correctedError={isSubmitted && !errors.email}
+                  correctedError={
+                    isSubmitted && !errors.email && !internal_ERROR
+                  }
                 />
               )}
               name="email"
@@ -146,7 +148,9 @@ export default function Login_PAGE() {
                   }}
                   value={value}
                   error={!!errors.password}
-                  correctedError={isSubmitted && !errors.password}
+                  correctedError={
+                    isSubmitted && !errors.password && !internal_ERROR
+                  }
                   props={{
                     secureTextEntry: true,
                   }}
@@ -154,6 +158,9 @@ export default function Login_PAGE() {
               )}
               name="password"
             />
+            {errors.password && (
+              <Error_TEXT>{errors.password.message}</Error_TEXT>
+            )}
             <Link
               href={"/login"}
               style={{
@@ -171,9 +178,6 @@ export default function Login_PAGE() {
                 I forgot my password
               </Styled_TEXT>
             </Link>
-            {errors.password && (
-              <Error_TEXT>{errors.password.message}</Error_TEXT>
-            )}
           </Block>
 
           {/* --------------------------------------------------------------------------------------------------- */}

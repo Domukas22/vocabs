@@ -123,7 +123,9 @@ export default function Register_PAGE() {
                   value={value}
                   error={!!errors.email}
                   props={{ keyboardType: "email-address" }}
-                  correctedError={isSubmitted && !errors.email}
+                  correctedError={
+                    isSubmitted && !errors.email && !internal_ERROR
+                  }
                 />
               )}
               name="email"
@@ -157,7 +159,9 @@ export default function Register_PAGE() {
                   }}
                   value={value}
                   error={!!errors.password}
-                  correctedError={isSubmitted && !errors.password}
+                  correctedError={
+                    isSubmitted && !errors.password && !internal_ERROR
+                  }
                   props={{
                     secureTextEntry: true,
                   }}

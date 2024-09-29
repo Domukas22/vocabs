@@ -21,6 +21,7 @@ import CreateList_MODAL from "@/src/features/1_lists/components/CreateList_MODAL
 import USE_zustand from "@/src/zustand";
 import FILTER_lists from "@/src/features/1_lists/utils/FILTER_lists";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
+import { EmptyFlatList_BOTTM } from "@/src/features/1_lists";
 interface SelectListModal_PROPS {
   open: boolean;
   title: string;
@@ -83,7 +84,7 @@ export default function SelectPrivateList_MODAL({
           <SearchBar value={search} SET_value={SET_search} />
         </Subnav>
 
-        {!z_ARE_listsLoading && z_lists.length > 0 ? (
+        {!z_ARE_listsLoading && z_lists.length > 0 && (
           <FlatList
             data={
               search === ""
@@ -117,8 +118,20 @@ export default function SelectPrivateList_MODAL({
             keyExtractor={(item) => item.id + "list btn" + item.name}
             style={{ padding: 12, flex: 1 }}
           />
-        ) : (
-          <Styled_TEXT>Loading</Styled_TEXT>
+        )}
+
+        {z_ARE_listsLoading && <Styled_TEXT>Loading</Styled_TEXT>}
+        {!z_ARE_listsLoading && z_lists.length === 0 && (
+          <EmptyFlatList_BOTTM
+            emptyBox_TEXT={
+              search === ""
+                ? t("label.youDontHaveAnyLists")
+                : t("label.noListsFound")
+            }
+            {...{ search, TOGGLE_createListModal }}
+            btn_TEXT={t("btn.createList")}
+            btn_ACTION={TOGGLE_createListModal}
+          />
         )}
 
         <Footer

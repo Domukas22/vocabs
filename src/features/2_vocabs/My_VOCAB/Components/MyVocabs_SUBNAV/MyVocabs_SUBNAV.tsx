@@ -15,6 +15,7 @@ export default function MyVocabs_SUBNAV({
   SET_search,
   TOGGLE_displaySettings,
   HANDLE_vocabModal,
+  activeFitlers = 0,
 }) {
   return (
     <Subnav>
@@ -24,7 +25,7 @@ export default function MyVocabs_SUBNAV({
         iconLeft={<ICON_displaySettings />}
         style={{ borderRadius: 100 }}
         onPress={TOGGLE_displaySettings}
-        topRightIconCount={0}
+        topRightIconCount={activeFitlers}
       />
       <Btn
         type="simple"

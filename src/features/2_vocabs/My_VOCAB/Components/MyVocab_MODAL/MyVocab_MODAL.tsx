@@ -43,7 +43,7 @@ import USE_modalToggles from "../../../../../hooks/USE_modalToggles";
 
 import GET_activeLangIDs from "../../../../../utils/GET_activeLangIDs";
 import HANLDE_modalLangsAndTrs from "../../../../../utils/HANLDE_modalLangsAndTrs";
-import POPULATE_privateVocabValues from "../../utils/POPULATE_myVocabValues";
+import POPULATE_myVocabValues from "../../utils/POPULATE_myVocabValues";
 import REMOVE_modalLangAndTr from "../../../../../utils/REMOVE_modalLangAndTr";
 import USE_myVocabValues from "../../hooks/USE_myVocabValues";
 import Confirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
@@ -121,13 +121,12 @@ export default function MyVocab_MODAL(props: ManageVocabModal_PROPS) {
       modal_LANGS,
     },
     TOGGLE_vocabModal,
-    TOGGLE_modal,
     SET_vocabs,
     HIGHLIGHT_vocab,
   });
 
   const POPULATE_modal = useCallback(() => {
-    POPULATE_privateVocabValues({
+    POPULATE_myVocabValues({
       vocab,
       set_FNs: {
         SET_modalTRs,
@@ -182,12 +181,19 @@ export default function MyVocab_MODAL(props: ManageVocabModal_PROPS) {
   );
 
   useEffect(() => {
-    open ? POPULATE_modal() : CLEAR_modal();
+    if (open) {
+      POPULATE_modal();
+    } else {
+      CLEAR_modal();
+      TOGGLE_modal("selectedLangs", false);
+      TOGGLE_modal("selectedList", false);
+      TOGGLE_modal("trText", false);
+      TOGGLE_modal("trHighlights", false);
+      TOGGLE_modal("delete", false);
+    }
     // TODO ==> Close every other modal inside when this triggers
     // in irder to do that, we need to chagen teh TOGGLE_modal("xx"), to SET method in order to define false
   }, [open]);
-
-  console.log(modal_LANGS);
 
   return (
     <Modal animationType="slide" transparent={true} visible={open} style={{}}>

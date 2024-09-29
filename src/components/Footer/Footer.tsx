@@ -30,6 +30,7 @@ const s = StyleSheet.create({
     borderColor: MyColors.border_white_005,
     alignItems: "center",
     gap: 16,
+    marginTop: "auto",
   },
   bottom: {
     paddingHorizontal: 12,

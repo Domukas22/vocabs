@@ -31,7 +31,10 @@ export default function MyVocabDisplaySettings_MODAL({
 
   return (
     <DisplaySettings_MODAL {...{ open, TOGGLE_open }}>
-      <DisplaySettings_SUBNAV {...{ view, SET_view }} />
+      <DisplaySettings_SUBNAV
+        activeFilters={displaySettings.difficultyFilters.length}
+        {...{ view, SET_view }}
+      />
       <ScrollView style={{ flex: 1 }}>
         {view === "sort" ? (
           <MyVocabSorting_BLOCKS

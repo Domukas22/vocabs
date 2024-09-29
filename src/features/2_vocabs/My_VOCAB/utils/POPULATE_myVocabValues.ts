@@ -8,7 +8,7 @@ import GET_langs from "../../../../utils/GET_langs";
 import GET_defaultTranslations from "../../../../utils/GET_defaultTranslations";
 import GET_langsFromTranslations from "../../../../utils/GET_langsFromTranslations";
 
-export default function POPULATE_privateVocabValues({
+export default function POPULATE_myVocabValues({
   vocab,
   set_FNs,
   languages,

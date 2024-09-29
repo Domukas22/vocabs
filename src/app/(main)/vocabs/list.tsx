@@ -135,6 +135,7 @@ export default function SingleList_PAGE() {
           TOGGLE_displaySettings,
           HANDLE_vocabModal,
         }}
+        activeFitlers={displaySettings.difficultyFilters.length}
       />
       {vocabs && vocabs.length > 0 ? (
         <MyVocabs_FLATLIST

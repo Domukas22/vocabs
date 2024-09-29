@@ -35,7 +35,7 @@ export const Langs_PROVIDER: React.FC<LangsProviderProps> = ({ children }) => {
   const [languages, setLanguages] = useState<Language_MODEL[]>([]);
   const [ARE_languagesLoading, SET_areLanguagesLoading] =
     useState<boolean>(true);
-  const [error, setError] = useState<string | undefined>(null);
+  const [error, setError] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     const fetchLanguages = async () => {
@@ -46,6 +46,9 @@ export const Langs_PROVIDER: React.FC<LangsProviderProps> = ({ children }) => {
           throw error;
         }
         setLanguages(data);
+        console.log("fetched langs successfully");
+        console.log(data?.length);
+        console.log("-----------------");
       } catch (error) {
         console.error("Error fetching languages:", error);
         setError((error as any).message); // Cast to any for TypeScript

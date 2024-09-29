@@ -11,10 +11,12 @@ export default function DisplaySettings_SUBNAV({
   view,
   SET_view,
   toShow = ["preview", "sort", "filter"],
+  activeFilters = 0,
 }: {
   view: "preview" | "sort" | "filter";
   SET_view: React.Dispatch<React.SetStateAction<"preview" | "sort" | "filter">>;
   toShow?: ("preview" | "sort" | "filter")[];
+  activeFilters?: number;
 }) {
   return (
     <Subnav noPadding>
@@ -49,6 +51,7 @@ export default function DisplaySettings_SUBNAV({
             type={view === "filter" ? "difficulty_1_active" : "simple"}
             onPress={() => SET_view("filter")}
             style={{ marginRight: 8 }}
+            topRightIconCount={activeFilters}
           />
         )}
       </ScrollView>
