@@ -37,8 +37,7 @@ import PublicVocab_MODAL from "@/src/features/2_vocabs/Public_VOCAB/components/P
 import USE_zustand from "@/src/zustand";
 import FETCH_publicVocabs from "@/src/features/2_vocabs/Public_VOCAB/utils/FETCH_publicVocabs";
 import PublicVocabs_HEADER from "@/src/features/2_vocabs/Public_VOCAB/components/PublicVocabs_HEADER";
-import PublicVocabs_FLATLIST from "@/src/features/2_vocabs/Public_VOCAB/components/PublicVocabs_FLATLIST/PublicVocabs_FLATLIST";
-import SelectPrivateList_MODAL from "@/src/components/Modals/Big_MODAL/Variations/SelectList_MODAL/SelectList_MODAL";
+import SelectMyList_MODAL from "@/src/features/1_lists/components/SelectMyList_MODAL/SelectMyList_MODAL";
 import USE_createMyVocab from "@/src/features/2_vocabs/My_VOCAB/hooks/USE_createMyVocab";
 import { useToast } from "react-native-toast-notifications";
 import { useTranslation } from "react-i18next";
@@ -136,8 +135,8 @@ export default function Explore_PAGE() {
     }
   };
 
-  const PREPARE_toSaveVocab = (vovab: PublicVocab_MODEL) => {
-    SET_targetSaveVocab(vovab);
+  const PREPARE_toSaveVocab = (vocab: PublicVocab_MODEL) => {
+    SET_targetSaveVocab(vocab);
     TOGGLE_saveVocabModal();
   };
   const [highlightedVocab_ID, SET_highlightedVocabId] = useState("");
@@ -164,16 +163,26 @@ export default function Explore_PAGE() {
         IS_admin={user?.is_admin}
       />
       {!z_ARE_publicVocabsLoading && z_publicVocabs.length > 0 && (
-        <PublicVocabs_FLATLIST
-          vocabs={z_publicVocabs}
-          SHOW_bottomBtn={displaySettings.search === ""}
-          IS_admin={user?.is_admin}
-          {...{
-            TOGGLE_vocabModal,
-            displaySettings,
-            HANDLE_vocabModal,
-            PREPARE_toSaveVocab,
+        <Styled_FLATLIST
+          data={z_publicVocabs}
+          renderItem={({ item }) => {
+            if (item?.id) {
+              return (
+                <Public_VOCAB
+                  key={"PublicVocab" + item?.id}
+                  vocab={item}
+                  {...{
+                    displaySettings,
+                    IS_admin: user?.is_admin,
+                    HANDLE_vocabModal,
+                    PREPARE_toSaveVocab,
+                  }}
+                />
+              );
+            }
+            return null;
           }}
+          keyExtractor={(item) => "Vocab" + item?.id}
         />
       )}
       <PublicVocabDisplaySettings_MODAL
@@ -190,7 +199,7 @@ export default function Explore_PAGE() {
         HIGHLIGHT_vocab={HIGHLIGHT_vocab}
       />
 
-      <SelectPrivateList_MODAL
+      <SelectMyList_MODAL
         open={SHOW_saveVocabModal}
         title="Saved vocab to list"
         submit_ACTION={(target_LIST: List_MODEL) => {
@@ -200,7 +209,7 @@ export default function Explore_PAGE() {
           TOGGLE_saveVocabModal();
           SET_targetSaveVocab(undefined);
         }}
-        IS_inAction={false}
+        IS_inAction={IS_creatingVocab}
       />
     </Page_WRAP>
   );

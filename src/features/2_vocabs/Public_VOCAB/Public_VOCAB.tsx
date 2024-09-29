@@ -26,7 +26,7 @@ import { useTranslation } from "react-i18next";
 import { ICON_X } from "@/src/components/icons/icons";
 
 interface VocabProps {
-  vocab: PublicVocab_MODEL;
+  vocab: PublicVocab_MODEL | undefined;
   displaySettings: PublicVocabDisplaySettings_PROPS;
   IS_admin: boolean;
   HANDLE_vocabModal: ({
@@ -60,18 +60,18 @@ export default function Public_VOCAB({
     >
       <View>
         <Vocab_FRONT
-          vocab_id={vocab.id}
-          translations={vocab.public_translations}
+          vocab_id={vocab?.id}
+          translations={vocab?.public_translations}
           difficulty={0}
-          description={vocab.description}
+          description={vocab?.description}
           displaySettings={displaySettings}
           open={open}
           TOGGLE_open={TOGGLE_vocab}
         />
         {open && (
           <>
-            <VocabBack_TRs TRs={vocab.public_translations} difficulty={0} />
-            <VocabBack_DESC desc={vocab.description} />
+            <VocabBack_TRs TRs={vocab?.public_translations} difficulty={0} />
+            <VocabBack_DESC desc={vocab?.description} />
 
             <View
               style={{

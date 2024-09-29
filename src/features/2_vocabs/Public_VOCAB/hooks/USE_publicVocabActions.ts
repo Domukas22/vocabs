@@ -8,16 +8,14 @@ import {
   User_MODEL,
   Vocab_MODEL,
 } from "@/src/db/models";
-import USE_createMyVocab from "./USE_createPublicVocab";
-import USE_updateMyVocab from "./USE_updatePublicVocab";
+import USE_createPublicVocab from "./USE_createPublicVocab";
+import USE_updatePublicVocab from "./USE_updatePublicVocab";
 import USE_deletePublicVocab from "./USE_deletePublicVocab";
 import USE_zustand from "../../../../zustand";
 import { useToast } from "react-native-toast-notifications";
 import { useSSR, useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { PublicVocabState_PROPS } from "./USE_publicVocabValues";
-import USE_createPublicVocab from "@/src/db/vocabs/USE_createPublicVocab";
-import USE_updatePublicVocab from "@/src/db/vocabs/USE_updatePublicVocab";
 
 interface privateVocabAction_PROPS {
   vocab: PublicVocab_MODEL | undefined;
@@ -90,6 +88,8 @@ export default function USE_publicVocabActions({
         description: modal_DESC,
         translations: modal_TRs,
       });
+      console.log(updatedVocab.data);
+
       if (updatedVocab.success) {
         z_UPDATE_publicVocab({
           vocab_id: updatedVocab.data.id,

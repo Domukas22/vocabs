@@ -23,6 +23,8 @@ import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 import USE_myListActions from "../../hooks/USE_myListActions";
 import RenameList_MODAL from "../RenameList_MODAL/RenameList_MODAL";
+import Footer from "@/src/components/Footer/Footer";
+import Dropdown_BLOCK from "@/src/components/Dropdown_BLOCK/Dropdown_BLOCK";
 
 interface ListSettingsModal_PROPS {
   list: List_MODEL;
@@ -117,13 +119,24 @@ export default function ListSettings_MODAL({
           );
         }}
       />
-      <Block>
+      <Dropdown_BLOCK toggleBtn_TEXT={t("btn.dangerZone")}>
         <Btn
           type="delete"
           text={t("btn.deleteList")}
           onPress={TOGGLE_deleteModal}
         />
-      </Block>
+      </Dropdown_BLOCK>
+
+      <Footer
+        btnLeft={
+          <Btn
+            text={t("btn.done")}
+            onPress={TOGGLE_open}
+            type="simple"
+            style={{ flex: 1 }}
+          />
+        }
+      />
 
       {/* ------------------------------ MODALS ------------------------------  */}
       <SelectLanguages_MODAL

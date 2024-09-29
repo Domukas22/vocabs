@@ -12,10 +12,10 @@ interface PublicVocabCreation_MODEL {
   translations: TranslationCreation_PROPS[] | undefined | [];
 }
 
-export default function USE_createMyVocab() {
+export default function USE_createPublicVocab() {
   const [IS_creatingPublicVocab, SET_isCreatingPublicVocab] = useState(false);
 
-  const CREATE_privateVocab = async (
+  const CREATE_publicVocab = async (
     props: PublicVocabCreation_MODEL
   ): Promise<{
     success: boolean;
@@ -31,6 +31,8 @@ export default function USE_createMyVocab() {
 
     if (description) vocab_DATA.description = description;
     if (image) vocab_DATA.image = image;
+
+    console.log("🔴🔴🔴", vocab_DATA);
 
     try {
       SET_isCreatingPublicVocab(true);
@@ -120,5 +122,5 @@ export default function USE_createMyVocab() {
     }
   };
 
-  return { CREATE_privateVocab, IS_creatingPublicVocab };
+  return { CREATE_publicVocab, IS_creatingPublicVocab };
 }

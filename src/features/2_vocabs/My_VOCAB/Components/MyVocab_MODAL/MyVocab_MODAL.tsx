@@ -14,13 +14,12 @@ import React, {
   useState,
   useTransition,
 } from "react";
-import { Modal, SafeAreaView } from "react-native";
+import { ActivityIndicator, Modal, SafeAreaView } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import SelectList_MODAL from "../../../Public_VOCAB/components/SavePublicVocabToList_MODAL/SavePublicVocabToList_MODAL";
 
 import { Language_MODEL, List_MODEL, Vocab_MODEL } from "@/src/db/models";
 
-import ManageVocab_FOOTER from "@/src/components/Footer/Variations/ManageVocab_FOOTER/ManageVocab_FOOTER";
 import TrInput_BLOCK from "../../../../../components/Block/Variations/TrInput_BLOCK/TrInput_BLOCK";
 import TrText_MODAL from "../../../../../components/Modals/Small_MODAL/Variations/TrText_MODAL/TrText_MODAL";
 import TrHighlights_MODAL from "../../../components/TrHighlights_MODAL/TrHighlights_MODAL";
@@ -52,6 +51,9 @@ import i18next from "i18next";
 import ListSettings_MODAL from "@/src/features/1_lists/components/ListSettings_MODAL/ListSettings_MODAL";
 
 import CLEAR_myVocabValues from "../../utils/CLEAR_myVocabValues";
+import Big_MODAL from "@/src/components/Modals/Big_MODAL/Big_MODAL";
+import Footer from "@/src/components/Footer/Footer";
+import SelectMyList_MODAL from "@/src/features/1_lists/components/SelectMyList_MODAL/SelectMyList_MODAL";
 
 interface ManageVocabModal_PROPS {
   open: boolean;
@@ -196,155 +198,179 @@ export default function MyVocab_MODAL(props: ManageVocabModal_PROPS) {
   }, [open]);
 
   return (
-    <Modal animationType="slide" transparent={true} visible={open} style={{}}>
-      <SafeAreaView
-        style={{
-          backgroundColor: MyColors.fill_bg,
-          flex: 1,
-        }}
-      >
-        <Header
-          title={
-            vocab ? t("modal.vocab.headerEdit") : t("modal.vocab.headerCreate")
-          }
-          big={true}
-          btnRight={
-            <Btn
-              type="seethrough"
-              iconLeft={<ICON_X big={true} rotate={true} />}
-              onPress={() =>
-                !IS_creatingVocab &&
-                !IS_updatingVocab &&
-                !IS_deleting &&
-                TOGGLE_vocabModal()
-              }
-              style={{ borderRadius: 100 }}
-            />
-          }
-        />
-
-        <KeyboardAwareScrollView
-          style={{ flex: 1 }}
-          keyboardShouldPersistTaps="handled"
-          contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }}
-        >
-          {/* ------------------------------ INPUTS ------------------------------  */}
-          <DifficultyInput_BLOCK {...{ modal_DIFF, SET_modalDiff }} />
-          <ChosenLangs_BLOCK
-            label={t("label.chosenLangs")}
-            langs={modal_LANGS}
-            toggle={() => TOGGLE_modal("selectedLangs")}
-            {...{ REMOVE_lang }}
-          />
-          {/* TODO ==> The problem her eis tha the chosen lang arr updates, but not the modal_TRs */}
-          {modal_TRs?.map((tr) => (
-            <TrInput_BLOCK
-              key={`TrInputBlock/${tr.lang_id}`}
-              {...{
-                languages,
-                tr,
-                modal_DIFF,
-                SET_targetLang,
-                TOGGLE_modal,
-              }}
-            />
-          ))}
-
-          <ImageInput_BLOCK {...{ modal_IMG, SET_modalImg }} />
-          <DescriptionInput_BLOCK {...{ modal_DESC, SET_modalDesc }} />
-
-          <Block>
-            <Label>{t("label.chosenList")}</Label>
-            <Btn
-              text={modal_LIST?.name || ""}
-              iconRight={<ICON_dropdownArrow />}
-              onPress={() => TOGGLE_modal("selectedList")}
-              type="simple"
-              style={{ flex: 1 }}
-              text_STYLES={{ flex: 1 }}
-            />
-          </Block>
-          {vocab && (
-            <Block>
-              <Btn
-                type="delete"
-                text={t("btn.deleteVocab")}
-                onPress={() => TOGGLE_modal("delete")}
-              />
-            </Block>
-          )}
-          {/* -------------------------------------------------------------------------  */}
-          {/* When creating, the buttons are visible when scrolled to the bottom */}
-          {!vocab && (
-            <ManageVocab_FOOTER
-              onCancelPress={() =>
-                !IS_creatingVocab &&
-                !IS_updatingVocab &&
-                !IS_deleting &&
-                TOGGLE_vocabModal()
-              }
-              onActionPress={CREATE_vocab}
-              actionBtnText={t("btn.createButtonAction")}
-              loading={IS_creatingVocab}
-            />
-          )}
-        </KeyboardAwareScrollView>
-
-        {/* When editing, the buttons are sticky at the bottom*/}
-        {vocab && (
-          <ManageVocab_FOOTER
-            onCancelPress={() =>
+    <Big_MODAL {...{ open }}>
+      <Header
+        title={
+          vocab ? t("modal.vocab.headerEdit") : t("modal.vocab.headerCreate")
+        }
+        big={true}
+        btnRight={
+          <Btn
+            type="seethrough"
+            iconLeft={<ICON_X big={true} rotate={true} />}
+            onPress={() =>
               !IS_creatingVocab &&
               !IS_updatingVocab &&
               !IS_deleting &&
               TOGGLE_vocabModal()
             }
-            loading={IS_updatingVocab}
-            actionBtnText={t("btn.updateButtonAction")}
-            onActionPress={UPDATE_vocab}
+            style={{ borderRadius: 100 }}
+          />
+        }
+      />
+
+      <KeyboardAwareScrollView
+        style={{ flex: 1 }}
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }}
+      >
+        {/* ------------------------------ INPUTS ------------------------------  */}
+        <DifficultyInput_BLOCK {...{ modal_DIFF, SET_modalDiff }} />
+        <ChosenLangs_BLOCK
+          label={t("label.chosenLangs")}
+          langs={modal_LANGS}
+          toggle={() => TOGGLE_modal("selectedLangs")}
+          {...{ REMOVE_lang }}
+        />
+        {/* TODO ==> The problem her eis tha the chosen lang arr updates, but not the modal_TRs */}
+        {modal_TRs?.map((tr) => (
+          <TrInput_BLOCK
+            key={`TrInputBlock/${tr.lang_id}`}
+            {...{
+              languages,
+              tr,
+              modal_DIFF,
+              SET_targetLang,
+              TOGGLE_modal,
+            }}
+          />
+        ))}
+
+        <ImageInput_BLOCK {...{ modal_IMG, SET_modalImg }} />
+        <DescriptionInput_BLOCK {...{ modal_DESC, SET_modalDesc }} />
+
+        <Block>
+          <Label>{t("label.chosenList")}</Label>
+          <Btn
+            text={modal_LIST?.name || ""}
+            iconRight={<ICON_dropdownArrow />}
+            onPress={() => TOGGLE_modal("selectedList")}
+            type="simple"
+            style={{ flex: 1 }}
+            text_STYLES={{ flex: 1 }}
+          />
+        </Block>
+        {vocab && (
+          <Block>
+            <Btn
+              type="delete"
+              text={t("btn.deleteVocab")}
+              onPress={() => TOGGLE_modal("delete")}
+            />
+          </Block>
+        )}
+        {/* -------------------------------------------------------------------------  */}
+        {/* When creating, the buttons are visible when scrolled to the bottom */}
+        {!vocab && (
+          <Footer
+            btnLeft={
+              <Btn
+                text={t("btn.cancel")}
+                onPress={TOGGLE_vocabModal}
+                type="simple"
+              />
+            }
+            btnRight={
+              <Btn
+                text={!IS_creatingVocab ? t("btn.createButtonAction") : ""}
+                iconRight={
+                  IS_creatingVocab && <ActivityIndicator color={"black"} />
+                }
+                onPress={() => {
+                  if (!IS_creatingVocab) CREATE_vocab();
+                }}
+                stayPressed={IS_creatingVocab}
+                type="action"
+                style={{ flex: 1 }}
+              />
+            }
           />
         )}
+      </KeyboardAwareScrollView>
 
-        {/* ------------------------------ MODALS ------------------------------  */}
-        <SelectLanguages_MODAL
-          open={modal_STATES.selectedLangs}
-          TOGGLE_open={() => TOGGLE_modal("selectedLangs")}
-          active_LANGS={modal_LANGS}
-          SUBMIT_langs={(langs: Language_MODEL[]) => {
-            HANLDE_langs(langs);
-            TOGGLE_modal("selectedLangs");
-          }}
-          {...{ languages, HANLDE_langs }}
+      {/* When editing, the buttons are sticky at the bottom*/}
+      {vocab && (
+        <Footer
+          btnLeft={
+            <Btn
+              text={t("btn.cancel")}
+              onPress={TOGGLE_vocabModal}
+              type="simple"
+            />
+          }
+          btnRight={
+            <Btn
+              text={!IS_updatingVocab ? t("btn.updateButtonAction") : ""}
+              iconRight={
+                IS_updatingVocab && <ActivityIndicator color={"black"} />
+              }
+              onPress={() => {
+                if (!IS_updatingVocab) UPDATE_vocab();
+              }}
+              stayPressed={IS_updatingVocab}
+              type="action"
+              style={{ flex: 1 }}
+            />
+          }
         />
+      )}
 
-        <TrText_MODAL
-          open={modal_STATES.trText}
-          TOGGLE_open={() => TOGGLE_modal("trText")}
-          {...{ target_LANG, modal_TRs, SET_modalTRs }}
-        />
+      {/* ------------------------------ MODALS ------------------------------  */}
+      <SelectLanguages_MODAL
+        open={modal_STATES.selectedLangs}
+        TOGGLE_open={() => TOGGLE_modal("selectedLangs")}
+        active_LANGS={modal_LANGS}
+        SUBMIT_langs={(langs: Language_MODEL[]) => {
+          HANLDE_langs(langs);
+          TOGGLE_modal("selectedLangs");
+        }}
+        {...{ languages, HANLDE_langs }}
+      />
 
-        <TrHighlights_MODAL
-          open={modal_STATES.trHighlights}
-          TOGGLE_open={() => TOGGLE_modal("trHighlights")}
-          {...{ target_LANG, modal_DIFF, modal_TRs, SET_modalTRs }}
-        />
+      <TrText_MODAL
+        open={modal_STATES.trText}
+        TOGGLE_open={() => TOGGLE_modal("trText")}
+        {...{ target_LANG, modal_TRs, SET_modalTRs }}
+      />
 
-        {/* ----- DELETE confirmation ----- */}
-        <Confirmation_MODAL
-          open={modal_STATES.delete && !!vocab}
-          toggle={() => !IS_deleting && TOGGLE_modal("delete")}
-          title={t("modal.deleteVocabConfirmation.header")}
-          action={DELETE_vocab}
-          IS_inAction={IS_deleting}
-          actionBtnText={t("btn.confirmDelete")}
-        />
-        <SelectList_MODAL
-          open={modal_STATES.selectedList}
-          TOGGLE_open={() => TOGGLE_modal("selectedList")}
-          current_LIST={modal_LIST}
-          SET_modalList={SET_modalList}
-        />
-      </SafeAreaView>
-    </Modal>
+      <TrHighlights_MODAL
+        open={modal_STATES.trHighlights}
+        TOGGLE_open={() => TOGGLE_modal("trHighlights")}
+        {...{ target_LANG, modal_DIFF, modal_TRs, SET_modalTRs }}
+      />
+
+      {/* ----- DELETE confirmation ----- */}
+      <Confirmation_MODAL
+        open={modal_STATES.delete && !!vocab}
+        toggle={() => !IS_deleting && TOGGLE_modal("delete")}
+        title={t("modal.deleteVocabConfirmation.header")}
+        action={DELETE_vocab}
+        IS_inAction={IS_deleting}
+        actionBtnText={t("btn.confirmDelete")}
+      />
+      <SelectMyList_MODAL
+        open={modal_STATES.selectedList}
+        title="Saved vocab to list"
+        submit_ACTION={(target_LIST: List_MODEL) => {
+          SET_modalList(target_LIST);
+          TOGGLE_modal("selectedList");
+        }}
+        cancel_ACTION={() => {
+          TOGGLE_modal("selectedList");
+        }}
+        IS_inAction={IS_creatingVocab}
+        current_LIST={modal_LIST}
+      />
+    </Big_MODAL>
   );
 }

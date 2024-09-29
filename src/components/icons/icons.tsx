@@ -521,6 +521,25 @@ export function ICON_toastNotification({
     </View>
   );
 }
+export function ICON_checkMark({
+  color = "grey_light",
+}: {
+  color?: "grey_light" | "primary";
+}) {
+  return (
+    <Svg width={18} height={18} viewBox="0 0 9 10" fill="none">
+      <Path
+        d="M1 5.21053L3.8 9L8 1"
+        stroke={
+          color === "primary" ? MyColors.icon_primary : MyColors.icon_gray_light
+        }
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </Svg>
+  );
+}
 
 const s = StyleSheet.create({
   icon: {

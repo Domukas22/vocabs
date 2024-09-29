@@ -24,8 +24,6 @@ export default function USE_createMyVocab() {
     const { user_id, list_id, difficulty, description, image, translations } =
       props;
 
-    console.log(translations);
-
     if (!user_id) {
       console.log("🔴 User not defined when creating vocab 🔴");
       return {
@@ -57,6 +55,7 @@ export default function USE_createMyVocab() {
     if (description) vocab_DATA.description = description;
     if (image) vocab_DATA.image = image;
 
+    console.log("🔴🔴🔴", vocab_DATA);
     try {
       SET_isCreatingVocab(true);
 

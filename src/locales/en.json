@@ -18,7 +18,7 @@
     "sortByDate": "By date",
     "easyToHard": "Easy --> Hard",
     "newToOld": "New --> Old",
-    "hardToEasy": "Hard --> Easy",
+    "hardToEasy": "Hard  --->  Easy",
     "oldToNew": "Old --> New",
     "done": "Done",
     "difficulty": {
@@ -48,7 +48,9 @@
     "confirmListRename": "Save name",
     "confirmListSelection": "Select list",
     "goToLogIn": "Log in",
-    "goToRegister": "Create an account"
+    "goToRegister": "Create an account",
+    "dangerZone": "Danger zone",
+    "deleteProfile": "Delete my profile"
   },
   "pages": {
     "about": {

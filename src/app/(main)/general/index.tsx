@@ -24,6 +24,7 @@ import { useTranslation } from "react-i18next";
 import LogoutConfirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/LogoutConfirmation_MODAL/LogoutConfirmation_MODAL";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 import Confirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
+import Dropdown_BLOCK from "@/src/components/Dropdown_BLOCK/Dropdown_BLOCK";
 
 export default function General_PAGE() {
   const { t } = useTranslation();
@@ -146,13 +147,18 @@ export default function General_PAGE() {
             text_STYLES={{ flex: 1, marginLeft: 4 }}
           />
         </Block>
-        <Block styles={{ gap: 12 }}>
+        <Dropdown_BLOCK toggleBtn_TEXT={t("btn.dangerZone")}>
           <Btn
             text={t("page.general.btn.logout")}
             type="delete"
             onPress={TOGGLE_logoutModal}
           />
-        </Block>
+          <Btn
+            text={t("btn.deleteProfile")}
+            type="delete"
+            onPress={TOGGLE_logoutModal}
+          />
+        </Dropdown_BLOCK>
       </ScrollView>
 
       {/* ----- LOGOUT confirmation ----- */}

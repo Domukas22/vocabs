@@ -17,17 +17,17 @@
     "createList": "Neue Liste erstellen",
     "cancel": "Abbrechen",
     "create": "Erstellen",
-    "sortByDifficulty": "Nach Schwierigkeit",
+    "sortByDifficulty": "Nach Schwerkeit",
     "sortByDate": "Nach Erstellungsdatum",
-    "easyToHard": "Einfach --> Schwierig",
+    "easyToHard": "Einfach --> Schwer",
     "newToOld": "Neu --> Alt",
-    "hardToEasy": "Schwierig --> Einfach",
+    "hardToEasy": "Schwer  --->  Einfach",
     "oldToNew": "Alt --> Neu",
     "done": "Fertig",
     "difficulty": {
       "easy": "Einfach",
       "medium": "Mittel",
-      "hard": "Schwierig"
+      "hard": "Schwer"
     },
     "selectLangs": "Sprachen auswählen",
     "editHighlights": "Markierungen bearbeiten",
@@ -49,9 +49,11 @@
     "createVocab": "Vokabel erstellen",
     "deleteList": "Liste löschen",
     "confirmListRename": "Name speichern",
-    "confirmListSelection": "List auswählen",
+    "confirmListSelection": "Liste auswählen",
     "goToLogIn": "Einloggen",
-    "goToRegister": "Profil erstellen"
+    "goToRegister": "Profil erstellen",
+    "dangerZone": "Gefahrzone",
+    "deleteProfile": "Mein Profil löschen"
   },
   "pages": {
     "about": {
@@ -126,9 +128,9 @@
   },
   "label": {
     "createList": "Wie nennst du die neue Liste?",
-    "filterByDifficulty": "Nach Schwierigkeit filtern",
+    "filterByDifficulty": "Nach Schwerkeit filtern",
     "vocabPreview": "Vorschau des Vokabels",
-    "selectDifficulty": "Schwierigkeit der Vokabel",
+    "selectDifficulty": "Schwerkeit der Vokabel",
     "chosenLangs": "Ausgewählte Sprachen",
     "uploadImage": "Bild (optional)",
     "description": "Beschreibung (optional)",
@@ -179,14 +181,14 @@
   "difficulty": {
     "easy": "Einfach",
     "medium": "Mittel",
-    "hard": "Schwierig"
+    "hard": "Schwer"
   },
   "toggle": {
     "showImage": "Bild anzeigen",
     "showDescription": "Beschreibung anzeigen",
     "showListName": "Listenname anzeigen",
     "showFlags": "Flaggen anzeigen",
-    "showDifficulty": "Schwierigkeit anzeigen"
+    "showDifficulty": "Schwerkeit anzeigen"
   },
   "vocabDummy": {
     "translation": "Vocabs app ist cool",
@@ -210,7 +212,7 @@
     "listDeleted": "Liste gelöscht",
     "listRenamed": "Liste umbennant",
     "defaultTRsUpdated": "Standardübersetzungen der Liste aktualisiert",
-    "vocabDifficultyUpdated": "Schwierigkeit der Vokabel aktualisiert",
+    "vocabDifficultyUpdated": "Schwerkeit der Vokabel aktualisiert",
     "vocabCopied": "Die Vokabel wurde in deine Liste hingefügt",
     "publicVocabCreated": "Öffentliches Vokabel erstellt",
     "publicVocabUpdated": "Öffentliches Vokabel bearbeitet",

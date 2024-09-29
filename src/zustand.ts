@@ -184,6 +184,9 @@ const USE_zustand = create<ZustandStore>((set) => ({
     set((state) => ({
       z_publicVocabs: state.z_publicVocabs.map((vocab) => {
         if (vocab.id === vocab_id) {
+          console.log("🔴 THIS 🔴");
+          console.log(updatedVocabData);
+
           return updatedVocabData;
         }
         return vocab;

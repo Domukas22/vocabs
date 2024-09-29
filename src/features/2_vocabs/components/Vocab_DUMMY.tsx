@@ -81,7 +81,11 @@ export default function Vocab_DUMMY({
 
 const s = StyleSheet.create({
   parent: {
-    backgroundColor: MyColors.btn_2,
+    backgroundColor: MyColors.btn_1,
+    borderColor: MyColors.border_white_005,
+    overflow: "hidden",
+    borderWidth: 1,
+    borderRadius: 12,
   },
 
   content: {

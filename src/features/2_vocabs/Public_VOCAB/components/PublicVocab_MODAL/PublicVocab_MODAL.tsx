@@ -8,12 +8,11 @@ import Header from "@/src/components/Header/Header";
 import { ICON_X } from "@/src/components/icons/icons";
 import { MyColors } from "@/src/constants/MyColors";
 import React, { useCallback, useEffect, useState } from "react";
-import { Modal, SafeAreaView } from "react-native";
+import { ActivityIndicator, Modal, SafeAreaView } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import { Language_MODEL, List_MODEL, PublicVocab_MODEL } from "@/src/db/models";
 
-import ManageVocab_FOOTER from "@/src/components/Footer/Variations/ManageVocab_FOOTER/ManageVocab_FOOTER";
 import TrInput_BLOCK from "../../../../../components/Block/Variations/TrInput_BLOCK/TrInput_BLOCK";
 import TrText_MODAL from "../../../../../components/Modals/Small_MODAL/Variations/TrText_MODAL/TrText_MODAL";
 import TrHighlights_MODAL from "../../../components/TrHighlights_MODAL/TrHighlights_MODAL";
@@ -38,6 +37,7 @@ import Confirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/C
 import USE_publicVocabValues from "../../hooks/USE_publicVocabValues";
 import POPULATE_publicVocabValues from "../../utils/POPULATE_publicVocabValues";
 import CLEAR_publicVocabValues from "../../utils/CLEAR_publicVocabValues";
+import Footer from "@/src/components/Footer/Footer";
 
 interface PublicVocabModal_PROPS {
   open: boolean;
@@ -219,32 +219,64 @@ export default function PublicVocab_MODAL(props: PublicVocabModal_PROPS) {
           {/* -------------------------------------------------------------------------  */}
           {/* When creating, the buttons are visible when scrolled to the bottom */}
           {!vocab && (
-            <ManageVocab_FOOTER
-              onCancelPress={() =>
-                !IS_creatingPublicVocab &&
-                !IS_updatingPublicVocab &&
-                !IS_deletingPublicVocab &&
-                TOGGLE_vocabModal()
+            <Footer
+              btnLeft={
+                <Btn
+                  text={t("btn.cancel")}
+                  onPress={TOGGLE_vocabModal}
+                  type="simple"
+                />
               }
-              onActionPress={CREATE_vocab}
-              actionBtnText={t("btn.createButtonAction")}
-              loading={IS_creatingPublicVocab}
+              btnRight={
+                <Btn
+                  text={
+                    !IS_creatingPublicVocab ? t("btn.createButtonAction") : ""
+                  }
+                  iconRight={
+                    IS_creatingPublicVocab && (
+                      <ActivityIndicator color={"black"} />
+                    )
+                  }
+                  onPress={() => {
+                    if (!IS_creatingPublicVocab) CREATE_vocab();
+                  }}
+                  stayPressed={IS_creatingPublicVocab}
+                  type="action"
+                  style={{ flex: 1 }}
+                />
+              }
             />
           )}
         </KeyboardAwareScrollView>
 
         {/* When editing, the buttons are sticky at the bottom*/}
         {vocab && (
-          <ManageVocab_FOOTER
-            onCancelPress={() =>
-              !IS_creatingPublicVocab &&
-              !IS_updatingPublicVocab &&
-              !IS_deletingPublicVocab &&
-              TOGGLE_vocabModal()
+          <Footer
+            btnLeft={
+              <Btn
+                text={t("btn.cancel")}
+                onPress={TOGGLE_vocabModal}
+                type="simple"
+              />
             }
-            loading={IS_updatingPublicVocab}
-            actionBtnText={t("btn.updateButtonAction")}
-            onActionPress={UPDATE_vocab}
+            btnRight={
+              <Btn
+                text={
+                  !IS_updatingPublicVocab ? t("btn.updateButtonAction") : ""
+                }
+                iconRight={
+                  IS_updatingPublicVocab && (
+                    <ActivityIndicator color={"black"} />
+                  )
+                }
+                onPress={() => {
+                  if (!IS_updatingPublicVocab) UPDATE_vocab();
+                }}
+                stayPressed={IS_updatingPublicVocab}
+                type="action"
+                style={{ flex: 1 }}
+              />
+            }
           />
         )}
 

@@ -7,6 +7,7 @@ import Btn from "@/src/components/Btn/Btn";
 import {
   ICON_difficultyDot,
   ICON_calendar,
+  ICON_shuffle,
 } from "@/src/components/icons/icons";
 import Label from "@/src/components/Label/Label";
 import { MyVocabDisplaySettings_PROPS } from "@/src/db/models";
@@ -27,9 +28,10 @@ export default function MyVocabSorting_BLOCKS({
       <Btn
         text={t("btn.sortByShuffling")}
         iconRight={
-          <ICON_difficultyDot
-            big={true}
-            difficulty={displaySettings?.sorting === "shuffle" ? 0 : 1}
+          <ICON_shuffle
+            color={
+              displaySettings?.sorting === "shuffle" ? "primary" : "grey_light"
+            }
           />
         }
         onPress={() =>

@@ -6,13 +6,13 @@ import { useState } from "react";
 import { TranslationCreation_PROPS, Vocab_MODEL } from "../../../../db/models";
 
 interface PublicVocabUpdate_MODEL {
-  vocab_id: string;
+  public_vocab_id: string;
   description?: string | "";
   image?: string | "";
   translations: TranslationCreation_PROPS[];
 }
 
-export default function USE_updateMyVocab() {
+export default function USE_updatePublicVocab() {
   const [IS_updatingPublicVocab, SET_isUpdatingPublicVocab] = useState(false);
 
   const UPDATE_publicVocab = async (
@@ -23,13 +23,13 @@ export default function USE_updateMyVocab() {
     msg?: string;
   }> => {
     const {
-      vocab_id, // Used to identify the vocab to update
+      public_vocab_id, // Used to identify the vocab to update
       description,
       image,
       translations,
     } = props;
 
-    if (!vocab_id) {
+    if (!public_vocab_id) {
       console.log("🔴 Vocab ID not defined when updating public vocab 🔴");
       return {
         success: false,
@@ -52,7 +52,7 @@ export default function USE_updateMyVocab() {
       const { data: updatedVocabData, error: vocabError } = await supabase
         .from("public_vocabs")
         .update(vocab_DATA)
-        .eq("id", vocab_id)
+        .eq("id", public_vocab_id)
         .select()
         .single();
 
@@ -69,7 +69,7 @@ export default function USE_updateMyVocab() {
         const existingTranslation = await supabase
           .from("public_translations")
           .select("id")
-          .eq("public_vocab_id", vocab_id)
+          .eq("public_vocab_id", public_vocab_id)
           .eq("lang_id", translation.lang_id)
           .single();
 
@@ -89,7 +89,7 @@ export default function USE_updateMyVocab() {
             .from("public_translations")
             .insert([
               {
-                public_vocab_id: vocab_id,
+                public_vocab_id: public_vocab_id,
                 lang_id: translation.lang_id,
                 text: translation.text,
                 highlights: translation.highlights,

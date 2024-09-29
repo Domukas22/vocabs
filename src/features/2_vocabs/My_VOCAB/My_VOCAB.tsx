@@ -17,6 +17,8 @@ import Btn from "@/src/components/Btn/Btn";
 import { ICON_difficultyDot, ICON_X } from "@/src/components/icons/icons";
 import { useTranslation } from "react-i18next";
 import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
+import MyVocabBack_BTNS from "./Components/MyVocabBack_BTNS/MyVocabBack_BTNS";
+import MyVocabBackDifficultyEdit_BTNS from "./Components/MyVocabDifficultyEdit_BTNS/MyVocabDifficultyEdit_BTNS";
 
 interface VocabProps {
   vocab: Vocab_MODEL;
@@ -100,7 +102,7 @@ export default function My_VOCAB({
             }}
           >
             {!SHOW_difficultyEdits ? (
-              <MyVocabBack_BTNs
+              <MyVocabBack_BTNS
                 {...{
                   vocab,
                   TOGGLE_vocab: TOGGLE_open,
@@ -109,7 +111,7 @@ export default function My_VOCAB({
                 }}
               />
             ) : (
-              <MyVocabBackDifficultyEdit_BTNs
+              <MyVocabBackDifficultyEdit_BTNS
                 active_DIFFICULTY={vocab.difficulty}
                 privateVocabDifficultyEdit_PROPS={
                   privateVocabDifficultyEdit_PROPS
@@ -152,105 +154,3 @@ const s = StyleSheet.create({
     backgroundColor: MyColors.btn_green,
   },
 });
-
-function MyVocabBack_BTNs({
-  vocab,
-  TOGGLE_vocab,
-  HANDLE_vocabModal,
-  TOGGLE_difficultyEdits,
-}: {
-  vocab: Vocab_MODEL;
-  TOGGLE_vocab: () => void;
-  TOGGLE_difficultyEdits: () => void;
-  HANDLE_vocabModal: (vocab: Vocab_MODEL) => void;
-}) {
-  const { t } = useTranslation();
-  return (
-    <View style={{ flexDirection: "row", gap: 8 }}>
-      <Btn
-        type="simple"
-        style={{ flex: 1 }}
-        onPress={() => {
-          HANDLE_vocabModal({ vocab });
-        }}
-        text={t("btn.editVocab")}
-        text_STYLES={{ textAlign: "center" }}
-      />
-
-      <Btn type="simple" onPress={TOGGLE_vocab} text={t("btn.close")} />
-
-      <Btn
-        type="simple"
-        onPress={TOGGLE_difficultyEdits}
-        iconLeft={
-          <ICON_difficultyDot difficulty={vocab.difficulty} big={true} />
-        }
-      />
-    </View>
-  );
-}
-function MyVocabBackDifficultyEdit_BTNs({
-  active_DIFFICULTY,
-  privateVocabDifficultyEdit_PROPS,
-  EDIT_difficulty,
-  TOGGLE_open,
-}: {
-  active_DIFFICULTY: 1 | 2 | 3;
-  privateVocabDifficultyEdit_PROPS: {
-    loading: boolean;
-    targetDifficulty: 1 | 2 | 3 | undefined;
-  };
-
-  EDIT_difficulty: (diff: 1 | 2 | 3) => void;
-  TOGGLE_open: () => void;
-}) {
-  const { loading, targetDifficulty } = privateVocabDifficultyEdit_PROPS;
-
-  return (
-    <View style={{ flexDirection: "row", gap: 8 }}>
-      <Btn
-        type={active_DIFFICULTY === 1 ? "difficulty_1_active" : "simple"}
-        style={{ flex: 1 }}
-        onPress={() => EDIT_difficulty(1)}
-        iconLeft={
-          loading && targetDifficulty === 1 ? (
-            <ActivityIndicator color={MyColors.icon_difficulty_1} />
-          ) : (
-            <ICON_difficultyDot difficulty={1} big={true} />
-          )
-        }
-      />
-
-      <Btn
-        type={active_DIFFICULTY === 2 ? "difficulty_2_active" : "simple"}
-        style={{ flex: 1 }}
-        onPress={() => EDIT_difficulty(2)}
-        iconLeft={
-          loading && targetDifficulty === 2 ? (
-            <ActivityIndicator color={MyColors.icon_difficulty_2} />
-          ) : (
-            <ICON_difficultyDot difficulty={2} big={true} />
-          )
-        }
-      />
-
-      <Btn
-        type={active_DIFFICULTY === 3 ? "difficulty_3_active" : "simple"}
-        style={{ flex: 1 }}
-        onPress={() => EDIT_difficulty(3)}
-        iconLeft={
-          loading && targetDifficulty === 3 ? (
-            <ActivityIndicator color={MyColors.icon_difficulty_3} />
-          ) : (
-            <ICON_difficultyDot difficulty={3} big={true} />
-          )
-        }
-      />
-      <Btn
-        type="simple"
-        onPress={TOGGLE_open}
-        iconLeft={<ICON_X big={true} rotate={true} />}
-      />
-    </View>
-  );
-}

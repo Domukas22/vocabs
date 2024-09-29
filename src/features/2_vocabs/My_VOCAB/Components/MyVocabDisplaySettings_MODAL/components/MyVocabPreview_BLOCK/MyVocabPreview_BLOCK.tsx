@@ -24,7 +24,7 @@ export default function MyVocabPreview_BLOCK({
     <Block>
       <Label>{t("label.vocabPreview")}</Label>
       <View style={{ gap: 12 }}>
-        <View
+        {/* <View
           style={{
             borderRadius: 16,
             overflow: "hidden",
@@ -33,7 +33,7 @@ export default function MyVocabPreview_BLOCK({
           }}
         >
           <Vocab_DUMMY {...{ displaySettings }} />
-        </View>
+        </View> */}
         <View
           style={{
             borderRadius: 16,
@@ -85,6 +85,7 @@ export default function MyVocabPreview_BLOCK({
             last
           />
         </View>
+        <Vocab_DUMMY {...{ displaySettings }} />
       </View>
     </Block>
   );

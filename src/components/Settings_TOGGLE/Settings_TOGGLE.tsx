@@ -44,12 +44,12 @@ const s = StyleSheet.create({
   btn: {
     flexDirection: "row",
     padding: 12,
-    backgroundColor: MyColors.btn_1,
+    backgroundColor: MyColors.btn_2,
     borderBottomWidth: 1,
     borderBottomColor: MyColors.border_white_005,
   },
   btnPress: {
-    backgroundColor: MyColors.btn_2,
+    backgroundColor: MyColors.btn_3,
   },
   toggle: {
     height: 30,

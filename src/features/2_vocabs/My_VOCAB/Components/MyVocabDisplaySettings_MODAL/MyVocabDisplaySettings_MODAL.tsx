@@ -11,6 +11,7 @@ import DisplaySettings_MODAL from "../../../components/DisplaySettings_MODAL/Dis
 import MyVocabPreview_BLOCK from "./components/MyVocabPreview_BLOCK/MyVocabPreview_BLOCK";
 import MyVocabFilter_BLOCK from "./components/MyVocabFilter_BLOCK/MyVocabFilter_BLOCK";
 import MyVocabSorting_BLOCKS from "./components/MyVocabSorting_BLOCKS/MyVocabSorting_BLOCKS";
+import MyVocabSortDirection_BLOCK from "./components/MyVocabSortDirection_BLOCK/MyVocabSortDirection_BLOCK";
 
 interface DisplaySettingsModal_PROPS {
   displaySettings: MyVocabDisplaySettings_PROPS;
@@ -47,6 +48,13 @@ export default function MyVocabDisplaySettings_MODAL({
         ) : (
           ""
         )}
+        {view === "sort" &&
+          (displaySettings.sorting === "date" ||
+            displaySettings.sorting === "difficulty") && (
+            <MyVocabSortDirection_BLOCK
+              {...{ displaySettings, SET_displaySettings }}
+            />
+          )}
       </ScrollView>
     </DisplaySettings_MODAL>
   );

@@ -5,7 +5,7 @@
 import Btn from "@/src/components/Btn/Btn";
 import Footer from "@/src/components/Footer/Footer";
 import Header from "@/src/components/Header/Header";
-import { ICON_X } from "@/src/components/icons/icons";
+import { ICON_checkMark, ICON_X } from "@/src/components/icons/icons";
 
 import SearchBar from "@/src/components/SearchBar/SearchBar";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
@@ -13,7 +13,13 @@ import Subnav from "@/src/components/Subnav/Subnav";
 
 import { MyColors } from "@/src/constants/MyColors";
 import React, { useEffect, useMemo, useState } from "react";
-import { FlatList, Modal, SafeAreaView, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  Modal,
+  SafeAreaView,
+  View,
+} from "react-native";
 import { List_MODEL } from "@/src/db/models";
 import { FETCH_lists } from "@/src/db/lists/fetch";
 import { useTranslation } from "react-i18next";
@@ -31,7 +37,7 @@ interface SelectListModal_PROPS {
   IS_inAction: boolean;
 }
 
-export default function SelectPrivateList_MODAL({
+export default function SelectMyList_MODAL({
   open,
   title = "INTERT MODAL TITLE",
   current_LIST,
@@ -106,12 +112,20 @@ export default function SelectPrivateList_MODAL({
               <Btn
                 key={item.id + "list btn" + item.name}
                 text={item.name}
+                iconRight={
+                  item.id === selectedModal_LIST?.id && (
+                    <ICON_checkMark color="primary" />
+                  )
+                }
                 onPress={() => {
                   SET_selectedModalList(item);
                   SET_search("");
                 }}
                 type={item.id === selectedModal_LIST?.id ? "active" : "simple"}
-                style={{ flex: 1, marginBottom: 8 }}
+                style={[
+                  { flex: 1, marginBottom: 8 },
+                  item.id !== selectedModal_LIST?.id && { paddingRight: 40 },
+                ]}
                 text_STYLES={{ flex: 1 }}
               />
             )}
@@ -140,7 +154,10 @@ export default function SelectPrivateList_MODAL({
           }
           btnRight={
             <Btn
-              text={t("btn.confirmListSelection")}
+              text={!IS_inAction ? t("btn.confirmListSelection") : ""}
+              iconRight={
+                IS_inAction ? <ActivityIndicator color="black" /> : null
+              }
               onPress={() => {
                 if (!IS_inAction && selectedModal_LIST)
                   submit_ACTION(selectedModal_LIST);

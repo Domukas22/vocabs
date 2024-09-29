@@ -37,11 +37,12 @@ export interface List_MODEL {
 // --------------------------------------------------------------------------------------------
 export interface Vocab_MODEL {
   id: string;
-  list_id: string;
-  user_id: string;
-  difficulty: 1 | 2 | 3;
-  description: string | "";
-  image: string | "";
+  list_id: string | null;
+  user_id: string | null;
+  difficulty: 1 | 2 | 3 | null;
+  description: string | null;
+  image: string | null;
+  is_public: boolean;
   created_at: string;
 
   translations?: Translation_MODEL[];
@@ -57,11 +58,11 @@ export interface PublicVocab_MODEL {
 // --------------------------------------------------------------------------------------------
 export interface Translation_MODEL {
   id: string;
-  user_id: string;
+  user_id: string | null;
   vocab_id: string;
   lang_id: string;
   text: string;
-  highlights: number[];
+  highlights: number[] | null;
   created_at: string;
 }
 export interface PublicTranslation_MODEL {
