@@ -16,18 +16,21 @@ interface ModalDefinition {
 // Define the reducer function
 const modalReducer = (
   state: Record<string, boolean>,
-  action: { type: string; payload: string }
+  action: {
+    type: string;
+    payload: { modalName: string; value: boolean | null };
+  }
 ) => {
-  const { payload: stateKey } = action;
+  const { modalName, value } = action.payload;
 
-  // Check if the stateKey exists in the state
-  if (!(stateKey in state)) return state;
+  // Check if the modalName exists in the state
+  if (!(modalName in state)) return state;
 
   switch (action.type) {
     case TOGGLE_MODAL:
       return {
         ...state,
-        [stateKey]: !state[stateKey], // Toggle the value
+        [modalName]: value !== null ? value : !state[modalName], // Toggle or explicitly set the value
       };
     default:
       return state;
@@ -48,9 +51,11 @@ export default function USE_modalToggles(modalDefinitions: ModalDefinition[]) {
   const [state, dispatch] = useReducer(modalReducer, initialState);
 
   // Single toggle function that uses action names with full IntelliSense
-  const TOGGLE_modal = (modalName: string) => {
-    dispatch({ type: TOGGLE_MODAL, payload: modalName });
-    console.log(modalName);
+  const TOGGLE_modal = (modalName: string, value: boolean | null = null) => {
+    dispatch({ type: TOGGLE_MODAL, payload: { modalName, value } });
+    console.log(
+      `${modalName} toggled to ${value !== null ? value : !state[modalName]}`
+    );
   };
 
   return {
@@ -60,5 +65,3 @@ export default function USE_modalToggles(modalDefinitions: ModalDefinition[]) {
     TOGGLE_modal, // Use this function to toggle any modal with IntelliSense
   };
 }
-
-// Example usage

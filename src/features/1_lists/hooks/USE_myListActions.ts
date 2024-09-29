@@ -30,7 +30,7 @@ export default function USE_myListActions({
   //   if (!IS_updatingVocab && !IS_creatingVocab && !IS_deleting && vocab) {
   //     const updatedVocab = await UPDATE_privateVocab({
   //       vocab_id: vocab.id,
-  //       user_id: user.id,
+  //       user_id: user?.id,
   //       list_id: modal_LIST.id,
   //       difficulty: modal_DIFF,
   //       image: modal_IMG,
@@ -59,7 +59,7 @@ export default function USE_myListActions({
   // async function CREATE_vocab() {
   //   if (!IS_updatingVocab && !IS_creatingVocab && !IS_deleting && !vocab) {
   //     const newVocab = await CREATE_privateVocab({
-  //       user_id: user.id,
+  //       user_id: user?.id,
   //       list_id: modal_LIST.id,
   //       difficulty: modal_DIFF,
   //       image: modal_IMG,

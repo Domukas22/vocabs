@@ -75,6 +75,8 @@ export default function MyVocab_MODAL(props: ManageVocabModal_PROPS) {
   const { t } = useTranslation();
   const { user } = USE_auth();
 
+  console.log(languages?.length);
+
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
     { name: "selectedLangs", initialValue: false },
     { name: "selectedList", initialValue: false },
@@ -181,7 +183,11 @@ export default function MyVocab_MODAL(props: ManageVocabModal_PROPS) {
 
   useEffect(() => {
     open ? POPULATE_modal() : CLEAR_modal();
+    // TODO ==> Close every other modal inside when this triggers
+    // in irder to do that, we need to chagen teh TOGGLE_modal("xx"), to SET method in order to define false
   }, [open]);
+
+  console.log(modal_LANGS);
 
   return (
     <Modal animationType="slide" transparent={true} visible={open} style={{}}>
@@ -224,7 +230,7 @@ export default function MyVocab_MODAL(props: ManageVocabModal_PROPS) {
             toggle={() => TOGGLE_modal("selectedLangs")}
             {...{ REMOVE_lang }}
           />
-
+          {/* TODO ==> The problem her eis tha the chosen lang arr updates, but not the modal_TRs */}
           {modal_TRs?.map((tr) => (
             <TrInput_BLOCK
               key={`TrInputBlock/${tr.lang_id}`}

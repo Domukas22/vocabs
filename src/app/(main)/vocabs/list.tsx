@@ -167,7 +167,7 @@ export default function SingleList_PAGE() {
         list={selected_LIST}
         open={SHOW_listSettingsModal}
         TOGGLE_open={TOGGLE_listSettingsModal}
-        user_id={user.id}
+        user_id={user?.id}
         backToIndex={() => router.back()}
         HIGHLIGHT_listName={HIGHLIGHT_listName}
       />

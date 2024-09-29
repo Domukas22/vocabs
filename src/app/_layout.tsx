@@ -15,7 +15,7 @@ import { View } from "react-native";
 import { Styled_TEXT } from "../components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "../constants/MyColors";
 import { ICON_toastNotification } from "../components/icons/icons";
-import Custom_TOAST from "../components/Custom_TOAST/Custom_TOAST";
+import Notification_BOX from "../components/Notification_BOX/Notification_BOX";
 
 export default function _layout() {
   return (
@@ -24,13 +24,13 @@ export default function _layout() {
         <ToastProvider
           renderType={{
             custom_success: (toast) => (
-              <Custom_TOAST type="success" text={toast?.message} />
+              <Notification_BOX type="success" text={toast?.message} />
             ),
             custom_error: (toast) => (
-              <Custom_TOAST type="error" text={toast?.message} />
+              <Notification_BOX type="error" text={toast?.message} />
             ),
             custom_warning: (toast) => (
-              <Custom_TOAST type="warning" text={toast?.message} />
+              <Notification_BOX type="warning" text={toast?.message} />
             ),
           }}
         >
@@ -60,17 +60,14 @@ function Main_LAYOUT() {
     SplashScreen.hideAsync();
     if (loaded && !ARE_languagesLoading) {
       // trigger every time user logs in/out or registers
-      supabase.auth.onAuthStateChange((_event, session) => {
+      supabase.auth.onAuthStateChange(async (_event, session) => {
         if (session) {
           SET_auth(session?.user);
-          GET_userData(session?.user);
-          // router.push("/(main)/vocabs");
-          router.push("/(main)/explore");
-          console.log("LOOOOOG");
+          await GET_userData(session?.user); // await user data fetching
+          router.push("/(main)/explore"); // push only after fetching user data
         } else {
           SET_auth(null);
           router.push("/welcome");
-          // router.push("/");
         }
       });
     }
@@ -78,7 +75,6 @@ function Main_LAYOUT() {
 
   async function GET_userData(user) {
     let res = await FETCH_userData(user?.id);
-    // we could also use the SET_auth function, but we defined the SET_userData for clarity
     if (res.success) SET_userData(res.data);
   }
 

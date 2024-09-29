@@ -3,7 +3,9 @@
   "header": {
     "page_list": "My lists",
     "page_about": "About us",
-    "listSettings": "List settings"
+    "listSettings": "List settings",
+    "createAnAccount": "Create a new account",
+    "login": "Welcome back!"
   },
   "blockLabels": {
     "uiLang": "App language"
@@ -44,7 +46,9 @@
     "createVocab": "Create vocab",
     "deleteList": "Delelte list",
     "confirmListRename": "Save name",
-    "confirmListSelection": "Select list"
+    "confirmListSelection": "Select list",
+    "goToLogIn": "Log in",
+    "goToRegister": "Create an account"
   },
   "pages": {
     "about": {
@@ -131,7 +135,9 @@
     "sortDirection": "Sort direction",
     "listName": "List name",
     "defaultVocabLangs": "Languages selected by default when creating a new vocab",
-    "editListName": "Edit the list name"
+    "editListName": "Edit the list name",
+    "noAccountYet": "Don't have an account yet?",
+    "alreadyHaveAccount": "Already have an account?"
   },
   "modal": {
     "displaySettings": {

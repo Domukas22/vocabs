@@ -7,7 +7,7 @@ import { StyleSheet, View } from "react-native";
 import { ICON_toastNotification } from "../icons/icons";
 import { Styled_TEXT } from "../Styled_TEXT/Styled_TEXT";
 
-export default function Custom_TOAST({
+export default function Notification_BOX({
   type,
   text = "This is a green toast",
 }: {

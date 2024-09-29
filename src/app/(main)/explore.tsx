@@ -98,7 +98,7 @@ export default function Explore_PAGE() {
   async function CREATE_vocab(target_LIST: List_MODEL) {
     if (!IS_creatingVocab && targetSave_VOCAB && target_LIST) {
       const newVocab = await CREATE_privateVocab({
-        user_id: user.id,
+        user_id: user?.id,
         list_id: target_LIST.id,
         difficulty: 3,
         image: "",

@@ -29,8 +29,8 @@ export default function CreateList_MODAL({
   const { CREATE_list, IS_creatingList, createList_ERROR } = USE_createList();
 
   const create = async () => {
-    if (!newList_NAME || !user.id) return;
-    await CREATE_list({ name: newList_NAME, user_id: user.id });
+    if (!newList_NAME || !user?.id) return;
+    await CREATE_list({ name: newList_NAME, user_id: user?.id });
     HANLDE_toggle();
   };
 

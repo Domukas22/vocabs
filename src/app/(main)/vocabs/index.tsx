@@ -49,7 +49,7 @@ export default function MyLists_PAGE() {
   useEffect(() => {
     (async () =>
       FETCH_myLists({
-        user_id: user.id,
+        user_id: user?.id,
         z: {
           z_SET_lists,
           z_SET_listsLoading,

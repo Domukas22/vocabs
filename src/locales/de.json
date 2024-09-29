@@ -6,7 +6,9 @@
   "header": {
     "page_list": "Meine Listen",
     "page_about": "Über uns",
-    "listSettings": "Liste Einstellungen"
+    "listSettings": "Liste Einstellungen",
+    "createAnAccount": "Erstelle einen Profil",
+    "login": "Willkommen zurück!"
   },
   "blockLabels": {
     "uiLang": "App Sprache"
@@ -47,7 +49,9 @@
     "createVocab": "Vokabel erstellen",
     "deleteList": "Liste löschen",
     "confirmListRename": "Name speichern",
-    "confirmListSelection": "List auswählen"
+    "confirmListSelection": "List auswählen",
+    "goToLogIn": "Einloggen",
+    "goToRegister": "Profil erstellen"
   },
   "pages": {
     "about": {
@@ -134,7 +138,9 @@
     "sortDirection": "Sortierungs Richtung",
     "listName": "Listen Name",
     "defaultVocabLangs": "Sprachen, die beim Erstellen eines neuen Vokabulars standardmäßig ausgewählt werden",
-    "editListName": "Nenne die Liste um"
+    "editListName": "Nenne die Liste um",
+    "noAccountYet": "Hast du noch kein Profil?",
+    "alreadyHaveAccount": "Hast du bereits ein Profil?"
   },
   "modal": {
     "displaySettings": {

@@ -58,7 +58,7 @@ export default function USE_myVocabActions({
     if (allowAction && vocab) {
       const updatedVocab = await UPDATE_privateVocab({
         vocab_id: vocab.id,
-        user_id: user.id,
+        user_id: user?.id,
         list_id: modal_LIST.id,
         difficulty: modal_DIFF,
         image: modal_IMG,
@@ -87,7 +87,7 @@ export default function USE_myVocabActions({
   async function CREATE_vocab() {
     if (allowAction && !vocab) {
       const newVocab = await CREATE_privateVocab({
-        user_id: user.id,
+        user_id: user?.id,
         list_id: modal_LIST.id,
         difficulty: modal_DIFF,
         image: modal_IMG,

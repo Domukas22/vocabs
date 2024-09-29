@@ -43,6 +43,8 @@ export default function POPULATE_privateVocabValues({
   SET_modalTRs(
     vocab?.translations
       ? vocab.translations
+      : selected_LIST.default_TRs
+      ? GET_defaultTranslations(selected_LIST.default_TRs)
       : GET_defaultTranslations(["en", "de"])
   );
 }

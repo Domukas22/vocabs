@@ -2,7 +2,17 @@
 //
 //
 
-import { ActivityIndicator, Alert, View } from "react-native";
+import {
+  ActivityIndicator,
+  Alert,
+  Image,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 import { Styled_TEXT } from "../components/Styled_TEXT/Styled_TEXT";
 import Page_WRAP from "../components/Page_WRAP/Page_WRAP";
 import { MyColors } from "../constants/MyColors";
@@ -14,13 +24,29 @@ import Btn from "../components/Btn/Btn";
 import { useRouter } from "expo-router";
 import { supabase } from "../lib/supabase";
 
+import { useForm, Controller } from "react-hook-form";
+import { ICON_arrow } from "../components/icons/icons";
+import { useToast } from "react-native-toast-notifications";
+import Notification_BOX from "../components/Notification_BOX/Notification_BOX";
+import AuthenticationHeader from "../features/0_authentication/components/AuthenticationHeader";
+import { t } from "i18next";
+import { useTranslation } from "react-i18next";
+import Error_TEXT from "../components/Error_TEXT/Error_TEXT";
+import LoginRegister_SWITCH from "../features/0_authentication/components/LoginRegister_SWTICH";
+
+type RegisterData_PROPS = {
+  email: string;
+  password: string;
+};
+
 export default function Register_PAGE() {
-  const [email, SET_email] = useState("");
-  const [password, SET_password] = useState("");
   const [loading, SET_loading] = useState(false);
+  const [internal_ERROR, SET_internalError] = useState("");
+  const { t } = useTranslation();
   const router = useRouter();
 
-  const createAccount = async () => {
+  const createAccount = async (data: RegisterData_PROPS) => {
+    const { email, password } = data;
     if (!email || !password) return;
     SET_loading(true);
     const {
@@ -38,54 +64,127 @@ export default function Register_PAGE() {
     SET_loading(false);
 
     if (error) {
-      Alert.alert("Sign up error", error.message);
+      SET_internalError(error.message);
     }
   };
 
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isSubmitted },
+  } = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+  const onSubmit = (data: RegisterData_PROPS) => createAccount(data);
+
   return (
     <Page_WRAP>
-      <View
-        style={{
-          alignItems: "center",
-          paddingVertical: 32,
-          borderBottomWidth: 1,
-          borderBottomColor: MyColors.border_white_005,
-        }}
+      <KeyboardAvoidingView
+        style={{ flex: 1, marginBottom: 20 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        <Styled_TEXT type="text_22_bold">
-          Create your Vocabs account!
-        </Styled_TEXT>
-      </View>
-      <Block noBorder>
-        <Label labelText="What is your E-Mail?" />
-        <StyledText_INPUT
-          value={email}
-          SET_value={SET_email}
-          placeholder="email@gmail.com..."
-        />
-      </Block>
-      <Block noBorder>
-        <Label labelText="Create a password" />
-        <StyledText_INPUT
-          value={password}
-          SET_value={SET_password}
-          placeholder="myPassword..."
-        />
-      </Block>
-      <Block styles={{ marginTop: 8 }}>
-        <Btn
-          text={!loading ? "Create accounttt" : ""}
-          iconRight={loading ? <ActivityIndicator color={"black"} /> : null}
-          type="action"
-          onPress={createAccount}
-        />
-      </Block>
-      <Block>
-        <Styled_TEXT type="text_18_regular">
-          Already have an account?
-        </Styled_TEXT>
-        <Btn text="Log in" onPress={() => router.push("/login")} />
-      </Block>
+        {/* --------------------------------------------------------------------------------------------------- */}
+        <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="handled">
+          <AuthenticationHeader
+            text={t("header.createAnAccount")}
+            image_EL={
+              <Image
+                source={require("@/src/assets/images/icon_new.png")}
+                style={{ height: 60, width: 60, objectFit: "contain" }}
+              />
+            }
+          />
+          <Block noBorder>
+            <Label>What is your E-Mail?</Label>
+
+            <Controller
+              control={control}
+              rules={{
+                required: {
+                  value: true,
+                  message: "Please provide an E-Mail adress",
+                },
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, // Email validation regex
+                  message: "Please provide a valid E-Mail address",
+                },
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <StyledText_INPUT
+                  placeholder="email@gmail.com..."
+                  onBlur={onBlur}
+                  SET_value={(val) => {
+                    onChange(val);
+                    SET_internalError("");
+                  }}
+                  value={value}
+                  error={!!errors.email}
+                  props={{ keyboardType: "email-address" }}
+                  correctedError={isSubmitted && !errors.email}
+                />
+              )}
+              name="email"
+            />
+            {errors.email && <Error_TEXT>{errors.email.message}</Error_TEXT>}
+          </Block>
+
+          {/* --------------------------------------------------------------------------------------------------- */}
+
+          <Block noBorder>
+            <Label>Create a password</Label>
+            <Controller
+              control={control}
+              rules={{
+                required: {
+                  value: true,
+                  message: "Please provide a password",
+                },
+                minLength: {
+                  value: 6,
+                  message: `Password must be at least 6 characters long.`,
+                },
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <StyledText_INPUT
+                  placeholder="Password..."
+                  onBlur={onBlur}
+                  SET_value={(val) => {
+                    onChange(val);
+                    SET_internalError("");
+                  }}
+                  value={value}
+                  error={!!errors.password}
+                  correctedError={isSubmitted && !errors.password}
+                  props={{
+                    secureTextEntry: true,
+                  }}
+                />
+              )}
+              name="password"
+            />
+            {errors.password && (
+              <Error_TEXT>{errors.password.message}</Error_TEXT>
+            )}
+          </Block>
+
+          {/* --------------------------------------------------------------------------------------------------- */}
+          {internal_ERROR && (
+            <Notification_BOX text={internal_ERROR} type="error" />
+          )}
+          <Block styles={{ marginTop: 8, marginBottom: 100 }}>
+            <Btn
+              text={!loading ? "Create account" : ""}
+              iconRight={loading ? <ActivityIndicator color={"black"} /> : null}
+              type="action"
+              onPress={handleSubmit(onSubmit)}
+            />
+          </Block>
+        </ScrollView>
+      </KeyboardAvoidingView>
+      <LoginRegister_SWITCH page="register" />
     </Page_WRAP>
   );
 }
