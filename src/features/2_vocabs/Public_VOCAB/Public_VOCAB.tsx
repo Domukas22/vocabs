@@ -26,17 +26,17 @@ import { useTranslation } from "react-i18next";
 import { ICON_X } from "@/src/components/icons/icons";
 
 interface VocabProps {
-  vocab: PublicVocab_MODEL | undefined;
-  displaySettings: PublicVocabDisplaySettings_PROPS;
+  vocab: Vocab_MODEL | undefined;
+  displaySettings: MyVocabDisplaySettings_PROPS;
   IS_admin: boolean;
   HANDLE_vocabModal: ({
     clear,
     vocab,
   }: {
     clear?: boolean;
-    vocab?: PublicVocab_MODEL;
+    vocab?: Vocab_MODEL;
   }) => void;
-  PREPARE_toSaveVocab: (vocab: PublicVocab_MODEL) => void;
+  PREPARE_toSaveVocab: (vocab: Vocab_MODEL) => void;
 }
 
 // TOGGLE_vocabModal needs to also pass in th etranslations, so we dont have to pass them async and get a delayed manageVocabModal update
@@ -61,7 +61,7 @@ export default function Public_VOCAB({
       <View>
         <Vocab_FRONT
           vocab_id={vocab?.id}
-          translations={vocab?.public_translations}
+          translations={vocab?.translations}
           difficulty={0}
           description={vocab?.description}
           displaySettings={displaySettings}
@@ -70,7 +70,7 @@ export default function Public_VOCAB({
         />
         {open && (
           <>
-            <VocabBack_TRs TRs={vocab?.public_translations} difficulty={0} />
+            <VocabBack_TRs TRs={vocab?.translations} difficulty={0} />
             <VocabBack_DESC desc={vocab?.description} />
 
             <View

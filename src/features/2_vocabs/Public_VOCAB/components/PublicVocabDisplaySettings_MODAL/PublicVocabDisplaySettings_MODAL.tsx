@@ -14,9 +14,9 @@ import DisplaySettings_MODAL from "../../../components/DisplaySettings_MODAL/Dis
 import PublicVocabPreview_BLOCK from "./components/PublicVocabPreview_BLOCK/PublicVocabPreview_BLOCK";
 
 interface DisplaySettingsModal_PROPS {
-  displaySettings: PublicVocabDisplaySettings_PROPS;
+  displaySettings: MyVocabDisplaySettings_PROPS;
   SET_displaySettings: React.Dispatch<
-    React.SetStateAction<PublicVocabDisplaySettings_PROPS>
+    React.SetStateAction<MyVocabDisplaySettings_PROPS>
   >;
   open: boolean;
   TOGGLE_open: () => void;

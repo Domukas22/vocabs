@@ -3,14 +3,16 @@
 //
 
 import { List_MODEL, User_MODEL, Vocab_MODEL } from "@/src/db/models";
-import USE_createMyVocab from "./USE_createMyVocab";
-import USE_updateMyVocab from "./USE_updateMyVocab";
-import USE_deleteMyVocab from "./USE_deleteMyVocab";
+import USE_createMyVocab from "./USE_createVocab";
+import USE_updateMyVocab from "./USE_updateVocab";
+import USE_deleteVocab from "./USE_deleteVocab";
 import { PrivateVocabState_PROPS } from "./USE_myVocabValues";
 import USE_zustand from "../../../../zustand";
 import { useToast } from "react-native-toast-notifications";
 import { useSSR, useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
+import USE_createVocab from "./USE_createVocab";
+import USE_updateVocab from "./USE_updateVocab";
 
 interface privateVocabAction_PROPS {
   user: User_MODEL;
@@ -19,6 +21,7 @@ interface privateVocabAction_PROPS {
   SET_vocabs: React.Dispatch<React.SetStateAction<Vocab_MODEL[]>>;
   TOGGLE_vocabModal: () => void;
   HIGHLIGHT_vocab: (id: string) => void;
+  is_public?: boolean;
 }
 
 export default function USE_myVocabActions({
@@ -28,6 +31,7 @@ export default function USE_myVocabActions({
   TOGGLE_vocabModal,
   SET_vocabs,
   HIGHLIGHT_vocab,
+  is_public = false,
 }: privateVocabAction_PROPS) {
   const { modal_TRs, modal_IMG, modal_DESC, modal_LIST, modal_DIFF } =
     modalValues;
@@ -36,35 +40,49 @@ export default function USE_myVocabActions({
 
   const {
     z_CREATE_privateVocab,
+    z_CREATE_publicVocab,
     z_UPDATE_privateVocab,
+    z_UPDATE_publicVocab,
     z_DELETE_privateVocab,
+    z_DELETE_publicVocab,
   } = USE_zustand();
 
-  const { CREATE_privateVocab, IS_creatingVocab } = USE_createMyVocab();
-  const { UPDATE_privateVocab, IS_updatingVocab } = USE_updateMyVocab();
-  const { DELETE_privateVocab, IS_deleting } = USE_deleteMyVocab();
+  const { CREATE_vocab, IS_creatingVocab } = USE_createVocab();
+  const { UPDATE_vocab, IS_updatingVocab } = USE_updateVocab();
+  const { DELETE_vocab, IS_deletingVocab } = USE_deleteVocab();
 
   const [allowAction, SET_allowAction] = useState(true);
 
   useEffect(() => {
     SET_allowAction(
-      !IS_updatingVocab && !IS_creatingVocab && !IS_deleting ? true : false
+      !IS_updatingVocab && !IS_creatingVocab && !IS_deletingVocab ? true : false
     );
-  }, [IS_creatingVocab, IS_updatingVocab, IS_deleting]);
+  }, [IS_creatingVocab, IS_updatingVocab, IS_deletingVocab]);
 
-  async function UPDATE_vocab() {
+  async function update() {
     if (allowAction && vocab) {
-      const updatedVocab = await UPDATE_privateVocab({
-        vocab_id: vocab.id,
-        user_id: user?.id,
-        list_id: modal_LIST.id,
-        difficulty: modal_DIFF,
-        image: modal_IMG,
-        description: modal_DESC,
-        translations: modal_TRs,
-      });
+      const updatedVocab = await UPDATE_vocab(
+        {
+          vocab_id: vocab.id,
+          user_id: user?.id,
+          list_id: modal_LIST?.id,
+          difficulty: modal_DIFF,
+          image: modal_IMG,
+          description: modal_DESC,
+          translations: modal_TRs,
+        },
+        user.is_admin,
+        is_public
+      );
       if (updatedVocab.success) {
-        z_UPDATE_privateVocab(modal_LIST.id, vocab.id, updatedVocab.data);
+        if (is_public) {
+          z_UPDATE_publicVocab({
+            vocab_id: updatedVocab.data.id,
+            updatedVocabData: updatedVocab.data,
+          });
+        } else {
+          z_UPDATE_privateVocab(modal_LIST?.id, vocab.id, updatedVocab.data);
+        }
         SET_vocabs((vocabs) =>
           vocabs.map((v) => {
             if (v.id === updatedVocab.data.id) {
@@ -82,19 +100,25 @@ export default function USE_myVocabActions({
       }
     }
   }
-  async function CREATE_vocab() {
+  async function create() {
     if (allowAction && !vocab) {
-      const newVocab = await CREATE_privateVocab({
+      const newVocab = await CREATE_vocab({
         user_id: user?.id,
-        list_id: modal_LIST.id,
+        list_id: modal_LIST?.id,
         difficulty: modal_DIFF,
         image: modal_IMG,
         description: modal_DESC,
         translations: modal_TRs,
+        is_public,
+        IS_admin: user.is_admin,
       });
 
       if (newVocab.success) {
-        z_CREATE_privateVocab(modal_LIST.id, newVocab.data);
+        if (is_public) {
+          z_CREATE_publicVocab(newVocab.data);
+        } else {
+          z_CREATE_privateVocab(modal_LIST?.id, newVocab.data);
+        }
         SET_vocabs((prev) => [newVocab.data, ...prev]);
         TOGGLE_vocabModal();
         HIGHLIGHT_vocab(newVocab.data.id);
@@ -105,13 +129,21 @@ export default function USE_myVocabActions({
       }
     }
   }
-  async function DELETE_vocab() {
+  async function delete_V() {
     if (allowAction && vocab) {
-      const result = await DELETE_privateVocab({
+      const result = await DELETE_vocab({
         vocab_id: vocab.id,
+        user_id: user.id,
+        list_id: modal_LIST?.id,
+        is_public: is_public,
+        is_admin: user.is_admin,
       });
       if (result.success) {
-        z_DELETE_privateVocab(modal_LIST.id, vocab.id);
+        if (is_public) {
+          z_DELETE_publicVocab({ targetVocab_ID: vocab.id });
+        } else {
+          z_DELETE_privateVocab(modal_LIST?.id, vocab.id);
+        }
         SET_vocabs((vocabs) => vocabs.filter((v) => v.id !== vocab.id));
         TOGGLE_vocabModal();
         HIGHLIGHT_vocab(vocab.id);
@@ -124,13 +156,13 @@ export default function USE_myVocabActions({
   }
 
   return {
-    CREATE_vocab,
-    UPDATE_vocab,
+    create,
+    update,
 
-    DELETE_vocab,
+    delete_V,
     IS_creatingVocab,
     IS_updatingVocab,
 
-    IS_deleting,
+    IS_deletingVocab,
   };
 }

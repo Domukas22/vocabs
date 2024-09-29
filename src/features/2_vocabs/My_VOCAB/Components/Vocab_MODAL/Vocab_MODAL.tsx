@@ -54,17 +54,19 @@ import CLEAR_myVocabValues from "../../utils/CLEAR_myVocabValues";
 import Big_MODAL from "@/src/components/Modals/Big_MODAL/Big_MODAL";
 import Footer from "@/src/components/Footer/Footer";
 import SelectMyList_MODAL from "@/src/features/1_lists/components/SelectMyList_MODAL/SelectMyList_MODAL";
+import Dropdown_BLOCK from "@/src/components/Dropdown_BLOCK/Dropdown_BLOCK";
 
 interface ManageVocabModal_PROPS {
   open: boolean;
   TOGGLE_modal: () => void;
   vocab: Vocab_MODEL | undefined;
-  selected_LIST: List_MODEL;
+  selected_LIST: List_MODEL | null | undefined;
   SET_vocabs: React.Dispatch<React.SetStateAction<Vocab_MODEL[]>>;
   HIGHLIGHT_vocab: (id: string) => void;
+  is_public?: boolean;
 }
 
-export default function MyVocab_MODAL(props: ManageVocabModal_PROPS) {
+export default function Vocab_MODAL(props: ManageVocabModal_PROPS) {
   const {
     open,
     TOGGLE_modal: TOGGLE_vocabModal,
@@ -72,6 +74,7 @@ export default function MyVocab_MODAL(props: ManageVocabModal_PROPS) {
     selected_LIST,
     SET_vocabs,
     HIGHLIGHT_vocab,
+    is_public = false,
   } = props;
   const { languages } = USE_langs();
   const { t } = useTranslation();
@@ -103,14 +106,14 @@ export default function MyVocab_MODAL(props: ManageVocabModal_PROPS) {
   } = USE_myVocabValues(selected_LIST);
 
   const {
-    CREATE_vocab,
-    UPDATE_vocab,
+    create,
+    update,
 
-    DELETE_vocab,
+    delete_V,
     IS_creatingVocab,
     IS_updatingVocab,
 
-    IS_deleting,
+    IS_deletingVocab,
   } = USE_myVocabActions({
     user,
     vocab,
@@ -125,6 +128,7 @@ export default function MyVocab_MODAL(props: ManageVocabModal_PROPS) {
     TOGGLE_vocabModal,
     SET_vocabs,
     HIGHLIGHT_vocab,
+    is_public,
   });
 
   const POPULATE_modal = useCallback(() => {
@@ -211,7 +215,7 @@ export default function MyVocab_MODAL(props: ManageVocabModal_PROPS) {
             onPress={() =>
               !IS_creatingVocab &&
               !IS_updatingVocab &&
-              !IS_deleting &&
+              !IS_deletingVocab &&
               TOGGLE_vocabModal()
             }
             style={{ borderRadius: 100 }}
@@ -225,14 +229,15 @@ export default function MyVocab_MODAL(props: ManageVocabModal_PROPS) {
         contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }}
       >
         {/* ------------------------------ INPUTS ------------------------------  */}
-        <DifficultyInput_BLOCK {...{ modal_DIFF, SET_modalDiff }} />
+        {!is_public && (
+          <DifficultyInput_BLOCK {...{ modal_DIFF, SET_modalDiff }} />
+        )}
         <ChosenLangs_BLOCK
           label={t("label.chosenLangs")}
           langs={modal_LANGS}
           toggle={() => TOGGLE_modal("selectedLangs")}
           {...{ REMOVE_lang }}
         />
-        {/* TODO ==> The problem her eis tha the chosen lang arr updates, but not the modal_TRs */}
         {modal_TRs?.map((tr) => (
           <TrInput_BLOCK
             key={`TrInputBlock/${tr.lang_id}`}
@@ -249,25 +254,27 @@ export default function MyVocab_MODAL(props: ManageVocabModal_PROPS) {
         <ImageInput_BLOCK {...{ modal_IMG, SET_modalImg }} />
         <DescriptionInput_BLOCK {...{ modal_DESC, SET_modalDesc }} />
 
-        <Block>
-          <Label>{t("label.chosenList")}</Label>
-          <Btn
-            text={modal_LIST?.name || ""}
-            iconRight={<ICON_dropdownArrow />}
-            onPress={() => TOGGLE_modal("selectedList")}
-            type="simple"
-            style={{ flex: 1 }}
-            text_STYLES={{ flex: 1 }}
-          />
-        </Block>
-        {vocab && (
+        {!is_public && (
           <Block>
+            <Label>{t("label.chosenList")}</Label>
+            <Btn
+              text={modal_LIST?.name || ""}
+              iconRight={<ICON_dropdownArrow />}
+              onPress={() => TOGGLE_modal("selectedList")}
+              type="simple"
+              style={{ flex: 1 }}
+              text_STYLES={{ flex: 1 }}
+            />
+          </Block>
+        )}
+        {vocab && (
+          <Dropdown_BLOCK toggleBtn_TEXT={t("btn.dangerZone")}>
             <Btn
               type="delete"
               text={t("btn.deleteVocab")}
               onPress={() => TOGGLE_modal("delete")}
             />
-          </Block>
+          </Dropdown_BLOCK>
         )}
         {/* -------------------------------------------------------------------------  */}
         {/* When creating, the buttons are visible when scrolled to the bottom */}
@@ -287,7 +294,7 @@ export default function MyVocab_MODAL(props: ManageVocabModal_PROPS) {
                   IS_creatingVocab && <ActivityIndicator color={"black"} />
                 }
                 onPress={() => {
-                  if (!IS_creatingVocab) CREATE_vocab();
+                  if (!IS_creatingVocab) create();
                 }}
                 stayPressed={IS_creatingVocab}
                 type="action"
@@ -315,7 +322,7 @@ export default function MyVocab_MODAL(props: ManageVocabModal_PROPS) {
                 IS_updatingVocab && <ActivityIndicator color={"black"} />
               }
               onPress={() => {
-                if (!IS_updatingVocab) UPDATE_vocab();
+                if (!IS_updatingVocab) update();
               }}
               stayPressed={IS_updatingVocab}
               type="action"
@@ -349,28 +356,30 @@ export default function MyVocab_MODAL(props: ManageVocabModal_PROPS) {
         {...{ target_LANG, modal_DIFF, modal_TRs, SET_modalTRs }}
       />
 
-      {/* ----- DELETE confirmation ----- */}
       <Confirmation_MODAL
         open={modal_STATES.delete && !!vocab}
-        toggle={() => !IS_deleting && TOGGLE_modal("delete")}
+        toggle={() => !IS_deletingVocab && TOGGLE_modal("delete")}
         title={t("modal.deleteVocabConfirmation.header")}
-        action={DELETE_vocab}
-        IS_inAction={IS_deleting}
+        action={delete_V}
+        IS_inAction={IS_deletingVocab}
         actionBtnText={t("btn.confirmDelete")}
       />
-      <SelectMyList_MODAL
-        open={modal_STATES.selectedList}
-        title="Saved vocab to list"
-        submit_ACTION={(target_LIST: List_MODEL) => {
-          SET_modalList(target_LIST);
-          TOGGLE_modal("selectedList");
-        }}
-        cancel_ACTION={() => {
-          TOGGLE_modal("selectedList");
-        }}
-        IS_inAction={IS_creatingVocab}
-        current_LIST={modal_LIST}
-      />
+
+      {!is_public && (
+        <SelectMyList_MODAL
+          open={modal_STATES.selectedList}
+          title="Saved vocab to list"
+          submit_ACTION={(target_LIST: List_MODEL) => {
+            SET_modalList(target_LIST);
+            TOGGLE_modal("selectedList");
+          }}
+          cancel_ACTION={() => {
+            TOGGLE_modal("selectedList");
+          }}
+          IS_inAction={IS_creatingVocab}
+          current_LIST={modal_LIST}
+        />
+      )}
     </Big_MODAL>
   );
 }

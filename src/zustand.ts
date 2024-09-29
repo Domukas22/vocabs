@@ -40,13 +40,13 @@ interface ZustandStore {
   z_DELETE_privateVocab: (list_id: string, vocab_id: string) => void;
 
   z_publicVocabs: PublicVocab_MODEL[];
-  z_SET_publicVocabs: (lists: PublicVocab_MODEL[]) => void;
+  z_SET_publicVocabs: (lists: Vocab_MODEL[]) => void;
   z_ARE_publicVocabsLoading: boolean;
   z_SET_publicVocabsLoading: (bool: boolean) => void;
   z_publicVocabs_ERROR: any;
   z_SET_publicVocabsError: (error: any) => void;
 
-  z_CREATE_publicVocab: ({ newVocab }: { newVocab: PublicVocab_MODEL }) => void;
+  z_CREATE_publicVocab: (newVocab: PublicVocab_MODEL) => void;
   z_UPDATE_publicVocab: ({
     vocab_id,
     updatedVocabData,
@@ -175,7 +175,9 @@ const USE_zustand = create<ZustandStore>((set) => ({
   z_publicVocabs_ERROR: null,
   z_SET_publicVocabsError: (error) => set({ z_lists_ERROR: error }),
 
-  z_CREATE_publicVocab: ({ newVocab }) => {
+  z_CREATE_publicVocab: (newVocab) => {
+    console.log(newVocab);
+
     set((state) => ({
       z_publicVocabs: [newVocab, ...state.z_publicVocabs],
     }));
@@ -184,9 +186,6 @@ const USE_zustand = create<ZustandStore>((set) => ({
     set((state) => ({
       z_publicVocabs: state.z_publicVocabs.map((vocab) => {
         if (vocab.id === vocab_id) {
-          console.log("🔴 THIS 🔴");
-          console.log(updatedVocabData);
-
           return updatedVocabData;
         }
         return vocab;
@@ -196,7 +195,7 @@ const USE_zustand = create<ZustandStore>((set) => ({
   z_DELETE_publicVocab: ({ targetVocab_ID }) => {
     set((state) => ({
       z_publicVocabs: state.z_publicVocabs.filter(
-        (v) => v.id !== targetVocab_ID
+        (v) => v?.id !== targetVocab_ID
       ),
     }));
   },

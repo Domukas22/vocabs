@@ -2,51 +2,21 @@
 //
 //
 
-import { Button, Text, View } from "react-native";
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
 import {
-  MyVocab_MODAL,
+  Vocab_MODAL,
   MyVocabDisplaySettings_MODAL,
   MyVocabs_HEADER,
   MyVocabs_SUBNAV,
   MyVocabs_FLATLIST,
 } from "@/src/features/2_vocabs";
 import { useRouter } from "expo-router";
-// import Btn from "@/src/components/Btn/Btn";
-// import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
-// import Header from "@/src/components/Header/Header";
-// import {
-//   ICON_3dots,
-//   ICON_arrow,
-//   ICON_displaySettings,
-//   ICON_X,
-// } from "@/src/components/icons/icons";
-// import { TranslationCreation_PROPS, Vocab_MODEL } from "@/src/db/models";
-// import { useEffect, useMemo, useState } from "react";
 import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
 import { MyVocabDisplaySettings_PROPS, Vocab_MODEL } from "@/src/db/models";
 import { useMemo, useState } from "react";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 import ListSettings_MODAL from "@/src/features/1_lists/components/ListSettings_MODAL/ListSettings_MODAL";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
-
-// import SUBSCRIBE_toVocabs from "@/src/db/vocabs/SUBSCRIBE_toVocabs";
-
-// import { supabase } from "@/src/lib/supabase";
-// import List_SKELETONS from "@/src/components/Skeletons/List_SKELETONS";
-// import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
-
-// import { MyVocabDisplaySettings_PROPS } from "@/src/db/models";
-// import Subnav from "@/src/components/Subnav/Subnav";
-// import SearchBar from "@/src/components/SearchBar/SearchBar";
-// import { USE_toggle } from "@/src/hooks/USE_toggle";
-// import e3 from "@/src/components/Subnav/Variations/PrivateVocabs_SUBNAV";
-// import PrivateVocabDisplaySettings_MODAL from "@/src/components/Modals/Big_MODAL/Variations/PrivateVocabDisplaySettings_MODAL/PrivateVocabDisplaySettings_MODAL";
-// import PrivateVocab_MODAL from "@/src/components/Modals/Vocab_MODALS/PrivateVocab_MODAL/PrivateVocab_MODAL";
-// import { useTranslation } from "react-i18next";
-// import Private_VOCAB from "@/src/components/Vocab/Private_VOCAB/Private_VOCAB";
-
-// import { MyColors } from "@/src/constants/MyColors";
 
 export default function SingleList_PAGE() {
   const router = useRouter();
@@ -156,7 +126,7 @@ export default function SingleList_PAGE() {
         SET_displaySettings={SET_displaySettings}
       />
 
-      <MyVocab_MODAL
+      <Vocab_MODAL
         open={SHOW_vocabModal}
         TOGGLE_modal={() => HANDLE_vocabModal({ clear: true })}
         vocab={target_VOCAB}

@@ -18,9 +18,9 @@ export default function PublicVocabPreview_BLOCK({
   displaySettings,
   SET_displaySettings,
 }: {
-  displaySettings: PublicVocabDisplaySettings_PROPS;
+  displaySettings: MyVocabDisplaySettings_PROPS;
   SET_displaySettings: React.Dispatch<
-    React.SetStateAction<PublicVocabDisplaySettings_PROPS>
+    React.SetStateAction<MyVocabDisplaySettings_PROPS>
   >;
 }) {
   return (

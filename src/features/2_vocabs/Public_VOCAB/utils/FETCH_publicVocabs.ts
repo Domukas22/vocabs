@@ -16,8 +16,9 @@ export default async function FETCH_publicVocabs({ z }) {
 
     // Prepare the query
     let query = supabase
-      .from("public_vocabs")
-      .select("*, public_translations(*)")
+      .from("vocabs")
+      .select("*, translations(*)")
+      .eq("is_public", true)
       .order("created_at", { ascending: false });
 
     // Execute the query

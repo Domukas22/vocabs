@@ -9,7 +9,7 @@ import {
 import { useState } from "react";
 
 export interface PrivateVocabState_PROPS {
-  modal_LIST: List_MODEL;
+  modal_LIST: List_MODEL | null | undefined;
   modal_DIFF: 1 | 2 | 3;
   modal_IMG: string;
   modal_DESC: string;
@@ -27,8 +27,12 @@ export interface PrivateVocabSet_PROPS {
   SET_modalLangs: React.Dispatch<React.SetStateAction<Language_MODEL[]>>;
 }
 
-export default function USE_myVocabValues(selected_LIST: List_MODEL) {
-  const [modal_LIST, SET_modalList] = useState<List_MODEL>(selected_LIST);
+export default function USE_myVocabValues(
+  selected_LIST: List_MODEL | null | undefined
+) {
+  const [modal_LIST, SET_modalList] = useState<List_MODEL | null>(
+    selected_LIST || null
+  );
   const [modal_DIFF, SET_modalDiff] = useState<1 | 2 | 3>(3);
   const [modal_IMG, SET_modalImg] = useState<string>("");
   const [modal_DESC, SET_modalDesc] = useState<string>("");

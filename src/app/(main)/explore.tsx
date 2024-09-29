@@ -14,6 +14,7 @@ import Public_VOCAB from "@/src/features/2_vocabs/Public_VOCAB/Public_VOCAB";
 import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
 import {
   List_MODEL,
+  MyVocabDisplaySettings_PROPS,
   PublicVocab_MODEL,
   PublicVocabDisplaySettings_PROPS,
   User_MODEL,
@@ -26,7 +27,7 @@ import { supabase } from "@/src/lib/supabase";
 import { useRouter } from "expo-router";
 import { useState, useEffect } from "react";
 import { View } from "react-native";
-import USE_fetchPublicVocabs from "@/src/db/vocabs/FETCH_publicVocabs";
+
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import PublicVocabs_SUBNAV from "@/src/components/Subnav/Variations/PublicVocabs_SUBNAV";
@@ -38,9 +39,10 @@ import USE_zustand from "@/src/zustand";
 import FETCH_publicVocabs from "@/src/features/2_vocabs/Public_VOCAB/utils/FETCH_publicVocabs";
 import PublicVocabs_HEADER from "@/src/features/2_vocabs/Public_VOCAB/components/PublicVocabs_HEADER";
 import SelectMyList_MODAL from "@/src/features/1_lists/components/SelectMyList_MODAL/SelectMyList_MODAL";
-import USE_createMyVocab from "@/src/features/2_vocabs/My_VOCAB/hooks/USE_createMyVocab";
+import USE_createMyVocab from "@/src/features/2_vocabs/My_VOCAB/hooks/USE_createVocab";
 import { useToast } from "react-native-toast-notifications";
 import { useTranslation } from "react-i18next";
+import { Vocab_MODAL } from "@/src/features/2_vocabs";
 
 export default function Explore_PAGE() {
   const router = useRouter();
@@ -53,12 +55,16 @@ export default function Explore_PAGE() {
   // const { FETCH_publicVocabs, IS_fetchingVocabs } = USE_fetchPublicVocabs();
 
   const [displaySettings, SET_displaySettings] =
-    useState<PublicVocabDisplaySettings_PROPS>({
-      search: "",
+    useState<MyVocabDisplaySettings_PROPS>({
       SHOW_image: false,
       SHOW_description: true,
       SHOW_flags: true,
+      SHOW_difficulty: true,
       frontTrLang_ID: "en",
+      sorting: "difficulty",
+      sortDirection: "ascending",
+      search: "",
+      difficultyFilters: [],
     });
 
   const {
@@ -81,28 +87,28 @@ export default function Explore_PAGE() {
       }))();
   }, []);
 
-  const [publicVocab, SET_toEditVocab] = useState<
-    PublicVocab_MODEL | undefined
-  >(undefined);
+  const [publicVocab, SET_toEditVocab] = useState<Vocab_MODEL | undefined>(
+    undefined
+  );
   const [targetSave_VOCAB, SET_targetSaveVocab] = useState<
-    PublicVocab_MODEL | undefined
+    Vocab_MODEL | undefined
   >(undefined);
 
   const [SHOW_saveVocabModal, TOGGLE_saveVocabModal] = USE_toggle();
 
   const { z_CREATE_privateVocab } = USE_zustand();
 
-  const { CREATE_privateVocab, IS_creatingVocab } = USE_createMyVocab();
+  const { CREATE_vocab, IS_creatingVocab } = USE_createMyVocab();
 
-  async function CREATE_vocab(target_LIST: List_MODEL) {
+  async function create(target_LIST: List_MODEL) {
     if (!IS_creatingVocab && targetSave_VOCAB && target_LIST) {
-      const newVocab = await CREATE_privateVocab({
+      const newVocab = await CREATE_vocab({
         user_id: user?.id,
         list_id: target_LIST.id,
         difficulty: 3,
         image: "",
         description: targetSave_VOCAB.description,
-        translations: targetSave_VOCAB.public_translations,
+        translations: targetSave_VOCAB.translations,
       });
 
       if (newVocab.success) {
@@ -123,7 +129,7 @@ export default function Explore_PAGE() {
     vocab,
   }: {
     clear?: boolean;
-    vocab?: PublicVocab_MODEL;
+    vocab?: Vocab_MODEL;
   }) => {
     // return;
     if (!clear && vocab) {
@@ -135,7 +141,7 @@ export default function Explore_PAGE() {
     }
   };
 
-  const PREPARE_toSaveVocab = (vocab: PublicVocab_MODEL) => {
+  const PREPARE_toSaveVocab = (vocab: Vocab_MODEL) => {
     SET_targetSaveVocab(vocab);
     TOGGLE_saveVocabModal();
   };
@@ -192,18 +198,27 @@ export default function Explore_PAGE() {
         SET_displaySettings={SET_displaySettings}
       />
 
-      <PublicVocab_MODAL
+      {/* <PublicVocab_MODAL
         open={SHOW_vocabModal}
         TOGGLE_modal={() => HANDLE_vocabModal({ clear: true })}
         vocab={publicVocab}
         HIGHLIGHT_vocab={HIGHLIGHT_vocab}
+      /> */}
+      <Vocab_MODAL
+        open={SHOW_vocabModal}
+        TOGGLE_modal={() => HANDLE_vocabModal({ clear: true })}
+        vocab={publicVocab}
+        selected_LIST={null}
+        SET_vocabs={(s) => {}}
+        HIGHLIGHT_vocab={HIGHLIGHT_vocab}
+        is_public={true}
       />
 
       <SelectMyList_MODAL
         open={SHOW_saveVocabModal}
         title="Saved vocab to list"
         submit_ACTION={(target_LIST: List_MODEL) => {
-          if (!IS_creatingVocab) CREATE_vocab(target_LIST);
+          if (!IS_creatingVocab) create(target_LIST);
         }}
         cancel_ACTION={() => {
           TOGGLE_saveVocabModal();

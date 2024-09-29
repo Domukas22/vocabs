@@ -18,9 +18,8 @@ import { Image, Pressable, StyleSheet, View } from "react-native";
 
 interface VocabFront_PROPS {
   vocab_id: string;
-  displaySettings:
-    | MyVocabDisplaySettings_PROPS
-    | PublicVocabDisplaySettings_PROPS;
+  displaySettings: MyVocabDisplaySettings_PROPS;
+
   translations: TranslationCreation_PROPS[] | undefined;
   difficulty: 0 | 1 | 2 | 3;
   description: string;
@@ -92,7 +91,7 @@ export default function Vocab_FRONT({
                     lang={tr.lang_id}
                   />
                 ))}
-              {SHOW_difficulty && difficulty && (
+              {SHOW_difficulty && (
                 <ICON_difficultyDot difficulty={difficulty} />
               )}
             </View>
