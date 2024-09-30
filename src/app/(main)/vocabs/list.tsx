@@ -8,7 +8,7 @@ import {
   MyVocabDisplaySettings_MODAL,
   MyVocabs_HEADER,
   MyVocabs_SUBNAV,
-  MyVocabs_FLATLIST,
+  Vocabs_FLATLIST,
 } from "@/src/features/2_vocabs";
 import { useRouter } from "expo-router";
 import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
@@ -108,7 +108,7 @@ export default function SingleList_PAGE() {
         activeFitlers={displaySettings.difficultyFilters.length}
       />
       {vocabs && vocabs.length > 0 ? (
-        <MyVocabs_FLATLIST
+        <Vocabs_FLATLIST
           vocabs={vocabs}
           SHOW_bottomBtn={true}
           {...{

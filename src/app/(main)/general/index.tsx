@@ -21,7 +21,6 @@ import { Alert, ScrollView, Text, View } from "react-native";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import { supabase } from "@/src/lib/supabase";
 import { useTranslation } from "react-i18next";
-import LogoutConfirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/LogoutConfirmation_MODAL/LogoutConfirmation_MODAL";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 import Confirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
 import Dropdown_BLOCK from "@/src/components/Dropdown_BLOCK/Dropdown_BLOCK";

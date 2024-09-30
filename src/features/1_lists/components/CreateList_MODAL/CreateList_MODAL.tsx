@@ -5,8 +5,8 @@
 import { useState } from "react";
 import Btn from "@/src/components/Btn/Btn";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
-import StyledText_INPUT from "../../../../components/StyledText_INPUT/StyledText_INPUT";
-import Small_MODAL from "../../../../components/Modals/Small_MODAL/Small_MODAL";
+import StyledText_INPUT from "@/src/components/StyledText_INPUT/StyledText_INPUT";
+import Small_MODAL from "@/src/components/Modals/Small_MODAL/Small_MODAL";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 
 import { useTranslation } from "react-i18next";

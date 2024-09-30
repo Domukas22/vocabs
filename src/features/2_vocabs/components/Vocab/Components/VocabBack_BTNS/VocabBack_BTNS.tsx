@@ -17,7 +17,7 @@ export default function VocabBack_BTNS({
   vocab: Vocab_MODEL;
   TOGGLE_vocab: () => void;
   TOGGLE_difficultyEdits: () => void;
-  HANDLE_vocabModal: (vocab: Vocab_MODEL) => void;
+  HANDLE_vocabModal: ({ vocab }: { vocab: Vocab_MODEL }) => void;
 }) {
   const { t } = useTranslation();
   return (
@@ -38,7 +38,9 @@ export default function VocabBack_BTNS({
         type="simple"
         onPress={TOGGLE_difficultyEdits}
         iconLeft={
-          <ICON_difficultyDot difficulty={vocab.difficulty} big={true} />
+          vocab?.difficulty && (
+            <ICON_difficultyDot difficulty={vocab.difficulty} big={true} />
+          )
         }
       />
     </View>

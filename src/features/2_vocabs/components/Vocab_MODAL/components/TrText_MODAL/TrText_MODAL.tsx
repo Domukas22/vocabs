@@ -9,7 +9,7 @@ import Btn from "@/src/components/Btn/Btn";
 import { ICON_flag } from "@/src/components/icons/icons";
 
 import StyledText_INPUT from "@/src/components/StyledText_INPUT/StyledText_INPUT";
-import GET_highlightsWithoutOverflow from "../../../../../utils/GET_highlightsWithoutOverflow";
+import GET_highlightsWithoutOverflow from "@/src/utils/GET_highlightsWithoutOverflow";
 import { Language_MODEL, TranslationCreation_PROPS } from "@/src/db/models";
 import Label from "@/src/components/Label/Label";
 import { useTranslation } from "react-i18next";

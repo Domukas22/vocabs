@@ -4,11 +4,9 @@
 
 import {
   ActivityIndicator,
-  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  View,
 } from "react-native";
 import { Styled_TEXT } from "../components/Styled_TEXT/Styled_TEXT";
 import Page_WRAP from "../components/Page_WRAP/Page_WRAP";

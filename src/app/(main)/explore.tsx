@@ -5,7 +5,7 @@
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
 import { List_SKELETONS } from "@/src/features/1_lists";
 import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
-import Public_VOCAB from "@/src/features/2_vocabs/components/Public_VOCAB/Public_VOCAB";
+import Public_VOCAB from "@/src/features/2_vocabs/components/Vocab/public";
 
 import {
   List_MODEL,
@@ -20,16 +20,17 @@ import { useState, useEffect } from "react";
 
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 
-import PublicVocabDisplaySettings_MODAL from "@/src/features/2_vocabs/components/Public_VOCAB/components/PublicVocabDisplaySettings_MODAL/PublicVocabDisplaySettings_MODAL";
+import PublicVocabDisplaySettings_MODAL from "@/src/features/2_vocabs/components/VocabDisplaySettings_MODAL/private";
 
 import USE_zustand from "@/src/zustand";
-import FETCH_publicVocabs from "@/src/features/2_vocabs/components/Public_VOCAB/utils/FETCH_publicVocabs";
-import PublicVocabs_HEADER from "@/src/features/2_vocabs/components/Public_VOCAB/components/PublicVocabs_HEADER";
+import FETCH_publicVocabs from "@/src/features/2_vocabs/components/Vocab/db_hooks/FETCH_publicVocabs";
+import PublicVocabs_HEADER from "@/src/features/2_vocabs/components/Vocabs_HEADER/public";
 import SelectMyList_MODAL from "@/src/features/1_lists/components/SelectMyList_MODAL/SelectMyList_MODAL";
 
 import { useToast } from "react-native-toast-notifications";
 import { useTranslation } from "react-i18next";
-import { Vocab_MODAL } from "@/src/features/2_vocabs";
+import { PublicVocabs_SUBNAV, Vocab_MODAL } from "@/src/features/2_vocabs";
+import USE_createVocab from "@/src/features/2_vocabs/components/Vocab/db_hooks/USE_createVocab";
 
 export default function Explore_PAGE() {
   const router = useRouter();
@@ -85,7 +86,7 @@ export default function Explore_PAGE() {
 
   const { z_CREATE_privateVocab } = USE_zustand();
 
-  const { CREATE_vocab, IS_creatingVocab } = USE_createMyVocab();
+  const { CREATE_vocab, IS_creatingVocab } = USE_createVocab();
 
   async function create(target_LIST: List_MODEL) {
     if (!IS_creatingVocab && targetSave_VOCAB && target_LIST) {

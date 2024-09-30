@@ -6,32 +6,25 @@ import Btn from "@/src/components/Btn/Btn";
 
 import Header from "@/src/components/Header/Header";
 import { ICON_dropdownArrow, ICON_X } from "@/src/components/icons/icons";
-import { MyColors } from "@/src/constants/MyColors";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-  useTransition,
-} from "react";
-import { ActivityIndicator, Modal, SafeAreaView } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import { ActivityIndicator } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import { Language_MODEL, List_MODEL, Vocab_MODEL } from "@/src/db/models";
 
-import TrInput_BLOCK from "../Blocks/TrInput_BLOCK/TrInput_BLOCK";
+import TrInput_BLOCK from "./components/TrInput_BLOCK/TrInput_BLOCK";
 import TrText_MODAL from "./components/TrText_MODAL/TrText_MODAL";
-import TrHighlights_MODAL from "../TrHighlights_MODAL/TrHighlights_MODAL";
+import TrHighlights_MODAL from "./components/TrHighlights_MODAL/TrHighlights_MODAL";
 
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
 import SelectLanguages_MODAL from "@/src/features/4_languages/components/SelectLanguages_MODAL/SelectLanguages_MODAL";
 
-import USE_myVocabActions from "../Vocab/hooks/USE_myVocabActions";
+import USE_myVocabActions from "../Vocab/db_hooks/USE_myVocabActions";
 
-import DifficultyInput_BLOCK from "../Blocks/DifficultyInput_BLOCK/DifficultyInput_BLOCK";
-import ImageInput_BLOCK from "../Blocks/ImageInput_BLOCK/ImageInput_BLOCK";
-import DescriptionInput_BLOCK from "../Blocks/DescriptionInput_BLOCK/DescriptionInput_BLOCK";
-import ChosenLangs_BLOCK from "../Blocks/ChosenLangs_BLOCK/ChosenLangs_BLOCK";
+import DifficultyInput_BLOCK from "./components/DifficultyInput_BLOCK/DifficultyInput_BLOCK";
+import ImageInput_BLOCK from "./components/ImageInput_BLOCK/ImageInput_BLOCK";
+import DescriptionInput_BLOCK from "./components/DescriptionInput_BLOCK/DescriptionInput_BLOCK";
+import ChosenLangs_BLOCK from "../../../../components/ChosenLangs_BLOCK/ChosenLangs_BLOCK";
 
 import { useTranslation } from "react-i18next";
 
@@ -40,15 +33,13 @@ import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 
 import HANLDE_modalLangsAndTrs from "@/src/utils/HANLDE_modalLangsAndTrs";
-import POPULATE_myVocabValues from "../Vocab/utils/POPULATE_myVocabValues";
+import POPULATE_vocabValues from "../Vocab/utils/POPULATE_vocabValues";
 import REMOVE_modalLangAndTr from "@/src/utils/REMOVE_modalLangAndTr";
-import USE_myVocabValues from "../Vocab/hooks/USE_myVocabValues";
+import USE_myVocabValues from "../Vocab/db_hooks/USE_myVocabValues";
 import Confirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
 import Label from "@/src/components/Label/Label";
-import i18next from "i18next";
-import ListSettings_MODAL from "@/src/features/1_lists/components/ListSettings_MODAL/ListSettings_MODAL";
 
-import CLEAR_myVocabValues from "../Vocab/utils/CLEAR_myVocabValues";
+import CLEAR_vocabValues from "../Vocab/utils/CLEAR_vocabValues";
 import Big_MODAL from "@/src/components/Modals/Big_MODAL/Big_MODAL";
 import Footer from "@/src/components/Footer/Footer";
 import SelectMyList_MODAL from "@/src/features/1_lists/components/SelectMyList_MODAL/SelectMyList_MODAL";
@@ -130,7 +121,7 @@ export default function Vocab_MODAL(props: ManageVocabModal_PROPS) {
   });
 
   const POPULATE_modal = useCallback(() => {
-    POPULATE_myVocabValues({
+    POPULATE_vocabValues({
       vocab,
       set_FNs: {
         SET_modalTRs,
@@ -145,7 +136,7 @@ export default function Vocab_MODAL(props: ManageVocabModal_PROPS) {
     });
   }, [vocab, selected_LIST]);
   const CLEAR_modal = useCallback(() => {
-    CLEAR_myVocabValues({
+    CLEAR_vocabValues({
       languages,
       selected_LIST,
       set_FNs: {

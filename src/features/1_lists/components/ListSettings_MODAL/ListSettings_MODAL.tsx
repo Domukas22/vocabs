@@ -3,22 +3,19 @@
 //
 
 import Block from "@/src/components/Block/Block";
-import ChosenLangs_BLOCK from "@/src/components/Block/Variations/ChosenLangs_BLOCK/ChosenLangs_BLOCK";
+import ChosenLangs_BLOCK from "@/src/components/ChosenLangs_BLOCK/ChosenLangs_BLOCK";
 import Btn from "@/src/components/Btn/Btn";
 import Header from "@/src/components/Header/Header";
 import { ICON_X } from "@/src/components/icons/icons";
 import Big_MODAL from "@/src/components/Modals/Big_MODAL/Big_MODAL";
-import SelectLanguages_MODAL from "@/src/components/Modals/Big_MODAL/SelectLanguages_MODAL/SelectLanguages_MODAL";
+import SelectLanguages_MODAL from "@/src/features/4_languages/components/SelectLanguages_MODAL/SelectLanguages_MODAL";
 import Confirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
-import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
 import { Language_MODEL, List_MODEL } from "@/src/db/models";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
-import GET_activeLangIDs from "@/src/utils/GET_activeLangIDs";
 import GET_langs from "@/src/utils/GET_langs";
-import REMOVE_lang from "@/src/utils/REMOVE_lang";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 import USE_myListActions from "../../hooks/USE_myListActions";
