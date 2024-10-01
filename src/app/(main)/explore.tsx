@@ -33,6 +33,7 @@ import { PublicVocabs_SUBNAV, Vocab_MODAL } from "@/src/features/2_vocabs";
 import USE_createVocab from "@/src/features/2_vocabs/hooks/USE_createVocab";
 import MultiSelectGrid from "@/src/components/multiselect_GRI";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { USE_searchedVocabs } from "@/src/features/2_vocabs/hooks/USE_searchedVocabs/USE_searchedVocabs";
 
 export default function Explore_PAGE() {
   const router = useRouter();
@@ -76,6 +77,9 @@ export default function Explore_PAGE() {
         },
       }))();
   }, []);
+
+  const { searched_VOCABS, search, SEARCH_vocabs, ARE_vocabsSearching } =
+    USE_searchedVocabs(z_publicVocabs);
 
   const [publicVocab, SET_toEditVocab] = useState<Vocab_MODEL | undefined>(
     undefined
@@ -148,40 +152,42 @@ export default function Explore_PAGE() {
   return (
     <Page_WRAP>
       <PublicVocabs_HEADER />
-      {z_ARE_publicVocabsLoading && <List_SKELETONS />}
+
       <PublicVocabs_SUBNAV
-        search={displaySettings.search}
-        SET_search={(val) =>
-          SET_displaySettings((prev) => ({ ...prev, search: val }))
-        }
+        search={search}
+        SET_search={SEARCH_vocabs}
         TOGGLE_displaySettings={TOGGLE_displaySettings}
         HANDLE_vocabModal={HANDLE_vocabModal}
         IS_admin={user?.is_admin}
       />
+      {z_ARE_publicVocabsLoading || (ARE_vocabsSearching && <List_SKELETONS />)}
 
-      {!z_ARE_publicVocabsLoading && z_publicVocabs.length > 0 && (
-        <Styled_FLATLIST
-          data={z_publicVocabs}
-          renderItem={({ item }) => {
-            if (item?.id) {
-              return (
-                <Public_VOCAB
-                  key={"PublicVocab" + item?.id}
-                  vocab={item}
-                  {...{
-                    displaySettings,
-                    IS_admin: user?.is_admin,
-                    HANDLE_vocabModal,
-                    PREPARE_toSaveVocab,
-                  }}
-                />
-              );
-            }
-            return null;
-          }}
-          keyExtractor={(item) => "Vocab" + item?.id}
-        />
-      )}
+      {!z_ARE_publicVocabsLoading &&
+        !ARE_vocabsSearching &&
+        z_publicVocabs.length > 0 &&
+        searched_VOCABS.length > 0 && (
+          <Styled_FLATLIST
+            data={searched_VOCABS}
+            renderItem={({ item }) => {
+              if (item?.id) {
+                return (
+                  <Public_VOCAB
+                    key={"PublicVocab" + item?.id}
+                    vocab={item}
+                    {...{
+                      displaySettings,
+                      IS_admin: user?.is_admin,
+                      HANDLE_vocabModal,
+                      PREPARE_toSaveVocab,
+                    }}
+                  />
+                );
+              }
+              return null;
+            }}
+            keyExtractor={(item) => "Vocab" + item?.id}
+          />
+        )}
       <PublicVocabDisplaySettings_MODAL
         open={SHOW_displaySettings}
         TOGGLE_open={TOGGLE_displaySettings}

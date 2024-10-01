@@ -150,7 +150,6 @@ export default function ListSettings_MODAL({
         IS_inAction={IS_updatingDefaultListTRs}
       />
 
-      {/* ----- DELETE confirmation ----- */}
       <RenameList_MODAL
         open={SHOW_renameListModal}
         toggle={TOGGLE_renameListModal}

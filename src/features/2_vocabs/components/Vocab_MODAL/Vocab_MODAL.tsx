@@ -5,12 +5,21 @@
 import Btn from "@/src/components/Btn/Btn";
 
 import Header from "@/src/components/Header/Header";
-import { ICON_dropdownArrow, ICON_X } from "@/src/components/icons/icons";
+import {
+  ICON_arrow,
+  ICON_dropdownArrow,
+  ICON_X,
+} from "@/src/components/icons/icons";
 import React, { useCallback, useEffect, useState } from "react";
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
-import { Language_MODEL, List_MODEL, Vocab_MODEL } from "@/src/db/models";
+import {
+  Language_MODEL,
+  List_MODEL,
+  User_MODEL,
+  Vocab_MODEL,
+} from "@/src/db/models";
 
 import TrInput_BLOCK from "./components/TrInput_BLOCK/TrInput_BLOCK";
 import TrText_MODAL from "./components/TrText_MODAL/TrText_MODAL";
@@ -44,6 +53,10 @@ import Big_MODAL from "@/src/components/Modals/Big_MODAL/Big_MODAL";
 import Footer from "@/src/components/Footer/Footer";
 import SelectMyList_MODAL from "@/src/features/1_lists/components/SelectMyList_MODAL/SelectMyList_MODAL";
 import Dropdown_BLOCK from "@/src/components/Dropdown_BLOCK/Dropdown_BLOCK";
+import USE_createVocab from "../../hooks/USE_createVocab";
+import USE_zustand from "@/src/zustand";
+import { useToast } from "react-native-toast-notifications";
+import { MyColors } from "@/src/constants/MyColors";
 
 interface ManageVocabModal_PROPS {
   open: boolean;
@@ -67,7 +80,9 @@ export default function Vocab_MODAL(props: ManageVocabModal_PROPS) {
   } = props;
   const { languages } = USE_langs();
   const { t } = useTranslation();
-  const { user } = USE_auth();
+  const { user }: { user: User_MODEL } = USE_auth();
+
+  const toast = useToast();
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
     { name: "selectedLangs", initialValue: false },
@@ -75,7 +90,39 @@ export default function Vocab_MODAL(props: ManageVocabModal_PROPS) {
     { name: "trText", initialValue: false },
     { name: "trHighlights", initialValue: false },
     { name: "delete", initialValue: false },
+    { name: "addToPublic", initialValue: false },
   ]);
+
+  const { z_CREATE_publicVocab } = USE_zustand();
+
+  const {
+    CREATE_vocab: CREATE_publicVocab,
+    IS_creatingVocab: IS_CreatingPublicVocab,
+  } = USE_createVocab();
+
+  async function CREATE_public() {
+    const newVocab = await CREATE_publicVocab({
+      user_id: null,
+      list_id: null,
+      difficulty: 3,
+      image: vocab?.image,
+      description: vocab?.description,
+      translations: vocab?.translations,
+      is_public: true,
+      IS_admin: user.is_admin,
+    });
+
+    if (newVocab.success) {
+      z_CREATE_publicVocab(newVocab.data);
+      // SET_vocabs((prev) => [newVocab.data, ...prev]);
+      TOGGLE_vocabModal();
+      HIGHLIGHT_vocab(newVocab.data.id);
+      toast.show(t("notifications.publicVocabCreated"), {
+        type: "custom_success",
+        duration: 2000,
+      });
+    }
+  }
 
   const {
     modal_TRs,
@@ -196,17 +243,30 @@ export default function Vocab_MODAL(props: ManageVocabModal_PROPS) {
         }
         big={true}
         btnRight={
-          <Btn
-            type="seethrough"
-            iconLeft={<ICON_X big={true} rotate={true} />}
-            onPress={() =>
-              !IS_creatingVocab &&
-              !IS_updatingVocab &&
-              !IS_deletingVocab &&
-              TOGGLE_vocabModal()
-            }
-            style={{ borderRadius: 100 }}
-          />
+          <View style={{ gap: 8, flexDirection: "row" }}>
+            {!is_public && user.is_admin && vocab && (
+              <Btn
+                iconLeft={<ICON_arrow direction="right" color="green" />}
+                style={{ borderRadius: 100 }}
+                type="seethrough"
+                onPress={() => {
+                  if (user.is_admin) TOGGLE_modal("addToPublic");
+                }}
+              />
+            )}
+
+            <Btn
+              type="seethrough"
+              iconLeft={<ICON_X big={true} rotate={true} />}
+              onPress={() =>
+                !IS_creatingVocab &&
+                !IS_updatingVocab &&
+                !IS_deletingVocab &&
+                TOGGLE_vocabModal()
+              }
+              style={{ borderRadius: 100 }}
+            />
+          </View>
         }
       />
 
@@ -263,6 +323,18 @@ export default function Vocab_MODAL(props: ManageVocabModal_PROPS) {
             />
           </Dropdown_BLOCK>
         )}
+        {/* {!is_public && user.is_admin && vocab && (
+          <Block>
+            <Btn
+              text={!IS_updatingVocab ? t("btn.addVocabToPublic") : ""}
+              onPress={() => {
+                if (user.is_admin) TOGGLE_modal("addToPublic");
+              }}
+              text_STYLES={{ color: MyColors.text_green }}
+              style={{ flex: 1 }}
+            />
+          </Block>
+        )} */}
         {/* -------------------------------------------------------------------------  */}
         {/* When creating, the buttons are visible when scrolled to the bottom */}
         {!vocab && (
@@ -285,7 +357,11 @@ export default function Vocab_MODAL(props: ManageVocabModal_PROPS) {
                 }}
                 stayPressed={IS_creatingVocab}
                 type="action"
-                style={{ flex: 1 }}
+                style={[
+                  { flex: 1 },
+                  is_public &&
+                    user.is_admin && { backgroundColor: MyColors.fill_green },
+                ]}
               />
             }
           />
@@ -313,7 +389,11 @@ export default function Vocab_MODAL(props: ManageVocabModal_PROPS) {
               }}
               stayPressed={IS_updatingVocab}
               type="action"
-              style={{ flex: 1 }}
+              style={[
+                { flex: 1 },
+                is_public &&
+                  user.is_admin && { backgroundColor: MyColors.fill_green },
+              ]}
             />
           }
         />
@@ -352,6 +432,19 @@ export default function Vocab_MODAL(props: ManageVocabModal_PROPS) {
         IS_inAction={IS_deletingVocab}
         actionBtnText={t("btn.confirmDelete")}
       />
+
+      {user.is_admin && (
+        <Confirmation_MODAL
+          open={modal_STATES.addToPublic && !!vocab && user?.is_admin}
+          toggle={() => !IS_creatingVocab && TOGGLE_modal("addToPublic")}
+          title={t("header.addToPublic")}
+          action={() => {
+            if (!IS_CreatingPublicVocab) CREATE_public();
+          }}
+          IS_inAction={IS_CreatingPublicVocab}
+          actionBtnText={t("btn.confirmMakeVocabPublic")}
+        />
+      )}
 
       {!is_public && (
         <SelectMyList_MODAL

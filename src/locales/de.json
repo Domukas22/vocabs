@@ -9,7 +9,8 @@
     "listSettings": "Liste Einstellungen",
     "createAnAccount": "Erstelle einen Profil",
     "login": "Willkommen zurück!",
-    "selectOneLanguage": "Eine Sprache wählen"
+    "selectOneLanguage": "Eine Sprache wählen",
+    "addToPublic": "Vokabel veröffentlichen?"
   },
   "blockLabels": {
     "uiLang": "App Sprache"
@@ -55,7 +56,11 @@
     "goToRegister": "Profil erstellen",
     "dangerZone": "Gefahrzone",
     "deleteProfile": "Mein Profil löschen",
-    "saveAndGoTohighlights": "Speicher und zur Markierungen"
+    "saveAndGoTohighlights": "Speicher und zur Markierungen",
+    "renameList": "Umbenneen",
+    "delete": "Löschen",
+    "confirmMakeVocabPublic": "Ja, veröffentlichen",
+    "addVocabToPublic": "Veröffentlichen"
   },
   "pages": {
     "about": {

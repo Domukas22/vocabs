@@ -3,7 +3,7 @@
 //
 //
 
-import { Pressable, StyleSheet, View } from "react-native";
+import { Animated, Pressable, StyleSheet, View } from "react-native";
 import { Styled_TEXT } from "../../../../components/Styled_TEXT/Styled_TEXT";
 
 import { MyColors } from "@/src/constants/MyColors";
@@ -13,6 +13,12 @@ import {
 } from "../../../../components/icons/icons";
 import { List_MODEL } from "@/src/db/models";
 import { useTranslation } from "react-i18next";
+import {
+  GestureHandlerRootView,
+  RectButton,
+  Swipeable,
+} from "react-native-gesture-handler";
+// import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 
 export default function MyList_BTN({
   list,
@@ -48,6 +54,7 @@ export default function MyList_BTN({
         s.btn,
         pressed && s.pressed,
         highlighted && s.highlighted,
+        { width: "100%", minWidth: "100%" },
       ]}
       onPress={onPress}
     >
@@ -92,12 +99,15 @@ const s = StyleSheet.create({
   btn: {
     borderWidth: 1,
     borderColor: MyColors.border_white_005,
+
     backgroundColor: MyColors.btn_2,
     paddingVertical: 10,
     paddingHorizontal: 16,
     minHeight: 44,
     borderRadius: 12,
     gap: 2,
+    flex: 1,
+    width: "100%",
   },
   pressed: {
     backgroundColor: MyColors.btn_3,

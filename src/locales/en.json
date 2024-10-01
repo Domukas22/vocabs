@@ -6,7 +6,8 @@
     "listSettings": "List settings",
     "createAnAccount": "Create a new account",
     "login": "Welcome back!",
-    "selectOneLanguage": "Select a language"
+    "selectOneLanguage": "Select a language",
+    "addToPublic": "Add vocab to public?"
   },
   "blockLabels": {
     "uiLang": "App language"
@@ -52,7 +53,11 @@
     "goToRegister": "Create an account",
     "dangerZone": "Danger zone",
     "deleteProfile": "Delete my profile",
-    "saveAndGoTohighlights": "Save and go to highlights"
+    "saveAndGoTohighlights": "Save and go to highlights",
+    "renameList": "Rename",
+    "delete": "Delete",
+    "confirmMakeVocabPublic": "Yes, make public",
+    "addVocabToPublic": "Add to public"
   },
   "pages": {
     "about": {

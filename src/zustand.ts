@@ -4,12 +4,7 @@
 
 // zustand_store.js
 import { create } from "zustand";
-import {
-  List_MODEL,
-  PublicVocab_MODEL,
-  Translation_MODEL,
-  Vocab_MODEL,
-} from "./db/models";
+import { List_MODEL, Vocab_MODEL, Translation_MODEL } from "./db/models";
 interface ZustandStore {
   z_lists: List_MODEL[];
   z_SET_lists: (fetchedLists: List_MODEL[]) => void;
@@ -39,20 +34,20 @@ interface ZustandStore {
   ) => void;
   z_DELETE_privateVocab: (list_id: string, vocab_id: string) => void;
 
-  z_publicVocabs: PublicVocab_MODEL[];
+  z_publicVocabs: Vocab_MODEL[];
   z_SET_publicVocabs: (lists: Vocab_MODEL[]) => void;
   z_ARE_publicVocabsLoading: boolean;
   z_SET_publicVocabsLoading: (bool: boolean) => void;
   z_publicVocabs_ERROR: any;
   z_SET_publicVocabsError: (error: any) => void;
 
-  z_CREATE_publicVocab: (newVocab: PublicVocab_MODEL) => void;
+  z_CREATE_publicVocab: (newVocab: Vocab_MODEL) => void;
   z_UPDATE_publicVocab: ({
     vocab_id,
     updatedVocabData,
   }: {
     vocab_id: string;
-    updatedVocabData: PublicVocab_MODEL;
+    updatedVocabData: Vocab_MODEL;
   }) => void;
   z_DELETE_publicVocab: ({
     targetVocab_ID,

@@ -8,6 +8,7 @@ import MyList_BTN from "@/src/features/1_lists/components/MyList_BTN/MyList_BTN"
 import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
 import { List_MODEL } from "@/src/db/models";
 import { useTranslation } from "react-i18next";
+import SwipeableExample from "@/src/components/SwipeableExample/SwipeableExample";
 
 export default function MyLists_FLATLIST({
   lists,
@@ -16,6 +17,8 @@ export default function MyLists_FLATLIST({
   TOGGLE_createListModal,
   highlighted_ID,
   _ref,
+  PREPARE_listRename,
+  PREPADE_deleteList,
 }) {
   const { t } = useTranslation();
   return (
@@ -24,11 +27,16 @@ export default function MyLists_FLATLIST({
       style={{ flex: 1 }}
       data={lists}
       renderItem={({ item }: { item: List_MODEL }) => (
-        <MyList_BTN
-          list={item}
-          onPress={() => SELECT_list(item)}
-          highlighted={highlighted_ID === item.id}
-        />
+        <SwipeableExample
+          leftBtn_ACTION={() => PREPARE_listRename(item)}
+          rightBtn_ACTION={() => PREPADE_deleteList(item)}
+        >
+          <MyList_BTN
+            list={item}
+            onPress={() => SELECT_list(item)}
+            highlighted={highlighted_ID === item.id}
+          />
+        </SwipeableExample>
       )}
       keyExtractor={(item) => item.id}
       ListFooterComponent={

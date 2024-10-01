@@ -111,8 +111,10 @@ export function ICON_X({
 }
 export function ICON_arrow({
   direction = "left",
+  color = "gray_light",
 }: {
   direction?: "left" | "right" | "up" | "down";
+  color?: "gray_light" | "green";
 }) {
   const rotate =
     direction === "left"
@@ -122,6 +124,9 @@ export function ICON_arrow({
       : direction === "up"
       ? "90deg"
       : "-90deg";
+
+  const fillColor =
+    color === "green" ? MyColors.icon_green : MyColors.icon_gray_light;
 
   return (
     <Svg
@@ -133,7 +138,7 @@ export function ICON_arrow({
     >
       <Path
         d="M20.5 6.8C20.9418 6.8 21.3 6.44183 21.3 6C21.3 5.55817 20.9418 5.2 20.5 5.2V6.8ZM0.934315 5.43431C0.621895 5.74673 0.621895 6.25327 0.934315 6.56569L6.02548 11.6569C6.3379 11.9693 6.84443 11.9693 7.15685 11.6569C7.46927 11.3444 7.46927 10.8379 7.15685 10.5255L2.63137 6L7.15685 1.47452C7.46927 1.1621 7.46927 0.655565 7.15685 0.343146C6.84443 0.0307264 6.3379 0.0307264 6.02548 0.343146L0.934315 5.43431ZM20.5 5.2L1.5 5.2V6.8L20.5 6.8V5.2Z"
-        fill={MyColors.icon_gray_light}
+        fill={fillColor}
       />
     </Svg>
   );

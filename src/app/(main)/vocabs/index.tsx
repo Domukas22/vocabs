@@ -28,12 +28,27 @@ import { useTranslation } from "react-i18next";
 import { USE_searchedLists } from "@/src/features/1_lists/hooks/USE_searchedLists/USE_searchedLists";
 import USE_highlighedId from "@/src/hooks/USE_highlighedId/USE_highlighedId";
 import Btn from "@/src/components/Btn/Btn";
+import RenameList_MODAL from "@/src/features/1_lists/components/RenameList_MODAL/RenameList_MODAL";
+import USE_renameList from "@/src/features/1_lists/hooks/USE_renameList";
+import {
+  Swipeable,
+  RectButton,
+  GestureHandlerRootView,
+} from "react-native-gesture-handler";
+import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
+
+import React from "react";
+import { StyleSheet, Text, Animated } from "react-native";
+import Confirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
+import USE_deleteList from "@/src/features/1_lists/hooks/USE_deleteList";
 
 export default function MyLists_PAGE() {
   const router = useRouter();
   const [SHOW_createListModal, TOGGLE_createListModal] = USE_toggle(false);
   const { SET_selectedList } = USE_selectedList();
   const { user } = USE_auth();
+  const [SHOW_renameListModal, TOGGLE_renameListModal] = USE_toggle();
+  const [SHOW_deleteModal, TOGGLE_deleteModal] = USE_toggle();
 
   const { t } = useTranslation();
   const list_REF = useRef(null);
@@ -50,7 +65,23 @@ export default function MyLists_PAGE() {
     USE_searchedLists(z_lists);
 
   const { highlighted_ID, highlight } = USE_highlighedId();
+
+  const { RENAME_list, IS_renamingList } = USE_renameList();
+  const { DELETE_list, IS_deletingList } = USE_deleteList();
   // const highlighted_ID = "4a1cd271-cbf4-4134-a72f-78ba71a7cf03";
+
+  const [target_LIST, SET_targetList] = useState<List_MODEL | undefined>(
+    undefined
+  );
+
+  function PREPARE_listRename(list: List_MODEL) {
+    SET_targetList(list);
+    TOGGLE_renameListModal();
+  }
+  function PREPADE_deleteList(list: List_MODEL) {
+    SET_targetList(list);
+    TOGGLE_deleteModal();
+  }
 
   useEffect(() => {
     (async () =>
@@ -85,6 +116,8 @@ export default function MyLists_PAGE() {
           TOGGLE_createListModal={TOGGLE_createListModal}
           highlighted_ID={highlighted_ID}
           _ref={list_REF}
+          PREPARE_listRename={PREPARE_listRename}
+          PREPADE_deleteList={PREPADE_deleteList}
         />
       ) : !z_ARE_listsLoading ? (
         <EmptyFlatList_BOTTM
@@ -104,6 +137,30 @@ export default function MyLists_PAGE() {
         postCreatiion_FNS={() => {
           list_REF?.current?.scrollToOffset({ animated: true, offset: 0 });
         }}
+      />
+      <RenameList_MODAL
+        open={SHOW_renameListModal}
+        toggle={() => {
+          SET_targetList(undefined);
+          TOGGLE_renameListModal();
+        }}
+        title={t("modal.listSettings.renameListModalTitle")}
+        rename={(new_NAME: string) => RENAME_list(target_LIST?.id, new_NAME)}
+        IS_inAction={IS_renamingList}
+        actionBtnText={t("btn.confirmListRename")}
+        current_NAME={target_LIST?.name}
+      />
+      {/* ----- DELETE confirmation ----- */}
+      <Confirmation_MODAL
+        open={SHOW_deleteModal}
+        toggle={() => {
+          SET_targetList(undefined);
+          TOGGLE_deleteModal();
+        }}
+        title={t("modal.listSettings.deleteListconfirmation")}
+        action={() => DELETE_list(target_LIST?.id)}
+        IS_inAction={IS_deletingList}
+        actionBtnText={t("btn.confirmDelete")}
       />
     </Page_WRAP>
   );

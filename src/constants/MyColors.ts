@@ -84,6 +84,9 @@ export const MyColors = {
   btn_green: primitives.green3,
   btn_green_press: primitives.green2,
 
+  btn_red: primitives.red3,
+  btn_red_press: primitives.red2,
+
   btn_difficulty_3: primitives.red3,
   btn_difficulty_3_press: primitives.red2,
 

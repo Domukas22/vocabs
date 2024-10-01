@@ -24,10 +24,13 @@ import { useTranslation } from "react-i18next";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 import Confirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
 import Dropdown_BLOCK from "@/src/components/Dropdown_BLOCK/Dropdown_BLOCK";
+import { useMemo } from "react";
+import USE_zustand from "@/src/zustand";
+import { vocabLimit } from "@/src/constants/globalVars";
 
 export default function General_PAGE() {
   const { t } = useTranslation();
-  const vocabCount = 89;
+
   const { SET_auth } = USE_auth();
   const { user } = USE_auth();
 
@@ -42,6 +45,16 @@ export default function General_PAGE() {
 
   const [IS_logoutModalOpen, TOGGLE_logoutModal] = USE_toggle();
 
+  const { z_lists } = USE_zustand();
+
+  const totalVocabs = useMemo(
+    () =>
+      z_lists.reduce((count, list) => {
+        return (count += list.vocabs?.length || 0);
+      }, 0),
+    [z_lists]
+  );
+
   return (
     <Page_WRAP>
       <Header title={t("page.general.header")} big={true} />
@@ -51,7 +64,7 @@ export default function General_PAGE() {
           <View style={{ gap: 16 }}>
             <View>
               <Styled_TEXT>
-                XX vocabs left until you reach the limit
+                {vocabLimit - totalVocabs} vocabs left until you reach the limit
               </Styled_TEXT>
               <Styled_TEXT type="label">{user?.email}</Styled_TEXT>
             </View>
@@ -68,7 +81,7 @@ export default function General_PAGE() {
                   color: MyColors.text_primary,
                 }}
               >
-                {vocabCount}
+                {totalVocabs}
               </Styled_TEXT>
               <View
                 style={{
@@ -84,7 +97,7 @@ export default function General_PAGE() {
                 <View
                   style={{
                     height: "100%",
-                    width: `${vocabCount}%`,
+                    width: `${totalVocabs}%`,
                     borderRadius: 50,
                     backgroundColor: MyColors.icon_primary,
                   }}
@@ -96,7 +109,7 @@ export default function General_PAGE() {
                   color: MyColors.text_white_06,
                 }}
               >
-                100
+                {vocabLimit}
               </Styled_TEXT>
             </View>
             <View style={{ flexDirection: "row", gap: 8 }}>
