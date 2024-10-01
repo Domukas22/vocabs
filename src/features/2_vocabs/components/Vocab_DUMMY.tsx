@@ -7,7 +7,7 @@ import { ICON_difficultyDot, ICON_flag } from "@/src/components/icons/icons";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
 import {
-  MyVocabDisplaySettings_PROPS,
+  VocabDisplaySettings_PROPS,
   PublicVocab_MODEL,
   PublicVocabDisplaySettings_PROPS,
   TranslationCreation_PROPS,
@@ -20,7 +20,7 @@ import { Image, Pressable, StyleSheet, View } from "react-native";
 
 interface VocabFront_PROPS {
   displaySettings:
-    | MyVocabDisplaySettings_PROPS
+    | VocabDisplaySettings_PROPS
     | PublicVocabDisplaySettings_PROPS;
   HAS_difficulty?: boolean;
 }

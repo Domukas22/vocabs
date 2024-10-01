@@ -5,13 +5,14 @@
     "page_about": "About us",
     "listSettings": "List settings",
     "createAnAccount": "Create a new account",
-    "login": "Welcome back!"
+    "login": "Welcome back!",
+    "selectOneLanguage": "Select a language"
   },
   "blockLabels": {
     "uiLang": "App language"
   },
   "btn": {
-    "createList": "Create a new list",
+    "createList": "Create list",
     "cancel": "Cancel",
     "create": "Create",
     "sortByDifficulty": "By difficulty",
@@ -50,7 +51,8 @@
     "goToLogIn": "Log in",
     "goToRegister": "Create an account",
     "dangerZone": "Danger zone",
-    "deleteProfile": "Delete my profile"
+    "deleteProfile": "Delete my profile",
+    "saveAndGoTohighlights": "Save and go to highlights"
   },
   "pages": {
     "about": {
@@ -139,7 +141,12 @@
     "defaultVocabLangs": "Languages selected by default when creating a new vocab",
     "editListName": "Edit the list name",
     "noAccountYet": "Don't have an account yet?",
-    "alreadyHaveAccount": "Already have an account?"
+    "alreadyHaveAccount": "Already have an account?",
+    "thisListIsEmpty": "This list is empty",
+    "vocabFrontLang": "Which language should be displayed when the vocab is closed?",
+    "vocabFrontLangExplanation": "If a vocab does not have a translation with the selected language, the first translation of the vocab will be displayed ",
+    "noLanguagesFound": "No languages found",
+    "langaugesOfThisList": "All languages in this list"
   },
   "modal": {
     "displaySettings": {
@@ -159,7 +166,7 @@
       "header": "Select a list"
     },
     "editTr": {
-      "header": "Edit translation"
+      "header": "Translation"
     },
     "editHighlights": {
       "header": "Edit highlights"
@@ -195,7 +202,8 @@
   },
   "word": {
     "translation": "translation",
-    "highlights": "highlights"
+    "highlights": "highlights",
+    "select": "Select"
   },
   "placeholder": {
     "translation": "Translation...",
@@ -213,6 +221,7 @@
     "vocabCopied": "The vocab was added to your list",
     "publicVocabCreated": "Public vocab created",
     "publicVocabUpdated": "Public vocab updated",
-    "publicVocabDeleted": "Public vocab deleted"
+    "publicVocabDeleted": "Public vocab deleted",
+    "listCreated": "Created a new list"
   }
 }

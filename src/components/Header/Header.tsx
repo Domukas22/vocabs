@@ -22,8 +22,6 @@ export default function Header({
   btnRight,
   IS_titleHighlighted = false,
 }: _header) {
-  console.log(IS_titleHighlighted);
-
   return (
     <View style={s.header}>
       {btnLeft && btnLeft}

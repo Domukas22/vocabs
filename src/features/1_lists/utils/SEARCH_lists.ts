@@ -4,7 +4,7 @@
 
 import { List_MODEL } from "@/src/db/models";
 
-export default function FILTER_lists({
+export default function SEARCH_lists({
   search,
   lists,
 }: {

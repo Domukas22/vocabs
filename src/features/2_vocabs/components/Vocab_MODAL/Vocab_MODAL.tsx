@@ -17,9 +17,9 @@ import TrText_MODAL from "./components/TrText_MODAL/TrText_MODAL";
 import TrHighlights_MODAL from "./components/TrHighlights_MODAL/TrHighlights_MODAL";
 
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
-import SelectLanguages_MODAL from "@/src/features/4_languages/components/SelectLanguages_MODAL/SelectLanguages_MODAL";
+import SelectMultipleLanguages_MODAL from "@/src/features/4_languages/components/SelectMultipleLanguages_MODAL/SelectMultipleLanguages_MODAL";
 
-import USE_myVocabActions from "../Vocab/db_hooks/USE_myVocabActions";
+import USE_myVocabActions from "../../hooks/USE_myVocabActions";
 
 import DifficultyInput_BLOCK from "./components/DifficultyInput_BLOCK/DifficultyInput_BLOCK";
 import ImageInput_BLOCK from "./components/ImageInput_BLOCK/ImageInput_BLOCK";
@@ -35,7 +35,7 @@ import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 import HANLDE_modalLangsAndTrs from "@/src/utils/HANLDE_modalLangsAndTrs";
 import POPULATE_vocabValues from "../Vocab/utils/POPULATE_vocabValues";
 import REMOVE_modalLangAndTr from "@/src/utils/REMOVE_modalLangAndTr";
-import USE_myVocabValues from "../Vocab/db_hooks/USE_myVocabValues";
+import USE_myVocabValues from "../../hooks/USE_myVocabValues";
 import Confirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
 import Label from "@/src/components/Label/Label";
 
@@ -68,8 +68,6 @@ export default function Vocab_MODAL(props: ManageVocabModal_PROPS) {
   const { languages } = USE_langs();
   const { t } = useTranslation();
   const { user } = USE_auth();
-
-  console.log(languages?.length);
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
     { name: "selectedLangs", initialValue: false },
@@ -322,7 +320,7 @@ export default function Vocab_MODAL(props: ManageVocabModal_PROPS) {
       )}
 
       {/* ------------------------------ MODALS ------------------------------  */}
-      <SelectLanguages_MODAL
+      <SelectMultipleLanguages_MODAL
         open={modal_STATES.selectedLangs}
         TOGGLE_open={() => TOGGLE_modal("selectedLangs")}
         active_LANGS={modal_LANGS}
@@ -336,6 +334,7 @@ export default function Vocab_MODAL(props: ManageVocabModal_PROPS) {
       <TrText_MODAL
         open={modal_STATES.trText}
         TOGGLE_open={() => TOGGLE_modal("trText")}
+        TOGGLE_highlightModal={() => TOGGLE_modal("trHighlights")}
         {...{ target_LANG, modal_TRs, SET_modalTRs }}
       />
 

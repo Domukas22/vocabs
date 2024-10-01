@@ -7,10 +7,10 @@ import { StyleSheet, View } from "react-native";
 import React, { useMemo } from "react";
 
 import { USE_toggle } from "@/src/hooks/USE_toggle";
-import { MyVocabDisplaySettings_PROPS, Vocab_MODEL } from "@/src/db/models";
+import { VocabDisplaySettings_PROPS, Vocab_MODEL } from "@/src/db/models";
 import Vocab_FRONT from "../Components/Vocab_FRONT/Vocab_FRONT";
 
-import USE_updateVocabDifficulty from "../db_hooks/USE_updateVocabDifficulty";
+import USE_updateVocabDifficulty from "../../../hooks/USE_updateVocabDifficulty";
 import VocabBack_TRS from "../Components/VocabBack_TRS/VocabBack_TRS";
 import VocabBack_DESC from "../Components/VocabBack_DESC/VocabBack_DESC";
 import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
@@ -20,7 +20,7 @@ import VocabBackDifficultyEdit_BTNS from "../Components/VocabBackDifficultyEdit_
 interface VocabProps {
   vocab: Vocab_MODEL;
   highlighted: boolean;
-  displaySettings: MyVocabDisplaySettings_PROPS;
+  displaySettings: VocabDisplaySettings_PROPS;
   HANDLE_vocabModal: {
     clear?: boolean;
     vocab?: Vocab_MODEL;
@@ -66,10 +66,10 @@ export default function MyVocab({
     () => [
       s.vocab,
       open && s.vocab_open,
-      open && vocab.difficulty && s[`difficulty_${vocab.difficulty}`],
+      open && vocab?.difficulty && s[`difficulty_${vocab?.difficulty}`],
       highlighted && s.highlighted,
     ],
-    [open, vocab.difficulty]
+    [open, vocab.difficulty, highlighted]
   );
 
   return (

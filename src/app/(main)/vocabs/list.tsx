@@ -12,11 +12,20 @@ import {
 } from "@/src/features/2_vocabs";
 import { useRouter } from "expo-router";
 import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
-import { MyVocabDisplaySettings_PROPS, Vocab_MODEL } from "@/src/db/models";
-import { useMemo, useState } from "react";
+import { VocabDisplaySettings_PROPS, Vocab_MODEL } from "@/src/db/models";
+import { useCallback, useMemo, useState } from "react";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 import ListSettings_MODAL from "@/src/features/1_lists/components/ListSettings_MODAL/ListSettings_MODAL";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
+import USE_highlighedId from "@/src/hooks/USE_highlighedId/USE_highlighedId";
+import { USE_highlightBoolean } from "@/src/hooks/USE_highlightBoolean/USE_highlightBoolean";
+import { EmptyFlatList_BOTTM, List_SKELETONS } from "@/src/features/1_lists";
+import { t } from "i18next";
+import { useTranslation } from "react-i18next";
+import { USE_searchedVocabs } from "@/src/features/2_vocabs/hooks/USE_searchedVocabs/USE_searchedVocabs";
+import GET_uniqueLanguagesInAList from "@/src/utils/GET_uniqueLanguagesInAList/GET_uniqueLanguagesInAList";
+import { USE_langs } from "@/src/context/Langs_CONTEXT";
+import USE_filteredVocabs from "@/src/features/2_vocabs/hooks/USE_filteredVocabs/USE_filteredVocabs";
 
 export default function SingleList_PAGE() {
   const router = useRouter();
@@ -25,19 +34,15 @@ export default function SingleList_PAGE() {
   const [SHOW_vocabModal, TOGGLE_vocabModal] = USE_toggle(false);
   const [SHOW_listSettingsModal, TOGGLE_listSettingsModal] = USE_toggle(false);
   const { user } = USE_auth();
+  const { t } = useTranslation();
+  const { languages } = USE_langs();
 
   const [vocabs, SET_vocabs] = useState<Vocab_MODEL[]>(
     selected_LIST?.vocabs || []
   );
-  // // const [filtered_VOCABS, SET_filteredVocabs] = useState<Vocab_MODEL[]>(vocabs);
-  const [target_VOCAB, SET_targetVocab] = useState<Vocab_MODEL | undefined>(
-    undefined
-  );
-  const [highlightedVocab_ID, SET_highlightedVocabId] = useState("");
-  const [IS_listNameHighlighted, SET_isListNameHightighted] = useState(false);
 
   const [displaySettings, SET_displaySettings] =
-    useState<MyVocabDisplaySettings_PROPS>({
+    useState<VocabDisplaySettings_PROPS>({
       SHOW_image: false,
       SHOW_description: true,
       SHOW_flags: true,
@@ -45,26 +50,33 @@ export default function SingleList_PAGE() {
       frontTrLang_ID: "en",
       sorting: "difficulty",
       sortDirection: "ascending",
-      search: "",
       difficultyFilters: [],
     });
 
-  const HIGHLIGHT_vocab = (id: string) => {
-    if (!highlightedVocab_ID) {
-      SET_highlightedVocabId(id);
-      setTimeout(() => {
-        SET_highlightedVocabId("");
-      }, 2000);
-    }
-  };
-  const HIGHLIGHT_listName = () => {
-    if (!IS_listNameHighlighted) {
-      SET_isListNameHightighted(true);
-      setTimeout(() => {
-        SET_isListNameHightighted(false);
-      }, 2000);
-    }
-  };
+  const { searched_VOCABS, search, SEARCH_vocabs, ARE_vocabsSearching } =
+    USE_searchedVocabs(vocabs);
+  // // const [filtered_VOCABS, SET_filteredVocabs] = useState<Vocab_MODEL[]>(vocabs);
+  const [target_VOCAB, SET_targetVocab] = useState<Vocab_MODEL | undefined>(
+    undefined
+  );
+
+  const { filtered_VOCABS, ARE_vocabsFiltering } = USE_filteredVocabs({
+    vocabs: searched_VOCABS,
+    displaySettings,
+  });
+
+  const list_LANGS = useMemo(
+    () => GET_uniqueLanguagesInAList(vocabs, languages),
+    [vocabs]
+  );
+
+  // const [IS_listNameHighlighted, SET_isListNameHightighted] = useState(false);
+  const { highlighted_ID, highlight } = USE_highlighedId();
+  const {
+    isHighlighted: IS_listNameHighlighted,
+    highlight: HIGHLIGHT_listName,
+  } = USE_highlightBoolean();
+
   function HANDLE_vocabModal({
     clear = false,
     vocab,
@@ -86,8 +98,6 @@ export default function SingleList_PAGE() {
   //   [displaySettings, vocabs]
   // );
 
-  console.log("LIST pageds");
-
   return (
     <Page_WRAP>
       <MyVocabs_HEADER
@@ -96,34 +106,51 @@ export default function SingleList_PAGE() {
         btnDots_ACTION={TOGGLE_listSettingsModal}
         IS_listNameHighlighted={IS_listNameHighlighted}
       />
-      <MyVocabs_SUBNAV
-        search={displaySettings.search}
-        SET_search={(val: string) =>
-          SET_displaySettings((prev) => ({ ...prev, search: val }))
-        }
-        {...{
-          TOGGLE_displaySettings,
-          HANDLE_vocabModal,
-        }}
-        activeFitlers={displaySettings.difficultyFilters.length}
-      />
-      {vocabs && vocabs.length > 0 ? (
+      {vocabs && vocabs.length > 0 && (
+        <MyVocabs_SUBNAV
+          search={search}
+          SET_search={SEARCH_vocabs}
+          {...{
+            TOGGLE_displaySettings,
+            HANDLE_vocabModal,
+          }}
+          activeFitlers={displaySettings.difficultyFilters.length}
+        />
+      )}
+      {ARE_vocabsSearching || ARE_vocabsFiltering ? <List_SKELETONS /> : null}
+
+      {vocabs &&
+      vocabs.length > 0 &&
+      searched_VOCABS.length > 0 &&
+      filtered_VOCABS.length > 0 ? (
         <Vocabs_FLATLIST
-          vocabs={vocabs}
+          vocabs={filtered_VOCABS}
           SHOW_bottomBtn={true}
           {...{
-            highlightedVocab_ID,
+            highlightedVocab_ID: highlighted_ID,
             TOGGLE_vocabModal,
             HANDLE_vocabModal,
             displaySettings,
           }}
         />
-      ) : null}
+      ) : (
+        <EmptyFlatList_BOTTM
+          emptyBox_TEXT={t("label.thisListIsEmpty")}
+          // emptyBox_TEXT={
+          //   search === ""
+          //     ? t("label.youDontHaveAnyLists")
+          //     : t("label.noListsFound")
+          // }
+          btn_TEXT={t("btn.createVocab")}
+          btn_ACTION={() => HANDLE_vocabModal({ clear: true })}
+        />
+      )}
       <MyVocabDisplaySettings_MODAL
         open={SHOW_displaySettings}
         TOGGLE_open={TOGGLE_displaySettings}
         displaySettings={displaySettings}
         SET_displaySettings={SET_displaySettings}
+        list_LANGS={list_LANGS}
       />
 
       <Vocab_MODAL
@@ -132,7 +159,7 @@ export default function SingleList_PAGE() {
         vocab={target_VOCAB}
         selected_LIST={selected_LIST}
         SET_vocabs={SET_vocabs}
-        HIGHLIGHT_vocab={HIGHLIGHT_vocab}
+        HIGHLIGHT_vocab={highlight}
       />
       <ListSettings_MODAL
         list={selected_LIST}
@@ -145,66 +172,3 @@ export default function SingleList_PAGE() {
     </Page_WRAP>
   );
 }
-
-// function FILTER_vocabs({
-//   vocabs,
-//   settings,
-// }: {
-//   vocabs: Vocab_MODEL[];
-//   settings: MyVocabDisplaySettings_PROPS;
-// }) {
-//   const { search, sorting, sortDirection, frontTrLang_ID, difficultyFilters } =
-//     settings;
-
-//   let result = [...vocabs];
-
-//   // Filter by difficulties
-//   if (difficultyFilters && difficultyFilters.length > 0) {
-//     result = result.filter((vocab) =>
-//       difficultyFilters.includes(vocab?.difficulty)
-//     );
-//   }
-
-//   // Filter by search query (matching description or translations)
-//   if (search) {
-//     const searchLower = search.toLowerCase();
-//     result = result.filter(
-//       (vocab) =>
-//         vocab.description?.toLowerCase().includes(searchLower) ||
-//         vocab.translations?.some((translation) =>
-//           translation.text?.toLowerCase().includes(searchLower)
-//         )
-//     );
-//   }
-
-//   // Sorting
-//   if (sorting) {
-//     result = result.sort((a, b) => {
-//       let comparison = 0;
-
-//       switch (sorting) {
-//         case "difficulty":
-//           comparison = a.difficulty - b.difficulty;
-//           break;
-//         case "date":
-//           comparison =
-//             new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-//           break;
-//         case "shuffle":
-//           comparison = Math.random() - 0.5; // Randomize order
-//           break;
-//         default:
-//           break;
-//       }
-
-//       // Apply sorting direction
-//       if (sortDirection === "descending") {
-//         comparison = -comparison;
-//       }
-
-//       return comparison;
-//     });
-//   }
-
-//   return result;
-// }

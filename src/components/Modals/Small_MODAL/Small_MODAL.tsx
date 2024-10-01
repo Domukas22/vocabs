@@ -1,16 +1,16 @@
-//
-//
-//
-
 import Btn from "../../Btn/Btn";
 import { ICON_X } from "@/src/components/icons/icons";
 import { Styled_TEXT } from "../../Styled_TEXT/Styled_TEXT";
-
 import { MyColors } from "@/src/constants/MyColors";
-
 import React from "react";
-import { View, Modal, SafeAreaView, StyleSheet, Text } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import {
+  View,
+  Modal,
+  SafeAreaView,
+  StyleSheet,
+  Platform,
+  KeyboardAvoidingView,
+} from "react-native";
 import { BlurView } from "expo-blur";
 
 interface SimpleModal_PROPS {
@@ -20,6 +20,7 @@ interface SimpleModal_PROPS {
   toggle: () => void;
   btnLeft?: React.ReactNode;
   btnRight?: React.ReactNode;
+  btnUpper?: React.ReactNode;
 }
 
 export default function Small_MODAL(props: SimpleModal_PROPS) {
@@ -28,47 +29,29 @@ export default function Small_MODAL(props: SimpleModal_PROPS) {
     title = "Simple modal",
     open: SHOW_simpleModal,
     toggle: TOGGLE_simpleModal,
-    btnLeft = <Btn text="Done" style={{ flex: 1 }} />,
+    btnLeft = <Btn text="Done" />,
     btnRight,
+    btnUpper,
   } = props;
 
   return (
-    <Modal
-      animationType="fade"
-      transparent={true}
-      visible={SHOW_simpleModal}
-      style={{}}
-    >
+    <Modal animationType="fade" transparent={true} visible={SHOW_simpleModal}>
       <BlurView
         intensity={50}
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: MyColors.fill_bg_dark_seethrough,
-        }}
-        tint="dark"
+        style={[
+          StyleSheet.absoluteFill,
+          { backgroundColor: MyColors.fill_bg_dark_seethrough },
+        ]}
       >
-        <SafeAreaView
-          style={{
-            backgroundColor: MyColors.fill_bg_dark_seethrough,
-            flex: 1,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <KeyboardAwareScrollView
-            style={{
-              flex: 1,
-              width: "100%",
-            }}
-            keyboardShouldPersistTaps="handled"
-            contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }}
+        <SafeAreaView style={styles.safeAreaView}>
+          {/* KeyboardAvoidingView helps adjust when keyboard is shown */}
+          <KeyboardAvoidingView
+            style={styles.keyboardAvoidingView}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            // keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0} // Adjust offset for iOS
           >
-            <View style={s.greyBox}>
-              <View style={s.header}>
+            <View style={styles.greyBox}>
+              <View style={styles.header}>
                 <Styled_TEXT type="text_22_bold" style={{ flex: 1 }}>
                   {title}
                 </Styled_TEXT>
@@ -79,25 +62,47 @@ export default function Small_MODAL(props: SimpleModal_PROPS) {
                   style={{ borderRadius: 100 }}
                 />
               </View>
-              {children && <View style={s.content}>{children}</View>}
-              <View style={s.footer}>
+
+              {/* Modal content */}
+              {children && <View style={styles.content}>{children}</View>}
+
+              <View style={styles.footer}>
                 {!btnLeft && !btnRight && (
                   <Styled_TEXT type="label_small">
                     use "btnLeft" or "btnRight" properties to insert buttons
                   </Styled_TEXT>
                 )}
-                {btnLeft && btnLeft}
-                {btnRight && btnRight}
+
+                {btnUpper && btnUpper}
+                <View
+                  style={{
+                    flexDirection: "row",
+                    gap: 8,
+                  }}
+                >
+                  {btnLeft && btnLeft}
+                  {btnRight && btnRight}
+                </View>
               </View>
             </View>
-          </KeyboardAwareScrollView>
+          </KeyboardAvoidingView>
         </SafeAreaView>
       </BlurView>
     </Modal>
   );
 }
 
-const s = StyleSheet.create({
+const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  keyboardAvoidingView: {
+    flex: 1,
+    width: "100%",
+    justifyContent: "center", // Center content between keyboard and top
+  },
   greyBox: {
     backgroundColor: MyColors.fill_bg,
     borderColor: MyColors.border_white_005,
@@ -106,7 +111,6 @@ const s = StyleSheet.create({
     width: "90%",
     maxWidth: 500,
     alignSelf: "center",
-    marginVertical: "auto",
   },
   header: {
     flexDirection: "row",
@@ -123,7 +127,6 @@ const s = StyleSheet.create({
     gap: 8,
   },
   footer: {
-    flexDirection: "row",
     gap: 8,
     padding: 12,
     borderTopColor: MyColors.border_white_005,

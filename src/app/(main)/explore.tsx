@@ -9,7 +9,7 @@ import Public_VOCAB from "@/src/features/2_vocabs/components/Vocab/public";
 
 import {
   List_MODEL,
-  MyVocabDisplaySettings_PROPS,
+  VocabDisplaySettings_PROPS,
   User_MODEL,
   Vocab_MODEL,
 } from "@/src/db/models";
@@ -23,14 +23,16 @@ import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import PublicVocabDisplaySettings_MODAL from "@/src/features/2_vocabs/components/VocabDisplaySettings_MODAL/private";
 
 import USE_zustand from "@/src/zustand";
-import FETCH_publicVocabs from "@/src/features/2_vocabs/components/Vocab/db_hooks/FETCH_publicVocabs";
+import FETCH_publicVocabs from "@/src/features/2_vocabs/hooks/FETCH_publicVocabs";
 import PublicVocabs_HEADER from "@/src/features/2_vocabs/components/Vocabs_HEADER/public";
 import SelectMyList_MODAL from "@/src/features/1_lists/components/SelectMyList_MODAL/SelectMyList_MODAL";
 
 import { useToast } from "react-native-toast-notifications";
 import { useTranslation } from "react-i18next";
 import { PublicVocabs_SUBNAV, Vocab_MODAL } from "@/src/features/2_vocabs";
-import USE_createVocab from "@/src/features/2_vocabs/components/Vocab/db_hooks/USE_createVocab";
+import USE_createVocab from "@/src/features/2_vocabs/hooks/USE_createVocab";
+import MultiSelectGrid from "@/src/components/multiselect_GRI";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function Explore_PAGE() {
   const router = useRouter();
@@ -43,7 +45,7 @@ export default function Explore_PAGE() {
   // const { FETCH_publicVocabs, IS_fetchingVocabs } = USE_fetchPublicVocabs();
 
   const [displaySettings, SET_displaySettings] =
-    useState<MyVocabDisplaySettings_PROPS>({
+    useState<VocabDisplaySettings_PROPS>({
       SHOW_image: false,
       SHOW_description: true,
       SHOW_flags: true,
@@ -156,6 +158,7 @@ export default function Explore_PAGE() {
         HANDLE_vocabModal={HANDLE_vocabModal}
         IS_admin={user?.is_admin}
       />
+
       {!z_ARE_publicVocabsLoading && z_publicVocabs.length > 0 && (
         <Styled_FLATLIST
           data={z_publicVocabs}

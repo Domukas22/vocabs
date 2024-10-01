@@ -6,7 +6,7 @@ import { Language_MODEL, List_MODEL } from "@/src/db/models";
 
 import GET_langs from "@/src/utils/GET_langs";
 import GET_defaultTranslations from "@/src/utils/GET_defaultTranslations";
-import { PrivateVocabSet_PROPS } from "../db_hooks/USE_myVocabValues";
+import { PrivateVocabSet_PROPS } from "../../../hooks/USE_myVocabValues";
 
 export default function CLEAR_vocabValues({
   languages,

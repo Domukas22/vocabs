@@ -14,13 +14,21 @@ export default function MyLists_FLATLIST({
   SELECT_list,
   SHOW_bottomBtn,
   TOGGLE_createListModal,
+  highlighted_ID,
+  _ref,
 }) {
   const { t } = useTranslation();
   return (
     <Styled_FLATLIST
+      _ref={_ref}
+      style={{ flex: 1 }}
       data={lists}
       renderItem={({ item }: { item: List_MODEL }) => (
-        <MyList_BTN list={item} onPress={() => SELECT_list(item)} />
+        <MyList_BTN
+          list={item}
+          onPress={() => SELECT_list(item)}
+          highlighted={highlighted_ID === item.id}
+        />
       )}
       keyExtractor={(item) => item.id}
       ListFooterComponent={

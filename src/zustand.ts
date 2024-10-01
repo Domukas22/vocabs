@@ -18,7 +18,7 @@ interface ZustandStore {
   z_lists_ERROR: any;
   z_SET_listsError: (error: any) => void;
 
-  z_CREATE_privateList: (newLists: List_MODEL[]) => void;
+  z_CREATE_privateList: (newLists: List_MODEL) => void;
   z_RENAME_privateList: (targetList_ID: string, new_NAME: string) => void;
   z_UPDATE_defaultListTRs: (
     targetList_ID: string,
@@ -74,7 +74,7 @@ const USE_zustand = create<ZustandStore>((set) => ({
 
   z_CREATE_privateList: (new_LIST) => {
     set((state) => ({
-      z_lists: [...new_LIST, ...state.z_lists], // Prepend new lists
+      z_lists: [new_LIST, ...state.z_lists], // Prepend new lists
     }));
   },
   z_RENAME_privateList: (targetList_ID, new_NAME) => {
@@ -142,7 +142,6 @@ const USE_zustand = create<ZustandStore>((set) => ({
             vocabs: list.vocabs?.map((vocab) => {
               if (vocab.id === vocab_id) {
                 vocab.difficulty = new_DIFFICULTY;
-                console.log("Change:", vocab.translations?.[0]?.text);
               }
               return vocab;
             }),
@@ -176,8 +175,6 @@ const USE_zustand = create<ZustandStore>((set) => ({
   z_SET_publicVocabsError: (error) => set({ z_lists_ERROR: error }),
 
   z_CREATE_publicVocab: (newVocab) => {
-    console.log(newVocab);
-
     set((state) => ({
       z_publicVocabs: [newVocab, ...state.z_publicVocabs],
     }));

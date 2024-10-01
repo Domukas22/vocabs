@@ -53,9 +53,6 @@ export default function USE_modalToggles(modalDefinitions: ModalDefinition[]) {
   // Single toggle function that uses action names with full IntelliSense
   const TOGGLE_modal = (modalName: string, value: boolean | null = null) => {
     dispatch({ type: TOGGLE_MODAL, payload: { modalName, value } });
-    console.log(
-      `${modalName} toggled to ${value !== null ? value : !state[modalName]}`
-    );
   };
 
   return {

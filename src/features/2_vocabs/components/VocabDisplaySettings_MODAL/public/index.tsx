@@ -4,7 +4,7 @@
 
 import React, { useState } from "react";
 import { ScrollView } from "react-native";
-import { MyVocabDisplaySettings_PROPS } from "@/src/db/models";
+import { VocabDisplaySettings_PROPS } from "@/src/db/models";
 import DisplaySettings_SUBNAV from "../components/DisplaySettings_SUBNAV/DisplaySettings_SUBNAV";
 import PublicVocabPreview_BLOCK from "../components/VocabPreview_BLOCK/private";
 import Big_MODAL from "@/src/components/Modals/Big_MODAL/Big_MODAL";
@@ -12,11 +12,12 @@ import Header from "@/src/components/Header/Header";
 import { useTranslation } from "react-i18next";
 import Btn from "@/src/components/Btn/Btn";
 import { ICON_X } from "@/src/components/icons/icons";
+import VocabFrontLang_BLOCK from "../components/VocabFrontLang_BLOCK/VocabFrontLang_BLOCK";
 
 interface DisplaySettingsModal_PROPS {
-  displaySettings: MyVocabDisplaySettings_PROPS;
+  displaySettings: VocabDisplaySettings_PROPS;
   SET_displaySettings: React.Dispatch<
-    React.SetStateAction<MyVocabDisplaySettings_PROPS>
+    React.SetStateAction<VocabDisplaySettings_PROPS>
   >;
   open: boolean;
   TOGGLE_open: () => void;
@@ -52,6 +53,9 @@ export default function PublicVocabDisplaySettings_MODAL({
             {...{ displaySettings, SET_displaySettings }}
           />
         )}
+        {/* {view === "preview" && (
+          <VocabFrontLang_BLOCK  {...{ displaySettings, SET_displaySettings }}/>
+        )} */}
       </ScrollView>
     </Big_MODAL>
   );

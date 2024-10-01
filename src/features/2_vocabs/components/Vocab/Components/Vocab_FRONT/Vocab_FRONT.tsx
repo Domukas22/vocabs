@@ -7,7 +7,7 @@ import { ICON_difficultyDot, ICON_flag } from "@/src/components/icons/icons";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
 import {
-  MyVocabDisplaySettings_PROPS,
+  VocabDisplaySettings_PROPS,
   Translation_MODEL,
   TranslationCreation_PROPS,
 } from "@/src/db/models";
@@ -16,7 +16,7 @@ import { Image, Pressable, StyleSheet, View } from "react-native";
 
 interface VocabFront_PROPS {
   vocab_id: string;
-  displaySettings: MyVocabDisplaySettings_PROPS;
+  displaySettings: VocabDisplaySettings_PROPS;
 
   translations: Translation_MODEL[] | undefined;
   difficulty: 0 | 1 | 2 | 3 | undefined;
@@ -44,14 +44,21 @@ export default function Vocab_FRONT({
     frontTrLang_ID,
   } = displaySettings;
 
-  const front_TR = useMemo(
-    () =>
-      translations
-        ? translations.find((tr) => tr.lang_id === frontTrLang_ID) ||
-          translations[0]
-        : null,
-    [translations, frontTrLang_ID]
-  );
+  const front_TR = useMemo(() => {
+    return (
+      translations?.find(
+        (tr) =>
+          tr.lang_id === frontTrLang_ID &&
+          tr.text !== "" &&
+          tr.text !== undefined &&
+          tr.text !== null
+      ) ||
+      translations?.find(
+        (tr) => tr.text !== "" && tr.text !== undefined && tr.text !== null
+      ) ||
+      null
+    );
+  }, [translations, frontTrLang_ID]);
 
   return (
     <Pressable
@@ -72,9 +79,9 @@ export default function Vocab_FRONT({
         <View style={s.content}>
           {front_TR && (
             <Highlighted_TEXT
-              text={front_TR.text || "EMPTY TRANSLATION"}
-              highlights={front_TR.highlights || []}
-              modal_DIFF={difficulty || 3}
+              text={front_TR?.text || "EMPTY TRANSLATION"}
+              highlights={front_TR?.highlights || []}
+              modal_DIFF={difficulty || 0}
             />
           )}
           {SHOW_description && description && (
@@ -89,8 +96,8 @@ export default function Vocab_FRONT({
                     lang={tr.lang_id}
                   />
                 ))}
-              {SHOW_difficulty && (
-                <ICON_difficultyDot difficulty={difficulty || 3} />
+              {SHOW_difficulty && !!difficulty && (
+                <ICON_difficultyDot difficulty={difficulty} />
               )}
             </View>
           )}

@@ -8,7 +8,7 @@ import Btn from "@/src/components/Btn/Btn";
 import Header from "@/src/components/Header/Header";
 import { ICON_X } from "@/src/components/icons/icons";
 import Big_MODAL from "@/src/components/Modals/Big_MODAL/Big_MODAL";
-import SelectLanguages_MODAL from "@/src/features/4_languages/components/SelectLanguages_MODAL/SelectLanguages_MODAL";
+import SelectMultipleLanguages_MODAL from "@/src/features/4_languages/components/SelectMultipleLanguages_MODAL/SelectMultipleLanguages_MODAL";
 import Confirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
@@ -136,7 +136,7 @@ export default function ListSettings_MODAL({
       />
 
       {/* ------------------------------ MODALS ------------------------------  */}
-      <SelectLanguages_MODAL
+      <SelectMultipleLanguages_MODAL
         open={SHOW_langSeletionModal}
         TOGGLE_open={TOGGLE_langSelectionModal}
         active_LANGS={langs}

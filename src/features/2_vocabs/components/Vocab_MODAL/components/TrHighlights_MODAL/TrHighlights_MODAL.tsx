@@ -41,8 +41,6 @@ export default function TrHighlights_MODAL({
   const appLang = useMemo(() => i18next.language, []);
 
   function SUBMIT_highlights() {
-    console.log(_lang);
-
     if (!_lang || !_lang.id) return;
     EDIT_trHighlights({ lang_id: _lang.id, newHighlights: _highlights });
     TOGGLE_open();
@@ -99,7 +97,7 @@ export default function TrHighlights_MODAL({
             "word.highlights"
           )} auf ${_lang?.lang_in_de}`}</Label>
         )}
-        <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+        <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 4 }}>
           {GET_highlightBtns({
             text,
             highlights: _highlights,
@@ -178,10 +176,8 @@ function Highlight_BTN({
 }) {
   const btnType = () => {
     if (!active) return "simple";
-    if (active && modal_DIFF === 0) return "active";
-    if (active && modal_DIFF === 1) return "difficulty_1_active";
-    if (active && modal_DIFF === 2) return "difficulty_2_active";
-    if (active && modal_DIFF === 3) return "difficulty_3_active";
+    if (active && letter !== " ") return `difficulty_${modal_DIFF || 3}_active`;
+
     return "simple";
   };
 
@@ -190,8 +186,22 @@ function Highlight_BTN({
       key={"highlight btn" + index + letter}
       text={letter}
       type={btnType()}
-      style={{ borderRadius: 0, width: "10%", paddingHorizontal: 0 }}
-      onPress={() => HANDLE_index(index)}
+      style={[
+        {
+          borderRadius: 4,
+          width: "10%",
+          paddingHorizontal: 0,
+          paddingVertical: 0,
+          height: 50,
+        },
+        letter === " " && { opacity: 0 },
+      ]}
+      onPress={() => {
+        if (letter !== " ") {
+          HANDLE_index(index);
+        }
+      }}
+      text_STYLES={{ fontSize: 20, fontFamily: "Nunito-SemiBold" }}
     />
   );
 }

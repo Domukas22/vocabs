@@ -16,11 +16,12 @@ import { useTranslation } from "react-i18next";
 
 export default function MyList_BTN({
   list,
-
   onPress,
+  highlighted,
 }: {
   list: List_MODEL;
   onPress: () => void;
+  highlighted: boolean;
 }) {
   const { t } = useTranslation();
   const { name } = list;
@@ -43,14 +44,18 @@ export default function MyList_BTN({
 
   return (
     <Pressable
-      style={({ pressed }) => [s.btn, pressed && s.pressed]}
+      style={({ pressed }) => [
+        s.btn,
+        pressed && s.pressed,
+        highlighted && s.highlighted,
+      ]}
       onPress={onPress}
     >
       <View style={{ flexDirection: "row" }}>
         <Styled_TEXT type="text_18_bold" style={{ textAlign: "left", flex: 1 }}>
           {name}
         </Styled_TEXT>
-        <ICON_arrow direction="right" />
+        {/* <ICON_arrow direction="right" /> */}
       </View>
       <Styled_TEXT type="label_small" style={{ textAlign: "left" }}>
         {list.vocabs && list.vocabs?.length > 0
@@ -96,6 +101,10 @@ const s = StyleSheet.create({
   },
   pressed: {
     backgroundColor: MyColors.btn_3,
+  },
+  highlighted: {
+    backgroundColor: MyColors.btn_green,
+    borderColor: MyColors.border_green,
   },
 });
 

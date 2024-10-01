@@ -9,7 +9,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Page_WRAP({ children }: { children: React.ReactNode }) {
   return (
-    <SafeAreaView style={s.MainScreen_VIEW}>
+    <SafeAreaView style={s.MainScreen_VIEW} edges={["top", "left", "right"]}>
       <View style={s.view}>{children}</View>
     </SafeAreaView>
   );
@@ -19,11 +19,14 @@ const s = StyleSheet.create({
   MainScreen_VIEW: {
     backgroundColor: MyColors.fill_bg,
     flex: 1,
+    paddingBottom: 0,
+    paddingVertical: 0,
     alignItems: "center",
   },
   view: {
     maxWidth: 700,
     width: "100%",
+
     flex: 1,
   },
 });

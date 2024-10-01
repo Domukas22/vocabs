@@ -11,7 +11,7 @@ import { MyColors } from "@/src/constants/MyColors";
 
 export default function VocabBack_TRS({
   TRs,
-  difficulty,
+  difficulty = 0,
 }: {
   TRs: Translation_MODEL[] | undefined;
   difficulty: 0 | 1 | 2 | 3 | undefined;
@@ -27,7 +27,7 @@ export default function VocabBack_TRS({
               <Highlighted_TEXT
                 text={tr.text}
                 highlights={tr.highlights}
-                modal_DIFF={difficulty || 3}
+                modal_DIFF={difficulty}
               />
             </View>
           )}

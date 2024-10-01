@@ -23,6 +23,7 @@ interface TrTextModal_PROPS {
   SET_modalTRs: React.Dispatch<
     React.SetStateAction<TranslationCreation_PROPS[]>
   >;
+  TOGGLE_highlightModal: () => void;
 }
 
 export default function TrText_MODAL({
@@ -31,6 +32,7 @@ export default function TrText_MODAL({
   TOGGLE_open,
   modal_TRs,
   SET_modalTRs,
+  TOGGLE_highlightModal = () => {},
 }: TrTextModal_PROPS) {
   const appLang = useMemo(() => i18next.language, []);
   const { t } = useTranslation();
@@ -38,13 +40,6 @@ export default function TrText_MODAL({
   const [_lang, SET_lang] = useState<Language_MODEL | undefined>(null);
 
   const inputREF = useRef(null);
-
-  function SUBMIT_tr() {
-    if (!_lang || !_lang.id) return;
-    EDIT_trText({ lang_id: _lang.id, newText: _text });
-    TOGGLE_open();
-    SET_text("");
-  }
 
   useEffect(() => {
     if (open) inputREF?.current?.focus();
@@ -55,6 +50,13 @@ export default function TrText_MODAL({
     SET_text(open ? text || "" : "");
     SET_lang(open ? target_LANG : null);
   }, [open]);
+
+  function SUBMIT_tr() {
+    if (!_lang || !_lang.id) return;
+    EDIT_trText({ lang_id: _lang.id, newText: _text });
+    TOGGLE_open();
+    SET_text("");
+  }
 
   function EDIT_trText({
     lang_id,
@@ -95,15 +97,24 @@ export default function TrText_MODAL({
             onPress={() => {
               SET_text(""), TOGGLE_open();
             }}
-            type="simple"
           />
         ),
         btnRight: (
           <Btn
             text={t("btn.save")}
             onPress={SUBMIT_tr}
-            type="action"
             style={{ flex: 1 }}
+            type={_text === "" ? "action" : "simple"}
+          />
+        ),
+        btnUpper: _text !== "" && (
+          <Btn
+            text={t("btn.saveAndGoTohighlights")}
+            onPress={() => {
+              SUBMIT_tr();
+              TOGGLE_highlightModal();
+            }}
+            type="action"
           />
         ),
       }}

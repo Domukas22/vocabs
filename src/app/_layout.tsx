@@ -65,7 +65,7 @@ function Main_LAYOUT() {
         if (session) {
           SET_auth(session?.user);
           await GET_userData(session?.user); // await user data fetching
-          router.push("/(main)/explore"); // push only after fetching user data
+          router.push("/(main)/vocabs"); // push only after fetching user data
         } else {
           SET_auth(null);
           router.push("/welcome");
@@ -73,8 +73,6 @@ function Main_LAYOUT() {
       });
     }
   }, [loaded, ARE_languagesLoading]);
-
-  console.log("langs: ", languages?.length);
 
   async function GET_userData(user) {
     let res = await FETCH_userData(user?.id);

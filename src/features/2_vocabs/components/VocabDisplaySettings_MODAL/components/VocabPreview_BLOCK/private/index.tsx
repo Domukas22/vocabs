@@ -6,7 +6,7 @@ import Block from "@/src/components/Block/Block";
 import Label from "@/src/components/Label/Label";
 import Settings_TOGGLE from "@/src/components/Settings_TOGGLE/Settings_TOGGLE";
 import { MyColors } from "@/src/constants/MyColors";
-import { MyVocabDisplaySettings_PROPS } from "@/src/db/models";
+import { VocabDisplaySettings_PROPS } from "@/src/db/models";
 import Vocab_DUMMY from "@/src/features/2_vocabs/components/Vocab_DUMMY";
 import { t } from "i18next";
 import { View } from "react-native";
@@ -15,9 +15,9 @@ export default function PublicVocabPreview_BLOCK({
   displaySettings,
   SET_displaySettings,
 }: {
-  displaySettings: MyVocabDisplaySettings_PROPS;
+  displaySettings: VocabDisplaySettings_PROPS;
   SET_displaySettings: React.Dispatch<
-    React.SetStateAction<MyVocabDisplaySettings_PROPS>
+    React.SetStateAction<VocabDisplaySettings_PROPS>
   >;
 }) {
   return (

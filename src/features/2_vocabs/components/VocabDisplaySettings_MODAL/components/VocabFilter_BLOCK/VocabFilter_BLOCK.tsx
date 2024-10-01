@@ -6,7 +6,7 @@ import Block from "@/src/components/Block/Block";
 import Btn from "@/src/components/Btn/Btn";
 import { ICON_X, ICON_difficultyDot } from "@/src/components/icons/icons";
 import Label from "@/src/components/Label/Label";
-import { MyVocabDisplaySettings_PROPS } from "@/src/db/models";
+import { VocabDisplaySettings_PROPS } from "@/src/db/models";
 import { t } from "i18next";
 import { useCallback } from "react";
 
@@ -14,9 +14,9 @@ export default function VocabFilter_BLOCK({
   displaySettings,
   SET_displaySettings,
 }: {
-  displaySettings: MyVocabDisplaySettings_PROPS;
+  displaySettings: VocabDisplaySettings_PROPS;
   SET_displaySettings: React.Dispatch<
-    React.SetStateAction<MyVocabDisplaySettings_PROPS>
+    React.SetStateAction<VocabDisplaySettings_PROPS>
   >;
 }) {
   const SELECT_filter = useCallback(

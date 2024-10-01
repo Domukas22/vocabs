@@ -39,7 +39,7 @@ interface SelectLanguagesModal_PROPS {
   IS_inAction?: boolean;
 }
 
-export default function SelectLanguages_MODAL(
+export default function SelectMultipleLanguages_MODAL(
   props: SelectLanguagesModal_PROPS
 ) {
   const { t } = useTranslation();
@@ -68,7 +68,6 @@ export default function SelectLanguages_MODAL(
     const tooManyLangSelected = modal_LANGS?.length >= 10;
     const hasOnly2Translations = modal_LANGS?.length === 2;
     if (!alreadyHasLang) {
-      console.log("fire");
       if (tooManyLangSelected) return;
 
       // add new lang

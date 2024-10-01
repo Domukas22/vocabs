@@ -5,14 +5,14 @@
 import Block from "@/src/components/Block/Block";
 import Btn from "@/src/components/Btn/Btn";
 import Label from "@/src/components/Label/Label";
-import { MyVocabDisplaySettings_PROPS } from "@/src/db/models";
+import { VocabDisplaySettings_PROPS } from "@/src/db/models";
 import React from "react";
 import { useTranslation } from "react-i18next";
 
 interface MyVocabSortDirectionBlock_PROPS {
-  displaySettings: MyVocabDisplaySettings_PROPS;
+  displaySettings: VocabDisplaySettings_PROPS;
   SET_displaySettings: React.Dispatch<
-    React.SetStateAction<MyVocabDisplaySettings_PROPS>
+    React.SetStateAction<VocabDisplaySettings_PROPS>
   >;
 }
 

@@ -8,7 +8,7 @@ import { StyleSheet, View } from "react-native";
 import { Vocab_MODEL } from "@/src/db/models";
 
 import { USE_toggle } from "@/src/hooks/USE_toggle";
-import { MyVocabDisplaySettings_PROPS } from "@/src/db/models";
+import { VocabDisplaySettings_PROPS } from "@/src/db/models";
 
 import Vocab_FRONT from "../Components/Vocab_FRONT/Vocab_FRONT";
 import VocabBack_TRS from "../Components/VocabBack_TRS/VocabBack_TRS";
@@ -19,7 +19,7 @@ import { ICON_X } from "@/src/components/icons/icons";
 
 interface VocabProps {
   vocab: Vocab_MODEL | undefined;
-  displaySettings: MyVocabDisplaySettings_PROPS;
+  displaySettings: VocabDisplaySettings_PROPS;
   IS_admin: boolean;
   HANDLE_vocabModal: ({
     clear,

@@ -29,6 +29,7 @@ export default function General_PAGE() {
   const { t } = useTranslation();
   const vocabCount = 89;
   const { SET_auth } = USE_auth();
+  const { user } = USE_auth();
 
   const lougout = async () => {
     const { error } = await supabase.auth.signOut();
@@ -48,7 +49,12 @@ export default function General_PAGE() {
       <ScrollView>
         <Block>
           <View style={{ gap: 16 }}>
-            <Styled_TEXT>XX vocabs left until you reach the limit</Styled_TEXT>
+            <View>
+              <Styled_TEXT>
+                XX vocabs left until you reach the limit
+              </Styled_TEXT>
+              <Styled_TEXT type="label">{user?.email}</Styled_TEXT>
+            </View>
             <View
               style={{
                 flexDirection: "row",

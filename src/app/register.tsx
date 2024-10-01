@@ -86,8 +86,8 @@ export default function Register_PAGE() {
         style={{ flex: 1, marginBottom: 20 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        {/* --------------------------------------------------------------------------------------------------- */}
         <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="handled">
+          {/* --------------------------------------------------------------------------------------------------- */}
           <AuthenticationHeader
             text={t("header.createAnAccount")}
             image_EL={

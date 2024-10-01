@@ -4,6 +4,8 @@
 import { useState } from "react";
 import { supabase } from "@/src/lib/supabase";
 import USE_zustand from "@/src/zustand";
+import { useToast } from "react-native-toast-notifications";
+import { useTranslation } from "react-i18next";
 
 export interface CreateList_PROPS {
   name: string;
@@ -15,6 +17,8 @@ export default function USE_createList() {
   const [createList_ERROR, SET_createListError] = useState<string | null>(null);
 
   const { z_CREATE_privateList } = USE_zustand();
+  const toast = useToast();
+  const { t } = useTranslation();
 
   const CREATE_list = async ({
     name,
@@ -31,7 +35,10 @@ export default function USE_createList() {
       const { data, error } = await supabase
         .from("lists")
         .insert([{ name, user_id }])
-        .select();
+        .select()
+        .single();
+
+      console.log(data);
 
       // Handle potential errors
       if (error) {
@@ -42,6 +49,10 @@ export default function USE_createList() {
 
       z_CREATE_privateList(data);
       console.log("🟢 List created 🟢");
+      toast.show(t("notifications.listCreated"), {
+        type: "custom_success",
+        duration: 2000,
+      });
 
       return { success: true, data };
     } catch (error) {

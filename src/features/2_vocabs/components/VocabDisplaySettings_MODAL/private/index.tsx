@@ -4,10 +4,10 @@
 
 import React, { useState } from "react";
 import { ScrollView } from "react-native";
-import { MyVocabDisplaySettings_PROPS } from "@/src/db/models";
+import { Language_MODEL, VocabDisplaySettings_PROPS } from "@/src/db/models";
 import DisplaySettings_SUBNAV from "../components/DisplaySettings_SUBNAV/DisplaySettings_SUBNAV";
 
-import MyVocabPreview_BLOCK from "../components/VocabPreview_BLOCK/public";
+import MyVocabPreview_BLOCKS from "../components/VocabPreview_BLOCK/public";
 import VocabFilter_BLOCK from "../components/VocabFilter_BLOCK/VocabFilter_BLOCK";
 import VocabSorting_BLOCKS from "../components/VocabSorting_BLOCKS/VocabSorting_BLOCKS";
 import VocabSortDirection_BLOCK from "../components/VocabSortDirection_BLOCK/VocabSortDirection_BLOCK";
@@ -17,14 +17,18 @@ import Big_MODAL from "@/src/components/Modals/Big_MODAL/Big_MODAL";
 import Header from "@/src/components/Header/Header";
 import { ICON_X } from "@/src/components/icons/icons";
 import { useTranslation } from "react-i18next";
+import { USE_toggle } from "@/src/hooks/USE_toggle";
+import SelectOneLanguage_MODAL from "@/src/features/4_languages/components/SelectOneLanguage_MODAL/SelectOneLanguage_MODAL";
+import { languagesArr_PROPS } from "@/src/constants/languages";
 
 interface DisplaySettingsModal_PROPS {
-  displaySettings: MyVocabDisplaySettings_PROPS;
+  displaySettings: VocabDisplaySettings_PROPS;
   SET_displaySettings: React.Dispatch<
-    React.SetStateAction<MyVocabDisplaySettings_PROPS>
+    React.SetStateAction<VocabDisplaySettings_PROPS>
   >;
   open: boolean;
   TOGGLE_open: () => void;
+  list_LANGS: Language_MODEL[];
 }
 
 export default function MyVocabDisplaySettings_MODAL({
@@ -32,9 +36,11 @@ export default function MyVocabDisplaySettings_MODAL({
   TOGGLE_open,
   displaySettings,
   SET_displaySettings,
+  list_LANGS,
 }: DisplaySettingsModal_PROPS) {
   const [view, SET_view] = useState<"preview" | "sort" | "filter">("preview");
   const { t } = useTranslation();
+  const [SHOW_frontLangModal, TOGGLE_frontLangModal] = USE_toggle();
 
   return (
     <Big_MODAL {...{ open }}>
@@ -57,11 +63,15 @@ export default function MyVocabDisplaySettings_MODAL({
       />
       <ScrollView style={{ flex: 1 }}>
         {view === "sort" ? (
-          <VocabSorting_BLOCKS {...{ displaySettings, SET_displaySettings }} />
+          <VocabSorting_BLOCKS
+            {...{ displaySettings, SET_displaySettings, list_LANGS }}
+          />
         ) : view === "filter" ? (
           <VocabFilter_BLOCK {...{ displaySettings, SET_displaySettings }} />
         ) : view === "preview" ? (
-          <MyVocabPreview_BLOCK {...{ displaySettings, SET_displaySettings }} />
+          <MyVocabPreview_BLOCKS
+            {...{ displaySettings, SET_displaySettings, TOGGLE_frontLangModal }}
+          />
         ) : (
           ""
         )}
@@ -83,6 +93,15 @@ export default function MyVocabDisplaySettings_MODAL({
             // text_STYLES={{ color: MyColors.text_white }}
           />
         }
+      />
+      <SelectOneLanguage_MODAL
+        open={SHOW_frontLangModal}
+        TOGGLE_open={TOGGLE_frontLangModal}
+        SELECT_lang={(lang_ID: string) => {
+          SET_displaySettings((p) => ({ ...p, frontTrLang_ID: lang_ID }));
+        }}
+        chosenLang_ID={displaySettings.frontTrLang_ID}
+        {...{ list_LANGS }}
       />
     </Big_MODAL>
   );

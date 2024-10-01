@@ -21,13 +21,14 @@ import {
   View,
 } from "react-native";
 import { List_MODEL } from "@/src/db/models";
-import { FETCH_lists } from "@/src/db/lists/fetch";
+
 import { useTranslation } from "react-i18next";
 import CreateList_MODAL from "@/src/features/1_lists/components/CreateList_MODAL/CreateList_MODAL";
 import USE_zustand from "@/src/zustand";
-import FILTER_lists from "@/src/features/1_lists/utils/FILTER_lists";
+import SEARCH_lists from "@/src/features/1_lists/utils/SEARCH_lists";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 import { EmptyFlatList_BOTTM } from "@/src/features/1_lists";
+import { USE_searchedLists } from "../../hooks/USE_searchedLists/USE_searchedLists";
 interface SelectListModal_PROPS {
   open: boolean;
   title: string;
@@ -47,7 +48,6 @@ export default function SelectMyList_MODAL({
 }: SelectListModal_PROPS) {
   const { t } = useTranslation();
 
-  const [search, SET_search] = useState("");
   const [SHOW_createListModal, TOGGLE_createListModal] = USE_toggle(false);
 
   const [selectedModal_LIST, SET_selectedModalList] = useState<
@@ -56,10 +56,8 @@ export default function SelectMyList_MODAL({
 
   const { z_lists, z_ARE_listsLoading } = USE_zustand();
 
-  const filtered_LISTS = useMemo(
-    () => FILTER_lists({ search, lists: z_lists }),
-    [search, z_lists]
-  );
+  const { searched_LISTS, search, SEARCH_lists, ARE_listsSearching } =
+    USE_searchedLists(z_lists);
 
   useEffect(() => {
     SET_selectedModalList(current_LIST);
@@ -87,15 +85,15 @@ export default function SelectMyList_MODAL({
           }
         />
         <Subnav>
-          <SearchBar value={search} SET_value={SET_search} />
+          <SearchBar value={search} SET_value={SEARCH_lists} />
         </Subnav>
 
-        {!z_ARE_listsLoading && z_lists.length > 0 && (
+        {!ARE_listsSearching && z_lists.length > 0 && (
           <FlatList
             data={
               search === ""
                 ? z_lists
-                : filtered_LISTS.filter((list) =>
+                : searched_LISTS.filter((list) =>
                     list.name.toLowerCase().includes(search.toLowerCase())
                   )
             }
@@ -119,7 +117,7 @@ export default function SelectMyList_MODAL({
                 }
                 onPress={() => {
                   SET_selectedModalList(item);
-                  SET_search("");
+                  SEARCH_lists("");
                 }}
                 type={item.id === selectedModal_LIST?.id ? "active" : "simple"}
                 style={[

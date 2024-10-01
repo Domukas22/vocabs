@@ -67,14 +67,7 @@ export interface Translation_MODEL {
 
   created_at: string;
 }
-export interface PublicTranslation_MODEL {
-  id: string;
-  public_vocab_id: string;
-  lang_id: string;
-  text: string;
-  highlights: number[];
-  created_at: string;
-}
+
 // --------------------------------------------------------------------------------------------
 
 export interface TranslationCreation_PROPS {
@@ -83,7 +76,7 @@ export interface TranslationCreation_PROPS {
   highlights: number[];
 }
 // ------------------------------------------------------------
-export interface MyVocabDisplaySettings_PROPS {
+export interface VocabDisplaySettings_PROPS {
   SHOW_image: boolean;
   SHOW_description: boolean;
   SHOW_flags: boolean;
@@ -91,13 +84,5 @@ export interface MyVocabDisplaySettings_PROPS {
   frontTrLang_ID: string;
   sorting: "shuffle" | "difficulty" | "date";
   sortDirection: "ascending" | "descending";
-  search: string;
   difficultyFilters: (1 | 2 | 3)[];
-}
-export interface PublicVocabDisplaySettings_PROPS {
-  SHOW_image: boolean;
-  SHOW_description: boolean;
-  SHOW_flags: boolean;
-  frontTrLang_ID: string;
-  search: string;
 }

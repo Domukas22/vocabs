@@ -10,17 +10,19 @@ import {
   ICON_shuffle,
 } from "@/src/components/icons/icons";
 import Label from "@/src/components/Label/Label";
-import { MyVocabDisplaySettings_PROPS } from "@/src/db/models";
+import { Language_MODEL, VocabDisplaySettings_PROPS } from "@/src/db/models";
 import { t } from "i18next";
+import VocabFrontLang_BLOCK from "../VocabFrontLang_BLOCK/VocabFrontLang_BLOCK";
 
 export default function VocabSorting_BLOCKS({
   displaySettings,
   SET_displaySettings,
 }: {
-  displaySettings: MyVocabDisplaySettings_PROPS;
+  displaySettings: VocabDisplaySettings_PROPS;
   SET_displaySettings: React.Dispatch<
-    React.SetStateAction<MyVocabDisplaySettings_PROPS>
+    React.SetStateAction<VocabDisplaySettings_PROPS>
   >;
+  list_LANGS: Language_MODEL[];
 }) {
   return (
     <Block row={false}>

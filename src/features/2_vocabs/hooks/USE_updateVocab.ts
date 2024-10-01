@@ -1,6 +1,7 @@
 import { supabase } from "@/src/lib/supabase";
 import { useState } from "react";
 import { TranslationCreation_PROPS, Vocab_MODEL } from "../../../../db/models";
+import { Translation_MODEL } from "@/src/db/models";
 
 interface VocabUpdate_MODEL {
   vocab_id: string;
@@ -65,14 +66,17 @@ export default function USE_updateVocab() {
       const updatedVocabData = vocabResponse.data;
 
       // Update translations
-      const finalVocab = await HANDLE_translationUpdate({
+      const updatedTranslations = await HANDLE_translationUpdate({
         vocab_id,
         translations,
         user_id,
         isPublic,
       });
 
-      return { success: true, data: finalVocab };
+      return {
+        success: true,
+        data: { ...updatedVocabData, translations: updatedTranslations },
+      };
     } catch (error) {
       console.log("🔴 Error updating vocab or translations 🔴 : ", error);
       return {
@@ -229,7 +233,7 @@ async function HANDLE_translationUpdate({
   const updatedTranslations = translationResults.flatMap((x) => x.data);
 
   console.log("🟢 Translations updated 🟢");
-  return { id: vocab_id, translations: updatedTranslations } as Vocab_MODEL;
+  return updatedTranslations;
 }
 
 // Validate input for vocab update

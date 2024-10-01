@@ -8,13 +8,14 @@
     "page_about": "Über uns",
     "listSettings": "Liste Einstellungen",
     "createAnAccount": "Erstelle einen Profil",
-    "login": "Willkommen zurück!"
+    "login": "Willkommen zurück!",
+    "selectOneLanguage": "Eine Sprache wählen"
   },
   "blockLabels": {
     "uiLang": "App Sprache"
   },
   "btn": {
-    "createList": "Neue Liste erstellen",
+    "createList": "Liste erstellen",
     "cancel": "Abbrechen",
     "create": "Erstellen",
     "sortByDifficulty": "Nach Schwerkeit",
@@ -53,7 +54,8 @@
     "goToLogIn": "Einloggen",
     "goToRegister": "Profil erstellen",
     "dangerZone": "Gefahrzone",
-    "deleteProfile": "Mein Profil löschen"
+    "deleteProfile": "Mein Profil löschen",
+    "saveAndGoTohighlights": "Speicher und zur Markierungen"
   },
   "pages": {
     "about": {
@@ -142,7 +144,12 @@
     "defaultVocabLangs": "Sprachen, die beim Erstellen eines neuen Vokabulars standardmäßig ausgewählt werden",
     "editListName": "Nenne die Liste um",
     "noAccountYet": "Hast du noch kein Profil?",
-    "alreadyHaveAccount": "Hast du bereits ein Profil?"
+    "alreadyHaveAccount": "Hast du bereits ein Profil?",
+    "thisListIsEmpty": "Diese Liste ist leer",
+    "vocabFrontLang": "Welche Sprache soll angezeigt werden, wenn die Vokabel geschlossen ist?",
+    "vocabFrontLangExplanation": "Wenn es für eine Vokabel keine Übersetzung mit der ausgewählten Sprache gibt, wird die erste Übersetzung des Vokabels angezeigt",
+    "noLanguagesFound": "Keine Sprachen gefunden",
+    "langaugesOfThisList": "Alle Sprachen dieser Liste"
   },
   "modal": {
     "displaySettings": {
@@ -162,7 +169,7 @@
       "header": "Wähle eine Liste"
     },
     "editTr": {
-      "header": "Übersetzung bearbeiten"
+      "header": "Übersetzung"
     },
     "editHighlights": {
       "header": "Markierungen bearbeiten"
@@ -198,7 +205,8 @@
   },
   "word": {
     "translation": "Übersetzung",
-    "highlights": "Markierungen"
+    "highlights": "Markierungen",
+    "select": "wählen"
   },
   "placeholder": {
     "translation": "Übersetzung...",
@@ -216,6 +224,7 @@
     "vocabCopied": "Die Vokabel wurde in deine Liste hingefügt",
     "publicVocabCreated": "Öffentliches Vokabel erstellt",
     "publicVocabUpdated": "Öffentliches Vokabel bearbeitet",
-    "publicVocabDeleted": "Öffentliches Vokabel gelöscht"
+    "publicVocabDeleted": "Öffentliches Vokabel gelöscht",
+    "listCreated": "Neue Liste erstellt"
   }
 }
