@@ -16,7 +16,7 @@ import {
 
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 import { useRouter } from "expo-router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 
@@ -29,11 +29,17 @@ import SelectMyList_MODAL from "@/src/features/1_lists/components/SelectMyList_M
 
 import { useToast } from "react-native-toast-notifications";
 import { useTranslation } from "react-i18next";
-import { PublicVocabs_SUBNAV, Vocab_MODAL } from "@/src/features/2_vocabs";
+import {
+  MyVocabDisplaySettings_MODAL,
+  PublicVocabs_SUBNAV,
+  Vocab_MODAL,
+} from "@/src/features/2_vocabs";
 import USE_createVocab from "@/src/features/2_vocabs/hooks/USE_createVocab";
 import MultiSelectGrid from "@/src/components/multiselect_GRI";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { USE_searchedVocabs } from "@/src/features/2_vocabs/hooks/USE_searchedVocabs/USE_searchedVocabs";
+import GET_uniqueLanguagesInAList from "@/src/utils/GET_uniqueLanguagesInAList/GET_uniqueLanguagesInAList";
+import { USE_langs } from "@/src/context/Langs_CONTEXT";
 
 export default function Explore_PAGE() {
   const router = useRouter();
@@ -149,6 +155,13 @@ export default function Explore_PAGE() {
     }
   };
 
+  const { languages } = USE_langs();
+
+  const list_LANGS = useMemo(
+    () => GET_uniqueLanguagesInAList(z_publicVocabs, languages),
+    [z_publicVocabs]
+  );
+
   return (
     <Page_WRAP>
       <PublicVocabs_HEADER />
@@ -188,11 +201,12 @@ export default function Explore_PAGE() {
             keyExtractor={(item) => "Vocab" + item?.id}
           />
         )}
-      <PublicVocabDisplaySettings_MODAL
+      <MyVocabDisplaySettings_MODAL
         open={SHOW_displaySettings}
         TOGGLE_open={TOGGLE_displaySettings}
         displaySettings={displaySettings}
         SET_displaySettings={SET_displaySettings}
+        list_LANGS={list_LANGS}
       />
 
       {/* <PublicVocab_MODAL

@@ -5,7 +5,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { Language_MODEL, Vocab_MODEL } from "@/src/db/models";
 
-export function USE_searchedLangs(langs: Language_MODEL[]) {
+export function USE_searchedLangs(langs: Language_MODEL[] | undefined) {
   const [searched_LANGS, SET_searchedLangs] = useState<Language_MODEL[]>(langs);
   const [search, setSearch] = useState("");
   const [ARE_langsSearching, SET_areLangsSearching] = useState(false);
@@ -21,7 +21,7 @@ export function USE_searchedLangs(langs: Language_MODEL[]) {
       // Use setTimeout to offload filtering to the event loop
       const filtered = await new Promise<Language_MODEL[]>((resolve) => {
         setTimeout(() => {
-          const result = langs.filter(
+          const result = langs?.filter(
             (lang) =>
               lang.lang_in_en?.toLowerCase().includes(search.toLowerCase()) ||
               lang.lang_in_de?.toLowerCase().includes(search.toLowerCase()) ||
@@ -30,7 +30,7 @@ export function USE_searchedLangs(langs: Language_MODEL[]) {
                 .includes(search.toLowerCase()) ||
               lang.country_in_de?.toLowerCase().includes(search.toLowerCase())
           );
-          resolve(result);
+          resolve(result || []);
         }, 0); // No delay; just offloading to the event loop
       });
       SET_searchedLangs(filtered);

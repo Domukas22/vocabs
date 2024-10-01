@@ -42,7 +42,7 @@ interface SelectOneLanguage_MODAL {
   TOGGLE_open: () => void;
   chosenLang_ID: string | undefined;
   SELECT_lang: (lang_ID: string) => void;
-  list_LANGS: Language_MODEL[];
+  list_LANGS: Language_MODEL[] | undefined;
 }
 
 export default function SelectOneLanguage_MODAL(
@@ -51,7 +51,7 @@ export default function SelectOneLanguage_MODAL(
   const { t } = useTranslation();
   const { open, TOGGLE_open, chosenLang_ID, SELECT_lang, list_LANGS } = props;
   const [modal_LANG, SET_modalLang] = useState<Language_MODEL | undefined>(
-    list_LANGS.find((lang) => lang.id === chosenLang_ID)
+    list_LANGS?.find((lang) => lang.id === chosenLang_ID)
   );
 
   const { searched_LANGS, search, SEARCH_langs, ARE_langsSearching } =
@@ -65,7 +65,7 @@ export default function SelectOneLanguage_MODAL(
   }, [modal_LANG?.id]);
 
   const cancel = useCallback(() => {
-    SET_modalLang(list_LANGS.find((lang) => lang.id === chosenLang_ID));
+    SET_modalLang(list_LANGS?.find((lang) => lang.id === chosenLang_ID));
     TOGGLE_open();
   }, []);
 
