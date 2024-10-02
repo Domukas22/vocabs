@@ -173,7 +173,7 @@ export default function Explore_PAGE() {
         HANDLE_vocabModal={HANDLE_vocabModal}
         IS_admin={user?.is_admin}
       />
-      {z_ARE_publicVocabsLoading || (ARE_vocabsSearching && <List_SKELETONS />)}
+      {(z_ARE_publicVocabsLoading || ARE_vocabsSearching) && <List_SKELETONS />}
 
       {!z_ARE_publicVocabsLoading &&
         !ARE_vocabsSearching &&

@@ -4,26 +4,29 @@
 
 import Highlighted_TEXT from "@/src/components/Highlighted_TEXT/Highlighted_TEXT";
 import { ICON_difficultyDot, ICON_flag } from "@/src/components/icons/icons";
+import Label from "@/src/components/Label/Label";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
 import {
   VocabDisplaySettings_PROPS,
   Translation_MODEL,
   TranslationCreation_PROPS,
+  Language_MODEL,
 } from "@/src/db/models";
+import i18next, { t } from "i18next";
 import { useMemo } from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 
 interface VocabFront_PROPS {
   vocab_id: string;
   displaySettings: VocabDisplaySettings_PROPS;
-
   translations: Translation_MODEL[] | undefined;
   difficulty: 0 | 1 | 2 | 3 | undefined;
   description: string | undefined;
   open: boolean;
   TOGGLE_open: () => void;
   highlighted?: boolean;
+  targetLang?: Language_MODEL;
 }
 
 export default function Vocab_FRONT({
@@ -35,6 +38,7 @@ export default function Vocab_FRONT({
   open,
   TOGGLE_open,
   highlighted,
+  targetLang,
 }: VocabFront_PROPS) {
   const {
     SHOW_image,
@@ -52,13 +56,11 @@ export default function Vocab_FRONT({
           tr.text !== "" &&
           tr.text !== undefined &&
           tr.text !== null
-      ) ||
-      translations?.find(
-        (tr) => tr.text !== "" && tr.text !== undefined && tr.text !== null
-      ) ||
-      null
+      ) || null
     );
   }, [translations, frontTrLang_ID]);
+
+  const appLang = useMemo(() => i18next.language, [i18next.language]);
 
   return (
     <Pressable
@@ -77,12 +79,18 @@ export default function Vocab_FRONT({
       )}
       {!open && (
         <View style={s.content}>
-          {front_TR && (
+          {front_TR ? (
             <Highlighted_TEXT
               text={front_TR?.text || "EMPTY TRANSLATION"}
               highlights={front_TR?.highlights || []}
               modal_DIFF={difficulty || 0}
             />
+          ) : (
+            <Label>
+              {t("label.missingTranslationPre") +
+                frontTrLang_ID.toLocaleUpperCase() +
+                t("label.missingTranslationPost")}
+            </Label>
           )}
           {SHOW_description && description && (
             <Styled_TEXT type="label_small">{description}</Styled_TEXT>
@@ -125,6 +133,6 @@ const s = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-end",
     gap: 4,
-    marginTop: 4,
+    marginTop: 12,
   },
 });

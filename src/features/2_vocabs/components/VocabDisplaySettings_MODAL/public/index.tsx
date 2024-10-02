@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import { ScrollView } from "react-native";
 import { VocabDisplaySettings_PROPS } from "@/src/db/models";
 import DisplaySettings_SUBNAV from "../components/DisplaySettings_SUBNAV/DisplaySettings_SUBNAV";
-import PublicVocabPreview_BLOCK from "../components/VocabPreview_BLOCK/private";
+import PublicVocabPreview_BLOCK from "../components/VocabPreview_BLOCK/public";
 import Big_MODAL from "@/src/components/Modals/Big_MODAL/Big_MODAL";
 import Header from "@/src/components/Header/Header";
 import { useTranslation } from "react-i18next";

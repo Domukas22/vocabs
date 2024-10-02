@@ -10,12 +10,17 @@ import {
   ICON_shuffle,
   ICON_flag,
   ICON_dropdownArrow,
+  ICON_X,
+  ICON_questionMark,
 } from "@/src/components/icons/icons";
 import Label from "@/src/components/Label/Label";
+import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
 import { Language_MODEL, VocabDisplaySettings_PROPS } from "@/src/db/models";
+import { USE_toggle } from "@/src/hooks/USE_toggle";
 import i18next, { t } from "i18next";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { View } from "react-native";
 
 export default function VocabFrontLang_BLOCK({
   selectedLang_ID,
@@ -32,18 +37,38 @@ export default function VocabFrontLang_BLOCK({
 
   const appLang = useMemo(() => i18next.language, []);
 
+  const [SHOW_details, TOGGLE_showDetails] = USE_toggle(false);
+
   return (
     <Block row={false}>
       <Label>{t("label.vocabFrontLang")}</Label>
-      <Btn
-        iconLeft={<ICON_flag lang={lang?.id} />}
-        text={lang?.[`lang_in_${appLang}`]}
-        iconRight={<ICON_dropdownArrow />}
-        onPress={TOGGLE_modal}
-        style={{ flex: 1 }}
-        text_STYLES={{ flex: 1 }}
-      />
-      <Label>{t("label.vocabFrontLangExplanation")}</Label>
+      <View style={{ gap: 8, flexDirection: "row" }}>
+        <Btn
+          iconLeft={<ICON_flag lang={lang?.id} />}
+          text={lang?.[`lang_in_${appLang}`]}
+          iconRight={<ICON_dropdownArrow />}
+          onPress={TOGGLE_modal}
+          style={{ flex: 1 }}
+          text_STYLES={{ flex: 1 }}
+        />
+        <Btn
+          iconLeft={
+            SHOW_details ? <ICON_X big rotate /> : <ICON_questionMark />
+          }
+          type={SHOW_details ? "seethrough" : "simple"}
+          onPress={TOGGLE_showDetails}
+        />
+      </View>
+      {SHOW_details && (
+        <View style={{ gap: 4 }}>
+          <Styled_TEXT type="label">
+            {t("label.vocabFrontLangExplanation1")}
+          </Styled_TEXT>
+          <Styled_TEXT type="label">
+            {t("label.vocabFrontLangExplanation2")}
+          </Styled_TEXT>
+        </View>
+      )}
     </Block>
   );
 }

@@ -18,6 +18,8 @@ export function USE_searchedVocabs(vocabs: Vocab_MODEL[]) {
 
   useEffect(() => {
     const filter = async () => {
+      console.log("TRIGGER");
+
       // Use setTimeout to offload filtering to the event loop
       const filtered = await new Promise<Vocab_MODEL[]>((resolve) => {
         setTimeout(() => {

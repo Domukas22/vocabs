@@ -51,6 +51,7 @@ export default function SingleList_PAGE() {
       sorting: "difficulty",
       sortDirection: "ascending",
       difficultyFilters: [],
+      langFilters: [],
     });
 
   const { searched_VOCABS, search, SEARCH_vocabs, ARE_vocabsSearching } =
@@ -114,7 +115,10 @@ export default function SingleList_PAGE() {
             TOGGLE_displaySettings,
             HANDLE_vocabModal,
           }}
-          activeFitlers={displaySettings.difficultyFilters.length}
+          activeFitlers={
+            displaySettings.difficultyFilters.length +
+            displaySettings.langFilters.length
+          }
         />
       )}
       {ARE_vocabsSearching || ARE_vocabsFiltering ? <List_SKELETONS /> : null}
@@ -135,12 +139,14 @@ export default function SingleList_PAGE() {
         />
       ) : (
         <EmptyFlatList_BOTTM
-          emptyBox_TEXT={t("label.thisListIsEmpty")}
-          // emptyBox_TEXT={
-          //   search === ""
-          //     ? t("label.youDontHaveAnyLists")
-          //     : t("label.noListsFound")
-          // }
+          // emptyBox_TEXT={t("label.thisListIsEmpty")}
+          emptyBox_TEXT={
+            search !== "" ||
+            displaySettings.langFilters.length > 0 ||
+            displaySettings.difficultyFilters.length > 0
+              ? t("label.noListsFound")
+              : t("label.youDontHaveAnyLists")
+          }
           btn_TEXT={t("btn.createVocab")}
           btn_ACTION={() => HANDLE_vocabModal({ clear: true })}
         />

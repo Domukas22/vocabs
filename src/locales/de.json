@@ -151,10 +151,14 @@
     "noAccountYet": "Hast du noch kein Profil?",
     "alreadyHaveAccount": "Hast du bereits ein Profil?",
     "thisListIsEmpty": "Diese Liste ist leer",
-    "vocabFrontLang": "Welche Sprache soll angezeigt werden, wenn die Vokabel geschlossen ist?",
-    "vocabFrontLangExplanation": "Wenn es für eine Vokabel keine Übersetzung mit der ausgewählten Sprache gibt, wird die erste Übersetzung des Vokabels angezeigt",
+    "vocabFrontLang": "Übersetzung der Vorderseite",
+    "vocabFrontLangExplanation2": "Wenn es für eine Vokabel keine Übersetzung mit der ausgewählten Sprache gibt, wird die erste Übersetzung des Vokabels angezeigt.",
     "noLanguagesFound": "Keine Sprachen gefunden",
-    "langaugesOfThisList": "Alle Sprachen dieser Liste"
+    "langaugesOfThisList": "Alle Sprachen dieser Liste",
+    "vocabFrontLangExplanation1": "Die ausgewählte Sprache wird vorne des Vokabels angezeigt, wenn es geschlossen ist.",
+    "missingTranslationPre": "Keine Übersetzung auf ",
+    "missingTranslationPost": " ",
+    "filterByLanguage": "Nach Sprache filtern"
   },
   "modal": {
     "displaySettings": {
@@ -206,7 +210,7 @@
     "translation": "Vocabs app ist cool",
     "listName": "Name der Liste",
     "description": "Beschreibung des Vokabels",
-    "title": "Vocabs app is mega"
+    "title": "Vocabs App ist super"
   },
   "word": {
     "translation": "Übersetzung",

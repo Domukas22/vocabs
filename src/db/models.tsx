@@ -22,7 +22,8 @@ export interface Language_MODEL {
   lang_in_de: string;
   country_in_en: string;
   country_in_de: string;
-  available_as_in_app_lang: boolean;
+  translation_example: string;
+  translation_example_highlights: number[];
 }
 export interface List_MODEL {
   id: string;
@@ -47,14 +48,6 @@ export interface Vocab_MODEL {
 
   translations?: Translation_MODEL[];
 }
-export interface PublicVocab_MODEL {
-  id: string;
-  description: string | "";
-  image: string | "";
-  created_at: string;
-
-  public_translations?: Translation_MODEL[];
-}
 // --------------------------------------------------------------------------------------------
 export interface Translation_MODEL {
   id: string;
@@ -67,7 +60,6 @@ export interface Translation_MODEL {
 
   created_at: string;
 }
-
 // --------------------------------------------------------------------------------------------
 
 export interface TranslationCreation_PROPS {
@@ -85,4 +77,5 @@ export interface VocabDisplaySettings_PROPS {
   sorting: "shuffle" | "difficulty" | "date";
   sortDirection: "ascending" | "descending";
   difficultyFilters: (1 | 2 | 3)[];
+  langFilters: string[];
 }

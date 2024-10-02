@@ -41,7 +41,10 @@ export const Langs_PROVIDER: React.FC<LangsProviderProps> = ({ children }) => {
     const fetchLanguages = async () => {
       SET_areLanguagesLoading(true);
       try {
-        const { data, error } = await supabase.from("languages").select("*");
+        const { data, error } = await supabase
+          .from("languages")
+          .select("*")
+          .order("lang_in_en", { ascending: true });
         if (error) {
           throw error;
         }

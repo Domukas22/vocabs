@@ -19,12 +19,20 @@ export default function USE_filteredVocabs({
         setTimeout(() => {
           let result = [...vocabs];
 
-          const { sorting, sortDirection, difficultyFilters } = displaySettings;
+          const { sorting, sortDirection, difficultyFilters, langFilters } =
+            displaySettings;
 
           // Apply difficulty filters
           if (difficultyFilters && difficultyFilters.length > 0) {
             result = result.filter((vocab) =>
               difficultyFilters.includes(vocab?.difficulty)
+            );
+          }
+
+          // Apply langauge filters
+          if (langFilters && langFilters.length > 0) {
+            result = result.filter((vocab) =>
+              vocab.translations?.some((tr) => langFilters.includes(tr.lang_id))
             );
           }
 
@@ -35,12 +43,9 @@ export default function USE_filteredVocabs({
 
               switch (sorting) {
                 case "difficulty":
-                  console.log("by diff");
-
                   comparison = a.difficulty - b.difficulty;
                   break;
                 case "date":
-                  console.log("by date");
                   comparison =
                     new Date(b.created_at).getTime() -
                     new Date(a.created_at).getTime();

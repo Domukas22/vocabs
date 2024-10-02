@@ -88,49 +88,46 @@ export default function SelectMyList_MODAL({
           <SearchBar value={search} SET_value={SEARCH_lists} />
         </Subnav>
 
-        {!ARE_listsSearching && z_lists.length > 0 && (
-          <FlatList
-            data={
-              search === ""
-                ? z_lists
-                : searched_LISTS.filter((list) =>
-                    list.name.toLowerCase().includes(search.toLowerCase())
-                  )
-            }
-            ListFooterComponent={
-              <Btn
-                iconLeft={<ICON_X color="primary" />}
-                text={t("btn.createList")}
-                onPress={TOGGLE_createListModal}
-                type="seethrough_primary"
-                style={{ flex: 1 }}
-              />
-            }
-            renderItem={({ item }: { item: List_MODEL }) => (
-              <Btn
-                key={item.id + "list btn" + item.name}
-                text={item.name}
-                iconRight={
-                  item.id === selectedModal_LIST?.id && (
-                    <ICON_checkMark color="primary" />
-                  )
-                }
-                onPress={() => {
-                  SET_selectedModalList(item);
-                  SEARCH_lists("");
-                }}
-                type={item.id === selectedModal_LIST?.id ? "active" : "simple"}
-                style={[
-                  { flex: 1, marginBottom: 8 },
-                  item.id !== selectedModal_LIST?.id && { paddingRight: 40 },
-                ]}
-                text_STYLES={{ flex: 1 }}
-              />
-            )}
-            keyExtractor={(item) => item.id + "list btn" + item.name}
-            style={{ padding: 12, flex: 1 }}
-          />
-        )}
+        {!ARE_listsSearching &&
+          z_lists.length > 0 &&
+          searched_LISTS.length > 0 && (
+            <FlatList
+              data={searched_LISTS}
+              ListFooterComponent={
+                <Btn
+                  iconLeft={<ICON_X color="primary" />}
+                  text={t("btn.createList")}
+                  onPress={TOGGLE_createListModal}
+                  type="seethrough_primary"
+                  style={{ flex: 1 }}
+                />
+              }
+              renderItem={({ item }: { item: List_MODEL }) => (
+                <Btn
+                  key={item.id + "list btn" + item.name}
+                  text={item.name}
+                  iconRight={
+                    item.id === selectedModal_LIST?.id && (
+                      <ICON_checkMark color="primary" />
+                    )
+                  }
+                  onPress={() => {
+                    SET_selectedModalList(item);
+                  }}
+                  type={
+                    item.id === selectedModal_LIST?.id ? "active" : "simple"
+                  }
+                  style={[
+                    { flex: 1, marginBottom: 8 },
+                    item.id !== selectedModal_LIST?.id && { paddingRight: 40 },
+                  ]}
+                  text_STYLES={{ flex: 1 }}
+                />
+              )}
+              keyExtractor={(item) => item.id + "list btn" + item.name}
+              style={{ padding: 12, flex: 1 }}
+            />
+          )}
 
         {z_ARE_listsLoading && <Styled_TEXT>Loading</Styled_TEXT>}
         {!z_ARE_listsLoading && z_lists.length === 0 && (

@@ -13,6 +13,11 @@ import { Language_MODEL, TranslationCreation_PROPS } from "@/src/db/models";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
 import Big_MODAL from "@/src/components/Modals/Big_MODAL/Big_MODAL";
+import {
+  GestureHandlerRootView,
+  NativeViewGestureHandler,
+  ScrollView,
+} from "react-native-gesture-handler";
 
 interface TrHighlightsModal_PROPS {
   open: boolean;
@@ -86,26 +91,28 @@ export default function TrHighlights_MODAL({
           />
         }
       />
-      <View style={{ flex: 1, padding: 16, gap: 8 }}>
-        {appLang === "en" && (
-          <Label icon={<ICON_flag lang={_lang?.id} />}>{`${
-            _lang?.lang_in_en
-          } ${t("word.highlights")}`}</Label>
-        )}
-        {appLang === "de" && (
-          <Label icon={<ICON_flag lang={_lang?.id} />}>{`${t(
-            "word.highlights"
-          )} auf ${_lang?.lang_in_de}`}</Label>
-        )}
-        <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 4 }}>
-          {GET_highlightBtns({
-            text,
-            highlights: _highlights,
-            SET_highlights,
-            modal_DIFF,
-          })}
-        </View>
-      </View>
+      <GestureHandlerRootView>
+        <ScrollView style={{ flex: 1, padding: 16, gap: 8 }}>
+          {appLang === "en" && (
+            <Label icon={<ICON_flag lang={_lang?.id} />}>{`${
+              _lang?.lang_in_en
+            } ${t("word.highlights")}`}</Label>
+          )}
+          {appLang === "de" && (
+            <Label icon={<ICON_flag lang={_lang?.id} />}>{`${t(
+              "word.highlights"
+            )} auf ${_lang?.lang_in_de}`}</Label>
+          )}
+          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 4 }}>
+            {GET_highlightBtns({
+              text,
+              highlights: _highlights,
+              SET_highlights,
+              modal_DIFF,
+            })}
+          </View>
+        </ScrollView>
+      </GestureHandlerRootView>
 
       <Footer
         btnLeft={

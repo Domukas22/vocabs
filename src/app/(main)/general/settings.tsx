@@ -33,7 +33,7 @@ export default function Settings_PAGE() {
   const changeLanguage = (lng: string) => {
     i18next.changeLanguage(lng);
   };
-  const appLang = useMemo(() => i18next.language, []);
+  const appLang = useMemo(() => i18next.language, [i18next.language]);
 
   return (
     <Page_WRAP>

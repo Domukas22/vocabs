@@ -148,10 +148,14 @@
     "noAccountYet": "Don't have an account yet?",
     "alreadyHaveAccount": "Already have an account?",
     "thisListIsEmpty": "This list is empty",
-    "vocabFrontLang": "Which language should be displayed when the vocab is closed?",
-    "vocabFrontLangExplanation": "If a vocab does not have a translation with the selected language, the first translation of the vocab will be displayed ",
+    "vocabFrontLang": "Front vocab translation",
+    "vocabFrontLangExplanation2": "If a vocab does not have a translation with the selected language, the first translation of the vocab will be displayed.",
     "noLanguagesFound": "No languages found",
-    "langaugesOfThisList": "All languages in this list"
+    "langaugesOfThisList": "All languages in this list",
+    "vocabFrontLangExplanation1": "The selected language will be the one shown at the front of the vocab when it's closed.",
+    "missingTranslationPre": "Missing ",
+    "missingTranslationPost": " translation",
+    "filterByLanguage": "Filter by language"
   },
   "modal": {
     "displaySettings": {
@@ -203,7 +207,7 @@
     "translation": "Vocabs app is awesome",
     "listName": "Name of the list",
     "description": "Vocab description",
-    "title": "Vocabs app is awesome"
+    "title": "Vocabs app is great"
   },
   "word": {
     "translation": "translation",

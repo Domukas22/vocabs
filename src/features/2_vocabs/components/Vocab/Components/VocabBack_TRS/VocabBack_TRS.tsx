@@ -23,7 +23,7 @@ export default function VocabBack_TRS({
             <ICON_flag big={true} lang={tr.lang_id} />
           </View>
           {tr?.highlights && (
-            <View style={{ paddingVertical: 16, flex: 1 }}>
+            <View style={s.trText_WRAP}>
               <Highlighted_TEXT
                 text={tr.text}
                 highlights={tr.highlights}
@@ -48,5 +48,10 @@ const s = StyleSheet.create({
     alignItems: "center",
     height: 58,
     width: 50,
+  },
+  trText_WRAP: {
+    paddingVertical: 16,
+    paddingRight: 12,
+    flex: 1,
   },
 });
