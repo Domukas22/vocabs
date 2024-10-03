@@ -235,6 +235,8 @@
     "publicVocabCreated": "Öffentliches Vokabel erstellt",
     "publicVocabUpdated": "Öffentliches Vokabel bearbeitet",
     "publicVocabDeleted": "Öffentliches Vokabel gelöscht",
-    "listCreated": "Neue Liste erstellt"
+    "listCreated": "Neue Liste erstellt",
+    "listDeletedPre": "Liste ",
+    "listDeletedPost": " gelöscht"
   }
 }

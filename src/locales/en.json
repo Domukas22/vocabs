@@ -232,6 +232,8 @@
     "publicVocabCreated": "Public vocab created",
     "publicVocabUpdated": "Public vocab updated",
     "publicVocabDeleted": "Public vocab deleted",
-    "listCreated": "Created a new list"
+    "listCreated": "Created a new list",
+    "listDeletedPre": "Deleted list ",
+    "listDeletedPost": " "
   }
 }

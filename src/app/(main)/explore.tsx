@@ -118,7 +118,7 @@ export default function Explore_PAGE() {
         SET_targetSaveVocab(undefined);
         toast.show(t("notifications.vocabCopied"), {
           type: "green",
-          duration: 2000,
+          duration: 5000,
         });
       }
     }
@@ -151,7 +151,7 @@ export default function Explore_PAGE() {
       SET_highlightedVocabId(id);
       setTimeout(() => {
         SET_highlightedVocabId("");
-      }, 2000);
+      }, 5000);
     }
   };
 

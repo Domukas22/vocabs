@@ -5,7 +5,7 @@
 import { useState, useCallback } from "react";
 
 // Custom hook to handle highlighting a boolean state
-export function USE_highlightBoolean(duration: number = 2000) {
+export function USE_highlightBoolean(duration: number = 5000) {
   const [isHighlighted, SET_isHighlighted] = useState(false);
 
   const highlight = useCallback(() => {

@@ -6,7 +6,7 @@ import React, { useCallback, useEffect, useState } from "react";
 
 let locked = false;
 
-export default function USE_highlighedId(duration: number = 2000) {
+export default function USE_highlighedId(duration: number = 5000) {
   const [highlighted_ID, setHighlightedId] = useState<string | null>(null);
   const [locked, setLocked] = useState(false);
 

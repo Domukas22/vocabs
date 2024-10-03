@@ -201,7 +201,7 @@ export default function SingleList_PAGE() {
           SET_toDeleteVocab(undefined);
           toast.show(t("notifications.vocabDeleted"), {
             type: "green",
-            duration: 2000,
+            duration: 5000,
           });
           SET_deleteVocabModal(false);
         }}

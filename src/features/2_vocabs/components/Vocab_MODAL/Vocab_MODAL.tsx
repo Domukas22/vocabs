@@ -124,7 +124,7 @@ export default function Vocab_MODAL(props: ManageVocabModal_PROPS) {
       HIGHLIGHT_vocab(newVocab.data.id);
       toast.show(t("notifications.publicVocabCreated"), {
         type: "green",
-        duration: 2000,
+        duration: 5000,
       });
     }
   }

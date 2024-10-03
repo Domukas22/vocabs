@@ -1,8 +1,8 @@
 Modals + valdiation + error handling for:
 
 - 🟢 Create list
-- Delete list
-- Update list name
+- 🟢 Delete list
+- 🟢 Update list name
 - Fetch lists
 
 - Create vocab

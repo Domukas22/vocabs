@@ -39,7 +39,7 @@ export default function USE_renameList() {
       console.log("🟢 List renamed 🟢");
       toast.show(t("notifications.listRenamed"), {
         type: "green",
-        duration: 2000,
+        duration: 5000,
       });
 
       return { success: true, msg: "🟢 List renamed 🟢" };

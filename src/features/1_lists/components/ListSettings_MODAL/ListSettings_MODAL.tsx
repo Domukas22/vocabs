@@ -15,7 +15,7 @@ import { USE_langs } from "@/src/context/Langs_CONTEXT";
 import { Language_MODEL, List_MODEL } from "@/src/db/models";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 import GET_langs from "@/src/utils/GET_langs";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 import USE_myListActions from "../../hooks/USE_myListActions";
@@ -27,6 +27,8 @@ import DeleteList_MODAL from "../DeleteList_MODAL";
 import USE_zustand from "@/src/zustand";
 import { useToast } from "react-native-toast-notifications";
 import { useRouter } from "expo-router";
+import UpdateList_MODAL from "../UpdateList_MODAL";
+import { MyColors } from "@/src/constants/MyColors";
 
 interface ListSettingsModal_PROPS {
   list: List_MODEL;
@@ -48,7 +50,7 @@ export default function ListSettings_MODAL({
   const { languages } = USE_langs();
   const { t } = useTranslation();
   const { user } = USE_auth();
-  const { z_DELETE_privateList } = USE_zustand();
+  const { z_lists, z_DELETE_privateList, z_RENAME_privateList } = USE_zustand();
   const toast = useToast();
   const router = useRouter();
 
@@ -59,7 +61,8 @@ export default function ListSettings_MODAL({
   ] = USE_toggle(false);
   const [SHOW_deleteModal, TOGGLE_deleteModal, SET_deleteModal] =
     USE_toggle(false);
-  const [SHOW_renameListModal, TOGGLE_renameListModal] = USE_toggle(false);
+  const [SHOW_renameListModal, TOGGLE_renameListModal, SET_updateListModal] =
+    USE_toggle(false);
 
   const langs = useMemo(
     () => GET_langs({ languages, target: list.default_TRs }),
@@ -89,6 +92,16 @@ export default function ListSettings_MODAL({
     },
   });
 
+  const [IS_listNameHighlighted, SET_isListNameHighlighted] = useState(false);
+  const HIGHLIGHT_modalListName = () => {
+    if (!IS_listNameHighlighted) {
+      SET_isListNameHighlighted(true);
+      setTimeout(() => {
+        SET_isListNameHighlighted(false);
+      }, 3000);
+    }
+  };
+
   return (
     <Big_MODAL open={open}>
       <Header
@@ -109,7 +122,15 @@ export default function ListSettings_MODAL({
       >
         <View style={{ flex: 1 }}>
           <Styled_TEXT type="text_18_bold">{t("label.listName")}</Styled_TEXT>
-          <Styled_TEXT>{list.name || "NO LIST NAME PROVIDED"}</Styled_TEXT>
+          <Styled_TEXT
+            style={{
+              color: IS_listNameHighlighted
+                ? MyColors.text_green
+                : MyColors.text_white,
+            }}
+          >
+            {list.name || "NO LIST NAME PROVIDED"}
+          </Styled_TEXT>
           {/* <Styled_TEXT>{user?.email || "---"}</Styled_TEXT> */}
         </View>
         <Btn text="Edit" onPress={TOGGLE_renameListModal} />
@@ -160,7 +181,7 @@ export default function ListSettings_MODAL({
         IS_inAction={IS_updatingDefaultListTRs}
       />
 
-      <RenameList_MODAL
+      {/* <RenameList_MODAL
         open={SHOW_renameListModal}
         toggle={TOGGLE_renameListModal}
         title={t("modal.listSettings.renameListModalTitle")}
@@ -168,6 +189,23 @@ export default function ListSettings_MODAL({
         IS_inAction={IS_renamingList}
         actionBtnText={t("btn.confirmListRename")}
         current_NAME={list.name}
+      /> */}
+      <UpdateList_MODAL
+        user={user}
+        IS_open={SHOW_renameListModal}
+        currentList={list}
+        currentList_NAMES={z_lists?.map((l) => l.name)}
+        CLOSE_modal={() => SET_updateListModal(false)}
+        onSuccess={(updatedList: List_MODEL) => {
+          z_RENAME_privateList(updatedList.id, updatedList.name);
+          toast.show(t("notifications.listRenamed"), {
+            type: "green",
+            duration: 5000,
+          });
+          SET_updateListModal(false);
+          HIGHLIGHT_listName();
+          HIGHLIGHT_modalListName();
+        }}
       />
       {/* ----- DELETE confirmation ----- */}
       {/* <Confirmation_MODAL
@@ -185,10 +223,15 @@ export default function ListSettings_MODAL({
         CLOSE_modal={() => SET_deleteModal(false)}
         onSuccess={(deletedList: List_MODEL) => {
           z_DELETE_privateList(deletedList?.id);
-          toast.show(t("notifications.listDeleted"), {
-            type: "green",
-            duration: 2000,
-          });
+          toast.show(
+            t("notifications.listDeletedPre") +
+              `"${deletedList?.name}"` +
+              t("notifications.listDeletedPost"),
+            {
+              type: "green",
+              duration: 5000,
+            }
+          );
           SET_deleteModal(false);
           TOGGLE_open();
           router.back();

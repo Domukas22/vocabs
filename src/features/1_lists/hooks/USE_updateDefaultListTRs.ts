@@ -42,7 +42,7 @@ export default function USE_updateDefaultListTRs() {
       console.log("🟢 Default TRs updated 🟢");
       toast.show(t("notifications.defaultTRsUpdated"), {
         type: "green",
-        duration: 2000,
+        duration: 5000,
       });
 
       return { success: true, msg: "🟢 Default TRs updated successfully 🟢" };

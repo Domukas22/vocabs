@@ -138,7 +138,7 @@ export default function MyLists_PAGE() {
           z_CREATE_privateList(newList);
           toast.show(t("notifications.listCreated"), {
             type: "green",
-            duration: 2000,
+            duration: 5000,
           });
           SET_createListModal(false);
         }}

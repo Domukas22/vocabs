@@ -61,7 +61,7 @@ export default function USE_updateVocabDifficulty() {
       console.log("🟢 Vocab difficulty updated 🟢");
       toast.show(t("notifications.vocabDifficultyUpdated"), {
         type: "green",
-        duration: 2000,
+        duration: 5000,
       });
 
       return { success: true };
