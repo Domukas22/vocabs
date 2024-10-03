@@ -1,55 +1,118 @@
-import { useState } from "react";
+//
+//
+//
+import { List_MODEL, User_MODEL } from "@/src/db/models";
 import { supabase } from "@/src/lib/supabase";
-import USE_zustand from "@/src/zustand";
-import { useToast } from "react-native-toast-notifications";
-import { useTranslation } from "react-i18next";
+import { useCallback, useMemo, useState } from "react";
+
+interface ListDelete_PROPS {
+  user?: User_MODEL;
+  list_id: string;
+  onSuccess?: (deletedList: List_MODEL) => void;
+}
 
 export default function USE_deleteList() {
-  const [IS_deletingList, SET_deletingList] = useState(false);
-  const [deleteList_ERROR, SET_deleteListError] = useState<string | null>(null);
-  const toast = useToast();
-  const { t } = useTranslation();
+  const [IS_deletingList, SET_isDeletingList] = useState(false);
+  const [error, SET_error] = useState<string | null>(null);
+  const RESET_error = useCallback(() => SET_error(null), []);
 
-  const { z_DELETE_privateList } = USE_zustand();
+  const errorMessage = useMemo(
+    () =>
+      "Some kind of error happened when trying to delete the list. This is an issue on our side. Please try to re-load the app and see if the problem persists. The issue has been recorded and will be reviewed by developers as soon as possible. We are sorry for the trouble.",
+    []
+  );
 
-  const DELETE_list = async (
-    targetList_ID: string
-  ): Promise<{
-    success: boolean;
-    msg?: string;
-  }> => {
+  const DELETE_list = async ({
+    user,
+    list_id,
+    onSuccess,
+  }: ListDelete_PROPS) => {
+    SET_error(null); // Clear previous error
+
+    // Validation checks
+    if (!list_id) {
+      SET_error(errorMessage);
+      return { success: false, msg: "🔴 List ID not provided for deletion 🔴" };
+    }
+
+    if (!user?.id) {
+      SET_error(errorMessage);
+      return {
+        success: false,
+        msg: "🔴 User ID missing for list deletion 🔴",
+      };
+    }
+
+    SET_isDeletingList(true);
     try {
-      SET_deletingList(true);
-      SET_deleteListError(null); // Reset error state before deleting the list
-
-      const { error } = await supabase
+      // Validate that the list exists for the given user
+      const { data: listData, error: listError } = await supabase
         .from("lists")
-        .delete()
-        .eq("id", targetList_ID);
+        .select()
+        .eq("id", list_id)
+        .eq("user_id", user?.id)
+        .single();
 
-      // Handle potential errors
-      if (error) {
-        console.error("🔴 Error deleting list: 🔴", error);
-        SET_deleteListError("🔴 Error deleting list 🔴");
-        return { success: false, msg: "🔴 Error deleting list 🔴" };
+      if (listError) {
+        SET_error(errorMessage);
+        return {
+          success: false,
+          msg: `🔴 Error fetching list with ID ${list_id} for user ${user?.id} 🔴: ${listError.message}`,
+        };
       }
 
-      z_DELETE_privateList(targetList_ID);
-      console.log("🟢 List deleted 🟢");
-      toast.show(t("notifications.listDeleted"), {
-        type: "green",
-        duration: 2000,
-      });
+      if (!listData) {
+        SET_error(
+          "It seems this list has already been deleted or could not be found."
+        );
+        return {
+          success: false,
+          msg: `🔴 List with ID ${list_id} not found for user ${user?.id} 🔴`,
+        };
+      }
 
-      return { success: true, msg: "🟢 List deleted successfully 🟢" };
-    } catch (error) {
-      console.error("🔴 Unexpected error deleting list: 🔴", error);
-      SET_deleteListError("🔴 Unexpected error occurred. 🔴");
-      return { success: false, msg: "🔴 Unexpected error occurred. 🔴" };
+      // Delete associated data if applicable (optional - add logic for related data if needed)
+
+      // Delete the list
+      const { data: deletedListData, error: deleteError } = await supabase
+        .from("lists")
+        .delete()
+        .eq("id", list_id)
+        .select()
+        .single();
+
+      if (deleteError) {
+        SET_error(errorMessage);
+        return {
+          success: false,
+          msg: `🔴 Error deleting list with ID ${list_id} 🔴: ${deleteError.message}`,
+        };
+      }
+
+      // Log success message
+      console.log("🟢 List deleted successfully 🟢");
+
+      // Post-delete callback
+      if (onSuccess) onSuccess(deletedListData);
+
+      return { success: true, data: deletedListData };
+    } catch (error: any) {
+      // Handle network or connection errors differently
+      if (error.message === "Failed to fetch") {
+        SET_error(
+          "There seems to be an issue with your internet connection. Please check and try again."
+        );
+      } else {
+        SET_error(errorMessage);
+      }
+      return {
+        success: false,
+        msg: `🔴 Unexpected error occurred during deletion of list ID ${list_id} 🔴: ${error.message}`,
+      };
     } finally {
-      SET_deletingList(false); // Always stop loading after the request
+      SET_isDeletingList(false);
     }
   };
 
-  return { DELETE_list, IS_deletingList, deleteList_ERROR };
+  return { DELETE_list, IS_deletingList, error, RESET_error };
 }

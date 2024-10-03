@@ -7,7 +7,8 @@
     "createAnAccount": "Create a new account",
     "login": "Welcome back!",
     "selectOneLanguage": "Select a language",
-    "addToPublic": "Add vocab to public?"
+    "addToPublic": "Add vocab to public?",
+    "deleteList": "Delete list?"
   },
   "blockLabels": {
     "uiLang": "App language"

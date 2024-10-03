@@ -35,7 +35,6 @@ export default function Login_PAGE() {
   const [loading, SET_loading] = useState(false);
   const [internal_ERROR, SET_internalError] = useState("");
   const { t } = useTranslation();
-  const router = useRouter();
 
   const login = async (data: LoginData_PROPS) => {
     const { email, password } = data;

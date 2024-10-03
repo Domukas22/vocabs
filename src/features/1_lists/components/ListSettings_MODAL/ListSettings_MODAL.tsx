@@ -22,6 +22,11 @@ import USE_myListActions from "../../hooks/USE_myListActions";
 import RenameList_MODAL from "../RenameList_MODAL/RenameList_MODAL";
 import Footer from "@/src/components/Footer/Footer";
 import Dropdown_BLOCK from "@/src/components/Dropdown_BLOCK/Dropdown_BLOCK";
+import { USE_auth } from "@/src/context/Auth_CONTEXT";
+import DeleteList_MODAL from "../DeleteList_MODAL";
+import USE_zustand from "@/src/zustand";
+import { useToast } from "react-native-toast-notifications";
+import { useRouter } from "expo-router";
 
 interface ListSettingsModal_PROPS {
   list: List_MODEL;
@@ -42,13 +47,18 @@ export default function ListSettings_MODAL({
 }: ListSettingsModal_PROPS) {
   const { languages } = USE_langs();
   const { t } = useTranslation();
+  const { user } = USE_auth();
+  const { z_DELETE_privateList } = USE_zustand();
+  const toast = useToast();
+  const router = useRouter();
 
   const [
     SHOW_langSeletionModal,
     TOGGLE_langSelectionModal,
     SET_langSelectionModal,
   ] = USE_toggle(false);
-  const [SHOW_deleteModal, TOGGLE_deleteModal] = USE_toggle(false);
+  const [SHOW_deleteModal, TOGGLE_deleteModal, SET_deleteModal] =
+    USE_toggle(false);
   const [SHOW_renameListModal, TOGGLE_renameListModal] = USE_toggle(false);
 
   const langs = useMemo(
@@ -160,13 +170,29 @@ export default function ListSettings_MODAL({
         current_NAME={list.name}
       />
       {/* ----- DELETE confirmation ----- */}
-      <Confirmation_MODAL
+      {/* <Confirmation_MODAL
         open={SHOW_deleteModal}
         toggle={TOGGLE_deleteModal}
         title={t("modal.listSettings.deleteListconfirmation")}
         action={() => DELETE_privateList(list.id)}
         IS_inAction={IS_deletingList}
         actionBtnText={t("btn.confirmDelete")}
+      /> */}
+      <DeleteList_MODAL
+        user={user}
+        IS_open={SHOW_deleteModal}
+        list_id={list?.id}
+        CLOSE_modal={() => SET_deleteModal(false)}
+        onSuccess={(deletedList: List_MODEL) => {
+          z_DELETE_privateList(deletedList?.id);
+          toast.show(t("notifications.listDeleted"), {
+            type: "green",
+            duration: 2000,
+          });
+          SET_deleteModal(false);
+          TOGGLE_open();
+          router.back();
+        }}
       />
     </Big_MODAL>
   );

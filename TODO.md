@@ -1,6 +1,6 @@
 Modals + valdiation + error handling for:
 
-- Create list
+- 🟢 Create list
 - Delete list
 - Update list name
 - Fetch lists

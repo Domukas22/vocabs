@@ -10,7 +10,8 @@
     "createAnAccount": "Erstelle einen Profil",
     "login": "Willkommen zurück!",
     "selectOneLanguage": "Eine Sprache wählen",
-    "addToPublic": "Vokabel veröffentlichen?"
+    "addToPublic": "Vokabel veröffentlichen?",
+    "deleteList": "Liste löschen?"
   },
   "blockLabels": {
     "uiLang": "App Sprache"
