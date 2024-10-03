@@ -24,6 +24,8 @@ import {
   View,
   FlatList,
   ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import languages from "@/src/constants/languages";
 
@@ -55,9 +57,6 @@ export default function SelectOneLanguage_MODAL(
     list_LANGS?.find((lang) => lang.id === chosenLang_ID)
   );
 
-  const { searched_LANGS, search, SEARCH_langs, ARE_langsSearching } =
-    USE_searchedLangs(list_LANGS);
-
   const appLang = useMemo(() => i18next.language, [i18next.language]);
 
   const submit = useCallback(() => {
@@ -72,77 +71,76 @@ export default function SelectOneLanguage_MODAL(
 
   return (
     <Big_MODAL {...{ open }}>
-      <Header
-        title={t("header.selectOneLanguage")}
-        big={true}
-        btnRight={
-          <Btn
-            type="seethrough"
-            iconLeft={<ICON_X big={true} rotate={true} />}
-            onPress={cancel}
-            style={{ borderRadius: 100 }}
-          />
-        }
-      />
-
-      <Subnav>
-        <SearchBar value={search} SET_value={SEARCH_langs} />
-      </Subnav>
-
-      {!ARE_langsSearching && searched_LANGS.length > 0 ? (
-        <Styled_FLATLIST
-          gap={8}
-          data={searched_LANGS}
-          ListHeaderComponent={
-            <Label styles={{ marginBottom: 8 }}>
-              {t("label.langaugesOfThisList")}
-            </Label>
-          }
-          renderItem={({ item }) => {
-            return (
-              <Btn
-                key={"Select lang" + item.id + item.lang_in_en}
-                iconLeft={
-                  <View style={{ marginRight: 4 }}>
-                    <ICON_flag lang={item?.id} big={true} />
-                  </View>
-                }
-                text={appLang === "en" ? item.lang_in_en : item.lang_in_de}
-                iconRight={
-                  modal_LANG?.id === item.id && (
-                    <ICON_checkMark color="primary" />
-                  )
-                }
-                onPress={() => SET_modalLang(item)}
-                type={modal_LANG?.id === item.id ? "active" : "simple"}
-                style={{ flex: 1 }}
-                text_STYLES={{ flex: 1 }}
-              />
-            );
-          }}
-          keyExtractor={(item) => "Select lang" + item?.id + item?.lang_in_en}
-        />
-      ) : !ARE_langsSearching && searched_LANGS.length === 0 ? (
-        <EmptyFlatList_BOTTM emptyBox_TEXT={t("label.noLanguagesFound")} />
-      ) : ARE_langsSearching ? (
-        <List_SKELETONS />
-      ) : null}
-
-      <Footer
-        btnLeft={<Btn text={t("btn.cancel")} onPress={cancel} />}
-        btnRight={
-          appLang && (
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
+        <Header
+          title={t("header.selectOneLanguage")}
+          big={true}
+          btnRight={
             <Btn
-              text={`${appLang === "en" ? t("word.select") + " " : ""}${
-                modal_LANG?.[`lang_in_${appLang}`]
-              }${appLang === "de" ? " " + t("word.select") : ""}`}
-              onPress={submit}
-              type="action"
-              style={{ flex: 1 }}
+              type="seethrough"
+              iconLeft={<ICON_X big={true} rotate={true} />}
+              onPress={cancel}
+              style={{ borderRadius: 100 }}
             />
-          )
-        }
-      />
+          }
+        />
+
+        {list_LANGS?.length && list_LANGS?.length > 0 ? (
+          <Styled_FLATLIST
+            gap={8}
+            data={list_LANGS}
+            ListHeaderComponent={
+              <Label styles={{ marginBottom: 8 }}>
+                {t("label.langaugesOfThisList")}
+              </Label>
+            }
+            renderItem={({ item }) => {
+              return (
+                <Btn
+                  key={"Select lang" + item.id + item.lang_in_en}
+                  iconLeft={
+                    <View style={{ marginRight: 4 }}>
+                      <ICON_flag lang={item?.id} big={true} />
+                    </View>
+                  }
+                  text={appLang === "en" ? item.lang_in_en : item.lang_in_de}
+                  iconRight={
+                    modal_LANG?.id === item.id && (
+                      <ICON_checkMark color="primary" />
+                    )
+                  }
+                  onPress={() => SET_modalLang(item)}
+                  type={modal_LANG?.id === item.id ? "active" : "simple"}
+                  style={{ flex: 1 }}
+                  text_STYLES={{ flex: 1 }}
+                />
+              );
+            }}
+            keyExtractor={(item) => "Select lang" + item?.id + item?.lang_in_en}
+          />
+        ) : list_LANGS?.length === 0 ? (
+          <EmptyFlatList_BOTTM emptyBox_TEXT={t("label.noLanguagesFound")} />
+        ) : null}
+
+        <Footer
+          btnLeft={<Btn text={t("btn.cancel")} onPress={cancel} />}
+          btnRight={
+            appLang && (
+              <Btn
+                text={`${appLang === "en" ? t("word.select") + " " : ""}${
+                  modal_LANG?.[`lang_in_${appLang}`]
+                }${appLang === "de" ? " " + t("word.select") : ""}`}
+                onPress={submit}
+                type="action"
+                style={{ flex: 1 }}
+              />
+            )
+          }
+        />
+      </KeyboardAvoidingView>
     </Big_MODAL>
   );
 }

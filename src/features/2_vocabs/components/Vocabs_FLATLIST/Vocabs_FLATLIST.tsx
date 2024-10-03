@@ -9,6 +9,7 @@ import { VocabDisplaySettings_PROPS, Vocab_MODEL } from "@/src/db/models";
 import { useTranslation } from "react-i18next";
 import MyVocab from "../Vocab/private";
 import React from "react";
+import SwipeableExample from "@/src/components/SwipeableExample/SwipeableExample";
 
 export default function Vocabs_FLATLIST({
   vocabs,
@@ -17,6 +18,7 @@ export default function Vocabs_FLATLIST({
   TOGGLE_vocabModal,
   HANDLE_vocabModal,
   displaySettings,
+  PREPARE_vocabDelete,
 }: {
   vocabs: Vocab_MODEL[];
   SHOW_bottomBtn: React.ReactNode;
@@ -27,6 +29,7 @@ export default function Vocabs_FLATLIST({
     vocab?: Vocab_MODEL;
   };
   displaySettings: VocabDisplaySettings_PROPS;
+  PREPARE_vocabDelete?: (id: string) => {};
 }) {
   const { t } = useTranslation();
 
@@ -35,12 +38,18 @@ export default function Vocabs_FLATLIST({
       data={vocabs}
       renderItem={({ item }) => {
         return (
-          <MyVocab
-            vocab={item}
-            highlighted={highlightedVocab_ID === item.id}
-            displaySettings={displaySettings}
-            HANDLE_vocabModal={HANDLE_vocabModal}
-          />
+          <SwipeableExample
+            rightBtn_ACTION={() => {
+              if (PREPARE_vocabDelete) PREPARE_vocabDelete(item.id);
+            }}
+          >
+            <MyVocab
+              vocab={item}
+              highlighted={highlightedVocab_ID === item.id}
+              displaySettings={displaySettings}
+              HANDLE_vocabModal={HANDLE_vocabModal}
+            />
+          </SwipeableExample>
         );
       }}
       keyExtractor={(item) => "Vocab" + item.id}

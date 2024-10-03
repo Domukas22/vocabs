@@ -7,11 +7,11 @@ import Header from "@/src/components/Header/Header";
 import { ICON_X } from "@/src/components/icons/icons";
 import { useTranslation } from "react-i18next";
 
-export default function MyLists_HEADER({ TOGGLE_createListModal }) {
+export default function MyLists_HEADER({ TOGGLE_createListModal, lists }) {
   const { t } = useTranslation();
   return (
     <Header
-      title={t("header.page_list")}
+      title={`${t("header.page_list")} (${lists?.length || 0})`}
       big={true}
       btnRight={
         <Btn

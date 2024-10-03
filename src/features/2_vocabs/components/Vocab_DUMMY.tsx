@@ -36,7 +36,7 @@ export default function Vocab_DUMMY({
   } = displaySettings;
 
   const { t } = useTranslation();
-  const appLang = useMemo(() => i18next.language, []);
+
   const { languages } = USE_langs();
   const lang: Language_MODEL = useMemo(
     () => languages?.find((lang) => lang.id === frontTrLang_ID),
@@ -44,19 +44,19 @@ export default function Vocab_DUMMY({
   );
 
   return (
-    <View style={s.parent}>
-      {SHOW_image && (
+    <View>
+      {/* {SHOW_image && (
         <Image
           source={require("@/src/assets/images/dummyImage.jpg")}
           style={{ height: 160, width: "100%" }}
         />
-      )}
+      )} */}
 
-      <View style={s.content}>
+      <View>
         <Highlighted_TEXT
           text={lang?.translation_example || "INSERT TRANSLATION"}
           highlights={lang?.translation_example_highlights}
-          modal_DIFF={0}
+          modal_DIFF={3}
         />
         {SHOW_description && (
           <Styled_TEXT type="label_small">
@@ -77,22 +77,10 @@ export default function Vocab_DUMMY({
 }
 
 const s = StyleSheet.create({
-  parent: {
-    backgroundColor: MyColors.btn_1,
-    borderColor: MyColors.border_white_005,
-    overflow: "hidden",
-    borderWidth: 1,
-    borderRadius: 12,
-  },
-
-  content: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
   iconWrap: {
     flexDirection: "row",
     justifyContent: "flex-end",
     gap: 4,
-    marginTop: 4,
+    marginTop: 12,
   },
 });

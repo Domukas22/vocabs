@@ -14,6 +14,6 @@ export default function SEARCH_lists({
   if (search === "") return lists;
 
   return lists.filter((list) =>
-    list.name.toLowerCase().includes(search.toLowerCase())
+    list.name.toLowerCase().includes(search.toLowerCase().trim())
   );
 }

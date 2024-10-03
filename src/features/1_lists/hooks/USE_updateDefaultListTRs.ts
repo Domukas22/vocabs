@@ -41,7 +41,7 @@ export default function USE_updateDefaultListTRs() {
       z_UPDATE_defaultListTRs(targetList_ID, newDefaultTRs);
       console.log("🟢 Default TRs updated 🟢");
       toast.show(t("notifications.defaultTRsUpdated"), {
-        type: "custom_success",
+        type: "green",
         duration: 2000,
       });
 

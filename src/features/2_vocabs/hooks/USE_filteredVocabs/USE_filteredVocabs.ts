@@ -31,9 +31,16 @@ export default function USE_filteredVocabs({
 
           // Apply langauge filters
           if (langFilters && langFilters.length > 0) {
-            result = result.filter((vocab) =>
-              vocab.translations?.some((tr) => langFilters.includes(tr.lang_id))
-            );
+            result = result.filter((vocab) => {
+              // Get the unique language IDs from the vocab's translations
+              const vocabLangIds =
+                vocab.translations?.map((tr) => tr.lang_id) || [];
+
+              // Check if every langFilter is present in vocabLangIds
+              return langFilters.every((langId) =>
+                vocabLangIds.includes(langId)
+              );
+            });
           }
 
           // Apply sorting

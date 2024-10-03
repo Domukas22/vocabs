@@ -37,7 +37,7 @@ export default function USE_deleteList() {
       z_DELETE_privateList(targetList_ID);
       console.log("🟢 List deleted 🟢");
       toast.show(t("notifications.listDeleted"), {
-        type: "custom_success",
+        type: "green",
         duration: 2000,
       });
 

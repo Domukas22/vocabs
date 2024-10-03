@@ -136,8 +136,8 @@
     "vocabPreview": "Vocab preview",
     "selectDifficulty": "Vocab difficulty",
     "chosenLangs": "Chosen languages",
-    "uploadImage": "Image (optional)",
-    "description": "Description (optional)",
+    "uploadImage": "Image",
+    "notes": "Notes",
     "chosenList": "Chosen list",
     "youDontHaveAnyLists": "You don't have any lists yet",
     "noListsFound": "No lists found",
@@ -153,9 +153,9 @@
     "noLanguagesFound": "No languages found",
     "langaugesOfThisList": "All languages in this list",
     "vocabFrontLangExplanation1": "The selected language will be the one shown at the front of the vocab when it's closed.",
-    "missingTranslationPre": "Missing ",
-    "missingTranslationPost": " translation",
-    "filterByLanguage": "Filter by language"
+    "filterByLanguage": "Filter by language",
+    "missingTranslation": "Missing translation in ",
+    "noVocabsFound": "No vocabs found"
   },
   "modal": {
     "displaySettings": {
@@ -216,7 +216,7 @@
   },
   "placeholder": {
     "translation": "Translation...",
-    "description": "Note down the place / movie / book so that you remember better...",
+    "description": "Notes...",
     "enterNewListName": "French vocabs..."
   },
   "notifications": {

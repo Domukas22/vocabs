@@ -8,29 +8,33 @@ import Settings_TOGGLE from "@/src/components/Settings_TOGGLE/Settings_TOGGLE";
 import { MyColors } from "@/src/constants/MyColors";
 import { Language_MODEL, VocabDisplaySettings_PROPS } from "@/src/db/models";
 import Vocab_DUMMY from "@/src/features/2_vocabs/components/Vocab_DUMMY";
-import { t } from "i18next";
-import { View } from "react-native";
+import i18next, { t } from "i18next";
+import { ScrollView, View } from "react-native";
 import VocabFrontLang_BLOCK from "../../VocabFrontLang_BLOCK/VocabFrontLang_BLOCK";
+import Btn from "@/src/components/Btn/Btn";
+import { ICON_checkMark, ICON_flag } from "@/src/components/icons/icons";
+import { useMemo } from "react";
+import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 
 export default function MyVocabPreview_BLOCKS({
   displaySettings,
   SET_displaySettings,
-  TOGGLE_frontLangModal,
+  list_LANGS,
 }: {
   displaySettings: VocabDisplaySettings_PROPS;
   SET_displaySettings: React.Dispatch<
     React.SetStateAction<VocabDisplaySettings_PROPS>
   >;
-  TOGGLE_frontLangModal: () => void;
+  list_LANGS: Language_MODEL[];
 }) {
+  const appLang = useMemo(() => i18next.language, [i18next.language]);
+
   return (
     <>
       <Block>
-        <Vocab_DUMMY {...{ displaySettings }} />
-      </Block>
-      <Block>
         <Label>{t("label.vocabPreview")}</Label>
-        <View style={{ gap: 12 }}>
+
+        <View style={{ gap: 12, marginTop: 4 }}>
           <View
             style={{
               borderRadius: 16,
@@ -39,17 +43,6 @@ export default function MyVocabPreview_BLOCKS({
               overflow: "hidden",
             }}
           >
-            <Settings_TOGGLE
-              text={t("toggle.showImage")}
-              active={displaySettings?.SHOW_image}
-              onPress={() => {
-                SET_displaySettings((p) => ({
-                  ...p,
-                  SHOW_image: !p.SHOW_image,
-                }));
-              }}
-            />
-
             <Settings_TOGGLE
               text={t("toggle.showDescription")}
               active={displaySettings?.SHOW_description}
@@ -84,10 +77,46 @@ export default function MyVocabPreview_BLOCKS({
           </View>
         </View>
       </Block>
-      <VocabFrontLang_BLOCK
-        selectedLang_ID={displaySettings.frontTrLang_ID}
-        TOGGLE_modal={TOGGLE_frontLangModal}
-      />
+
+      {list_LANGS?.length && list_LANGS?.length > 0 && (
+        <Block>
+          <Label>{t("label.vocabFrontLang")}</Label>
+          <ScrollView>
+            {list_LANGS.map((lang, index) => (
+              <Btn
+                key={"Select lang" + lang.id + lang.lang_in_en}
+                iconLeft={
+                  <View style={{ marginRight: 4 }}>
+                    <ICON_flag lang={lang?.id} big={true} />
+                  </View>
+                }
+                text={appLang === "en" ? lang.lang_in_en : lang.lang_in_de}
+                iconRight={
+                  displaySettings.frontTrLang_ID === lang.id && (
+                    <ICON_checkMark color="primary" />
+                  )
+                }
+                onPress={() => {
+                  SET_displaySettings((p) => ({
+                    ...p,
+                    frontTrLang_ID: lang.id,
+                  }));
+                }}
+                type={
+                  displaySettings.frontTrLang_ID === lang.id
+                    ? "active"
+                    : "simple"
+                }
+                style={[
+                  { flex: 1, marginBottom: 8 },
+                  index === list_LANGS.length - 1 && { marginBottom: 24 },
+                ]}
+                text_STYLES={{ flex: 1 }}
+              />
+            ))}
+          </ScrollView>
+        </Block>
+      )}
     </>
   );
 }

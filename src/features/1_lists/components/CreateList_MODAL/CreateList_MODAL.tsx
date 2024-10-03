@@ -14,15 +14,15 @@ import USE_createList from "../../hooks/USE_createList";
 import { ActivityIndicator } from "react-native";
 
 interface CreateListModal_PROPS {
-  open: boolean;
-  toggle: () => void;
+  IS_open: boolean;
+  TOGGLE_modal: () => void;
   highlight?: (list_ID: string) => void;
   postCreatiion_FNS: () => void;
 }
 
 export default function CreateList_MODAL({
-  open,
-  toggle,
+  IS_open,
+  TOGGLE_modal,
   highlight,
   postCreatiion_FNS,
 }: CreateListModal_PROPS) {
@@ -35,8 +35,8 @@ export default function CreateList_MODAL({
   const inputREF = useRef(null);
 
   useEffect(() => {
-    if (open) inputREF?.current?.focus();
-  }, [open]);
+    if (IS_open) inputREF?.current?.focus();
+  }, [IS_open]);
 
   const create = async () => {
     if (!newList_NAME || !user?.id) return;
@@ -56,14 +56,13 @@ export default function CreateList_MODAL({
 
   function HANLDE_toggle() {
     SET_newListName("");
-    toggle();
+    TOGGLE_modal();
   }
 
   return (
     <Small_MODAL
+      {...{ IS_open, TOGGLE_modal }}
       title={t("btn.createList")}
-      open={open}
-      toggle={toggle}
       btnLeft={<Btn text={t("btn.cancel")} onPress={HANLDE_toggle} />}
       btnRight={
         <Btn

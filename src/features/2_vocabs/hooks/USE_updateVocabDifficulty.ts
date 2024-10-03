@@ -60,7 +60,7 @@ export default function USE_updateVocabDifficulty() {
       z_UPDATE_vocabDifficulty(list_id, vocab_id, newDifficulty);
       console.log("🟢 Vocab difficulty updated 🟢");
       toast.show(t("notifications.vocabDifficultyUpdated"), {
-        type: "custom_success",
+        type: "green",
         duration: 2000,
       });
 

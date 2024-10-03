@@ -38,7 +38,7 @@ export default function USE_renameList() {
       z_RENAME_privateList(targetList_ID, newListName);
       console.log("🟢 List renamed 🟢");
       toast.show(t("notifications.listRenamed"), {
-        type: "custom_success",
+        type: "green",
         duration: 2000,
       });
 

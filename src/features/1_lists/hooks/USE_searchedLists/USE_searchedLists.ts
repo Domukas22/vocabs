@@ -22,7 +22,7 @@ export function USE_searchedLists(lists: List_MODEL[]) {
       const filtered = await new Promise<List_MODEL[]>((resolve) => {
         setTimeout(() => {
           const result = lists.filter((list) =>
-            list.name.toLowerCase().includes(search.toLowerCase())
+            list.name.toLowerCase().includes(search.toLowerCase().trim())
           );
           resolve(result);
         }, 0); // No delay; just offloading to the event loop

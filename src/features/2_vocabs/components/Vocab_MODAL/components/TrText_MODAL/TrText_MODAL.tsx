@@ -14,6 +14,7 @@ import { Language_MODEL, TranslationCreation_PROPS } from "@/src/db/models";
 import Label from "@/src/components/Label/Label";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
+import { KeyboardAvoidingView, Platform } from "react-native";
 
 interface TrTextModal_PROPS {
   open: boolean;
@@ -87,8 +88,8 @@ export default function TrText_MODAL({
     <Small_MODAL
       {...{
         title: t("modal.editTr.header"),
-        open: open,
-        toggle: () => {
+        IS_open: open,
+        TOGGLE_modal: () => {
           SET_text(""), TOGGLE_open();
         },
         btnLeft: (
@@ -133,7 +134,7 @@ export default function TrText_MODAL({
         multiline={true}
         value={_text}
         SET_value={SET_text}
-        placeholder={t("placeholder.translation")}
+        // placeholder={t("placeholder.translation")}
         _ref={inputREF}
       />
     </Small_MODAL>

@@ -3,6 +3,7 @@
 //
 
 import { Language_MODEL, TranslationCreation_PROPS } from "@/src/db/models";
+import { minVocabTranslations } from "../constants/globalVars";
 
 export default function REMOVE_lang({
   langs,
@@ -13,7 +14,7 @@ export default function REMOVE_lang({
   SET_langs: React.Dispatch<React.SetStateAction<Language_MODEL[]>>;
   targetLang_ID: string;
 }) {
-  if (langs.length !== 2) {
+  if (langs.length !== minVocabTranslations) {
     SET_langs((prev) => prev.filter((lang) => lang.id !== targetLang_ID));
   }
 }

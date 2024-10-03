@@ -1,5 +1,6 @@
 import { MyColors } from "@/src/constants/MyColors";
 import { t } from "i18next";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { Animated, StyleSheet, View } from "react-native";
 import {
@@ -14,18 +15,24 @@ export default function SwipeableExample({
   children,
   leftBtn_ACTION,
   rightBtn_ACTION,
+}: {
+  children: React.ReactNode;
+  leftBtn_ACTION?: () => void;
+  rightBtn_ACTION?: () => void;
 }) {
   const { t } = useTranslation();
   return (
     <GestureHandlerRootView>
       <View style={styles.container}>
         <Swipeable
-          renderLeftActions={(progress, dragX) =>
-            RENDER_leftActions(progress, dragX, leftBtn_ACTION, t)
-          }
-          renderRightActions={(progress, dragX) =>
-            RENDER_rightActions(progress, dragX, rightBtn_ACTION, t)
-          }
+          renderLeftActions={(progress, dragX) => {
+            if (leftBtn_ACTION)
+              return RENDER_leftActions(progress, dragX, leftBtn_ACTION, t);
+          }}
+          renderRightActions={(progress, dragX) => {
+            if (rightBtn_ACTION)
+              return RENDER_rightActions(progress, dragX, rightBtn_ACTION, t);
+          }}
         >
           {/* <View style={styles.swipeableContainer}>
             <Text style={styles.text}>Swipe me left or right!</Text>
@@ -103,6 +110,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 12,
     overflow: "hidden",
+
+    // backgroundColor: "green",
   },
   swipeableContainer: {
     width: "100%",

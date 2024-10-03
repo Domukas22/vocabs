@@ -13,7 +13,7 @@ import {
 import { useRouter } from "expo-router";
 import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
 import { VocabDisplaySettings_PROPS, Vocab_MODEL } from "@/src/db/models";
-import { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 import ListSettings_MODAL from "@/src/features/1_lists/components/ListSettings_MODAL/ListSettings_MODAL";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
@@ -26,6 +26,12 @@ import { USE_searchedVocabs } from "@/src/features/2_vocabs/hooks/USE_searchedVo
 import GET_uniqueLanguagesInAList from "@/src/utils/GET_uniqueLanguagesInAList/GET_uniqueLanguagesInAList";
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
 import USE_filteredVocabs from "@/src/features/2_vocabs/hooks/USE_filteredVocabs/USE_filteredVocabs";
+import USE_deleteVocab from "@/src/features/2_vocabs/hooks/USE_deleteVocab";
+import Confirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
+import { ToastProvider, useToast } from "react-native-toast-notifications";
+import USE_zustand from "@/src/zustand";
+import DeleteVocab_MODAL from "@/src/features/2_vocabs/components/DeleteVocab_MODAL/DeleteVocab_MODAL";
+import Notification_BOX from "@/src/components/Notification_BOX/Notification_BOX";
 
 export default function SingleList_PAGE() {
   const router = useRouter();
@@ -94,10 +100,12 @@ export default function SingleList_PAGE() {
     }
   }
 
-  // const filtered_VOCABS = useMemo(
-  //   () => filtered_VOCABS({ vocabs, settings: displaySettings }),
-  //   [displaySettings, vocabs]
-  // );
+  const [SHOW_deleteVocabModal, SET_deleteVocabModal] = useState(false);
+  const [toDeleteVocab_ID, SET_toDeleteVocab] = useState<string | undefined>();
+  const PREPARE_vocabDelete = (id: string) => {
+    SET_toDeleteVocab(id);
+    SET_deleteVocabModal(true);
+  };
 
   return (
     <Page_WRAP>
@@ -135,6 +143,7 @@ export default function SingleList_PAGE() {
             TOGGLE_vocabModal,
             HANDLE_vocabModal,
             displaySettings,
+            PREPARE_vocabDelete,
           }}
         />
       ) : (
@@ -144,8 +153,8 @@ export default function SingleList_PAGE() {
             search !== "" ||
             displaySettings.langFilters.length > 0 ||
             displaySettings.difficultyFilters.length > 0
-              ? t("label.noListsFound")
-              : t("label.youDontHaveAnyLists")
+              ? t("label.noVocabsFound")
+              : t("label.thisListIsEmpty")
           }
           btn_TEXT={t("btn.createVocab")}
           btn_ACTION={() => HANDLE_vocabModal({ clear: true })}
@@ -166,6 +175,7 @@ export default function SingleList_PAGE() {
         selected_LIST={selected_LIST}
         SET_vocabs={SET_vocabs}
         HIGHLIGHT_vocab={highlight}
+        {...{ PREPARE_vocabDelete }}
       />
       <ListSettings_MODAL
         list={selected_LIST}
@@ -174,6 +184,17 @@ export default function SingleList_PAGE() {
         user_id={user?.id}
         backToIndex={() => router.back()}
         HIGHLIGHT_listName={HIGHLIGHT_listName}
+      />
+      <DeleteVocab_MODAL
+        IS_open={SHOW_deleteVocabModal}
+        is_public={false}
+        vocab_id={toDeleteVocab_ID}
+        list_id={selected_LIST?.id}
+        CLOSE_modal={() => SET_deleteVocabModal(false)}
+        RESET_targetVocab={() => SET_toDeleteVocab(undefined)}
+        REMOVE_fromPrintedVocabs={(id: string) =>
+          SET_vocabs((prev) => prev.filter((v) => v.id !== id))
+        }
       />
     </Page_WRAP>
   );

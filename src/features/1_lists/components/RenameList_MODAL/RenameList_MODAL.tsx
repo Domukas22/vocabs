@@ -40,8 +40,8 @@ export default function RenameList_MODAL({
   return (
     <Small_MODAL
       {...{
-        open,
-        toggle,
+        IS_open: open,
+        TOGGLE_modal: toggle,
         title,
         btnLeft: <Btn text={t("btn.cancel")} onPress={toggle} type="simple" />,
         btnRight: (

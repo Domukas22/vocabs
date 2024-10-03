@@ -19,12 +19,12 @@ export default function DescriptionInput_BLOCK({
   const { t } = useTranslation();
   return (
     <Block>
-      <Label>{t("label.description")}</Label>
+      <Label>{t("label.notes")}</Label>
       <StyledText_INPUT
-        multiline={true}
+        multiline
+        staySmall
         value={modal_DESC || ""}
         SET_value={(value: string) => SET_modalDesc(value)}
-        placeholder={t("placeholder.description")}
       />
     </Block>
   );

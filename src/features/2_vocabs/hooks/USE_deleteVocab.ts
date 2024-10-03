@@ -1,6 +1,6 @@
 import { supabase } from "@/src/lib/supabase"; // Adjust this import based on your project structure
 import { useState } from "react";
-import { Vocab_MODEL } from "../../../../db/models";
+import { Vocab_MODEL } from "@/src/db/models";
 
 interface VocabDelete_PROPS {
   vocab_id: string;
@@ -8,6 +8,7 @@ interface VocabDelete_PROPS {
   list_id?: string; // List ID can be optional for public vocab
   is_public: boolean;
   is_admin: boolean;
+  postDelete_FNS?: () => void;
 }
 
 export default function USE_deleteVocab() {
@@ -20,7 +21,8 @@ export default function USE_deleteVocab() {
     data?: Vocab_MODEL | null;
     msg?: string;
   }> => {
-    const { vocab_id, user_id, list_id, is_public, is_admin } = props;
+    const { vocab_id, user_id, list_id, is_public, is_admin, postDelete_FNS } =
+      props;
 
     // Step 1: Check if vocab ID is provided
     if (!vocab_id) {
@@ -103,6 +105,7 @@ export default function USE_deleteVocab() {
       // Step 6: Return success response
       const successMsg = "✅ Vocab and translations deleted successfully ✅";
       console.log(successMsg);
+      if (postDelete_FNS) postDelete_FNS();
       return {
         success: true,
         data: deletedVocabData,

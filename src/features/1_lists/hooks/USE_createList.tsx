@@ -50,7 +50,7 @@ export default function USE_createList() {
       z_CREATE_privateList(data);
       console.log("🟢 List created 🟢");
       toast.show(t("notifications.listCreated"), {
-        type: "custom_success",
+        type: "green",
         duration: 2000,
       });
 

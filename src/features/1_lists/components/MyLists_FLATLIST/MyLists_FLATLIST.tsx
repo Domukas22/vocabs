@@ -9,6 +9,7 @@ import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/St
 import { List_MODEL } from "@/src/db/models";
 import { useTranslation } from "react-i18next";
 import SwipeableExample from "@/src/components/SwipeableExample/SwipeableExample";
+import Label from "@/src/components/Label/Label";
 
 export default function MyLists_FLATLIST({
   lists,

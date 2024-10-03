@@ -20,6 +20,8 @@ import {
   View,
   FlatList,
   ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import languages from "@/src/constants/languages";
 
@@ -29,6 +31,10 @@ import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/St
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
 import Big_MODAL from "@/src/components/Modals/Big_MODAL/Big_MODAL";
+import {
+  maxVocabTranslations,
+  minVocabTranslations,
+} from "@/src/constants/globalVars";
 
 interface SelectLanguagesModal_PROPS {
   open: boolean;
@@ -57,16 +63,28 @@ export default function SelectMultipleLanguages_MODAL(
 
   const searchedLangs =
     search !== ""
-      ? languages.filter((lang) =>
-          lang.lang_in_en.toLowerCase().includes(search.toLowerCase())
+      ? languages.filter(
+          (lang) =>
+            lang.lang_in_en
+              .toLowerCase()
+              .includes(search.toLowerCase().trim()) ||
+            lang.lang_in_de
+              .toLowerCase()
+              .includes(search.toLowerCase().trim()) ||
+            lang.country_in_en
+              .toLowerCase()
+              .includes(search.toLowerCase().trim()) ||
+            lang.country_in_de
+              .toLowerCase()
+              .includes(search.toLowerCase().trim())
         )
       : languages;
 
   function SELECT_lang(incomdingLang: Language_MODEL) {
     const alreadyHasLang = modal_LANGS?.some((l) => l.id === incomdingLang.id);
 
-    const tooManyLangSelected = modal_LANGS?.length >= 10;
-    const hasOnly2Translations = modal_LANGS?.length === 2;
+    const tooManyLangSelected = modal_LANGS?.length >= maxVocabTranslations;
+    const hasOnly2Translations = modal_LANGS?.length === minVocabTranslations;
     if (!alreadyHasLang) {
       if (tooManyLangSelected) return;
 
@@ -89,127 +107,136 @@ export default function SelectMultipleLanguages_MODAL(
 
   return (
     <Big_MODAL {...{ open }}>
-      <Header
-        title={t("modal.selectLanguages.header")}
-        big={true}
-        btnRight={
-          <Btn
-            type="seethrough"
-            iconLeft={<ICON_X big={true} rotate={true} />}
-            onPress={() => {
-              if (!IS_inAction) TOGGLE_open();
-            }}
-            style={{ borderRadius: 100 }}
-          />
-        }
-      />
-
-      <Subnav>
-        <SearchBar value={search} SET_value={SET_search} />
-      </Subnav>
-
-      <Styled_FLATLIST
-        gap={8}
-        data={searchedLangs}
-        renderItem={({ item }) => {
-          return (
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
+        <Header
+          title={t("modal.selectLanguages.header")}
+          big={true}
+          btnRight={
             <Btn
-              key={"Select lang" + item.id + item.lang_in_en}
-              iconLeft={
-                <View style={{ marginRight: 4 }}>
-                  <ICON_flag lang={item?.id} big={true} />
-                </View>
-              }
-              iconRight={
-                <ICON_X
-                  color={
-                    modal_LANGS.some((l) => l.id === item.id)
-                      ? "primary"
-                      : "grey"
-                  }
-                  rotate={modal_LANGS.some((l) => l.id === item.id)}
-                  big={true}
-                />
-              }
-              text={appLang === "en" ? item.lang_in_en : item.lang_in_de}
-              onPress={() => SELECT_lang(item)}
-              type={
-                modal_LANGS.some((l) => l.id === item.id) ? "active" : "simple"
-              }
-              style={{ flex: 1 }}
-              text_STYLES={{ flex: 1 }}
+              type="seethrough"
+              iconLeft={<ICON_X big={true} rotate={true} />}
+              onPress={() => {
+                if (!IS_inAction) TOGGLE_open();
+              }}
+              style={{ borderRadius: 100 }}
             />
-          );
-        }}
-        keyExtractor={(item) => "Select lang" + item.id + item.lang_in_en}
-      />
+          }
+        />
 
-      <Footer
-        contentAbove={
-          <ScrollView
-            style={{
-              flexDirection: "row",
-              width: "100%",
-              paddingLeft: 12,
-              paddingTop: 12,
-            }}
-            horizontal={true}
-          >
-            {modal_LANGS.map((lang) => (
+        <Subnav>
+          <SearchBar value={search} SET_value={SET_search} />
+        </Subnav>
+
+        <Styled_FLATLIST
+          gap={8}
+          data={searchedLangs}
+          keyboardShouldPersistTaps="always"
+          renderItem={({ item }) => {
+            return (
               <Btn
-                key={lang.id + "tiny selected lang buttons"}
-                iconLeft={<ICON_flag lang={lang.id} />}
-                text={lang?.id?.toUpperCase()}
-                iconRight={<ICON_X color="primary" rotate={true} />}
-                onPress={() => SELECT_lang(lang)}
-                type="active"
-                tiny={true}
-                style={{ marginRight: 8 }}
+                key={"Select lang" + item.id + item.lang_in_en}
+                iconLeft={
+                  <View style={{ marginRight: 4 }}>
+                    <ICON_flag lang={item?.id} big={true} />
+                  </View>
+                }
+                iconRight={
+                  <ICON_X
+                    color={
+                      modal_LANGS.some((l) => l.id === item.id)
+                        ? "primary"
+                        : "grey"
+                    }
+                    rotate={modal_LANGS.some((l) => l.id === item.id)}
+                    big={true}
+                  />
+                }
+                text={appLang === "en" ? item.lang_in_en : item.lang_in_de}
+                onPress={() => SELECT_lang(item)}
+                type={
+                  modal_LANGS.some((l) => l.id === item.id)
+                    ? "active"
+                    : "simple"
+                }
+                style={{ flex: 1 }}
+                text_STYLES={{ flex: 1 }}
               />
-            ))}
-          </ScrollView>
-        }
-        btnLeft={
-          <Btn
-            text={t("btn.cancel")}
-            onPress={() => {
-              if (!IS_inAction) TOGGLE_open();
-            }}
-          />
-        }
-        btnRight={
-          appLang === "en" ? (
-            <Btn
-              text={
-                !IS_inAction ? `Select ${modal_LANGS?.length} languages` : ""
-              }
-              onPress={() => {
-                if (!IS_inAction) SUBMIT_langs(modal_LANGS);
+            );
+          }}
+          keyExtractor={(item) => "Select lang" + item.id + item.lang_in_en}
+        />
+
+        <Footer
+          contentAbove={
+            <ScrollView
+              style={{
+                flexDirection: "row",
+                width: "100%",
+                paddingLeft: 12,
+                paddingTop: 12,
               }}
-              iconRight={
-                IS_inAction ? <ActivityIndicator color="black" /> : null
-              }
-              type="action"
-              style={{ flex: 1 }}
-            />
-          ) : (
+              horizontal={true}
+              keyboardShouldPersistTaps="always"
+            >
+              {modal_LANGS.map((lang) => (
+                <Btn
+                  key={lang.id + "tiny selected lang buttons"}
+                  iconLeft={<ICON_flag lang={lang.id} />}
+                  text={lang?.id?.toUpperCase()}
+                  iconRight={<ICON_X color="primary" rotate={true} />}
+                  onPress={() => SELECT_lang(lang)}
+                  type="active"
+                  tiny={true}
+                  style={{ marginRight: 8 }}
+                />
+              ))}
+            </ScrollView>
+          }
+          btnLeft={
             <Btn
-              text={
-                !IS_inAction ? `${modal_LANGS?.length} Sprachen wählen` : ""
-              }
+              text={t("btn.cancel")}
               onPress={() => {
-                if (!IS_inAction) SUBMIT_langs(modal_LANGS);
+                if (!IS_inAction) TOGGLE_open();
               }}
-              iconRight={
-                IS_inAction ? <ActivityIndicator color="black" /> : null
-              }
-              type="action"
-              stayPressed={IS_inAction}
-              style={{ flex: 1 }}
             />
-          )
-        }
-      />
+          }
+          btnRight={
+            appLang === "en" ? (
+              <Btn
+                text={
+                  !IS_inAction ? `Select ${modal_LANGS?.length} languages` : ""
+                }
+                onPress={() => {
+                  if (!IS_inAction) SUBMIT_langs(modal_LANGS);
+                }}
+                iconRight={
+                  IS_inAction ? <ActivityIndicator color="black" /> : null
+                }
+                type="action"
+                style={{ flex: 1 }}
+              />
+            ) : (
+              <Btn
+                text={
+                  !IS_inAction ? `${modal_LANGS?.length} Sprachen wählen` : ""
+                }
+                onPress={() => {
+                  if (!IS_inAction) SUBMIT_langs(modal_LANGS);
+                }}
+                iconRight={
+                  IS_inAction ? <ActivityIndicator color="black" /> : null
+                }
+                type="action"
+                stayPressed={IS_inAction}
+                style={{ flex: 1 }}
+              />
+            )
+          }
+        />
+      </KeyboardAvoidingView>
     </Big_MODAL>
   );
 }

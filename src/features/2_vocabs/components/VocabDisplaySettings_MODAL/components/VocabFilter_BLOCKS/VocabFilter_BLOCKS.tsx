@@ -121,7 +121,7 @@ export default function VocabFilter_BLOCKS({
       </Block>
       <Block>
         <Label>{t("label.filterByLanguage")}</Label>
-        {list_LANGS?.map((lang) => {
+        {list_LANGS?.map((lang, index) => {
           return (
             <Btn
               key={`langFilterBtn ${lang.id}`}
@@ -145,6 +145,7 @@ export default function VocabFilter_BLOCKS({
                   ? "active"
                   : "simple"
               }
+              style={[index === list_LANGS.length - 1 && { marginBottom: 24 }]}
               text_STYLES={{ flex: 1 }}
               onPress={() => SELECT_langFilter(lang.id)}
             />

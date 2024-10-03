@@ -15,28 +15,31 @@ import { View } from "react-native";
 import { Styled_TEXT } from "../components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "../constants/MyColors";
 import { ICON_toastNotification } from "../components/icons/icons";
-import Notification_BOX from "../components/Notification_BOX/Notification_BOX";
 
 export default function _layout() {
   return (
     <Langs_PROVIDER>
       <Auth_PROVIDER>
-        <ToastProvider
+        {/* <ToastProvider
           renderType={{
-            custom_success: (toast) => (
+            green: (toast) => (
               <Notification_BOX type="success" text={toast?.message} />
             ),
-            custom_error: (toast) => (
+            red: (toast) => (
               <Notification_BOX type="error" text={toast?.message} />
             ),
             custom_warning: (toast) => (
               <Notification_BOX type="warning" text={toast?.message} />
             ),
           }}
-          style={{ bottom: 400 }}
-        >
-          <Main_LAYOUT />
-        </ToastProvider>
+          style={{
+            bottom: 400,
+            zIndex: 9999, // Ensure it's a high value to stay on top
+            elevation: 9999, // For Android devices
+          }}
+        > */}
+        <Main_LAYOUT />
+        {/* </ToastProvider> */}
       </Auth_PROVIDER>
     </Langs_PROVIDER>
   );

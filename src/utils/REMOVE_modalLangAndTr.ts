@@ -3,6 +3,7 @@
 //
 
 import { Language_MODEL, TranslationCreation_PROPS } from "@/src/db/models";
+import { minVocabTranslations } from "../constants/globalVars";
 
 export default function REMOVE_modalLangAndTr({
   targetLang_ID,
@@ -17,7 +18,7 @@ export default function REMOVE_modalLangAndTr({
   >;
   targetLang_ID: string;
 }) {
-  if (modal_LANGS.length !== 2) {
+  if (modal_LANGS.length !== minVocabTranslations) {
     SET_modalLangs((prev) => prev.filter((lang) => lang.id !== targetLang_ID));
     SET_modalTRs((prev) => prev?.filter((tr) => tr.lang_id !== targetLang_ID));
   }

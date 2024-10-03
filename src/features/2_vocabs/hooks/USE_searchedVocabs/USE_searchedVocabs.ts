@@ -18,16 +18,16 @@ export function USE_searchedVocabs(vocabs: Vocab_MODEL[]) {
 
   useEffect(() => {
     const filter = async () => {
-      console.log("TRIGGER");
-
       // Use setTimeout to offload filtering to the event loop
       const filtered = await new Promise<Vocab_MODEL[]>((resolve) => {
         setTimeout(() => {
           const result = vocabs.filter(
             (vocab) =>
-              vocab.description?.toLowerCase().includes(search.toLowerCase()) ||
+              vocab.description
+                ?.toLowerCase()
+                .includes(search.toLowerCase().trim()) ||
               vocab.translations?.some((tr) =>
-                tr.text.toLowerCase().includes(search.toLowerCase())
+                tr.text.toLowerCase().includes(search.toLowerCase().trim())
               )
           );
           resolve(result);

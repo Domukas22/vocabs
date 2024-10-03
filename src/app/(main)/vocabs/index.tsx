@@ -47,6 +47,8 @@ import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/St
 import { ICON_flag } from "@/src/components/icons/icons";
 import LangHighlightCheck_FLATLIST from "@/src/components/forTesting/LangHighlightCheck_FLATLIST";
 
+// TODO ==> create a DELETE_listModal, similar to DeleteVocab_MODAL
+
 export default function MyLists_PAGE() {
   const router = useRouter();
   const [SHOW_createListModal, TOGGLE_createListModal] = USE_toggle(false);
@@ -102,7 +104,7 @@ export default function MyLists_PAGE() {
 
   return (
     <Page_WRAP>
-      <MyLists_HEADER {...{ TOGGLE_createListModal }} />
+      <MyLists_HEADER {...{ TOGGLE_createListModal, lists: z_lists }} />
 
       {z_lists.length > 5 && (
         <MyLists_SUBNAV {...{ search, SET_search: SEARCH_lists }} />

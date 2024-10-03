@@ -117,7 +117,7 @@ export default function Explore_PAGE() {
         TOGGLE_saveVocabModal();
         SET_targetSaveVocab(undefined);
         toast.show(t("notifications.vocabCopied"), {
-          type: "custom_success",
+          type: "green",
           duration: 2000,
         });
       }

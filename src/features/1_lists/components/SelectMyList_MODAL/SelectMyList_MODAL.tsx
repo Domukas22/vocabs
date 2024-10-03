@@ -16,7 +16,9 @@ import React, { useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
+  KeyboardAvoidingView,
   Modal,
+  Platform,
   SafeAreaView,
   View,
 } from "react-native";
@@ -29,6 +31,7 @@ import SEARCH_lists from "@/src/features/1_lists/utils/SEARCH_lists";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 import { EmptyFlatList_BOTTM } from "@/src/features/1_lists";
 import { USE_searchedLists } from "../../hooks/USE_searchedLists/USE_searchedLists";
+import Big_MODAL from "@/src/components/Modals/Big_MODAL/Big_MODAL";
 interface SelectListModal_PROPS {
   open: boolean;
   title: string;
@@ -64,13 +67,10 @@ export default function SelectMyList_MODAL({
   }, [open]);
 
   return (
-    <Modal animationType="slide" transparent={true} visible={open} style={{}}>
-      <SafeAreaView
-        style={{
-          backgroundColor: MyColors.fill_bg,
-
-          flex: 1,
-        }}
+    <Big_MODAL open={open}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
       >
         <Header
           title={title}
@@ -93,6 +93,7 @@ export default function SelectMyList_MODAL({
           searched_LISTS.length > 0 && (
             <FlatList
               data={searched_LISTS}
+              keyboardShouldPersistTaps="always"
               ListFooterComponent={
                 <Btn
                   iconLeft={<ICON_X color="primary" />}
@@ -163,11 +164,11 @@ export default function SelectMyList_MODAL({
             />
           }
         />
-      </SafeAreaView>
+      </KeyboardAvoidingView>
       <CreateList_MODAL
         open={SHOW_createListModal}
         toggle={TOGGLE_createListModal}
       />
-    </Modal>
+    </Big_MODAL>
   );
 }

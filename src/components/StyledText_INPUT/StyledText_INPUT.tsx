@@ -21,10 +21,11 @@ import { ICON_toastNotification } from "../icons/icons";
 type _TextInputProps = TextInputProps & {
   value: string;
   SET_value: (val: string) => void;
-  placeholder: string;
+  placeholder?: string;
   error?: boolean;
   correctedError?: boolean;
   multiline?: boolean;
+  staySmall?: boolean;
   _ref?: Ref<R_TextInput>;
   props?: TextInputProps;
 };
@@ -38,29 +39,31 @@ export default function StyledText_INPUT({
   correctedError = undefined,
   style,
   _ref,
+  setIsFocused,
+  staySmall = false,
   props,
 }: _TextInputProps) {
-  const [isFocused, setIsFocused] = useState(false);
-
   return (
     <View style={{ justifyContent: "center" }}>
       <R_TextInput
         style={[
           s.textInput,
-          multiline && { minHeight: 120, height: 120 },
+          multiline && { height: "auto" },
+          multiline && !staySmall && { minHeight: 100 },
           error && s.error,
           correctedError && s.correctedError,
           correctedError && { paddingRight: 44 },
           style,
         ]}
-        placeholder={placeholder ? placeholder : "A nice placeholder..."}
+        placeholder={placeholder && placeholder}
         multiline={multiline}
+        scrollEnabled={false}
+        numberOfLines={multiline ? 4 : 1}
         placeholderTextColor={MyColors.text_white_06}
         value={value}
         onChangeText={SET_value}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
-        scrollEnabled={false}
+        onFocus={() => !!setIsFocused && setIsFocused(true)}
+        onBlur={() => !!setIsFocused && setIsFocused(false)}
         ref={_ref && _ref}
         {...props}
       />

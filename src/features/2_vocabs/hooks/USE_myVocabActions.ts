@@ -93,7 +93,7 @@ export default function USE_myVocabActions({
         TOGGLE_vocabModal();
         HIGHLIGHT_vocab(vocab.id);
         toast.show(t("notifications.vocabUpdated"), {
-          type: "custom_success",
+          type: "green",
           duration: 2000,
         });
       }
@@ -122,7 +122,7 @@ export default function USE_myVocabActions({
         TOGGLE_vocabModal();
         HIGHLIGHT_vocab(newVocab.data.id);
         toast.show(t("notifications.vocabCreated"), {
-          type: "custom_success",
+          type: "green",
           duration: 2000,
         });
       }
@@ -148,7 +148,7 @@ export default function USE_myVocabActions({
         HIGHLIGHT_vocab(vocab.id);
       }
       toast.show(t("notifications.vocabDeleted"), {
-        type: "custom_success",
+        type: "green",
         duration: 2000,
       });
     }

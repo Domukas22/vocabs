@@ -76,6 +76,7 @@ const s = StyleSheet.create({
     fontFamily: "Nunito-Light",
     color: MyColors.text_white_06,
   },
+
   vocabTitle: {
     fontSize: 18,
     color: MyColors.text_white,

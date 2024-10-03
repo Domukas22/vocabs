@@ -12,26 +12,29 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 import { BlurView } from "expo-blur";
+import My_TOAST from "../../My_TOAST/My_TOAST";
 
 interface SimpleModal_PROPS {
   children?: React.ReactNode;
   title?: string;
-  open: boolean;
-  toggle: () => void;
+  IS_open: boolean;
+  TOGGLE_modal: () => void;
   btnLeft?: React.ReactNode;
   btnRight?: React.ReactNode;
   btnUpper?: React.ReactNode;
+  z?: number;
 }
 
 export default function Small_MODAL(props: SimpleModal_PROPS) {
   const {
     children,
     title = "Simple modal",
-    open: SHOW_simpleModal,
-    toggle: TOGGLE_simpleModal,
+    IS_open: SHOW_simpleModal,
+    TOGGLE_modal: TOGGLE_simpleModal,
     btnLeft = <Btn text="Done" />,
     btnRight,
     btnUpper,
+    z,
   } = props;
 
   return (

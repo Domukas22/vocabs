@@ -119,6 +119,8 @@ export default function MyVocab({
 }
 const s = StyleSheet.create({
   vocab: {
+    width: "100%",
+    minWidth: "100%",
     borderRadius: 12,
     backgroundColor: MyColors.btn_2,
     borderWidth: 1,

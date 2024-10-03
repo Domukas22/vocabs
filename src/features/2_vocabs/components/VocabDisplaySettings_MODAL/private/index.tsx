@@ -21,6 +21,8 @@ import { USE_toggle } from "@/src/hooks/USE_toggle";
 import SelectOneLanguage_MODAL from "@/src/features/4_languages/components/SelectOneLanguage_MODAL/SelectOneLanguage_MODAL";
 import languages, { languagesArr_PROPS } from "@/src/constants/languages";
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
+import Vocab_DUMMY from "../../Vocab_DUMMY";
+import Block from "@/src/components/Block/Block";
 
 interface DisplaySettingsModal_PROPS {
   displaySettings: VocabDisplaySettings_PROPS;
@@ -66,6 +68,11 @@ export default function MyVocabDisplaySettings_MODAL({
         }
         {...{ view, SET_view }}
       />
+      {view === "preview" && (
+        <Block>
+          <Vocab_DUMMY {...{ displaySettings }} />
+        </Block>
+      )}
       <ScrollView style={{ flex: 1 }}>
         {view === "sort" ? (
           <VocabSorting_BLOCKS
@@ -77,7 +84,7 @@ export default function MyVocabDisplaySettings_MODAL({
           />
         ) : view === "preview" ? (
           <MyVocabPreview_BLOCKS
-            {...{ displaySettings, SET_displaySettings, TOGGLE_frontLangModal }}
+            {...{ displaySettings, SET_displaySettings, list_LANGS }}
           />
         ) : (
           ""

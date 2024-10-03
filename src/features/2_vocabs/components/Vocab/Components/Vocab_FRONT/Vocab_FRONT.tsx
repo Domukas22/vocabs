@@ -7,6 +7,7 @@ import { ICON_difficultyDot, ICON_flag } from "@/src/components/icons/icons";
 import Label from "@/src/components/Label/Label";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
+import { USE_langs } from "@/src/context/Langs_CONTEXT";
 import {
   VocabDisplaySettings_PROPS,
   Translation_MODEL,
@@ -26,7 +27,6 @@ interface VocabFront_PROPS {
   open: boolean;
   TOGGLE_open: () => void;
   highlighted?: boolean;
-  targetLang?: Language_MODEL;
 }
 
 export default function Vocab_FRONT({
@@ -38,7 +38,6 @@ export default function Vocab_FRONT({
   open,
   TOGGLE_open,
   highlighted,
-  targetLang,
 }: VocabFront_PROPS) {
   const {
     SHOW_image,
@@ -56,11 +55,22 @@ export default function Vocab_FRONT({
           tr.text !== "" &&
           tr.text !== undefined &&
           tr.text !== null
-      ) || null
+      ) ||
+      // ------- if select lang id not found, just select the first transaltion
+
+      // translations?.find(
+      //   (tr) => tr.text !== "" && tr.text !== undefined && tr.text !== null
+      // ) ||
+      null
     );
   }, [translations, frontTrLang_ID]);
 
+  const { languages } = USE_langs();
   const appLang = useMemo(() => i18next.language, [i18next.language]);
+  const targetLang = useMemo(
+    () => languages?.find((lang) => lang.id === displaySettings.frontTrLang_ID),
+    [displaySettings.frontTrLang_ID]
+  );
 
   return (
     <Pressable
@@ -74,7 +84,7 @@ export default function Vocab_FRONT({
       {SHOW_image && (
         <Image
           source={require("@/src/assets/images/dummyImage.jpg")}
-          style={{ height: 160, width: "100%" }}
+          style={{ height: 200, width: "100%" }}
         />
       )}
       {!open && (
@@ -87,9 +97,8 @@ export default function Vocab_FRONT({
             />
           ) : (
             <Label>
-              {t("label.missingTranslationPre") +
-                frontTrLang_ID.toLocaleUpperCase() +
-                t("label.missingTranslationPost")}
+              {t("label.missingTranslation") +
+                targetLang?.[`lang_in_${appLang || "en"}`]}
             </Label>
           )}
           {SHOW_description && description && (

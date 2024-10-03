@@ -9,12 +9,14 @@ interface RenderTextWithhighlights_PROPS {
   text: string;
   highlights: number[];
   modal_DIFF: 0 | 1 | 2 | 3;
+  light?: boolean;
 }
 
 export default function Highlighted_TEXT({
   text,
   highlights,
   modal_DIFF,
+  light = false,
 }: RenderTextWithhighlights_PROPS) {
   const highlightTextColor =
     modal_DIFF === 3
@@ -37,6 +39,7 @@ export default function Highlighted_TEXT({
             style={[
               isHighlighted && { color: highlightTextColor },
               isHighlighted && modal_DIFF === 1 && { textDecorationLine },
+              light && { fontFamily: "Nunito-Light" },
             ]}
             // style={[
             //   isHighlighted && { color },
