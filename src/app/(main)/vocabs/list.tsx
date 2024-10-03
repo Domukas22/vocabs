@@ -48,6 +48,8 @@ export default function SingleList_PAGE() {
     selected_LIST?.vocabs || []
   );
 
+  const { z_DELETE_privateVocab } = USE_zustand();
+
   const [displaySettings, SET_displaySettings] =
     useState<VocabDisplaySettings_PROPS>({
       SHOW_image: false,
@@ -195,6 +197,7 @@ export default function SingleList_PAGE() {
         CLOSE_modal={() => SET_deleteVocabModal(false)}
         onSuccess={() => {
           SET_vocabs((prev) => prev.filter((v) => v.id !== toDeleteVocab_ID));
+          z_DELETE_privateVocab(selected_LIST?.id, toDeleteVocab_ID || "");
           SET_toDeleteVocab(undefined);
           toast.show(t("notifications.vocabDeleted"), {
             type: "green",

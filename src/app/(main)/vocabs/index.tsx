@@ -5,9 +5,9 @@
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
 import { useRouter } from "expo-router";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-import { Language_MODEL, List_MODEL } from "@/src/db/models";
+import { List_MODEL } from "@/src/db/models";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
 
@@ -21,37 +21,24 @@ import {
   FETCH_myLists,
 } from "@/src/features/1_lists";
 
-import { Button, View } from "react-native";
-
 import USE_zustand from "@/src/zustand";
 import { useTranslation } from "react-i18next";
 import { USE_searchedLists } from "@/src/features/1_lists/hooks/USE_searchedLists/USE_searchedLists";
 import USE_highlighedId from "@/src/hooks/USE_highlighedId/USE_highlighedId";
-import Btn from "@/src/components/Btn/Btn";
 import RenameList_MODAL from "@/src/features/1_lists/components/RenameList_MODAL/RenameList_MODAL";
 import USE_renameList from "@/src/features/1_lists/hooks/USE_renameList";
-import {
-  Swipeable,
-  RectButton,
-  GestureHandlerRootView,
-} from "react-native-gesture-handler";
-import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 
 import React from "react";
-import { StyleSheet, Text, Animated } from "react-native";
 import Confirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
 import USE_deleteList from "@/src/features/1_lists/hooks/USE_deleteList";
-import { USE_langs } from "@/src/context/Langs_CONTEXT";
-import Highlighted_TEXT from "@/src/components/Highlighted_TEXT/Highlighted_TEXT";
-import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
-import { ICON_flag } from "@/src/components/icons/icons";
-import LangHighlightCheck_FLATLIST from "@/src/components/forTesting/LangHighlightCheck_FLATLIST";
+import { useToast } from "react-native-toast-notifications";
 
 // TODO ==> create a DELETE_listModal, similar to DeleteVocab_MODAL
 
 export default function MyLists_PAGE() {
   const router = useRouter();
-  const [SHOW_createListModal, TOGGLE_createListModal] = USE_toggle(false);
+  const [SHOW_createListModal, TOGGLE_createListModal, SET_createListModal] =
+    USE_toggle(false);
   const { SET_selectedList } = USE_selectedList();
   const { user } = USE_auth();
   const [SHOW_renameListModal, TOGGLE_renameListModal] = USE_toggle();
@@ -59,6 +46,7 @@ export default function MyLists_PAGE() {
 
   const { t } = useTranslation();
   const list_REF = useRef(null);
+  const toast = useToast();
 
   const {
     z_lists,
@@ -66,6 +54,7 @@ export default function MyLists_PAGE() {
     z_SET_lists,
     z_SET_listsLoading,
     z_SET_listsError,
+    z_CREATE_privateList,
   } = USE_zustand();
 
   const { searched_LISTS, search, SEARCH_lists, ARE_listsSearching } =
@@ -139,11 +128,19 @@ export default function MyLists_PAGE() {
       ) : null}
 
       <CreateList_MODAL
+        user={user}
         IS_open={SHOW_createListModal}
-        TOGGLE_modal={TOGGLE_createListModal}
-        highlight={highlight}
-        postCreatiion_FNS={() => {
+        currentList_NAMES={z_lists?.map((l) => l.name)}
+        CLOSE_modal={() => SET_createListModal(false)}
+        onSuccess={(newList: List_MODEL) => {
+          highlight(newList?.id);
           list_REF?.current?.scrollToOffset({ animated: true, offset: 0 });
+          z_CREATE_privateList(newList);
+          toast.show(t("notifications.listCreated"), {
+            type: "green",
+            duration: 2000,
+          });
+          SET_createListModal(false);
         }}
       />
       <RenameList_MODAL

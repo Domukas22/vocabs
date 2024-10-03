@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import { BlurView } from "expo-blur";
 import My_TOAST from "../../My_TOAST/My_TOAST";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 interface SimpleModal_PROPS {
   children?: React.ReactNode;
