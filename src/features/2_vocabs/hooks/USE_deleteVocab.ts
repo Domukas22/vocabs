@@ -1,91 +1,139 @@
-import { supabase } from "@/src/lib/supabase"; // Adjust this import based on your project structure
-import { useState } from "react";
-import { Vocab_MODEL } from "@/src/db/models";
+import { User_MODEL } from "@/src/db/models";
+import { supabase } from "@/src/lib/supabase";
+import { useCallback, useMemo, useState } from "react";
 
 interface VocabDelete_PROPS {
+  user?: User_MODEL;
   vocab_id: string;
-  user_id?: string; // User ID can be optional for public vocab
-  list_id?: string; // List ID can be optional for public vocab
+  list_id?: string;
   is_public: boolean;
-  is_admin: boolean;
-  postDelete_FNS?: () => void;
+  onSuccess?: () => void;
 }
 
 export default function USE_deleteVocab() {
   const [IS_deletingVocab, SET_isDeletingVocab] = useState(false);
+  const [error, SET_error] = useState<string | null>(null);
+  const RESET_error = useCallback(() => SET_error(null), []);
 
-  const DELETE_vocab = async (
-    props: VocabDelete_PROPS
-  ): Promise<{
-    success: boolean;
-    data?: Vocab_MODEL | null;
-    msg?: string;
-  }> => {
-    const { vocab_id, user_id, list_id, is_public, is_admin, postDelete_FNS } =
-      props;
+  const errorMessage = useMemo(
+    () =>
+      "Some kind of error happened when trying to delete the vocab. This is an issue on our side. Please try to re-load the app and see if the problem persists. The issue has been recorded and will be reviewed by developers as soon as possible. We are sorry for the trouble.",
+    []
+  );
 
-    // Step 1: Check if vocab ID is provided
+  const DELETE_vocab = async ({
+    user,
+    vocab_id,
+    list_id,
+    is_public,
+    onSuccess,
+  }: VocabDelete_PROPS) => {
+    SET_error(null); // Clear previous error
+
+    // Validation checks
     if (!vocab_id) {
-      const errorMsg = "🔴 Vocab ID not provided 🔴";
-      console.log(errorMsg);
+      SET_error(errorMessage);
+      return { success: false, msg: "🔴 Vocab ID not provided 🔴" };
+    }
+
+    if (is_public && !user?.is_admin) {
+      SET_error("Only admins can delete public vocabs.");
       return {
         success: false,
-        msg: errorMsg,
+        msg: "🔴 Admin privileges are required to delete public vocab 🔴",
       };
     }
 
-    // Step 2: If the vocab is public, check if the user is an admin
-    if (is_public) {
-      if (!is_admin) {
-        const errorMsg =
-          "🔴 Cannot delete a public vocab without admin privileges 🔴";
-        console.log(errorMsg);
+    if (!is_public) {
+      if (!user?.id) {
+        SET_error(errorMessage);
         return {
           success: false,
-          msg: errorMsg,
+          msg: "🔴 User ID missing for private vocab deletion 🔴",
         };
       }
-      // If admin, skip user_id and list_id validation
-    } else {
-      // Step 3: If vocab is private, ensure user_id and list_id are provided
-      if (!user_id) {
-        const errorMsg = "🔴 User ID not provided for private vocab 🔴";
-        console.log(errorMsg);
-        return {
-          success: false,
-          msg: errorMsg,
-        };
-      }
-
       if (!list_id) {
-        const errorMsg = "🔴 List ID not provided for private vocab 🔴";
-        console.log(errorMsg);
+        SET_error(errorMessage);
         return {
           success: false,
-          msg: errorMsg,
+          msg: "🔴 List ID missing for private vocab deletion 🔴",
         };
       }
     }
 
+    SET_isDeletingVocab(true);
     try {
-      SET_isDeletingVocab(true);
+      // If the vocab is public, validate that it exists with both vocab_id and is_public = true
+      if (is_public && user?.is_admin) {
+        const { data: publicVocab, error: publicVocabError } = await supabase
+          .from("vocabs")
+          .select()
+          .eq("id", vocab_id)
+          .eq("is_public", true)
+          .single();
 
-      // Step 4: Delete the translations associated with the vocab
+        if (publicVocabError) {
+          SET_error(errorMessage);
+          return {
+            success: false,
+            msg: `🔴 Error fetching public vocab with ID ${vocab_id} 🔴: ${publicVocabError.message}`,
+          };
+        }
+
+        if (!publicVocab) {
+          SET_error(
+            "It seems this public vocabulary has already been deleted or could not be found."
+          );
+          return {
+            success: false,
+            msg: `🔴 Public vocab with ID ${vocab_id} not found 🔴`,
+          };
+        }
+      }
+
+      // If the vocab is private, validate that it exists with both vocab_id and user?.id
+      if (!is_public) {
+        const { data: privateVocab, error: privateVocabError } = await supabase
+          .from("vocabs")
+          .select()
+          .eq("id", vocab_id)
+          .eq("user_id", user?.id)
+          .single();
+
+        if (privateVocabError) {
+          SET_error(errorMessage);
+          return {
+            success: false,
+            msg: `🔴 Error fetching private vocab with ID ${vocab_id} for user ${user?.id} 🔴: ${privateVocabError.message}`,
+          };
+        }
+
+        if (!privateVocab) {
+          SET_error(
+            "It seems this vocab has already been deleted or could not be found."
+          );
+          return {
+            success: false,
+            msg: `🔴 Private vocab with ID ${vocab_id} not found for user ${user?.id} 🔴`,
+          };
+        }
+      }
+
+      // Delete associated translations
       const { error: translationError } = await supabase
         .from("translations")
         .delete()
         .eq("vocab_id", vocab_id);
 
       if (translationError) {
-        const errorMsg = `🔴 Error deleting translations 🔴: ${translationError.message}`;
-        console.log(errorMsg);
+        SET_error(errorMessage);
         return {
           success: false,
-          msg: errorMsg,
+          msg: `🔴 Error deleting translations for vocab ID ${vocab_id} 🔴: ${translationError.message}`,
         };
       }
 
-      // Step 5: Delete the vocab itself
+      // Delete the vocab
       const { data: deletedVocabData, error: vocabError } = await supabase
         .from("vocabs")
         .delete()
@@ -94,34 +142,37 @@ export default function USE_deleteVocab() {
         .single();
 
       if (vocabError) {
-        const errorMsg = `🔴 Error deleting vocab 🔴: ${vocabError.message}`;
-        console.log(errorMsg);
+        SET_error(errorMessage);
         return {
           success: false,
-          msg: errorMsg,
+          msg: `🔴 Error deleting vocab with ID ${vocab_id} 🔴: ${vocabError.message}`,
         };
       }
 
-      // Step 6: Return success response
-      const successMsg = "✅ Vocab and translations deleted successfully ✅";
-      console.log(successMsg);
-      if (postDelete_FNS) postDelete_FNS();
-      return {
-        success: true,
-        data: deletedVocabData,
-        msg: successMsg,
-      };
-    } catch (error) {
-      const errorMsg = `🔴 Error deleting vocab or translations 🔴: ${error.message}`;
-      console.log(errorMsg);
+      // Log success message with green circle emoji
+      console.log("🟢 Vocab and translations deleted successfully 🟢");
+
+      // Post-delete callback
+      if (onSuccess) onSuccess();
+
+      return { success: true, data: deletedVocabData };
+    } catch (error: any) {
+      // Handle network or connection errors differently
+      if (error.message === "Failed to fetch") {
+        SET_error(
+          "It looks like there's an issue with your internet connection. Please check your connection and try again."
+        );
+      } else {
+        SET_error(errorMessage);
+      }
       return {
         success: false,
-        msg: errorMsg,
+        msg: `🔴 Unexpected error occurred during deletion of vocab ID ${vocab_id} 🔴: ${error.message}`,
       };
     } finally {
       SET_isDeletingVocab(false);
     }
   };
 
-  return { DELETE_vocab, IS_deletingVocab };
+  return { DELETE_vocab, IS_deletingVocab, error, RESET_error };
 }

@@ -42,6 +42,7 @@ export default function SingleList_PAGE() {
   const { user } = USE_auth();
   const { t } = useTranslation();
   const { languages } = USE_langs();
+  const toast = useToast();
 
   const [vocabs, SET_vocabs] = useState<Vocab_MODEL[]>(
     selected_LIST?.vocabs || []
@@ -186,15 +187,21 @@ export default function SingleList_PAGE() {
         HIGHLIGHT_listName={HIGHLIGHT_listName}
       />
       <DeleteVocab_MODAL
+        user={user}
         IS_open={SHOW_deleteVocabModal}
         is_public={false}
         vocab_id={toDeleteVocab_ID}
         list_id={selected_LIST?.id}
         CLOSE_modal={() => SET_deleteVocabModal(false)}
-        RESET_targetVocab={() => SET_toDeleteVocab(undefined)}
-        REMOVE_fromPrintedVocabs={(id: string) =>
-          SET_vocabs((prev) => prev.filter((v) => v.id !== id))
-        }
+        onSuccess={() => {
+          SET_vocabs((prev) => prev.filter((v) => v.id !== toDeleteVocab_ID));
+          SET_toDeleteVocab(undefined);
+          toast.show(t("notifications.vocabDeleted"), {
+            type: "green",
+            duration: 2000,
+          });
+          SET_deleteVocabModal(false);
+        }}
       />
     </Page_WRAP>
   );

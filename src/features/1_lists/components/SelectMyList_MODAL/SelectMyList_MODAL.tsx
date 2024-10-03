@@ -166,8 +166,8 @@ export default function SelectMyList_MODAL({
         />
       </KeyboardAvoidingView>
       <CreateList_MODAL
-        open={SHOW_createListModal}
-        toggle={TOGGLE_createListModal}
+        IS_open={SHOW_createListModal}
+        TOGGLE_modal={TOGGLE_createListModal}
       />
     </Big_MODAL>
   );

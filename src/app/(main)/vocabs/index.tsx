@@ -139,8 +139,8 @@ export default function MyLists_PAGE() {
       ) : null}
 
       <CreateList_MODAL
-        open={SHOW_createListModal}
-        toggle={TOGGLE_createListModal}
+        IS_open={SHOW_createListModal}
+        TOGGLE_modal={TOGGLE_createListModal}
         highlight={highlight}
         postCreatiion_FNS={() => {
           list_REF?.current?.scrollToOffset({ animated: true, offset: 0 });
