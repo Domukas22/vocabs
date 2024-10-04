@@ -237,6 +237,11 @@
     "publicVocabDeleted": "Öffentliches Vokabel gelöscht",
     "listCreated": "Neue Liste erstellt",
     "listDeletedPre": "Liste ",
-    "listDeletedPost": " gelöscht"
+    "listDeletedPost": " gelöscht",
+    "vocabCreatedInAnotherListPre": "Neue Vokabel zur Liste ",
+    "vocabCreatedInAnotherListPost": " hizugefügt"
+  },
+  "notification": {
+    "atLeast1LangError": "Mindestens 1 Sprache muss ausgewählt sein"
   }
 }

@@ -58,6 +58,7 @@ import USE_createMyVocabFormValues from "../hooks/create/USE_createMyVocabFormVa
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import Error_TEXT from "@/src/components/Error_TEXT/Error_TEXT";
 import GET_defaultTranslations from "@/src/utils/GET_defaultTranslations";
+import { Controller, useForm } from "react-hook-form";
 
 // TODO ==> We need separate create and update vocab modals
 // perhaps even separate ones for private/public
@@ -79,6 +80,7 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
   const { languages } = USE_langs();
   const { t } = useTranslation();
   const { user }: { user: User_MODEL } = USE_auth();
+  const toast = useToast();
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
     { name: "selectedLangs", initialValue: false },
@@ -93,51 +95,42 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
     TranslationCreation_PROPS | undefined
   >(undefined);
 
-  const selected_LANGS = useMemo(
-    () =>
-      modal_VALUES?.trs.reduce((acc, tr) => {
-        if (!acc.some((lang) => lang.id === tr.lang_id)) {
-          const lang = languages?.find((l) => l.id === tr.lang_id);
-          if (lang) acc.push(lang);
-        }
-        return acc;
-      }, [] as Language_MODEL[]),
-    [modal_VALUES.trs.length]
-  );
   const EDIT_selectedLangs = (new_LANGS: Language_MODEL[]) => {
-    // TODO ==> create error notifactions for too few or too many langs selected
+    let updated_TRS = [...getValues("translations")];
 
-    let new_TRS = [...modal_VALUES.trs];
+    // Filter out translations for languages that are no longer selected
+    updated_TRS = updated_TRS.filter((tr) =>
+      new_LANGS.some((newLang) => newLang.id === tr.lang_id)
+    );
 
-    if (modal_VALUES?.trs.length > 1) {
-      // filter out deleted ones
-      new_TRS.filter((tr) =>
-        new_LANGS.some((newLang) => newLang.id === tr.lang_id)
-      );
-    }
+    // Add new languages that don't have a translation yet
+    new_LANGS.forEach((lang) => {
+      if (!updated_TRS.some((tr) => tr.lang_id === lang.id)) {
+        updated_TRS.push({
+          lang_id: lang.id,
+          text: "",
+          highlights: [],
+        });
+      }
+    });
 
-    if (modal_VALUES?.trs.length < 6) {
-      // add new ones
-      new_LANGS.forEach((lang) => {
-        if (!new_TRS.some((tr) => tr.lang_id === lang.id)) {
-          new_TRS.push({
-            lang_id: lang.id,
-            text: "",
-            highlights: [],
-          });
-        }
-      });
-    }
-    modalSet_FNS.SET_trs(new_TRS);
+    // Update the form values
+    setValue("translations", updated_TRS);
   };
   const REMOVE_lang = (lang_id: string) => {
-    // TODO ==> create error notifactions for too few or too many langs selected
-    if (modal_VALUES?.trs.length > 1) {
-      modalSet_FNS.SET_trs((prev) =>
-        prev.filter((tr) => tr.lang_id !== lang_id)
+    const currentTranslations = getValues("translations");
+    if (currentTranslations.length > 1) {
+      const updatedTranslations = currentTranslations.filter(
+        (tr) => tr.lang_id !== lang_id
       );
+      setValue("translations", updatedTranslations);
     }
   };
+
+  const SUBMIT_list = (list: List_MODEL) => {
+    setValue("list", list);
+  };
+
   const HANDLE_trText = ({
     lang_id,
     text,
@@ -159,12 +152,11 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
     lang_id: string;
     highlights: number[];
   }) => {
-    modalSet_FNS.SET_trs((prev) =>
-      prev.map((tr) => {
-        if (tr.lang_id === lang_id) tr.highlights = highlights;
-        return tr;
-      })
-    );
+    let updated_TRS = [...getValues("translations")].map((tr) => {
+      if (tr.lang_id === lang_id) tr.highlights = highlights;
+      return tr;
+    });
+    setValue("translations", updated_TRS);
   };
   const RESET_form = () => {
     modalSet_FNS.SET_trs(
@@ -178,13 +170,22 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
   const { CREATE_vocab, IS_creatingVocab, error, RESET_error } =
     USE_createVocab();
 
-  const create = async () => {
+  type CreateMyVocabData_PROPS = {
+    list: List_MODEL | undefined;
+    difficulty: 1 | 2 | 3;
+    description: string;
+    translations: TranslationCreation_PROPS[];
+  };
+
+  const create = async (data: CreateMyVocabData_PROPS) => {
+    const { list, description, difficulty, translations } = data;
+
     const result = await CREATE_vocab({
       user,
-      list_id: modal_VALUES.list?.id,
-      difficulty: modal_VALUES.diff,
-      description: modal_VALUES.desc,
-      translations: modal_VALUES.trs,
+      list_id: list?.id,
+      difficulty,
+      description,
+      translations,
       is_public: false,
       onSuccess: (new_VOCAB: Vocab_MODEL) => {
         onSuccess(new_VOCAB);
@@ -196,6 +197,27 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
       console.log(result.msg); // Log internal message for debugging.
     }
   };
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isSubmitted },
+    setValue,
+    getValues,
+    reset,
+    clearErrors,
+  } = useForm<CreateMyVocabData_PROPS>({
+    defaultValues: {
+      translations: GET_defaultTranslations(initial_LIST?.default_LANGS) || [],
+      description: "",
+      list: initial_LIST,
+
+      difficulty: 3,
+    },
+  });
+
+  const form_TRS = getValues("translations") || [];
+  const submit = (data: CreateMyVocabData_PROPS) => create(data);
 
   return (
     <Big_MODAL {...{ open: IS_open }}>
@@ -228,42 +250,120 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
 
           <ChosenLangs_BLOCK
             label={t("label.chosenLangs")}
-            langs={selected_LANGS}
+            trs={form_TRS}
             toggle={() => TOGGLE_modal("selectedLangs")}
             {...{ REMOVE_lang }}
           />
-          {modal_VALUES.trs?.map((tr) => (
-            <TrInput_BLOCK
-              key={`TrInputBlock/${tr.lang_id}`}
-              diff={modal_VALUES.diff}
-              {...{
-                tr,
-                HANDLE_trText,
-                TOGGLE_modal,
-                SET_targetTr,
+
+          {form_TRS.map((tr, index) => (
+            <Controller
+              key={tr.lang_id}
+              control={control}
+              name={`translations[${index}].text`}
+              rules={{
+                required: {
+                  value: true,
+                  message: "Please provide a value or remove the language",
+                },
+                maxLength: {
+                  value: 200,
+                  message: "Translations can have 200 letters at most",
+                },
               }}
+              render={({ field }) => (
+                <TrInput_BLOCK
+                  tr={tr}
+                  diff={modal_VALUES.diff}
+                  HANDLE_trText={(newValue) => field.onChange(newValue.text)}
+                  TOGGLE_modal={TOGGLE_modal}
+                  SET_targetTr={SET_targetTr}
+                  error={isSubmitted ? errors.translations?.[index]?.text : ""}
+                  IS_errorCorrected={
+                    isSubmitted && !errors.translations?.[index]?.text
+                  }
+                />
+              )}
             />
           ))}
-          <DescriptionInput_BLOCK
-            value={modal_VALUES.desc}
-            SET_value={modalSet_FNS.SET_desc}
-          />
-          <DifficultyInput_BLOCK
-            value={modal_VALUES.diff}
-            SET_value={modalSet_FNS.SET_diff}
-          />
 
-          <Block>
-            <Label>{t("label.chosenList")}</Label>
-            <Btn
-              text={modal_VALUES.list?.name || ""}
-              iconRight={<ICON_dropdownArrow />}
-              onPress={() => TOGGLE_modal("selectedList")}
-              type="simple"
-              style={{ flex: 1 }}
-              text_STYLES={{ flex: 1 }}
-            />
-          </Block>
+          <Controller
+            control={control}
+            name="description"
+            rules={{
+              maxLength: {
+                value: 200,
+                message: "Descriptions can have 200 letters at most",
+              },
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <DescriptionInput_BLOCK
+                value={value}
+                SET_value={(val) => {
+                  onChange(val);
+                  RESET_error();
+                }}
+                error={isSubmitted ? errors.description : ""}
+                IS_errorCorrected={isSubmitted && !errors.description}
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name="difficulty"
+            rules={{
+              required: {
+                value: true,
+                message: "Please select a difficulty",
+              },
+            }}
+            render={({ field: { onChange, value } }) => (
+              <DifficultyInput_BLOCK
+                value={value}
+                SET_value={(val) => {
+                  onChange(val);
+                  RESET_error();
+                }}
+                error={isSubmitted ? errors.difficulty : ""}
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name="list"
+            rules={{
+              required: {
+                value: true,
+                message: "Please select a list",
+              },
+            }}
+            render={({ field: { value } }) => (
+              <Block>
+                <Label>{t("label.chosenList")}</Label>
+                <Btn
+                  text={value?.name || "Select a list..."}
+                  iconRight={<ICON_dropdownArrow />}
+                  onPress={() => TOGGLE_modal("selectedList")}
+                  type="simple"
+                  style={[
+                    { flex: 1 },
+                    errors.list && { borderColor: MyColors.border_red },
+                  ]}
+                  text_STYLES={{
+                    flex: 1,
+                    fontFamily: value?.name ? "Nunito-Regular" : "Nunito-Light",
+                    color: value?.name
+                      ? MyColors.text_white
+                      : MyColors.text_white_06,
+                  }}
+                />
+                {isSubmitted && errors.list && (
+                  <Styled_TEXT type="text_error">
+                    {errors.list?.message}
+                  </Styled_TEXT>
+                )}
+              </Block>
+            )}
+          />
         </KeyboardAwareScrollView>
 
         <Footer
@@ -297,7 +397,7 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
               iconRight={
                 IS_creatingVocab && <ActivityIndicator color={"black"} />
               }
-              onPress={() => !IS_creatingVocab && create()}
+              onPress={handleSubmit(submit)}
               stayPressed={IS_creatingVocab}
               type="action"
               style={{ flex: 1 }}
@@ -309,11 +409,8 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
         <SelectMultipleLanguages_MODAL
           open={modal_STATES.selectedLangs}
           TOGGLE_open={() => TOGGLE_modal("selectedLangs")}
-          active_LANGS={selected_LANGS}
-          SUBMIT_langs={(langs: Language_MODEL[]) => {
-            EDIT_selectedLangs(langs);
-            TOGGLE_modal("selectedLangs");
-          }}
+          trs={form_TRS}
+          SUBMIT_langs={EDIT_selectedLangs}
         />
 
         <TrHighlights_MODAL
@@ -329,8 +426,11 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
           open={modal_STATES.selectedList}
           title="Saved vocab to list"
           submit_ACTION={(target_LIST: List_MODEL) => {
-            modalSet_FNS.SET_list(target_LIST);
-            TOGGLE_modal("selectedList");
+            if (target_LIST) {
+              SUBMIT_list(target_LIST);
+              clearErrors("list");
+              TOGGLE_modal("selectedList");
+            }
           }}
           cancel_ACTION={() => {
             TOGGLE_modal("selectedList");

@@ -11,7 +11,7 @@ import SearchBar from "@/src/components/SearchBar/SearchBar";
 import Subnav from "@/src/components/Subnav/Subnav";
 
 import { MyColors } from "@/src/constants/MyColors";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Modal,
   SafeAreaView,
@@ -26,7 +26,7 @@ import {
 import languages from "@/src/constants/languages";
 
 import Block from "@/src/components/Block/Block";
-import { Language_MODEL } from "@/src/db/models";
+import { Language_MODEL, TranslationCreation_PROPS } from "@/src/db/models";
 import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
@@ -36,28 +36,42 @@ import {
   minVocabTranslations,
 } from "@/src/constants/globalVars";
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
+import GET_langsFromTranslations from "@/src/utils/GET_langsFromTranslations";
 
 interface SelectLanguagesModal_PROPS {
   open: boolean;
-  active_LANGS: Language_MODEL[];
   IS_inAction?: boolean;
   TOGGLE_open: () => void;
   SUBMIT_langs: (newLangSelection: Language_MODEL[]) => void;
+  trs: TranslationCreation_PROPS[];
 }
 
 export default function SelectMultipleLanguages_MODAL({
   open,
-  active_LANGS,
   IS_inAction = false,
   TOGGLE_open,
   SUBMIT_langs,
+  trs,
 }: SelectLanguagesModal_PROPS) {
   const { t } = useTranslation();
 
   const [search, SET_search] = useState("");
-
-  const [modal_LANGS, SET_modalLangs] = useState(active_LANGS);
   const { languages } = USE_langs();
+
+  const [modal_LANGS, SET_modalLangs] = useState<Language_MODEL[]>(
+    GET_langsFromTranslations(trs, languages) || []
+  );
+
+  const cancel = () => {
+    SET_modalLangs(GET_langsFromTranslations(trs, languages) || []);
+    TOGGLE_open();
+  };
+
+  const submit = () => {
+    SUBMIT_langs(modal_LANGS);
+    SET_modalLangs(GET_langsFromTranslations(trs, languages) || []);
+    TOGGLE_open();
+  };
 
   const searchedLangs =
     search !== ""
@@ -78,6 +92,10 @@ export default function SelectMultipleLanguages_MODAL({
         )
       : languages;
 
+  useEffect(() => {
+    SET_modalLangs(GET_langsFromTranslations(trs, languages) || []);
+  }, [trs]);
+
   function SELECT_lang(incomdingLang: Language_MODEL) {
     const alreadyHasLang = modal_LANGS?.some((l) => l.id === incomdingLang.id);
 
@@ -96,11 +114,6 @@ export default function SelectMultipleLanguages_MODAL({
       );
     }
   }
-
-  useEffect(() => {
-    SET_modalLangs(active_LANGS);
-  }, [open]);
-
   const appLang = useMemo(() => i18next.language, []);
 
   return (
@@ -117,7 +130,7 @@ export default function SelectMultipleLanguages_MODAL({
               type="seethrough"
               iconLeft={<ICON_X big={true} rotate={true} />}
               onPress={() => {
-                if (!IS_inAction) TOGGLE_open();
+                if (!IS_inAction) cancel();
               }}
               style={{ borderRadius: 100 }}
             />
@@ -144,18 +157,18 @@ export default function SelectMultipleLanguages_MODAL({
                 iconRight={
                   <ICON_X
                     color={
-                      modal_LANGS.some((l) => l.id === item.id)
+                      modal_LANGS?.some((l) => l.id === item.id)
                         ? "primary"
                         : "grey"
                     }
-                    rotate={modal_LANGS.some((l) => l.id === item.id)}
+                    rotate={modal_LANGS?.some((l) => l.id === item.id)}
                     big={true}
                   />
                 }
                 text={appLang === "en" ? item.lang_in_en : item.lang_in_de}
                 onPress={() => SELECT_lang(item)}
                 type={
-                  modal_LANGS.some((l) => l.id === item.id)
+                  modal_LANGS?.some((l) => l.id === item.id)
                     ? "active"
                     : "simple"
                 }
@@ -179,7 +192,7 @@ export default function SelectMultipleLanguages_MODAL({
               horizontal={true}
               keyboardShouldPersistTaps="always"
             >
-              {modal_LANGS.map((lang) => (
+              {modal_LANGS?.map((lang) => (
                 <Btn
                   key={lang.id + "tiny selected lang buttons"}
                   iconLeft={<ICON_flag lang={lang.id} />}
@@ -197,7 +210,7 @@ export default function SelectMultipleLanguages_MODAL({
             <Btn
               text={t("btn.cancel")}
               onPress={() => {
-                if (!IS_inAction) TOGGLE_open();
+                if (!IS_inAction) cancel();
               }}
             />
           }
@@ -222,7 +235,7 @@ export default function SelectMultipleLanguages_MODAL({
                   !IS_inAction ? `${modal_LANGS?.length} Sprachen wählen` : ""
                 }
                 onPress={() => {
-                  if (!IS_inAction) SUBMIT_langs(modal_LANGS);
+                  if (!IS_inAction) submit();
                 }}
                 iconRight={
                   IS_inAction ? <ActivityIndicator color="black" /> : null

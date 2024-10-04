@@ -4,7 +4,11 @@
 
 import { Language_MODEL, TranslationCreation_PROPS } from "@/src/db/models";
 import Block from "@/src/components/Block/Block";
-import { ICON_flag } from "@/src/components/icons/icons";
+import {
+  ICON_difficultyDot,
+  ICON_flag,
+  ICON_toastNotification,
+} from "@/src/components/icons/icons";
 import Btn from "@/src/components/Btn/Btn";
 import React, { useMemo, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
@@ -18,6 +22,7 @@ import i18next from "i18next";
 import StyledText_INPUT from "@/src/components/StyledText_INPUT/StyledText_INPUT";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
+import { FieldError } from "react-hook-form";
 
 interface VocabTranslationInputs_PROPS {
   tr: TranslationCreation_PROPS;
@@ -27,6 +32,8 @@ interface VocabTranslationInputs_PROPS {
   SET_targetTr: React.Dispatch<
     React.SetStateAction<TranslationCreation_PROPS | undefined>
   >;
+  error: string | FieldError | undefined;
+  IS_errorCorrected: boolean;
 }
 
 export default function TrInput_BLOCK({
@@ -35,6 +42,8 @@ export default function TrInput_BLOCK({
   HANDLE_trText,
   TOGGLE_modal,
   SET_targetTr,
+  error,
+  IS_errorCorrected,
 }: VocabTranslationInputs_PROPS) {
   const { t } = useTranslation();
   const appLang = useMemo(() => i18next.language, []);
@@ -53,23 +62,46 @@ export default function TrInput_BLOCK({
       labelIcon={<ICON_flag lang={tr?.lang_id} />}
       styles={{ padding: 20 }}
     >
-      <Label icon={<ICON_flag lang={lang?.id} />}>{`${t(
+      <Label icon={<ICON_flag lang={lang?.id} big />}>{`${t(
         "word.translation"
-      )} auf ${lang?.[`lang_in_${appLang || "en"}`]}`}</Label>
+      )} auf ${lang?.[`lang_in_${appLang || "en"}`]} *`}</Label>
 
       <View style={{ position: "relative" }}>
         {!isFocused && (
-          <View style={s.overlay} pointerEvents="none">
+          <View
+            style={[
+              s.overlay,
+              IS_errorCorrected && {
+                paddingRight: 44,
+              },
+            ]}
+            pointerEvents="none"
+          >
             {tr.text && (
               <Highlighted_TEXT
                 text={tr.text}
                 highlights={tr.highlights}
-                diff={diff}
                 light
+                {...{ diff }}
               />
             )}
           </View>
         )}
+        {/* <View
+          style={{
+            position: "absolute",
+            bottom: 12,
+            right: 12,
+
+            zIndex: 10,
+          }}
+        >
+          <Btn
+            iconLeft={<ICON_difficultyDot difficulty={diff} big />}
+            type="seethrough"
+            onPress={() => {}}
+          />
+        </View> */}
 
         <StyledText_INPUT
           multiline
@@ -79,9 +111,10 @@ export default function TrInput_BLOCK({
           }}
           // placeholder={t("placeholder.translation")}
           _ref={inputREF}
-          setIsFocused={setIsFocused}
+          {...{ error, IS_errorCorrected, isFocused, setIsFocused }}
         />
       </View>
+      {error && <Styled_TEXT type="text_error">{error.message}</Styled_TEXT>}
 
       <View style={{ flexDirection: "row", gap: 8 }}>
         {/* <Btn text="Remove" type="seethrough" onPress={() => {}} /> */}
@@ -107,10 +140,12 @@ export default function TrInput_BLOCK({
 const s = StyleSheet.create({
   overlay: {
     position: "absolute",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
+    top: 1,
+    left: 1,
+    right: 1,
+    bottom: 1,
+    // justifyContent: "center",
+
     zIndex: 10,
 
     paddingHorizontal: 16,
@@ -118,8 +153,8 @@ const s = StyleSheet.create({
 
     backgroundColor: MyColors.btn_2,
     borderRadius: 12,
-    borderWidth: 1,
-    borderColor: MyColors.border_white_005,
+    // borderWidth: 1,
+    // borderColor: MyColors.border_white_005,
   },
   textBtnPress: {
     backgroundColor: MyColors.btn_3,

@@ -12,27 +12,31 @@ import { View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useMemo } from "react";
 import i18next from "i18next";
+import { USE_langs } from "@/src/context/Langs_CONTEXT";
+import GET_langsFromTranslations from "@/src/utils/GET_langsFromTranslations";
 
 interface ChosenLangsInputs_PROPS {
   label: string;
-  langs: Language_MODEL[];
+  trs: TranslationCreation_PROPS[];
   REMOVE_lang: (lang_id: string) => void;
   toggle: () => void;
 }
 
 export default function ChosenLangs_BLOCK({
   label,
-  langs,
+  trs,
   REMOVE_lang = () => {},
   toggle = () => {},
 }: ChosenLangsInputs_PROPS) {
   const { t } = useTranslation();
   const currentAppLanguage = useMemo(() => i18next.language, []);
+  const { languages } = USE_langs();
+  const langs = useMemo(() => GET_langsFromTranslations(trs, languages), [trs]);
 
   return (
     <Block>
       <Label>{label || "NO LABEL PROVIDED"}</Label>
-      {langs.map((lang: Language_MODEL) => {
+      {langs?.map((lang: Language_MODEL) => {
         return (
           <Btn
             key={"chosen lang" + lang.id}

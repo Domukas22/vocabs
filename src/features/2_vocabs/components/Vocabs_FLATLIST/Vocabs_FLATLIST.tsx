@@ -15,14 +15,16 @@ export default function Vocabs_FLATLIST({
   vocabs,
   highlightedVocab_ID,
   SHOW_bottomBtn,
-  TOGGLE_vocabModal,
+  TOGGLE_updateVocabModal,
+  TOGGLE_createVocabModal,
   HANDLE_vocabModal,
   displaySettings,
   PREPARE_vocabDelete,
 }: {
   vocabs: Vocab_MODEL[];
   SHOW_bottomBtn: React.ReactNode;
-  TOGGLE_vocabModal: () => void;
+  TOGGLE_updateVocabModal: () => void;
+  TOGGLE_createVocabModal: () => void;
   highlightedVocab_ID: string;
   HANDLE_vocabModal: {
     clear?: boolean;
@@ -59,7 +61,7 @@ export default function Vocabs_FLATLIST({
             text={t("btn.createVocab")}
             iconLeft={<ICON_X color="primary" />}
             type="seethrough_primary"
-            onPress={TOGGLE_vocabModal}
+            onPress={TOGGLE_createVocabModal}
           />
         ) : null
       }

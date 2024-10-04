@@ -123,7 +123,7 @@ export default function CreateList_MODAL({
             value={value}
             error={!!errors.name || !!createList_ERROR}
             props={{ keyboardType: "default" }} // Changed to "default" for list names
-            correctedError={isSubmitted && !errors.name && !createList_ERROR}
+            IS_errorCorrected={isSubmitted && !errors.name && !createList_ERROR}
             _ref={inputREF}
           />
         )}

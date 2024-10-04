@@ -234,6 +234,11 @@
     "publicVocabDeleted": "Public vocab deleted",
     "listCreated": "Created a new list",
     "listDeletedPre": "Deleted list ",
-    "listDeletedPost": " "
+    "listDeletedPost": " ",
+    "vocabCreatedInAnotherListPre": "Created new vocab in the list ",
+    "vocabCreatedInAnotherListPost": " "
+  },
+  "notification": {
+    "atLeast1LangError": "Atleast 1 language must be selected"
   }
 }

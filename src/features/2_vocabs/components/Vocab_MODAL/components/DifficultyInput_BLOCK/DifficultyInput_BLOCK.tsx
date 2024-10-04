@@ -6,17 +6,21 @@
 import Block from "@/src/components/Block/Block";
 import Btn from "@/src/components/Btn/Btn";
 import Label from "@/src/components/Label/Label";
+import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
+import { FieldError } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 
 interface DifficultyInputs_PROPS {
   value: 1 | 2 | 3;
   SET_value: React.Dispatch<React.SetStateAction<1 | 2 | 3>>;
+  error: string | FieldError | undefined;
 }
 
 export default function DifficultyInput_BLOCK({
   value,
   SET_value,
+  error,
 }: DifficultyInputs_PROPS) {
   const { t } = useTranslation();
   return (
@@ -51,6 +55,7 @@ export default function DifficultyInput_BLOCK({
           text_STYLES={{ textAlign: "center" }}
         />
       </View>
+      {error && <Styled_TEXT type="text_error">{error.message}</Styled_TEXT>}
     </Block>
   );
 }

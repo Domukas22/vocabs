@@ -23,11 +23,13 @@ type _TextInputProps = TextInputProps & {
   SET_value: (val: string) => void;
   placeholder?: string;
   error?: boolean;
-  correctedError?: boolean;
+  IS_errorCorrected?: boolean;
   multiline?: boolean;
   staySmall?: boolean;
   _ref?: Ref<R_TextInput>;
   props?: TextInputProps;
+  isFocused: boolean;
+  setIsFocused: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function StyledText_INPUT({
@@ -36,9 +38,10 @@ export default function StyledText_INPUT({
   placeholder,
   multiline = false,
   error = undefined,
-  correctedError = undefined,
+  IS_errorCorrected = undefined,
   style,
   _ref,
+  isFocused,
   setIsFocused,
   staySmall = false,
   props,
@@ -51,8 +54,8 @@ export default function StyledText_INPUT({
           multiline && { height: "auto" },
           multiline && !staySmall && { minHeight: 100 },
           error && s.error,
-          correctedError && s.correctedError,
-          correctedError && { paddingRight: 44 },
+          IS_errorCorrected &&
+            isFocused && { ...s.IS_errorCorrected, paddingRight: 44 },
           style,
         ]}
         placeholder={placeholder && placeholder}
@@ -67,7 +70,7 @@ export default function StyledText_INPUT({
         ref={_ref && _ref}
         {...props}
       />
-      {correctedError && (
+      {IS_errorCorrected && isFocused && (
         <View style={{ position: "absolute", right: 12 }}>
           <ICON_toastNotification type="success" />
         </View>
@@ -96,7 +99,7 @@ const s = StyleSheet.create({
   error: {
     borderColor: MyColors.border_red,
   },
-  correctedError: {
+  IS_errorCorrected: {
     borderColor: MyColors.border_green,
   },
 });

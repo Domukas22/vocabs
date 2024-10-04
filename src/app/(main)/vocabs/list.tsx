@@ -41,6 +41,8 @@ export default function SingleList_PAGE() {
   const [SHOW_vocabModal, TOGGLE_vocabModal] = USE_toggle(false);
   const [SHOW_createVocabModal, TOGGLE_createVocabModal, SET_createVocabModal] =
     USE_toggle(false);
+  const [SHOW_updateVocabModal, TOGGLE_updateVocabModal, SET_updateVocabModal] =
+    USE_toggle(false);
   const [SHOW_listSettingsModal, TOGGLE_listSettingsModal] = USE_toggle(false);
   const { user } = USE_auth();
   const { t } = useTranslation();
@@ -51,7 +53,8 @@ export default function SingleList_PAGE() {
     selected_LIST?.vocabs || []
   );
 
-  const { z_CREATE_privateVocab, z_DELETE_privateVocab } = USE_zustand();
+  const { z_lists, z_CREATE_privateVocab, z_DELETE_privateVocab } =
+    USE_zustand();
 
   const [displaySettings, SET_displaySettings] =
     useState<VocabDisplaySettings_PROPS>({
@@ -144,7 +147,8 @@ export default function SingleList_PAGE() {
           SHOW_bottomBtn={true}
           {...{
             highlightedVocab_ID: highlighted_ID,
-            TOGGLE_vocabModal,
+            TOGGLE_updateVocabModal,
+            TOGGLE_createVocabModal,
             HANDLE_vocabModal,
             displaySettings,
             PREPARE_vocabDelete,
@@ -161,7 +165,7 @@ export default function SingleList_PAGE() {
               : t("label.thisListIsEmpty")
           }
           btn_TEXT={t("btn.createVocab")}
-          btn_ACTION={() => HANDLE_vocabModal({ clear: true })}
+          btn_ACTION={TOGGLE_createVocabModal}
         />
       )}
       <MyVocabDisplaySettings_MODAL
@@ -172,28 +176,34 @@ export default function SingleList_PAGE() {
         list_LANGS={list_LANGS}
       />
 
-      {/* <Vocab_MODAL
-        open={SHOW_vocabModal}
-        TOGGLE_modal={() => HANDLE_vocabModal({ clear: true })}
-        vocab={target_VOCAB}
-        selected_LIST={selected_LIST}
-        SET_vocabs={SET_vocabs}
-        HIGHLIGHT_vocab={highlight}
-        {...{ PREPARE_vocabDelete }}
-      /> */}
       <CreateMyVocab_MODAL
         IS_open={SHOW_createVocabModal}
         initial_LIST={selected_LIST}
         TOGGLE_modal={() => TOGGLE_createVocabModal()}
         onSuccess={(new_VOCAB: Vocab_MODEL) => {
-          SET_vocabs((prev) => [new_VOCAB, ...prev]);
           z_CREATE_privateVocab(new_VOCAB);
-          toast.show(t("notifications.vocabCreated"), {
-            type: "green",
-            duration: 3000,
-          });
           SET_createVocabModal(false);
-          HIGHLIGHT_vocab(new_VOCAB.id);
+
+          if (new_VOCAB.list_id === selected_LIST.id) {
+            SET_vocabs((prev) => [new_VOCAB, ...prev]);
+            HIGHLIGHT_vocab(new_VOCAB.id);
+            toast.show(t("notifications.vocabCreated"), {
+              type: "green",
+              duration: 3000,
+            });
+          } else {
+            toast.show(
+              t("notifications.vocabCreatedInAnotherListPre") +
+                `"${
+                  z_lists.find((l) => l.id === new_VOCAB.list_id)?.name || ""
+                }"` +
+                t("notifications.vocabCreatedInAnotherListPost"),
+              {
+                type: "green",
+                duration: 5000,
+              }
+            );
+          }
         }}
       />
       <ListSettings_MODAL
