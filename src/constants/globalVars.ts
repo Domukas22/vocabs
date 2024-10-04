@@ -9,6 +9,9 @@ export const vocabLimit = 100;
 export const minVocabTranslations = 1;
 export const maxVocabTranslations = 5;
 
+export const MAX_DESCRIPTION_LENGTH = 200;
+export const MAX_TRANSLATION_LENGTH = 200;
+
 export const level_0_limits = { lists: 15, vocabs: 100 };
 export const level_1_limits = { lists: 50, vocabs: 1000 };
 export const level_2_limits = { lists: 100, vocabs: 5000 };

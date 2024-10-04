@@ -3,17 +3,11 @@
 //
 
 import Btn from "@/src/components/Btn/Btn";
-
 import Header from "@/src/components/Header/Header";
-import {
-  ICON_arrow,
-  ICON_dropdownArrow,
-  ICON_X,
-} from "@/src/components/icons/icons";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { ICON_dropdownArrow, ICON_X } from "@/src/components/icons/icons";
+import React, { useMemo, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-
 import {
   Language_MODEL,
   List_MODEL,
@@ -23,45 +17,34 @@ import {
 } from "@/src/db/models";
 
 import TrInput_BLOCK from "../../components/Vocab_MODAL/components/TrInput_BLOCK/TrInput_BLOCK";
-
 import TrHighlights_MODAL from "../../components/Vocab_MODAL/components/TrHighlights_MODAL/TrHighlights_MODAL";
-
-import { USE_langs } from "@/src/context/Langs_CONTEXT";
 import SelectMultipleLanguages_MODAL from "@/src/features/4_languages/components/SelectMultipleLanguages_MODAL/SelectMultipleLanguages_MODAL";
-
-import USE_myVocabActions from "../../hooks/USE_myVocabActions";
-
 import DifficultyInput_BLOCK from "../../components/Vocab_MODAL/components/DifficultyInput_BLOCK/DifficultyInput_BLOCK";
-
 import DescriptionInput_BLOCK from "../../components/Vocab_MODAL/components/DescriptionInput_BLOCK/DescriptionInput_BLOCK";
 import ChosenLangs_BLOCK from "../../../../components/ChosenLangs_BLOCK/ChosenLangs_BLOCK";
 
 import { useTranslation } from "react-i18next";
-
 import Block from "@/src/components/Block/Block";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
-
-import Confirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
 import Label from "@/src/components/Label/Label";
 
 import Big_MODAL from "@/src/components/Modals/Big_MODAL/Big_MODAL";
 import Footer from "@/src/components/Footer/Footer";
 import SelectMyList_MODAL from "@/src/features/1_lists/components/SelectMyList_MODAL/SelectMyList_MODAL";
-import Dropdown_BLOCK from "@/src/components/Dropdown_BLOCK/Dropdown_BLOCK";
 import USE_createVocab from "../../hooks/USE_createVocab";
-import USE_zustand from "@/src/zustand";
-import { useToast } from "react-native-toast-notifications";
 import { MyColors } from "@/src/constants/MyColors";
-import My_TOAST from "@/src/components/My_TOAST/My_TOAST";
-import USE_createMyVocabFormValues from "../hooks/create/USE_createMyVocabFormValues";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
-import Error_TEXT from "@/src/components/Error_TEXT/Error_TEXT";
+
 import GET_defaultTranslations from "@/src/utils/GET_defaultTranslations";
 import { Controller, useForm } from "react-hook-form";
-
-// TODO ==> We need separate create and update vocab modals
-// perhaps even separate ones for private/public
+import HANLDE_selectedLangs from "../../shared/utils/HANLDE_selectedLangs";
+import HANLDE_selectedHighlights from "../../shared/utils/HANDLE_selectedTrs";
+import HANDLE_langRemoval from "../../shared/utils/HANLDE_langRemoval";
+import {
+  MAX_DESCRIPTION_LENGTH,
+  MAX_TRANSLATION_LENGTH,
+} from "@/src/constants/globalVars";
 
 interface CreateMyVocabModal_PROPS {
   IS_open: boolean;
@@ -70,6 +53,13 @@ interface CreateMyVocabModal_PROPS {
   onSuccess: (new_VOCAB: Vocab_MODEL) => void;
 }
 
+type CreateMyVocabData_PROPS = {
+  list: List_MODEL | undefined;
+  difficulty: 1 | 2 | 3;
+  description: string;
+  translations: TranslationCreation_PROPS[];
+};
+
 export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
   const {
     IS_open,
@@ -77,10 +67,9 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
     initial_LIST,
     onSuccess = () => {},
   } = props;
-  const { languages } = USE_langs();
+
   const { t } = useTranslation();
   const { user }: { user: User_MODEL } = USE_auth();
-  const toast = useToast();
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
     { name: "selectedLangs", initialValue: false },
@@ -88,98 +77,15 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
     { name: "trHighlights", initialValue: false },
   ]);
 
-  const { modal_VALUES, modalSet_FNS } =
-    USE_createMyVocabFormValues(initial_LIST);
-
   const [target_TR, SET_targetTr] = useState<
     TranslationCreation_PROPS | undefined
   >(undefined);
 
-  const EDIT_selectedLangs = (new_LANGS: Language_MODEL[]) => {
-    let updated_TRS = [...getValues("translations")];
-
-    // Filter out translations for languages that are no longer selected
-    updated_TRS = updated_TRS.filter((tr) =>
-      new_LANGS.some((newLang) => newLang.id === tr.lang_id)
-    );
-
-    // Add new languages that don't have a translation yet
-    new_LANGS.forEach((lang) => {
-      if (!updated_TRS.some((tr) => tr.lang_id === lang.id)) {
-        updated_TRS.push({
-          lang_id: lang.id,
-          text: "",
-          highlights: [],
-        });
-      }
-    });
-
-    // Update the form values
-    setValue("translations", updated_TRS);
-  };
-  const REMOVE_lang = (lang_id: string) => {
-    const currentTranslations = getValues("translations");
-    if (currentTranslations.length > 1) {
-      const updatedTranslations = currentTranslations.filter(
-        (tr) => tr.lang_id !== lang_id
-      );
-      setValue("translations", updatedTranslations);
-    }
-  };
-
-  const SUBMIT_list = (list: List_MODEL) => {
-    setValue("list", list);
-  };
-
-  const HANDLE_trText = ({
-    lang_id,
-    text,
-  }: {
-    lang_id: string;
-    text: string;
-  }) => {
-    modalSet_FNS.SET_trs((prev) =>
-      prev.map((tr) => {
-        if (tr.lang_id === lang_id) tr.text = text;
-        return tr;
-      })
-    );
-  };
-  const SUBMIT_highlights = ({
-    lang_id,
-    highlights,
-  }: {
-    lang_id: string;
-    highlights: number[];
-  }) => {
-    let updated_TRS = [...getValues("translations")].map((tr) => {
-      if (tr.lang_id === lang_id) tr.highlights = highlights;
-      return tr;
-    });
-    setValue("translations", updated_TRS);
-  };
-  const RESET_form = () => {
-    modalSet_FNS.SET_trs(
-      GET_defaultTranslations(initial_LIST?.default_LANGS) || []
-    );
-    modalSet_FNS.SET_desc("");
-    modalSet_FNS.SET_list(initial_LIST);
-    modalSet_FNS.SET_diff(3);
-  };
-
   const { CREATE_vocab, IS_creatingVocab, error, RESET_error } =
     USE_createVocab();
 
-  type CreateMyVocabData_PROPS = {
-    list: List_MODEL | undefined;
-    difficulty: 1 | 2 | 3;
-    description: string;
-    translations: TranslationCreation_PROPS[];
-  };
-
   const create = async (data: CreateMyVocabData_PROPS) => {
     const { list, description, difficulty, translations } = data;
-
     const result = await CREATE_vocab({
       user,
       list_id: list?.id,
@@ -189,12 +95,12 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
       is_public: false,
       onSuccess: (new_VOCAB: Vocab_MODEL) => {
         onSuccess(new_VOCAB);
-        RESET_form();
+        reset();
       },
     });
 
     if (!result.success) {
-      console.log(result.msg); // Log internal message for debugging.
+      console.error(result.msg);
     }
   };
 
@@ -206,17 +112,23 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
     getValues,
     reset,
     clearErrors,
+    trigger,
   } = useForm<CreateMyVocabData_PROPS>({
     defaultValues: {
       translations: GET_defaultTranslations(initial_LIST?.default_LANGS) || [],
       description: "",
       list: initial_LIST,
-
       difficulty: 3,
     },
+    criteriaMode: "all",
+    shouldFocusError: true,
+    mode: "onSubmit",
   });
 
-  const form_TRS = getValues("translations") || [];
+  const form_TRS = useMemo(
+    () => getValues("translations"),
+    [getValues("translations")]
+  );
   const submit = (data: CreateMyVocabData_PROPS) => create(data);
 
   return (
@@ -231,7 +143,7 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
               iconLeft={<ICON_X big={true} rotate={true} />}
               onPress={() => {
                 TOGGLE_vocabModal();
-                RESET_form();
+                reset();
                 RESET_error();
               }}
               style={{ borderRadius: 100 }}
@@ -248,16 +160,39 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
         >
           {/* ------------------------------ INPUTS ------------------------------  */}
 
-          <ChosenLangs_BLOCK
-            label={t("label.chosenLangs")}
-            trs={form_TRS}
-            toggle={() => TOGGLE_modal("selectedLangs")}
-            {...{ REMOVE_lang }}
+          <Controller
+            control={control}
+            name="translations"
+            rules={{
+              validate: (value) =>
+                value && value.length > 0
+                  ? true
+                  : "At least one language must be selected is required",
+            }}
+            render={({ field: { value, onChange }, fieldState: { error } }) => (
+              <ChosenLangs_BLOCK
+                label={t("label.chosenLangs")}
+                trs={value}
+                toggle={() => TOGGLE_modal("selectedLangs")}
+                REMOVE_lang={(lang_id: string) =>
+                  HANDLE_langRemoval({
+                    lang_id,
+                    current_TRS: value,
+                    SET_trs: (updated_TRS: TranslationCreation_PROPS[]) => {
+                      onChange([...updated_TRS]); // Update translations array via onChange
+                      trigger();
+                    },
+                  })
+                }
+                error={error}
+                // Pass the error message from validation
+              />
+            )}
           />
 
           {form_TRS.map((tr, index) => (
             <Controller
-              key={tr.lang_id}
+              key={tr.lang_id + "InputsBlock"}
               control={control}
               name={`translations[${index}].text`}
               rules={{
@@ -266,14 +201,14 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
                   message: "Please provide a value or remove the language",
                 },
                 maxLength: {
-                  value: 200,
-                  message: "Translations can have 200 letters at most",
+                  value: MAX_TRANSLATION_LENGTH,
+                  message: `Translations can have ${MAX_TRANSLATION_LENGTH} letters at most`,
                 },
               }}
               render={({ field }) => (
                 <TrInput_BLOCK
                   tr={tr}
-                  diff={modal_VALUES.diff}
+                  diff={getValues("difficulty")}
                   HANDLE_trText={(newValue) => field.onChange(newValue.text)}
                   TOGGLE_modal={TOGGLE_modal}
                   SET_targetTr={SET_targetTr}
@@ -291,8 +226,8 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
             name="description"
             rules={{
               maxLength: {
-                value: 200,
-                message: "Descriptions can have 200 letters at most",
+                value: MAX_DESCRIPTION_LENGTH,
+                message: `Descriptions can have ${MAX_DESCRIPTION_LENGTH} letters at most`,
               },
             }}
             render={({ field: { onChange, onBlur, value } }) => (
@@ -321,6 +256,7 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
                 value={value}
                 SET_value={(val) => {
                   onChange(val);
+                  trigger();
                   RESET_error();
                 }}
                 error={isSubmitted ? errors.difficulty : ""}
@@ -386,7 +322,7 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
               onPress={() => {
                 TOGGLE_vocabModal();
                 RESET_error();
-                RESET_form();
+                reset();
               }}
               type="simple"
             />
@@ -410,16 +346,33 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
           open={modal_STATES.selectedLangs}
           TOGGLE_open={() => TOGGLE_modal("selectedLangs")}
           trs={form_TRS}
-          SUBMIT_langs={EDIT_selectedLangs}
+          SUBMIT_langs={(new_LANGS: Language_MODEL[]) =>
+            HANLDE_selectedLangs({
+              new_LANGS,
+              current_TRS: form_TRS,
+              SET_trs: (updated_TRS: TranslationCreation_PROPS[]) =>
+                setValue("translations", updated_TRS),
+            })
+          }
         />
 
         <TrHighlights_MODAL
           open={modal_STATES.trHighlights}
           tr={target_TR}
-          diff={modal_VALUES.diff}
+          diff={getValues("difficulty")}
           TOGGLE_open={() => TOGGLE_modal("trHighlights")}
-          SET_trs={modalSet_FNS.SET_trs}
-          {...{ SUBMIT_highlights }}
+          SET_trs={(trs: TranslationCreation_PROPS[]) => {
+            setValue("translations", trs);
+          }}
+          SUBMIT_highlights={({ lang_id, highlights }) =>
+            HANLDE_selectedHighlights({
+              new_HIGHLIGHTS: highlights,
+              lang_id,
+              current_TRS: form_TRS,
+              SET_trs: (updated_TRS: TranslationCreation_PROPS[]) =>
+                setValue("translations", updated_TRS),
+            })
+          }
         />
 
         <SelectMyList_MODAL
@@ -427,7 +380,7 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
           title="Saved vocab to list"
           submit_ACTION={(target_LIST: List_MODEL) => {
             if (target_LIST) {
-              SUBMIT_list(target_LIST);
+              setValue("list", target_LIST);
               clearErrors("list");
               TOGGLE_modal("selectedList");
             }
@@ -436,7 +389,7 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
             TOGGLE_modal("selectedList");
           }}
           IS_inAction={IS_creatingVocab}
-          current_LIST={modal_VALUES.list}
+          current_LIST={getValues("list")}
         />
       </View>
     </Big_MODAL>

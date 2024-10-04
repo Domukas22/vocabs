@@ -25,7 +25,7 @@ interface TrHighlightsModal_PROPS {
   tr: TranslationCreation_PROPS | undefined;
   diff: 0 | 1 | 2 | 3;
   TOGGLE_open: () => void;
-  SET_trs: React.Dispatch<React.SetStateAction<TranslationCreation_PROPS[]>>;
+  SET_trs: (trs: TranslationCreation_PROPS[]) => void;
   SUBMIT_highlights: ({
     lang_id,
     highlights,

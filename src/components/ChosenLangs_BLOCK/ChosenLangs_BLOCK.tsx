@@ -14,12 +14,15 @@ import { useMemo } from "react";
 import i18next from "i18next";
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
 import GET_langsFromTranslations from "@/src/utils/GET_langsFromTranslations";
+import { Styled_TEXT } from "../Styled_TEXT/Styled_TEXT";
+import { FieldError } from "react-hook-form";
 
 interface ChosenLangsInputs_PROPS {
   label: string;
   trs: TranslationCreation_PROPS[];
   REMOVE_lang: (lang_id: string) => void;
   toggle: () => void;
+  error: FieldError | undefined;
 }
 
 export default function ChosenLangs_BLOCK({
@@ -27,6 +30,7 @@ export default function ChosenLangs_BLOCK({
   trs,
   REMOVE_lang = () => {},
   toggle = () => {},
+  error,
 }: ChosenLangsInputs_PROPS) {
   const { t } = useTranslation();
   const currentAppLanguage = useMemo(() => i18next.language, []);
@@ -61,6 +65,7 @@ export default function ChosenLangs_BLOCK({
         type="seethrough_primary"
         onPress={toggle}
       />
+      {error && <Styled_TEXT type="text_error">{error.message}</Styled_TEXT>}
     </Block>
   );
 }
