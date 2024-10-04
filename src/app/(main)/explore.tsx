@@ -102,7 +102,7 @@ export default function Explore_PAGE() {
 
   async function create(target_LIST: List_MODEL) {
     if (!IS_creatingVocab && targetSave_VOCAB && target_LIST) {
-      const newVocab = await CREATE_vocab({
+      const new_VOCAB = await CREATE_vocab({
         user_id: user?.id,
         list_id: target_LIST.id,
         difficulty: 3,
@@ -111,9 +111,9 @@ export default function Explore_PAGE() {
         translations: targetSave_VOCAB.translations,
       });
 
-      if (newVocab.success) {
-        z_CREATE_privateVocab(target_LIST.id, newVocab.data);
-        // SET_vocabs((prev) => [newVocab.data, ...prev]);
+      if (new_VOCAB.success) {
+        z_CREATE_privateVocab(target_LIST.id, new_VOCAB.data);
+        // SET_vocabs((prev) => [new_VOCAB.data, ...prev]);
         TOGGLE_saveVocabModal();
         SET_targetSaveVocab(undefined);
         toast.show(t("notifications.vocabCopied"), {

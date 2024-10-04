@@ -106,7 +106,7 @@ export default function Vocab_MODAL(props: ManageVocabModal_PROPS) {
   } = USE_createVocab();
 
   async function CREATE_public() {
-    const newVocab = await CREATE_publicVocab({
+    const new_VOCAB = await CREATE_publicVocab({
       user_id: null,
       list_id: null,
       difficulty: 3,
@@ -117,11 +117,11 @@ export default function Vocab_MODAL(props: ManageVocabModal_PROPS) {
       IS_admin: user.is_admin,
     });
 
-    if (newVocab.success) {
-      z_CREATE_publicVocab(newVocab.data);
-      // SET_vocabs((prev) => [newVocab.data, ...prev]);
+    if (new_VOCAB.success) {
+      z_CREATE_publicVocab(new_VOCAB.data);
+      // SET_vocabs((prev) => [new_VOCAB.data, ...prev]);
       TOGGLE_vocabModal();
-      HIGHLIGHT_vocab(newVocab.data.id);
+      HIGHLIGHT_vocab(new_VOCAB.data.id);
       toast.show(t("notifications.publicVocabCreated"), {
         type: "green",
         duration: 5000,

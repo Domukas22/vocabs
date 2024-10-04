@@ -32,12 +32,15 @@ import { ToastProvider, useToast } from "react-native-toast-notifications";
 import USE_zustand from "@/src/zustand";
 import DeleteVocab_MODAL from "@/src/features/2_vocabs/components/DeleteVocab_MODAL/DeleteVocab_MODAL";
 import Notification_BOX from "@/src/components/Notification_BOX/Notification_BOX";
+import CreateMyVocab_MODAL from "@/src/features/2_vocabs/private/components/CreateMyVocab_MODAL";
 
 export default function SingleList_PAGE() {
   const router = useRouter();
   const { selected_LIST } = USE_selectedList();
   const [SHOW_displaySettings, TOGGLE_displaySettings] = USE_toggle(false);
   const [SHOW_vocabModal, TOGGLE_vocabModal] = USE_toggle(false);
+  const [SHOW_createVocabModal, TOGGLE_createVocabModal, SET_createVocabModal] =
+    USE_toggle(false);
   const [SHOW_listSettingsModal, TOGGLE_listSettingsModal] = USE_toggle(false);
   const { user } = USE_auth();
   const { t } = useTranslation();
@@ -48,7 +51,7 @@ export default function SingleList_PAGE() {
     selected_LIST?.vocabs || []
   );
 
-  const { z_DELETE_privateVocab } = USE_zustand();
+  const { z_CREATE_privateVocab, z_DELETE_privateVocab } = USE_zustand();
 
   const [displaySettings, SET_displaySettings] =
     useState<VocabDisplaySettings_PROPS>({
@@ -81,7 +84,7 @@ export default function SingleList_PAGE() {
   );
 
   // const [IS_listNameHighlighted, SET_isListNameHightighted] = useState(false);
-  const { highlighted_ID, highlight } = USE_highlighedId();
+  const { highlighted_ID, highlight: HIGHLIGHT_vocab } = USE_highlighedId();
   const {
     isHighlighted: IS_listNameHighlighted,
     highlight: HIGHLIGHT_listName,
@@ -122,14 +125,12 @@ export default function SingleList_PAGE() {
         <MyVocabs_SUBNAV
           search={search}
           SET_search={SEARCH_vocabs}
-          {...{
-            TOGGLE_displaySettings,
-            HANDLE_vocabModal,
-          }}
+          onPlusIconPress={TOGGLE_createVocabModal}
           activeFitlers={
             displaySettings.difficultyFilters.length +
             displaySettings.langFilters.length
           }
+          {...{ TOGGLE_displaySettings }}
         />
       )}
       {ARE_vocabsSearching || ARE_vocabsFiltering ? <List_SKELETONS /> : null}
@@ -171,7 +172,7 @@ export default function SingleList_PAGE() {
         list_LANGS={list_LANGS}
       />
 
-      <Vocab_MODAL
+      {/* <Vocab_MODAL
         open={SHOW_vocabModal}
         TOGGLE_modal={() => HANDLE_vocabModal({ clear: true })}
         vocab={target_VOCAB}
@@ -179,6 +180,21 @@ export default function SingleList_PAGE() {
         SET_vocabs={SET_vocabs}
         HIGHLIGHT_vocab={highlight}
         {...{ PREPARE_vocabDelete }}
+      /> */}
+      <CreateMyVocab_MODAL
+        IS_open={SHOW_createVocabModal}
+        initial_LIST={selected_LIST}
+        TOGGLE_modal={() => TOGGLE_createVocabModal()}
+        onSuccess={(new_VOCAB: Vocab_MODEL) => {
+          SET_vocabs((prev) => [new_VOCAB, ...prev]);
+          z_CREATE_privateVocab(new_VOCAB);
+          toast.show(t("notifications.vocabCreated"), {
+            type: "green",
+            duration: 3000,
+          });
+          SET_createVocabModal(false);
+          HIGHLIGHT_vocab(new_VOCAB.id);
+        }}
       />
       <ListSettings_MODAL
         list={selected_LIST}

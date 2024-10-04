@@ -9,10 +9,16 @@ import Subnav from "@/src/components/Subnav/Subnav";
 
 export default function Vocabs_SUBNAV({
   search,
+  activeFitlers = 0,
   SET_search,
   TOGGLE_displaySettings,
-  HANDLE_vocabModal,
-  activeFitlers = 0,
+  onPlusIconPress,
+}: {
+  search: string;
+  activeFitlers: number;
+  SET_search: (val: string) => void;
+  TOGGLE_displaySettings: () => void;
+  onPlusIconPress: () => void;
 }) {
   return (
     <Subnav>
@@ -28,7 +34,7 @@ export default function Vocabs_SUBNAV({
         type="simple"
         iconLeft={<ICON_X big={true} color="primary" />}
         style={{ borderRadius: 100 }}
-        onPress={() => HANDLE_vocabModal({ clear: true })}
+        onPress={onPlusIconPress}
       />
     </Subnav>
   );

@@ -18,67 +18,49 @@ import {
   NativeViewGestureHandler,
   ScrollView,
 } from "react-native-gesture-handler";
+import { USE_langs } from "@/src/context/Langs_CONTEXT";
 
 interface TrHighlightsModal_PROPS {
   open: boolean;
+  tr: TranslationCreation_PROPS | undefined;
+  diff: 0 | 1 | 2 | 3;
   TOGGLE_open: () => void;
-  target_LANG: Language_MODEL | undefined;
-  modal_DIFF: 0 | 1 | 2 | 3;
-  modal_TRs: TranslationCreation_PROPS[];
-  SET_modalTRs: React.Dispatch<
-    React.SetStateAction<TranslationCreation_PROPS[]>
-  >;
+  SET_trs: React.Dispatch<React.SetStateAction<TranslationCreation_PROPS[]>>;
+  SUBMIT_highlights: ({
+    lang_id,
+    highlights,
+  }: {
+    lang_id: string;
+    highlights: number[];
+  }) => void;
 }
 
 export default function TrHighlights_MODAL({
-  target_LANG,
   open,
+  tr,
+  diff,
   TOGGLE_open,
-  modal_DIFF,
-  modal_TRs,
-  SET_modalTRs,
+  SUBMIT_highlights,
 }: TrHighlightsModal_PROPS) {
-  const [_highlights, SET_highlights] = useState([]);
-  const [_lang, SET_lang] = useState<Language_MODEL | undefined>(undefined);
-  const text = modal_TRs?.find((tr) => tr.lang_id === target_LANG?.id)?.text;
-
+  const { languages } = USE_langs();
   const { t } = useTranslation();
   const appLang = useMemo(() => i18next.language, []);
+  const lang = useMemo(() => languages.find((l) => l.id === tr?.lang_id), [tr]);
 
-  function SUBMIT_highlights() {
-    if (!_lang || !_lang.id) return;
-    EDIT_trHighlights({ lang_id: _lang.id, newHighlights: _highlights });
+  const [highlights, SET_highlights] = useState(tr?.highlights || []);
+
+  function submit() {
+    SUBMIT_highlights({ lang_id: lang?.id, highlights });
+
     TOGGLE_open();
-    SET_highlights([]);
   }
 
   useEffect(() => {
-    SET_highlights(
-      open
-        ? modal_TRs?.find((tr) => tr.lang_id === target_LANG.id)?.highlights
-        : []
-    );
-
-    SET_lang(open ? target_LANG : null);
-  }, [open, modal_DIFF]);
-
-  function EDIT_trHighlights({
-    lang_id,
-    newHighlights,
-  }: {
-    lang_id: string;
-    newHighlights: number[];
-  }) {
-    if (!modal_TRs) return;
-    const newTRs = modal_TRs.map((tr) => {
-      if (tr.lang_id === lang_id) tr.highlights = newHighlights;
-      return tr;
-    });
-    SET_modalTRs(newTRs);
-  }
+    SET_highlights(tr?.highlights || []);
+  }, [tr]);
 
   return (
-    <Big_MODAL open={open && text !== ""}>
+    <Big_MODAL open={open && tr?.text !== ""}>
       <Header
         title={t("modal.editHighlights.header")}
         big={true}
@@ -94,21 +76,21 @@ export default function TrHighlights_MODAL({
       <GestureHandlerRootView>
         <ScrollView style={{ flex: 1, padding: 16, gap: 8 }}>
           {appLang === "en" && (
-            <Label icon={<ICON_flag lang={_lang?.id} />}>{`${
-              _lang?.lang_in_en
+            <Label icon={<ICON_flag lang={lang?.id} />}>{`${
+              lang?.lang_in_en
             } ${t("word.highlights")}`}</Label>
           )}
           {appLang === "de" && (
-            <Label icon={<ICON_flag lang={_lang?.id} />}>{`${t(
+            <Label icon={<ICON_flag lang={lang?.id} />}>{`${t(
               "word.highlights"
-            )} auf ${_lang?.lang_in_de}`}</Label>
+            )} auf ${lang?.lang_in_de}`}</Label>
           )}
           <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 4 }}>
             {GET_highlightBtns({
-              text,
-              highlights: _highlights,
-              SET_highlights,
-              modal_DIFF,
+              text: tr?.text || "",
+              highlights: highlights,
+              SEThighlights: SET_highlights,
+              diff,
             })}
           </View>
         </ScrollView>
@@ -121,7 +103,7 @@ export default function TrHighlights_MODAL({
         btnRight={
           <Btn
             text={t("btn.confirmSelection")}
-            onPress={SUBMIT_highlights}
+            onPress={submit}
             type="action"
             style={{ flex: 1 }}
           />
@@ -134,13 +116,13 @@ export default function TrHighlights_MODAL({
 function GET_highlightBtns({
   text,
   highlights,
-  modal_DIFF,
-  SET_highlights,
+  diff,
+  SEThighlights,
 }: {
   text: string;
   highlights: number[];
-  modal_DIFF: 0 | 1 | 2 | 3;
-  SET_highlights: React.Dispatch<React.SetStateAction<number[]>>;
+  diff: 0 | 1 | 2 | 3;
+  SEThighlights: React.Dispatch<React.SetStateAction<number[]>>;
 }) {
   function HANDLE_index(index: number) {
     let updatedIndexes: number[];
@@ -154,7 +136,7 @@ function GET_highlightBtns({
     }
 
     // Update the highlights state with the new string
-    SET_highlights(updatedIndexes);
+    SEThighlights(updatedIndexes);
   }
 
   return text?.split("").map((letter, index) =>
@@ -162,7 +144,7 @@ function GET_highlightBtns({
       letter,
       index,
       active: highlights.includes(index),
-      modal_DIFF,
+      diff,
       HANDLE_index,
     })
   );
@@ -172,18 +154,18 @@ function Highlight_BTN({
   letter,
   index,
   active,
-  modal_DIFF,
+  diff,
   HANDLE_index,
 }: {
   letter: string;
   index: number;
   active: boolean;
-  modal_DIFF: 0 | 1 | 2 | 3;
+  diff: 0 | 1 | 2 | 3;
   HANDLE_index: (index: number) => void;
 }) {
   const btnType = () => {
     if (!active) return "simple";
-    if (active && letter !== " ") return `difficulty_${modal_DIFF || 3}_active`;
+    if (active && letter !== " ") return `difficulty_${diff || 3}_active`;
 
     return "simple";
   };

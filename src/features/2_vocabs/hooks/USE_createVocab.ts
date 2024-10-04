@@ -1,64 +1,70 @@
 import { supabase } from "@/src/lib/supabase";
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import {
   TranslationCreation_PROPS,
+  User_MODEL,
   Vocab_MODEL,
-  Translation_MODEL,
 } from "@/src/db/models";
 
 interface VocabCreation_MODEL {
-  user_id?: string | null | undefined;
-  list_id?: string | null | undefined;
+  user?: User_MODEL | undefined;
+  list_id?: string | undefined;
   difficulty?: 1 | 2 | 3;
   description?: string | "";
-  image?: string | "" | null | undefined;
-  translations: TranslationCreation_PROPS[] | undefined | [] | null;
+  translations: TranslationCreation_PROPS[] | undefined;
   is_public?: boolean;
-  IS_admin?: boolean;
+  onSuccess: (new_VOCAB: Vocab_MODEL) => void;
 }
 
 export default function USE_createVocab() {
   const [IS_creatingVocab, SET_isCreatingVocab] = useState(false);
+  const [error, SET_error] = useState<string | null>(null);
+  const RESET_error = useCallback(() => SET_error(null), []);
 
-  const CREATE_vocab = async (
-    props: VocabCreation_MODEL
-  ): Promise<{ success: boolean; data?: any; msg?: string }> => {
-    const {
-      user_id,
-      list_id,
-      difficulty,
-      description,
-      image,
-      translations,
-      is_public = false,
-      IS_admin = false,
-    } = props;
+  const errorMessage = useMemo(
+    () =>
+      "Some kind of error happened when trying to create the vocab. This is an issue on our side. Please try to reload the app and see if the problem persists. The issue has been recorded and will be reviewed by developers. We apologize for the trouble.",
+    []
+  );
 
-    console.log("PUBLIC: ", is_public);
+  const CREATE_vocab = async ({
+    user,
+    list_id,
+    difficulty,
+    description,
+    translations,
+    is_public = false,
+    onSuccess,
+  }: VocabCreation_MODEL): Promise<{
+    success: boolean;
+    data?: any;
+    msg?: string;
+  }> => {
+    SET_error(null); // Clear any previous error
 
-    // Initial checks
-    if (is_public) {
-      if (!IS_admin) {
-        console.log("🔴 Only admins can create public vocabs 🔴");
+    // Initial validation checks
+    if (is_public && !user?.is_admin) {
+      SET_error("Only admins can create public vocabs.");
+      return {
+        success: false,
+        msg: "🔴 Only admins can create public vocabs 🔴",
+      };
+    }
+
+    if (!is_public) {
+      if (!user?.id) {
+        SET_error(errorMessage);
         return {
           success: false,
-          msg: "🔴 Only admins can create public vocabs 🔴",
+          msg: "🔴 User ID is required for creating private vocabs 🔴",
         };
       }
-      // Set user_id and list_id to null for public vocabs
-    } else {
-      if (!user_id) {
-        console.log("🔴 User not defined when creating private vocab 🔴");
-        return {
-          success: false,
-          msg: "🔴 User not defined when creating private vocab 🔴",
-        };
-      }
+
       if (!list_id) {
-        console.log("🔴 List not defined when creating private vocab 🔴");
+        SET_error(errorMessage);
         return {
           success: false,
-          msg: "🔴 List not defined when creating private vocab 🔴",
+          msg: "🔴 List ID is required for creating private vocabs 🔴",
         };
       }
     }
@@ -66,13 +72,12 @@ export default function USE_createVocab() {
     try {
       SET_isCreatingVocab(true);
 
-      // Insert vocab
+      // Handle vocab creation
       const vocabResponse = await HANDLE_vocabCreation({
-        user_id: is_public ? null : user_id, // user_id null for public vocabs
-        list_id: is_public ? null : list_id, // list_id null for public vocabs
+        user_id: is_public ? null : user?.id, // user_id is null for public vocabs
+        list_id: is_public ? null : list_id, // list_id is null for public vocabs
         difficulty,
         description,
-        image,
         is_public,
       });
 
@@ -80,36 +85,43 @@ export default function USE_createVocab() {
 
       const vocabData = vocabResponse.data;
 
-      // Handle translation insertion if translations exist
+      // Handle translation insertion if provided
       const finalVocab = await HANDLE_translationInsertion({
         vocabData,
         translations,
-        user_id: is_public ? null : user_id, // user_id null for public translations
+        user_id: is_public ? null : user?.id,
         is_public,
       });
 
+      if (onSuccess) onSuccess(finalVocab);
       return { success: true, data: finalVocab };
-    } catch (error) {
-      console.log("🔴 Error creating vocab or translations 🔴 : ", error);
+      // ---------------------------------------------
+    } catch (error: any) {
+      if (error.message === "Failed to fetch") {
+        SET_error(
+          "It looks like there's an issue with your internet connection. Please check your connection and try again."
+        );
+      } else {
+        SET_error(errorMessage);
+      }
       return {
         success: false,
-        msg: "🔴 Error creating vocab or translations 🔴",
+        msg: `🔴 Unexpected error occurred during vocab creation 🔴: ${error.message}`,
       };
     } finally {
       SET_isCreatingVocab(false);
     }
   };
 
-  return { CREATE_vocab, IS_creatingVocab };
+  return { CREATE_vocab, IS_creatingVocab, error, RESET_error };
 }
 
-// Helper function to insert vocab
+// Helper function to create vocab
 async function HANDLE_vocabCreation(vocab_DATA: {
   user_id: string | null | undefined;
   list_id: string | null | undefined;
   difficulty?: number;
   description?: string;
-  image?: string;
   is_public: boolean;
 }): Promise<{ success: boolean; data?: any; msg?: string }> {
   try {
@@ -120,18 +132,22 @@ async function HANDLE_vocabCreation(vocab_DATA: {
       .single();
 
     if (error) {
-      console.log("🔴 Error creating vocab 🔴 : ", error);
-      return { success: false, msg: error.message };
+      console.log(`🔴 Error creating vocab 🔴: ${error.message}`);
+      return {
+        success: false,
+        msg: `🔴 Error creating vocab: ${error.message} 🔴`,
+      };
     }
-    console.log("🟢 Vocab created 🟢");
+
+    console.log("🟢 Vocab created successfully 🟢");
     return { success: true, data };
-  } catch (error) {
-    console.log("🔴 Error inserting vocab 🔴", error);
+  } catch (error: any) {
+    console.log("🔴 Error inserting vocab 🔴", error.message);
     return { success: false, msg: "🔴 Error inserting vocab 🔴" };
   }
 }
 
-// Helper function to insert translations and return final vocab
+// Helper function to insert translations
 async function HANDLE_translationInsertion({
   vocabData,
   translations,
@@ -154,7 +170,7 @@ async function HANDLE_translationInsertion({
 
     if (!transSuccess) throw new Error("🔴 Error inserting translations 🔴");
 
-    console.log("🟢 Translations created 🟢");
+    console.log("🟢 Translations created successfully 🟢");
     return { ...vocabData, translations: insertedTranslations };
   }
 
@@ -168,7 +184,7 @@ async function db_INSERT_translations(
   user_id: string | null | undefined,
   translations: TranslationCreation_PROPS[],
   is_public: boolean
-) {
+): Promise<{ success: boolean; data?: any }> {
   try {
     const translationPromises = translations.map((translation) => {
       const translation_DATA = {
@@ -177,7 +193,7 @@ async function db_INSERT_translations(
         lang_id: translation.lang_id,
         text: translation.text,
         highlights: translation.highlights,
-        is_public, // Set is_public according to vocab setting
+        is_public,
       };
 
       return supabase.from("translations").insert([translation_DATA]).select();
@@ -188,13 +204,13 @@ async function db_INSERT_translations(
     const failedTranslations = results.filter(({ error }) => error);
     if (failedTranslations.length > 0) {
       console.log("🔴 Error creating some translations 🔴", failedTranslations);
-      return { success: false, failedTranslations };
+      return { success: false, data: failedTranslations };
     }
 
     const insertedTranslations = results.flatMap((x) => x.data);
     return { success: true, data: insertedTranslations };
-  } catch (error) {
-    console.log("🔴 Error inserting translations 🔴", error);
-    return { success: false, error };
+  } catch (error: any) {
+    console.log("🔴 Error inserting translations 🔴", error.message);
+    return { success: false, data: error };
   }
 }

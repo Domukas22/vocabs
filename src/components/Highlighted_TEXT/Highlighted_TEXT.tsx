@@ -8,26 +8,26 @@ import { Styled_TEXT } from "../Styled_TEXT/Styled_TEXT";
 interface RenderTextWithhighlights_PROPS {
   text: string;
   highlights: number[];
-  modal_DIFF: 0 | 1 | 2 | 3;
+  diff: 0 | 1 | 2 | 3;
   light?: boolean;
 }
 
 export default function Highlighted_TEXT({
   text,
   highlights,
-  modal_DIFF,
+  diff,
   light = false,
 }: RenderTextWithhighlights_PROPS) {
   const highlightTextColor =
-    modal_DIFF === 3
+    diff === 3
       ? MyColors.text_difficulty_3
-      : modal_DIFF === 2
+      : diff === 2
       ? MyColors.text_difficulty_2
-      : modal_DIFF === 1
+      : diff === 1
       ? MyColors.text_difficulty_1
       : MyColors.text_primary;
 
-  const textDecorationLine = modal_DIFF === 1 ? "underline" : undefined;
+  const textDecorationLine = diff === 1 ? "underline" : undefined;
 
   return (
     <Styled_TEXT>
@@ -38,12 +38,12 @@ export default function Highlighted_TEXT({
             key={index}
             style={[
               isHighlighted && { color: highlightTextColor },
-              isHighlighted && modal_DIFF === 1 && { textDecorationLine },
+              isHighlighted && diff === 1 && { textDecorationLine },
               light && { fontFamily: "Nunito-Light" },
             ]}
             // style={[
             //   isHighlighted && { color },
-            //   modal_DIFF === 1 && { textDecorationLine: "underline" },
+            //   diff === 1 && { textDecorationLine: "underline" },
             // ]}
           >
             {letter}

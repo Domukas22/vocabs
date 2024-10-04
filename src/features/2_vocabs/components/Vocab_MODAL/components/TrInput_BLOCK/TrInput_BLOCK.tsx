@@ -17,47 +17,37 @@ import { useTranslation } from "react-i18next";
 import i18next from "i18next";
 import StyledText_INPUT from "@/src/components/StyledText_INPUT/StyledText_INPUT";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
+import { USE_langs } from "@/src/context/Langs_CONTEXT";
 
 interface VocabTranslationInputs_PROPS {
-  languages: Language_MODEL[] | undefined;
   tr: TranslationCreation_PROPS;
-  modal_DIFF: 0 | 1 | 2 | 3;
-  SET_targetLang: React.Dispatch<
-    React.SetStateAction<Language_MODEL | undefined>
-  >;
+  diff: 0 | 1 | 2 | 3;
   TOGGLE_modal: (whichModalToOpen: string) => void;
+  HANDLE_trText: ({ lang_id, text }: { lang_id: string; text: string }) => void;
+  SET_targetTr: React.Dispatch<
+    React.SetStateAction<TranslationCreation_PROPS | undefined>
+  >;
 }
 
 export default function TrInput_BLOCK({
   tr,
-  languages,
-  modal_DIFF,
-  SET_targetLang,
+  diff,
+  HANDLE_trText,
   TOGGLE_modal,
-  target_LANG,
-  SET_modalTRs,
+  SET_targetTr,
 }: VocabTranslationInputs_PROPS) {
   const { t } = useTranslation();
   const appLang = useMemo(() => i18next.language, []);
-  const lang: Language_MODEL | undefined = languages?.find(
-    (lang: Language_MODEL) => lang.id === tr.lang_id
+  const { languages } = USE_langs();
+
+  const lang = useMemo(
+    () => languages?.find((lang: Language_MODEL) => lang.id === tr.lang_id),
+    []
   );
 
   const inputREF = useRef(null);
-  const [SHOW_textInput, SET_showtextInput] = useState(false);
-
-  const HANDLE_text = (newVal) => {
-    SET_modalTRs((prev) =>
-      prev.map((currTr) => {
-        if (currTr.lang_id === tr.lang_id) {
-          currTr.text = newVal;
-        }
-        return currTr;
-      })
-    );
-  };
-
   const [isFocused, setIsFocused] = useState(false);
+
   return (
     <Block
       labelIcon={<ICON_flag lang={tr?.lang_id} />}
@@ -66,6 +56,7 @@ export default function TrInput_BLOCK({
       <Label icon={<ICON_flag lang={lang?.id} />}>{`${t(
         "word.translation"
       )} auf ${lang?.[`lang_in_${appLang || "en"}`]}`}</Label>
+
       <View style={{ position: "relative" }}>
         {!isFocused && (
           <View style={s.overlay} pointerEvents="none">
@@ -73,31 +64,21 @@ export default function TrInput_BLOCK({
               <Highlighted_TEXT
                 text={tr.text}
                 highlights={tr.highlights}
-                modal_DIFF={modal_DIFF}
+                diff={diff}
                 light
               />
             )}
-            {/* {!tr.text && (
-              <Styled_TEXT
-                type="text_18_light"
-                style={{
-                  color: MyColors.text_white_06,
-                }}
-              >
-                {t("placeholder.translation")}
-              </Styled_TEXT>
-            )} */}
-            {/* <Styled_TEXT>{tr.text}</Styled_TEXT> */}
           </View>
         )}
 
         <StyledText_INPUT
           multiline
           value={tr.text}
-          SET_value={HANDLE_text}
+          SET_value={(val: string) => {
+            HANDLE_trText({ lang_id: tr.lang_id, text: val });
+          }}
           // placeholder={t("placeholder.translation")}
           _ref={inputREF}
-          onBlur={() => SET_showtextInput(false)}
           setIsFocused={setIsFocused}
         />
       </View>
@@ -109,7 +90,7 @@ export default function TrInput_BLOCK({
             text={t("btn.editHighlights")}
             type="seethrough"
             onPress={() => {
-              SET_targetLang(lang);
+              SET_targetTr(tr);
               TOGGLE_modal("trHighlights");
               setIsFocused(false);
               inputREF.current?.blur();

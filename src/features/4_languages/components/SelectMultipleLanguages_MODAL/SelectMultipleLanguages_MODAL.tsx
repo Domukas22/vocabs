@@ -35,31 +35,29 @@ import {
   maxVocabTranslations,
   minVocabTranslations,
 } from "@/src/constants/globalVars";
+import { USE_langs } from "@/src/context/Langs_CONTEXT";
 
 interface SelectLanguagesModal_PROPS {
   open: boolean;
-  TOGGLE_open: () => void;
   active_LANGS: Language_MODEL[];
-  languages: Language_MODEL[];
-  SUBMIT_langs: (newLangSelection: Language_MODEL[]) => void;
   IS_inAction?: boolean;
+  TOGGLE_open: () => void;
+  SUBMIT_langs: (newLangSelection: Language_MODEL[]) => void;
 }
 
-export default function SelectMultipleLanguages_MODAL(
-  props: SelectLanguagesModal_PROPS
-) {
+export default function SelectMultipleLanguages_MODAL({
+  open,
+  active_LANGS,
+  IS_inAction = false,
+  TOGGLE_open,
+  SUBMIT_langs,
+}: SelectLanguagesModal_PROPS) {
   const { t } = useTranslation();
-  const {
-    open,
-    TOGGLE_open,
-    active_LANGS,
-    languages,
-    SUBMIT_langs,
-    IS_inAction = false,
-  } = props;
+
   const [search, SET_search] = useState("");
 
   const [modal_LANGS, SET_modalLangs] = useState(active_LANGS);
+  const { languages } = USE_langs();
 
   const searchedLangs =
     search !== ""

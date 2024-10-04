@@ -101,7 +101,7 @@ export default function USE_myVocabActions({
   }
   async function create() {
     if (allowAction && !vocab) {
-      const newVocab = await CREATE_vocab({
+      const new_VOCAB = await CREATE_vocab({
         user_id: user?.id,
         list_id: modal_LIST?.id,
         difficulty: modal_DIFF,
@@ -112,15 +112,15 @@ export default function USE_myVocabActions({
         IS_admin: user.is_admin,
       });
 
-      if (newVocab.success) {
+      if (new_VOCAB.success) {
         if (is_public) {
-          z_CREATE_publicVocab(newVocab.data);
+          z_CREATE_publicVocab(new_VOCAB.data);
         } else {
-          z_CREATE_privateVocab(modal_LIST?.id, newVocab.data);
+          z_CREATE_privateVocab(modal_LIST?.id, new_VOCAB.data);
         }
-        SET_vocabs((prev) => [newVocab.data, ...prev]);
+        SET_vocabs((prev) => [new_VOCAB.data, ...prev]);
         TOGGLE_vocabModal();
-        HIGHLIGHT_vocab(newVocab.data.id);
+        HIGHLIGHT_vocab(new_VOCAB.data.id);
         toast.show(t("notifications.vocabCreated"), {
           type: "green",
           duration: 5000,

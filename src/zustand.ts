@@ -21,7 +21,7 @@ interface ZustandStore {
   ) => void;
   z_DELETE_privateList: (targetList_ID: string) => void;
 
-  z_CREATE_privateVocab: (list_id: string, vocabData: Vocab_MODEL) => void;
+  z_CREATE_privateVocab: (new_VOCAB: Vocab_MODEL | undefined) => void;
   z_UPDATE_vocabDifficulty: (
     list_id: string,
     vocab_ID: string,
@@ -41,7 +41,7 @@ interface ZustandStore {
   z_publicVocabs_ERROR: any;
   z_SET_publicVocabsError: (error: any) => void;
 
-  z_CREATE_publicVocab: (newVocab: Vocab_MODEL) => void;
+  z_CREATE_publicVocab: (new_VOCAB: Vocab_MODEL) => void;
   z_UPDATE_publicVocab: ({
     vocab_id,
     updatedVocabData,
@@ -83,7 +83,7 @@ const USE_zustand = create<ZustandStore>((set) => ({
   z_UPDATE_defaultListTRs: (targetList_ID, newDefaultTRs) => {
     set((state) => ({
       z_lists: state.z_lists.map((list) => {
-        if (list.id === targetList_ID) list.default_TRs = newDefaultTRs;
+        if (list.id === targetList_ID) list.default_LANGS = newDefaultTRs;
         return list;
       }),
     }));
@@ -94,15 +94,16 @@ const USE_zustand = create<ZustandStore>((set) => ({
     }));
   },
 
-  z_CREATE_privateVocab: (list_id, vocabData) => {
+  z_CREATE_privateVocab: (new_VOCAB) => {
+    if (!new_VOCAB || !new_VOCAB.list_id) return;
     set((state) => ({
       z_lists: state.z_lists.map((list) => {
-        if (list.id === list_id) {
+        if (list.id === new_VOCAB.list_id) {
           return {
             ...list,
             vocabs: [
               {
-                ...vocabData,
+                ...new_VOCAB,
               },
               ...(list.vocabs || []),
             ], // Prepend the new vocab with translations
@@ -169,9 +170,9 @@ const USE_zustand = create<ZustandStore>((set) => ({
   z_publicVocabs_ERROR: null,
   z_SET_publicVocabsError: (error) => set({ z_lists_ERROR: error }),
 
-  z_CREATE_publicVocab: (newVocab) => {
+  z_CREATE_publicVocab: (new_VOCAB) => {
     set((state) => ({
-      z_publicVocabs: [newVocab, ...state.z_publicVocabs],
+      z_publicVocabs: [new_VOCAB, ...state.z_publicVocabs],
     }));
   },
   z_UPDATE_publicVocab: ({ vocab_id, updatedVocabData }) => {

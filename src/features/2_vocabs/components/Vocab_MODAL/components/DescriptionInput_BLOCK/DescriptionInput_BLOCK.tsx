@@ -8,13 +8,13 @@ import StyledText_INPUT from "@/src/components/StyledText_INPUT/StyledText_INPUT
 import { useTranslation } from "react-i18next";
 
 interface DescriptionInput_PROPS {
-  modal_DESC: string;
-  SET_modalDesc: React.Dispatch<React.SetStateAction<string>>;
+  value: string;
+  SET_value: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export default function DescriptionInput_BLOCK({
-  modal_DESC,
-  SET_modalDesc,
+  value,
+  SET_value,
 }: DescriptionInput_PROPS) {
   const { t } = useTranslation();
   return (
@@ -23,8 +23,8 @@ export default function DescriptionInput_BLOCK({
       <StyledText_INPUT
         multiline
         staySmall
-        value={modal_DESC || ""}
-        SET_value={(value: string) => SET_modalDesc(value)}
+        value={value || ""}
+        SET_value={(value: string) => SET_value(value)}
       />
     </Block>
   );

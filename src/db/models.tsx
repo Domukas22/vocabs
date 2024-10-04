@@ -30,7 +30,7 @@ export interface List_MODEL {
   user_id: string;
   name: string;
   created_at: string;
-  default_TRs: string[];
+  default_LANGS: string[];
 
   vocabs?: Vocab_MODEL[];
 }
@@ -45,9 +45,9 @@ export interface Vocab_MODEL {
   image: string | undefined;
   is_public: boolean;
   created_at: string;
-
   translations?: Translation_MODEL[];
 }
+
 // --------------------------------------------------------------------------------------------
 export interface Translation_MODEL {
   id: string;

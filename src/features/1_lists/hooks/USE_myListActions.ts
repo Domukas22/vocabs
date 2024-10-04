@@ -58,7 +58,7 @@ export default function USE_myListActions({
   // }
   // async function CREATE_vocab() {
   //   if (!IS_updatingVocab && !IS_creatingVocab && !IS_deleting && !vocab) {
-  //     const newVocab = await CREATE_privateVocab({
+  //     const new_VOCAB = await CREATE_privateVocab({
   //       user_id: user?.id,
   //       list_id: modal_LIST.id,
   //       difficulty: modal_DIFF,
@@ -67,11 +67,11 @@ export default function USE_myListActions({
   //       translations: modal_TRs,
   //     });
 
-  //     if (newVocab.success) {
-  //       CREATE_privateVocab_z(modal_LIST.id, newVocab.data);
-  //       SET_vocabs((prev) => [newVocab.data, ...prev]);
+  //     if (new_VOCAB.success) {
+  //       CREATE_privateVocab_z(modal_LIST.id, new_VOCAB.data);
+  //       SET_vocabs((prev) => [new_VOCAB.data, ...prev]);
   //       TOGGLE_vocabModal();
-  //       HIGHLIGHT_vocab(newVocab.data.id);
+  //       HIGHLIGHT_vocab(new_VOCAB.data.id);
   //       toast.show(t("notifications.vocabCreated"), {
   //         type: "green",
   //         duration: 5000,

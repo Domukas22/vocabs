@@ -65,8 +65,8 @@ export default function ListSettings_MODAL({
     USE_toggle(false);
 
   const langs = useMemo(
-    () => GET_langs({ languages, target: list.default_TRs }),
-    [list.default_TRs]
+    () => GET_langs({ languages, target: list.default_LANGS }),
+    [list.default_LANGS]
   );
 
   const {

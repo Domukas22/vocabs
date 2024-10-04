@@ -15,6 +15,7 @@ export type ThemedTextProps = TextProps & {
     | "text_15_semibold"
     | "label"
     | "label_small"
+    | "text_error"
     | "vocabTitle";
 };
 
@@ -75,6 +76,11 @@ const s = StyleSheet.create({
     fontSize: 16,
     fontFamily: "Nunito-Light",
     color: MyColors.text_white_06,
+  },
+  text_error: {
+    fontSize: 18,
+    fontFamily: "Nunito-Regular",
+    color: MyColors.text_red,
   },
 
   vocabTitle: {

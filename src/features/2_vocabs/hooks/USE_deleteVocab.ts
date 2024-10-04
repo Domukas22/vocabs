@@ -152,10 +152,7 @@ export default function USE_deleteVocab() {
         };
       }
 
-      // Log success message with green circle emoji
       console.log("🟢 Vocab and translations deleted successfully 🟢");
-
-      // Post-delete callback
       if (onSuccess) onSuccess();
 
       return { success: true, data: deletedVocabData };

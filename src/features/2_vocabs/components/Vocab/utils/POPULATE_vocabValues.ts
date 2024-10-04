@@ -35,15 +35,15 @@ export default function POPULATE_vocabValues({
   SET_modalLangs(
     vocab?.translations
       ? GET_langsFromTranslations(vocab.translations, languages)
-      : selected_LIST?.default_TRs
-      ? GET_langs({ languages, target: selected_LIST.default_TRs })
+      : selected_LIST?.default_LANGS
+      ? GET_langs({ languages, target: selected_LIST.default_LANGS })
       : GET_langs({ languages, target: ["en", "de"] })
   );
   SET_modalTRs(
     vocab?.translations
       ? vocab.translations
-      : selected_LIST?.default_TRs
-      ? GET_defaultTranslations(selected_LIST.default_TRs)
+      : selected_LIST?.default_LANGS
+      ? GET_defaultTranslations(selected_LIST.default_LANGS)
       : GET_defaultTranslations(["en", "de"])
   );
 }
