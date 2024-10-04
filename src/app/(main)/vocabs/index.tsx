@@ -32,6 +32,7 @@ import React from "react";
 import Confirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
 import USE_deleteList from "@/src/features/1_lists/hooks/USE_deleteList";
 import { useToast } from "react-native-toast-notifications";
+import UpdateList_MODAL from "@/src/features/1_lists/components/UpdateList_MODAL";
 
 // TODO ==> create a DELETE_listModal, similar to DeleteVocab_MODAL
 
@@ -155,6 +156,7 @@ export default function MyLists_PAGE() {
         actionBtnText={t("btn.confirmListRename")}
         current_NAME={target_LIST?.name}
       />
+
       {/* ----- DELETE confirmation ----- */}
       <Confirmation_MODAL
         open={SHOW_deleteModal}
