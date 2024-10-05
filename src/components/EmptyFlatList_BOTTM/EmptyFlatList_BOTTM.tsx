@@ -6,6 +6,7 @@ import Btn from "@/src/components/Btn/Btn";
 import { ICON_X } from "@/src/components/icons/icons";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 
@@ -13,10 +14,12 @@ export default function EmptyFlatList_BOTTM({
   emptyBox_TEXT = "INSERT EMPTY BOX TEXT",
   btn_TEXT,
   btn_ACTION,
+  bottom_EL,
 }: {
   emptyBox_TEXT: string;
   btn_TEXT?: string;
   btn_ACTION?: () => void;
+  bottom_EL?: React.ReactNode;
 }) {
   return (
     <View>
@@ -43,6 +46,7 @@ export default function EmptyFlatList_BOTTM({
           />
         </View>
       )}
+      {bottom_EL && bottom_EL}
     </View>
   );
 }

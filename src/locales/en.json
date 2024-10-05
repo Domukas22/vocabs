@@ -240,5 +240,8 @@
   },
   "notification": {
     "atLeast1LangError": "Atleast 1 language must be selected"
+  },
+  "emptyText": {
+    "noLangsSelected": "No languages selected"
   }
 }

@@ -22,8 +22,8 @@ type _TextInputProps = TextInputProps & {
   value: string;
   SET_value: (val: string) => void;
   placeholder?: string;
-  error?: boolean;
-  IS_errorCorrected?: boolean;
+  error: FieldError | undefined;
+  isSubmitted?: boolean;
   multiline?: boolean;
   staySmall?: boolean;
   _ref?: Ref<R_TextInput>;
@@ -38,7 +38,7 @@ export default function StyledText_INPUT({
   placeholder,
   multiline = false,
   error = undefined,
-  IS_errorCorrected = undefined,
+  isSubmitted = false,
   style,
   _ref,
   isFocused,
@@ -54,7 +54,8 @@ export default function StyledText_INPUT({
           multiline && { height: "auto" },
           multiline && !staySmall && { minHeight: 100 },
           error && s.error,
-          IS_errorCorrected &&
+          isSubmitted &&
+            !error &&
             isFocused && { ...s.IS_errorCorrected, paddingRight: 44 },
           style,
         ]}
@@ -70,7 +71,7 @@ export default function StyledText_INPUT({
         ref={_ref && _ref}
         {...props}
       />
-      {IS_errorCorrected && isFocused && (
+      {isSubmitted && !error && isFocused && (
         <View style={{ position: "absolute", right: 12 }}>
           <ICON_toastNotification type="success" />
         </View>

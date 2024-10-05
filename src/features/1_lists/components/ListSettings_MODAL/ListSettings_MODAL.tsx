@@ -65,8 +65,8 @@ export default function ListSettings_MODAL({
     USE_toggle(false);
 
   const langs = useMemo(
-    () => GET_langs({ languages, target: list.default_LANGS }),
-    [list.default_LANGS]
+    () => GET_langs({ languages, target: list?.default_LANGS }),
+    [list?.default_LANGS]
   );
 
   const {
@@ -129,7 +129,7 @@ export default function ListSettings_MODAL({
                 : MyColors.text_white,
             }}
           >
-            {list.name || "NO LIST NAME PROVIDED"}
+            {list?.name || "NO LIST NAME PROVIDED"}
           </Styled_TEXT>
           {/* <Styled_TEXT>{user?.email || "---"}</Styled_TEXT> */}
         </View>
@@ -142,7 +142,7 @@ export default function ListSettings_MODAL({
         toggle={TOGGLE_langSelectionModal}
         REMOVE_lang={(targetLang_ID) => {
           UPDATE_privateListDefaultTRs(
-            list.id,
+            list?.id,
             langs.filter((l) => l.id !== targetLang_ID).map((l) => l.id)
           );
         }}
@@ -173,7 +173,7 @@ export default function ListSettings_MODAL({
         active_LANGS={langs}
         SUBMIT_langs={(langs: Language_MODEL[]) => {
           UPDATE_privateListDefaultTRs(
-            list.id,
+            list?.id,
             langs.map((l) => l.id)
           );
         }}
@@ -185,10 +185,10 @@ export default function ListSettings_MODAL({
         open={SHOW_renameListModal}
         toggle={TOGGLE_renameListModal}
         title={t("modal.listSettings.renameListModalTitle")}
-        rename={(new_NAME: string) => RENAME_privateList(new_NAME, list.id)}
+        rename={(new_NAME: string) => RENAME_privateList(new_NAME, list?.id)}
         IS_inAction={IS_renamingList}
         actionBtnText={t("btn.confirmListRename")}
-        current_NAME={list.name}
+        current_NAME={list?.name}
       /> */}
       <UpdateList_MODAL
         user={user}
@@ -197,7 +197,7 @@ export default function ListSettings_MODAL({
         currentList_NAMES={z_lists?.map((l) => l.name)}
         CLOSE_modal={() => SET_updateListModal(false)}
         onSuccess={(updatedList: List_MODEL) => {
-          z_RENAME_privateList(updatedList.id, updatedList.name);
+          z_RENAME_privateList(updatedlist?.id, updatedlist?.name);
           toast.show(t("notifications.listRenamed"), {
             type: "green",
             duration: 5000,
@@ -212,7 +212,7 @@ export default function ListSettings_MODAL({
         open={SHOW_deleteModal}
         toggle={TOGGLE_deleteModal}
         title={t("modal.listSettings.deleteListconfirmation")}
-        action={() => DELETE_privateList(list.id)}
+        action={() => DELETE_privateList(list?.id)}
         IS_inAction={IS_deletingList}
         actionBtnText={t("btn.confirmDelete")}
       /> */}

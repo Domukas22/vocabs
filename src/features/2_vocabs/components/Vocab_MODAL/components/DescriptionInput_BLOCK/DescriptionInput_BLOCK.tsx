@@ -12,16 +12,16 @@ import { useTranslation } from "react-i18next";
 
 interface DescriptionInput_PROPS {
   value: string;
-  SET_value: React.Dispatch<React.SetStateAction<string>>;
-  error: string | FieldError | undefined;
-  IS_errorCorrected: boolean;
+  error: FieldError | undefined;
+  isSubmitted: boolean;
+  onChange: (...event: any[]) => void;
 }
 
 export default function DescriptionInput_BLOCK({
   value,
-  SET_value,
+  onChange,
   error,
-  IS_errorCorrected,
+  isSubmitted,
 }: DescriptionInput_PROPS) {
   const { t } = useTranslation();
   const [isFocused, setIsFocused] = useState(false);
@@ -33,8 +33,8 @@ export default function DescriptionInput_BLOCK({
         multiline
         staySmall
         value={value || ""}
-        SET_value={(value: string) => SET_value(value)}
-        {...{ error, IS_errorCorrected, isFocused, setIsFocused }}
+        SET_value={onChange}
+        {...{ error, isSubmitted, isFocused, setIsFocused }}
       />
       {error && <Styled_TEXT type="text_error">{error?.message}</Styled_TEXT>}
     </Block>

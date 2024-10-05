@@ -27,23 +27,19 @@ import { FieldError } from "react-hook-form";
 interface VocabTranslationInputs_PROPS {
   tr: TranslationCreation_PROPS;
   diff: 0 | 1 | 2 | 3;
-  TOGGLE_modal: (whichModalToOpen: string) => void;
-  HANDLE_trText: ({ lang_id, text }: { lang_id: string; text: string }) => void;
-  SET_targetTr: React.Dispatch<
-    React.SetStateAction<TranslationCreation_PROPS | undefined>
-  >;
-  error: string | FieldError | undefined;
-  IS_errorCorrected: boolean;
+  OPEN_highlights: (tr: TranslationCreation_PROPS) => void;
+  error: FieldError | undefined;
+  isSubmitted: boolean;
+  onChange: (...event: any[]) => void;
 }
 
 export default function TrInput_BLOCK({
   tr,
   diff,
-  HANDLE_trText,
-  TOGGLE_modal,
-  SET_targetTr,
+  OPEN_highlights,
   error,
-  IS_errorCorrected,
+  isSubmitted,
+  onChange,
 }: VocabTranslationInputs_PROPS) {
   const { t } = useTranslation();
   const appLang = useMemo(() => i18next.language, []);
@@ -60,7 +56,7 @@ export default function TrInput_BLOCK({
   return (
     <Block
       labelIcon={<ICON_flag lang={tr?.lang_id} />}
-      styles={{ padding: 20 }}
+      styles={{ padding: 12 }}
     >
       <Label icon={<ICON_flag lang={lang?.id} big />}>{`${t(
         "word.translation"
@@ -71,9 +67,10 @@ export default function TrInput_BLOCK({
           <View
             style={[
               s.overlay,
-              IS_errorCorrected && {
-                paddingRight: 44,
-              },
+              isSubmitted &&
+                !error && {
+                  paddingRight: 44,
+                },
             ]}
             pointerEvents="none"
           >
@@ -106,12 +103,10 @@ export default function TrInput_BLOCK({
         <StyledText_INPUT
           multiline
           value={tr.text}
-          SET_value={(val: string) => {
-            HANDLE_trText({ lang_id: tr.lang_id, text: val });
-          }}
+          SET_value={onChange}
           // placeholder={t("placeholder.translation")}
           _ref={inputREF}
-          {...{ error, IS_errorCorrected, isFocused, setIsFocused }}
+          {...{ error, isSubmitted, isFocused, setIsFocused }}
         />
       </View>
       {error && <Styled_TEXT type="text_error">{error.message}</Styled_TEXT>}
@@ -123,8 +118,7 @@ export default function TrInput_BLOCK({
             text={t("btn.editHighlights")}
             type="seethrough"
             onPress={() => {
-              SET_targetTr(tr);
-              TOGGLE_modal("trHighlights");
+              OPEN_highlights(tr);
               setIsFocused(false);
               inputREF.current?.blur();
             }}

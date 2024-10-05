@@ -71,6 +71,7 @@ export default function SelectMultipleLanguages_MODAL({
     SUBMIT_langs(modal_LANGS);
     SET_modalLangs(GET_langsFromTranslations(trs, languages) || []);
     TOGGLE_open();
+    console.log("log");
   };
 
   const searchedLangs =
@@ -99,16 +100,10 @@ export default function SelectMultipleLanguages_MODAL({
   function SELECT_lang(incomdingLang: Language_MODEL) {
     const alreadyHasLang = modal_LANGS?.some((l) => l.id === incomdingLang.id);
 
-    const tooManyLangSelected = modal_LANGS?.length >= maxVocabTranslations;
-    const hasOnly2Translations = modal_LANGS?.length === minVocabTranslations;
     if (!alreadyHasLang) {
-      if (tooManyLangSelected) return;
-
       // add new lang
       SET_modalLangs((prev) => [...prev, incomdingLang]);
     } else {
-      if (hasOnly2Translations) return;
-
       SET_modalLangs((prev) =>
         prev.filter((lang) => lang.id !== incomdingLang.id)
       );

@@ -32,7 +32,7 @@ import { ToastProvider, useToast } from "react-native-toast-notifications";
 import USE_zustand from "@/src/zustand";
 import DeleteVocab_MODAL from "@/src/features/2_vocabs/components/DeleteVocab_MODAL/DeleteVocab_MODAL";
 import Notification_BOX from "@/src/components/Notification_BOX/Notification_BOX";
-import CreateMyVocab_MODAL from "@/src/features/2_vocabs/private/components/CreateMyVocab_MODAL";
+import CreateMyVocab_MODAL from "@/src/features/2_vocabs/private/components/CreateMyVocab_MODAL/CreateMyVocab_MODAL";
 
 export default function SingleList_PAGE() {
   const router = useRouter();
@@ -40,7 +40,7 @@ export default function SingleList_PAGE() {
   const [SHOW_displaySettings, TOGGLE_displaySettings] = USE_toggle(false);
   const [SHOW_vocabModal, TOGGLE_vocabModal] = USE_toggle(false);
   const [SHOW_createVocabModal, TOGGLE_createVocabModal, SET_createVocabModal] =
-    USE_toggle(false);
+    USE_toggle(true);
   const [SHOW_updateVocabModal, TOGGLE_updateVocabModal, SET_updateVocabModal] =
     USE_toggle(false);
   const [SHOW_listSettingsModal, TOGGLE_listSettingsModal] = USE_toggle(false);

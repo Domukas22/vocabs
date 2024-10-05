@@ -18,8 +18,8 @@ interface VocabCreation_MODEL {
 
 export default function USE_createVocab() {
   const [IS_creatingVocab, SET_isCreatingVocab] = useState(false);
-  const [error, SET_error] = useState<string | null>(null);
-  const RESET_error = useCallback(() => SET_error(null), []);
+  const [db_ERROR, SET_error] = useState<string | null>(null);
+  const RESET_dbError = useCallback(() => SET_error(null), []);
 
   const errorMessage = useMemo(
     () =>
@@ -76,8 +76,8 @@ export default function USE_createVocab() {
       const vocabResponse = await HANDLE_vocabCreation({
         user_id: is_public ? null : user?.id, // user_id is null for public vocabs
         list_id: is_public ? null : list_id, // list_id is null for public vocabs
-        difficulty,
-        description,
+        difficulty: difficulty || 3,
+        description: description || "",
         is_public,
       });
 
@@ -113,7 +113,7 @@ export default function USE_createVocab() {
     }
   };
 
-  return { CREATE_vocab, IS_creatingVocab, error, RESET_error };
+  return { CREATE_vocab, IS_creatingVocab, db_ERROR, RESET_dbError };
 }
 
 // Helper function to create vocab

@@ -27,7 +27,8 @@ export default function Block({
     <View
       style={[
         {
-          padding: 16,
+          padding: 12,
+          paddingBottom: 16,
           gap: 8,
           borderBottomWidth: 1,
           borderColor: MyColors.border_white_005,

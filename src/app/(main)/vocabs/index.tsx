@@ -92,6 +92,13 @@ export default function MyLists_PAGE() {
       }))();
   }, []);
 
+  useEffect(() => {
+    if (searched_LISTS.length > 0) {
+      SET_selectedList(searched_LISTS[0]);
+      router.push("/(main)/vocabs/list");
+    }
+  }, [searched_LISTS.length]);
+
   return (
     <Page_WRAP>
       <MyLists_HEADER {...{ TOGGLE_createListModal, lists: z_lists }} />
