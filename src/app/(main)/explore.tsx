@@ -5,7 +5,7 @@
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
 import { List_SKELETONS } from "@/src/features/1_lists";
 import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
-import Public_VOCAB from "@/src/features/2_vocabs/components/Vocab/public";
+import Public_VOCAB from "@/src/features/2_vocabs/components/Vocab/Public_VOCAB";
 
 import {
   List_MODEL,
@@ -20,11 +20,11 @@ import { useState, useEffect, useMemo } from "react";
 
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 
-import PublicVocabDisplaySettings_MODAL from "@/src/features/2_vocabs/components/VocabDisplaySettings_MODAL/private";
+import PublicVocabDisplaySettings_MODAL from "@/src/features/2_vocabs/components/Modal/DisplaySettings/MyVocabsDisplaySettings_MODAL";
 
 import USE_zustand from "@/src/zustand";
 import FETCH_publicVocabs from "@/src/features/2_vocabs/hooks/FETCH_publicVocabs";
-import PublicVocabs_HEADER from "@/src/features/2_vocabs/components/Vocabs_HEADER/public";
+import PublicVocabs_HEADER from "@/src/features/2_vocabs/components/Header/PublicVocab_HEADER";
 import SelectMyList_MODAL from "@/src/features/1_lists/components/SelectMyList_MODAL/SelectMyList_MODAL";
 
 import { useToast } from "react-native-toast-notifications";
@@ -32,13 +32,13 @@ import { useTranslation } from "react-i18next";
 import {
   MyVocabDisplaySettings_MODAL,
   PublicVocabs_SUBNAV,
-  Vocab_MODAL,
+  CreateMyVocab_MODAL,
+  USE_searchedVocabs,
 } from "@/src/features/2_vocabs";
 import USE_createVocab from "@/src/features/2_vocabs/hooks/USE_createVocab";
 import MultiSelectGrid from "@/src/components/multiselect_GRI";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { USE_searchedVocabs } from "@/src/features/2_vocabs/hooks/USE_searchedVocabs/USE_searchedVocabs";
-import GET_uniqueLanguagesInAList from "@/src/utils/GET_uniqueLanguagesInAList/GET_uniqueLanguagesInAList";
+import GET_uniqueLanguagesInAList from "@/src/features/4_languages/utils/GET_uniqueLanguagesInAList/GET_uniqueLanguagesInAList";
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
 
 export default function Explore_PAGE() {
@@ -215,7 +215,7 @@ export default function Explore_PAGE() {
         vocab={publicVocab}
         HIGHLIGHT_vocab={HIGHLIGHT_vocab}
       /> */}
-      <Vocab_MODAL
+      <CreateMyVocab_MODAL
         open={SHOW_vocabModal}
         TOGGLE_modal={() => HANDLE_vocabModal({ clear: true })}
         vocab={publicVocab}

@@ -4,8 +4,8 @@
 
 import { Language_MODEL, List_MODEL } from "@/src/db/models";
 
-import GET_langs from "@/src/utils/GET_langs";
-import GET_defaultTranslations from "@/src/utils/GET_defaultTranslations";
+import GET_langs from "@/src/features/4_languages/utils/GET_langs";
+import GET_defaultTranslations from "@/src/features/2_vocabs/utils/GET_defaultTranslations";
 import { PrivateVocabSet_PROPS } from "../../../hooks/USE_myVocabValues";
 
 export default function CLEAR_vocabValues({

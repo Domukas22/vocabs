@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 import { useMemo } from "react";
 import i18next from "i18next";
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
-import GET_langsFromTranslations from "@/src/utils/GET_langsFromTranslations";
+import GET_langsFromTranslations from "@/src/features/4_languages/utils/GET_langsFromTranslations";
 import { Styled_TEXT } from "../Styled_TEXT/Styled_TEXT";
 import { FieldError } from "react-hook-form";
 import EmptyFlatList_BOTTM from "../EmptyFlatList_BOTTM/EmptyFlatList_BOTTM";

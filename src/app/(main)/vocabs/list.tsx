@@ -4,16 +4,19 @@
 
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
 import {
-  Vocab_MODAL,
+  CreateMyVocab_MODAL,
   MyVocabDisplaySettings_MODAL,
   MyVocabs_HEADER,
   MyVocabs_SUBNAV,
-  Vocabs_FLATLIST,
+  MyVocabs_FLATLIST,
+  DeleteVocab_MODAL,
+  USE_filteredVocabs,
+  USE_searchedVocabs,
 } from "@/src/features/2_vocabs";
 import { useRouter } from "expo-router";
 import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
 import { VocabDisplaySettings_PROPS, Vocab_MODEL } from "@/src/db/models";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 import ListSettings_MODAL from "@/src/features/1_lists/components/ListSettings_MODAL/ListSettings_MODAL";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
@@ -22,17 +25,11 @@ import { USE_highlightBoolean } from "@/src/hooks/USE_highlightBoolean/USE_highl
 import { EmptyFlatList_BOTTM, List_SKELETONS } from "@/src/features/1_lists";
 import { t } from "i18next";
 import { useTranslation } from "react-i18next";
-import { USE_searchedVocabs } from "@/src/features/2_vocabs/hooks/USE_searchedVocabs/USE_searchedVocabs";
-import GET_uniqueLanguagesInAList from "@/src/utils/GET_uniqueLanguagesInAList/GET_uniqueLanguagesInAList";
+import GET_uniqueLanguagesInAList from "@/src/features/4_languages/utils/GET_uniqueLanguagesInAList/GET_uniqueLanguagesInAList";
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
-import USE_filteredVocabs from "@/src/features/2_vocabs/hooks/USE_filteredVocabs/USE_filteredVocabs";
-import USE_deleteVocab from "@/src/features/2_vocabs/hooks/USE_deleteVocab";
-import Confirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
-import { ToastProvider, useToast } from "react-native-toast-notifications";
+
+import { useToast } from "react-native-toast-notifications";
 import USE_zustand from "@/src/zustand";
-import DeleteVocab_MODAL from "@/src/features/2_vocabs/components/DeleteVocab_MODAL/DeleteVocab_MODAL";
-import Notification_BOX from "@/src/components/Notification_BOX/Notification_BOX";
-import CreateMyVocab_MODAL from "@/src/features/2_vocabs/private/components/CreateMyVocab_MODAL/CreateMyVocab_MODAL";
 
 export default function SingleList_PAGE() {
   const router = useRouter();
@@ -142,7 +139,7 @@ export default function SingleList_PAGE() {
       vocabs.length > 0 &&
       searched_VOCABS.length > 0 &&
       filtered_VOCABS.length > 0 ? (
-        <Vocabs_FLATLIST
+        <MyVocabs_FLATLIST
           vocabs={filtered_VOCABS}
           SHOW_bottomBtn={true}
           {...{

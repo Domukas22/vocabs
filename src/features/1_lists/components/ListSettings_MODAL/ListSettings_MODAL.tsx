@@ -14,7 +14,7 @@ import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
 import { Language_MODEL, List_MODEL } from "@/src/db/models";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
-import GET_langs from "@/src/utils/GET_langs";
+import GET_langs from "@/src/features/4_languages/utils/GET_langs";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { View } from "react-native";

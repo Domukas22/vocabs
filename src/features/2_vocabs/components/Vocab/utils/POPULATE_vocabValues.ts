@@ -4,9 +4,9 @@
 
 import { Vocab_MODEL, Language_MODEL, List_MODEL } from "@/src/db/models";
 import { PrivateVocabSet_PROPS } from "../../../hooks/USE_myVocabValues";
-import GET_langs from "@/src/utils/GET_langs";
-import GET_defaultTranslations from "@/src/utils/GET_defaultTranslations";
-import GET_langsFromTranslations from "@/src/utils/GET_langsFromTranslations";
+import GET_langs from "@/src/features/4_languages/utils/GET_langs";
+import GET_defaultTranslations from "@/src/features/2_vocabs/utils/GET_defaultTranslations";
+import GET_langsFromTranslations from "@/src/features/4_languages/utils/GET_langsFromTranslations";
 
 export default function POPULATE_vocabValues({
   vocab,

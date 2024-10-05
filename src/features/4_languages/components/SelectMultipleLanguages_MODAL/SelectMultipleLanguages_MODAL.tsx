@@ -36,7 +36,7 @@ import {
   minVocabTranslations,
 } from "@/src/constants/globalVars";
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
-import GET_langsFromTranslations from "@/src/utils/GET_langsFromTranslations";
+import GET_langsFromTranslations from "@/src/features/4_languages/utils/GET_langsFromTranslations";
 
 interface SelectLanguagesModal_PROPS {
   open: boolean;
