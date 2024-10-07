@@ -9,7 +9,8 @@
     "selectOneLanguage": "Select a language",
     "addToPublic": "Add vocab to public?",
     "deleteList": "Delete list?",
-    "selectTags": "Select tags"
+    "selectTags": "Select tags",
+    "publicPrivateVocabToPublicAsAdmin": "Publish vocab?"
   },
   "blockLabels": {
     "uiLang": "App language"
@@ -62,7 +63,8 @@
     "addVocabToPublic": "Add to public",
     "selectTags": "Select tags",
     "createTagPre": "Create tag ",
-    "createTagPost": " "
+    "createTagPost": " ",
+    "confirmPublish": "Yes, publish"
   },
   "pages": {
     "about": {
@@ -243,7 +245,10 @@
     "vocabCreatedInAnotherListPre": "Created new vocab in the list ",
     "vocabCreatedInAnotherListPost": " ",
     "vocabUpdatedInAnotherListPre": "Updated vocab in the list\t",
-    "vocabUpdatedInAnotherListPost": " "
+    "vocabUpdatedInAnotherListPost": " ",
+    "publicVocabSavedInAPrivateListPre": "Saved vocab in the list\t",
+    "publicVocabSavedInAPrivateListPost": " ",
+    "vocabPublishedToPublic": "Vocab published to public"
   },
   "notification": {
     "atLeast1LangError": "Atleast 1 language must be selected"

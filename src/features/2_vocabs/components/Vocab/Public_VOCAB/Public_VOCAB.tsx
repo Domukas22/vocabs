@@ -8,7 +8,7 @@ import { StyleSheet, View } from "react-native";
 import { Vocab_MODEL } from "@/src/db/models";
 
 import { USE_toggle } from "@/src/hooks/USE_toggle";
-import { VocabDisplaySettings_PROPS } from "@/src/db/models";
+import { MyVocabDisplaySettings_PROPS } from "@/src/db/models";
 
 import Vocab_FRONT from "../Components/Vocab_FRONT/Vocab_FRONT";
 import VocabBack_TRS from "../Components/VocabBack_TRS/VocabBack_TRS";
@@ -19,9 +19,10 @@ import { ICON_X } from "@/src/components/icons/icons";
 
 interface VocabProps {
   vocab: Vocab_MODEL | undefined;
-  displaySettings: VocabDisplaySettings_PROPS;
+  displaySettings: MyVocabDisplaySettings_PROPS;
+  highlighted?: boolean;
   IS_admin: boolean;
-  HANDLE_vocabModal: ({
+  HANDLE_updateModal: ({
     clear,
     vocab,
   }: {
@@ -36,10 +37,11 @@ export default function Public_VOCAB({
   vocab,
   displaySettings,
   IS_admin = false,
-  HANDLE_vocabModal,
+  HANDLE_updateModal,
   PREPARE_toSaveVocab,
+  highlighted,
 }: VocabProps) {
-  const [open, TOGGLE_vocab] = USE_toggle(false);
+  const [open, TOGGLE_open] = USE_toggle(false);
   const { t } = useTranslation();
 
   return (
@@ -51,15 +53,16 @@ export default function Public_VOCAB({
       ]}
     >
       <View>
-        <Vocab_FRONT
-          vocab_id={vocab?.id}
-          translations={vocab?.translations}
-          difficulty={0}
-          description={vocab?.description}
-          displaySettings={displaySettings}
-          open={open}
-          TOGGLE_open={TOGGLE_vocab}
-        />
+        {!open && (
+          <Vocab_FRONT
+            translations={vocab?.translations}
+            difficulty={0}
+            description={vocab?.description}
+            displaySettings={displaySettings}
+            highlighted={highlighted}
+            TOGGLE_open={TOGGLE_open}
+          />
+        )}
         {open && (
           <>
             <VocabBack_TRS TRs={vocab?.translations} difficulty={0} />
@@ -76,7 +79,7 @@ export default function Public_VOCAB({
                   type="simple"
                   style={{ flex: 1 }}
                   onPress={() => {
-                    HANDLE_vocabModal({ vocab });
+                    HANDLE_updateModal({ vocab });
                   }}
                   text={t("btn.editVocabAsAdmin")}
                   text_STYLES={{
@@ -96,7 +99,7 @@ export default function Public_VOCAB({
 
               <Btn
                 type="simple"
-                onPress={TOGGLE_vocab}
+                onPress={TOGGLE_open}
                 text={t("btn.close")}
                 style={{ flex: 1 }}
               />
@@ -115,6 +118,8 @@ const s = StyleSheet.create({
     borderWidth: 1,
     borderColor: MyColors.border_white_005,
     overflow: "hidden",
+    width: "100%",
+    minWidth: "100%",
   },
   vocab_open: {
     backgroundColor: MyColors.fill_bg,

@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import { Vocab_MODEL, VocabDisplaySettings_PROPS } from "@/src/db/models";
+import { Vocab_MODEL, MyVocabDisplaySettings_PROPS } from "@/src/db/models";
 
 export default function USE_filteredVocabs({
   vocabs,
   displaySettings,
 }: {
   vocabs: Vocab_MODEL[];
-  displaySettings: VocabDisplaySettings_PROPS;
+  displaySettings: MyVocabDisplaySettings_PROPS;
 }) {
   const [filtered_VOCABS, SET_filteredVocabs] = useState<Vocab_MODEL[]>(vocabs);
   const [ARE_vocabsFiltering, SET_areVocabsFiltering] = useState(false);

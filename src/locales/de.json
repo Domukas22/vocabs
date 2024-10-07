@@ -12,7 +12,8 @@
     "selectOneLanguage": "Eine Sprache wählen",
     "addToPublic": "Vokabel veröffentlichen?",
     "deleteList": "Liste löschen?",
-    "selectTags": "Tags auswählen"
+    "selectTags": "Tags auswählen",
+    "publicPrivateVocabToPublicAsAdmin": "Vokabel veröffentlichen?"
   },
   "blockLabels": {
     "uiLang": "App Sprache"
@@ -65,7 +66,8 @@
     "addVocabToPublic": "Veröffentlichen",
     "selectTags": "Tags wählen",
     "createTagPre": "Tag ",
-    "createTagPost": "hinfügen"
+    "createTagPost": "hinfügen",
+    "confirmPublish": "Ja, veröffentlichen"
   },
   "pages": {
     "about": {
@@ -246,7 +248,10 @@
     "vocabCreatedInAnotherListPre": "Neue Vokabel zur Liste ",
     "vocabCreatedInAnotherListPost": " hizugefügt",
     "vocabUpdatedInAnotherListPre": "Vokabel in der Liste ",
-    "vocabUpdatedInAnotherListPost": "erneut"
+    "vocabUpdatedInAnotherListPost": "erneut",
+    "publicVocabSavedInAPrivateListPre": "Vokabel in der Liste ",
+    "publicVocabSavedInAPrivateListPost": "gespeichert",
+    "vocabPublishedToPublic": "Vokabel veröffentlicht"
   },
   "notification": {
     "atLeast1LangError": "Mindestens 1 Sprache muss ausgewählt sein"

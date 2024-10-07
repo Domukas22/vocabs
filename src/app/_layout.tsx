@@ -69,7 +69,7 @@ function Main_LAYOUT() {
         if (session) {
           SET_auth(session?.user);
           await GET_userData(session?.user); // await user data fetching
-          router.push("/(main)/vocabs"); // push only after fetching user data
+          router.push("/(main)/explore"); // push only after fetching user data
         } else {
           SET_auth(null);
           router.push("/welcome");

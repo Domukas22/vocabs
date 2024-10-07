@@ -9,7 +9,7 @@ import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
 import {
-  VocabDisplaySettings_PROPS,
+  MyVocabDisplaySettings_PROPS,
   Translation_MODEL,
   TranslationCreation_PROPS,
   Language_MODEL,
@@ -19,11 +19,11 @@ import { useMemo } from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 
 interface VocabFront_PROPS {
-  displaySettings: VocabDisplaySettings_PROPS;
+  displaySettings: MyVocabDisplaySettings_PROPS;
   translations: Translation_MODEL[] | undefined;
   difficulty: 0 | 1 | 2 | 3 | undefined;
   description: string | undefined;
-  tags: string[] | undefined;
+
   TOGGLE_open: () => void;
   highlighted?: boolean;
 }

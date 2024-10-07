@@ -10,9 +10,10 @@ import TinyLang_SCROLLER from "@/src/features/4_languages/components/TinyLang_SC
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import Btn from "@/src/components/Btn/Btn";
 import { ICON_X } from "@/src/components/icons/icons";
+import { CreatePublicVocabData_PROPS } from "../../../Modal/CreatePublicVocab_MODAL/CreatePublicVocab_MODAL";
 
 interface ChosenLangsController_PROPS {
-  control: Control<CreateMyVocabData_PROPS, any>;
+  control: Control<CreatePublicVocabData_PROPS, any>;
   TOGGLE_langModal: () => void;
 }
 

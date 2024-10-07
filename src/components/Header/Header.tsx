@@ -29,7 +29,7 @@ export default function Header({
         <Styled_TEXT
           type="text_22_bold"
           style={[
-            { flex: 1 },
+            { flex: 1 /*borderColor: "yellow", borderWidth: 1 */ },
             IS_titleHighlighted && { color: MyColors.text_green },
           ]}
         >

@@ -5,7 +5,7 @@
 import Btn from "@/src/components/Btn/Btn";
 import { ICON_X } from "@/src/components/icons/icons";
 import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
-import { VocabDisplaySettings_PROPS, Vocab_MODEL } from "@/src/db/models";
+import { MyVocabDisplaySettings_PROPS, Vocab_MODEL } from "@/src/db/models";
 import { useTranslation } from "react-i18next";
 import MyVocab from "../../Vocab/My_VOCAB/My_VOCAB";
 import React from "react";
@@ -30,7 +30,7 @@ export default function MyVocabs_FLATLIST({
     clear?: boolean;
     vocab?: Vocab_MODEL;
   };
-  displaySettings: VocabDisplaySettings_PROPS;
+  displaySettings: MyVocabDisplaySettings_PROPS;
   PREPARE_vocabDelete?: (id: string) => {};
 }) {
   const { t } = useTranslation();

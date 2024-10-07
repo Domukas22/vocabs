@@ -92,25 +92,6 @@ export default function MyLists_PAGE() {
       }))();
   }, []);
 
-  useEffect(() => {
-    if (
-      !z_ARE_listsLoading &&
-      !ARE_listsSearching &&
-      searched_LISTS.length > 0 &&
-      z_lists.length > 0
-    ) {
-      if (searched_LISTS[0].id) {
-        SET_selectedList(searched_LISTS[0]);
-        router.push("/(main)/vocabs/list");
-      }
-    }
-  }, [
-    z_ARE_listsLoading,
-    ARE_listsSearching,
-    searched_LISTS.length,
-    z_lists.length,
-  ]);
-
   return (
     <Page_WRAP>
       <MyLists_HEADER {...{ TOGGLE_createListModal, lists: z_lists }} />

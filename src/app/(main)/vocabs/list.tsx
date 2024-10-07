@@ -15,7 +15,7 @@ import {
 } from "@/src/features/2_vocabs";
 import { useRouter } from "expo-router";
 import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
-import { VocabDisplaySettings_PROPS, Vocab_MODEL } from "@/src/db/models";
+import { MyVocabDisplaySettings_PROPS, Vocab_MODEL } from "@/src/db/models";
 import React, { useMemo, useState } from "react";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 import ListSettings_MODAL from "@/src/features/1_lists/components/ListSettings_MODAL/ListSettings_MODAL";
@@ -32,12 +32,12 @@ import { useToast } from "react-native-toast-notifications";
 import USE_zustand from "@/src/zustand";
 import GET_uniqueTagsInAList from "@/src/features/future/tags/GET_uniqueTagsInAList/GET_uniqueTagsInAList";
 import UpdateMyVocab_MODAL from "@/src/features/2_vocabs/components/Modal/UpdateMyVocab_MODAL/UpdateMyVocab_MODAL";
+import PublishPrivateVocabAsAdmin_MODAL from "@/src/features/2_vocabs/components/Modal/PublishPrivateVocabAsAdmin_MODAL/PublishPrivateVocabAsAdmin_MODAL";
 
 export default function SingleList_PAGE() {
   const router = useRouter();
   const { selected_LIST } = USE_selectedList();
   const [SHOW_displaySettings, TOGGLE_displaySettings] = USE_toggle(false);
-
   const [SHOW_createVocabModal, TOGGLE_createVocabModal, SET_createVocabModal] =
     USE_toggle(false);
   const [SHOW_updateVocabModal, TOGGLE_updateVocabModal, SET_updateVocabModal] =
@@ -60,7 +60,7 @@ export default function SingleList_PAGE() {
   } = USE_zustand();
 
   const [displaySettings, SET_displaySettings] =
-    useState<VocabDisplaySettings_PROPS>({
+    useState<MyVocabDisplaySettings_PROPS>({
       SHOW_description: true,
       SHOW_flags: true,
       SHOW_difficulty: true,

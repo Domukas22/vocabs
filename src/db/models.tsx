@@ -69,7 +69,7 @@ export interface TranslationCreation_PROPS {
   highlights: number[];
 }
 // ------------------------------------------------------------
-export interface VocabDisplaySettings_PROPS {
+export interface MyVocabDisplaySettings_PROPS {
   SHOW_description: boolean;
   SHOW_flags: boolean;
   SHOW_difficulty: boolean;
@@ -78,4 +78,10 @@ export interface VocabDisplaySettings_PROPS {
   sortDirection: "ascending" | "descending";
   difficultyFilters: (1 | 2 | 3)[];
   langFilters: string[];
+}
+export interface PublicVocabDisplaySettings_PROPS {
+  SHOW_description: boolean;
+  SHOW_flags: boolean;
+  SHOW_difficulty: boolean;
+  frontTrLang_ID: string;
 }

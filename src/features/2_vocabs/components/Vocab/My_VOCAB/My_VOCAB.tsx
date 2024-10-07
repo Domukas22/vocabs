@@ -7,7 +7,7 @@ import { StyleSheet, View } from "react-native";
 import React, { useMemo } from "react";
 
 import { USE_toggle } from "@/src/hooks/USE_toggle";
-import { VocabDisplaySettings_PROPS, Vocab_MODEL } from "@/src/db/models";
+import { MyVocabDisplaySettings_PROPS, Vocab_MODEL } from "@/src/db/models";
 import Vocab_FRONT from "../Components/Vocab_FRONT/Vocab_FRONT";
 
 import USE_updateVocabDifficulty from "../../../hooks/USE_updateVocabDifficulty";
@@ -20,7 +20,7 @@ import VocabBackDifficultyEdit_BTNS from "../Components/VocabBackDifficultyEdit_
 interface VocabProps {
   vocab: Vocab_MODEL;
   highlighted: boolean;
-  displaySettings: VocabDisplaySettings_PROPS;
+  displaySettings: MyVocabDisplaySettings_PROPS;
   HANDLE_updateModal: {
     clear?: boolean;
     vocab?: Vocab_MODEL;
@@ -79,7 +79,6 @@ export default function MyVocab({
           translations={vocab.translations}
           difficulty={vocab.difficulty}
           description={vocab.description}
-          tags={vocab.tags}
           displaySettings={displaySettings}
           highlighted={highlighted}
           TOGGLE_open={TOGGLE_open}

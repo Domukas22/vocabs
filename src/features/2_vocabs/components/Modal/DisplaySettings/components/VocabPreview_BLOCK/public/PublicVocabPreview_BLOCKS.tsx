@@ -16,16 +16,16 @@ import { ICON_checkMark, ICON_flag } from "@/src/components/icons/icons";
 import { useMemo } from "react";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 
-export default function MyVocabPreview_BLOCKS({
+export default function PublicVocabPreview_BLOCKS({
   displaySettings,
   SET_displaySettings,
-  list_LANGS,
+  available_LANGS,
 }: {
   displaySettings: MyVocabDisplaySettings_PROPS;
   SET_displaySettings: React.Dispatch<
     React.SetStateAction<MyVocabDisplaySettings_PROPS>
   >;
-  list_LANGS: Language_MODEL[];
+  available_LANGS: Language_MODEL[];
 }) {
   const appLang = useMemo(() => i18next.language, [i18next.language]);
 
@@ -63,26 +63,15 @@ export default function MyVocabPreview_BLOCKS({
                 }));
               }}
             />
-            <Settings_TOGGLE
-              text={t("toggle.showDifficulty")}
-              active={displaySettings?.SHOW_difficulty}
-              onPress={() => {
-                SET_displaySettings((p) => ({
-                  ...p,
-                  SHOW_difficulty: !p.SHOW_difficulty,
-                }));
-              }}
-              last
-            />
           </View>
         </View>
       </Block>
 
-      {list_LANGS?.length && list_LANGS?.length > 0 && (
+      {available_LANGS?.length && available_LANGS?.length > 0 && (
         <Block>
           <Label>{t("label.vocabFrontLang")}</Label>
           <ScrollView>
-            {list_LANGS.map((lang, index) => (
+            {available_LANGS.map((lang, index) => (
               <Btn
                 key={"Select lang" + lang.id + lang.lang_in_en}
                 iconLeft={
@@ -109,7 +98,7 @@ export default function MyVocabPreview_BLOCKS({
                 }
                 style={[
                   { flex: 1, marginBottom: 8 },
-                  index === list_LANGS.length - 1 && { marginBottom: 24 },
+                  index === available_LANGS.length - 1 && { marginBottom: 24 },
                 ]}
                 text_STYLES={{ flex: 1 }}
               />

@@ -10,7 +10,7 @@ import {
   ICON_flag,
 } from "@/src/components/icons/icons";
 import Label from "@/src/components/Label/Label";
-import { Language_MODEL, VocabDisplaySettings_PROPS } from "@/src/db/models";
+import { Language_MODEL, MyVocabDisplaySettings_PROPS } from "@/src/db/models";
 import i18next, { t } from "i18next";
 import { useCallback, useMemo } from "react";
 import { View } from "react-native";
@@ -20,9 +20,9 @@ export default function VocabFilter_BLOCKS({
   SET_displaySettings,
   list_LANGS,
 }: {
-  displaySettings: VocabDisplaySettings_PROPS;
+  displaySettings: MyVocabDisplaySettings_PROPS;
   SET_displaySettings: React.Dispatch<
-    React.SetStateAction<VocabDisplaySettings_PROPS>
+    React.SetStateAction<MyVocabDisplaySettings_PROPS>
   >;
   list_LANGS: Language_MODEL[] | [] | undefined;
 }) {

@@ -7,13 +7,21 @@ import { ICON_displaySettings, ICON_X } from "@/src/components/icons/icons";
 import SearchBar from "@/src/components/SearchBar/SearchBar";
 import Subnav from "@/src/components/Subnav/Subnav";
 
+interface PublicVocabsSubnav_PROPS {
+  search: string;
+  SET_search: (val: string) => void;
+  TOGGLE_displaySettings: () => void;
+  TOGGLE_createPublicVocabModal: () => void;
+  is_admin: boolean;
+}
+
 export default function PublicVocabs_SUBNAV({
   search,
   SET_search,
   TOGGLE_displaySettings,
-  HANDLE_vocabModal,
-  IS_admin = false,
-}) {
+  TOGGLE_createPublicVocabModal,
+  is_admin = false,
+}: PublicVocabsSubnav_PROPS) {
   return (
     <Subnav>
       <SearchBar value={search} SET_value={SET_search} />
@@ -23,12 +31,12 @@ export default function PublicVocabs_SUBNAV({
         style={{ borderRadius: 100 }}
         onPress={TOGGLE_displaySettings}
       />
-      {IS_admin && (
+      {is_admin && (
         <Btn
           type="simple"
           iconLeft={<ICON_X big={true} color="admin" />}
           style={{ borderRadius: 100 }}
-          onPress={() => HANDLE_vocabModal({ clear: true })}
+          onPress={TOGGLE_createPublicVocabModal}
         />
       )}
     </Subnav>

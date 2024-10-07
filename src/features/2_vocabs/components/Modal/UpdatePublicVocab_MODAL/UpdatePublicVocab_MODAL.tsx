@@ -4,7 +4,7 @@
 
 import Btn from "@/src/components/Btn/Btn";
 import Header from "@/src/components/Header/Header";
-import { ICON_arrow, ICON_X } from "@/src/components/icons/icons";
+import { ICON_X } from "@/src/components/icons/icons";
 import React, { useEffect, useState } from "react";
 import { View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -39,42 +39,36 @@ import List_CONTROLLER from "../../Inputs/InputControllers/List_CONTROLLER";
 import CreateMyVocab_FOOTER from "../../Footer/CreateMyVocab_FOOTER/CreateMyVocab_FOOTER";
 import USE_updateVocab from "../../../hooks/USE_updateVocab";
 import UpdateMyVocab_FOOTER from "../../Footer/UpdateMyVocab_FOOTER/UpdateMyVocab_FOOTER";
-import PublishPrivateVocabAsAdmin_MODAL from "../PublishPrivateVocabAsAdmin_MODAL/PublishPrivateVocabAsAdmin_MODAL";
-import { useToast } from "react-native-toast-notifications";
 
-interface UpdateMyVocabModal_PROPS {
+interface UpdatePublicVocabModal_PROPS {
   IS_open: boolean;
   toUpdate_VOCAB: Vocab_MODEL | undefined;
-  initial_LIST: List_MODEL | undefined;
   TOGGLE_modal: () => void;
   onSuccess: (new_VOCAB: Vocab_MODEL) => void;
 }
 
-export type UpdateMyVocabData_PROPS = {
-  list: List_MODEL | undefined;
-  difficulty: 1 | 2 | 3;
+export type UpdatePublicVocabData_PROPS = {
   description: string;
   translations: TranslationCreation_PROPS[];
 };
 
-export default function UpdateMyVocab_MODAL(props: UpdateMyVocabModal_PROPS) {
+export default function UpdatePublicVocab_MODAL(
+  props: UpdatePublicVocabModal_PROPS
+) {
   const {
     IS_open,
     toUpdate_VOCAB,
-    initial_LIST,
     TOGGLE_modal: TOGGLE_vocabModal,
     onSuccess = () => {},
   } = props;
 
   const { t } = useTranslation();
   const { user }: { user: User_MODEL } = USE_auth();
-  const toast = useToast();
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
     { name: "langs", initialValue: false },
     { name: "highlights", initialValue: false },
     { name: "list", initialValue: false },
-    { name: "publish", initialValue: false },
   ]);
 
   const [target_TR, SET_targetTr] = useState<
@@ -84,18 +78,16 @@ export default function UpdateMyVocab_MODAL(props: UpdateMyVocabModal_PROPS) {
   const { UPDATE_vocab, IS_updatingVocab, db_ERROR, RESET_dbError } =
     USE_updateVocab();
 
-  const update = async (data: UpdateMyVocabData_PROPS) => {
-    const { list, description, difficulty, translations } = data;
+  const update = async (data: UpdatePublicVocabData_PROPS) => {
+    const { description, translations } = data;
     const result = await UPDATE_vocab({
       user,
       vocab_id: toUpdate_VOCAB?.id,
-      list_id: list?.id,
-      difficulty,
       description,
       translations,
-      is_public: false,
-      onSuccess: (new_VOCAB: Vocab_MODEL) => {
-        onSuccess(new_VOCAB);
+      is_public: true,
+      onSuccess: (updated_VOCAB: Vocab_MODEL) => {
+        onSuccess(updated_VOCAB);
         reset();
       },
     });
@@ -114,12 +106,10 @@ export default function UpdateMyVocab_MODAL(props: UpdateMyVocabModal_PROPS) {
     clearErrors,
     trigger,
     watch,
-  } = useForm<UpdateMyVocabData_PROPS>({
+  } = useForm<UpdatePublicVocabData_PROPS>({
     defaultValues: {
       translations: [],
       description: "",
-      list: undefined,
-      difficulty: undefined,
     },
     criteriaMode: "all",
     shouldFocusError: true,
@@ -127,7 +117,7 @@ export default function UpdateMyVocab_MODAL(props: UpdateMyVocabModal_PROPS) {
   });
 
   const form_TRS = getValues("translations") || [];
-  const submit = (data: UpdateMyVocabData_PROPS) => update(data);
+  const submit = (data: UpdatePublicVocabData_PROPS) => update(data);
   const formValues = watch();
 
   useEffect(() => {
@@ -138,8 +128,6 @@ export default function UpdateMyVocab_MODAL(props: UpdateMyVocabModal_PROPS) {
     if (IS_open) {
       setValue("translations", toUpdate_VOCAB?.translations || []);
       setValue("description", toUpdate_VOCAB?.description || "");
-      setValue("difficulty", toUpdate_VOCAB?.difficulty || 3);
-      setValue("list", initial_LIST || undefined);
     }
   }, [IS_open]);
 
@@ -150,27 +138,15 @@ export default function UpdateMyVocab_MODAL(props: UpdateMyVocabModal_PROPS) {
           title={t("modal.vocab.headerCreate")}
           big={true}
           btnRight={
-            <View style={{ flexDirection: "row", gap: 8 }}>
-              {user?.is_admin && (
-                <Btn
-                  type="seethrough"
-                  iconLeft={<ICON_arrow direction="right" color="green" />}
-                  onPress={() => {
-                    TOGGLE_modal("publish");
-                  }}
-                  style={{ borderRadius: 100 }}
-                />
-              )}
-              <Btn
-                type="seethrough"
-                iconLeft={<ICON_X big={true} rotate={true} />}
-                onPress={() => {
-                  TOGGLE_vocabModal();
-                  reset();
-                }}
-                style={{ borderRadius: 100 }}
-              />
-            </View>
+            <Btn
+              type="seethrough"
+              iconLeft={<ICON_X big={true} rotate={true} />}
+              onPress={() => {
+                TOGGLE_vocabModal();
+                reset();
+              }}
+              style={{ borderRadius: 100 }}
+            />
           }
         />
 
@@ -191,7 +167,7 @@ export default function UpdateMyVocab_MODAL(props: UpdateMyVocabModal_PROPS) {
           {form_TRS.map((tr, index) => (
             <TrInput_CONTROLLER
               {...{ tr, index, control }}
-              diff={getValues("difficulty")}
+              diff={undefined}
               OPEN_highlights={() => {
                 SET_targetTr(tr);
                 TOGGLE_modal("highlights");
@@ -201,11 +177,6 @@ export default function UpdateMyVocab_MODAL(props: UpdateMyVocabModal_PROPS) {
           ))}
 
           <Description_CONTROLER {...{ control }} />
-          <Difficulty_CONTROLLER {...{ control }} />
-          <List_CONTROLLER
-            {...{ control }}
-            TOGGLE_listModal={() => TOGGLE_modal("list")}
-          />
         </KeyboardAwareScrollView>
         <UpdateMyVocab_FOOTER
           {...{ IS_updatingVocab, db_ERROR }}
@@ -240,7 +211,7 @@ export default function UpdateMyVocab_MODAL(props: UpdateMyVocabModal_PROPS) {
         <TrHighlights_MODAL
           open={modal_STATES.highlights}
           tr={target_TR}
-          diff={getValues("difficulty")}
+          diff={0}
           TOGGLE_open={() => TOGGLE_modal("highlights")}
           SET_trs={(trs: TranslationCreation_PROPS[]) => {
             setValue("translations", trs);
@@ -255,38 +226,6 @@ export default function UpdateMyVocab_MODAL(props: UpdateMyVocabModal_PROPS) {
                 setValue("translations", updated_TRS),
             })
           }
-        />
-
-        <SelectMyList_MODAL
-          open={modal_STATES.list}
-          title="Saved vocab to list"
-          submit_ACTION={(target_LIST: List_MODEL) => {
-            if (target_LIST) {
-              setValue("list", target_LIST);
-              clearErrors("list");
-              TOGGLE_modal("list");
-            }
-          }}
-          cancel_ACTION={() => {
-            TOGGLE_modal("list");
-          }}
-          IS_inAction={false}
-          current_LIST={getValues("list")}
-        />
-
-        <PublishPrivateVocabAsAdmin_MODAL
-          user={user}
-          IS_open={modal_STATES.publish}
-          vocab={toUpdate_VOCAB}
-          CLOSE_modal={() => TOGGLE_modal("publish")}
-          onSuccess={() => {
-            TOGGLE_modal("publish");
-            TOGGLE_vocabModal();
-            toast.show(t("notifications.vocabPublishedToPublic"), {
-              type: "green",
-              duration: 5000,
-            });
-          }}
         />
       </View>
     </Big_MODAL>
