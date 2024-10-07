@@ -27,7 +27,7 @@ export default function VocabBack_TRS({
               <Highlighted_TEXT
                 text={tr.text}
                 highlights={tr.highlights}
-                modal_DIFF={difficulty}
+                diff={difficulty}
               />
             </View>
           )}

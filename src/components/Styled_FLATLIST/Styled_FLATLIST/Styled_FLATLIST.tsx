@@ -26,12 +26,19 @@ export default function Styled_FLATLIST<T>({
       ref={_ref}
       data={data}
       renderItem={(info: ListRenderItemInfo<T>) => (
-        <View style={[{ marginBottom: gap }]}>
+        <View style={[{ marginBottom: gap, flex: 1 }]}>
           {renderItem ? renderItem(info) : null}
         </View>
       )}
       keyExtractor={keyExtractor}
-      style={[{ padding, flex: 1, paddingBottom: 20 }, style]}
+      style={[
+        {
+          padding,
+          flex: 1,
+          paddingBottom: 20,
+        },
+        style,
+      ]}
       ListFooterComponentStyle={{ marginBottom: 50 }}
       ListFooterComponent={<View />} // For bottom padding
       {...rest}

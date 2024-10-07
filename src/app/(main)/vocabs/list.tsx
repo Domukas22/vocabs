@@ -30,14 +30,16 @@ import { USE_langs } from "@/src/context/Langs_CONTEXT";
 
 import { useToast } from "react-native-toast-notifications";
 import USE_zustand from "@/src/zustand";
+import GET_uniqueTagsInAList from "@/src/features/future/tags/GET_uniqueTagsInAList/GET_uniqueTagsInAList";
+import UpdateMyVocab_MODAL from "@/src/features/2_vocabs/components/Modal/UpdateMyVocab_MODAL/UpdateMyVocab_MODAL";
 
 export default function SingleList_PAGE() {
   const router = useRouter();
   const { selected_LIST } = USE_selectedList();
   const [SHOW_displaySettings, TOGGLE_displaySettings] = USE_toggle(false);
-  const [SHOW_vocabModal, TOGGLE_vocabModal] = USE_toggle(false);
+
   const [SHOW_createVocabModal, TOGGLE_createVocabModal, SET_createVocabModal] =
-    USE_toggle(true);
+    USE_toggle(false);
   const [SHOW_updateVocabModal, TOGGLE_updateVocabModal, SET_updateVocabModal] =
     USE_toggle(false);
   const [SHOW_listSettingsModal, TOGGLE_listSettingsModal] = USE_toggle(false);
@@ -50,12 +52,15 @@ export default function SingleList_PAGE() {
     selected_LIST?.vocabs || []
   );
 
-  const { z_lists, z_CREATE_privateVocab, z_DELETE_privateVocab } =
-    USE_zustand();
+  const {
+    z_lists,
+    z_CREATE_privateVocab,
+    z_DELETE_privateVocab,
+    z_UPDATE_privateVocab,
+  } = USE_zustand();
 
   const [displaySettings, SET_displaySettings] =
     useState<VocabDisplaySettings_PROPS>({
-      SHOW_image: false,
       SHOW_description: true,
       SHOW_flags: true,
       SHOW_difficulty: true,
@@ -69,7 +74,7 @@ export default function SingleList_PAGE() {
   const { searched_VOCABS, search, SEARCH_vocabs, ARE_vocabsSearching } =
     USE_searchedVocabs(vocabs);
   // // const [filtered_VOCABS, SET_filteredVocabs] = useState<Vocab_MODEL[]>(vocabs);
-  const [target_VOCAB, SET_targetVocab] = useState<Vocab_MODEL | undefined>(
+  const [toUpdate_VOCAB, SET_toUpdateVocab] = useState<Vocab_MODEL | undefined>(
     undefined
   );
 
@@ -90,7 +95,7 @@ export default function SingleList_PAGE() {
     highlight: HIGHLIGHT_listName,
   } = USE_highlightBoolean();
 
-  function HANDLE_vocabModal({
+  function HANDLE_updateModal({
     clear = false,
     vocab,
   }: {
@@ -98,11 +103,11 @@ export default function SingleList_PAGE() {
     vocab?: Vocab_MODEL;
   }) {
     if (!clear && vocab) {
-      SET_targetVocab(vocab);
-      TOGGLE_vocabModal();
+      SET_toUpdateVocab(vocab);
+      SET_updateVocabModal(true);
     } else if (clear) {
-      SET_targetVocab(undefined);
-      TOGGLE_vocabModal();
+      SET_toUpdateVocab(undefined);
+      SET_updateVocabModal(false);
     }
   }
 
@@ -146,7 +151,7 @@ export default function SingleList_PAGE() {
             highlightedVocab_ID: highlighted_ID,
             TOGGLE_updateVocabModal,
             TOGGLE_createVocabModal,
-            HANDLE_vocabModal,
+            HANDLE_updateModal,
             displaySettings,
             PREPARE_vocabDelete,
           }}
@@ -195,6 +200,43 @@ export default function SingleList_PAGE() {
                   z_lists.find((l) => l.id === new_VOCAB.list_id)?.name || ""
                 }"` +
                 t("notifications.vocabCreatedInAnotherListPost"),
+              {
+                type: "green",
+                duration: 5000,
+              }
+            );
+          }
+        }}
+      />
+      <UpdateMyVocab_MODAL
+        {...{ toUpdate_VOCAB }}
+        IS_open={SHOW_updateVocabModal}
+        initial_LIST={selected_LIST}
+        TOGGLE_modal={() => TOGGLE_updateVocabModal()}
+        onSuccess={(updated_VOCAB: Vocab_MODEL) => {
+          z_UPDATE_privateVocab(updated_VOCAB);
+          SET_updateVocabModal(false);
+
+          if (updated_VOCAB.list_id === selected_LIST.id) {
+            SET_vocabs((prev) =>
+              prev.map((vocab) => {
+                if (vocab.id === updated_VOCAB.id) return updated_VOCAB;
+                return vocab;
+              })
+            );
+            HIGHLIGHT_vocab(updated_VOCAB.id);
+            toast.show(t("notifications.vocabUpdated"), {
+              type: "green",
+              duration: 3000,
+            });
+          } else {
+            toast.show(
+              t("notifications.vocabUpdatedInAnotherListPre") +
+                `"${
+                  z_lists.find((l) => l.id === updated_VOCAB.list_id)?.name ||
+                  ""
+                }"` +
+                t("notifications.vocabUpdatedInAnotherListPost"),
               {
                 type: "green",
                 duration: 5000,

@@ -10,7 +10,7 @@ import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
 import { t } from "i18next";
 import { Control, Controller } from "react-hook-form";
-import { CreateMyVocabData_PROPS } from "../../../Modal/CreateMyVocab_MODAL";
+import { CreateMyVocabData_PROPS } from "../../../Modal/CreateMyVocab_MODAL/CreateMyVocab_MODAL";
 
 interface ListController_PROPS {
   control: Control<CreateMyVocabData_PROPS, any>;

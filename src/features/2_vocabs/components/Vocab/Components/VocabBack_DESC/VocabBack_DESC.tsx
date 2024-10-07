@@ -15,7 +15,7 @@ export default function VocabBack_DESC({ desc }: { desc: string | undefined }) {
         borderColor: MyColors.border_white_005,
       }}
     >
-      <Styled_TEXT type="label_small">{desc}</Styled_TEXT>
+      {desc && <Styled_TEXT type="label_small">{desc}</Styled_TEXT>}
     </View>
   ) : null;
 }

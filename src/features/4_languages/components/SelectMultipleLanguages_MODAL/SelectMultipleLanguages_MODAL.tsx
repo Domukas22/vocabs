@@ -65,13 +65,13 @@ export default function SelectMultipleLanguages_MODAL({
   const cancel = () => {
     SET_modalLangs(GET_langsFromTranslations(trs, languages) || []);
     TOGGLE_open();
+    SET_search("");
   };
 
   const submit = () => {
     SUBMIT_langs(modal_LANGS);
     SET_modalLangs(GET_langsFromTranslations(trs, languages) || []);
     TOGGLE_open();
-    console.log("log");
   };
 
   const searchedLangs =
@@ -102,7 +102,7 @@ export default function SelectMultipleLanguages_MODAL({
 
     if (!alreadyHasLang) {
       // add new lang
-      SET_modalLangs((prev) => [...prev, incomdingLang]);
+      SET_modalLangs((prev) => [incomdingLang, ...prev]);
     } else {
       SET_modalLangs((prev) =>
         prev.filter((lang) => lang.id !== incomdingLang.id)

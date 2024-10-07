@@ -29,7 +29,7 @@ const s = StyleSheet.create({
     borderTopWidth: 1,
     borderColor: MyColors.border_white_005,
     alignItems: "center",
-    gap: 16,
+
     marginTop: "auto",
   },
   bottom: {

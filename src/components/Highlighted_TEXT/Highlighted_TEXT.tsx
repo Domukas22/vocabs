@@ -8,7 +8,7 @@ import { Styled_TEXT } from "../Styled_TEXT/Styled_TEXT";
 interface RenderTextWithhighlights_PROPS {
   text: string;
   highlights: number[];
-  diff: 0 | 1 | 2 | 3;
+  diff: 0 | 1 | 2 | 3 | undefined;
   light?: boolean;
 }
 

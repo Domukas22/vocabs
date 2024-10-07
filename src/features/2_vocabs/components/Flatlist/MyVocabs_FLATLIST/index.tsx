@@ -7,7 +7,7 @@ import { ICON_X } from "@/src/components/icons/icons";
 import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
 import { VocabDisplaySettings_PROPS, Vocab_MODEL } from "@/src/db/models";
 import { useTranslation } from "react-i18next";
-import MyVocab from "../../Vocab/My_VOCAB";
+import MyVocab from "../../Vocab/My_VOCAB/My_VOCAB";
 import React from "react";
 import SwipeableExample from "@/src/components/SwipeableExample/SwipeableExample";
 
@@ -17,7 +17,7 @@ export default function MyVocabs_FLATLIST({
   SHOW_bottomBtn,
   TOGGLE_updateVocabModal,
   TOGGLE_createVocabModal,
-  HANDLE_vocabModal,
+  HANDLE_updateModal,
   displaySettings,
   PREPARE_vocabDelete,
 }: {
@@ -26,7 +26,7 @@ export default function MyVocabs_FLATLIST({
   TOGGLE_updateVocabModal: () => void;
   TOGGLE_createVocabModal: () => void;
   highlightedVocab_ID: string;
-  HANDLE_vocabModal: {
+  HANDLE_updateModal: {
     clear?: boolean;
     vocab?: Vocab_MODEL;
   };
@@ -49,7 +49,7 @@ export default function MyVocabs_FLATLIST({
               vocab={item}
               highlighted={highlightedVocab_ID === item.id}
               displaySettings={displaySettings}
-              HANDLE_vocabModal={HANDLE_vocabModal}
+              {...{ HANDLE_updateModal }}
             />
           </SwipeableExample>
         );

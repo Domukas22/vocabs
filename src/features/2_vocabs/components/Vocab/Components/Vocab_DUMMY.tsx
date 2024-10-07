@@ -27,13 +27,8 @@ export default function Vocab_DUMMY({
   displaySettings,
   HAS_difficulty = true,
 }: VocabFront_PROPS) {
-  const {
-    SHOW_image,
-    SHOW_description,
-    SHOW_flags,
-    SHOW_difficulty,
-    frontTrLang_ID,
-  } = displaySettings;
+  const { SHOW_description, SHOW_flags, SHOW_difficulty, frontTrLang_ID } =
+    displaySettings;
 
   const { t } = useTranslation();
 
@@ -58,6 +53,7 @@ export default function Vocab_DUMMY({
           highlights={lang?.translation_example_highlights}
           modal_DIFF={3}
         />
+
         {SHOW_description && (
           <Styled_TEXT type="label_small">
             {t("vocabDummy.description")}

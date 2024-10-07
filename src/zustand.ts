@@ -27,11 +27,7 @@ interface ZustandStore {
     vocab_ID: string,
     new_DIFFICULTY: 1 | 2 | 3
   ) => void;
-  z_UPDATE_privateVocab: (
-    list_id: string,
-    vocab_id: string,
-    updatedVocabData: Vocab_MODEL
-  ) => void;
+  z_UPDATE_privateVocab: (updated_VOCAB: Vocab_MODEL) => void;
   z_DELETE_privateVocab: (list_id: string, vocab_id: string) => void;
 
   z_publicVocabs: Vocab_MODEL[];
@@ -113,15 +109,15 @@ const USE_zustand = create<ZustandStore>((set) => ({
       }),
     }));
   },
-  z_UPDATE_privateVocab: (list_id, vocab_id, updatedVocab) => {
+  z_UPDATE_privateVocab: (updated_VOCAB) => {
     set((state) => ({
       z_lists: state.z_lists.map((list) => {
-        if (list.id === list_id) {
+        if (list.id === updated_VOCAB.list_id) {
           return {
             ...list,
             vocabs:
               list.vocabs?.map((vocab) =>
-                vocab.id === vocab_id ? updatedVocab : vocab
+                vocab.id === updated_VOCAB.id ? updated_VOCAB : vocab
               ) || [], // Update the vocab if it matches
           };
         }

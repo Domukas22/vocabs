@@ -10,9 +10,9 @@ export { default as PublicVocabs_HEADER } from "./components/Header/PublicVocab_
 export { default as MyVocabs_SUBNAV } from "./components/Subnav/MyVocabs_SUBNAV";
 export { default as PublicVocabs_SUBNAV } from "./components/Subnav/PublicVocabs_SUBNAV";
 
-export { default as CreateMyVocab_MODAL } from "./components/Modal/CreateMyVocab_MODAL";
+export { default as CreateMyVocab_MODAL } from "./components/Modal/CreateMyVocab_MODAL/CreateMyVocab_MODAL";
 
-export { default as MyVocabDisplaySettings_MODAL } from "./components/Modal/DisplaySettings/MyVocabsDisplaySettings_MODAL";
+export { default as MyVocabDisplaySettings_MODAL } from "./components/Modal/DisplaySettings/MyVocabsDisplaySettings_MODAL/MyVocabsDisplaySettings_MODAL";
 
 export { default as DeleteVocab_MODAL } from "./components/Modal/DeleteVocab_MODAL";
 

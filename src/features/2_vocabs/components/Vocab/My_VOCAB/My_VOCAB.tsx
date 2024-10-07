@@ -21,7 +21,7 @@ interface VocabProps {
   vocab: Vocab_MODEL;
   highlighted: boolean;
   displaySettings: VocabDisplaySettings_PROPS;
-  HANDLE_vocabModal: {
+  HANDLE_updateModal: {
     clear?: boolean;
     vocab?: Vocab_MODEL;
   };
@@ -32,7 +32,7 @@ export default function MyVocab({
   vocab,
   highlighted,
   displaySettings,
-  HANDLE_vocabModal,
+  HANDLE_updateModal,
 }: VocabProps) {
   const [open, TOGGLE_open] = USE_toggle();
   const [SHOW_difficultyEdits, TOGGLE_difficultyEdits] = USE_toggle(false);
@@ -74,30 +74,33 @@ export default function MyVocab({
 
   return (
     <View style={styles}>
-      <Vocab_FRONT
-        vocab_id={vocab.id}
-        translations={vocab.translations}
-        difficulty={vocab.difficulty}
-        description={vocab.description}
-        displaySettings={displaySettings}
-        highlighted={highlighted}
-        open={open}
-        TOGGLE_open={TOGGLE_open}
-      />
+      {!open && (
+        <Vocab_FRONT
+          translations={vocab.translations}
+          difficulty={vocab.difficulty}
+          description={vocab.description}
+          tags={vocab.tags}
+          displaySettings={displaySettings}
+          highlighted={highlighted}
+          TOGGLE_open={TOGGLE_open}
+        />
+      )}
       {open && (
         <>
           <VocabBack_TRS
             TRs={vocab?.translations}
-            difficulty={vocab.difficulty}
+            difficulty={vocab?.difficulty}
           />
+
           <VocabBack_DESC desc={vocab.description} />
+
           <View style={{ padding: 12 }}>
             {!SHOW_difficultyEdits ? (
               <VocabBack_BTNS
                 {...{
                   vocab,
                   TOGGLE_vocab: TOGGLE_open,
-                  HANDLE_vocabModal,
+                  HANDLE_updateModal,
                   TOGGLE_difficultyEdits,
                 }}
               />

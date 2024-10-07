@@ -19,33 +19,27 @@ import { useMemo } from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 
 interface VocabFront_PROPS {
-  vocab_id: string;
   displaySettings: VocabDisplaySettings_PROPS;
   translations: Translation_MODEL[] | undefined;
   difficulty: 0 | 1 | 2 | 3 | undefined;
   description: string | undefined;
-  open: boolean;
+  tags: string[] | undefined;
   TOGGLE_open: () => void;
   highlighted?: boolean;
 }
 
 export default function Vocab_FRONT({
-  vocab_id,
   translations,
   difficulty,
   description,
+
   displaySettings,
-  open,
+
   TOGGLE_open,
   highlighted,
 }: VocabFront_PROPS) {
-  const {
-    SHOW_image,
-    SHOW_description,
-    SHOW_flags,
-    SHOW_difficulty,
-    frontTrLang_ID,
-  } = displaySettings;
+  const { SHOW_description, SHOW_flags, SHOW_difficulty, frontTrLang_ID } =
+    displaySettings;
 
   const front_TR = useMemo(() => {
     return (
@@ -81,45 +75,36 @@ export default function Vocab_FRONT({
       ]}
       onPress={TOGGLE_open}
     >
-      {SHOW_image && (
-        <Image
-          source={require("@/src/assets/images/dummyImage.jpg")}
-          style={{ height: 200, width: "100%" }}
-        />
-      )}
-      {!open && (
-        <View style={s.content}>
-          {front_TR ? (
-            <Highlighted_TEXT
-              text={front_TR?.text || "EMPTY TRANSLATION"}
-              highlights={front_TR?.highlights || []}
-              modal_DIFF={difficulty || 0}
-            />
-          ) : (
-            <Label>
-              {t("label.missingTranslation") +
-                targetLang?.[`lang_in_${appLang || "en"}`]}
-            </Label>
-          )}
-          {SHOW_description && description && (
-            <Styled_TEXT type="label_small">{description}</Styled_TEXT>
-          )}
-          {(SHOW_flags || SHOW_difficulty) && (
-            <View style={s.iconWrap}>
-              {SHOW_flags &&
-                translations?.map((tr) => (
-                  <ICON_flag
-                    key={"FrontFlag" + vocab_id + tr.lang_id}
-                    lang={tr.lang_id}
-                  />
-                ))}
-              {SHOW_difficulty && !!difficulty && (
-                <ICON_difficultyDot difficulty={difficulty} />
-              )}
-            </View>
-          )}
-        </View>
-      )}
+      <View style={s.content}>
+        {front_TR ? (
+          <Highlighted_TEXT
+            text={front_TR?.text || "EMPTY TRANSLATION"}
+            highlights={front_TR?.highlights || []}
+            diff={difficulty}
+          />
+        ) : (
+          <Label>
+            {t("label.missingTranslation") +
+              targetLang?.[`lang_in_${appLang || "en"}`]}
+          </Label>
+        )}
+
+        {SHOW_description && description && (
+          <Styled_TEXT type="label_small">{description}</Styled_TEXT>
+        )}
+
+        {(SHOW_flags || SHOW_difficulty) && (
+          <View style={s.iconWrap}>
+            {SHOW_flags &&
+              translations?.map((tr) => (
+                <ICON_flag key={"FrontFlag" + tr.lang_id} lang={tr.lang_id} />
+              ))}
+            {SHOW_difficulty && !!difficulty && (
+              <ICON_difficultyDot difficulty={difficulty} />
+            )}
+          </View>
+        )}
+      </View>
     </Pressable>
   );
 }
@@ -143,5 +128,15 @@ const s = StyleSheet.create({
     justifyContent: "flex-end",
     gap: 4,
     marginTop: 12,
+  },
+  tagWrap: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+  },
+  tagText: {
+    fontSize: 14,
+    fontFamily: "Nunito-Light",
+    color: MyColors.text_white_06,
   },
 });

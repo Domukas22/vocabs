@@ -7,7 +7,7 @@ import { ScrollView } from "react-native";
 import { Language_MODEL, VocabDisplaySettings_PROPS } from "@/src/db/models";
 import DisplaySettings_SUBNAV from "../components/DisplaySettings_SUBNAV/DisplaySettings_SUBNAV";
 
-import MyVocabPreview_BLOCKS from "../components/VocabPreview_BLOCK/private";
+import MyVocabPreview_BLOCKS from "../components/VocabPreview_BLOCK/private/MyVocabPreview_BLOCKS";
 import VocabFilter_BLOCKS from "../components/VocabFilter_BLOCKS/VocabFilter_BLOCKS";
 import VocabSorting_BLOCKS from "../components/VocabSorting_BLOCKS/VocabSorting_BLOCKS";
 import VocabSortDirection_BLOCK from "../components/VocabSortDirection_BLOCK/VocabSortDirection_BLOCK";

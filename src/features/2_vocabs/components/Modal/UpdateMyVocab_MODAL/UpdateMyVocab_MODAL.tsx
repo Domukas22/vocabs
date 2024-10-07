@@ -37,52 +37,54 @@ import Description_CONTROLER from "../../Inputs/InputControllers/Description_CON
 import Difficulty_CONTROLLER from "../../Inputs/InputControllers/Difficulty_CONTROLLER";
 import List_CONTROLLER from "../../Inputs/InputControllers/List_CONTROLLER";
 import CreateMyVocab_FOOTER from "../../Footer/CreateMyVocab_FOOTER/CreateMyVocab_FOOTER";
+import USE_updateVocab from "../../../hooks/USE_updateVocab";
+import UpdateMyVocab_FOOTER from "../../Footer/UpdateMyVocab_FOOTER/UpdateMyVocab_FOOTER";
 
-import { USE_langs } from "@/src/context/Langs_CONTEXT";
-
-interface CreateMyVocabModal_PROPS {
+interface UpdateMyVocabModal_PROPS {
   IS_open: boolean;
+  toUpdate_VOCAB: Vocab_MODEL | undefined;
   initial_LIST: List_MODEL | undefined;
   TOGGLE_modal: () => void;
   onSuccess: (new_VOCAB: Vocab_MODEL) => void;
 }
 
-export type CreateMyVocabData_PROPS = {
+export type UpdateMyVocabData_PROPS = {
   list: List_MODEL | undefined;
   difficulty: 1 | 2 | 3;
   description: string;
   translations: TranslationCreation_PROPS[];
 };
 
-export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
+export default function UpdateMyVocab_MODAL(props: UpdateMyVocabModal_PROPS) {
   const {
     IS_open,
-    TOGGLE_modal: TOGGLE_vocabModal,
+    toUpdate_VOCAB,
     initial_LIST,
+    TOGGLE_modal: TOGGLE_vocabModal,
     onSuccess = () => {},
   } = props;
 
   const { t } = useTranslation();
   const { user }: { user: User_MODEL } = USE_auth();
-  const { languages } = USE_langs();
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
-    { name: "selectedLangs", initialValue: false },
-    { name: "selectedList", initialValue: false },
-    { name: "trHighlights", initialValue: false },
+    { name: "langs", initialValue: false },
+    { name: "highlights", initialValue: false },
+    { name: "list", initialValue: false },
   ]);
 
   const [target_TR, SET_targetTr] = useState<
     TranslationCreation_PROPS | undefined
   >(undefined);
 
-  const { CREATE_vocab, IS_creatingVocab, db_ERROR, RESET_dbError } =
-    USE_createVocab();
+  const { UPDATE_vocab, IS_updatingVocab, db_ERROR, RESET_dbError } =
+    USE_updateVocab();
 
-  const create = async (data: CreateMyVocabData_PROPS) => {
+  const update = async (data: UpdateMyVocabData_PROPS) => {
     const { list, description, difficulty, translations } = data;
-    const result = await CREATE_vocab({
+    const result = await UPDATE_vocab({
       user,
+      vocab_id: toUpdate_VOCAB?.id,
       list_id: list?.id,
       difficulty,
       description,
@@ -107,14 +109,13 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
     reset,
     clearErrors,
     trigger,
-    formState: { errors },
     watch,
-  } = useForm<CreateMyVocabData_PROPS>({
+  } = useForm<UpdateMyVocabData_PROPS>({
     defaultValues: {
-      translations: GET_defaultTranslations(initial_LIST?.default_LANGS) || [],
+      translations: [],
       description: "",
-      list: initial_LIST,
-      difficulty: 3,
+      list: undefined,
+      difficulty: undefined,
     },
     criteriaMode: "all",
     shouldFocusError: true,
@@ -122,12 +123,21 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
   });
 
   const form_TRS = getValues("translations") || [];
-  const submit = (data: CreateMyVocabData_PROPS) => create(data);
+  const submit = (data: UpdateMyVocabData_PROPS) => update(data);
   const formValues = watch();
 
   useEffect(() => {
     RESET_dbError();
-  }, [formValues]);
+  }, [formValues, toUpdate_VOCAB]);
+
+  useEffect(() => {
+    if (IS_open) {
+      setValue("translations", toUpdate_VOCAB?.translations || []);
+      setValue("description", toUpdate_VOCAB?.description || "");
+      setValue("difficulty", toUpdate_VOCAB?.difficulty || 3);
+      setValue("list", initial_LIST || undefined);
+    }
+  }, [IS_open]);
 
   return (
     <Big_MODAL {...{ open: IS_open }}>
@@ -159,7 +169,7 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
 
           <ChosenLangs_CONTROLLER
             {...{ control, trigger }}
-            TOGGLE_langModal={() => TOGGLE_modal("selectedLangs")}
+            TOGGLE_langModal={() => TOGGLE_modal("langs")}
           />
 
           {form_TRS.map((tr, index) => (
@@ -168,7 +178,7 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
               diff={getValues("difficulty")}
               OPEN_highlights={() => {
                 SET_targetTr(tr);
-                TOGGLE_modal("trHighlights");
+                TOGGLE_modal("highlights");
               }}
               key={tr.lang_id + "InputsBlock"}
             />
@@ -178,11 +188,11 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
           <Difficulty_CONTROLLER {...{ control }} />
           <List_CONTROLLER
             {...{ control }}
-            TOGGLE_listModal={() => TOGGLE_modal("selectedList")}
+            TOGGLE_listModal={() => TOGGLE_modal("list")}
           />
         </KeyboardAwareScrollView>
-        <CreateMyVocab_FOOTER
-          {...{ IS_creatingVocab, db_ERROR }}
+        <UpdateMyVocab_FOOTER
+          {...{ IS_updatingVocab, db_ERROR }}
           submit={handleSubmit(submit)}
           CANCEL_creation={() => {
             TOGGLE_vocabModal();
@@ -192,8 +202,8 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
 
         {/* ------------------------------ MODALS ------------------------------  */}
         <SelectMultipleLanguages_MODAL
-          open={modal_STATES.selectedLangs}
-          TOGGLE_open={() => TOGGLE_modal("selectedLangs")}
+          open={modal_STATES.langs}
+          TOGGLE_open={() => TOGGLE_modal("langs")}
           trs={form_TRS}
           SUBMIT_langs={(new_LANGS: Language_MODEL[]) =>
             // adds/deletes current translations based on new languages provided
@@ -212,10 +222,10 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
         />
 
         <TrHighlights_MODAL
-          open={modal_STATES.trHighlights}
+          open={modal_STATES.highlights}
           tr={target_TR}
           diff={getValues("difficulty")}
-          TOGGLE_open={() => TOGGLE_modal("trHighlights")}
+          TOGGLE_open={() => TOGGLE_modal("highlights")}
           SET_trs={(trs: TranslationCreation_PROPS[]) => {
             setValue("translations", trs);
           }}
@@ -232,19 +242,19 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
         />
 
         <SelectMyList_MODAL
-          open={modal_STATES.selectedList}
+          open={modal_STATES.list}
           title="Saved vocab to list"
           submit_ACTION={(target_LIST: List_MODEL) => {
             if (target_LIST) {
               setValue("list", target_LIST);
               clearErrors("list");
-              TOGGLE_modal("selectedList");
+              TOGGLE_modal("list");
             }
           }}
           cancel_ACTION={() => {
-            TOGGLE_modal("selectedList");
+            TOGGLE_modal("list");
           }}
-          IS_inAction={IS_creatingVocab}
+          IS_inAction={false}
           current_LIST={getValues("list")}
         />
       </View>

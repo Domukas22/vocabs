@@ -11,7 +11,8 @@
     "login": "Willkommen zurück!",
     "selectOneLanguage": "Eine Sprache wählen",
     "addToPublic": "Vokabel veröffentlichen?",
-    "deleteList": "Liste löschen?"
+    "deleteList": "Liste löschen?",
+    "selectTags": "Tags auswählen"
   },
   "blockLabels": {
     "uiLang": "App Sprache"
@@ -61,7 +62,10 @@
     "renameList": "Umbenneen",
     "delete": "Löschen",
     "confirmMakeVocabPublic": "Ja, veröffentlichen",
-    "addVocabToPublic": "Veröffentlichen"
+    "addVocabToPublic": "Veröffentlichen",
+    "selectTags": "Tags wählen",
+    "createTagPre": "Tag ",
+    "createTagPost": "hinfügen"
   },
   "pages": {
     "about": {
@@ -205,7 +209,8 @@
     "showDescription": "Beschreibung anzeigen",
     "showListName": "Listenname anzeigen",
     "showFlags": "Flaggen anzeigen",
-    "showDifficulty": "Schwerkeit anzeigen"
+    "showDifficulty": "Schwerkeit anzeigen",
+    "showTags": "Tags anzeigen"
   },
   "vocabDummy": {
     "translation": "Vocabs app ist cool",
@@ -239,7 +244,9 @@
     "listDeletedPre": "Liste ",
     "listDeletedPost": " gelöscht",
     "vocabCreatedInAnotherListPre": "Neue Vokabel zur Liste ",
-    "vocabCreatedInAnotherListPost": " hizugefügt"
+    "vocabCreatedInAnotherListPost": " hizugefügt",
+    "vocabUpdatedInAnotherListPre": "Vokabel in der Liste ",
+    "vocabUpdatedInAnotherListPost": "erneut"
   },
   "notification": {
     "atLeast1LangError": "Mindestens 1 Sprache muss ausgewählt sein"

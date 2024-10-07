@@ -10,6 +10,7 @@ interface VocabCreation_MODEL {
   user?: User_MODEL | undefined;
   list_id?: string | undefined;
   difficulty?: 1 | 2 | 3;
+
   description?: string | "";
   translations: TranslationCreation_PROPS[] | undefined;
   is_public?: boolean;
@@ -32,6 +33,7 @@ export default function USE_createVocab() {
     list_id,
     difficulty,
     description,
+
     translations,
     is_public = false,
     onSuccess,
@@ -78,6 +80,7 @@ export default function USE_createVocab() {
         list_id: is_public ? null : list_id, // list_id is null for public vocabs
         difficulty: difficulty || 3,
         description: description || "",
+
         is_public,
       });
 
@@ -122,6 +125,7 @@ async function HANDLE_vocabCreation(vocab_DATA: {
   list_id: string | null | undefined;
   difficulty?: number;
   description?: string;
+
   is_public: boolean;
 }): Promise<{ success: boolean; data?: any; msg?: string }> {
   try {
@@ -140,6 +144,8 @@ async function HANDLE_vocabCreation(vocab_DATA: {
     }
 
     console.log("🟢 Vocab created successfully 🟢");
+    console.log(data);
+
     return { success: true, data };
   } catch (error: any) {
     console.log("🔴 Error inserting vocab 🔴", error.message);

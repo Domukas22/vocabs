@@ -23,3 +23,15 @@ export const level_7_limits = { lists: 350, vocabs: 7000 };
 export const level_8_limits = { lists: 400, vocabs: 8000 };
 export const level_9_limits = { lists: 450, vocabs: 9000 };
 export const level_10_limits = { lists: 500, vocabs: 10000 };
+
+export const DEFAULT_TAG_SUGGESTIONS = [
+  "Movie",
+  "Funny",
+  "Book",
+  "Real life",
+  "Family",
+  "Friends",
+  "Home",
+  "Food",
+  "Travel",
+];

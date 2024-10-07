@@ -93,11 +93,23 @@ export default function MyLists_PAGE() {
   }, []);
 
   useEffect(() => {
-    if (searched_LISTS.length > 0) {
-      SET_selectedList(searched_LISTS[0]);
-      router.push("/(main)/vocabs/list");
+    if (
+      !z_ARE_listsLoading &&
+      !ARE_listsSearching &&
+      searched_LISTS.length > 0 &&
+      z_lists.length > 0
+    ) {
+      if (searched_LISTS[0].id) {
+        SET_selectedList(searched_LISTS[0]);
+        router.push("/(main)/vocabs/list");
+      }
     }
-  }, [searched_LISTS.length]);
+  }, [
+    z_ARE_listsLoading,
+    ARE_listsSearching,
+    searched_LISTS.length,
+    z_lists.length,
+  ]);
 
   return (
     <Page_WRAP>

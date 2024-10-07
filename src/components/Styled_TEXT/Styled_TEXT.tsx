@@ -73,7 +73,7 @@ const s = StyleSheet.create({
     color: MyColors.text_white_06,
   },
   label_small: {
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: "Nunito-Light",
     color: MyColors.text_white_06,
   },

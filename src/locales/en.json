@@ -8,7 +8,8 @@
     "login": "Welcome back!",
     "selectOneLanguage": "Select a language",
     "addToPublic": "Add vocab to public?",
-    "deleteList": "Delete list?"
+    "deleteList": "Delete list?",
+    "selectTags": "Select tags"
   },
   "blockLabels": {
     "uiLang": "App language"
@@ -58,7 +59,10 @@
     "renameList": "Rename",
     "delete": "Delete",
     "confirmMakeVocabPublic": "Yes, make public",
-    "addVocabToPublic": "Add to public"
+    "addVocabToPublic": "Add to public",
+    "selectTags": "Select tags",
+    "createTagPre": "Create tag ",
+    "createTagPost": " "
   },
   "pages": {
     "about": {
@@ -202,7 +206,8 @@
     "showListName": "Show list name",
     "showDescription": "Show description",
     "showFlags": "Show flags",
-    "showDifficulty": "Show difficulty"
+    "showDifficulty": "Show difficulty",
+    "showTags": "Show tags"
   },
   "vocabDummy": {
     "translation": "Vocabs app is awesome",
@@ -236,7 +241,9 @@
     "listDeletedPre": "Deleted list ",
     "listDeletedPost": " ",
     "vocabCreatedInAnotherListPre": "Created new vocab in the list ",
-    "vocabCreatedInAnotherListPost": " "
+    "vocabCreatedInAnotherListPost": " ",
+    "vocabUpdatedInAnotherListPre": "Updated vocab in the list\t",
+    "vocabUpdatedInAnotherListPost": " "
   },
   "notification": {
     "atLeast1LangError": "Atleast 1 language must be selected"

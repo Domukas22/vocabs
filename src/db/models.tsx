@@ -45,6 +45,7 @@ export interface Vocab_MODEL {
   image: string | undefined;
   is_public: boolean;
   created_at: string;
+
   translations?: Translation_MODEL[];
 }
 
@@ -55,7 +56,7 @@ export interface Translation_MODEL {
   vocab_id: string;
   lang_id: string;
   text: string;
-  highlights: number[] | null;
+  highlights: number[] | undefined;
   is_public: boolean;
 
   created_at: string;
@@ -69,7 +70,6 @@ export interface TranslationCreation_PROPS {
 }
 // ------------------------------------------------------------
 export interface VocabDisplaySettings_PROPS {
-  SHOW_image: boolean;
   SHOW_description: boolean;
   SHOW_flags: boolean;
   SHOW_difficulty: boolean;

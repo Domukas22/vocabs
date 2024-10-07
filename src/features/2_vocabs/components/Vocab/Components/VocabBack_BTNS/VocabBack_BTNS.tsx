@@ -11,13 +11,13 @@ import { View } from "react-native";
 export default function VocabBack_BTNS({
   vocab,
   TOGGLE_vocab,
-  HANDLE_vocabModal,
+  HANDLE_updateModal,
   TOGGLE_difficultyEdits,
 }: {
   vocab: Vocab_MODEL;
   TOGGLE_vocab: () => void;
   TOGGLE_difficultyEdits: () => void;
-  HANDLE_vocabModal: ({ vocab }: { vocab: Vocab_MODEL }) => void;
+  HANDLE_updateModal: ({ vocab }: { vocab: Vocab_MODEL }) => void;
 }) {
   const { t } = useTranslation();
   return (
@@ -26,7 +26,7 @@ export default function VocabBack_BTNS({
         type="simple"
         style={{ flex: 1 }}
         onPress={() => {
-          HANDLE_vocabModal({ vocab });
+          HANDLE_updateModal({ vocab });
         }}
         text={t("btn.editVocab")}
         text_STYLES={{ textAlign: "center" }}

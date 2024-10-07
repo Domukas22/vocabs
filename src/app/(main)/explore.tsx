@@ -20,7 +20,7 @@ import { useState, useEffect, useMemo } from "react";
 
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 
-import PublicVocabDisplaySettings_MODAL from "@/src/features/2_vocabs/components/Modal/DisplaySettings/MyVocabsDisplaySettings_MODAL";
+import PublicVocabDisplaySettings_MODAL from "@/src/features/2_vocabs/components/Modal/DisplaySettings/MyVocabsDisplaySettings_MODAL/MyVocabsDisplaySettings_MODAL";
 
 import USE_zustand from "@/src/zustand";
 import FETCH_publicVocabs from "@/src/features/2_vocabs/hooks/FETCH_publicVocabs";
