@@ -14,7 +14,7 @@ interface ZustandStore {
   z_SET_listsError: (error: any) => void;
 
   z_CREATE_privateList: (newLists: List_MODEL) => void;
-  z_RENAME_privateList: (targetList_ID: string, new_NAME: string) => void;
+  z_RENAME_privateList: (renamed_LIST: List_MODEL) => void;
   z_UPDATE_defaultListTRs: (
     targetList_ID: string,
     newDefaultTRs: string[]
@@ -68,10 +68,10 @@ const USE_zustand = create<ZustandStore>((set) => ({
       z_lists: [new_LIST, ...state.z_lists], // Prepend new lists
     }));
   },
-  z_RENAME_privateList: (targetList_ID, new_NAME) => {
+  z_RENAME_privateList: (renamed_LIST) => {
     set((state) => ({
       z_lists: state.z_lists.map((list) => {
-        if (list.id === targetList_ID) list.name = new_NAME;
+        if (list.id === renamed_LIST.id) list.name = renamed_LIST.name;
         return list;
       }),
     }));

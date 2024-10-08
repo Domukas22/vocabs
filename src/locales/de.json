@@ -13,7 +13,8 @@
     "addToPublic": "Vokabel veröffentlichen?",
     "deleteList": "Liste löschen?",
     "selectTags": "Tags auswählen",
-    "publicPrivateVocabToPublicAsAdmin": "Vokabel veröffentlichen?"
+    "publicPrivateVocabToPublicAsAdmin": "Vokabel veröffentlichen?",
+    "renameList": "Liste umbenennen"
   },
   "blockLabels": {
     "uiLang": "App Sprache"
@@ -258,5 +259,10 @@
   },
   "emptyText": {
     "noLangsSelected": "Keine Sprachen ausgewählt"
+  },
+  "error": {
+    "provideAListName": "Bitte einen Listenname eingeben",
+    "listNameTaken": "Du hast beireits eine Listen namens ",
+    "noListSelected": "Keine Liste ausgewählt"
   }
 }

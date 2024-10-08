@@ -6,9 +6,10 @@ import { List_MODEL } from "@/src/db/models";
 
 export interface CreateList_PROPS {
   name: string;
-  user_id: string;
+  user_id: string | undefined;
   currentList_NAMES: string[];
-  onSuccess: (newList: List_MODEL) => void;
+  onSuccess?: (newList: List_MODEL) => void;
+  cleanup?: () => void;
 }
 
 export default function USE_createList() {
@@ -28,6 +29,7 @@ export default function USE_createList() {
     user_id,
     currentList_NAMES,
     onSuccess,
+    cleanup,
   }: CreateList_PROPS): Promise<{
     success: boolean;
     newList?: List_MODEL | undefined;
@@ -79,6 +81,7 @@ export default function USE_createList() {
       console.log("🟢 List created 🟢");
 
       if (onSuccess && newList) onSuccess(newList);
+      if (cleanup) cleanup();
 
       return { success: true, newList };
     } catch (error: any) {

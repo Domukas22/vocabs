@@ -32,6 +32,7 @@ import { USE_toggle } from "@/src/hooks/USE_toggle";
 import { EmptyFlatList_BOTTM } from "@/src/features/1_lists";
 import { USE_searchedLists } from "../../hooks/USE_searchedLists/USE_searchedLists";
 import Big_MODAL from "@/src/components/Modals/Big_MODAL/Big_MODAL";
+import { USE_auth } from "@/src/context/Auth_CONTEXT";
 interface SelectListModal_PROPS {
   open: boolean;
   title: string;
@@ -50,14 +51,14 @@ export default function SelectMyList_MODAL({
   IS_inAction,
 }: SelectListModal_PROPS) {
   const { t } = useTranslation();
-
+  const { user } = USE_auth();
   const [SHOW_createListModal, TOGGLE_createListModal] = USE_toggle(false);
 
   const [selectedModal_LIST, SET_selectedModalList] = useState<
     List_MODEL | undefined
   >(current_LIST);
 
-  const { z_lists, z_ARE_listsLoading } = USE_zustand();
+  const { z_lists, z_CREATE_privateList } = USE_zustand();
 
   const { searched_LISTS, search, SEARCH_lists, ARE_listsSearching } =
     USE_searchedLists(z_lists);
@@ -130,8 +131,8 @@ export default function SelectMyList_MODAL({
             />
           )}
 
-        {z_ARE_listsLoading && <Styled_TEXT>Loading</Styled_TEXT>}
-        {!z_ARE_listsLoading && z_lists.length === 0 && (
+        {ARE_listsSearching && <Styled_TEXT>Loading</Styled_TEXT>}
+        {!ARE_listsSearching && z_lists.length === 0 && (
           <EmptyFlatList_BOTTM
             emptyBox_TEXT={
               search === ""
@@ -166,8 +167,14 @@ export default function SelectMyList_MODAL({
         />
       </KeyboardAvoidingView>
       <CreateList_MODAL
+        user_id={user?.id}
         IS_open={SHOW_createListModal}
-        TOGGLE_modal={TOGGLE_createListModal}
+        currentList_NAMES={z_lists?.map((l) => l.name)}
+        CLOSE_modal={() => TOGGLE_createListModal()}
+        onSuccess={(newList: List_MODEL) => {
+          z_CREATE_privateList(newList);
+          SET_selectedModalList(newList);
+        }}
       />
     </Big_MODAL>
   );

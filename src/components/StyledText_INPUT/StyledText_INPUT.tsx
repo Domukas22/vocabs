@@ -20,16 +20,16 @@ import { ICON_toastNotification } from "../icons/icons";
 
 type _TextInputProps = TextInputProps & {
   value: string;
-  SET_value: (val: string) => void;
-  placeholder?: string;
   error: FieldError | undefined;
-  isSubmitted?: boolean;
+  isSubmitted: boolean;
+  SET_value: (val: string) => void;
+  isFocused: boolean;
+  setIsFocused: React.Dispatch<React.SetStateAction<boolean>>;
+  placeholder?: string;
   multiline?: boolean;
   staySmall?: boolean;
   _ref?: Ref<R_TextInput>;
   props?: TextInputProps;
-  isFocused: boolean;
-  setIsFocused: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function StyledText_INPUT({

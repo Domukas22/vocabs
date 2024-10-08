@@ -16,6 +16,8 @@ import { Styled_TEXT } from "../components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "../constants/MyColors";
 import { ICON_toastNotification } from "../components/icons/icons";
 import Notification_BOX from "../components/Notification_BOX/Notification_BOX";
+import USE_fetchMyLists from "../features/1_lists/hooks/USE_fetchMyLists";
+import USE_zustand from "../zustand";
 
 export default function _layout() {
   return (
@@ -50,6 +52,10 @@ function Main_LAYOUT() {
   const { SET_auth, SET_userData } = USE_auth();
   const { ARE_languagesLoading, languages } = USE_langs();
 
+  const { FETCH_myLists, ARE_listsFetching, fetchLists_ERROR, RESET_error } =
+    USE_fetchMyLists();
+  const { z_SET_lists } = USE_zustand();
+
   const router = useRouter();
   const [loaded] = useFonts({
     "Nunito-Black": require("@/src/assets/fonts/Nunito-Black.ttf"),
@@ -68,8 +74,16 @@ function Main_LAYOUT() {
       supabase.auth.onAuthStateChange(async (_event, session) => {
         if (session) {
           SET_auth(session?.user);
-          await GET_userData(session?.user); // await user data fetching
-          router.push("/(main)/explore"); // push only after fetching user data
+          const user = await GET_userData(session?.user);
+          const lists = await FETCH_myLists({ user_id: user?.id || "" });
+
+          if (lists.success && lists.lists) {
+            z_SET_lists(lists.lists);
+          } else {
+            console.error(lists.msg);
+          }
+
+          router.push("/(main)/vocabs");
         } else {
           SET_auth(null);
           router.push("/welcome");
@@ -80,7 +94,10 @@ function Main_LAYOUT() {
 
   async function GET_userData(user) {
     let res = await FETCH_userData(user?.id);
-    if (res.success) SET_userData(res.data);
+    if (res.success) {
+      SET_userData(res.data);
+      return res.data;
+    }
   }
 
   if (!loaded) return null;

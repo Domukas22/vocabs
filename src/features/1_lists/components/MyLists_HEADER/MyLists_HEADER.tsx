@@ -5,9 +5,16 @@
 import Btn from "@/src/components/Btn/Btn";
 import Header from "@/src/components/Header/Header";
 import { ICON_X } from "@/src/components/icons/icons";
+import { List_MODEL } from "@/src/db/models";
 import { useTranslation } from "react-i18next";
 
-export default function MyLists_HEADER({ TOGGLE_createListModal, lists }) {
+export default function MyLists_HEADER({
+  TOGGLE_createListModal,
+  lists,
+}: {
+  TOGGLE_createListModal: () => void;
+  lists: List_MODEL[];
+}) {
   const { t } = useTranslation();
   return (
     <Header

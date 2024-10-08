@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator } from "react-native";
 import Btn from "@/src/components/Btn/Btn";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
@@ -9,9 +9,12 @@ import USE_createList from "../../hooks/USE_createList";
 import Error_TEXT from "@/src/components/Error_TEXT/Error_TEXT";
 import { List_MODEL, User_MODEL } from "@/src/db/models";
 import { Controller, useForm } from "react-hook-form";
+import { TextInput } from "react-native";
+import IS_listNameTaken from "../../utils/IS_listNameTaken";
+import USE_zustand from "@/src/zustand";
 
 interface CreateListModal_PROPS {
-  user: User_MODEL;
+  user_id: string | undefined;
   IS_open: boolean;
   currentList_NAMES: string[];
   CLOSE_modal: () => void;
@@ -23,16 +26,18 @@ type NewList_PROPS = {
 };
 
 export default function CreateList_MODAL({
-  user,
+  user_id,
   IS_open,
   currentList_NAMES,
   CLOSE_modal,
   onSuccess,
 }: CreateListModal_PROPS) {
+  const inputREF = useRef<TextInput>(null);
+  const [isFocused, setIsFocused] = useState(false);
+  const { z_lists } = USE_zustand();
   const { t } = useTranslation();
   const { CREATE_list, IS_creatingList, createList_ERROR, RESET_error } =
     USE_createList();
-  const inputREF = useRef(null);
 
   const {
     control,
@@ -55,16 +60,14 @@ export default function CreateList_MODAL({
     const { name } = data;
     const newList = await CREATE_list({
       name,
-      user_id: user.id,
+      user_id,
       currentList_NAMES,
-      onSuccess: (newList) => {
-        console.log("Before reset");
-        onSuccess(newList);
+      onSuccess,
+      cleanup: () => {
         setTimeout(() => {
           // doesn't call for some reason without the timeout
-          reset();
+          HANLDE_toggle();
         }, 0);
-        console.log("After reset");
       },
     });
 
@@ -105,32 +108,39 @@ export default function CreateList_MODAL({
         rules={{
           required: {
             value: true,
-            message: "Please provide a list name",
+            message: t("error.provideAListName"),
           },
           validate: {
-            uniqueName: (value) =>
-              !currentList_NAMES.includes(value.trim()) ||
-              "This list name already exists.",
+            uniqueName: (value) => {
+              const IS_nameTaken = IS_listNameTaken({
+                lists: z_lists,
+                name: value,
+                list_id: "new",
+              });
+
+              return IS_nameTaken ? t("error.listNameTaken") : true;
+            },
           },
         }}
-        render={({ field: { onChange, onBlur, value } }) => (
+        render={({
+          field: { onChange, onBlur, value },
+          fieldState: { error },
+        }) => (
           <StyledText_INPUT
-            onBlur={onBlur}
+            {...{ value, error, isSubmitted, isFocused, setIsFocused }}
             SET_value={(val) => {
               onChange(val);
               RESET_error();
             }}
             value={value}
-            error={!!errors.name || !!createList_ERROR}
             props={{ keyboardType: "default" }} // Changed to "default" for list names
-            IS_errorCorrected={isSubmitted && !errors.name && !createList_ERROR}
             _ref={inputREF}
           />
         )}
         name="name"
       />
-      {errors.name && <Error_TEXT>{errors.name.message}</Error_TEXT>}
-      {createList_ERROR && <Error_TEXT>{createList_ERROR}</Error_TEXT>}
+      {errors.name && <Error_TEXT text={errors.name.message} />}
+      {createList_ERROR && <Error_TEXT text={createList_ERROR} />}
     </Small_MODAL>
   );
 }

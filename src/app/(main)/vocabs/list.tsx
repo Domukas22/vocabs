@@ -138,7 +138,6 @@ export default function SingleList_PAGE() {
           {...{ TOGGLE_displaySettings }}
         />
       )}
-      {ARE_vocabsSearching || ARE_vocabsFiltering ? <List_SKELETONS /> : null}
 
       {vocabs &&
       vocabs.length > 0 &&
@@ -156,7 +155,9 @@ export default function SingleList_PAGE() {
             PREPARE_vocabDelete,
           }}
         />
-      ) : (
+      ) : ARE_vocabsSearching || ARE_vocabsFiltering ? (
+        <List_SKELETONS />
+      ) : !ARE_vocabsSearching && !ARE_vocabsFiltering ? (
         <EmptyFlatList_BOTTM
           // emptyBox_TEXT={t("label.thisListIsEmpty")}
           emptyBox_TEXT={
@@ -169,7 +170,7 @@ export default function SingleList_PAGE() {
           btn_TEXT={t("btn.createVocab")}
           btn_ACTION={TOGGLE_createVocabModal}
         />
-      )}
+      ) : null}
       <MyVocabDisplaySettings_MODAL
         open={SHOW_displaySettings}
         TOGGLE_open={TOGGLE_displaySettings}

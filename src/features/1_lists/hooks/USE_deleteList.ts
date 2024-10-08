@@ -6,9 +6,10 @@ import { supabase } from "@/src/lib/supabase";
 import { useCallback, useMemo, useState } from "react";
 
 interface ListDelete_PROPS {
-  user?: User_MODEL;
-  list_id: string;
+  user_id: string | undefined;
+  list_id: string | undefined;
   onSuccess?: (deletedList: List_MODEL) => void;
+  cleanup?: () => void;
 }
 
 export default function USE_deleteList() {
@@ -23,9 +24,10 @@ export default function USE_deleteList() {
   );
 
   const DELETE_list = async ({
-    user,
+    user_id,
     list_id,
     onSuccess,
+    cleanup,
   }: ListDelete_PROPS) => {
     SET_error(null); // Clear previous error
 
@@ -35,7 +37,7 @@ export default function USE_deleteList() {
       return { success: false, msg: "🔴 List ID not provided for deletion 🔴" };
     }
 
-    if (!user?.id) {
+    if (!user_id) {
       SET_error(errorMessage);
       return {
         success: false,
@@ -50,14 +52,14 @@ export default function USE_deleteList() {
         .from("lists")
         .select()
         .eq("id", list_id)
-        .eq("user_id", user?.id)
+        .eq("user_id", user_id)
         .single();
 
       if (listError) {
         SET_error(errorMessage);
         return {
           success: false,
-          msg: `🔴 Error fetching list with ID ${list_id} for user ${user?.id} 🔴: ${listError.message}`,
+          msg: `🔴 Error fetching list with ID ${list_id} for user ${user_id} 🔴: ${listError.message}`,
         };
       }
 
@@ -67,7 +69,7 @@ export default function USE_deleteList() {
         );
         return {
           success: false,
-          msg: `🔴 List with ID ${list_id} not found for user ${user?.id} 🔴`,
+          msg: `🔴 List with ID ${list_id} not found for user ${user_id} 🔴`,
         };
       }
 
@@ -94,6 +96,7 @@ export default function USE_deleteList() {
 
       // Post-delete callback
       if (onSuccess) onSuccess(deletedListData);
+      if (cleanup) cleanup();
 
       return { success: true, data: deletedListData };
     } catch (error: any) {

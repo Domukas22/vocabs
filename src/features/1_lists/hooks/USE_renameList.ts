@@ -1,56 +1,118 @@
-import { useState } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { supabase } from "@/src/lib/supabase";
-import USE_zustand from "@/src/zustand";
 import { useToast } from "react-native-toast-notifications";
 import { useTranslation } from "react-i18next";
+import { List_MODEL } from "@/src/db/models";
+
+export interface RenameList_PROPS {
+  list_id: string | undefined;
+  newName: string | undefined;
+  user_id: string | undefined;
+  currentList_NAMES: string[];
+  onSuccess?: (updated_LIST: List_MODEL) => void;
+  cleanup?: () => void;
+}
 
 export default function USE_renameList() {
   const [IS_renamingList, SET_renamingList] = useState(false);
   const [renameList_ERROR, SET_renameListError] = useState<string | null>(null);
-  const toast = useToast();
-  const { t } = useTranslation();
 
-  const { z_RENAME_privateList } = USE_zustand();
+  const RESET_error = useCallback(() => SET_renameListError(null), []);
 
-  const RENAME_list = async (
-    targetList_ID: string,
-    newListName: string
-  ): Promise<{
+  const errorMessage = useMemo(
+    () =>
+      "Some kind of error happened when trying to rename the list. This is an issue on our side. Please try to re-load the app and see if the problem persists. The issue has been recorded and will be reviewed by developers as soon as possible. We are sorry for the trouble.",
+    []
+  );
+
+  const RENAME_list = async ({
+    newName,
+    user_id,
+    list_id,
+    currentList_NAMES,
+    onSuccess,
+    cleanup,
+  }: RenameList_PROPS): Promise<{
     success: boolean;
+    updated_LIST?: List_MODEL | undefined;
     msg?: string;
   }> => {
+    SET_renameListError(null); // Clear previous error
+
+    // Validation checks
+    if (!list_id) {
+      SET_renameListError(errorMessage);
+      return {
+        success: false,
+        msg: "🔴 List ID not provided for renaming 🔴",
+      };
+    }
+
+    if (!newName) {
+      SET_renameListError("You must provide a new list name.");
+      return {
+        success: false,
+        msg: "🔴 New list name not provided 🔴",
+      };
+    }
+
+    if (currentList_NAMES?.some((listName) => listName === newName)) {
+      SET_renameListError("You already have a list with that name.");
+      return {
+        success: false,
+        msg: "🔴 New list name already exists 🔴",
+      };
+    }
+
+    if (!user_id) {
+      SET_renameListError(errorMessage);
+      return {
+        success: false,
+        msg: "🔴 User ID not provided for renaming 🔴",
+      };
+    }
+
+    SET_renamingList(true);
     try {
-      SET_renamingList(true);
-      SET_renameListError(null); // Reset error state before renaming the list
-
-      const { error } = await supabase
+      const { data: updated_LIST, error } = await supabase
         .from("lists")
-        .update({ name: newListName })
-        .eq("id", targetList_ID);
+        .update({ name: newName })
+        .eq("user_id", user_id)
+        .eq("id", list_id)
+        .select()
+        .single();
 
-      // Handle potential errors
       if (error) {
-        console.error("🔴 Error renaming list: 🔴", error);
-        SET_renameListError("🔴 Error renaming list 🔴");
-        return { success: false, msg: "🔴 Error renaming list 🔴" };
+        SET_renameListError(errorMessage);
+        return {
+          success: false,
+          msg: `🔴 Something went wrong when renaming list 🔴: ${error}`,
+        };
       }
 
-      z_RENAME_privateList(targetList_ID, newListName);
       console.log("🟢 List renamed 🟢");
-      toast.show(t("notifications.listRenamed"), {
-        type: "green",
-        duration: 5000,
-      });
+      if (onSuccess && updated_LIST) onSuccess(updated_LIST);
+      if (cleanup) cleanup();
 
-      return { success: true, msg: "🟢 List renamed 🟢" };
-    } catch (error) {
-      console.error("🔴 Unexpected error renaming list: 🔴", error);
-      SET_renameListError("🔴 Unexpected error occurred. 🔴");
-      return { success: false, msg: "🔴 Unexpected error occurred. 🔴" };
+      return { success: true, updated_LIST };
+    } catch (error: any) {
+      // Handle network or connection errors differently
+      if (error.message === "Failed to fetch") {
+        SET_renameListError(
+          "It looks like there's an issue with your internet connection. Please check your connection and try again."
+        );
+      } else {
+        SET_renameListError(errorMessage);
+      }
+
+      return {
+        success: false,
+        msg: `🔴 Unexpected error occurred during renaming of the list: ${error.message} 🔴`,
+      };
     } finally {
-      SET_renamingList(false); // Always stop loading after the request
+      SET_renamingList(false);
     }
   };
 
-  return { RENAME_list, IS_renamingList, renameList_ERROR };
+  return { RENAME_list, IS_renamingList, renameList_ERROR, RESET_error };
 }

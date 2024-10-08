@@ -10,7 +10,8 @@
     "addToPublic": "Add vocab to public?",
     "deleteList": "Delete list?",
     "selectTags": "Select tags",
-    "publicPrivateVocabToPublicAsAdmin": "Publish vocab?"
+    "publicPrivateVocabToPublicAsAdmin": "Publish vocab?",
+    "renameList": "Rename list"
   },
   "blockLabels": {
     "uiLang": "App language"
@@ -255,5 +256,10 @@
   },
   "emptyText": {
     "noLangsSelected": "No languages selected"
+  },
+  "error": {
+    "provideAListName": "Please provide a list name",
+    "listNameTaken": "You already have a list named ",
+    "noListSelected": "No list selected"
   }
 }

@@ -29,7 +29,11 @@ export default function MyLists_FLATLIST({
       data={lists}
       renderItem={({ item }: { item: List_MODEL }) => (
         <SwipeableExample
-          leftBtn_ACTION={() => PREPARE_listRename(item)}
+          leftBtn_ACTION={() => {
+            console.log("FIRE");
+
+            PREPARE_listRename(item);
+          }}
           rightBtn_ACTION={() => PREPADE_deleteList(item)}
         >
           <MyList_BTN

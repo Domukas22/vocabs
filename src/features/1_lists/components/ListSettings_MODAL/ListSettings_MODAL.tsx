@@ -181,59 +181,38 @@ export default function ListSettings_MODAL({
         IS_inAction={IS_updatingDefaultListTRs}
       />
 
-      {/* <RenameList_MODAL
-        open={SHOW_renameListModal}
-        toggle={TOGGLE_renameListModal}
-        title={t("modal.listSettings.renameListModalTitle")}
-        rename={(new_NAME: string) => RENAME_privateList(new_NAME, list?.id)}
-        IS_inAction={IS_renamingList}
-        actionBtnText={t("btn.confirmListRename")}
+      <RenameList_MODAL
+        list_id={list?.id}
+        user_id={user?.id}
         current_NAME={list?.name}
-      /> */}
-      <UpdateList_MODAL
-        user={user}
         IS_open={SHOW_renameListModal}
-        currentList={list}
-        currentList_NAMES={z_lists?.map((l) => l.name)}
-        CLOSE_modal={() => SET_updateListModal(false)}
-        onSuccess={(updatedList: List_MODEL) => {
-          z_RENAME_privateList(updatedlist?.id, updatedlist?.name);
-          toast.show(t("notifications.listRenamed"), {
-            type: "green",
-            duration: 5000,
-          });
-          SET_updateListModal(false);
-          HIGHLIGHT_listName();
-          HIGHLIGHT_modalListName();
+        CLOSE_modal={() => TOGGLE_renameListModal()}
+        onSuccess={(updated_LIST?: List_MODEL) => {
+          if (updated_LIST) {
+            z_RENAME_privateList(updated_LIST);
+            HIGHLIGHT_modalListName();
+          }
         }}
       />
-      {/* ----- DELETE confirmation ----- */}
-      {/* <Confirmation_MODAL
-        open={SHOW_deleteModal}
-        toggle={TOGGLE_deleteModal}
-        title={t("modal.listSettings.deleteListconfirmation")}
-        action={() => DELETE_privateList(list?.id)}
-        IS_inAction={IS_deletingList}
-        actionBtnText={t("btn.confirmDelete")}
-      /> */}
+
       <DeleteList_MODAL
-        user={user}
+        user_id={user?.id}
         IS_open={SHOW_deleteModal}
         list_id={list?.id}
         CLOSE_modal={() => SET_deleteModal(false)}
-        onSuccess={(deletedList: List_MODEL) => {
-          z_DELETE_privateList(deletedList?.id);
+        onSuccess={(deleted_LIST?: List_MODEL) => {
+          if (!deleted_LIST) return;
+          SET_deleteModal(false);
+          z_DELETE_privateList(deleted_LIST?.id);
           toast.show(
             t("notifications.listDeletedPre") +
-              `"${deletedList?.name}"` +
+              `"${deleted_LIST?.name}"` +
               t("notifications.listDeletedPost"),
             {
               type: "green",
               duration: 5000,
             }
           );
-          SET_deleteModal(false);
-          TOGGLE_open();
           router.back();
         }}
       />

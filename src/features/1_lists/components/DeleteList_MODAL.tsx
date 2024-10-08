@@ -8,17 +8,19 @@ import { ActivityIndicator } from "react-native";
 import Error_TEXT from "@/src/components/Error_TEXT/Error_TEXT";
 import USE_deleteList from "../hooks/USE_deleteList";
 import { List_MODEL, User_MODEL } from "@/src/db/models";
+import USE_zustand from "@/src/zustand";
+import { useToast } from "react-native-toast-notifications";
 
 interface DeleteListModal_PROPS {
-  user?: User_MODEL;
+  user_id: string | undefined;
   IS_open: boolean;
   list_id: string | undefined;
   CLOSE_modal: () => void | undefined;
-  onSuccess: (deletedList: List_MODEL) => void | undefined;
+  onSuccess?: (deleted_LIST?: List_MODEL) => void | undefined;
 }
 
 export default function DeleteList_MODAL({
-  user,
+  user_id,
   IS_open = false,
   list_id = undefined,
   CLOSE_modal = () => {},
@@ -29,9 +31,10 @@ export default function DeleteList_MODAL({
 
   const handleDelete = async () => {
     const result = await DELETE_list({
-      user,
-      list_id: list_id || "",
+      user_id,
+      list_id: list_id,
       onSuccess,
+      cleanup: CLOSE_modal,
     });
 
     if (!result.success) {
@@ -73,7 +76,7 @@ export default function DeleteList_MODAL({
         />
       }
     >
-      {error && <Error_TEXT>{error}</Error_TEXT>}
+      {error && <Error_TEXT text={error} />}
     </Small_MODAL>
   );
 }
