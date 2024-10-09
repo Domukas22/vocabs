@@ -46,6 +46,7 @@ export default function SwipeableExample({
 
 function RENDER_leftActions(progress, dragX, leftBtn_ACTION, t) {
   const trans = dragX.interpolate({
+    // inputRange: [0, ACTION_WIDTH], // Limit swipe to the action width
     inputRange: [0, ACTION_WIDTH], // Limit swipe to the action width
     outputRange: [-ACTION_WIDTH / 2, 0], // Smooth transition
     extrapolate: "clamp",

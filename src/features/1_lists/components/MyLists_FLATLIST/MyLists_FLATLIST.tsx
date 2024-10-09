@@ -10,17 +10,30 @@ import { List_MODEL } from "@/src/db/models";
 import { useTranslation } from "react-i18next";
 import SwipeableExample from "@/src/components/SwipeableExample/SwipeableExample";
 import Label from "@/src/components/Label/Label";
+import React from "react";
+import { FlatList } from "react-native";
+
+interface MyListsFlatlist_PROPS {
+  _ref: React.RefObject<FlatList>;
+  lists: List_MODEL[];
+  SHOW_bottomBtn: boolean;
+  highlighted_ID?: string | undefined;
+  SELECT_list: (list: List_MODEL) => void;
+  PREPARE_listRename: (list: List_MODEL) => void;
+  PREPADE_deleteList: (list: List_MODEL) => void;
+  TOGGLE_createListModal: () => void;
+}
 
 export default function MyLists_FLATLIST({
-  lists,
-  SELECT_list,
-  SHOW_bottomBtn,
-  TOGGLE_createListModal,
-  highlighted_ID,
   _ref,
+  lists,
+  SHOW_bottomBtn,
+  highlighted_ID,
+  SELECT_list,
   PREPARE_listRename,
   PREPADE_deleteList,
-}) {
+  TOGGLE_createListModal,
+}: MyListsFlatlist_PROPS) {
   const { t } = useTranslation();
   return (
     <Styled_FLATLIST
@@ -30,8 +43,6 @@ export default function MyLists_FLATLIST({
       renderItem={({ item }: { item: List_MODEL }) => (
         <SwipeableExample
           leftBtn_ACTION={() => {
-            console.log("FIRE");
-
             PREPARE_listRename(item);
           }}
           rightBtn_ACTION={() => PREPADE_deleteList(item)}

@@ -5,10 +5,9 @@
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
 import { useRouter } from "expo-router";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 import { List_MODEL } from "@/src/db/models";
-import { USE_toggle } from "@/src/hooks/USE_toggle";
 import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
 
 import {
@@ -18,7 +17,6 @@ import {
   MyLists_FLATLIST,
   MyLists_HEADER,
   MyLists_SUBNAV,
-  FETCH_myLists,
 } from "@/src/features/1_lists";
 
 import USE_zustand from "@/src/zustand";
@@ -26,22 +24,18 @@ import { useTranslation } from "react-i18next";
 import { USE_searchedLists } from "@/src/features/1_lists/hooks/USE_searchedLists/USE_searchedLists";
 import USE_highlighedId from "@/src/hooks/USE_highlighedId/USE_highlighedId";
 import RenameList_MODAL from "@/src/features/1_lists/components/RenameList_MODAL/RenameList_MODAL";
-import USE_renameList from "@/src/features/1_lists/hooks/USE_renameList";
 
 import React from "react";
-import Confirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
-import USE_deleteList from "@/src/features/1_lists/hooks/USE_deleteList";
 import { useToast } from "react-native-toast-notifications";
-import UpdateList_MODAL from "@/src/features/1_lists/components/UpdateList_MODAL";
 import DeleteList_MODAL from "@/src/features/1_lists/components/DeleteList_MODAL";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
-import { FlatListComponent, ViewComponent } from "react-native";
 import { FlatList } from "react-native";
 
 export default function MyLists_PAGE() {
   const { user } = USE_auth();
   const { t } = useTranslation();
   const { SET_selectedList } = USE_selectedList();
+  const { z_SET_printedVocabs } = USE_zustand();
 
   const router = useRouter();
   const list_REF = useRef<FlatList<any>>(null);

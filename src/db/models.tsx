@@ -69,7 +69,7 @@ export interface TranslationCreation_PROPS {
   highlights: number[];
 }
 // ------------------------------------------------------------
-export interface MyVocabDisplaySettings_PROPS {
+export interface DisplaySettings_PROPS {
   SHOW_description: boolean;
   SHOW_flags: boolean;
   SHOW_difficulty: boolean;

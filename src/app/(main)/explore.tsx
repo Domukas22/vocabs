@@ -18,7 +18,7 @@ import {
 import { useRouter } from "expo-router";
 import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
 import {
-  MyVocabDisplaySettings_PROPS,
+  DisplaySettings_PROPS,
   PublicVocabDisplaySettings_PROPS,
   Vocab_MODEL,
 } from "@/src/db/models";

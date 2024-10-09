@@ -2,9 +2,13 @@
 //
 //
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { ScrollView } from "react-native";
-import { Language_MODEL, MyVocabDisplaySettings_PROPS } from "@/src/db/models";
+import {
+  Language_MODEL,
+  DisplaySettings_PROPS,
+  Vocab_MODEL,
+} from "@/src/db/models";
 import DisplaySettings_SUBNAV from "../components/DisplaySettings_SUBNAV/DisplaySettings_SUBNAV";
 
 import MyVocabPreview_BLOCKS from "../components/VocabPreview_BLOCK/private/MyVocabPreview_BLOCKS";
@@ -23,15 +27,16 @@ import languages, { languagesArr_PROPS } from "@/src/constants/languages";
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
 import Vocab_DUMMY from "../../../Vocab/Components/Vocab_DUMMY";
 import Block from "@/src/components/Block/Block";
+import GET_uniqueLanguagesInAList from "@/src/features/4_languages/utils/GET_uniqueLanguagesInAList/GET_uniqueLanguagesInAList";
 
 interface DisplaySettingsModal_PROPS {
-  displaySettings: MyVocabDisplaySettings_PROPS;
+  displaySettings: DisplaySettings_PROPS;
   SET_displaySettings: React.Dispatch<
-    React.SetStateAction<MyVocabDisplaySettings_PROPS>
+    React.SetStateAction<DisplaySettings_PROPS>
   >;
   open: boolean;
   TOGGLE_open: () => void;
-  list_LANGS: Language_MODEL[];
+  vocabs?: Vocab_MODEL[];
 }
 
 export default function MyVocabDisplaySettings_MODAL({
@@ -39,12 +44,17 @@ export default function MyVocabDisplaySettings_MODAL({
   TOGGLE_open,
   displaySettings,
   SET_displaySettings,
-  list_LANGS,
+  vocabs,
 }: DisplaySettingsModal_PROPS) {
   const [view, SET_view] = useState<"preview" | "sort" | "filter">("preview");
   const { t } = useTranslation();
   const [SHOW_frontLangModal, TOGGLE_frontLangModal] = USE_toggle();
   const { languages } = USE_langs();
+
+  const list_LANGS = useMemo(
+    () => GET_uniqueLanguagesInAList(vocabs || [], languages),
+    [vocabs]
+  );
 
   return (
     <Big_MODAL {...{ open }}>

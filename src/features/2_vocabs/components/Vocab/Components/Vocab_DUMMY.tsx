@@ -8,7 +8,7 @@ import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
 import {
-  MyVocabDisplaySettings_PROPS,
+  DisplaySettings_PROPS,
   TranslationCreation_PROPS,
   Vocab_MODEL,
   Language_MODEL,
@@ -20,9 +20,7 @@ import { useTranslation } from "react-i18next";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 
 interface VocabFront_PROPS {
-  displaySettings:
-    | MyVocabDisplaySettings_PROPS
-    | PublicVocabDisplaySettings_PROPS;
+  displaySettings: DisplaySettings_PROPS | PublicVocabDisplaySettings_PROPS;
   HAS_difficulty?: boolean;
 }
 

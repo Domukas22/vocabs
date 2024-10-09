@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import {
   Vocab_MODEL,
-  MyVocabDisplaySettings_PROPS,
+  DisplaySettings_PROPS,
   PublicVocabDisplaySettings_PROPS,
 } from "@/src/db/models";
 

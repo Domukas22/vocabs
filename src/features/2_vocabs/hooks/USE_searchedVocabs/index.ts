@@ -2,22 +2,22 @@
 //
 //
 
-import { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Vocab_MODEL } from "@/src/db/models";
 
-export default function USE_searchedVocabs(vocabs: Vocab_MODEL[]) {
+export default function USE_searchedVocabs({
+  vocabs,
+  search,
+}: {
+  vocabs: Vocab_MODEL[];
+  search: string;
+}) {
   const [searched_VOCABS, SET_searchedVocabs] = useState<Vocab_MODEL[]>(vocabs);
-  const [search, setSearch] = useState("");
   const [ARE_vocabsSearching, SET_areVocabsSearching] = useState(false);
-
-  // Function to handle searching
-  const SEARCH_vocabs = useCallback((newSearch: string) => {
-    setSearch(newSearch);
-    SET_areVocabsSearching(true); // Set fetching state to true
-  }, []);
 
   useEffect(() => {
     const filter = async () => {
+      SET_areVocabsSearching(true);
       // Use setTimeout to offload filtering to the event loop
       const filtered = await new Promise<Vocab_MODEL[]>((resolve) => {
         setTimeout(() => {
@@ -40,5 +40,5 @@ export default function USE_searchedVocabs(vocabs: Vocab_MODEL[]) {
     filter(); // Call the async function
   }, [search, vocabs]); // Re-run when search or lists change
 
-  return { searched_VOCABS, search, SEARCH_vocabs, ARE_vocabsSearching };
+  return { searched_VOCABS, ARE_vocabsSearching };
 }

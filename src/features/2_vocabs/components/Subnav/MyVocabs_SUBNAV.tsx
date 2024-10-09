@@ -8,19 +8,21 @@ import SearchBar from "@/src/components/SearchBar/SearchBar";
 import Subnav from "@/src/components/Subnav/Subnav";
 
 export default function Vocabs_SUBNAV({
+  vocab_COUNT,
   search,
   activeFitlers = 0,
   SET_search,
   TOGGLE_displaySettings,
   onPlusIconPress,
 }: {
+  vocab_COUNT: number;
   search: string;
   activeFitlers: number;
   SET_search: (val: string) => void;
   TOGGLE_displaySettings: () => void;
   onPlusIconPress: () => void;
 }) {
-  return (
+  return vocab_COUNT > 0 ? (
     <Subnav>
       <SearchBar value={search} SET_value={SET_search} />
       <Btn
@@ -37,5 +39,5 @@ export default function Vocabs_SUBNAV({
         onPress={onPlusIconPress}
       />
     </Subnav>
-  );
+  ) : null;
 }

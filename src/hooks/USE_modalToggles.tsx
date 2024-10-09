@@ -10,7 +10,7 @@ const TOGGLE_MODAL = "TOGGLE_MODAL";
 // Define the shape of the initial state definition
 interface ModalDefinition {
   name: string; // Modal name
-  initialValue: boolean; // Initial visibility state
+  initialValue?: boolean; // Initial visibility state
 }
 
 // Define the reducer function
@@ -41,7 +41,7 @@ const modalReducer = (
 export default function USE_modalToggles(modalDefinitions: ModalDefinition[]) {
   // Generate the initial state from the provided modal definitions
   const initialState = modalDefinitions.reduce(
-    (acc, { name, initialValue }) => {
+    (acc, { name, initialValue = false }) => {
       acc[name] = initialValue; // Set the initial value for each modal
       return acc;
     },

@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import { ScrollView } from "react-native";
 import {
   Language_MODEL,
-  MyVocabDisplaySettings_PROPS,
+  DisplaySettings_PROPS,
   PublicVocabDisplaySettings_PROPS,
 } from "@/src/db/models";
 import DisplaySettings_SUBNAV from "../components/DisplaySettings_SUBNAV/DisplaySettings_SUBNAV";
