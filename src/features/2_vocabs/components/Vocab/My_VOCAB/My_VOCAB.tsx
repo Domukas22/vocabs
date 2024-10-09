@@ -20,7 +20,7 @@ import VocabBackDifficultyEdit_BTNS from "../Components/VocabBackDifficultyEdit_
 interface VocabProps {
   vocab: Vocab_MODEL;
   highlighted: boolean;
-  displaySettings: DisplaySettings_PROPS;
+
   HANDLE_updateModal: {
     clear?: boolean;
     vocab?: Vocab_MODEL;
@@ -31,7 +31,7 @@ interface VocabProps {
 export default function MyVocab({
   vocab,
   highlighted,
-  displaySettings,
+
   HANDLE_updateModal,
 }: VocabProps) {
   const [open, TOGGLE_open] = USE_toggle();
@@ -79,7 +79,6 @@ export default function MyVocab({
           translations={vocab.translations}
           difficulty={vocab.difficulty}
           description={vocab.description}
-          displaySettings={displaySettings}
           highlighted={highlighted}
           TOGGLE_open={TOGGLE_open}
         />

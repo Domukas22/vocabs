@@ -15,18 +15,14 @@ import Btn from "@/src/components/Btn/Btn";
 import { ICON_checkMark, ICON_flag } from "@/src/components/icons/icons";
 import { useMemo } from "react";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
+import USE_zustand from "@/src/zustand";
 
 export default function MyVocabPreview_BLOCKS({
-  displaySettings,
-  SET_displaySettings,
   list_LANGS,
 }: {
-  displaySettings: DisplaySettings_PROPS;
-  SET_displaySettings: React.Dispatch<
-    React.SetStateAction<DisplaySettings_PROPS>
-  >;
   list_LANGS: Language_MODEL[];
 }) {
+  const { z_display_SETTINGS, z_SET_displaySettings } = USE_zustand();
   const appLang = useMemo(() => i18next.language, [i18next.language]);
 
   return (
@@ -45,32 +41,29 @@ export default function MyVocabPreview_BLOCKS({
           >
             <Settings_TOGGLE
               text={t("toggle.showDescription")}
-              active={displaySettings?.SHOW_description}
+              active={z_display_SETTINGS?.SHOW_description}
               onPress={() => {
-                SET_displaySettings((p) => ({
-                  ...p,
-                  SHOW_description: !p.SHOW_description,
-                }));
+                z_SET_displaySettings({
+                  SHOW_description: !z_display_SETTINGS.SHOW_description,
+                });
               }}
             />
             <Settings_TOGGLE
               text={t("toggle.showFlags")}
-              active={displaySettings?.SHOW_flags}
+              active={z_display_SETTINGS?.SHOW_flags}
               onPress={() => {
-                SET_displaySettings((p) => ({
-                  ...p,
-                  SHOW_flags: !p.SHOW_flags,
-                }));
+                z_SET_displaySettings({
+                  SHOW_flags: !z_display_SETTINGS.SHOW_flags,
+                });
               }}
             />
             <Settings_TOGGLE
               text={t("toggle.showDifficulty")}
-              active={displaySettings?.SHOW_difficulty}
+              active={z_display_SETTINGS?.SHOW_difficulty}
               onPress={() => {
-                SET_displaySettings((p) => ({
-                  ...p,
-                  SHOW_difficulty: !p.SHOW_difficulty,
-                }));
+                z_SET_displaySettings({
+                  SHOW_difficulty: !z_display_SETTINGS.SHOW_difficulty,
+                });
               }}
               last
             />
@@ -92,18 +85,15 @@ export default function MyVocabPreview_BLOCKS({
                 }
                 text={appLang === "en" ? lang.lang_in_en : lang.lang_in_de}
                 iconRight={
-                  displaySettings.frontTrLang_ID === lang.id && (
+                  z_display_SETTINGS.frontTrLang_ID === lang.id && (
                     <ICON_checkMark color="primary" />
                   )
                 }
                 onPress={() => {
-                  SET_displaySettings((p) => ({
-                    ...p,
-                    frontTrLang_ID: lang.id,
-                  }));
+                  z_SET_displaySettings({ frontTrLang_ID: lang.id });
                 }}
                 type={
-                  displaySettings.frontTrLang_ID === lang.id
+                  z_display_SETTINGS.frontTrLang_ID === lang.id
                     ? "active"
                     : "simple"
                 }

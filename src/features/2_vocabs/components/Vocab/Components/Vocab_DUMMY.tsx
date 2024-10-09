@@ -14,22 +14,22 @@ import {
   Language_MODEL,
   PublicVocabDisplaySettings_PROPS,
 } from "@/src/db/models";
+import USE_zustand from "@/src/zustand";
 import i18next from "i18next";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 
 interface VocabFront_PROPS {
-  displaySettings: DisplaySettings_PROPS | PublicVocabDisplaySettings_PROPS;
   HAS_difficulty?: boolean;
 }
 
 export default function Vocab_DUMMY({
-  displaySettings,
   HAS_difficulty = true,
 }: VocabFront_PROPS) {
+  const { z_display_SETTINGS, z_SET_displaySettings } = USE_zustand();
   const { SHOW_description, SHOW_flags, SHOW_difficulty, frontTrLang_ID } =
-    displaySettings;
+    z_display_SETTINGS;
 
   const { t } = useTranslation();
 
@@ -52,7 +52,7 @@ export default function Vocab_DUMMY({
         <Highlighted_TEXT
           text={lang?.translation_example || "INSERT TRANSLATION"}
           highlights={lang?.translation_example_highlights}
-          modal_DIFF={3}
+          diff={3}
         />
 
         {SHOW_description && (

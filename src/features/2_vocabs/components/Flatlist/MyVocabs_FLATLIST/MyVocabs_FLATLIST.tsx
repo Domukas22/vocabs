@@ -21,7 +21,7 @@ export default function MyVocabs_FLATLIST({
   SHOW_bottomBtn,
   TOGGLE_createVocabModal,
   HANDLE_updateModal,
-  displaySettings,
+
   PREPARE_vocabDelete,
   search,
 }: {
@@ -33,46 +33,40 @@ export default function MyVocabs_FLATLIST({
     clear?: boolean;
     vocab?: Vocab_MODEL;
   };
-  displaySettings: DisplaySettings_PROPS;
+
   PREPARE_vocabDelete?: (id: string) => void;
   search: string;
 }) {
-  const { z_printed_VOCABS, z_display_SETTINGS } = USE_zustand();
+  const { z_printed_VOCABS, z_display_SETTINGS, z_SET_printedVocabs } =
+    USE_zustand();
   const { t } = useTranslation();
-  const { searched_VOCABS, ARE_vocabsSearching } = USE_searchedVocabs({
-    vocabs: all_VOCABS || [],
-    search,
-  });
-
-  const { filtered_VOCABS, ARE_vocabsFiltering } = USE_filteredVocabs({
-    vocabs: searched_VOCABS,
-    displaySettings,
-  });
 
   const [loading, SET_loading] = useState(false);
 
   useEffect(() => {
-    const filterVocabs = async () => {
-      SET_loading(true);
+    SET_loading(true);
+    const searched = GET_searchedVocabs({ vocabs: all_VOCABS, search });
+    const filtered = GET_filteredVocabs({
+      vocabs: searched,
+      displaySettings: z_display_SETTINGS,
+    });
+    SET_loading(false);
+    z_SET_printedVocabs(filtered);
+  }, [search, z_display_SETTINGS]);
 
-      SET_loading(false);
-    };
-
-    filterVocabs();
-  }, [search, z_display_SETTINGS, all_VOCABS]);
-
-  if (ARE_vocabsSearching || ARE_vocabsFiltering) return <List_SKELETONS />;
+  if (loading) return <List_SKELETONS />;
   if (
     all_VOCABS &&
-    all_VOCABS?.length > 0 &&
-    !ARE_vocabsSearching &&
-    !ARE_vocabsFiltering &&
-    searched_VOCABS.length > 0 &&
-    filtered_VOCABS.length > 0
+    all_VOCABS?.length > 0
+    // &&
+    // !ARE_vocabsSearching &&
+    // !ARE_vocabsFiltering &&
+    // searched_VOCABS.length > 0 &&
+    // filtered_VOCABS.length > 0
   ) {
     return (
       <Styled_FLATLIST
-        data={filtered_VOCABS}
+        data={z_printed_VOCABS}
         renderItem={({ item }) => {
           return (
             <SwipeableExample
@@ -83,7 +77,6 @@ export default function MyVocabs_FLATLIST({
               <MyVocab
                 vocab={item}
                 highlighted={highlightedVocab_ID === item.id}
-                displaySettings={displaySettings}
                 {...{ HANDLE_updateModal }}
               />
             </SwipeableExample>
@@ -103,18 +96,14 @@ export default function MyVocabs_FLATLIST({
       />
     );
   }
-  if (
-    !ARE_vocabsSearching &&
-    !ARE_vocabsFiltering &&
-    filtered_VOCABS.length === 0
-  ) {
+  if (!loading && z_printed_VOCABS.length === 0) {
     return (
       <EmptyFlatList_BOTTM
         // emptyBox_TEXT={t("label.thisListIsEmpty")}
         emptyBox_TEXT={
           search !== "" ||
-          displaySettings.langFilters.length > 0 ||
-          displaySettings.difficultyFilters.length > 0
+          z_display_SETTINGS.langFilters.length > 0 ||
+          z_display_SETTINGS.difficultyFilters.length > 0
             ? t("label.noVocabsFound")
             : t("label.thisListIsEmpty")
         }
@@ -125,4 +114,69 @@ export default function MyVocabs_FLATLIST({
   }
 }
 
-function GET_filteredVocabs({ vocabs, displaySettings }) {}
+function GET_filteredVocabs({ vocabs, displaySettings }) {
+  let result = [...vocabs];
+
+  const { sorting, sortDirection, difficultyFilters, langFilters } =
+    displaySettings;
+
+  // Apply difficulty filters
+  if (difficultyFilters && difficultyFilters.length > 0) {
+    result = result.filter((vocab) =>
+      difficultyFilters.includes(vocab?.difficulty)
+    );
+  }
+
+  // Apply langauge filters
+  if (langFilters && langFilters.length > 0) {
+    result = result.filter((vocab) => {
+      // Get the unique language IDs from the vocab's translations
+      const vocabLangIds = vocab.translations?.map((tr) => tr.lang_id) || [];
+
+      // Check if every langFilter is present in vocabLangIds
+      return langFilters.every((langId) => vocabLangIds.includes(langId));
+    });
+  }
+
+  // Apply sorting
+  if (sorting) {
+    result = result.sort((a, b) => {
+      let comparison = 0;
+
+      switch (sorting) {
+        case "difficulty":
+          comparison = a.difficulty - b.difficulty;
+          break;
+        case "date":
+          comparison =
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+          break;
+        case "shuffle":
+          comparison = Math.random() - 0.5; // Randomize order
+          break;
+        default:
+          break;
+      }
+
+      // Apply sorting direction
+      if (sortDirection === "descending") {
+        comparison = -comparison;
+      }
+
+      return comparison;
+    });
+  }
+
+  return result;
+}
+function GET_searchedVocabs({ vocabs, search }) {
+  const result = vocabs?.filter(
+    (vocab) =>
+      vocab.description?.toLowerCase().includes(search.toLowerCase().trim()) ||
+      vocab.translations?.some((tr) =>
+        tr.text.toLowerCase().includes(search.toLowerCase().trim())
+      )
+  );
+
+  return result;
+}

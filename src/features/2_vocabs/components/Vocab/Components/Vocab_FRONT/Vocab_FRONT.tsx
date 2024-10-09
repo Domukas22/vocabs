@@ -14,12 +14,12 @@ import {
   TranslationCreation_PROPS,
   Language_MODEL,
 } from "@/src/db/models";
+import USE_zustand from "@/src/zustand";
 import i18next, { t } from "i18next";
 import { useMemo } from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 
 interface VocabFront_PROPS {
-  displaySettings: DisplaySettings_PROPS;
   translations: Translation_MODEL[] | undefined;
   difficulty: 0 | 1 | 2 | 3 | undefined;
   description: string | undefined;
@@ -33,13 +33,12 @@ export default function Vocab_FRONT({
   difficulty,
   description,
 
-  displaySettings,
-
   TOGGLE_open,
   highlighted,
 }: VocabFront_PROPS) {
+  const { z_display_SETTINGS } = USE_zustand();
   const { SHOW_description, SHOW_flags, SHOW_difficulty, frontTrLang_ID } =
-    displaySettings;
+    z_display_SETTINGS;
 
   const front_TR = useMemo(() => {
     return (
@@ -62,8 +61,8 @@ export default function Vocab_FRONT({
   const { languages } = USE_langs();
   const appLang = useMemo(() => i18next.language, [i18next.language]);
   const targetLang = useMemo(
-    () => languages?.find((lang) => lang.id === displaySettings.frontTrLang_ID),
-    [displaySettings.frontTrLang_ID]
+    () => languages?.find((lang) => lang.id === frontTrLang_ID),
+    [frontTrLang_ID]
   );
 
   return (

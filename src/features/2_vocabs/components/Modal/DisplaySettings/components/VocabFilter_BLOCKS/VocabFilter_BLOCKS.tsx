@@ -11,53 +11,47 @@ import {
 } from "@/src/components/icons/icons";
 import Label from "@/src/components/Label/Label";
 import { Language_MODEL, DisplaySettings_PROPS } from "@/src/db/models";
+import USE_zustand from "@/src/zustand";
 import i18next, { t } from "i18next";
 import { useCallback, useMemo } from "react";
 import { View } from "react-native";
 
 export default function VocabFilter_BLOCKS({
-  displaySettings,
-  SET_displaySettings,
   list_LANGS,
 }: {
-  displaySettings: DisplaySettings_PROPS;
-  SET_displaySettings: React.Dispatch<
-    React.SetStateAction<DisplaySettings_PROPS>
-  >;
   list_LANGS: Language_MODEL[] | [] | undefined;
 }) {
+  const { z_display_SETTINGS, z_SET_displaySettings } = USE_zustand();
   const appLang = useMemo(() => i18next.language, [i18next.language]);
   const SELECT_difficultyFilter = useCallback(
     (incoming_DIFF: 1 | 2 | 3) => {
-      SET_displaySettings((p) => ({
-        ...p,
+      z_SET_displaySettings({
         difficultyFilters: GET_handledDifficulties({
-          difficultyFilters: p.difficultyFilters,
+          difficultyFilters: z_display_SETTINGS.difficultyFilters,
           incoming_DIFF,
         }),
-      }));
+      });
     },
-    [displaySettings]
+    [z_display_SETTINGS]
   );
   const SELECT_langFilter = useCallback(
     (incoming_LANG: string) => {
       const newLangs = GET_handledLangs({
-        langFilters: displaySettings.langFilters,
+        langFilters: z_display_SETTINGS.langFilters,
         incoming_LANG,
       });
 
       const correctedFrontLangId = GET_handledFrontLangId({
-        frontLang_ID: displaySettings.frontTrLang_ID,
+        frontLang_ID: z_display_SETTINGS.frontTrLang_ID,
         newLang_IDS: newLangs,
       });
 
-      SET_displaySettings((p) => ({
-        ...p,
+      z_SET_displaySettings({
         langFilters: newLangs,
         frontTrLang_ID: correctedFrontLangId,
-      }));
+      });
     },
-    [displaySettings]
+    [z_display_SETTINGS]
   );
 
   return (
@@ -67,7 +61,7 @@ export default function VocabFilter_BLOCKS({
         <Btn
           text={t("difficulty.easy")}
           iconRight={
-            displaySettings?.difficultyFilters.some((nr) => nr === 1) ? (
+            z_display_SETTINGS?.difficultyFilters.some((nr) => nr === 1) ? (
               <ICON_X big={true} rotate={true} color="difficulty_1" />
             ) : (
               <ICON_difficultyDot big={true} difficulty={1} />
@@ -75,7 +69,7 @@ export default function VocabFilter_BLOCKS({
           }
           onPress={() => SELECT_difficultyFilter(1)}
           type={
-            displaySettings?.difficultyFilters.some((nr) => nr === 1)
+            z_display_SETTINGS?.difficultyFilters.some((nr) => nr === 1)
               ? "difficulty_1_active"
               : "simple"
           }
@@ -85,7 +79,7 @@ export default function VocabFilter_BLOCKS({
         <Btn
           text={t("difficulty.medium")}
           iconRight={
-            displaySettings?.difficultyFilters.some((nr) => nr === 2) ? (
+            z_display_SETTINGS?.difficultyFilters.some((nr) => nr === 2) ? (
               <ICON_X big={true} rotate={true} color="difficulty_2" />
             ) : (
               <ICON_difficultyDot big={true} difficulty={2} />
@@ -93,7 +87,7 @@ export default function VocabFilter_BLOCKS({
           }
           onPress={() => SELECT_difficultyFilter(2)}
           type={
-            displaySettings?.difficultyFilters.some((nr) => nr === 2)
+            z_display_SETTINGS?.difficultyFilters.some((nr) => nr === 2)
               ? "difficulty_2_active"
               : "simple"
           }
@@ -103,7 +97,7 @@ export default function VocabFilter_BLOCKS({
         <Btn
           text={t("difficulty.hard")}
           iconRight={
-            displaySettings?.difficultyFilters.some((nr) => nr === 3) ? (
+            z_display_SETTINGS?.difficultyFilters.some((nr) => nr === 3) ? (
               <ICON_X big={true} rotate={true} color="difficulty_3" />
             ) : (
               <ICON_difficultyDot big={true} difficulty={3} />
@@ -111,7 +105,7 @@ export default function VocabFilter_BLOCKS({
           }
           onPress={() => SELECT_difficultyFilter(3)}
           type={
-            displaySettings?.difficultyFilters.some((nr) => nr === 3)
+            z_display_SETTINGS?.difficultyFilters.some((nr) => nr === 3)
               ? "difficulty_3_active"
               : "simple"
           }
@@ -132,14 +126,14 @@ export default function VocabFilter_BLOCKS({
               }
               text={lang[`lang_in_${appLang || "en"}`]}
               iconRight={
-                displaySettings?.langFilters.some(
+                z_display_SETTINGS?.langFilters.some(
                   (lang_ID) => lang_ID === lang.id
                 ) ? (
                   <ICON_X big rotate color="primary" />
                 ) : null
               }
               type={
-                displaySettings?.langFilters.some(
+                z_display_SETTINGS?.langFilters.some(
                   (lang_ID) => lang_ID === lang.id
                 )
                   ? "active"

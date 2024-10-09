@@ -13,7 +13,7 @@ interface MyVocabDisplaySettings_PROPS {
   frontTrLang_ID: string;
   sorting: "difficulty" | "date" | "shuffle"; // Example sorting options
   sortDirection: "ascending" | "descending";
-  difficultyFilters: number[]; // Assuming the difficulty filters are represented by numbers
+  difficultyFilters: (1 | 2 | 3)[]; // Assuming the difficulty filters are represented by numbers
   langFilters: string[]; // Assuming language filters are represented by language codes or IDs as strings
 }
 
