@@ -43,6 +43,8 @@ export default function MyVocabs_FLATLIST({
 
   const [loading, SET_loading] = useState(false);
 
+  console.log(z_printed_VOCABS);
+
   useEffect(() => {
     SET_loading(true);
     const searched = GET_searchedVocabs({ vocabs: all_VOCABS, search });
