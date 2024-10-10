@@ -18,6 +18,7 @@ import { ICON_toastNotification } from "../components/icons/icons";
 import Notification_BOX from "../components/Notification_BOX/Notification_BOX";
 import USE_fetchMyLists from "../features/1_lists/hooks/USE_fetchMyLists";
 import USE_zustand from "../zustand";
+import { executeSync } from "../db/sync";
 
 export default function _layout() {
   return (
@@ -51,9 +52,7 @@ export default function _layout() {
 function Main_LAYOUT() {
   const { SET_auth, SET_userData } = USE_auth();
   const { ARE_languagesLoading, languages } = USE_langs();
-
-  const { FETCH_myLists, ARE_listsFetching, fetchLists_ERROR, RESET_error } =
-    USE_fetchMyLists();
+  const { FETCH_myLists } = USE_fetchMyLists();
   const { z_SET_lists } = USE_zustand();
 
   const router = useRouter();
@@ -69,38 +68,46 @@ function Main_LAYOUT() {
 
   useEffect(() => {
     SplashScreen.hideAsync();
+
     if (loaded && !ARE_languagesLoading && languages?.length > 0) {
-      // trigger every time user logs in/out or registers
-      supabase.auth.onAuthStateChange(async (_event, session) => {
-        if (session) {
-          SET_auth(session?.user);
-          const user = await GET_userData(session?.user);
-          const lists = await FETCH_myLists({ user_id: user?.id || "" });
-
-          if (lists.success && lists.lists) {
-            z_SET_lists(lists.lists);
+      // Set up the auth state change listener
+      const { data } = supabase.auth.onAuthStateChange(
+        async (_event, session) => {
+          if (session) {
+            SET_auth(session.user);
+            const userData = await fetchUserData(session.user);
+            if (userData) {
+              await executeSync(); // Sync after fetching user data
+            }
           } else {
-            console.error(lists.msg);
+            SET_auth(null);
+            router.push("/welcome");
           }
-
-          router.push("/(main)/vocabs");
-        } else {
-          SET_auth(null);
-          router.push("/welcome");
         }
-      });
+      );
+
+      return () => {
+        data.subscription.unsubscribe(); // Cleanup the listener on unmount
+      };
     }
   }, [loaded, ARE_languagesLoading]);
 
-  async function GET_userData(user) {
-    let res = await FETCH_userData(user?.id);
+  async function fetchUserData(user) {
+    const res = await FETCH_userData(user.id);
     if (res.success) {
       SET_userData(res.data);
-      return res.data;
+      const lists = await FETCH_myLists({ user_id: user.id });
+      if (lists.success && lists.lists) {
+        z_SET_lists(lists.lists);
+      } else {
+        console.error(lists.msg);
+      }
+      return res.data; // Return user data if successful
     }
+    return null; // Return null if fetching failed
   }
 
-  if (!loaded) return null;
+  if (!loaded) return null; // Show nothing while fonts are loading
 
   return <Slot />;
 }

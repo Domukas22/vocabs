@@ -1,7 +1,3 @@
-//
-//
-//
-
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -35,6 +31,7 @@ export default function Login_PAGE() {
   const [loading, SET_loading] = useState(false);
   const [internal_ERROR, SET_internalError] = useState("");
   const { t } = useTranslation();
+  const router = useRouter(); // Initialize router
 
   const login = async (data: LoginData_PROPS) => {
     const { email, password } = data;
@@ -42,6 +39,7 @@ export default function Login_PAGE() {
     if (!email || !password) return;
     SET_loading(true);
 
+    // Sign in with Supabase
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -51,6 +49,9 @@ export default function Login_PAGE() {
 
     if (error) {
       SET_internalError(error.message);
+    } else {
+      // Navigate to the main application screen on successful login
+      router.push("/(main)/vocabs"); // Update to your main app route
     }
   };
 
@@ -58,12 +59,13 @@ export default function Login_PAGE() {
     control,
     handleSubmit,
     formState: { errors, isSubmitted },
-  } = useForm({
+  } = useForm<LoginData_PROPS>({
     defaultValues: {
       email: "",
       password: "",
     },
   });
+
   const onSubmit = (data: LoginData_PROPS) => login(data);
 
   return (
@@ -72,7 +74,6 @@ export default function Login_PAGE() {
         style={{ flex: 1, marginBottom: 20 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        {/* --------------------------------------------------------------------------------------------------- */}
         <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="handled">
           <AuthenticationHeader
             text={t("header.login")}
@@ -85,13 +86,12 @@ export default function Login_PAGE() {
           />
           <Block noBorder>
             <Label>What is your E-Mail?</Label>
-
             <Controller
               control={control}
               rules={{
                 required: {
                   value: true,
-                  message: "Please provide an E-Mail adress",
+                  message: "Please provide an E-Mail address",
                 },
                 pattern: {
                   value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, // Email validation regex
@@ -104,7 +104,7 @@ export default function Login_PAGE() {
                   onBlur={onBlur}
                   SET_value={(val) => {
                     onChange(val);
-                    SET_internalError("");
+                    SET_internalError(""); // Clear internal error on change
                   }}
                   value={value}
                   error={!!errors.email}
@@ -118,8 +118,6 @@ export default function Login_PAGE() {
             />
             {errors.email && <Error_TEXT>{errors.email.message}</Error_TEXT>}
           </Block>
-
-          {/* --------------------------------------------------------------------------------------------------- */}
 
           <Block noBorder>
             <Label>Enter your password</Label>
@@ -141,16 +139,14 @@ export default function Login_PAGE() {
                   onBlur={onBlur}
                   SET_value={(val) => {
                     onChange(val);
-                    SET_internalError("");
+                    SET_internalError(""); // Clear internal error on change
                   }}
                   value={value}
                   error={!!errors.password}
                   IS_errorCorrected={
                     isSubmitted && !errors.password && !internal_ERROR
                   }
-                  props={{
-                    secureTextEntry: true,
-                  }}
+                  props={{ secureTextEntry: true }}
                 />
               )}
               name="password"
@@ -158,12 +154,7 @@ export default function Login_PAGE() {
             {errors.password && (
               <Error_TEXT>{errors.password.message}</Error_TEXT>
             )}
-            <Link
-              href={"/login"}
-              style={{
-                display: "flex",
-              }}
-            >
+            <Link href={"/login"} style={{ display: "flex", marginTop: 8 }}>
               <Styled_TEXT
                 type="text_18_regular"
                 style={{
@@ -177,7 +168,6 @@ export default function Login_PAGE() {
             </Link>
           </Block>
 
-          {/* --------------------------------------------------------------------------------------------------- */}
           {internal_ERROR && (
             <Notification_BOX text={internal_ERROR} type="error" />
           )}
