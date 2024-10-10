@@ -30,7 +30,7 @@ import {
 import languages from "@/src/constants/languages";
 
 import Block from "@/src/components/Block/Block";
-import { Language_MODEL } from "@/src/db/props";
+import { Language_PROPS } from "@/src/db/props";
 import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
@@ -45,7 +45,7 @@ interface SelectOneLanguage_MODAL {
   TOGGLE_open: () => void;
   chosenLang_ID: string | undefined;
   SELECT_lang: (lang_ID: string) => void;
-  list_LANGS: Language_MODEL[] | undefined;
+  list_LANGS: Language_PROPS[] | undefined;
 }
 
 export default function SelectOneLanguage_MODAL(
@@ -53,7 +53,7 @@ export default function SelectOneLanguage_MODAL(
 ) {
   const { t } = useTranslation();
   const { open, TOGGLE_open, chosenLang_ID, SELECT_lang, list_LANGS } = props;
-  const [modal_LANG, SET_modalLang] = useState<Language_MODEL | undefined>(
+  const [modal_LANG, SET_modalLang] = useState<Language_PROPS | undefined>(
     list_LANGS?.find((lang) => lang.id === chosenLang_ID)
   );
 

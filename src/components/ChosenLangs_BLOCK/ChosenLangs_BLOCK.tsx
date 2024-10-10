@@ -6,7 +6,7 @@ import Block from "@/src/components/Block/Block";
 import Btn from "@/src/components/Btn/Btn";
 import { ICON_flag, ICON_X } from "@/src/components/icons/icons";
 import Label from "@/src/components/Label/Label";
-import { Language_MODEL, TranslationCreation_PROPS } from "@/src/db/props";
+import { Language_PROPS, TranslationCreation_PROPS } from "@/src/db/props";
 import { View } from "react-native";
 
 import { useTranslation } from "react-i18next";
@@ -42,7 +42,7 @@ export default function ChosenLangs_BLOCK({
     <>
       <Block>
         <Label>{label || "NO LABEL PROVIDED"}</Label>
-        {langs?.map((lang: Language_MODEL) => {
+        {langs?.map((lang: Language_PROPS) => {
           return (
             <Btn
               key={"chosen lang" + lang.id}

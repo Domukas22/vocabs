@@ -2,7 +2,7 @@
 //
 //
 
-import { Translation_MODEL } from "@/src/db/props";
+import { Translation_PROPS } from "@/src/db/props";
 import { View } from "react-native";
 import { ICON_flag } from "@/src/components/icons/icons";
 import Highlighted_TEXT from "@/src/components/Highlighted_TEXT/Highlighted_TEXT";
@@ -13,7 +13,7 @@ export default function VocabBack_TRS({
   TRs,
   difficulty = 0,
 }: {
-  TRs: Translation_MODEL[] | undefined;
+  TRs: Translation_PROPS[] | undefined;
   difficulty: 0 | 1 | 2 | 3 | undefined;
 }) {
   return TRs

@@ -20,7 +20,7 @@ import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
 import {
   DisplaySettings_PROPS,
   PublicVocabDisplaySettings_PROPS,
-  Vocab_MODEL,
+  Vocab_PROPS,
 } from "@/src/db/props";
 import React, { useEffect, useMemo, useState } from "react";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
@@ -64,7 +64,7 @@ export default function Explore_PAGE() {
 
   const { FETCH_publicVocabs, ARE_publicVocabsFetching, publicVocabs_ERROR } =
     USE_fetchPublicVocabs();
-  const [vocabs, SET_vocabs] = useState<Vocab_MODEL[]>([]);
+  const [vocabs, SET_vocabs] = useState<Vocab_PROPS[]>([]);
   const [SHOW_displaySettings, TOGGLE_displaySettings] = USE_toggle(false);
 
   const { searched_VOCABS, search, SEARCH_vocabs, ARE_vocabsSearching } =
@@ -78,12 +78,12 @@ export default function Explore_PAGE() {
     USE_toggle(false);
 
   const [targetSave_VOCAB, SET_targetSaveVocab] = useState<
-    Vocab_MODEL | undefined
+    Vocab_PROPS | undefined
   >(undefined);
 
   const { highlighted_ID, highlight: HIGHLIGHT_vocab } = USE_highlighedId();
 
-  const [toUpdate_VOCAB, SET_toUpdateVocab] = useState<Vocab_MODEL | undefined>(
+  const [toUpdate_VOCAB, SET_toUpdateVocab] = useState<Vocab_PROPS | undefined>(
     undefined
   );
   const [SHOW_updateVocabModal, TOGGLE_updateVocabModal, SET_updateVocabModal] =
@@ -104,7 +104,7 @@ export default function Explore_PAGE() {
     vocab,
   }: {
     clear?: boolean;
-    vocab?: Vocab_MODEL;
+    vocab?: Vocab_PROPS;
   }) {
     if (!clear && vocab) {
       SET_toUpdateVocab(vocab);
@@ -115,7 +115,7 @@ export default function Explore_PAGE() {
     }
   }
 
-  const PREPARE_toSaveVocab = (vocab: Vocab_MODEL) => {
+  const PREPARE_toSaveVocab = (vocab: Vocab_PROPS) => {
     SET_targetSaveVocab(vocab);
     SET_saveVocabModal(true);
   };
@@ -183,7 +183,7 @@ export default function Explore_PAGE() {
         <CreatePublicVocab_MODAL
           IS_open={SHOW_createPublicVocabModal}
           TOGGLE_modal={() => TOGGLE_createPublicVocabModal()}
-          onSuccess={(new_VOCAB: Vocab_MODEL) => {
+          onSuccess={(new_VOCAB: Vocab_PROPS) => {
             SET_vocabs((prev) => [new_VOCAB, ...prev]);
 
             SET_createPublicVocabModal(false);
@@ -202,7 +202,7 @@ export default function Explore_PAGE() {
           {...{ toUpdate_VOCAB }}
           IS_open={SHOW_updateVocabModal}
           TOGGLE_modal={() => TOGGLE_updateVocabModal()}
-          onSuccess={(updated_VOCAB: Vocab_MODEL) => {
+          onSuccess={(updated_VOCAB: Vocab_PROPS) => {
             SET_updateVocabModal(false);
 
             SET_vocabs((prev) =>
@@ -225,7 +225,7 @@ export default function Explore_PAGE() {
         TOGGLE_open={TOGGLE_saveVocabModal}
         IS_open={SHOW_saveVocabModal}
         user={user}
-        onSuccess={(saved_VOCAB: Vocab_MODEL) => {
+        onSuccess={(saved_VOCAB: Vocab_PROPS) => {
           TOGGLE_saveVocabModal();
           z_CREATE_privateVocab(saved_VOCAB);
           toast.show(

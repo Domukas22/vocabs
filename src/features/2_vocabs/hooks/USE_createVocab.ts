@@ -2,19 +2,19 @@ import { supabase } from "@/src/lib/supabase";
 import { useCallback, useMemo, useState } from "react";
 import {
   TranslationCreation_PROPS,
-  User_MODEL,
-  Vocab_MODEL,
+  User_PROPS,
+  Vocab_PROPS,
 } from "@/src/db/props";
 
 interface VocabCreation_MODEL {
-  user?: User_MODEL | undefined;
+  user?: User_PROPS | undefined;
   list_id?: string | undefined;
   difficulty?: 1 | 2 | 3;
 
   description?: string | "";
   translations: TranslationCreation_PROPS[] | undefined;
   is_public?: boolean;
-  onSuccess: (new_VOCAB: Vocab_MODEL) => void;
+  onSuccess: (new_VOCAB: Vocab_PROPS) => void;
 }
 
 export default function USE_createVocab() {
@@ -160,11 +160,11 @@ async function HANDLE_translationInsertion({
   user_id,
   is_public,
 }: {
-  vocabData: Vocab_MODEL;
+  vocabData: Vocab_PROPS;
   translations: TranslationCreation_PROPS[] | undefined;
   user_id: string | null | undefined;
   is_public: boolean;
-}): Promise<Vocab_MODEL> {
+}): Promise<Vocab_PROPS> {
   if (translations && translations.length > 0) {
     const { success: transSuccess, data: insertedTranslations } =
       await db_INSERT_translations(

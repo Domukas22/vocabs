@@ -2,19 +2,19 @@
 //
 
 import {
-  Language_MODEL,
-  List_MODEL,
+  Language_PROPS,
+  List_PROPS,
   TranslationCreation_PROPS,
 } from "@/src/db/props";
 import { useState } from "react";
 
 export interface PrivateVocabState_PROPS {
-  modal_LIST: List_MODEL | null | undefined;
+  modal_LIST: List_PROPS | null | undefined;
   modal_DIFF: 1 | 2 | 3;
   modal_IMG: string;
   modal_DESC: string;
   modal_TRs: TranslationCreation_PROPS[];
-  modal_LANGS: Language_MODEL[];
+  modal_LANGS: Language_PROPS[];
 }
 export interface PrivateVocabSet_PROPS {
   SET_modalTRs: React.Dispatch<
@@ -22,22 +22,22 @@ export interface PrivateVocabSet_PROPS {
   >;
   SET_modalImg: React.Dispatch<React.SetStateAction<string>>;
   SET_modalDesc: React.Dispatch<React.SetStateAction<string>>;
-  SET_modalList: React.Dispatch<React.SetStateAction<List_MODEL>>;
+  SET_modalList: React.Dispatch<React.SetStateAction<List_PROPS>>;
   SET_modalDiff: React.Dispatch<React.SetStateAction<1 | 2 | 3>>;
-  SET_modalLangs: React.Dispatch<React.SetStateAction<Language_MODEL[]>>;
+  SET_modalLangs: React.Dispatch<React.SetStateAction<Language_PROPS[]>>;
 }
 
 export default function USE_myVocabValues(
-  selected_LIST: List_MODEL | null | undefined
+  selected_LIST: List_PROPS | null | undefined
 ) {
-  const [modal_LIST, SET_modalList] = useState<List_MODEL | null>(
+  const [modal_LIST, SET_modalList] = useState<List_PROPS | null>(
     selected_LIST || null
   );
   const [modal_DIFF, SET_modalDiff] = useState<1 | 2 | 3>(3);
   const [modal_IMG, SET_modalImg] = useState<string>("");
   const [modal_DESC, SET_modalDesc] = useState<string>("");
   const [modal_TRs, SET_modalTRs] = useState<TranslationCreation_PROPS[]>([]);
-  const [modal_LANGS, SET_modalLangs] = useState<Language_MODEL[]>([]);
+  const [modal_LANGS, SET_modalLangs] = useState<Language_PROPS[]>([]);
 
   return {
     modal_TRs,

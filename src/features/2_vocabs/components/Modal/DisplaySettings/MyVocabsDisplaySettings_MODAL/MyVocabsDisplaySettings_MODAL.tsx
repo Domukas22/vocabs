@@ -5,9 +5,9 @@
 import React, { useMemo, useState } from "react";
 import { ScrollView } from "react-native";
 import {
-  Language_MODEL,
+  Language_PROPS,
   DisplaySettings_PROPS,
-  Vocab_MODEL,
+  Vocab_PROPS,
 } from "@/src/db/props";
 import DisplaySettings_SUBNAV from "../components/DisplaySettings_SUBNAV/DisplaySettings_SUBNAV";
 
@@ -33,7 +33,7 @@ import USE_zustand from "@/src/zustand";
 interface DisplaySettingsModal_PROPS {
   open: boolean;
   TOGGLE_open: () => void;
-  vocabs?: Vocab_MODEL[];
+  vocabs?: Vocab_PROPS[];
 }
 
 export default function MyVocabDisplaySettings_MODAL({

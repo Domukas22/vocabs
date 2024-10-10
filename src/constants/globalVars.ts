@@ -5,6 +5,8 @@
 export const GET_langFlagUrl = (lang: string) =>
   `https://nmqzljcpoczrlruijbbk.supabase.co/storage/v1/object/public/lang_images/${lang}.png`;
 
+export const USER_ID = "ui0ZA9iKNBO3nupc";
+
 export const vocabLimit = 100;
 export const minVocabTranslations = 1;
 export const maxVocabTranslations = 5;

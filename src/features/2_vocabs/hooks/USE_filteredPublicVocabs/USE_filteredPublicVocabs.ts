@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import {
-  Vocab_MODEL,
+  Vocab_PROPS,
   DisplaySettings_PROPS,
   PublicVocabDisplaySettings_PROPS,
 } from "@/src/db/props";
@@ -9,17 +9,17 @@ export default function USE_filteredPublicVocabs({
   vocabs,
   displaySettings,
 }: {
-  vocabs: Vocab_MODEL[];
+  vocabs: Vocab_PROPS[];
   displaySettings: PublicVocabDisplaySettings_PROPS;
 }) {
-  const [filtered_VOCABS, SET_filteredVocabs] = useState<Vocab_MODEL[]>(vocabs);
+  const [filtered_VOCABS, SET_filteredVocabs] = useState<Vocab_PROPS[]>(vocabs);
   const [ARE_vocabsFiltering, SET_areVocabsFiltering] = useState(false);
 
   useEffect(() => {
     const filterVocabs = async () => {
       SET_areVocabsFiltering(true); // Set filtering state to true
 
-      const filtered = await new Promise<Vocab_MODEL[]>((resolve) => {
+      const filtered = await new Promise<Vocab_PROPS[]>((resolve) => {
         setTimeout(() => {
           let result = [...vocabs];
 

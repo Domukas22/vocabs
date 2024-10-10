@@ -9,11 +9,11 @@ import React, { useEffect, useState } from "react";
 import { View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import {
-  Language_MODEL,
-  List_MODEL,
+  Language_PROPS,
+  List_PROPS,
   TranslationCreation_PROPS,
-  User_MODEL,
-  Vocab_MODEL,
+  User_PROPS,
+  Vocab_PROPS,
 } from "@/src/db/props";
 
 import TrHighlights_MODAL from "../TrHighlights_MODAL";
@@ -41,7 +41,7 @@ import CreateMyVocab_FOOTER from "../../Footer/CreateMyVocab_FOOTER/CreateMyVoca
 interface CreatePublicVocabModal_PROPS {
   IS_open: boolean;
   TOGGLE_modal: () => void;
-  onSuccess: (new_VOCAB: Vocab_MODEL) => void;
+  onSuccess: (new_VOCAB: Vocab_PROPS) => void;
 }
 
 export type CreatePublicVocabData_PROPS = {
@@ -59,7 +59,7 @@ export default function CreatePublicVocab_MODAL(
   } = props;
 
   const { t } = useTranslation();
-  const { user }: { user: User_MODEL } = USE_auth();
+  const { user }: { user: User_PROPS } = USE_auth();
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
     { name: "langs", initialValue: false },
@@ -84,7 +84,7 @@ export default function CreatePublicVocab_MODAL(
 
       translations,
       is_public: true,
-      onSuccess: (new_VOCAB: Vocab_MODEL) => {
+      onSuccess: (new_VOCAB: Vocab_PROPS) => {
         onSuccess(new_VOCAB);
         reset();
       },
@@ -184,7 +184,7 @@ export default function CreatePublicVocab_MODAL(
           open={modal_STATES.langs}
           TOGGLE_open={() => TOGGLE_modal("langs")}
           trs={form_TRS}
-          SUBMIT_langs={(new_LANGS: Language_MODEL[]) =>
+          SUBMIT_langs={(new_LANGS: Language_PROPS[]) =>
             // adds/deletes current translations based on new languages provided
             HANLDE_selectedLangs({
               new_LANGS,

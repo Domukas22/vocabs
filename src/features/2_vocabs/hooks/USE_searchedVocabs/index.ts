@@ -3,23 +3,23 @@
 //
 
 import React, { useEffect, useState, useCallback } from "react";
-import { Vocab_MODEL } from "@/src/db/props";
+import { Vocab_PROPS } from "@/src/db/props";
 
 export default function USE_searchedVocabs({
   vocabs,
   search,
 }: {
-  vocabs: Vocab_MODEL[];
+  vocabs: Vocab_PROPS[];
   search: string;
 }) {
-  const [searched_VOCABS, SET_searchedVocabs] = useState<Vocab_MODEL[]>(vocabs);
+  const [searched_VOCABS, SET_searchedVocabs] = useState<Vocab_PROPS[]>(vocabs);
   const [ARE_vocabsSearching, SET_areVocabsSearching] = useState(false);
 
   useEffect(() => {
     const filter = async () => {
       SET_areVocabsSearching(true);
       // Use setTimeout to offload filtering to the event loop
-      const filtered = await new Promise<Vocab_MODEL[]>((resolve) => {
+      const filtered = await new Promise<Vocab_PROPS[]>((resolve) => {
         setTimeout(() => {
           const result = vocabs.filter(
             (vocab) =>

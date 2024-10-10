@@ -2,11 +2,11 @@
 //
 //
 
-import { Language_MODEL, Vocab_MODEL } from "@/src/db/props";
+import { Language_PROPS, Vocab_PROPS } from "@/src/db/props";
 
 export default function GET_uniqueLanguagesInAList(
-  vocabs: Vocab_MODEL[],
-  languages: Language_MODEL[]
+  vocabs: Vocab_PROPS[],
+  languages: Language_PROPS[]
 ) {
   const lang_IDs = vocabs.reduce((acc, vocab) => {
     vocab.translations?.forEach((tr) => {

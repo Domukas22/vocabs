@@ -5,7 +5,7 @@
 import { MyColors } from "@/src/constants/MyColors";
 import { StyleSheet, View } from "react-native";
 
-import { Vocab_MODEL } from "@/src/db/props";
+import { Vocab_PROPS } from "@/src/db/props";
 
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 import { DisplaySettings_PROPS } from "@/src/db/props";
@@ -18,7 +18,7 @@ import { useTranslation } from "react-i18next";
 import { ICON_X } from "@/src/components/icons/icons";
 
 interface VocabProps {
-  vocab: Vocab_MODEL | undefined;
+  vocab: Vocab_PROPS | undefined;
   displaySettings: DisplaySettings_PROPS;
   highlighted?: boolean;
   IS_admin: boolean;
@@ -27,9 +27,9 @@ interface VocabProps {
     vocab,
   }: {
     clear?: boolean;
-    vocab?: Vocab_MODEL;
+    vocab?: Vocab_PROPS;
   }) => void;
-  PREPARE_toSaveVocab: (vocab: Vocab_MODEL) => void;
+  PREPARE_toSaveVocab: (vocab: Vocab_PROPS) => void;
 }
 
 // TOGGLE_vocabModal needs to also pass in th etranslations, so we dont have to pass them async and get a delayed manageVocabModal update

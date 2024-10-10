@@ -2,12 +2,12 @@ import { supabase } from "@/src/lib/supabase";
 import { useCallback, useMemo, useState } from "react";
 import {
   TranslationCreation_PROPS,
-  User_MODEL,
-  Vocab_MODEL,
+  User_PROPS,
+  Vocab_PROPS,
 } from "@/src/db/props";
 
 interface VocabUpdate_MODEL {
-  user?: User_MODEL | undefined;
+  user?: User_PROPS | undefined;
   vocab_id: string | undefined;
   list_id?: string | undefined;
   difficulty?: 1 | 2 | 3;
@@ -15,7 +15,7 @@ interface VocabUpdate_MODEL {
   description?: string | "";
   translations: TranslationCreation_PROPS[] | undefined;
   is_public?: boolean;
-  onSuccess: (updated_VOCAB: Vocab_MODEL) => void;
+  onSuccess: (updated_VOCAB: Vocab_PROPS) => void;
 }
 
 export default function USE_updateVocab() {
@@ -179,11 +179,11 @@ async function HANDLE_translationUpdate({
   user_id,
   is_public,
 }: {
-  vocabData: Vocab_MODEL;
+  vocabData: Vocab_PROPS;
   translations: TranslationCreation_PROPS[] | undefined;
   user_id: string | null | undefined;
   is_public: boolean;
-}): Promise<Vocab_MODEL> {
+}): Promise<Vocab_PROPS> {
   if (translations && translations.length > 0) {
     // Fetch existing translations for the given vocab
     const { data: existingTranslations, error } = await supabase

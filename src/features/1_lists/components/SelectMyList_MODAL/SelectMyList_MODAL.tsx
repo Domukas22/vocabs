@@ -22,7 +22,7 @@ import {
   SafeAreaView,
   View,
 } from "react-native";
-import { List_MODEL } from "@/src/db/props";
+import { List_PROPS } from "@/src/db/props";
 
 import { useTranslation } from "react-i18next";
 import CreateList_MODAL from "@/src/features/1_lists/components/CreateList_MODAL/CreateList_MODAL";
@@ -36,8 +36,8 @@ import { USE_auth } from "@/src/context/Auth_CONTEXT";
 interface SelectListModal_PROPS {
   open: boolean;
   title: string;
-  current_LIST?: List_MODEL | undefined;
-  submit_ACTION: (list: List_MODEL) => void;
+  current_LIST?: List_PROPS | undefined;
+  submit_ACTION: (list: List_PROPS) => void;
   cancel_ACTION: () => void;
   IS_inAction: boolean;
 }
@@ -55,7 +55,7 @@ export default function SelectMyList_MODAL({
   const [SHOW_createListModal, TOGGLE_createListModal] = USE_toggle(false);
 
   const [selectedModal_LIST, SET_selectedModalList] = useState<
-    List_MODEL | undefined
+    List_PROPS | undefined
   >(current_LIST);
 
   const { z_lists, z_CREATE_privateList } = USE_zustand();
@@ -104,7 +104,7 @@ export default function SelectMyList_MODAL({
                   style={{ flex: 1 }}
                 />
               }
-              renderItem={({ item }: { item: List_MODEL }) => (
+              renderItem={({ item }: { item: List_PROPS }) => (
                 <Btn
                   key={item.id + "list btn" + item.name}
                   text={item.name}
@@ -171,7 +171,7 @@ export default function SelectMyList_MODAL({
         IS_open={SHOW_createListModal}
         currentList_NAMES={z_lists?.map((l) => l.name)}
         CLOSE_modal={() => TOGGLE_createListModal()}
-        onSuccess={(newList: List_MODEL) => {
+        onSuccess={(newList: List_PROPS) => {
           z_CREATE_privateList(newList);
           SET_selectedModalList(newList);
         }}

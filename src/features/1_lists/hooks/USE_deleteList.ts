@@ -1,14 +1,14 @@
 //
 //
 //
-import { List_MODEL, User_MODEL } from "@/src/db/props";
+import { List_PROPS, User_PROPS } from "@/src/db/props";
 import { supabase } from "@/src/lib/supabase";
 import { useCallback, useMemo, useState } from "react";
 
 interface ListDelete_PROPS {
   user_id: string | undefined;
   list_id: string | undefined;
-  onSuccess?: (deletedList: List_MODEL) => void;
+  onSuccess?: (deletedList: List_PROPS) => void;
   cleanup?: () => void;
 }
 

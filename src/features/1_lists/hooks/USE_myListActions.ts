@@ -2,7 +2,7 @@
 //
 //
 
-import { List_MODEL, User_MODEL } from "@/src/db/props";
+import { List_PROPS, User_PROPS } from "@/src/db/props";
 import USE_deleteList from "./USE_deleteList";
 import USE_renameList from "./USE_renameList";
 import USE_updateDefaultListTRs from "./USE_updateDefaultListTRs";

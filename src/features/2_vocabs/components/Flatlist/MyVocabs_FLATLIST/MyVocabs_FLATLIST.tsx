@@ -5,7 +5,7 @@
 import Btn from "@/src/components/Btn/Btn";
 import { ICON_X } from "@/src/components/icons/icons";
 import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
-import { DisplaySettings_PROPS, Vocab_MODEL } from "@/src/db/props";
+import { DisplaySettings_PROPS, Vocab_PROPS } from "@/src/db/props";
 import { useTranslation } from "react-i18next";
 import MyVocab from "../../Vocab/My_VOCAB/My_VOCAB";
 import React, { useEffect, useState } from "react";
@@ -25,13 +25,13 @@ export default function MyVocabs_FLATLIST({
   PREPARE_vocabDelete,
   search,
 }: {
-  all_VOCABS: Vocab_MODEL[] | undefined;
+  all_VOCABS: Vocab_PROPS[] | undefined;
   SHOW_bottomBtn: React.ReactNode;
   TOGGLE_createVocabModal: () => void;
   highlightedVocab_ID: string;
   HANDLE_updateModal: {
     clear?: boolean;
-    vocab?: Vocab_MODEL;
+    vocab?: Vocab_PROPS;
   };
 
   PREPARE_vocabDelete?: (id: string) => void;

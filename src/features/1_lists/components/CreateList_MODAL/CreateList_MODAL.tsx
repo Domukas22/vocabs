@@ -7,18 +7,21 @@ import Small_MODAL from "@/src/components/Modals/Small_MODAL/Small_MODAL";
 import { useTranslation } from "react-i18next";
 import USE_createList from "../../hooks/USE_createList";
 import Error_TEXT from "@/src/components/Error_TEXT/Error_TEXT";
-import { List_MODEL, User_MODEL } from "@/src/db/props";
+import { List_PROPS, User_PROPS } from "@/src/db/props";
 import { Controller, useForm } from "react-hook-form";
 import { TextInput } from "react-native";
 import IS_listNameTaken from "../../utils/IS_listNameTaken";
 import USE_zustand from "@/src/zustand";
+import { List_MODEL } from "@/src/db/watermelon_MODELS";
+import db, { Lists_DB, Users_DB } from "@/src/db";
+import { USER_ID } from "@/src/constants/globalVars";
 
 interface CreateListModal_PROPS {
   user_id: string | undefined;
   IS_open: boolean;
   currentList_NAMES: string[];
   CLOSE_modal: () => void;
-  onSuccess: (newList: List_MODEL) => void;
+  onSuccess: (newList: List_PROPS) => void;
 }
 
 type NewList_PROPS = {
@@ -70,6 +73,7 @@ export default function CreateList_MODAL({
         }, 0);
       },
     });
+    await CREATE_list_w({ user_id, name });
 
     if (!newList.success) {
       console.log(newList.msg); // Log internal message for debugging.
@@ -143,4 +147,23 @@ export default function CreateList_MODAL({
       {createList_ERROR && <Error_TEXT text={createList_ERROR} />}
     </Small_MODAL>
   );
+}
+
+async function CREATE_list_w({
+  name,
+  user_id,
+}: {
+  name: string | undefined;
+  user_id: string | undefined;
+}) {
+  if (!name || !user_id) return;
+  await db.write(async () => {
+    // const user = await Users_DB.query(Q.where("name", "Domas"));
+    const user = await Users_DB.find(USER_ID);
+    if (!user) return;
+    await Lists_DB.create((newList: List_MODEL) => {
+      newList.name = name;
+      newList.user.set(user);
+    });
+  });
 }

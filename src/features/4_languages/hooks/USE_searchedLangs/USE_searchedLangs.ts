@@ -3,10 +3,10 @@
 //
 
 import { useEffect, useState, useCallback } from "react";
-import { Language_MODEL, Vocab_MODEL } from "@/src/db/props";
+import { Language_PROPS, Vocab_PROPS } from "@/src/db/props";
 
-export function USE_searchedLangs(langs: Language_MODEL[] | undefined) {
-  const [searched_LANGS, SET_searchedLangs] = useState<Language_MODEL[]>(langs);
+export function USE_searchedLangs(langs: Language_PROPS[] | undefined) {
+  const [searched_LANGS, SET_searchedLangs] = useState<Language_PROPS[]>(langs);
   const [search, setSearch] = useState("");
   const [ARE_langsSearching, SET_areLangsSearching] = useState(false);
 
@@ -19,7 +19,7 @@ export function USE_searchedLangs(langs: Language_MODEL[] | undefined) {
   useEffect(() => {
     const filter = async () => {
       // Use setTimeout to offload filtering to the event loop
-      const filtered = await new Promise<Language_MODEL[]>((resolve) => {
+      const filtered = await new Promise<Language_PROPS[]>((resolve) => {
         setTimeout(() => {
           const result = langs?.filter(
             (lang) =>

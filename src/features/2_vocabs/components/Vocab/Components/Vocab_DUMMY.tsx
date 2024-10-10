@@ -10,8 +10,8 @@ import { USE_langs } from "@/src/context/Langs_CONTEXT";
 import {
   DisplaySettings_PROPS,
   TranslationCreation_PROPS,
-  Vocab_MODEL,
-  Language_MODEL,
+  Vocab_PROPS,
+  Language_PROPS,
   PublicVocabDisplaySettings_PROPS,
 } from "@/src/db/props";
 import USE_zustand from "@/src/zustand";
@@ -34,7 +34,7 @@ export default function Vocab_DUMMY({
   const { t } = useTranslation();
 
   const { languages } = USE_langs();
-  const lang: Language_MODEL = useMemo(
+  const lang: Language_PROPS = useMemo(
     () => languages?.find((lang) => lang.id === frontTrLang_ID),
     [frontTrLang_ID]
   );

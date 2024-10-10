@@ -3,7 +3,7 @@
 
 import Btn from "@/src/components/Btn/Btn";
 import { ICON_difficultyDot } from "@/src/components/icons/icons";
-import { Vocab_MODEL } from "@/src/db/props";
+import { Vocab_PROPS } from "@/src/db/props";
 import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 
@@ -14,10 +14,10 @@ export default function VocabBack_BTNS({
   HANDLE_updateModal,
   TOGGLE_difficultyEdits,
 }: {
-  vocab: Vocab_MODEL;
+  vocab: Vocab_PROPS;
   TOGGLE_vocab: () => void;
   TOGGLE_difficultyEdits: () => void;
-  HANDLE_updateModal: ({ vocab }: { vocab: Vocab_MODEL }) => void;
+  HANDLE_updateModal: ({ vocab }: { vocab: Vocab_PROPS }) => void;
 }) {
   const { t } = useTranslation();
   return (

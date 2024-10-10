@@ -6,7 +6,7 @@ import Block from "@/src/components/Block/Block";
 import Label from "@/src/components/Label/Label";
 import Settings_TOGGLE from "@/src/components/Settings_TOGGLE/Settings_TOGGLE";
 import { MyColors } from "@/src/constants/MyColors";
-import { Language_MODEL, DisplaySettings_PROPS } from "@/src/db/props";
+import { Language_PROPS, DisplaySettings_PROPS } from "@/src/db/props";
 import Vocab_DUMMY from "@/src/features/2_vocabs/components/Vocab/Components/Vocab_DUMMY";
 import i18next, { t } from "i18next";
 import { ScrollView, View } from "react-native";
@@ -20,7 +20,7 @@ import USE_zustand from "@/src/zustand";
 export default function MyVocabPreview_BLOCKS({
   list_LANGS,
 }: {
-  list_LANGS: Language_MODEL[];
+  list_LANGS: Language_PROPS[];
 }) {
   const { z_display_SETTINGS, z_SET_displaySettings } = USE_zustand();
   const appLang = useMemo(() => i18next.language, [i18next.language]);

@@ -5,16 +5,16 @@
 import SelectMyList_MODAL from "@/src/features/1_lists/components/SelectMyList_MODAL/SelectMyList_MODAL";
 import USE_createVocab from "../../../hooks/USE_createVocab";
 import { useState } from "react";
-import { List_MODEL, User_MODEL, Vocab_MODEL } from "@/src/db/props";
+import { List_PROPS, User_PROPS, Vocab_PROPS } from "@/src/db/props";
 import USE_zustand from "@/src/zustand";
 import { CreateMyVocabData_PROPS } from "../CreateMyVocab_MODAL/CreateMyVocab_MODAL";
 
 interface SavePublicVocabToListModal_PROPS {
   IS_open: boolean;
   TOGGLE_open: () => void;
-  user: User_MODEL;
-  vocab: Vocab_MODEL | undefined;
-  onSuccess: (new_VOCAB: Vocab_MODEL) => void;
+  user: User_PROPS;
+  vocab: Vocab_PROPS | undefined;
+  onSuccess: (new_VOCAB: Vocab_PROPS) => void;
 }
 
 export default function SavePublicVocabToList_MODAL({
@@ -29,7 +29,7 @@ export default function SavePublicVocabToList_MODAL({
 
   const { z_lists } = USE_zustand();
 
-  const create = async (list: List_MODEL) => {
+  const create = async (list: List_PROPS) => {
     const result = await CREATE_vocab({
       user,
       list_id: list?.id,
@@ -37,7 +37,7 @@ export default function SavePublicVocabToList_MODAL({
       description: vocab?.description,
       translations: vocab?.translations || [],
       is_public: false,
-      onSuccess: (new_VOCAB: Vocab_MODEL) => {
+      onSuccess: (new_VOCAB: Vocab_PROPS) => {
         onSuccess(new_VOCAB);
       },
     });
@@ -51,7 +51,7 @@ export default function SavePublicVocabToList_MODAL({
     <SelectMyList_MODAL
       open={IS_open}
       title="Saved vocab to list"
-      submit_ACTION={(list: List_MODEL) => {
+      submit_ACTION={(list: List_PROPS) => {
         if (list) create(list);
       }}
       cancel_ACTION={() => {

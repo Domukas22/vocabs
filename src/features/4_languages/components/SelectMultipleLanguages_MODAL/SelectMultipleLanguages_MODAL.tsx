@@ -26,7 +26,7 @@ import {
 import languages from "@/src/constants/languages";
 
 import Block from "@/src/components/Block/Block";
-import { Language_MODEL, TranslationCreation_PROPS } from "@/src/db/props";
+import { Language_PROPS, TranslationCreation_PROPS } from "@/src/db/props";
 import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
@@ -42,7 +42,7 @@ interface SelectLanguagesModal_PROPS {
   open: boolean;
   IS_inAction?: boolean;
   TOGGLE_open: () => void;
-  SUBMIT_langs: (newLangSelection: Language_MODEL[]) => void;
+  SUBMIT_langs: (newLangSelection: Language_PROPS[]) => void;
   trs: TranslationCreation_PROPS[];
 }
 
@@ -58,7 +58,7 @@ export default function SelectMultipleLanguages_MODAL({
   const [search, SET_search] = useState("");
   const { languages } = USE_langs();
 
-  const [modal_LANGS, SET_modalLangs] = useState<Language_MODEL[]>(
+  const [modal_LANGS, SET_modalLangs] = useState<Language_PROPS[]>(
     GET_langsFromTranslations(trs, languages) || []
   );
 
@@ -97,7 +97,7 @@ export default function SelectMultipleLanguages_MODAL({
     SET_modalLangs(GET_langsFromTranslations(trs, languages) || []);
   }, [trs]);
 
-  function SELECT_lang(incomdingLang: Language_MODEL) {
+  function SELECT_lang(incomdingLang: Language_PROPS) {
     const alreadyHasLang = modal_LANGS?.some((l) => l.id === incomdingLang.id);
 
     if (!alreadyHasLang) {

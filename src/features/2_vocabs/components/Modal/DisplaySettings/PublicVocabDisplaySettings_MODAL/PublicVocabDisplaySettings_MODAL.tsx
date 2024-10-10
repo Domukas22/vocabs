@@ -5,7 +5,7 @@
 import React, { useState } from "react";
 import { ScrollView } from "react-native";
 import {
-  Language_MODEL,
+  Language_PROPS,
   DisplaySettings_PROPS,
   PublicVocabDisplaySettings_PROPS,
 } from "@/src/db/props";
@@ -36,7 +36,7 @@ interface DisplaySettingsModal_PROPS {
   >;
   open: boolean;
   TOGGLE_open: () => void;
-  available_LANGS: Language_MODEL[];
+  available_LANGS: Language_PROPS[];
 }
 
 export default function PublicVocabDisplaySettings_MODAL({

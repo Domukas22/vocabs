@@ -2,13 +2,13 @@ import { useState, useCallback, useMemo } from "react";
 import { supabase } from "@/src/lib/supabase";
 import { useToast } from "react-native-toast-notifications";
 import { useTranslation } from "react-i18next";
-import { List_MODEL } from "@/src/db/props";
+import { List_PROPS } from "@/src/db/props";
 
 export interface CreateList_PROPS {
   name: string;
   user_id: string | undefined;
   currentList_NAMES: string[];
-  onSuccess?: (newList: List_MODEL) => void;
+  onSuccess?: (newList: List_PROPS) => void;
   cleanup?: () => void;
 }
 
@@ -32,7 +32,7 @@ export default function USE_createList() {
     cleanup,
   }: CreateList_PROPS): Promise<{
     success: boolean;
-    newList?: List_MODEL | undefined;
+    newList?: List_PROPS | undefined;
     msg?: string;
   }> => {
     SET_createListError(null); // Clear previous error

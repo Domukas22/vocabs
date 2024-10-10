@@ -2,14 +2,14 @@ import { useState, useCallback, useMemo } from "react";
 import { supabase } from "@/src/lib/supabase";
 import { useToast } from "react-native-toast-notifications";
 import { useTranslation } from "react-i18next";
-import { List_MODEL } from "@/src/db/props";
+import { List_PROPS } from "@/src/db/props";
 
 export interface RenameList_PROPS {
   list_id: string | undefined;
   newName: string | undefined;
   user_id: string | undefined;
   currentList_NAMES: string[];
-  onSuccess?: (updated_LIST: List_MODEL) => void;
+  onSuccess?: (updated_LIST: List_PROPS) => void;
   cleanup?: () => void;
 }
 
@@ -34,7 +34,7 @@ export default function USE_renameList() {
     cleanup,
   }: RenameList_PROPS): Promise<{
     success: boolean;
-    updated_LIST?: List_MODEL | undefined;
+    updated_LIST?: List_PROPS | undefined;
     msg?: string;
   }> => {
     SET_renameListError(null); // Clear previous error

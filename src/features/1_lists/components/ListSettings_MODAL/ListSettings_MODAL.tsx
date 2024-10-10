@@ -12,7 +12,7 @@ import SelectMultipleLanguages_MODAL from "@/src/features/4_languages/components
 import Confirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
-import { Language_MODEL, List_MODEL } from "@/src/db/props";
+import { Language_PROPS, List_PROPS } from "@/src/db/props";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 import GET_langs from "@/src/features/4_languages/utils/GET_langs";
 import { useMemo, useState } from "react";
@@ -31,7 +31,7 @@ import UpdateList_MODAL from "../UpdateList_MODAL";
 import { MyColors } from "@/src/constants/MyColors";
 
 interface ListSettingsModal_PROPS {
-  list: List_MODEL;
+  list: List_PROPS;
   open: boolean;
   TOGGLE_open: () => void;
   backToIndex: () => void;
@@ -171,7 +171,7 @@ export default function ListSettings_MODAL({
         open={SHOW_langSeletionModal}
         TOGGLE_open={TOGGLE_langSelectionModal}
         active_LANGS={langs}
-        SUBMIT_langs={(langs: Language_MODEL[]) => {
+        SUBMIT_langs={(langs: Language_PROPS[]) => {
           UPDATE_privateListDefaultTRs(
             list?.id,
             langs.map((l) => l.id)
@@ -187,7 +187,7 @@ export default function ListSettings_MODAL({
         current_NAME={list?.name}
         IS_open={SHOW_renameListModal}
         CLOSE_modal={() => TOGGLE_renameListModal()}
-        onSuccess={(updated_LIST?: List_MODEL) => {
+        onSuccess={(updated_LIST?: List_PROPS) => {
           if (updated_LIST) {
             z_RENAME_privateList(updated_LIST);
             HIGHLIGHT_modalListName();
@@ -200,7 +200,7 @@ export default function ListSettings_MODAL({
         IS_open={SHOW_deleteModal}
         list_id={list?.id}
         CLOSE_modal={() => SET_deleteModal(false)}
-        onSuccess={(deleted_LIST?: List_MODEL) => {
+        onSuccess={(deleted_LIST?: List_PROPS) => {
           if (!deleted_LIST) return;
           SET_deleteModal(false);
           z_DELETE_privateList(deleted_LIST?.id);

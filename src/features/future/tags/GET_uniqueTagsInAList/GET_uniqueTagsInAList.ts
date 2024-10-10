@@ -2,9 +2,9 @@
 //
 //
 
-import { Vocab_MODEL } from "@/src/db/props";
+import { Vocab_PROPS } from "@/src/db/props";
 
-export default function GET_uniqueTagsInAList(vocabs: Vocab_MODEL[]) {
+export default function GET_uniqueTagsInAList(vocabs: Vocab_PROPS[]) {
   const tags = vocabs.reduce((acc, vocab) => {
     vocab.tags?.forEach((tag) => {
       if (!acc.includes(tag)) acc.push(tag);

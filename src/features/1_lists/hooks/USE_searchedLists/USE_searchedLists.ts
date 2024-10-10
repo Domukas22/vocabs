@@ -3,10 +3,10 @@
 //
 
 import { useEffect, useState, useCallback } from "react";
-import { List_MODEL } from "@/src/db/props";
+import { List_PROPS } from "@/src/db/props";
 
-export function USE_searchedLists(lists: List_MODEL[]) {
-  const [searched_LISTS, setSearched_LISTS] = useState<List_MODEL[]>(lists);
+export function USE_searchedLists(lists: List_PROPS[]) {
+  const [searched_LISTS, setSearched_LISTS] = useState<List_PROPS[]>(lists);
   const [search, setSearch] = useState("");
   const [ARE_listsSearching, setARE_listsSearching] = useState(false);
 
@@ -19,7 +19,7 @@ export function USE_searchedLists(lists: List_MODEL[]) {
   useEffect(() => {
     const filterListsAsync = async () => {
       // Use setTimeout to offload filtering to the event loop
-      const filtered = await new Promise<List_MODEL[]>((resolve) => {
+      const filtered = await new Promise<List_PROPS[]>((resolve) => {
         setTimeout(() => {
           const result = lists.filter((list) =>
             list.name.toLowerCase().includes(search.toLowerCase().trim())

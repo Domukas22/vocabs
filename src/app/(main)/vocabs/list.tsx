@@ -13,7 +13,7 @@ import {
 } from "@/src/features/2_vocabs";
 import { useRouter } from "expo-router";
 import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
-import { List_MODEL, DisplaySettings_PROPS, Vocab_MODEL } from "@/src/db/props";
+import { List_PROPS, DisplaySettings_PROPS, Vocab_PROPS } from "@/src/db/props";
 import React, { useEffect, useState } from "react";
 import ListSettings_MODAL from "@/src/features/1_lists/components/ListSettings_MODAL/ListSettings_MODAL";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
@@ -35,11 +35,11 @@ export default function SingleList_PAGE() {
   const [search, SET_search] = useState("");
   const { selected_LIST } = USE_selectedList();
 
-  const [vocabs, SET_vocabs] = useState<Vocab_MODEL[]>(
+  const [vocabs, SET_vocabs] = useState<Vocab_PROPS[]>(
     selected_LIST?.vocabs || []
   );
   const [toUpdate_VOCAB, SET_toUpdateVocab] = useState<
-    Vocab_MODEL | undefined
+    Vocab_PROPS | undefined
   >();
 
   const { highlighted_ID, highlight: HIGHLIGHT_vocab } = USE_highlighedId();
@@ -72,7 +72,7 @@ export default function SingleList_PAGE() {
     vocab,
   }: {
     clear?: boolean;
-    vocab?: Vocab_MODEL;
+    vocab?: Vocab_PROPS;
   }) {
     SET_toUpdateVocab(!clear && vocab ? vocab : undefined);
     TOGGLE_updateVocabModal();
@@ -117,7 +117,7 @@ export default function SingleList_PAGE() {
         IS_open={IS_createModalOpen}
         initial_LIST={selected_LIST}
         TOGGLE_modal={TOGGLE_createVocabModal}
-        onSuccess={(new_VOCAB: Vocab_MODEL) => onCreate_SUCCESS(new_VOCAB)}
+        onSuccess={(new_VOCAB: Vocab_PROPS) => onCreate_SUCCESS(new_VOCAB)}
       />
       <UpdateMyVocab_MODAL
         {...{ toUpdate_VOCAB }}
@@ -152,7 +152,7 @@ function USE_createVocabModal({
   selected_LIST,
   HIGHLIGHT_vocab,
 }: {
-  selected_LIST: List_MODEL;
+  selected_LIST: List_PROPS;
   HIGHLIGHT_vocab: (id: string) => void;
 }) {
   const { t } = useTranslation();
@@ -165,7 +165,7 @@ function USE_createVocabModal({
     SET_createModalOpen(!IS_createModalOpen);
   }
 
-  function onCreate_SUCCESS(new_VOCAB: Vocab_MODEL) {
+  function onCreate_SUCCESS(new_VOCAB: Vocab_PROPS) {
     z_CREATE_privateVocab(new_VOCAB);
     TOGGLE_createVocabModal();
 
@@ -196,7 +196,7 @@ function USE_updateVocabModal({
   selected_LIST,
   HIGHLIGHT_vocab,
 }: {
-  selected_LIST: List_MODEL;
+  selected_LIST: List_PROPS;
   HIGHLIGHT_vocab: (id: string) => void;
 }) {
   const { t } = useTranslation();
@@ -215,7 +215,7 @@ function USE_updateVocabModal({
   }
 
   // Function called upon successful update of a vocab
-  function onUpdate_SUCCESS(updated_VOCAB: Vocab_MODEL) {
+  function onUpdate_SUCCESS(updated_VOCAB: Vocab_PROPS) {
     z_UPDATE_privateVocab(updated_VOCAB);
     TOGGLE_updateVocabModal();
 
@@ -247,7 +247,7 @@ function USE_updateVocabModal({
 function USE_deleteVocabModal({
   selected_LIST,
 }: {
-  selected_LIST: List_MODEL;
+  selected_LIST: List_PROPS;
 }) {
   const { t } = useTranslation();
   const toast = useToast();

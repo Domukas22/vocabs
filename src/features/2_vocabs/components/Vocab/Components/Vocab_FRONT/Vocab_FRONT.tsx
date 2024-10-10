@@ -10,9 +10,9 @@ import { MyColors } from "@/src/constants/MyColors";
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
 import {
   DisplaySettings_PROPS,
-  Translation_MODEL,
+  Translation_PROPS,
   TranslationCreation_PROPS,
-  Language_MODEL,
+  Language_PROPS,
 } from "@/src/db/props";
 import USE_zustand from "@/src/zustand";
 import i18next, { t } from "i18next";
@@ -20,7 +20,7 @@ import { useMemo } from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 
 interface VocabFront_PROPS {
-  translations: Translation_MODEL[] | undefined;
+  translations: Translation_PROPS[] | undefined;
   difficulty: 0 | 1 | 2 | 3 | undefined;
   description: string | undefined;
 

@@ -6,7 +6,7 @@ import Btn from "@/src/components/Btn/Btn";
 import { ICON_flag, ICON_X } from "@/src/components/icons/icons";
 import { MyColors } from "@/src/constants/MyColors";
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
-import { Language_MODEL, TranslationCreation_PROPS } from "@/src/db/props";
+import { Language_PROPS, TranslationCreation_PROPS } from "@/src/db/props";
 import GET_langsFromTranslations from "@/src/features/4_languages/utils/GET_langsFromTranslations";
 import { t, use } from "i18next";
 import React, { useMemo } from "react";

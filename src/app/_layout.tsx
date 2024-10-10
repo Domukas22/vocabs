@@ -77,7 +77,8 @@ function Main_LAYOUT() {
             SET_auth(session.user);
             const userData = await fetchUserData(session.user);
             if (userData) {
-              await executeSync(); // Sync after fetching user data
+              // await executeSync(); // Sync after fetching user data
+              router.push("/(main)/vocabs");
             }
           } else {
             SET_auth(null);

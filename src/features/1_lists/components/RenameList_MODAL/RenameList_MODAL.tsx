@@ -14,7 +14,7 @@ import USE_renameList from "../../hooks/USE_renameList";
 import USE_zustand from "@/src/zustand";
 import { useToast } from "react-native-toast-notifications";
 import { Controller, useForm } from "react-hook-form";
-import { List_MODEL } from "@/src/db/props";
+import { List_PROPS } from "@/src/db/props";
 import Error_TEXT from "@/src/components/Error_TEXT/Error_TEXT";
 import VALIDATE_newListName from "../../utils/IS_listNameTaken";
 import IS_listNameTaken from "../../utils/IS_listNameTaken";
@@ -25,7 +25,7 @@ interface LogoutConfirmationModal_PROPS {
   current_NAME: string | undefined;
   IS_open: boolean;
   CLOSE_modal: () => void;
-  onSuccess?: (updated_LIST?: List_MODEL) => void;
+  onSuccess?: (updated_LIST?: List_PROPS) => void;
 }
 
 type NewListName_PROPS = {

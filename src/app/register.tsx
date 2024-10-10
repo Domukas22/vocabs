@@ -33,6 +33,8 @@ import { t } from "i18next";
 import { useTranslation } from "react-i18next";
 import Error_TEXT from "../components/Error_TEXT/Error_TEXT";
 import LoginRegister_SWITCH from "../features/0_authentication/components/LoginRegister_SWTICH";
+import db, { Users_DB } from "../db";
+import { User_MODEL } from "../db/watermelon_MODELS";
 
 type RegisterData_PROPS = {
   email: string;
@@ -45,26 +47,24 @@ export default function Register_PAGE() {
   const { t } = useTranslation();
   const router = useRouter();
 
-  const createAccount = async (data: RegisterData_PROPS) => {
+  const register = async (data: RegisterData_PROPS) => {
     const { email, password } = data;
     if (!email || !password) return;
     SET_loading(true);
-    const {
-      data: { session },
-      error,
-    } = await supabase.auth.signUp({
-      email: email,
-      password: password,
-      options: {
-        data: {
-          is_premium: false,
-        },
-      },
+
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
     });
+
+    await createUser(email);
+
     SET_loading(false);
 
     if (error) {
       SET_internalError(error.message);
+    } else {
+      router.push("/(main)/vocabs"); // Navigate to main route on success
     }
   };
 
@@ -78,7 +78,7 @@ export default function Register_PAGE() {
       password: "",
     },
   });
-  const onSubmit = (data: RegisterData_PROPS) => createAccount(data);
+  const onSubmit = (data: RegisterData_PROPS) => register(data);
 
   return (
     <Page_WRAP>
@@ -191,4 +191,18 @@ export default function Register_PAGE() {
       <LoginRegister_SWITCH page="register" />
     </Page_WRAP>
   );
+}
+
+async function createUser(email: string) {
+  await db.write(async () => {
+    await Users_DB.create((user: User_MODEL) => {
+      user.email = email;
+      user.is_premium = false;
+      user.is_admin = false;
+      user.payment_date = "";
+      user.payment_amount = 0;
+      user.payment_type = "0";
+      user.app_lang_id = "en";
+    });
+  });
 }

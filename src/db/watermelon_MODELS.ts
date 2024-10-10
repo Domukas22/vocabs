@@ -3,15 +3,16 @@ import {
   children,
   date,
   field,
+  immutableRelation,
   reader,
   readonly,
   relation,
   text,
+  writer,
 } from "@nozbe/watermelondb/decorators";
 import { Associations } from "@nozbe/watermelondb/Model";
 
 // ---------------------------------------------------------------
-// User Model
 export class User_MODEL extends Model {
   static table = "users";
 
@@ -34,10 +35,10 @@ export class User_MODEL extends Model {
   @field("app_lang_id") app_lang_id!: "en" | "de";
 
   @readonly @date("created_at") created_at!: number;
+  @readonly @date("updated_at") updated_at!: number;
+  @readonly @date("deleted_at") deleted_at!: number;
 }
 // ---------------------------------------------------------------
-
-// Language Model
 export class Language_MODEL extends Model {
   static table = "languages";
 
@@ -51,10 +52,10 @@ export class Language_MODEL extends Model {
   translation_example_highlights!: number[];
 
   @readonly @date("created_at") created_at!: number;
+  @readonly @date("updated_at") updated_at!: number;
+  @readonly @date("deleted_at") deleted_at!: number;
 }
 // ---------------------------------------------------------------
-
-// List Model
 export class List_MODEL extends Model {
   static table = "lists";
   static associations: Associations = {
@@ -64,11 +65,13 @@ export class List_MODEL extends Model {
 
   @children("vocabs") vocabs!: Vocab_MODEL[];
 
-  @relation("users", "user_id") user!: User_MODEL;
+  @immutableRelation("users", "user_id") user!: User_MODEL;
   @text("name") name!: string;
   @field("default_LANGS") default_LANGS!: string[]; // Array of language ids
 
   @readonly @date("created_at") created_at!: number;
+  @readonly @date("updated_at") updated_at!: number;
+  @readonly @date("deleted_at") deleted_at!: number;
 
   @reader async GET_vocabCounts(list_id: string) {
     const vocabs = (await this.collections
@@ -99,8 +102,6 @@ export class List_MODEL extends Model {
   }
 }
 // ---------------------------------------------------------------
-
-// Vocab Model
 export class Vocab_MODEL extends Model {
   static table = "vocabs";
   static associations: Associations = {
@@ -120,10 +121,10 @@ export class Vocab_MODEL extends Model {
   @field("is_public") is_public!: boolean;
 
   @readonly @date("created_at") created_at!: number;
+  @readonly @date("updated_at") updated_at!: number;
+  @readonly @date("deleted_at") deleted_at!: number;
 }
 // ---------------------------------------------------------------
-
-// Translation Model
 export class Translation_MODEL extends Model {
   static table = "translations";
 
@@ -141,5 +142,7 @@ export class Translation_MODEL extends Model {
   @field("is_public") is_public!: boolean;
 
   @readonly @date("created_at") created_at!: number;
+  @readonly @date("updated_at") updated_at!: number;
+  @readonly @date("deleted_at") deleted_at!: number;
 }
 // ---------------------------------------------------------------

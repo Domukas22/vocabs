@@ -2,7 +2,7 @@
 //
 //
 
-export interface User_MODEL {
+export interface User_PROPS {
   id: string;
   email: string;
   is_premum: boolean;
@@ -14,9 +14,8 @@ export interface User_MODEL {
 
   created_at: string;
 }
-export interface Language_MODEL {
+export interface Language_PROPS {
   id: string;
-  image_url: string;
   created_at: string;
   lang_in_en: string;
   lang_in_de: string;
@@ -25,18 +24,17 @@ export interface Language_MODEL {
   translation_example: string;
   translation_example_highlights: number[];
 }
-export interface List_MODEL {
+export interface List_PROPS {
   id: string;
   user_id: string;
   name: string;
   created_at: string;
   default_LANGS: string[];
-
-  vocabs?: Vocab_MODEL[]; // populated while fetching
+  vocabs?: Vocab_PROPS[]; // populated while fetching
 }
 
 // --------------------------------------------------------------------------------------------
-export interface Vocab_MODEL {
+export interface Vocab_PROPS {
   id: string;
   list_id: string | undefined;
   user_id: string | undefined;
@@ -46,11 +44,11 @@ export interface Vocab_MODEL {
   is_public: boolean;
   created_at: string;
 
-  translations?: Translation_MODEL[]; // populated while fetching
+  translations?: Translation_PROPS[]; // populated while fetching
 }
 
 // --------------------------------------------------------------------------------------------
-export interface Translation_MODEL {
+export interface Translation_PROPS {
   id: string;
   user_id: string | undefined;
   vocab_id: string;

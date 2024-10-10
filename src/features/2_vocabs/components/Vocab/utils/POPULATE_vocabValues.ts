@@ -2,7 +2,7 @@
 //
 //
 
-import { Vocab_MODEL, Language_MODEL, List_MODEL } from "@/src/db/props";
+import { Vocab_PROPS, Language_PROPS, List_PROPS } from "@/src/db/props";
 import { PrivateVocabSet_PROPS } from "../../../hooks/USE_myVocabValues";
 import GET_langs from "@/src/features/4_languages/utils/GET_langs";
 import GET_defaultTranslations from "@/src/features/2_vocabs/utils/GET_defaultTranslations";
@@ -14,10 +14,10 @@ export default function POPULATE_vocabValues({
   languages,
   selected_LIST,
 }: {
-  vocab: Vocab_MODEL | undefined;
+  vocab: Vocab_PROPS | undefined;
   set_FNs: PrivateVocabSet_PROPS;
-  languages: Language_MODEL[];
-  selected_LIST: List_MODEL | null | undefined;
+  languages: Language_PROPS[];
+  selected_LIST: List_PROPS | null | undefined;
 }) {
   const {
     SET_modalTRs,

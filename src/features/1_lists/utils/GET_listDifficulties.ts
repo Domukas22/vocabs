@@ -2,10 +2,10 @@
 //
 //
 
-import { List_MODEL } from "@/src/db/props";
+import { List_PROPS } from "@/src/db/props";
 
 export default function GET_listDifficulties(
-  list: List_MODEL | undefined = undefined
+  list: List_PROPS | undefined = undefined
 ) {
   return list?.vocabs?.reduce(
     (acc, vocab) => {

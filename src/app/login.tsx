@@ -47,11 +47,13 @@ export default function Login_PAGE() {
 
     SET_loading(false);
 
+    console.log("YAY");
+
     if (error) {
       SET_internalError(error.message);
     } else {
       // Navigate to the main application screen on successful login
-      router.push("/(main)/vocabs"); // Update to your main app route
+      // router.push("/(main)/vocabs"); // Update to your main app route
     }
   };
 

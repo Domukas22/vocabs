@@ -14,6 +14,8 @@ export default appSchema({
         { name: "payment_type", type: "string" },
         { name: "app_lang_id", type: "string" }, // Storing language ids like 'en' or 'de'
         { name: "created_at", type: "number" },
+        { name: "updated_at", type: "number" },
+        { name: "deleted_at", type: "number" },
       ],
     }),
 
@@ -24,6 +26,8 @@ export default appSchema({
         { name: "name", type: "string" },
         { name: "default_LANGS", type: "string" }, // Array of language ids stored as stringified JSON
         { name: "created_at", type: "number" },
+        { name: "updated_at", type: "number" },
+        { name: "deleted_at", type: "number" },
       ],
     }),
 
@@ -37,6 +41,8 @@ export default appSchema({
         { name: "image", type: "string", isOptional: true },
         { name: "is_public", type: "boolean" },
         { name: "created_at", type: "number" },
+        { name: "updated_at", type: "number" },
+        { name: "deleted_at", type: "number" },
       ],
     }),
 
@@ -50,6 +56,8 @@ export default appSchema({
         { name: "highlights", type: "string", isOptional: true }, // Store highlights as stringified JSON array
         { name: "is_public", type: "boolean" },
         { name: "created_at", type: "number" },
+        { name: "updated_at", type: "number" },
+        { name: "deleted_at", type: "number" },
       ],
     }),
 
@@ -64,6 +72,8 @@ export default appSchema({
         { name: "translation_example", type: "string" },
         { name: "translation_example_highlights", type: "string" }, // Store as stringified JSON array of numbers
         { name: "created_at", type: "number" },
+        { name: "updated_at", type: "number" },
+        { name: "deleted_at", type: "number" },
       ],
     }),
   ],

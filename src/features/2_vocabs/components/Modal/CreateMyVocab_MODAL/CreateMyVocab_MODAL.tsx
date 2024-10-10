@@ -9,11 +9,11 @@ import React, { useEffect, useState } from "react";
 import { View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import {
-  Language_MODEL,
-  List_MODEL,
+  Language_PROPS,
+  List_PROPS,
   TranslationCreation_PROPS,
-  User_MODEL,
-  Vocab_MODEL,
+  User_PROPS,
+  Vocab_PROPS,
 } from "@/src/db/props";
 
 import TrHighlights_MODAL from "../TrHighlights_MODAL";
@@ -40,13 +40,13 @@ import CreateMyVocab_FOOTER from "../../Footer/CreateMyVocab_FOOTER/CreateMyVoca
 
 interface CreateMyVocabModal_PROPS {
   IS_open: boolean;
-  initial_LIST: List_MODEL | undefined;
+  initial_LIST: List_PROPS | undefined;
   TOGGLE_modal: () => void;
-  onSuccess: (new_VOCAB: Vocab_MODEL) => void;
+  onSuccess: (new_VOCAB: Vocab_PROPS) => void;
 }
 
 export type CreateMyVocabData_PROPS = {
-  list: List_MODEL | undefined;
+  list: List_PROPS | undefined;
   difficulty: 1 | 2 | 3;
   description: string;
 
@@ -62,7 +62,7 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
   } = props;
 
   const { t } = useTranslation();
-  const { user }: { user: User_MODEL } = USE_auth();
+  const { user }: { user: User_PROPS } = USE_auth();
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
     { name: "langs", initialValue: false },
@@ -87,7 +87,7 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
 
       translations,
       is_public: false,
-      onSuccess: (new_VOCAB: Vocab_MODEL) => {
+      onSuccess: (new_VOCAB: Vocab_PROPS) => {
         onSuccess(new_VOCAB);
         reset();
       },
@@ -194,7 +194,7 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
           open={modal_STATES.langs}
           TOGGLE_open={() => TOGGLE_modal("langs")}
           trs={form_TRS}
-          SUBMIT_langs={(new_LANGS: Language_MODEL[]) =>
+          SUBMIT_langs={(new_LANGS: Language_PROPS[]) =>
             // adds/deletes current translations based on new languages provided
             HANLDE_selectedLangs({
               new_LANGS,
@@ -233,7 +233,7 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
         <SelectMyList_MODAL
           open={modal_STATES.list}
           title="Saved vocab to list"
-          submit_ACTION={(target_LIST: List_MODEL) => {
+          submit_ACTION={(target_LIST: List_PROPS) => {
             if (target_LIST) {
               setValue("list", target_LIST);
               clearErrors("list");

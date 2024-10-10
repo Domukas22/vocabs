@@ -9,7 +9,7 @@ import { View } from "react-native";
 import Header from "@/src/components/Header/Header";
 import Footer from "@/src/components/Footer/Footer";
 import Label from "@/src/components/Label/Label";
-import { Language_MODEL, TranslationCreation_PROPS } from "@/src/db/props";
+import { Language_PROPS, TranslationCreation_PROPS } from "@/src/db/props";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
 import Big_MODAL from "@/src/components/Modals/Big_MODAL/Big_MODAL";

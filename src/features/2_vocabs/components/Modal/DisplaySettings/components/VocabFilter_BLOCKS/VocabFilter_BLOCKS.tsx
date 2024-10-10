@@ -10,7 +10,7 @@ import {
   ICON_flag,
 } from "@/src/components/icons/icons";
 import Label from "@/src/components/Label/Label";
-import { Language_MODEL, DisplaySettings_PROPS } from "@/src/db/props";
+import { Language_PROPS, DisplaySettings_PROPS } from "@/src/db/props";
 import USE_zustand from "@/src/zustand";
 import i18next, { t } from "i18next";
 import { useCallback, useMemo } from "react";
@@ -19,7 +19,7 @@ import { View } from "react-native";
 export default function VocabFilter_BLOCKS({
   list_LANGS,
 }: {
-  list_LANGS: Language_MODEL[] | [] | undefined;
+  list_LANGS: Language_PROPS[] | [] | undefined;
 }) {
   const { z_display_SETTINGS, z_SET_displaySettings } = USE_zustand();
   const appLang = useMemo(() => i18next.language, [i18next.language]);

@@ -2,14 +2,14 @@
 //
 //
 
-import { Language_MODEL, TranslationCreation_PROPS } from "@/src/db/props";
+import { Language_PROPS, TranslationCreation_PROPS } from "@/src/db/props";
 
 export default function HANLDE_selectedLangs({
   new_LANGS,
   current_TRS,
   SET_trs,
 }: {
-  new_LANGS: Language_MODEL[];
+  new_LANGS: Language_PROPS[];
   current_TRS: TranslationCreation_PROPS[];
   SET_trs: (langs: TranslationCreation_PROPS[]) => void;
 }) {

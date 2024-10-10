@@ -3,14 +3,14 @@
 //
 import { useState, useCallback, useMemo } from "react";
 import { supabase } from "@/src/lib/supabase";
-import { List_MODEL } from "@/src/db/props";
+import { List_PROPS } from "@/src/db/props";
 
 export interface UpdateList_PROPS {
   name: string;
   list_id: string;
   user_id: string;
   currentList_NAMES: string[];
-  onSuccess: (updatedList: List_MODEL) => void;
+  onSuccess: (updatedList: List_PROPS) => void;
 }
 
 export default function USE_updateList() {
@@ -33,7 +33,7 @@ export default function USE_updateList() {
     onSuccess,
   }: UpdateList_PROPS): Promise<{
     success: boolean;
-    updatedList?: List_MODEL | undefined;
+    updatedList?: List_PROPS | undefined;
     msg?: string;
   }> => {
     SET_updateListError(null); // Clear previous error

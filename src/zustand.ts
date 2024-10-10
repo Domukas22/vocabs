@@ -4,7 +4,7 @@
 
 // zustand_store.js
 import { create } from "zustand";
-import { List_MODEL, Vocab_MODEL, Translation_MODEL } from "./db/props";
+import { List_PROPS, Vocab_PROPS, Translation_PROPS } from "./db/props";
 
 interface MyVocabDisplaySettings_PROPS {
   SHOW_description: boolean;
@@ -18,11 +18,11 @@ interface MyVocabDisplaySettings_PROPS {
 }
 
 interface ZustandStore {
-  z_lists: List_MODEL[];
-  z_SET_lists: (fetchedLists: List_MODEL[]) => void;
+  z_lists: List_PROPS[];
+  z_SET_lists: (fetchedLists: List_PROPS[]) => void;
 
-  z_printed_VOCABS: Vocab_MODEL[];
-  z_SET_printedVocabs: (vocabs: Vocab_MODEL[]) => void;
+  z_printed_VOCABS: Vocab_PROPS[];
+  z_SET_printedVocabs: (vocabs: Vocab_PROPS[]) => void;
   // z_ARE_printedVocabsLoading: boolean;
   // z_SET_printedVocabsLoading: (val: boolean) => void;
 
@@ -31,20 +31,20 @@ interface ZustandStore {
     newSettings: Partial<MyVocabDisplaySettings_PROPS>
   ) => void;
 
-  z_CREATE_privateList: (newLists: List_MODEL) => void;
-  z_RENAME_privateList: (renamed_LIST: List_MODEL) => void;
+  z_CREATE_privateList: (newLists: List_PROPS) => void;
+  z_RENAME_privateList: (renamed_LIST: List_PROPS) => void;
   z_UPDATE_defaultListTRs: (
     targetList_ID: string,
     newDefaultTRs: string[]
   ) => void;
   z_DELETE_privateList: (targetList_ID: string) => void;
-  z_CREATE_privateVocab: (new_VOCAB: Vocab_MODEL | undefined) => void;
+  z_CREATE_privateVocab: (new_VOCAB: Vocab_PROPS | undefined) => void;
   z_UPDATE_vocabDifficulty: (
     list_id: string,
     vocab_ID: string,
     new_DIFFICULTY: 1 | 2 | 3
   ) => void;
-  z_UPDATE_privateVocab: (updated_VOCAB: Vocab_MODEL) => void;
+  z_UPDATE_privateVocab: (updated_VOCAB: Vocab_PROPS) => void;
   z_DELETE_privateVocab: (list_id: string, vocab_id: string) => void;
 }
 

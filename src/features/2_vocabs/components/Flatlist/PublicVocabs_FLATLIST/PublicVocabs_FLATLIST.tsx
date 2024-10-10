@@ -8,7 +8,7 @@ import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/St
 import {
   DisplaySettings_PROPS,
   PublicVocabDisplaySettings_PROPS,
-  Vocab_MODEL,
+  Vocab_PROPS,
 } from "@/src/db/props";
 import { useTranslation } from "react-i18next";
 import Public_VOCAB from "../../Vocab/Public_VOCAB/Public_VOCAB";
@@ -25,16 +25,16 @@ export default function PublicVocabs_FLATLIST({
   PREPARE_vocabDelete,
   PREPARE_toSaveVocab,
 }: {
-  vocabs: Vocab_MODEL[];
+  vocabs: Vocab_PROPS[];
   SHOW_bottomBtn: React.ReactNode;
   highlightedVocab_ID: string | undefined;
   HANDLE_updateModal: {
     clear?: boolean;
-    vocab?: Vocab_MODEL;
+    vocab?: Vocab_PROPS;
   };
   displaySettings: PublicVocabDisplaySettings_PROPS;
   PREPARE_vocabDelete?: (id: string) => {};
-  PREPARE_toSaveVocab: (vocab: Vocab_MODEL) => void;
+  PREPARE_toSaveVocab: (vocab: Vocab_PROPS) => void;
 }) {
   const { t } = useTranslation();
   const { user } = USE_auth();

@@ -2,7 +2,7 @@
 //
 //
 
-import { Language_MODEL, TranslationCreation_PROPS } from "@/src/db/props";
+import { Language_PROPS, TranslationCreation_PROPS } from "@/src/db/props";
 import Block from "@/src/components/Block/Block";
 import { ICON_flag } from "@/src/components/icons/icons";
 import Btn from "@/src/components/Btn/Btn";
@@ -41,7 +41,7 @@ export default function TrInput_BLOCK({
   const { languages } = USE_langs();
 
   const lang = useMemo(
-    () => languages?.find((lang: Language_MODEL) => lang.id === tr.lang_id),
+    () => languages?.find((lang: Language_PROPS) => lang.id === tr.lang_id),
     []
   );
 
