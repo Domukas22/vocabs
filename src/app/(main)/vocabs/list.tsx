@@ -35,6 +35,7 @@ export default function SingleList_PAGE() {
   const router = useRouter();
   const [search, SET_search] = useState("");
   const { selected_LIST } = USE_selectedList();
+  const { z_display_SETTINGS } = USE_zustand();
 
   const [vocabs, SET_vocabs] = useState<Vocab_PROPS[]>(
     selected_LIST?.vocabs || []
@@ -96,12 +97,20 @@ export default function SingleList_PAGE() {
       />
       <MyVocabs_SUBNAV
         {...{ search, SET_search }}
-        vocab_COUNT={vocabs?.length || 0}
         onPlusIconPress={() => TOGGLE_createVocabModal()}
         TOGGLE_displaySettings={() => TOGGLE_modal("displaySettings")}
       />
 
       <MyVocabs_FLATLIST
+        filters={{
+          search: search,
+          list_id: selected_LIST?.id,
+          is_public: false,
+          difficultyFilters: z_display_SETTINGS.difficultyFilters || [],
+          langFilters: z_display_SETTINGS.langFilters || [],
+          sorting: z_display_SETTINGS.sorting,
+          sortDirection: z_display_SETTINGS.sortDirection,
+        }}
         list_id={selected_LIST?.id || ""}
         SHOW_bottomBtn={true}
         TOGGLE_createVocabModal={() => TOGGLE_createVocabModal()}
@@ -129,11 +138,11 @@ export default function SingleList_PAGE() {
         TOGGLE_modal={TOGGLE_updateVocabModal}
         onSuccess={onUpdate_SUCCESS}
       />
-      {/* <MyVocabDisplaySettings_MODAL
+      <MyVocabDisplaySettings_MODAL
         open={modal_STATES.displaySettings}
         TOGGLE_open={() => TOGGLE_modal("displaySettings")}
-        vocabs={vocabs}
-      /> */}
+        list_id={selected_LIST?.id || ""}
+      />
 
       {/* <
       

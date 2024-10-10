@@ -13,17 +13,51 @@ import { ScrollView, View } from "react-native";
 import VocabFrontLang_BLOCK from "../../VocabFrontLang_BLOCK/VocabFrontLang_BLOCK";
 import Btn from "@/src/components/Btn/Btn";
 import { ICON_checkMark, ICON_flag } from "@/src/components/icons/icons";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import USE_zustand from "@/src/zustand";
+import { Language_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
+import languages from "@/src/constants/languages";
+import { Languages_DB, Translations_DB, Vocabs_DB } from "@/src/db";
+import GET_uniqueLanguagesInAList from "@/src/features/4_languages/utils/GET_uniqueLanguagesInAList/GET_uniqueLanguagesInAList";
+import { Q } from "@nozbe/watermelondb";
+import { withObservables } from "@nozbe/watermelondb/react";
+import { USE_langs } from "@/src/context/Langs_CONTEXT";
 
-export default function MyVocabPreview_BLOCKS({
-  list_LANGS,
-}: {
-  list_LANGS: Language_PROPS[];
-}) {
+function _MyVocabPreview_BLOCKS({ vocabs }: { vocabs: Vocab_MODEL[] }) {
   const { z_display_SETTINGS, z_SET_displaySettings } = USE_zustand();
   const appLang = useMemo(() => i18next.language, [i18next.language]);
+
+  const { languages: allLanguages } = USE_langs();
+  const [list_LANGS, SET_list_LANGS] = useState<Language_MODEL[]>([]);
+
+  useEffect(() => {
+    // Define an async function to call GET_uniqueLanguagesInAList
+    const fetchLanguages = async () => {
+      // Assuming you have access to a proper list of Language_MODEL instances
+
+      const vocab_IDS = vocabs?.map((v) => v.id);
+
+      const trs = await Translations_DB.query(
+        Q.where("vocab_id", Q.oneOf(vocab_IDS))
+      ).fetch();
+
+      const lang_IDs = trs.reduce((acc, translation) => {
+        if (!acc.includes(translation.lang_id)) acc.push(translation.lang_id);
+        return acc;
+      }, [] as string[]);
+
+      // Filter languages based on the unique language IDs
+      const uniqueLanguages = allLanguages.filter((lang) =>
+        lang_IDs.includes(lang.id)
+      );
+
+      SET_list_LANGS(uniqueLanguages);
+    };
+
+    // Call the async function
+    fetchLanguages();
+  }, [vocabs]);
 
   return (
     <>
@@ -71,11 +105,11 @@ export default function MyVocabPreview_BLOCKS({
         </View>
       </Block>
 
-      {list_LANGS?.length && list_LANGS?.length > 0 && (
+      {list_LANGS && list_LANGS?.length > 0 && (
         <Block>
           <Label>{t("label.vocabFrontLang")}</Label>
           <ScrollView>
-            {list_LANGS.map((lang, index) => (
+            {list_LANGS?.map((lang, index) => (
               <Btn
                 key={"Select lang" + lang.id + lang.lang_in_en}
                 iconLeft={
@@ -111,3 +145,13 @@ export default function MyVocabPreview_BLOCKS({
   );
 }
 //
+
+const enhance = withObservables(
+  ["list_id"],
+  ({ list_id }: { list_id: string }) => ({
+    // vocabs: Vocabs_DB.query(Q.where("list_id", list_id)),
+    vocabs: Vocabs_DB.query(Q.where("list_id", list_id)),
+  })
+);
+
+export const MyVocabPreview_BLOCKS = enhance(_MyVocabPreview_BLOCKS);

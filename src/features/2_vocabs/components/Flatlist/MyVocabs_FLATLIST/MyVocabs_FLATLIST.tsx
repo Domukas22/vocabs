@@ -19,6 +19,7 @@ import { withObservables } from "@nozbe/watermelondb/react";
 import { Vocabs_DB } from "@/src/db";
 import { Q } from "@nozbe/watermelondb";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
+import FETCH_vocabs, { VocabFilter_PROPS } from "../../../utils/FETCH_vocabs";
 
 function _MyVocabs_FLATLIST({
   list_id,
@@ -43,63 +44,16 @@ function _MyVocabs_FLATLIST({
   PREPARE_vocabDelete?: (id: string) => void;
   search: string;
 }) {
-  const { z_printed_VOCABS, z_display_SETTINGS, z_SET_printedVocabs } =
-    USE_zustand();
+  console.log(list_id);
+
+  const { z_display_SETTINGS } = USE_zustand();
   const { t } = useTranslation();
 
   const [loading, SET_loading] = useState(false);
 
-  // useEffect(() => {
-  //   SET_loading(true);
-  //   const searched = GET_searchedVocabs({ vocabs: all_VOCABS, search });
-  //   const filtered = GET_filteredVocabs({
-  //     vocabs: searched,
-  //     displaySettings: z_display_SETTINGS,
-  //   });
-  //   SET_loading(false);
-  //   z_SET_printedVocabs(filtered);
-  // }, [search, z_display_SETTINGS]);
-
   if (loading) return <List_SKELETONS />;
-  // <Styled_FLATLIST
-  //   data={vocabs || []}
-  //   renderItem={({ item }) => {
-  //     return (
-  //       <SwipeableExample
-  //         rightBtn_ACTION={() => {
-  //           if (PREPARE_vocabDelete) PREPARE_vocabDelete(item.id);
-  //         }}
-  //       >
-  //         <MyVocab
-  //           vocab={item}
-  //           highlighted={highlightedVocab_ID === item.id}
-  //           {...{ HANDLE_updateModal }}
-  //         />
-  //       </SwipeableExample>
-  //     );
-  //   }}
-  //   keyExtractor={(item) => "Vocab" + item.id}
-  //   ListFooterComponent={
-  //     SHOW_bottomBtn ? (
-  //       <Btn
-  //         text={t("btn.createVocab")}
-  //         iconLeft={<ICON_X color="primary" />}
-  //         type="seethrough_primary"
-  //         onPress={TOGGLE_createVocabModal}
-  //       />
-  //     ) : null
-  //   }
-  // />;
 
-  if (
-    vocabs &&
-    vocabs?.length > 0
-    // &&
-    // !ARE_vocabsSearching &&
-    // !ARE_vocabsFiltering &&
-    // searched_VOCABS.length > 0 &&
-    // filtered_VOCABS.length > 0
-  ) {
+  if (vocabs && vocabs?.length > 0) {
     return (
       <Styled_FLATLIST
         data={vocabs}
@@ -151,9 +105,10 @@ function _MyVocabs_FLATLIST({
 }
 
 const enhance = withObservables(
-  ["list_id"],
-  ({ list_id }: { list_id: string }) => ({
-    vocabs: Vocabs_DB.query(),
+  ["filters"],
+  ({ filters }: { filters: VocabFilter_PROPS }) => ({
+    // vocabs: Vocabs_DB.query(Q.where("list_id", list_id)),
+    vocabs: FETCH_vocabs(filters),
   })
 );
 

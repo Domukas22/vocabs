@@ -49,16 +49,11 @@ function _MyVocab({ trs, vocab, highlighted, HANDLE_updateModal }: VocabProps) {
     });
   };
 
-  // console.log(trs);
-
   const {
-    // this needs to be here and not in the Vocab back, beacsue the color need sot update for the entire vocab
     UPDATE_privateVocabDifficulty,
     privateVocabDifficultyEdit_PROPS,
     updateDifficulty_ERROR,
   } = USE_updateVocabDifficulty();
-
-  const { selected_LIST } = USE_selectedList();
 
   async function EDIT_vocabDifficulty(newDifficulty: 1 | 2 | 3) {
     if (
@@ -66,7 +61,6 @@ function _MyVocab({ trs, vocab, highlighted, HANDLE_updateModal }: VocabProps) {
       vocab.difficulty !== newDifficulty
     ) {
       const result = await UPDATE_privateVocabDifficulty({
-        list_id: selected_LIST.id,
         vocab_id: vocab.id,
         newDifficulty,
       });

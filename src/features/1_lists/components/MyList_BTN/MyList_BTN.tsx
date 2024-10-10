@@ -14,18 +14,24 @@ import { useTranslation } from "react-i18next";
 import { useMemo } from "react";
 import GET_listDifficulties from "../../utils/GET_listDifficulties";
 import VocabDifficulty_COUNTS from "../VocabDifficulty_COUNTS/VocabDifficulty_COUNTS";
+import { List_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
+import { Vocabs_DB } from "@/src/db";
+import { Q } from "@nozbe/watermelondb";
+import { withObservables } from "@nozbe/watermelondb/react";
 
-export default function MyList_BTN({
+function _MyList_BTN({
   list,
+  vocabs,
   onPress,
   highlighted,
 }: {
   list: List_PROPS;
+  vocabs: Vocab_MODEL;
   onPress: () => void;
   highlighted: boolean;
 }) {
   const { t } = useTranslation();
-  const difficulties = useMemo(() => GET_listDifficulties(list), []);
+  const difficulties = useMemo(() => GET_listDifficulties(vocabs), []);
 
   return (
     <Pressable
@@ -51,6 +57,12 @@ export default function MyList_BTN({
     </Pressable>
   );
 }
+
+const enhance = withObservables(["list"], ({ list }: { list: List_MODEL }) => ({
+  vocabs: Vocabs_DB.query(Q.where("list_id", list?.id || "")).observe(),
+}));
+
+export const MyList_BTN = enhance(_MyList_BTN);
 
 const s = StyleSheet.create({
   btn: {

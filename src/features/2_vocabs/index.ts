@@ -12,7 +12,7 @@ export { default as PublicVocabs_SUBNAV } from "./components/Subnav/PublicVocabs
 
 export { default as CreateMyVocab_MODAL } from "./components/Modal/CreateMyVocab_MODAL/CreateMyVocab_MODAL";
 
-export { default as MyVocabDisplaySettings_MODAL } from "./components/Modal/DisplaySettings/MyVocabsDisplaySettings_MODAL/MyVocabsDisplaySettings_MODAL";
+export { MyVocabDisplaySettings_MODAL } from "./components/Modal/DisplaySettings/MyVocabsDisplaySettings_MODAL/MyVocabsDisplaySettings_MODAL";
 
 export { default as DeleteVocab_MODAL } from "./components/Modal/DeleteVocab_MODAL";
 

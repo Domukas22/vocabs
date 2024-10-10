@@ -10,14 +10,12 @@ import USE_zustand from "@/src/zustand";
 import { useMemo } from "react";
 
 export default function Vocabs_SUBNAV({
-  vocab_COUNT,
   search,
 
   SET_search,
   TOGGLE_displaySettings,
   onPlusIconPress,
 }: {
-  vocab_COUNT: number;
   search: string;
 
   SET_search: (val: string) => void;
@@ -33,7 +31,7 @@ export default function Vocabs_SUBNAV({
     [z_display_SETTINGS.difficultyFilters, z_display_SETTINGS.langFilters]
   );
 
-  return vocab_COUNT > 0 ? (
+  return (
     <Subnav>
       <SearchBar value={search} SET_value={SET_search} />
       <Btn
@@ -50,5 +48,5 @@ export default function Vocabs_SUBNAV({
         onPress={onPlusIconPress}
       />
     </Subnav>
-  ) : null;
+  );
 }

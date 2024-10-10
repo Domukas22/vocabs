@@ -4,7 +4,7 @@
 
 import Btn from "@/src/components/Btn/Btn";
 import { ICON_X } from "@/src/components/icons/icons";
-import MyList_BTN from "@/src/features/1_lists/components/MyList_BTN/MyList_BTN";
+import { MyList_BTN } from "@/src/features/1_lists/components/MyList_BTN/MyList_BTN";
 import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
 import { List_PROPS } from "@/src/db/props";
 import { useTranslation } from "react-i18next";

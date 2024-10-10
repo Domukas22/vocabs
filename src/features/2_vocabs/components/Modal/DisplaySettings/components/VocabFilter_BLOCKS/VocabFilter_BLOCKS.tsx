@@ -2,6 +2,7 @@
 //
 //
 
+import vocabs from "@/src/app/(main)/vocabs";
 import Block from "@/src/components/Block/Block";
 import Btn from "@/src/components/Btn/Btn";
 import {
@@ -10,19 +11,56 @@ import {
   ICON_flag,
 } from "@/src/components/icons/icons";
 import Label from "@/src/components/Label/Label";
+import { USE_langs } from "@/src/context/Langs_CONTEXT";
+import { Translations_DB, Vocabs_DB } from "@/src/db";
 import { Language_PROPS, DisplaySettings_PROPS } from "@/src/db/props";
+import { Language_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 import USE_zustand from "@/src/zustand";
+import { Q } from "@nozbe/watermelondb";
+import withObservables from "@nozbe/watermelondb/react/withObservables";
 import i18next, { t } from "i18next";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
 
-export default function VocabFilter_BLOCKS({
-  list_LANGS,
+function _VocabFilter_BLOCKS({
+  vocabs,
 }: {
-  list_LANGS: Language_PROPS[] | [] | undefined;
+  vocabs: Vocab_MODEL[] | undefined;
 }) {
   const { z_display_SETTINGS, z_SET_displaySettings } = USE_zustand();
   const appLang = useMemo(() => i18next.language, [i18next.language]);
+
+  const { languages: allLanguages } = USE_langs();
+  const [list_LANGS, SET_list_LANGS] = useState<Language_MODEL[]>([]);
+
+  useEffect(() => {
+    // Define an async function to call GET_uniqueLanguagesInAList
+    const fetchLanguages = async () => {
+      // Assuming you have access to a proper list of Language_MODEL instances
+
+      const vocab_IDS = vocabs?.map((v) => v.id) || [];
+
+      const trs = await Translations_DB.query(
+        Q.where("vocab_id", Q.oneOf(vocab_IDS))
+      ).fetch();
+
+      const lang_IDs = trs.reduce((acc, translation) => {
+        if (!acc.includes(translation.lang_id)) acc.push(translation.lang_id);
+        return acc;
+      }, [] as string[]);
+
+      // Filter languages based on the unique language IDs
+      const uniqueLanguages = allLanguages.filter((lang) =>
+        lang_IDs.includes(lang.id)
+      );
+
+      SET_list_LANGS(uniqueLanguages);
+    };
+
+    // Call the async function
+    fetchLanguages();
+  }, [vocabs]);
+
   const SELECT_difficultyFilter = useCallback(
     (incoming_DIFF: 1 | 2 | 3) => {
       z_SET_displaySettings({
@@ -192,3 +230,13 @@ function GET_handledFrontLangId({
 
   return frontLang_ID;
 }
+
+const enhance = withObservables(
+  ["list_id"],
+  ({ list_id }: { list_id: string }) => ({
+    // vocabs: Vocabs_DB.query(Q.where("list_id", list_id)),
+    vocabs: Vocabs_DB.query(Q.where("list_id", list_id)),
+  })
+);
+
+export const VocabFilter_BLOCKS = enhance(_VocabFilter_BLOCKS);
