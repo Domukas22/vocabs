@@ -47,7 +47,9 @@ export default function TrHighlights_MODAL({
   const appLang = useMemo(() => i18next.language, []);
   const lang = useMemo(() => languages.find((l) => l.id === tr?.lang_id), [tr]);
 
-  const [highlights, SET_highlights] = useState(tr?.highlights || []);
+  const [highlights, SET_highlights] = useState(
+    tr?.highlights.map(Number) || []
+  );
 
   function submit() {
     SUBMIT_highlights({ lang_id: lang?.id, highlights });
@@ -56,7 +58,7 @@ export default function TrHighlights_MODAL({
   }
 
   useEffect(() => {
-    SET_highlights(tr?.highlights || []);
+    SET_highlights(tr?.highlights.map(Number) || []);
   }, [tr]);
 
   return (

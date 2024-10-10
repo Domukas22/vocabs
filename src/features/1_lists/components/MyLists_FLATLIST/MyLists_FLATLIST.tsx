@@ -12,6 +12,13 @@ import SwipeableExample from "@/src/components/SwipeableExample/SwipeableExample
 import Label from "@/src/components/Label/Label";
 import React from "react";
 import { FlatList } from "react-native";
+import { List_MODEL } from "@/src/db/watermelon_MODELS";
+import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
+import { withObservables } from "@nozbe/watermelondb/react";
+import { Lists_DB } from "@/src/db";
+import { USER_ID } from "@/src/constants/globalVars";
+import { Q } from "@nozbe/watermelondb";
+import { take } from "@nozbe/watermelondb/QueryDescription";
 
 interface MyListsFlatlist_PROPS {
   _ref: React.RefObject<FlatList>;
@@ -24,7 +31,7 @@ interface MyListsFlatlist_PROPS {
   TOGGLE_createListModal: () => void;
 }
 
-export default function MyLists_FLATLIST({
+function _MyLists_FLATLIST({
   _ref,
   lists,
   SHOW_bottomBtn,
@@ -35,6 +42,7 @@ export default function MyLists_FLATLIST({
   TOGGLE_createListModal,
 }: MyListsFlatlist_PROPS) {
   const { t } = useTranslation();
+
   return (
     <Styled_FLATLIST
       _ref={_ref}
@@ -68,3 +76,15 @@ export default function MyLists_FLATLIST({
     />
   );
 }
+const enhance_allLists = withObservables(
+  ["lists", "user_id"],
+  ({ lists, user_id }: { lists: List_MODEL[]; user_id: string }) => ({
+    lists: Lists_DB.query(
+      Q.where("user_id", user_id),
+      Q.sortBy("created_at", Q.asc)
+    ),
+    // vocabs: Vocabs_DB,
+    // vocabs,
+  })
+);
+export const MyLists_FLATLIST = enhance_allLists(_MyLists_FLATLIST);

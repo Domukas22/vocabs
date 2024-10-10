@@ -55,6 +55,8 @@ export default function SelectMultipleLanguages_MODAL({
 }: SelectLanguagesModal_PROPS) {
   const { t } = useTranslation();
 
+  console.log(trs);
+
   const [search, SET_search] = useState("");
   const { languages } = USE_langs();
 

@@ -26,6 +26,7 @@ import { useToast } from "react-native-toast-notifications";
 import USE_zustand from "@/src/zustand";
 import UpdateMyVocab_MODAL from "@/src/features/2_vocabs/components/Modal/UpdateMyVocab_MODAL/UpdateMyVocab_MODAL";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
+import { Translation_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 
 export default function SingleList_PAGE() {
   const { user } = USE_auth();
@@ -39,7 +40,11 @@ export default function SingleList_PAGE() {
     selected_LIST?.vocabs || []
   );
   const [toUpdate_VOCAB, SET_toUpdateVocab] = useState<
-    Vocab_PROPS | undefined
+    Vocab_MODEL | undefined
+  >();
+
+  const [toUpdate_TRS, SET_toUpdateTRS] = useState<
+    Translation_MODEL[] | undefined
   >();
 
   const { highlighted_ID, highlight: HIGHLIGHT_vocab } = USE_highlighedId();
@@ -70,11 +75,14 @@ export default function SingleList_PAGE() {
   function HANDLE_updateModal({
     clear = false,
     vocab,
+    trs,
   }: {
     clear?: boolean;
-    vocab?: Vocab_PROPS;
+    vocab?: Vocab_MODEL;
+    trs?: Translation_MODEL[];
   }) {
     SET_toUpdateVocab(!clear && vocab ? vocab : undefined);
+    SET_toUpdateTRS(!clear && trs ? trs : undefined);
     TOGGLE_updateVocabModal();
   }
 
@@ -94,7 +102,7 @@ export default function SingleList_PAGE() {
       />
 
       <MyVocabs_FLATLIST
-        all_VOCABS={vocabs}
+        list_id={selected_LIST?.id || ""}
         SHOW_bottomBtn={true}
         TOGGLE_createVocabModal={() => TOGGLE_createVocabModal()}
         PREPARE_vocabDelete={(id: string) => {
@@ -107,12 +115,6 @@ export default function SingleList_PAGE() {
           HANDLE_updateModal,
         }}
       />
-      <MyVocabDisplaySettings_MODAL
-        open={modal_STATES.displaySettings}
-        TOGGLE_open={() => TOGGLE_modal("displaySettings")}
-        vocabs={vocabs}
-      />
-
       <CreateMyVocab_MODAL
         IS_open={IS_createModalOpen}
         initial_LIST={selected_LIST}
@@ -120,12 +122,21 @@ export default function SingleList_PAGE() {
         onSuccess={(new_VOCAB: Vocab_PROPS) => onCreate_SUCCESS(new_VOCAB)}
       />
       <UpdateMyVocab_MODAL
-        {...{ toUpdate_VOCAB }}
+        toUpdate_VOCAB={toUpdate_VOCAB}
+        toUpdate_TRS={toUpdate_TRS}
+        list={selected_LIST}
         IS_open={IS_updateModalOpen}
-        initial_LIST={selected_LIST}
         TOGGLE_modal={TOGGLE_updateVocabModal}
         onSuccess={onUpdate_SUCCESS}
       />
+      {/* <MyVocabDisplaySettings_MODAL
+        open={modal_STATES.displaySettings}
+        TOGGLE_open={() => TOGGLE_modal("displaySettings")}
+        vocabs={vocabs}
+      /> */}
+
+      {/* <
+      
       <ListSettings_MODAL
         list={selected_LIST}
         open={modal_STATES.listSettings}
@@ -134,7 +145,7 @@ export default function SingleList_PAGE() {
         backToIndex={() => router.back()}
         HIGHLIGHT_listName={HIGHLIGHT_listName}
       />
-      {/* // IS_deleteModalOpen, TOGGLE_deleteVocabModal, onDelete_SUCCESS, SET_VOCAB_TO_DELETE  */}
+    */}
       <DeleteVocab_MODAL
         user={user}
         IS_open={IS_deleteModalOpen}

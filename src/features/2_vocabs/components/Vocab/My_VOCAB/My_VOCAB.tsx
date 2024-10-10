@@ -11,31 +11,45 @@ import { DisplaySettings_PROPS, Vocab_PROPS } from "@/src/db/props";
 import Vocab_FRONT from "../Components/Vocab_FRONT/Vocab_FRONT";
 
 import USE_updateVocabDifficulty from "../../../hooks/USE_updateVocabDifficulty";
-import VocabBack_TRS from "../Components/VocabBack_TRS/VocabBack_TRS";
+import { VocabBack_TRS } from "../Components/VocabBack_TRS/VocabBack_TRS";
 import VocabBack_DESC from "../Components/VocabBack_DESC/VocabBack_DESC";
 import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
 import VocabBack_BTNS from "../Components/VocabBack_BTNS/VocabBack_BTNS";
 import VocabBackDifficultyEdit_BTNS from "../Components/VocabBackDifficultyEdit_BTNS/VocabBackDifficultyEdit_BTNS";
+import { Translations_DB } from "@/src/db";
+import { Q } from "@nozbe/watermelondb";
+import { withObservables } from "@nozbe/watermelondb/react";
+import { Translation_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 
 interface VocabProps {
-  vocab: Vocab_PROPS;
+  trs: Translation_MODEL[];
+  vocab: Vocab_MODEL;
   highlighted: boolean;
 
-  HANDLE_updateModal: {
+  HANDLE_updateModal: ({
+    clear,
+    vocab,
+    trs,
+  }: {
     clear?: boolean;
-    vocab?: Vocab_PROPS;
-  };
+    vocab?: Vocab_MODEL;
+    trs?: Translation_MODEL[];
+  }) => void;
 }
 
 // TOGGLE_vocabModal needs to also pass in th etranslations, so we dont have to pass them async and get a delayed manageVocabModal update
-export default function MyVocab({
-  vocab,
-  highlighted,
-
-  HANDLE_updateModal,
-}: VocabProps) {
+function _MyVocab({ trs, vocab, highlighted, HANDLE_updateModal }: VocabProps) {
   const [open, TOGGLE_open] = USE_toggle();
   const [SHOW_difficultyEdits, TOGGLE_difficultyEdits] = USE_toggle(false);
+
+  const handleEdit = () => {
+    HANDLE_updateModal({
+      vocab,
+      trs,
+    });
+  };
+
+  // console.log(trs);
 
   const {
     // this needs to be here and not in the Vocab back, beacsue the color need sot update for the entire vocab
@@ -76,19 +90,16 @@ export default function MyVocab({
     <View style={styles}>
       {!open && (
         <Vocab_FRONT
-          translations={vocab.translations}
-          difficulty={vocab.difficulty}
-          description={vocab.description}
+          trs={trs || []}
+          difficulty={vocab?.difficulty}
+          description={vocab?.description}
           highlighted={highlighted}
           TOGGLE_open={TOGGLE_open}
         />
       )}
       {open && (
         <>
-          <VocabBack_TRS
-            TRs={vocab?.translations}
-            difficulty={vocab?.difficulty}
-          />
+          <VocabBack_TRS trs={trs} difficulty={vocab?.difficulty} />
 
           <VocabBack_DESC desc={vocab.description} />
 
@@ -97,10 +108,11 @@ export default function MyVocab({
               <VocabBack_BTNS
                 {...{
                   vocab,
+                  trs,
                   TOGGLE_vocab: TOGGLE_open,
-                  HANDLE_updateModal,
                   TOGGLE_difficultyEdits,
                 }}
+                editBtn_FN={handleEdit}
               />
             ) : (
               <VocabBackDifficultyEdit_BTNS
@@ -118,6 +130,16 @@ export default function MyVocab({
     </View>
   );
 }
+
+const enhance = withObservables(
+  ["vocab"],
+  ({ vocab }: { vocab: Vocab_MODEL }) => ({
+    trs: Translations_DB.query(Q.where("vocab_id", vocab.id)),
+  })
+);
+
+export const MyVocab = enhance(_MyVocab);
+
 const s = StyleSheet.create({
   vocab: {
     width: "100%",

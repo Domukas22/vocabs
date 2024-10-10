@@ -41,31 +41,39 @@ import USE_updateVocab from "../../../hooks/USE_updateVocab";
 import UpdateMyVocab_FOOTER from "../../Footer/UpdateMyVocab_FOOTER/UpdateMyVocab_FOOTER";
 import PublishPrivateVocabAsAdmin_MODAL from "../PublishPrivateVocabAsAdmin_MODAL/PublishPrivateVocabAsAdmin_MODAL";
 import { useToast } from "react-native-toast-notifications";
+import { withObservables } from "@nozbe/watermelondb/react";
+import { Lists_DB, Translations_DB, Vocabs_DB } from "@/src/db";
+import {
+  List_MODEL,
+  Translation_MODEL,
+  Vocab_MODEL,
+} from "@/src/db/watermelon_MODELS";
+import { Q } from "@nozbe/watermelondb";
 
 interface UpdateMyVocabModal_PROPS {
   IS_open: boolean;
   toUpdate_VOCAB: Vocab_PROPS | undefined;
-  initial_LIST: List_PROPS | undefined;
+  list: List_MODEL | undefined;
+  toUpdate_TRS: Translation_MODEL[] | undefined;
   TOGGLE_modal: () => void;
   onSuccess: (new_VOCAB: Vocab_PROPS) => void;
 }
 
 export type UpdateMyVocabData_PROPS = {
-  list: List_PROPS | undefined;
+  list: List_MODEL | undefined;
   difficulty: 1 | 2 | 3;
   description: string;
   translations: TranslationCreation_PROPS[];
 };
 
-export default function UpdateMyVocab_MODAL(props: UpdateMyVocabModal_PROPS) {
-  const {
-    IS_open,
-    toUpdate_VOCAB,
-    initial_LIST,
-    TOGGLE_modal: TOGGLE_vocabModal,
-    onSuccess = () => {},
-  } = props;
-
+export default function UpdateMyVocab_MODAL({
+  toUpdate_VOCAB,
+  list,
+  toUpdate_TRS,
+  IS_open,
+  TOGGLE_modal: TOGGLE_vocabModal,
+  onSuccess = () => {},
+}: UpdateMyVocabModal_PROPS) {
   const { t } = useTranslation();
   const { user }: { user: User_PROPS } = USE_auth();
   const toast = useToast();
@@ -89,7 +97,7 @@ export default function UpdateMyVocab_MODAL(props: UpdateMyVocabModal_PROPS) {
     const result = await UPDATE_vocab({
       user,
       vocab_id: toUpdate_VOCAB?.id,
-      list_id: list?.id,
+      list,
       difficulty,
       description,
       translations,
@@ -135,12 +143,21 @@ export default function UpdateMyVocab_MODAL(props: UpdateMyVocabModal_PROPS) {
   }, [formValues, toUpdate_VOCAB]);
 
   useEffect(() => {
-    if (IS_open) {
-      setValue("translations", toUpdate_VOCAB?.translations || []);
-      setValue("description", toUpdate_VOCAB?.description || "");
-      setValue("difficulty", toUpdate_VOCAB?.difficulty || 3);
-      setValue("list", initial_LIST || undefined);
-    }
+    const fn = async () => {
+      if (IS_open) {
+        const p = toUpdate_TRS?.map((x) => ({
+          text: x.text,
+          highlights: x.highlights,
+          lang_id: x.lang_id,
+        }));
+
+        setValue("translations", p ? p : []);
+        setValue("description", toUpdate_VOCAB?.description || "");
+        setValue("difficulty", toUpdate_VOCAB?.difficulty || 3);
+        setValue("list", list || undefined);
+      }
+    };
+    fn();
   }, [IS_open]);
 
   return (
@@ -188,17 +205,19 @@ export default function UpdateMyVocab_MODAL(props: UpdateMyVocabModal_PROPS) {
             TOGGLE_langModal={() => TOGGLE_modal("langs")}
           />
 
-          {form_TRS.map((tr, index) => (
-            <TrInput_CONTROLLER
-              {...{ tr, index, control }}
-              diff={getValues("difficulty")}
-              OPEN_highlights={() => {
-                SET_targetTr(tr);
-                TOGGLE_modal("highlights");
-              }}
-              key={tr.lang_id + "InputsBlock"}
-            />
-          ))}
+          {form_TRS &&
+            form_TRS.length > 0 &&
+            form_TRS?.map((tr, index) => (
+              <TrInput_CONTROLLER
+                {...{ tr, index, control }}
+                diff={getValues("difficulty")}
+                OPEN_highlights={() => {
+                  SET_targetTr(tr);
+                  TOGGLE_modal("highlights");
+                }}
+                key={tr.lang_id + "InputsBlock"}
+              />
+            ))}
 
           <Description_CONTROLER {...{ control }} />
           <Difficulty_CONTROLLER {...{ control }} />

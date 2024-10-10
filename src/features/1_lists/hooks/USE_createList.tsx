@@ -3,6 +3,9 @@ import { supabase } from "@/src/lib/supabase";
 import { useToast } from "react-native-toast-notifications";
 import { useTranslation } from "react-i18next";
 import { List_PROPS } from "@/src/db/props";
+import db, { Lists_DB } from "@/src/db";
+import { List_MODEL } from "@/src/db/watermelon_MODELS";
+import { USER_ID } from "@/src/constants/globalVars";
 
 export interface CreateList_PROPS {
   name: string;
@@ -64,35 +67,24 @@ export default function USE_createList() {
 
     SET_creatingList(true);
     try {
-      const { data: newList, error } = await supabase
-        .from("lists")
-        .insert([{ name, user_id }])
-        .select()
-        .single();
+      await db.write(async () => {
+        const newList = await Lists_DB.create((newList: List_MODEL) => {
+          newList.name = name;
+          newList.user_id = user_id;
+          newList.default_LANGS = ["en", "de"];
+        });
 
-      if (error) {
-        SET_createListError(errorMessage);
-        return {
-          success: false,
-          msg: "🔴 Error creating list. Please try again later. 🔴",
-        };
-      }
+        console.log("🟢 List created 🟢");
 
-      console.log("🟢 List created 🟢");
+        if (onSuccess) onSuccess(newList);
+        if (cleanup) cleanup();
 
-      if (onSuccess && newList) onSuccess(newList);
-      if (cleanup) cleanup();
-
-      return { success: true, newList };
+        return { success: true, newList };
+      });
     } catch (error: any) {
-      // Handle network or connection errors differently
-      if (error.message === "Failed to fetch") {
-        SET_createListError(
-          "It looks like there's an issue with your internet connection. Please check your connection and try again."
-        );
-      } else {
-        SET_createListError(errorMessage);
-      }
+      // Handle specific errors
+      console.log("🔴 Error creating list 🔴", error.message);
+      SET_createListError(errorMessage);
 
       return {
         success: false,

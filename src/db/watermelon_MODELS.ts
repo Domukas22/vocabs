@@ -4,6 +4,7 @@ import {
   date,
   field,
   immutableRelation,
+  json,
   reader,
   readonly,
   relation,
@@ -12,60 +13,15 @@ import {
 } from "@nozbe/watermelondb/decorators";
 import { Associations } from "@nozbe/watermelondb/Model";
 
-// ---------------------------------------------------------------
-export class User_MODEL extends Model {
-  static table = "users";
-
-  static associations: Associations = {
-    lists: { type: "has_many", foreignKey: "user_id" },
-    vocabs: { type: "has_many", foreignKey: "user_id" },
-    translations: { type: "has_many", foreignKey: "user_id" },
-  };
-
-  @children("lists") lists!: List_MODEL[];
-  @children("vocabs") vocabs!: Vocab_MODEL[];
-  @children("translations") translations!: Translation_MODEL[];
-
-  @text("email") email!: string;
-  @field("is_premium") is_premium!: boolean;
-  @field("is_admin") is_admin!: boolean;
-  @field("payment_date") payment_date!: string;
-  @field("payment_amount") payment_amount!: number;
-  @text("payment_type") payment_type!: string;
-  @field("app_lang_id") app_lang_id!: "en" | "de";
-
-  @readonly @date("created_at") created_at!: number;
-  @readonly @date("updated_at") updated_at!: number;
-  @readonly @date("deleted_at") deleted_at!: number;
-}
-// ---------------------------------------------------------------
-export class Language_MODEL extends Model {
-  static table = "languages";
-
-  @text("image_url") image_url!: string;
-  @text("lang_in_en") lang_in_en!: string;
-  @text("lang_in_de") lang_in_de!: string;
-  @text("country_in_en") country_in_en!: string;
-  @text("country_in_de") country_in_de!: string;
-  @text("translation_example") translation_example!: string;
-  @field("translation_example_highlights")
-  translation_example_highlights!: number[];
-
-  @readonly @date("created_at") created_at!: number;
-  @readonly @date("updated_at") updated_at!: number;
-  @readonly @date("deleted_at") deleted_at!: number;
-}
-// ---------------------------------------------------------------
 export class List_MODEL extends Model {
   static table = "lists";
   static associations: Associations = {
-    user: { type: "belongs_to", key: "user_id" },
     vocabs: { type: "has_many", foreignKey: "list_id" },
   };
 
   @children("vocabs") vocabs!: Vocab_MODEL[];
 
-  @immutableRelation("users", "user_id") user!: User_MODEL;
+  @text("user_id") user_id!: string | undefined;
   @text("name") name!: string;
   @field("default_LANGS") default_LANGS!: string[]; // Array of language ids
 
@@ -106,15 +62,13 @@ export class Vocab_MODEL extends Model {
   static table = "vocabs";
   static associations: Associations = {
     list: { type: "belongs_to", key: "list_id" },
-    user: { type: "belongs_to", key: "user_id" },
     translations: { type: "has_many", foreignKey: "vocab_id" },
   };
 
   @children("translations") translations!: Translation_MODEL[];
-
   @relation("lists", "list_id") list!: List_MODEL;
-  @relation("users", "user_id") user!: User_MODEL;
 
+  @text("user_id") user_id!: string | undefined;
   @field("difficulty") difficulty!: 1 | 2 | 3 | undefined;
   @text("description") description!: string | undefined;
   @field("image") image!: string | undefined;
@@ -125,20 +79,22 @@ export class Vocab_MODEL extends Model {
   @readonly @date("deleted_at") deleted_at!: number;
 }
 // ---------------------------------------------------------------
+const SANITIZE_highlights = (rawHighlights: number[]) => {
+  return Array.isArray(rawHighlights) ? rawHighlights.map(String) : [];
+};
 export class Translation_MODEL extends Model {
   static table = "translations";
 
   static associations: Associations = {
     vocab: { type: "belongs_to", key: "vocab_id" },
-    user: { type: "belongs_to", key: "user_id" },
   };
 
   @relation("vocabs", "vocab_id") vocab!: Vocab_MODEL;
-  @relation("users", "user_id") user!: User_MODEL;
 
+  @text("user_id") user_id!: string | undefined;
   @field("lang_id") lang_id!: string;
   @text("text") text!: string;
-  @field("highlights") highlights!: number[] | undefined;
+  @json("highlights", SANITIZE_highlights) highlights!: number[] | undefined;
   @field("is_public") is_public!: boolean;
 
   @readonly @date("created_at") created_at!: number;
@@ -146,3 +102,20 @@ export class Translation_MODEL extends Model {
   @readonly @date("deleted_at") deleted_at!: number;
 }
 // ---------------------------------------------------------------
+// ---------------------------------------------------------------
+// ---------------------------------------------------------------
+export class Language_MODEL extends Model {
+  static table = "languages";
+
+  @text("lang_in_en") lang_in_en!: string;
+  @text("lang_in_de") lang_in_de!: string;
+  @text("country_in_en") country_in_en!: string;
+  @text("country_in_de") country_in_de!: string;
+  @text("translation_example") translation_example!: string;
+  @field("translation_example_highlights")
+  translation_example_highlights!: number[];
+
+  @readonly @date("created_at") created_at!: number;
+  @readonly @date("updated_at") updated_at!: number;
+  @readonly @date("deleted_at") deleted_at!: number;
+}

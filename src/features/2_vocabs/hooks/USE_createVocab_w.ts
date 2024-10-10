@@ -1,19 +1,17 @@
-import db, { Translations_DB, Vocabs_DB } from "@/src/db";
 import { useCallback, useMemo, useState } from "react";
+import { Database } from "@nozbe/watermelondb";
 import {
   TranslationCreation_PROPS,
   User_PROPS,
   Vocab_PROPS,
 } from "@/src/db/props";
-import {
-  Vocab_MODEL,
-  Translation_MODEL,
-  List_MODEL,
-} from "@/src/db/watermelon_MODELS";
+// Assuming you have a model for Vocab
+import { Translation_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
+import db, { Vocabs_DB } from "@/src/db";
 
 interface VocabCreation_MODEL {
   user?: User_PROPS | undefined;
-  list?: List_MODEL | undefined;
+  list_id?: string | undefined;
   difficulty?: 1 | 2 | 3;
   description?: string | "";
   translations: TranslationCreation_PROPS[] | undefined;
@@ -21,7 +19,7 @@ interface VocabCreation_MODEL {
   onSuccess: (new_VOCAB: Vocab_PROPS) => void;
 }
 
-export default function USE_createVocab() {
+export default function USE_createVocab(database: Database) {
   const [IS_creatingVocab, SET_isCreatingVocab] = useState(false);
   const [db_ERROR, SET_error] = useState<string | null>(null);
   const RESET_dbError = useCallback(() => SET_error(null), []);
@@ -34,7 +32,7 @@ export default function USE_createVocab() {
 
   const CREATE_vocab = async ({
     user,
-    list,
+    list_id,
     difficulty,
     description,
     translations,
@@ -65,11 +63,11 @@ export default function USE_createVocab() {
         };
       }
 
-      if (!list || !list.id) {
+      if (!list_id) {
         SET_error(errorMessage);
         return {
           success: false,
-          msg: "🔴 List is required for creating private vocabs 🔴",
+          msg: "🔴 List ID is required for creating private vocabs 🔴",
         };
       }
     }
@@ -80,7 +78,7 @@ export default function USE_createVocab() {
       // Handle vocab creation
       const vocabResponse = await HANDLE_vocabCreation({
         user_id: is_public ? null : user?.id,
-        list: is_public ? null : list,
+        list_id: is_public ? null : list_id,
         difficulty: difficulty || 3,
         description: description || "",
         is_public,
@@ -88,11 +86,11 @@ export default function USE_createVocab() {
 
       if (!vocabResponse.success) return vocabResponse;
 
-      const vocab = vocabResponse.data;
+      const vocabData = vocabResponse.data;
 
-      console.log("HERE:🔴 ", translations);
+      // Handle translation insertion if provided
       const finalVocab = await HANDLE_translationInsertion({
-        vocab,
+        vocabData,
         translations,
         user_id: is_public ? null : user?.id,
         is_public,
@@ -101,13 +99,7 @@ export default function USE_createVocab() {
       if (onSuccess) onSuccess(finalVocab);
       return { success: true, data: finalVocab };
     } catch (error: any) {
-      if (error.message === "Failed to fetch") {
-        SET_error(
-          "It looks like there's an issue with your internet connection. Please check your connection and try again."
-        );
-      } else {
-        SET_error(errorMessage);
-      }
+      SET_error(errorMessage);
       return {
         success: false,
         msg: `🔴 Unexpected error occurred during vocab creation 🔴: ${error.message}`,
@@ -122,64 +114,92 @@ export default function USE_createVocab() {
 
 // Helper function to create vocab
 async function HANDLE_vocabCreation(vocab_DATA: {
-  user_id: string;
-  list: string;
+  user_id: string | null | undefined;
+  list_id: string | null | undefined;
   difficulty?: number;
   description?: string;
   is_public: boolean;
-}): Promise<{ success: boolean; data?: any; msg?: string }> {
+}): Promise<{ success: boolean; data?: Vocab_PROPS; msg?: string }> {
   try {
-    const newVocab = await db.write(async () => {
-      return await Vocabs_DB.create((vocab: Vocab_MODEL) => {
-        vocab.user_id = vocab_DATA.user_id;
-        vocab.list.set(vocab_DATA.list);
-        vocab.difficulty = vocab_DATA.difficulty;
-        vocab.description = vocab_DATA.description;
-        vocab.is_public = vocab_DATA.is_public;
+    await db.write(async () => {
+      const vocab = await Vocabs_DB.create((v) => {
+        v.user_id = vocab_DATA.user_id; // Set user_id
+        v.list_id = vocab_DATA.list_id; // Set list_id
+        v.difficulty = vocab_DATA?.difficulty || 3; // Set difficulty
+        v.description = vocab_DATA.description; // Set description
+        v.is_public = vocab_DATA.is_public; // Set is_public
       });
-    });
 
-    console.log("🟢 Vocab created successfully 🟢");
-    return { success: true, data: newVocab };
+      return { success: true, data: vocab };
+    });
   } catch (error: any) {
-    console.log("🔴 Error inserting vocab 🔴", error.message);
-    return { success: false, msg: "🔴 Error inserting vocab 🔴" };
+    console.log("🔴 Error creating vocab 🔴: ", error.message);
+    return {
+      success: false,
+      msg: `🔴 Error creating vocab: ${error.message} 🔴`,
+    };
   }
 }
 
 // Helper function to insert translations
 async function HANDLE_translationInsertion({
-  vocab,
+  vocabData,
   translations,
   user_id,
   is_public,
 }: {
-  vocab: Vocab_MODEL;
+  vocabData: Vocab_PROPS;
   translations: TranslationCreation_PROPS[] | undefined;
   user_id: string | null | undefined;
   is_public: boolean;
 }): Promise<Vocab_PROPS> {
   if (translations && translations.length > 0) {
-    console.log("HERE:🔴🔴🔴 ", translations);
-    const translationPromises = translations?.map((translation) => {
-      return db.write(async () => {
-        return await Translations_DB.create((trans) => {
-          trans.vocab.set(vocab);
-          trans.user_id = user_id;
-          trans.lang_id = translation.lang_id;
-          trans.text = translation.text;
-          trans.highlights = translation.highlights;
-          trans.is_public = is_public;
-        });
-      });
-    });
+    const { success: transSuccess, data: insertedTranslations } =
+      await db_INSERT_translations(
+        vocabData.id,
+        user_id,
+        translations,
+        is_public
+      );
 
-    await Promise.all(translationPromises);
+    if (!transSuccess) throw new Error("🔴 Error inserting translations 🔴");
 
     console.log("🟢 Translations created successfully 🟢");
-    return { ...vocab, translations };
+    return { ...vocabData, translations: insertedTranslations };
   }
 
   // Return vocab without translations if none provided
-  return { ...vocab, translations: [] };
+  return { ...vocabData, translations: [] };
+}
+
+// Insert translations into the database
+async function db_INSERT_translations(
+  vocab_id: string,
+  user_id: string | null | undefined,
+  translations: TranslationCreation_PROPS[],
+  is_public: boolean
+): Promise<{ success: boolean; data?: any }> {
+  try {
+    await db.write(async () => {
+      const translationPromises = translations.map((translation) => {
+        return database.collections
+          .get<Translation_MODEL>("translations")
+          .create((t) => {
+            t.vocab_id = vocab_id;
+            t.user_id = user_id;
+            t.lang_id = translation.lang_id;
+            t.text = translation.text;
+            t.highlights = translation.highlights;
+            t.is_public = is_public;
+          });
+      });
+
+      await Promise.all(translationPromises);
+    });
+
+    return { success: true, data: translations };
+  } catch (error: any) {
+    console.log("🔴 Error inserting translations 🔴", error.message);
+    return { success: false, data: error };
+  }
 }

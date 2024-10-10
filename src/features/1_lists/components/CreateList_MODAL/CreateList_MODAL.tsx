@@ -73,7 +73,6 @@ export default function CreateList_MODAL({
         }, 0);
       },
     });
-    await CREATE_list_w({ user_id, name });
 
     if (!newList.success) {
       console.log(newList.msg); // Log internal message for debugging.
@@ -147,23 +146,4 @@ export default function CreateList_MODAL({
       {createList_ERROR && <Error_TEXT text={createList_ERROR} />}
     </Small_MODAL>
   );
-}
-
-async function CREATE_list_w({
-  name,
-  user_id,
-}: {
-  name: string | undefined;
-  user_id: string | undefined;
-}) {
-  if (!name || !user_id) return;
-  await db.write(async () => {
-    // const user = await Users_DB.query(Q.where("name", "Domas"));
-    const user = await Users_DB.find(USER_ID);
-    if (!user) return;
-    await Lists_DB.create((newList: List_MODEL) => {
-      newList.name = name;
-      newList.user.set(user);
-    });
-  });
 }

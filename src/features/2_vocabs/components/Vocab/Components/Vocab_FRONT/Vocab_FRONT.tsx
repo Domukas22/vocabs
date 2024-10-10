@@ -20,7 +20,7 @@ import { useMemo } from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 
 interface VocabFront_PROPS {
-  translations: Translation_PROPS[] | undefined;
+  trs: Translation_PROPS[] | undefined;
   difficulty: 0 | 1 | 2 | 3 | undefined;
   description: string | undefined;
 
@@ -29,7 +29,7 @@ interface VocabFront_PROPS {
 }
 
 export default function Vocab_FRONT({
-  translations,
+  trs,
   difficulty,
   description,
 
@@ -41,22 +41,16 @@ export default function Vocab_FRONT({
     z_display_SETTINGS;
 
   const front_TR = useMemo(() => {
-    return (
-      translations?.find(
-        (tr) =>
-          tr.lang_id === frontTrLang_ID &&
-          tr.text !== "" &&
-          tr.text !== undefined &&
-          tr.text !== null
-      ) ||
-      // ------- if select lang id not found, just select the first transaltion
-
-      // translations?.find(
-      //   (tr) => tr.text !== "" && tr.text !== undefined && tr.text !== null
-      // ) ||
-      null
-    );
-  }, [translations, frontTrLang_ID]);
+    return trs && trs.length > 0
+      ? trs?.find(
+          (tr) =>
+            tr.lang_id === frontTrLang_ID &&
+            tr.text !== "" &&
+            tr.text !== undefined &&
+            tr.text !== null
+        )
+      : null;
+  }, [trs, frontTrLang_ID]);
 
   const { languages } = USE_langs();
   const appLang = useMemo(() => i18next.language, [i18next.language]);
@@ -95,7 +89,9 @@ export default function Vocab_FRONT({
         {(SHOW_flags || SHOW_difficulty) && (
           <View style={s.iconWrap}>
             {SHOW_flags &&
-              translations?.map((tr) => (
+              trs &&
+              trs.length > 0 &&
+              trs?.map((tr) => (
                 <ICON_flag key={"FrontFlag" + tr.lang_id} lang={tr.lang_id} />
               ))}
             {SHOW_difficulty && !!difficulty && (

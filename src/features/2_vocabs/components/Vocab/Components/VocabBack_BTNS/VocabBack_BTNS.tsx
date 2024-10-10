@@ -4,20 +4,22 @@
 import Btn from "@/src/components/Btn/Btn";
 import { ICON_difficultyDot } from "@/src/components/icons/icons";
 import { Vocab_PROPS } from "@/src/db/props";
+import { Translation_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 
 //
 export default function VocabBack_BTNS({
   vocab,
+
   TOGGLE_vocab,
-  HANDLE_updateModal,
+  editBtn_FN,
   TOGGLE_difficultyEdits,
 }: {
-  vocab: Vocab_PROPS;
+  vocab: Vocab_MODEL;
   TOGGLE_vocab: () => void;
   TOGGLE_difficultyEdits: () => void;
-  HANDLE_updateModal: ({ vocab }: { vocab: Vocab_PROPS }) => void;
+  editBtn_FN: () => void;
 }) {
   const { t } = useTranslation();
   return (
@@ -25,9 +27,7 @@ export default function VocabBack_BTNS({
       <Btn
         type="simple"
         style={{ flex: 1 }}
-        onPress={() => {
-          HANDLE_updateModal({ vocab });
-        }}
+        onPress={editBtn_FN}
         text={t("btn.editVocab")}
         text_STYLES={{ textAlign: "center" }}
       />

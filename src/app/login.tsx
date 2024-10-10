@@ -47,8 +47,6 @@ export default function Login_PAGE() {
 
     SET_loading(false);
 
-    console.log("YAY");
-
     if (error) {
       SET_internalError(error.message);
     } else {

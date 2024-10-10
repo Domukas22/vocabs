@@ -8,29 +8,32 @@ import { ICON_flag } from "@/src/components/icons/icons";
 import Highlighted_TEXT from "@/src/components/Highlighted_TEXT/Highlighted_TEXT";
 import { StyleSheet } from "react-native";
 import { MyColors } from "@/src/constants/MyColors";
+import { Translation_MODEL } from "@/src/db/watermelon_MODELS";
+import { Translations_DB, Vocabs_DB } from "@/src/db";
+import { withObservables } from "@nozbe/watermelondb/react";
+import { Q } from "@nozbe/watermelondb";
 
-export default function VocabBack_TRS({
-  TRs,
+export function VocabBack_TRS({
+  trs,
   difficulty = 0,
 }: {
-  TRs: Translation_PROPS[] | undefined;
+  trs: Translation_MODEL[];
   difficulty: 0 | 1 | 2 | 3 | undefined;
 }) {
-  return TRs
-    ? TRs.map((tr) => (
+  return trs && trs.length > 0
+    ? trs.map((tr) => (
         <View key={tr.text + "vocabBackTrText" + tr.id} style={s.bottomTr}>
           <View style={s.bottomVocabFlag_WRAP}>
             <ICON_flag big={true} lang={tr.lang_id} />
           </View>
-          {tr?.highlights && (
-            <View style={s.trText_WRAP}>
-              <Highlighted_TEXT
-                text={tr.text}
-                highlights={tr.highlights}
-                diff={difficulty}
-              />
-            </View>
-          )}
+
+          <View style={s.trText_WRAP}>
+            <Highlighted_TEXT
+              text={tr.text}
+              highlights={tr.highlights}
+              diff={difficulty}
+            />
+          </View>
         </View>
       ))
     : null;

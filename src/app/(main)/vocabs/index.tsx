@@ -30,7 +30,7 @@ import { useToast } from "react-native-toast-notifications";
 import DeleteList_MODAL from "@/src/features/1_lists/components/DeleteList_MODAL";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 import { FlatList } from "react-native";
-import { Lists_DB, Users_DB } from "@/src/db";
+import { Lists_DB } from "@/src/db";
 import { Q } from "@nozbe/watermelondb";
 import { USER_ID } from "@/src/constants/globalVars";
 
@@ -72,16 +72,6 @@ export default function MyLists_PAGE() {
     TOGGLE_modal("delete");
   }
 
-  useEffect(() => {
-    const fetch = async () => {
-      const res = await Lists_DB.query(Q.where("user_id", USER_ID)).fetch();
-      const us = await Users_DB.query();
-      // console.log(us[0].id);
-      console.log(res[0].name);
-    };
-    fetch();
-  }, []);
-
   return (
     <Page_WRAP>
       <MyLists_HEADER
@@ -94,9 +84,10 @@ export default function MyLists_PAGE() {
       {z_lists.length > 5 && (
         <MyLists_SUBNAV {...{ search, SET_search: SEARCH_lists }} />
       )}
-      <MyVocabLists />
+
       {!ARE_listsSearching && searched_LISTS.length > 0 ? (
         <MyLists_FLATLIST
+          user_id={user?.id || ""}
           lists={searched_LISTS}
           SELECT_list={(list: List_PROPS) => {
             SET_selectedList(list);
@@ -181,34 +172,3 @@ export default function MyLists_PAGE() {
 }
 
 ///-----------------------------------------
-
-//--------------------------------
-//
-import { withObservables } from "@nozbe/watermelondb/react";
-import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
-import { List_MODEL } from "@/src/db/watermelon_MODELS";
-
-//
-
-function _MyVocabLists({ lists }: { lists: List_MODEL[] }) {
-  console.log(lists?.length);
-
-  return (
-    <>
-      {lists?.map((l) => (
-        <Styled_TEXT key={l?.id}>{l.name}</Styled_TEXT>
-      ))}
-    </>
-  );
-}
-
-const enhance = withObservables(
-  ["lists"],
-  ({ lists }: { lists: List_MODEL[] }) => ({
-    lists: Lists_DB.query(Q.where("user_id", USER_ID)),
-    // vocabs: Vocabs_DB,
-    // vocabs,
-  })
-);
-
-const MyVocabLists = enhance(_MyVocabLists);

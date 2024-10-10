@@ -32,7 +32,8 @@ export default function Highlighted_TEXT({
   return (
     <Styled_TEXT>
       {text?.split("").map((letter, index) => {
-        const isHighlighted = highlights?.includes(index) && letter !== " ";
+        const isHighlighted =
+          highlights?.map(Number)?.includes(index) && letter !== " ";
         return (
           <Styled_TEXT
             key={index}

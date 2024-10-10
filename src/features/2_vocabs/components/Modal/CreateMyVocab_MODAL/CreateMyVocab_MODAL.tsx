@@ -37,19 +37,19 @@ import Description_CONTROLER from "../../Inputs/InputControllers/Description_CON
 import Difficulty_CONTROLLER from "../../Inputs/InputControllers/Difficulty_CONTROLLER";
 import List_CONTROLLER from "../../Inputs/InputControllers/List_CONTROLLER";
 import CreateMyVocab_FOOTER from "../../Footer/CreateMyVocab_FOOTER/CreateMyVocab_FOOTER";
+import { List_MODEL } from "@/src/db/watermelon_MODELS";
 
 interface CreateMyVocabModal_PROPS {
   IS_open: boolean;
-  initial_LIST: List_PROPS | undefined;
+  initial_LIST: List_MODEL | undefined;
   TOGGLE_modal: () => void;
   onSuccess: (new_VOCAB: Vocab_PROPS) => void;
 }
 
 export type CreateMyVocabData_PROPS = {
-  list: List_PROPS | undefined;
+  list: List_MODEL | undefined;
   difficulty: 1 | 2 | 3;
   description: string;
-
   translations: TranslationCreation_PROPS[];
 };
 
@@ -81,7 +81,7 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
     const { list, description, difficulty, translations } = data;
     const result = await CREATE_vocab({
       user,
-      list_id: list?.id,
+      list,
       difficulty,
       description,
 
@@ -110,7 +110,9 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
     watch,
   } = useForm<CreateMyVocabData_PROPS>({
     defaultValues: {
-      translations: GET_defaultTranslations(initial_LIST?.default_LANGS) || [],
+      translations:
+        GET_defaultTranslations(initial_LIST?.default_LANGS || ["en", "de"]) ||
+        [],
       description: "",
       list: initial_LIST,
       difficulty: 3,

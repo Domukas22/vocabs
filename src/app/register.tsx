@@ -34,7 +34,6 @@ import { useTranslation } from "react-i18next";
 import Error_TEXT from "../components/Error_TEXT/Error_TEXT";
 import LoginRegister_SWITCH from "../features/0_authentication/components/LoginRegister_SWTICH";
 import db, { Users_DB } from "../db";
-import { User_MODEL } from "../db/watermelon_MODELS";
 
 type RegisterData_PROPS = {
   email: string;
@@ -57,7 +56,7 @@ export default function Register_PAGE() {
       password,
     });
 
-    await createUser(email);
+    // await createUser(email);
 
     SET_loading(false);
 
@@ -193,16 +192,16 @@ export default function Register_PAGE() {
   );
 }
 
-async function createUser(email: string) {
-  await db.write(async () => {
-    await Users_DB.create((user: User_MODEL) => {
-      user.email = email;
-      user.is_premium = false;
-      user.is_admin = false;
-      user.payment_date = "";
-      user.payment_amount = 0;
-      user.payment_type = "0";
-      user.app_lang_id = "en";
-    });
-  });
-}
+// async function createUser(email: string) {
+//   await db.write(async () => {
+//     await Users_DB.create((user: User_MODEL) => {
+//       user.email = email;
+//       user.is_premium = false;
+//       user.is_admin = false;
+//       user.payment_date = "";
+//       user.payment_amount = 0;
+//       user.payment_type = "0";
+//       user.app_lang_id = "en";
+//     });
+//   });
+// }

@@ -6,6 +6,7 @@ import { useToast } from "react-native-toast-notifications";
 import USE_deleteVocab from "../../../hooks/USE_deleteVocab";
 import Error_TEXT from "@/src/components/Error_TEXT/Error_TEXT";
 import { User_PROPS } from "@/src/db/props";
+import db, { Vocabs_DB } from "@/src/db";
 
 interface DeleteVocabModal_PROPS {
   user?: User_PROPS;
@@ -29,6 +30,13 @@ export default function DeleteVocab_MODAL({
   const { t } = useTranslation();
   const { DELETE_vocab, IS_deletingVocab, error, RESET_error } =
     USE_deleteVocab();
+
+  const del = async () => {
+    await db.write(async () => {
+      const vocab = await Vocabs_DB.find(vocab_id);
+      await vocab.markAsDeleted();
+    });
+  };
 
   const handleDelete = async () => {
     const result = await DELETE_vocab({
@@ -72,7 +80,7 @@ export default function DeleteVocab_MODAL({
           iconRight={
             IS_deletingVocab ? <ActivityIndicator color="black" /> : null
           }
-          onPress={handleDelete}
+          onPress={del}
           type="action"
           style={{ flex: 1 }}
         />
