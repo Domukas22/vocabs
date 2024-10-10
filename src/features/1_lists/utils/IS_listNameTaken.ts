@@ -1,7 +1,7 @@
 //
 //
 
-import { List_MODEL } from "@/src/db/models";
+import { List_MODEL } from "@/src/db/props";
 
 export default function IS_listNameTaken({
   lists = [],

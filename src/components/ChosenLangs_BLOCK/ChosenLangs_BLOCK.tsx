@@ -6,7 +6,7 @@ import Block from "@/src/components/Block/Block";
 import Btn from "@/src/components/Btn/Btn";
 import { ICON_flag, ICON_X } from "@/src/components/icons/icons";
 import Label from "@/src/components/Label/Label";
-import { Language_MODEL, TranslationCreation_PROPS } from "@/src/db/models";
+import { Language_MODEL, TranslationCreation_PROPS } from "@/src/db/props";
 import { View } from "react-native";
 
 import { useTranslation } from "react-i18next";

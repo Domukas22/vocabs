@@ -7,7 +7,7 @@ import { useRouter } from "expo-router";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import { useRef, useState } from "react";
 
-import { List_MODEL } from "@/src/db/models";
+import { List_MODEL } from "@/src/db/props";
 import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
 
 import {

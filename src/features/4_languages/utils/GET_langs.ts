@@ -2,7 +2,7 @@
 //
 //
 
-import { Language_MODEL } from "@/src/db/models";
+import { Language_MODEL } from "@/src/db/props";
 
 export default function GET_langs({
   languages,

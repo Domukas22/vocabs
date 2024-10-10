@@ -21,7 +21,7 @@ import {
   DisplaySettings_PROPS,
   PublicVocabDisplaySettings_PROPS,
   Vocab_MODEL,
-} from "@/src/db/models";
+} from "@/src/db/props";
 import React, { useEffect, useMemo, useState } from "react";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 import ListSettings_MODAL from "@/src/features/1_lists/components/ListSettings_MODAL/ListSettings_MODAL";

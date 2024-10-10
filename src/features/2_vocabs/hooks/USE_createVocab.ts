@@ -4,7 +4,7 @@ import {
   TranslationCreation_PROPS,
   User_MODEL,
   Vocab_MODEL,
-} from "@/src/db/models";
+} from "@/src/db/props";
 
 interface VocabCreation_MODEL {
   user?: User_MODEL | undefined;

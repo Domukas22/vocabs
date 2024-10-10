@@ -2,7 +2,7 @@
 //
 //
 
-import { TranslationCreation_PROPS } from "@/src/db/models";
+import { TranslationCreation_PROPS } from "@/src/db/props";
 
 export interface HANDLE_langRemoval_PROPS {
   lang_id: string;

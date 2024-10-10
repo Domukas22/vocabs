@@ -10,7 +10,7 @@ import {
   ICON_flag,
 } from "@/src/components/icons/icons";
 import Label from "@/src/components/Label/Label";
-import { Language_MODEL, DisplaySettings_PROPS } from "@/src/db/models";
+import { Language_MODEL, DisplaySettings_PROPS } from "@/src/db/props";
 import USE_zustand from "@/src/zustand";
 import i18next, { t } from "i18next";
 import { useCallback, useMemo } from "react";

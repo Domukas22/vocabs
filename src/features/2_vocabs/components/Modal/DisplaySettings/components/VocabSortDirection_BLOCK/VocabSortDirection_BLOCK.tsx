@@ -5,7 +5,7 @@
 import Block from "@/src/components/Block/Block";
 import Btn from "@/src/components/Btn/Btn";
 import Label from "@/src/components/Label/Label";
-import { DisplaySettings_PROPS } from "@/src/db/models";
+import { DisplaySettings_PROPS } from "@/src/db/props";
 import USE_zustand from "@/src/zustand";
 import React from "react";
 import { useTranslation } from "react-i18next";

@@ -7,7 +7,7 @@ import Btn from "@/src/components/Btn/Btn";
 import { ActivityIndicator } from "react-native";
 import Error_TEXT from "@/src/components/Error_TEXT/Error_TEXT";
 import USE_deleteList from "../hooks/USE_deleteList";
-import { List_MODEL, User_MODEL } from "@/src/db/models";
+import { List_MODEL, User_MODEL } from "@/src/db/props";
 import USE_zustand from "@/src/zustand";
 import { useToast } from "react-native-toast-notifications";
 

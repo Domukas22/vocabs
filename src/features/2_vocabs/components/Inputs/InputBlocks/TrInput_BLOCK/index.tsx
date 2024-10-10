@@ -2,7 +2,7 @@
 //
 //
 
-import { Language_MODEL, TranslationCreation_PROPS } from "@/src/db/models";
+import { Language_MODEL, TranslationCreation_PROPS } from "@/src/db/props";
 import Block from "@/src/components/Block/Block";
 import { ICON_flag } from "@/src/components/icons/icons";
 import Btn from "@/src/components/Btn/Btn";

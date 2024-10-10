@@ -22,7 +22,7 @@ import {
   SafeAreaView,
   View,
 } from "react-native";
-import { List_MODEL } from "@/src/db/models";
+import { List_MODEL } from "@/src/db/props";
 
 import { useTranslation } from "react-i18next";
 import CreateList_MODAL from "@/src/features/1_lists/components/CreateList_MODAL/CreateList_MODAL";

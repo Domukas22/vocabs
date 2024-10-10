@@ -5,10 +5,10 @@
 import { MyColors } from "@/src/constants/MyColors";
 import { StyleSheet, View } from "react-native";
 
-import { Vocab_MODEL } from "@/src/db/models";
+import { Vocab_MODEL } from "@/src/db/props";
 
 import { USE_toggle } from "@/src/hooks/USE_toggle";
-import { DisplaySettings_PROPS } from "@/src/db/models";
+import { DisplaySettings_PROPS } from "@/src/db/props";
 
 import Vocab_FRONT from "../Components/Vocab_FRONT/Vocab_FRONT";
 import VocabBack_TRS from "../Components/VocabBack_TRS/VocabBack_TRS";

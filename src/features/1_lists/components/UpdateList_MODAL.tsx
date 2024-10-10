@@ -10,7 +10,7 @@ import Small_MODAL from "@/src/components/Modals/Small_MODAL/Small_MODAL";
 import { useTranslation } from "react-i18next";
 import USE_updateList from "../hooks/USE_updateList";
 import Error_TEXT from "@/src/components/Error_TEXT/Error_TEXT";
-import { List_MODEL, User_MODEL } from "@/src/db/models";
+import { List_MODEL, User_MODEL } from "@/src/db/props";
 import { Controller, useForm } from "react-hook-form";
 
 interface UpdateListModal_PROPS {

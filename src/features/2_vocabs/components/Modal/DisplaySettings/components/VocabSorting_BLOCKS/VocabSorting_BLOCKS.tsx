@@ -10,7 +10,7 @@ import {
   ICON_shuffle,
 } from "@/src/components/icons/icons";
 import Label from "@/src/components/Label/Label";
-import { Language_MODEL, DisplaySettings_PROPS } from "@/src/db/models";
+import { Language_MODEL, DisplaySettings_PROPS } from "@/src/db/props";
 import { t } from "i18next";
 import VocabFrontLang_BLOCK from "../VocabFrontLang_BLOCK/VocabFrontLang_BLOCK";
 import USE_zustand from "@/src/zustand";

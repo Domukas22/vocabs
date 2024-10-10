@@ -2,7 +2,7 @@
 //
 //
 
-import { TranslationCreation_PROPS } from "@/src/db/models";
+import { TranslationCreation_PROPS } from "@/src/db/props";
 
 export default function HANLDE_selectedHighlights({
   new_HIGHLIGHTS,

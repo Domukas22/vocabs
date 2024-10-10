@@ -9,7 +9,7 @@ import {
   DisplaySettings_PROPS,
   PublicVocabDisplaySettings_PROPS,
   Vocab_MODEL,
-} from "@/src/db/models";
+} from "@/src/db/props";
 import { useTranslation } from "react-i18next";
 import Public_VOCAB from "../../Vocab/Public_VOCAB/Public_VOCAB";
 import React from "react";

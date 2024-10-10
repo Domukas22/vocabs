@@ -30,7 +30,7 @@ import {
 import languages from "@/src/constants/languages";
 
 import Block from "@/src/components/Block/Block";
-import { Language_MODEL } from "@/src/db/models";
+import { Language_MODEL } from "@/src/db/props";
 import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";

@@ -5,7 +5,7 @@ import { ActivityIndicator } from "react-native";
 import { useToast } from "react-native-toast-notifications";
 import USE_deleteVocab from "../../../hooks/USE_deleteVocab";
 import Error_TEXT from "@/src/components/Error_TEXT/Error_TEXT";
-import { User_MODEL } from "@/src/db/models";
+import { User_MODEL } from "@/src/db/props";
 
 interface DeleteVocabModal_PROPS {
   user?: User_MODEL;

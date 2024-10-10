@@ -6,7 +6,7 @@ import { MAX_TRANSLATION_LENGTH } from "@/src/constants/globalVars";
 import TrInput_BLOCK from "../../InputBlocks/TrInput_BLOCK";
 import { Control, Controller } from "react-hook-form";
 import { CreateMyVocabData_PROPS } from "../../../Modal/CreateMyVocab_MODAL/CreateMyVocab_MODAL";
-import { TranslationCreation_PROPS } from "@/src/db/models";
+import { TranslationCreation_PROPS } from "@/src/db/props";
 import { CreatePublicVocabData_PROPS } from "../../../Modal/CreatePublicVocab_MODAL/CreatePublicVocab_MODAL";
 
 interface TrInputController_PROPS {

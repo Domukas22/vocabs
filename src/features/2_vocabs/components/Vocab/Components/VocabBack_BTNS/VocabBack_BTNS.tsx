@@ -3,7 +3,7 @@
 
 import Btn from "@/src/components/Btn/Btn";
 import { ICON_difficultyDot } from "@/src/components/icons/icons";
-import { Vocab_MODEL } from "@/src/db/models";
+import { Vocab_MODEL } from "@/src/db/props";
 import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 

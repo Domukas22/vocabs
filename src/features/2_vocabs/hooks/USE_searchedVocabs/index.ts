@@ -3,7 +3,7 @@
 //
 
 import React, { useEffect, useState, useCallback } from "react";
-import { Vocab_MODEL } from "@/src/db/models";
+import { Vocab_MODEL } from "@/src/db/props";
 
 export default function USE_searchedVocabs({
   vocabs,

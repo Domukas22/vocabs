@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo } from "react";
 import { supabase } from "@/src/lib/supabase";
 import { useToast } from "react-native-toast-notifications";
 import { useTranslation } from "react-i18next";
-import { List_MODEL } from "@/src/db/models";
+import { List_MODEL } from "@/src/db/props";
 
 export interface CreateList_PROPS {
   name: string;

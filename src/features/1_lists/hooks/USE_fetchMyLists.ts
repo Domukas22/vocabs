@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo } from "react";
 import { supabase } from "@/src/lib/supabase";
 import { useToast } from "react-native-toast-notifications";
 import { useTranslation } from "react-i18next";
-import { List_MODEL } from "@/src/db/models"; // Assuming List_MODEL is used in the app
+import { List_MODEL } from "@/src/db/props"; // Assuming List_MODEL is used in the app
 
 export interface PrivateListFilter_PROPS {
   user_id: string;

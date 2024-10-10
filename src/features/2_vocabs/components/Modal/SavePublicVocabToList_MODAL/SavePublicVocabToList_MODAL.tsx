@@ -5,7 +5,7 @@
 import SelectMyList_MODAL from "@/src/features/1_lists/components/SelectMyList_MODAL/SelectMyList_MODAL";
 import USE_createVocab from "../../../hooks/USE_createVocab";
 import { useState } from "react";
-import { List_MODEL, User_MODEL, Vocab_MODEL } from "@/src/db/models";
+import { List_MODEL, User_MODEL, Vocab_MODEL } from "@/src/db/props";
 import USE_zustand from "@/src/zustand";
 import { CreateMyVocabData_PROPS } from "../CreateMyVocab_MODAL/CreateMyVocab_MODAL";
 

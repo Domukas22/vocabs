@@ -7,7 +7,7 @@ import { StyleSheet, View } from "react-native";
 import React, { useMemo } from "react";
 
 import { USE_toggle } from "@/src/hooks/USE_toggle";
-import { DisplaySettings_PROPS, Vocab_MODEL } from "@/src/db/models";
+import { DisplaySettings_PROPS, Vocab_MODEL } from "@/src/db/props";
 import Vocab_FRONT from "../Components/Vocab_FRONT/Vocab_FRONT";
 
 import USE_updateVocabDifficulty from "../../../hooks/USE_updateVocabDifficulty";

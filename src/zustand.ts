@@ -4,7 +4,7 @@
 
 // zustand_store.js
 import { create } from "zustand";
-import { List_MODEL, Vocab_MODEL, Translation_MODEL } from "./db/models";
+import { List_MODEL, Vocab_MODEL, Translation_MODEL } from "./db/props";
 
 interface MyVocabDisplaySettings_PROPS {
   SHOW_description: boolean;

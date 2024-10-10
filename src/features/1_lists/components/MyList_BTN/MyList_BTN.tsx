@@ -8,7 +8,7 @@ import { Styled_TEXT } from "../../../../components/Styled_TEXT/Styled_TEXT";
 
 import { MyColors } from "@/src/constants/MyColors";
 import { ICON_difficultyDot } from "../../../../components/icons/icons";
-import { List_MODEL } from "@/src/db/models";
+import { List_MODEL } from "@/src/db/props";
 import { useTranslation } from "react-i18next";
 
 import { useMemo } from "react";

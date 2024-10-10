@@ -2,7 +2,7 @@
 //
 //
 
-import { Vocab_MODEL } from "@/src/db/models";
+import { Vocab_MODEL } from "@/src/db/props";
 
 export default function GET_uniqueTagsInAList(vocabs: Vocab_MODEL[]) {
   const tags = vocabs.reduce((acc, vocab) => {

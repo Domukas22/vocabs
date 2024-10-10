@@ -3,7 +3,7 @@
 //
 import { useState, useCallback, useMemo } from "react";
 import { supabase } from "@/src/lib/supabase";
-import { List_MODEL } from "@/src/db/models";
+import { List_MODEL } from "@/src/db/props";
 
 export interface UpdateList_PROPS {
   name: string;

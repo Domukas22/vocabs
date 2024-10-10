@@ -1,7 +1,7 @@
 //
 //
 //
-import { List_MODEL, User_MODEL } from "@/src/db/models";
+import { List_MODEL, User_MODEL } from "@/src/db/props";
 import { supabase } from "@/src/lib/supabase";
 import { useCallback, useMemo, useState } from "react";
 

@@ -2,7 +2,7 @@
 //
 //
 
-import { Translation_MODEL } from "@/src/db/models";
+import { Translation_MODEL } from "@/src/db/props";
 import { View } from "react-native";
 import { ICON_flag } from "@/src/components/icons/icons";
 import Highlighted_TEXT from "@/src/components/Highlighted_TEXT/Highlighted_TEXT";

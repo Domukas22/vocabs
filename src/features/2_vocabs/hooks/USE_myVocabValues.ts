@@ -5,7 +5,7 @@ import {
   Language_MODEL,
   List_MODEL,
   TranslationCreation_PROPS,
-} from "@/src/db/models";
+} from "@/src/db/props";
 import { useState } from "react";
 
 export interface PrivateVocabState_PROPS {

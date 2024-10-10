@@ -13,7 +13,7 @@ import {
   Vocab_MODEL,
   Language_MODEL,
   PublicVocabDisplaySettings_PROPS,
-} from "@/src/db/models";
+} from "@/src/db/props";
 import USE_zustand from "@/src/zustand";
 import i18next from "i18next";
 import { useMemo } from "react";

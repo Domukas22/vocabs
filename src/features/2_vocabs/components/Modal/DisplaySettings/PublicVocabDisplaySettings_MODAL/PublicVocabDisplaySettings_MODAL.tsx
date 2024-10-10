@@ -8,7 +8,7 @@ import {
   Language_MODEL,
   DisplaySettings_PROPS,
   PublicVocabDisplaySettings_PROPS,
-} from "@/src/db/models";
+} from "@/src/db/props";
 import DisplaySettings_SUBNAV from "../components/DisplaySettings_SUBNAV/DisplaySettings_SUBNAV";
 
 import MyVocabPreview_BLOCKS from "../components/VocabPreview_BLOCK/private/MyVocabPreview_BLOCKS";

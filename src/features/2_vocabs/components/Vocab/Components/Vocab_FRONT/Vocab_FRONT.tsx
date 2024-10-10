@@ -13,7 +13,7 @@ import {
   Translation_MODEL,
   TranslationCreation_PROPS,
   Language_MODEL,
-} from "@/src/db/models";
+} from "@/src/db/props";
 import USE_zustand from "@/src/zustand";
 import i18next, { t } from "i18next";
 import { useMemo } from "react";

@@ -2,7 +2,7 @@
 //
 //
 
-import { Language_MODEL, TranslationCreation_PROPS } from "@/src/db/models";
+import { Language_MODEL, TranslationCreation_PROPS } from "@/src/db/props";
 
 export default function GET_langsFromTranslations(
   trs: TranslationCreation_PROPS[],

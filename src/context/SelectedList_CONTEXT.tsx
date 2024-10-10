@@ -3,7 +3,7 @@
 //
 
 import React, { createContext, useState, useContext } from "react";
-import { List_MODEL } from "../db/models";
+import { List_MODEL } from "../db/props";
 
 interface ListContextType {
   selected_LIST: List_MODEL;

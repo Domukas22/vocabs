@@ -14,7 +14,7 @@ import USE_renameList from "../../hooks/USE_renameList";
 import USE_zustand from "@/src/zustand";
 import { useToast } from "react-native-toast-notifications";
 import { Controller, useForm } from "react-hook-form";
-import { List_MODEL } from "@/src/db/models";
+import { List_MODEL } from "@/src/db/props";
 import Error_TEXT from "@/src/components/Error_TEXT/Error_TEXT";
 import VALIDATE_newListName from "../../utils/IS_listNameTaken";
 import IS_listNameTaken from "../../utils/IS_listNameTaken";

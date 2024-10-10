@@ -13,11 +13,7 @@ import {
 } from "@/src/features/2_vocabs";
 import { useRouter } from "expo-router";
 import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
-import {
-  List_MODEL,
-  DisplaySettings_PROPS,
-  Vocab_MODEL,
-} from "@/src/db/models";
+import { List_MODEL, DisplaySettings_PROPS, Vocab_MODEL } from "@/src/db/props";
 import React, { useEffect, useState } from "react";
 import ListSettings_MODAL from "@/src/features/1_lists/components/ListSettings_MODAL/ListSettings_MODAL";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";

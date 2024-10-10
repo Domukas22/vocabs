@@ -3,7 +3,7 @@
 //
 
 import { useEffect, useState, useCallback } from "react";
-import { Language_MODEL, Vocab_MODEL } from "@/src/db/models";
+import { Language_MODEL, Vocab_MODEL } from "@/src/db/props";
 
 export function USE_searchedLangs(langs: Language_MODEL[] | undefined) {
   const [searched_LANGS, SET_searchedLangs] = useState<Language_MODEL[]>(langs);

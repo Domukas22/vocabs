@@ -3,7 +3,7 @@ import {
   Vocab_MODEL,
   DisplaySettings_PROPS,
   PublicVocabDisplaySettings_PROPS,
-} from "@/src/db/models";
+} from "@/src/db/props";
 
 export default function USE_filteredPublicVocabs({
   vocabs,

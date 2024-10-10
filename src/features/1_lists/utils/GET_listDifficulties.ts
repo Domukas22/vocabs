@@ -2,7 +2,7 @@
 //
 //
 
-import { List_MODEL } from "@/src/db/models";
+import { List_MODEL } from "@/src/db/props";
 
 export default function GET_listDifficulties(
   list: List_MODEL | undefined = undefined

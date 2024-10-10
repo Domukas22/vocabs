@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Vocab_MODEL, DisplaySettings_PROPS } from "@/src/db/models";
+import { Vocab_MODEL, DisplaySettings_PROPS } from "@/src/db/props";
 
 export default function USE_filteredVocabs({
   vocabs,

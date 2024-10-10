@@ -5,7 +5,7 @@
 import Btn from "@/src/components/Btn/Btn";
 import { ICON_X } from "@/src/components/icons/icons";
 import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
-import { DisplaySettings_PROPS, Vocab_MODEL } from "@/src/db/models";
+import { DisplaySettings_PROPS, Vocab_MODEL } from "@/src/db/props";
 import { useTranslation } from "react-i18next";
 import MyVocab from "../../Vocab/My_VOCAB/My_VOCAB";
 import React, { useEffect, useState } from "react";

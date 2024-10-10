@@ -32,7 +32,7 @@ export interface List_MODEL {
   created_at: string;
   default_LANGS: string[];
 
-  vocabs?: Vocab_MODEL[];
+  vocabs?: Vocab_MODEL[]; // populated while fetching
 }
 
 // --------------------------------------------------------------------------------------------
@@ -46,7 +46,7 @@ export interface Vocab_MODEL {
   is_public: boolean;
   created_at: string;
 
-  translations?: Translation_MODEL[];
+  translations?: Translation_MODEL[]; // populated while fetching
 }
 
 // --------------------------------------------------------------------------------------------
@@ -78,10 +78,4 @@ export interface DisplaySettings_PROPS {
   sortDirection: "ascending" | "descending";
   difficultyFilters: (1 | 2 | 3)[];
   langFilters: string[];
-}
-export interface PublicVocabDisplaySettings_PROPS {
-  SHOW_description: boolean;
-  SHOW_flags: boolean;
-  SHOW_difficulty: boolean;
-  frontTrLang_ID: string;
 }

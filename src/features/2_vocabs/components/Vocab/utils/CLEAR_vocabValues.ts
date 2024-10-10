@@ -2,7 +2,7 @@
 //
 //
 
-import { Language_MODEL, List_MODEL } from "@/src/db/models";
+import { Language_MODEL, List_MODEL } from "@/src/db/props";
 
 import GET_langs from "@/src/features/4_languages/utils/GET_langs";
 import GET_defaultTranslations from "@/src/features/2_vocabs/utils/GET_defaultTranslations";

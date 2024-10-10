@@ -12,7 +12,7 @@ import SelectMultipleLanguages_MODAL from "@/src/features/4_languages/components
 import Confirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
-import { Language_MODEL, List_MODEL } from "@/src/db/models";
+import { Language_MODEL, List_MODEL } from "@/src/db/props";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 import GET_langs from "@/src/features/4_languages/utils/GET_langs";
 import { useMemo, useState } from "react";

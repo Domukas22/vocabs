@@ -2,7 +2,7 @@
 //
 //
 
-import { Language_MODEL, Vocab_MODEL } from "@/src/db/models";
+import { Language_MODEL, Vocab_MODEL } from "@/src/db/props";
 
 export default function GET_uniqueLanguagesInAList(
   vocabs: Vocab_MODEL[],

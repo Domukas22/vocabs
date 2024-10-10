@@ -14,7 +14,7 @@ import {
   TranslationCreation_PROPS,
   User_MODEL,
   Vocab_MODEL,
-} from "@/src/db/models";
+} from "@/src/db/props";
 
 import TrHighlights_MODAL from "../TrHighlights_MODAL";
 import SelectMultipleLanguages_MODAL from "@/src/features/4_languages/components/SelectMultipleLanguages_MODAL/SelectMultipleLanguages_MODAL";
