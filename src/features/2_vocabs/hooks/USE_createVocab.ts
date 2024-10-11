@@ -77,29 +77,46 @@ export default function USE_createVocab() {
     try {
       SET_isCreatingVocab(true);
 
-      // Handle vocab creation
-      const vocabResponse = await HANDLE_vocabCreation({
-        user_id: is_public ? null : user?.id,
-        list: is_public ? null : list,
-        difficulty: difficulty || 3,
-        description: description || "",
-        is_public,
+      const newVocab = await db.write(async () => {
+        const vocab = await Vocabs_DB.create((vocab: Vocab_MODEL) => {
+          vocab.user_id = is_public ? null : user?.id;
+          vocab.list?.set(is_public ? null : list);
+          vocab.difficulty = difficulty || 3;
+          vocab.description = description || "";
+          vocab.is_public = is_public;
+
+          vocab.lang_ids = // ["en", "de"]
+            translations && translations.length > 0
+              ? translations?.reduce((acc, tr) => {
+                  if (!acc.includes(tr.lang_id)) acc.push(tr.lang_id);
+                  return acc;
+                }, [] as string[])
+              : [];
+        });
+
+        if (translations) {
+          translations.map(async (translation) => {
+            return await Translations_DB.create((trans) => {
+              trans.vocab.set(vocab);
+              trans.user_id = is_public ? undefined : user?.id;
+              trans.lang_id = translation.lang_id;
+              trans.text = translation.text;
+              trans.highlights = translation.highlights;
+              trans.is_public = is_public;
+            });
+          });
+        }
+
+        return vocab;
       });
 
-      if (!vocabResponse.success) return vocabResponse;
+      // Success handling
+      if (onSuccess) {
+        onSuccess(newVocab);
+        console.log("🟢 Vocab created successfully 🟢");
+      }
 
-      const vocab = vocabResponse.data;
-
-      console.log("HERE:🔴 ", translations);
-      const finalVocab = await HANDLE_translationInsertion({
-        vocab,
-        translations,
-        user_id: is_public ? null : user?.id,
-        is_public,
-      });
-
-      if (onSuccess) onSuccess(finalVocab);
-      return { success: true, data: finalVocab };
+      return { success: true, data: newVocab };
     } catch (error: any) {
       if (error.message === "Failed to fetch") {
         SET_error(
@@ -118,68 +135,4 @@ export default function USE_createVocab() {
   };
 
   return { CREATE_vocab, IS_creatingVocab, db_ERROR, RESET_dbError };
-}
-
-// Helper function to create vocab
-async function HANDLE_vocabCreation(vocab_DATA: {
-  user_id: string;
-  list: string;
-  difficulty?: number;
-  description?: string;
-  is_public: boolean;
-}): Promise<{ success: boolean; data?: any; msg?: string }> {
-  try {
-    const newVocab = await db.write(async () => {
-      return await Vocabs_DB.create((vocab: Vocab_MODEL) => {
-        vocab.user_id = vocab_DATA.user_id;
-        vocab.list.set(vocab_DATA.list);
-        vocab.difficulty = vocab_DATA.difficulty;
-        vocab.description = vocab_DATA.description;
-        vocab.is_public = vocab_DATA.is_public;
-      });
-    });
-
-    console.log("🟢 Vocab created successfully 🟢");
-    return { success: true, data: newVocab };
-  } catch (error: any) {
-    console.log("🔴 Error inserting vocab 🔴", error.message);
-    return { success: false, msg: "🔴 Error inserting vocab 🔴" };
-  }
-}
-
-// Helper function to insert translations
-async function HANDLE_translationInsertion({
-  vocab,
-  translations,
-  user_id,
-  is_public,
-}: {
-  vocab: Vocab_MODEL;
-  translations: TranslationCreation_PROPS[] | undefined;
-  user_id: string | null | undefined;
-  is_public: boolean;
-}): Promise<Vocab_PROPS> {
-  if (translations && translations.length > 0) {
-    console.log("HERE:🔴🔴🔴 ", translations);
-    const translationPromises = translations?.map((translation) => {
-      return db.write(async () => {
-        return await Translations_DB.create((trans) => {
-          trans.vocab.set(vocab);
-          trans.user_id = user_id;
-          trans.lang_id = translation.lang_id;
-          trans.text = translation.text;
-          trans.highlights = translation.highlights;
-          trans.is_public = is_public;
-        });
-      });
-    });
-
-    await Promise.all(translationPromises);
-
-    console.log("🟢 Translations created successfully 🟢");
-    return { ...vocab, translations };
-  }
-
-  // Return vocab without translations if none provided
-  return { ...vocab, translations: [] };
 }

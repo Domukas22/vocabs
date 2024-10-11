@@ -104,7 +104,7 @@ export default function SingleList_PAGE() {
       <MyVocabs_FLATLIST
         filters={{
           search: search,
-          list_id: selected_LIST?.id,
+          list: selected_LIST,
           is_public: false,
           difficultyFilters: z_display_SETTINGS.difficultyFilters || [],
           langFilters: z_display_SETTINGS.langFilters || [],
@@ -144,8 +144,6 @@ export default function SingleList_PAGE() {
         list_id={selected_LIST?.id || ""}
       />
 
-      {/* <
-      
       <ListSettings_MODAL
         list={selected_LIST}
         open={modal_STATES.listSettings}
@@ -154,7 +152,7 @@ export default function SingleList_PAGE() {
         backToIndex={() => router.back()}
         HIGHLIGHT_listName={HIGHLIGHT_listName}
       />
-    */}
+
       <DeleteVocab_MODAL
         user={user}
         IS_open={IS_deleteModalOpen}
@@ -181,7 +179,6 @@ function USE_createVocabModal({
   const [IS_createModalOpen, SET_createModalOpen] = useState(false);
 
   function TOGGLE_createVocabModal() {
-    console.log("fire");
     SET_createModalOpen(!IS_createModalOpen);
   }
 

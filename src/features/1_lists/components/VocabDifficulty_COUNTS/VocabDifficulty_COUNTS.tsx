@@ -14,29 +14,29 @@ export default function VocabDifficulty_COUNTS({
 }: {
   difficulties:
     | {
-        difficulty_1: number;
-        difficulty_2: number;
-        difficulty_3: number;
+        diff_1_count: number;
+        diff_2_count: number;
+        diff_3_count: number;
       }
     | undefined;
 }) {
   return (
     <View style={{ flexDirection: "row", gap: 8, justifyContent: "flex-end" }}>
-      {difficulties?.difficulty_1 ? (
+      {difficulties?.diff_1_count ? (
         <SingleVocabDifficulty_COUNT
-          count={difficulties.difficulty_1}
+          count={difficulties.diff_1_count}
           difficulty={1}
         />
       ) : null}
-      {difficulties?.difficulty_2 ? (
+      {difficulties?.diff_2_count ? (
         <SingleVocabDifficulty_COUNT
-          count={difficulties.difficulty_2}
+          count={difficulties.diff_2_count}
           difficulty={2}
         />
       ) : null}
-      {difficulties?.difficulty_3 ? (
+      {difficulties?.diff_3_count ? (
         <SingleVocabDifficulty_COUNT
-          count={difficulties.difficulty_3}
+          count={difficulties.diff_3_count}
           difficulty={3}
         />
       ) : null}

@@ -3,31 +3,31 @@ import db, { Lists_DB } from "@/src/db";
 import { List_MODEL } from "@/src/db/watermelon_MODELS";
 
 export interface RenameList_PROPS {
-  list_id: string | undefined;
-  newName: string | undefined;
   user_id: string | undefined;
-  currentList_NAMES: string[];
+  list_id: string | undefined;
+  new_LANGS: string[] | undefined;
   onSuccess?: (updated_LIST: List_MODEL) => void;
   cleanup?: () => void;
 }
 
-export default function USE_renameList() {
-  const [IS_renamingList, SET_renamingList] = useState(false);
-  const [renameList_ERROR, SET_renameListError] = useState<string | null>(null);
+export default function USE_updateListDefaultLangs() {
+  const [IS_updatingDefaultLangs, SET_renamingList] = useState(false);
+  const [updateDefaultLangs_ERROR, SET_renameListError] = useState<
+    string | null
+  >(null);
 
   const RESET_error = useCallback(() => SET_renameListError(null), []);
 
   const errorMessage = useMemo(
     () =>
-      "Some kind of error happened when trying to rename the list. This is an issue on our side. Please try to re-load the app and see if the problem persists. The issue has been recorded and will be reviewed by developers as soon as possible. We are sorry for the trouble.",
+      "Some kind of error happened when trying to update the default list languages. This is an issue on our side. Please try to re-load the app and see if the problem persists. The issue has been recorded and will be reviewed by developers as soon as possible. We are sorry for the trouble.",
     []
   );
 
-  const RENAME_list = async ({
-    newName,
+  const UPDATE_defaultLangs = async ({
+    new_LANGS,
     user_id,
     list_id,
-    currentList_NAMES,
     onSuccess,
     cleanup,
   }: RenameList_PROPS): Promise<{
@@ -42,23 +42,15 @@ export default function USE_renameList() {
       SET_renameListError(errorMessage);
       return {
         success: false,
-        msg: "🔴 List ID not provided for renaming 🔴",
+        msg: "🔴 List ID not provided for updating default list translations 🔴",
       };
     }
 
-    if (!newName) {
-      SET_renameListError("You must provide a new list name.");
+    if (!new_LANGS) {
+      SET_renameListError(errorMessage);
       return {
         success: false,
-        msg: "🔴 New list name not provided 🔴",
-      };
-    }
-
-    if (currentList_NAMES?.some((listName) => listName === newName)) {
-      SET_renameListError("You already have a list with that name.");
-      return {
-        success: false,
-        msg: "🔴 New list name already exists 🔴",
+        msg: "🔴 Lang array not provided when tyring to edit default list translations 🔴",
       };
     }
 
@@ -66,7 +58,7 @@ export default function USE_renameList() {
       SET_renameListError(errorMessage);
       return {
         success: false,
-        msg: "🔴 User ID not provided for renaming 🔴",
+        msg: "🔴 User ID not provided for updating default list translations 🔴",
       };
     }
 
@@ -75,11 +67,11 @@ export default function USE_renameList() {
       const updated_LIST = await db.write(async () => {
         const list = await Lists_DB.find(list_id);
         await list.update((list: List_MODEL) => {
-          list.name = newName;
+          list.default_LANGS = new_LANGS;
         });
       });
 
-      console.log("🟢 List renamed 🟢");
+      console.log("🟢 Default list langs updated 🟢");
       if (onSuccess && updated_LIST) onSuccess(updated_LIST);
       if (cleanup) cleanup();
 
@@ -103,5 +95,10 @@ export default function USE_renameList() {
     }
   };
 
-  return { RENAME_list, IS_renamingList, renameList_ERROR, RESET_error };
+  return {
+    UPDATE_defaultLangs,
+    IS_updatingDefaultLangs,
+    updateDefaultLangs_ERROR,
+    RESET_error,
+  };
 }

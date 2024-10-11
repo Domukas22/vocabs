@@ -128,7 +128,7 @@ function _MyVocab({ trs, vocab, highlighted, HANDLE_updateModal }: VocabProps) {
 const enhance = withObservables(
   ["vocab"],
   ({ vocab }: { vocab: Vocab_MODEL }) => ({
-    trs: Translations_DB.query(Q.where("vocab_id", vocab.id)),
+    trs: vocab.translations,
   })
 );
 

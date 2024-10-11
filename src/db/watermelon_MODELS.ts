@@ -5,6 +5,7 @@ import {
   field,
   immutableRelation,
   json,
+  lazy,
   reader,
   readonly,
   relation,
@@ -12,6 +13,10 @@ import {
   writer,
 } from "@nozbe/watermelondb/decorators";
 import { Associations } from "@nozbe/watermelondb/Model";
+
+const sanitize = (rawHighlights: number[]) => {
+  return Array.isArray(rawHighlights) ? rawHighlights.map(String) : [];
+};
 
 export class List_MODEL extends Model {
   static table = "lists";
@@ -23,39 +28,16 @@ export class List_MODEL extends Model {
 
   @text("user_id") user_id!: string | undefined;
   @text("name") name!: string;
-  @field("default_LANGS") default_LANGS!: string[]; // Array of language ids
+  @json("default_LANGS", sanitize) default_LANGS!: string[] | undefined;
 
-  @readonly @date("created_at") created_at!: number;
-  @readonly @date("updated_at") updated_at!: number;
+  @readonly @date("created_at") createdAt!: number;
+  @readonly @date("updated_at") updatedAt!: number;
   @readonly @date("deleted_at") deleted_at!: number;
 
-  @reader async GET_vocabCounts(list_id: string) {
-    const vocabs = (await this.collections
-      .get("vocabs")
-      .query(Q.where("list_id", list_id))
-      .fetch()) as Vocab_MODEL[];
-
-    // Count vocabs by difficulty
-    return vocabs.reduce(
-      (counts, vocab) => {
-        if (vocab.difficulty === 1) {
-          counts.difficulty_1 += 1;
-        } else if (vocab.difficulty === 2) {
-          counts.difficulty_2 += 1;
-        } else if (vocab.difficulty === 3) {
-          counts.difficulty_3 += 1;
-        }
-        counts.total += 1;
-        return counts;
-      },
-      {
-        total: 0,
-        difficulty_1: 0,
-        difficulty_2: 0,
-        difficulty_3: 0,
-      }
-    );
-  }
+  @lazy diff_1 = this.vocabs.extend(Q.where("difficulty", 1)).observeCount();
+  @lazy diff_2 = this.vocabs.extend(Q.where("difficulty", 2)).observeCount();
+  @lazy diff_3 = this.vocabs.extend(Q.where("difficulty", 3)).observeCount();
+  @lazy totalVocabs = this.vocabs.observeCount();
 }
 // ---------------------------------------------------------------
 export class Vocab_MODEL extends Model {
@@ -66,22 +48,21 @@ export class Vocab_MODEL extends Model {
   };
 
   @children("translations") translations!: Translation_MODEL[];
-  @relation("lists", "list_id") list!: List_MODEL;
+  @relation("lists", "list_id") list!: List_MODEL | undefined;
 
   @text("user_id") user_id!: string | undefined;
   @field("difficulty") difficulty!: 1 | 2 | 3 | undefined;
   @text("description") description!: string | undefined;
   @field("image") image!: string | undefined;
   @field("is_public") is_public!: boolean;
+  @json("lang_ids", sanitize) lang_ids!: string[] | undefined;
 
-  @readonly @date("created_at") created_at!: number;
-  @readonly @date("updated_at") updated_at!: number;
+  @readonly @date("created_at") createdAt!: number;
+  @readonly @date("updated_at") updatedAt!: number;
   @readonly @date("deleted_at") deleted_at!: number;
 }
 // ---------------------------------------------------------------
-const SANITIZE_highlights = (rawHighlights: number[]) => {
-  return Array.isArray(rawHighlights) ? rawHighlights.map(String) : [];
-};
+
 export class Translation_MODEL extends Model {
   static table = "translations";
 
@@ -94,11 +75,11 @@ export class Translation_MODEL extends Model {
   @text("user_id") user_id!: string | undefined;
   @field("lang_id") lang_id!: string;
   @text("text") text!: string;
-  @json("highlights", SANITIZE_highlights) highlights!: number[] | undefined;
+  @json("highlights", sanitize) highlights!: number[] | undefined;
   @field("is_public") is_public!: boolean;
 
-  @readonly @date("created_at") created_at!: number;
-  @readonly @date("updated_at") updated_at!: number;
+  @readonly @date("created_at") createdAt!: number;
+  @readonly @date("updated_at") updatedAt!: number;
   @readonly @date("deleted_at") deleted_at!: number;
 }
 // ---------------------------------------------------------------
@@ -115,7 +96,7 @@ export class Language_MODEL extends Model {
   @field("translation_example_highlights")
   translation_example_highlights!: number[];
 
-  @readonly @date("created_at") created_at!: number;
-  @readonly @date("updated_at") updated_at!: number;
+  @readonly @date("created_at") createdAt!: number;
+  @readonly @date("updated_at") updatedAt!: number;
   @readonly @date("deleted_at") deleted_at!: number;
 }

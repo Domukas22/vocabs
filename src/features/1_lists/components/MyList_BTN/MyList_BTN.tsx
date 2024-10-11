@@ -11,7 +11,7 @@ import { ICON_difficultyDot } from "../../../../components/icons/icons";
 import { List_PROPS } from "@/src/db/props";
 import { useTranslation } from "react-i18next";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import GET_listDifficulties from "../../utils/GET_listDifficulties";
 import VocabDifficulty_COUNTS from "../VocabDifficulty_COUNTS/VocabDifficulty_COUNTS";
 import { List_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
@@ -20,18 +20,29 @@ import { Q } from "@nozbe/watermelondb";
 import { withObservables } from "@nozbe/watermelondb/react";
 
 function _MyList_BTN({
-  list,
+  diff_1_count,
+  diff_2_count,
+  diff_3_count,
+  total_count,
   vocabs,
+  list,
   onPress,
   highlighted,
 }: {
-  list: List_PROPS;
+  diff_1_count: number;
+  diff_2_count: number;
+  diff_3_count: number;
+  total_count: number;
+  list: List_MODEL;
   vocabs: Vocab_MODEL;
   onPress: () => void;
   highlighted: boolean;
 }) {
   const { t } = useTranslation();
-  const difficulties = useMemo(() => GET_listDifficulties(vocabs), []);
+
+  // console.log([list.name, diff_1_count, diff_2_count, diff_3_count]);
+
+  console.log(vocabs?.[0]?.difficulty);
 
   return (
     <Pressable
@@ -53,13 +64,19 @@ function _MyList_BTN({
           : t("other.emptyList")}
       </Styled_TEXT>
 
-      <VocabDifficulty_COUNTS {...{ difficulties }} />
+      <VocabDifficulty_COUNTS
+        difficulties={{ diff_1_count, diff_2_count, diff_3_count }}
+      />
     </Pressable>
   );
 }
 
-const enhance = withObservables(["list"], ({ list }: { list: List_MODEL }) => ({
-  vocabs: Vocabs_DB.query(Q.where("list_id", list?.id || "")).observe(),
+const enhance = withObservables([], ({ list }: { list: List_MODEL }) => ({
+  vocabs: list.vocabs,
+  diff_1_count: list.diff_1,
+  diff_2_count: list.diff_2,
+  diff_3_count: list.diff_3,
+  total_count: list.totalVocabs,
 }));
 
 export const MyList_BTN = enhance(_MyList_BTN);

@@ -77,14 +77,12 @@ function _MyLists_FLATLIST({
   );
 }
 const enhance_allLists = withObservables(
-  ["lists", "user_id"],
-  ({ lists, user_id }: { lists: List_MODEL[]; user_id: string }) => ({
+  ["user_id"],
+  ({ user_id }: { user_id: string }) => ({
     lists: Lists_DB.query(
       Q.where("user_id", user_id),
       Q.sortBy("created_at", Q.asc)
     ),
-    // vocabs: Vocabs_DB,
-    // vocabs,
   })
 );
 export const MyLists_FLATLIST = enhance_allLists(_MyLists_FLATLIST);

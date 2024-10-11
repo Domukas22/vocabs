@@ -24,6 +24,7 @@ interface ChosenLangsInputs_PROPS {
   REMOVE_lang: (lang_id: string) => void;
   toggle: () => void;
   error: FieldError | undefined;
+  langs?: Language_PROPS | undefined;
 }
 
 export default function ChosenLangs_BLOCK({
@@ -32,11 +33,10 @@ export default function ChosenLangs_BLOCK({
   REMOVE_lang = () => {},
   toggle = () => {},
   error,
+  langs,
 }: ChosenLangsInputs_PROPS) {
   const { t } = useTranslation();
   const currentAppLanguage = useMemo(() => i18next.language, []);
-  const { languages } = USE_langs();
-  const langs = useMemo(() => GET_langsFromTranslations(trs, languages), [trs]);
 
   return (
     <>

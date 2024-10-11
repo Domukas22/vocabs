@@ -67,20 +67,20 @@ export default function USE_createList() {
 
     SET_creatingList(true);
     try {
-      await db.write(async () => {
+      const new_LIST = await db.write(async () => {
         const newList = await Lists_DB.create((newList: List_MODEL) => {
           newList.name = name;
           newList.user_id = user_id;
           newList.default_LANGS = ["en", "de"];
         });
-
-        console.log("🟢 List created 🟢");
-
-        if (onSuccess) onSuccess(newList);
-        if (cleanup) cleanup();
-
-        return { success: true, newList };
+        return newList;
       });
+      console.log("🟢 List created 🟢");
+
+      if (onSuccess) onSuccess(new_LIST);
+      if (cleanup) cleanup();
+
+      return { success: true, new_LIST };
     } catch (error: any) {
       // Handle specific errors
       console.log("🔴 Error creating list 🔴", error.message);

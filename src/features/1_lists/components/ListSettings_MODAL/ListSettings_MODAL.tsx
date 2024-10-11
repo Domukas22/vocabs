@@ -29,14 +29,15 @@ import { useToast } from "react-native-toast-notifications";
 import { useRouter } from "expo-router";
 import UpdateList_MODAL from "../UpdateList_MODAL";
 import { MyColors } from "@/src/constants/MyColors";
+import { List_MODEL } from "@/src/db/watermelon_MODELS";
+import USE_updateListDefaultLangs from "../../hooks/USE_updateListDefaultLangs";
 
 interface ListSettingsModal_PROPS {
-  list: List_PROPS;
+  list: List_MODEL;
   open: boolean;
   TOGGLE_open: () => void;
   backToIndex: () => void;
   user_id: string;
-
   HIGHLIGHT_listName: () => void;
 }
 
@@ -102,6 +103,22 @@ export default function ListSettings_MODAL({
     }
   };
 
+  const {
+    UPDATE_defaultLangs,
+    IS_updatingDefaultLangs,
+    updateDefaultLangs_ERROR,
+    RESET_error,
+  } = USE_updateListDefaultLangs();
+
+  const UPDATE_langs = (new_LANGS: string[]) => {
+    if (!new_LANGS) return;
+    UPDATE_defaultLangs({
+      user_id: user?.id || "",
+      list_id: list?.id,
+      new_LANGS,
+    });
+  };
+
   return (
     <Big_MODAL open={open}>
       <Header
@@ -141,9 +158,8 @@ export default function ListSettings_MODAL({
         langs={langs}
         toggle={TOGGLE_langSelectionModal}
         REMOVE_lang={(targetLang_ID) => {
-          UPDATE_privateListDefaultTRs(
-            list?.id,
-            langs.filter((l) => l.id !== targetLang_ID).map((l) => l.id)
+          UPDATE_langs(
+            langs.filter((l) => l.id !== targetLang_ID)?.map((x) => x.id)
           );
         }}
       />
@@ -170,12 +186,9 @@ export default function ListSettings_MODAL({
       <SelectMultipleLanguages_MODAL
         open={SHOW_langSeletionModal}
         TOGGLE_open={TOGGLE_langSelectionModal}
-        active_LANGS={langs}
+        langs={langs}
         SUBMIT_langs={(langs: Language_PROPS[]) => {
-          UPDATE_privateListDefaultTRs(
-            list?.id,
-            langs.map((l) => l.id)
-          );
+          UPDATE_langs(langs.map((l) => l.id));
         }}
         languages={languages}
         IS_inAction={IS_updatingDefaultListTRs}

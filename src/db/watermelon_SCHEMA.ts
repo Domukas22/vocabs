@@ -40,6 +40,7 @@ export default appSchema({
         { name: "description", type: "string", isOptional: true },
         { name: "image", type: "string", isOptional: true },
         { name: "is_public", type: "boolean" },
+        { name: "lang_ids", type: "string", isOptional: true },
         { name: "created_at", type: "number" },
         { name: "updated_at", type: "number" },
         { name: "deleted_at", type: "number" },

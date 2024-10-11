@@ -53,14 +53,12 @@ export type CreateMyVocabData_PROPS = {
   translations: TranslationCreation_PROPS[];
 };
 
-export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
-  const {
-    IS_open,
-    TOGGLE_modal: TOGGLE_vocabModal,
-    initial_LIST,
-    onSuccess = () => {},
-  } = props;
-
+export default function CreateMyVocab_MODAL({
+  IS_open,
+  TOGGLE_modal: TOGGLE_vocabModal,
+  initial_LIST,
+  onSuccess = () => {},
+}: CreateMyVocabModal_PROPS) {
   const { t } = useTranslation();
   const { user }: { user: User_PROPS } = USE_auth();
 
@@ -121,6 +119,7 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
     shouldFocusError: true,
     mode: "onSubmit",
   });
+  console.log(initial_LIST?.default_LANGS);
 
   const form_TRS = getValues("translations") || [];
   const submit = (data: CreateMyVocabData_PROPS) => create(data);
@@ -129,6 +128,14 @@ export default function CreateMyVocab_MODAL(props: CreateMyVocabModal_PROPS) {
   useEffect(() => {
     RESET_dbError();
   }, [formValues]);
+  useEffect(() => {
+    if (IS_open)
+      setValue(
+        "translations",
+        GET_defaultTranslations(initial_LIST?.default_LANGS || ["en", "de"]) ||
+          []
+      );
+  }, [IS_open]);
 
   return (
     <Big_MODAL {...{ open: IS_open }}>

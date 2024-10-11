@@ -44,8 +44,6 @@ function _MyVocabs_FLATLIST({
   PREPARE_vocabDelete?: (id: string) => void;
   search: string;
 }) {
-  console.log(list_id);
-
   const { z_display_SETTINGS } = USE_zustand();
   const { t } = useTranslation();
 
@@ -53,11 +51,18 @@ function _MyVocabs_FLATLIST({
 
   if (loading) return <List_SKELETONS />;
 
+  console.log(
+    "VOCABS: ",
+    vocabs?.map((v) => v.lang_ids)
+  );
+  console.log("SETTINGS: ", z_display_SETTINGS.langFilters);
+
   if (vocabs && vocabs?.length > 0) {
     return (
       <Styled_FLATLIST
         data={vocabs}
         renderItem={({ item }) => {
+          console.log(item.lang_ids);
           return (
             <SwipeableExample
               rightBtn_ACTION={() => {

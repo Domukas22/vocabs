@@ -85,10 +85,22 @@ export default function MyLists_PAGE() {
         <MyLists_SUBNAV {...{ search, SET_search: SEARCH_lists }} />
       )}
 
-      {!ARE_listsSearching && searched_LISTS.length > 0 ? (
+      <MyLists_FLATLIST
+        user_id={user?.id || ""}
+        SELECT_list={(list: List_PROPS) => {
+          SET_selectedList(list);
+          router.push("/(main)/vocabs/list");
+        }}
+        SHOW_bottomBtn={search === ""}
+        TOGGLE_createListModal={() => TOGGLE_modal("create")}
+        highlighted_ID={highlighted_ID}
+        _ref={list_REF}
+        PREPARE_listRename={PREPARE_listRename}
+        PREPADE_deleteList={PREPADE_deleteList}
+      />
+      {/* {!ARE_listsSearching && searched_LISTS.length > 0 ? (
         <MyLists_FLATLIST
           user_id={user?.id || ""}
-          lists={searched_LISTS}
           SELECT_list={(list: List_PROPS) => {
             SET_selectedList(list);
             router.push("/(main)/vocabs/list");
@@ -112,7 +124,7 @@ export default function MyLists_PAGE() {
         />
       ) : ARE_listsSearching ? (
         <List_SKELETONS />
-      ) : null}
+      ) : null} */}
 
       <CreateList_MODAL
         user_id={user?.id}

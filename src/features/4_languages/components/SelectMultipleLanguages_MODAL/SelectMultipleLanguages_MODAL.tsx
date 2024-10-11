@@ -37,13 +37,16 @@ import {
 } from "@/src/constants/globalVars";
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
 import GET_langsFromTranslations from "@/src/features/4_languages/utils/GET_langsFromTranslations";
+import { Language_MODEL } from "@/src/db/watermelon_MODELS";
 
 interface SelectLanguagesModal_PROPS {
   open: boolean;
   IS_inAction?: boolean;
+
   TOGGLE_open: () => void;
   SUBMIT_langs: (newLangSelection: Language_PROPS[]) => void;
-  trs: TranslationCreation_PROPS[];
+  trs?: TranslationCreation_PROPS[] | undefined;
+  langs?: Language_MODEL[] | undefined;
 }
 
 export default function SelectMultipleLanguages_MODAL({
@@ -52,27 +55,30 @@ export default function SelectMultipleLanguages_MODAL({
   TOGGLE_open,
   SUBMIT_langs,
   trs,
+  langs,
 }: SelectLanguagesModal_PROPS) {
   const { t } = useTranslation();
-
-  console.log(trs);
 
   const [search, SET_search] = useState("");
   const { languages } = USE_langs();
 
   const [modal_LANGS, SET_modalLangs] = useState<Language_PROPS[]>(
-    GET_langsFromTranslations(trs, languages) || []
+    langs ? langs : trs ? GET_langsFromTranslations(trs, languages) : []
   );
 
   const cancel = () => {
-    SET_modalLangs(GET_langsFromTranslations(trs, languages) || []);
+    SET_modalLangs(
+      langs ? langs : trs ? GET_langsFromTranslations(trs, languages) : []
+    );
     TOGGLE_open();
     SET_search("");
   };
 
   const submit = () => {
     SUBMIT_langs(modal_LANGS);
-    SET_modalLangs(GET_langsFromTranslations(trs, languages) || []);
+    SET_modalLangs(
+      langs ? langs : trs ? GET_langsFromTranslations(trs, languages) : []
+    );
     TOGGLE_open();
   };
 

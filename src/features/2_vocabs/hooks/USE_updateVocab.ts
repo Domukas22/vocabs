@@ -41,7 +41,7 @@ export default function USE_updateVocab() {
     list,
     difficulty,
     description,
-    translations,
+    translations: incodming_TRS,
     is_public = false,
     onSuccess,
   }: VocabUpdate_MODEL): Promise<{
@@ -89,29 +89,67 @@ export default function USE_updateVocab() {
     try {
       SET_isUpdatingVocab(true);
 
-      // Handle vocab update
-      const vocabResponse = await HANDLE_vocabUpdate({
-        vocab_id,
-        user_id: is_public ? null : user?.id,
-        list: is_public ? null : list,
-        difficulty: difficulty || 3,
-        description: description || "",
-        is_public,
+      const updatedVocab = await db.write(async () => {
+        const vocab = await Vocabs_DB.find(vocab_id);
+        await vocab.update((v: Vocab_MODEL) => {
+          v.user_id = is_public ? null : user?.id;
+          v.list.set(is_public ? null : list);
+          v.difficulty = difficulty || 3;
+          v.description = description || "";
+          v.is_public = is_public;
+          v.lang_ids = // ["en", "de"]
+            incodming_TRS && incodming_TRS.length > 0
+              ? incodming_TRS?.reduce((acc, tr) => {
+                  if (!acc.includes(tr.lang_id)) acc.push(tr.lang_id);
+                  return acc;
+                }, [] as string[])
+              : [];
+        });
+
+        const old_TRS = await Translations_DB.query(
+          Q.where("vocab_id", vocab.id)
+        ).fetch();
+
+        old_TRS.forEach(async (old_TR) => {
+          // if a tr is in the old_TRS, but not in the incodming_TRS, delete it
+          const SHOULD_delete = !incodming_TRS?.some(
+            (i_TR) => i_TR.lang_id === old_TR.lang_id
+          );
+          const updated_TR = incodming_TRS?.find(
+            (tr) => tr.lang_id === old_TR.lang_id
+          );
+
+          if (SHOULD_delete) {
+            await old_TR.destroyPermanently();
+            return;
+          } else if (updated_TR && !SHOULD_delete) {
+            await old_TR.update((old_TR) => {
+              old_TR.text = updated_TR.text;
+              old_TR.highlights = updated_TR.highlights;
+              old_TR.is_public = is_public;
+            });
+          }
+        });
+
+        incodming_TRS?.forEach(async (i_TR) => {
+          const IS_new = !old_TRS.some((o_TR) => o_TR.lang_id === i_TR.lang_id);
+          if (IS_new) {
+            await Translations_DB.create((tr) => {
+              tr.vocab.set(vocab);
+              tr.user_id = vocab.user_id;
+              tr.lang_id = i_TR.lang_id;
+              tr.text = i_TR.text;
+              tr.highlights = i_TR.highlights;
+              tr.is_public = vocab.is_public;
+            });
+          }
+        });
+
+        return vocab;
       });
 
-      if (!vocabResponse.success) return vocabResponse;
-
-      const vocab = vocabResponse.data;
-
-      const finalVocab = await HANDLE_translationUpdate({
-        vocab,
-        translations,
-        user_id: is_public ? null : user?.id,
-        is_public,
-      });
-
-      if (onSuccess) onSuccess(finalVocab);
-      return { success: true, data: finalVocab };
+      if (onSuccess) onSuccess(updatedVocab);
+      return { success: true, data: updatedVocab };
     } catch (error: any) {
       if (error.message === "Failed to fetch") {
         SET_error(
@@ -130,99 +168,4 @@ export default function USE_updateVocab() {
   };
 
   return { UPDATE_vocab, IS_updatingVocab, db_ERROR, RESET_dbError };
-}
-
-// Helper function to update vocab
-async function HANDLE_vocabUpdate(vocab_DATA: {
-  vocab_id: string;
-  user_id: string | null | undefined;
-  list: string | null | undefined;
-  difficulty?: number;
-  description?: string;
-  is_public: boolean;
-}): Promise<{ success: boolean; data?: any; msg?: string }> {
-  try {
-    const updatedVocab = await db.write(async () => {
-      const vocab = await Vocabs_DB.find(vocab_DATA.vocab_id);
-      await vocab.update((vocabInstance: Vocab_MODEL) => {
-        vocabInstance.user_id = vocab_DATA.user_id;
-        vocabInstance.list.set(vocab_DATA.list);
-        vocabInstance.difficulty = vocab_DATA.difficulty;
-        vocabInstance.description = vocab_DATA.description;
-        vocabInstance.is_public = vocab_DATA.is_public;
-      });
-      return vocab;
-    });
-
-    console.log("🟢 Vocab updated successfully 🟢");
-    return { success: true, data: updatedVocab };
-  } catch (error: any) {
-    console.log("🔴 Error updating vocab 🔴", error.message);
-    return { success: false, msg: "🔴 Error updating vocab 🔴" };
-  }
-}
-
-// Helper function to update translations
-async function HANDLE_translationUpdate({
-  vocab,
-  translations,
-  user_id,
-  is_public,
-}: {
-  vocab: Vocab_MODEL;
-  translations: TranslationCreation_PROPS[] | undefined;
-  user_id: string | null | undefined;
-  is_public: boolean;
-}): Promise<Vocab_PROPS> {
-  // Fetch the current translations for this vocab
-  const currentTranslations = await Translations_DB.query(
-    Q.where("vocab_id", vocab.id)
-  ).fetch();
-
-  // Create a set of new lang_ids for easier lookup
-  const newLangIds = new Set(translations?.map((t) => t.lang_id));
-
-  // Delete translations that are not in the new translations
-  const deletionPromises = currentTranslations
-    .filter((currentTrans) => !newLangIds.has(currentTrans.lang_id))
-    .map((transToDelete) =>
-      db.write(async () => {
-        await transToDelete.destroyPermanently();
-      })
-    );
-
-  // Create or update translations based on the new translations provided
-  const upsertPromises = translations?.map((newTranslation) =>
-    db.write(async () => {
-      // Find if there's an existing translation with the same lang_id
-      const existingTranslation = currentTranslations.find(
-        (trans) => trans.lang_id === newTranslation.lang_id
-      );
-
-      if (existingTranslation) {
-        // Update if it exists
-        await existingTranslation.update((trans) => {
-          trans.text = newTranslation.text;
-          trans.highlights = newTranslation.highlights;
-          trans.is_public = is_public;
-        });
-      } else {
-        // Create if it doesn't exist
-        await Translations_DB.create((trans) => {
-          trans.vocab.set(vocab);
-          trans.user_id = user_id;
-          trans.lang_id = newTranslation.lang_id;
-          trans.text = newTranslation.text;
-          trans.highlights = newTranslation.highlights;
-          trans.is_public = is_public;
-        });
-      }
-    })
-  );
-
-  // Execute all promises (deletions and upserts)
-  await Promise.all([...deletionPromises, ...(upsertPromises || [])]);
-
-  console.log("🟢 Translations updated successfully 🟢");
-  return { ...vocab, translations };
 }
