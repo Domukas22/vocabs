@@ -5,20 +5,21 @@
 import { MyColors } from "@/src/constants/MyColors";
 import { StyleSheet, View } from "react-native";
 
-import { Vocab_PROPS } from "@/src/db/props";
-
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 import { DisplaySettings_PROPS } from "@/src/db/props";
 
 import Vocab_FRONT from "../Components/Vocab_FRONT/Vocab_FRONT";
-import VocabBack_TRS from "../Components/VocabBack_TRS/VocabBack_TRS";
+import { VocabBack_TRS } from "../Components/VocabBack_TRS/VocabBack_TRS";
 import VocabBack_DESC from "../Components/VocabBack_DESC/VocabBack_DESC";
 import Btn from "@/src/components/Btn/Btn";
 import { useTranslation } from "react-i18next";
 import { ICON_X } from "@/src/components/icons/icons";
+import { withObservables } from "@nozbe/watermelondb/react";
+import { Translation_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 
 interface VocabProps {
-  vocab: Vocab_PROPS | undefined;
+  vocab: Vocab_MODEL | undefined;
+  trs: Translation_MODEL[];
   displaySettings: DisplaySettings_PROPS;
   highlighted?: boolean;
   IS_admin: boolean;
@@ -27,14 +28,21 @@ interface VocabProps {
     vocab,
   }: {
     clear?: boolean;
-    vocab?: Vocab_PROPS;
+    vocab?: Vocab_MODEL;
   }) => void;
-  PREPARE_toSaveVocab: (vocab: Vocab_PROPS) => void;
+  PREPARE_toSaveVocab: ({
+    vocab,
+    trs,
+  }: {
+    vocab: Vocab_MODEL;
+    trs: Translation_MODEL[];
+  }) => void;
 }
 
 // TOGGLE_vocabModal needs to also pass in th etranslations, so we dont have to pass them async and get a delayed manageVocabModal update
-export default function Public_VOCAB({
+function _Public_VOCAB({
   vocab,
+  trs,
   displaySettings,
   IS_admin = false,
   HANDLE_updateModal,
@@ -55,7 +63,7 @@ export default function Public_VOCAB({
       <View>
         {!open && (
           <Vocab_FRONT
-            translations={vocab?.translations}
+            trs={trs}
             difficulty={0}
             description={vocab?.description}
             displaySettings={displaySettings}
@@ -65,7 +73,7 @@ export default function Public_VOCAB({
         )}
         {open && (
           <>
-            <VocabBack_TRS TRs={vocab?.translations} difficulty={0} />
+            <VocabBack_TRS trs={trs} difficulty={0} />
             <VocabBack_DESC desc={vocab?.description} />
 
             <View
@@ -79,7 +87,7 @@ export default function Public_VOCAB({
                   type="simple"
                   style={{ flex: 1 }}
                   onPress={() => {
-                    HANDLE_updateModal({ vocab });
+                    HANDLE_updateModal({ vocab, trs });
                   }}
                   text={t("btn.editVocabAsAdmin")}
                   text_STYLES={{
@@ -92,7 +100,7 @@ export default function Public_VOCAB({
                 iconLeft={<ICON_X color="primary" />}
                 type="simple_primary_text"
                 style={{ flex: 1 }}
-                onPress={() => PREPARE_toSaveVocab(vocab)}
+                onPress={() => PREPARE_toSaveVocab({ vocab, trs })}
                 text={t("btn.saveVocabToList")}
                 text_STYLES={{ textAlign: "center" }}
               />
@@ -110,6 +118,15 @@ export default function Public_VOCAB({
     </View>
   );
 }
+
+const enhance = withObservables(
+  ["vocab"],
+  ({ vocab }: { vocab: Vocab_MODEL }) => ({
+    trs: vocab.translations,
+  })
+);
+
+export const Public_VOCAB = enhance(_Public_VOCAB);
 
 const s = StyleSheet.create({
   vocab: {

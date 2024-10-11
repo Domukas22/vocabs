@@ -36,20 +36,7 @@ export default function DeleteVocab_MODAL({
       const vocab = await Vocabs_DB.find(vocab_id);
       await vocab.markAsDeleted();
     });
-  };
-
-  const handleDelete = async () => {
-    const result = await DELETE_vocab({
-      user,
-      vocab_id: vocab_id || "",
-      list_id,
-      is_public: is_public || false,
-      onSuccess,
-    });
-
-    if (!result.success) {
-      console.log(result.msg); // Log internal message for debugging.
-    }
+    if (onSuccess) onSuccess();
   };
 
   return (

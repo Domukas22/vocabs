@@ -249,7 +249,8 @@
     "vocabUpdatedInAnotherListPost": " ",
     "publicVocabSavedInAPrivateListPre": "Saved vocab in the list\t",
     "publicVocabSavedInAPrivateListPost": " ",
-    "vocabPublishedToPublic": "Vocab published to public"
+    "vocabPublishedToPublic": "Vocab published to public",
+    "savedVocab": "Vocab saved"
   },
   "notification": {
     "atLeast1LangError": "Atleast 1 language must be selected"

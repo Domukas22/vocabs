@@ -16,6 +16,11 @@ interface MyVocabDisplaySettings_PROPS {
   difficultyFilters: (1 | 2 | 3)[]; // Assuming the difficulty filters are represented by numbers
   langFilters: string[]; // Assuming language filters are represented by language codes or IDs as strings
 }
+interface PublicVocabDisplaySettings_PROPS {
+  SHOW_description: boolean;
+  SHOW_flags: boolean;
+  frontTrLang_ID: string;
+}
 
 interface ZustandStore {
   z_lists: List_PROPS[];
@@ -29,6 +34,11 @@ interface ZustandStore {
   z_display_SETTINGS: MyVocabDisplaySettings_PROPS;
   z_SET_displaySettings: (
     newSettings: Partial<MyVocabDisplaySettings_PROPS>
+  ) => void;
+
+  z_publicDisplay_SETTINGS: PublicVocabDisplaySettings_PROPS;
+  z_SET_publicDisplaySettings: (
+    newSettings: Partial<PublicVocabDisplaySettings_PROPS>
   ) => void;
 
   z_CREATE_privateList: (newLists: List_PROPS) => void;
@@ -69,6 +79,19 @@ const USE_zustand = create<ZustandStore>((set) => ({
     langFilters: [],
   },
   z_SET_displaySettings: (newSettings) => {
+    set((state) => ({
+      z_display_SETTINGS: {
+        ...state.z_display_SETTINGS,
+        ...newSettings,
+      },
+    }));
+  },
+  z_publicDisplay_SETTINGS: {
+    SHOW_description: true,
+    SHOW_flags: true,
+    frontTrLang_ID: "en",
+  },
+  z_SET_publicDisplaySettings: (newSettings) => {
     set((state) => ({
       z_display_SETTINGS: {
         ...state.z_display_SETTINGS,

@@ -27,6 +27,10 @@ import Dropdown_BLOCK from "@/src/components/Dropdown_BLOCK/Dropdown_BLOCK";
 import { useMemo } from "react";
 import USE_zustand from "@/src/zustand";
 import { vocabLimit } from "@/src/constants/globalVars";
+import FETCH_vocabs, {
+  VocabFilter_PROPS,
+} from "@/src/features/2_vocabs/utils/FETCH_vocabs";
+import { withObservables } from "@nozbe/watermelondb/react";
 
 export default function General_PAGE() {
   const { t } = useTranslation();

@@ -14,7 +14,7 @@ import USE_searchedVocabs from "../../../hooks/USE_searchedVocabs";
 import USE_filteredVocabs from "../../../hooks/USE_filteredVocabs";
 import { EmptyFlatList_BOTTM, List_SKELETONS } from "@/src/features/1_lists";
 import USE_zustand from "@/src/zustand";
-import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
+import { Translation_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 import { withObservables } from "@nozbe/watermelondb/react";
 import { Vocabs_DB } from "@/src/db";
 import { Q } from "@nozbe/watermelondb";
@@ -36,10 +36,15 @@ function _MyVocabs_FLATLIST({
   SHOW_bottomBtn: React.ReactNode;
   TOGGLE_createVocabModal: () => void;
   highlightedVocab_ID: string;
-  HANDLE_updateModal: {
+  HANDLE_updateModal: ({
+    clear,
+    vocab,
+    trs,
+  }: {
     clear?: boolean;
     vocab?: Vocab_PROPS;
-  };
+    trs?: Translation_MODEL[];
+  }) => void;
 
   PREPARE_vocabDelete?: (id: string) => void;
   search: string;

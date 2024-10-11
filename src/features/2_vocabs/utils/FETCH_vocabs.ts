@@ -11,8 +11,8 @@ export interface VocabFilter_PROPS {
   list?: List_MODEL | undefined;
   is_public?: boolean;
   difficultyFilters?: (1 | 2 | 3)[];
-  langFilters: string[];
-  sorting: "shuffle" | "difficulty" | "date";
+  langFilters?: string[];
+  sorting?: "shuffle" | "difficulty" | "date";
   sortDirection?: "ascending" | "descending";
 }
 
@@ -25,8 +25,8 @@ const FETCH_vocabs = ({
   sorting,
   sortDirection,
 }: VocabFilter_PROPS) => {
-  if (!list?.id) {
-    throw new Error("List ID is required.");
+  if (!list?.id && !is_public) {
+    throw new Error("🔴 List ID is required. 🔴");
   }
 
   // Start with the base query

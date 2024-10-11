@@ -8,17 +8,20 @@ import { useState } from "react";
 import { List_PROPS, User_PROPS, Vocab_PROPS } from "@/src/db/props";
 import USE_zustand from "@/src/zustand";
 import { CreateMyVocabData_PROPS } from "../CreateMyVocab_MODAL/CreateMyVocab_MODAL";
+import { List_MODEL, Translation_MODEL } from "@/src/db/watermelon_MODELS";
 
 interface SavePublicVocabToListModal_PROPS {
+  vocab: Vocab_PROPS | undefined;
+  trs: Translation_MODEL[] | undefined;
   IS_open: boolean;
   TOGGLE_open: () => void;
   user: User_PROPS;
-  vocab: Vocab_PROPS | undefined;
   onSuccess: (new_VOCAB: Vocab_PROPS) => void;
 }
 
 export default function SavePublicVocabToList_MODAL({
   vocab,
+  trs,
   IS_open,
   user,
   onSuccess,
@@ -29,13 +32,13 @@ export default function SavePublicVocabToList_MODAL({
 
   const { z_lists } = USE_zustand();
 
-  const create = async (list: List_PROPS) => {
+  const create = async (list: List_MODEL) => {
     const result = await CREATE_vocab({
       user,
-      list_id: list?.id,
+      list,
       difficulty: 3,
       description: vocab?.description,
-      translations: vocab?.translations || [],
+      translations: trs || [],
       is_public: false,
       onSuccess: (new_VOCAB: Vocab_PROPS) => {
         onSuccess(new_VOCAB);
@@ -51,7 +54,7 @@ export default function SavePublicVocabToList_MODAL({
     <SelectMyList_MODAL
       open={IS_open}
       title="Saved vocab to list"
-      submit_ACTION={(list: List_PROPS) => {
+      submit_ACTION={(list: List_MODEL) => {
         if (list) create(list);
       }}
       cancel_ACTION={() => {

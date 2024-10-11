@@ -40,154 +40,125 @@ import GET_uniqueTagsInAList from "@/src/features/future/tags/GET_uniqueTagsInAL
 import UpdateMyVocab_MODAL from "@/src/features/2_vocabs/components/Modal/UpdateMyVocab_MODAL/UpdateMyVocab_MODAL";
 import USE_filteredPublicVocabs from "@/src/features/2_vocabs/hooks/USE_filteredPublicVocabs/USE_filteredPublicVocabs";
 import USE_fetchPublicVocabs from "@/src/features/2_vocabs/hooks/USE_fetchPublicVocabs";
-import PublicVocabs_FLATLIST from "@/src/features/2_vocabs/components/Flatlist/PublicVocabs_FLATLIST/PublicVocabs_FLATLIST";
+import { PublicVocabs_FLATLIST } from "@/src/features/2_vocabs/components/Flatlist/PublicVocabs_FLATLIST/PublicVocabs_FLATLIST";
 import PublicVocabDisplaySettings_MODAL from "@/src/features/2_vocabs/components/Modal/DisplaySettings/PublicVocabDisplaySettings_MODAL/PublicVocabDisplaySettings_MODAL";
 import CreatePublicVocab_MODAL from "@/src/features/2_vocabs/components/Modal/CreatePublicVocab_MODAL/CreatePublicVocab_MODAL";
 import UpdatePublicVocab_MODAL from "@/src/features/2_vocabs/components/Modal/UpdatePublicVocab_MODAL/UpdatePublicVocab_MODAL";
 import SavePublicVocabToList_MODAL from "@/src/features/2_vocabs/components/Modal/SavePublicVocabToList_MODAL/SavePublicVocabToList_MODAL";
+import USE_modalToggles from "@/src/hooks/USE_modalToggles";
+import { Translation_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 
 export default function Explore_PAGE() {
-  const router = useRouter();
   const { user } = USE_auth();
+  const { t } = useTranslation();
   const toast = useToast();
+  const router = useRouter();
+  const [search, SET_search] = useState("");
+
   const { languages } = USE_langs();
 
-  const { z_lists, z_CREATE_privateVocab } = USE_zustand();
+  const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
+    { name: "displaySettings" },
+    { name: "save" },
+    { name: "create" },
+    { name: "delete" },
+    { name: "update" },
+  ]);
 
-  const [displaySettings, SET_displaySettings] =
-    useState<PublicVocabDisplaySettings_PROPS>({
-      SHOW_description: true,
-      SHOW_flags: true,
-      SHOW_difficulty: true,
-      frontTrLang_ID: "en",
-    });
-
-  const { FETCH_publicVocabs, ARE_publicVocabsFetching, publicVocabs_ERROR } =
-    USE_fetchPublicVocabs();
-  const [vocabs, SET_vocabs] = useState<Vocab_PROPS[]>([]);
-  const [SHOW_displaySettings, TOGGLE_displaySettings] = USE_toggle(false);
-
-  const { searched_VOCABS, search, SEARCH_vocabs, ARE_vocabsSearching } =
-    USE_searchedVocabs(vocabs);
   const [
     SHOW_createPublicVocabModal,
     TOGGLE_createPublicVocabModal,
     SET_createPublicVocabModal,
   ] = USE_toggle(false);
-  const [SHOW_saveVocabModal, TOGGLE_saveVocabModal, SET_saveVocabModal] =
-    USE_toggle(false);
 
   const [targetSave_VOCAB, SET_targetSaveVocab] = useState<
     Vocab_PROPS | undefined
   >(undefined);
+  const [targetSave_TRS, SET_targetSaveTRS] = useState<
+    Translation_MODEL[] | undefined
+  >();
 
   const { highlighted_ID, highlight: HIGHLIGHT_vocab } = USE_highlighedId();
 
-  const [toUpdate_VOCAB, SET_toUpdateVocab] = useState<Vocab_PROPS | undefined>(
-    undefined
-  );
-  const [SHOW_updateVocabModal, TOGGLE_updateVocabModal, SET_updateVocabModal] =
-    USE_toggle(false);
+  const [toUpdate_VOCAB, SET_toUpdateVocab] = useState<
+    Vocab_MODEL | undefined
+  >();
 
-  useEffect(() => {
-    const fetch = async () => {
-      const result = await FETCH_publicVocabs();
-      if (result.success) {
-        SET_vocabs(result.data);
-      }
-    };
-    fetch();
-  }, []);
+  const [toUpdate_TRS, SET_toUpdateTRS] = useState<
+    Translation_MODEL[] | undefined
+  >();
+  const [toDeleteVocab_ID, SET_toDeleteVocab] = useState<string | undefined>();
 
   function HANDLE_updateModal({
     clear = false,
     vocab,
+    trs,
   }: {
     clear?: boolean;
-    vocab?: Vocab_PROPS;
+    vocab?: Vocab_MODEL;
+    trs?: Translation_MODEL[];
   }) {
-    if (!clear && vocab) {
-      SET_toUpdateVocab(vocab);
-      SET_updateVocabModal(true);
-    } else if (clear) {
-      SET_toUpdateVocab(undefined);
-      SET_updateVocabModal(false);
-    }
+    SET_toUpdateVocab(!clear && vocab ? vocab : undefined);
+    SET_toUpdateTRS(!clear && trs ? trs : undefined);
+    TOGGLE_modal("update");
   }
 
-  const PREPARE_toSaveVocab = (vocab: Vocab_PROPS) => {
+  const PREPARE_toSaveVocab = ({
+    vocab,
+    trs,
+  }: {
+    vocab: Vocab_PROPS;
+    trs: Translation_MODEL[];
+  }) => {
     SET_targetSaveVocab(vocab);
-    SET_saveVocabModal(true);
+    SET_targetSaveTRS(trs);
+    TOGGLE_modal("save");
   };
 
-  const [SHOW_deleteVocabModal, SET_deleteVocabModal] = useState(false);
-  const [toDeleteVocab_ID, SET_toDeleteVocab] = useState<string | undefined>();
   const PREPARE_vocabDelete = (id: string) => {
     SET_toDeleteVocab(id);
-    SET_deleteVocabModal(true);
+    TOGGLE_modal("delete");
   };
-
-  const available_LANGS = useMemo(
-    () => GET_uniqueLanguagesInAList(vocabs, languages),
-    [vocabs]
-  );
 
   return (
     <Page_WRAP>
       <PublicVocabs_HEADER />
-      {vocabs && vocabs.length > 0 && (
-        <PublicVocabs_SUBNAV
-          {...{ search, TOGGLE_displaySettings, TOGGLE_createPublicVocabModal }}
-          SET_search={SEARCH_vocabs}
-          is_admin={user?.is_admin}
-        />
-      )}
+      <PublicVocabs_SUBNAV
+        {...{ search, SET_search }}
+        TOGGLE_createPublicVocabModal={() => TOGGLE_modal("create")}
+        TOGGLE_displaySettings={() => TOGGLE_modal("displaySettings")}
+        is_admin={user?.is_admin}
+      />
 
-      {ARE_vocabsSearching || ARE_publicVocabsFetching ? (
+      {/* {ARE_vocabsSearching || ARE_publicVocabsFetching ? (
         <List_SKELETONS />
-      ) : null}
+      ) : null} */}
 
-      {vocabs && vocabs.length > 0 && searched_VOCABS.length > 0 ? (
-        <PublicVocabs_FLATLIST
-          vocabs={searched_VOCABS}
-          highlightedVocab_ID={highlighted_ID}
-          SHOW_bottomBtn={true}
-          {...{
-            PREPARE_vocabDelete,
-            PREPARE_toSaveVocab,
-            displaySettings,
-            HANDLE_updateModal,
-          }}
-        />
-      ) : (
-        <EmptyFlatList_BOTTM
-          // emptyBox_TEXT={t("label.thisListIsEmpty")}
-          emptyBox_TEXT={
-            search !== ""
-              ? t("label.noVocabsFound")
-              : t("label.thisListIsEmpty")
-          }
-          btn_TEXT={t("btn.createVocab")}
-          btn_ACTION={() => {}}
-        />
-      )}
-      <PublicVocabDisplaySettings_MODAL
+      <PublicVocabs_FLATLIST
+        highlightedVocab_ID={highlighted_ID}
+        SHOW_bottomBtn={true}
+        {...{
+          search,
+          PREPARE_toSaveVocab,
+          PREPARE_vocabDelete,
+          HANDLE_updateModal,
+        }}
+      />
+
+      {/* <PublicVocabDisplaySettings_MODAL
         open={SHOW_displaySettings}
         displaySettings={displaySettings}
         TOGGLE_open={TOGGLE_displaySettings}
         SET_displaySettings={SET_displaySettings}
         available_LANGS={available_LANGS}
-      />
+      />  */}
 
       {user?.is_admin && (
         <CreatePublicVocab_MODAL
-          IS_open={SHOW_createPublicVocabModal}
-          TOGGLE_modal={() => TOGGLE_createPublicVocabModal()}
+          IS_open={modal_STATES.create}
+          TOGGLE_modal={() => TOGGLE_modal("create")}
           onSuccess={(new_VOCAB: Vocab_PROPS) => {
-            SET_vocabs((prev) => [new_VOCAB, ...prev]);
-
-            SET_createPublicVocabModal(false);
-
+            TOGGLE_modal("create");
             HIGHLIGHT_vocab(new_VOCAB.id);
             toast.show(t("notifications.vocabCreated"), {
               type: "green",
@@ -199,18 +170,11 @@ export default function Explore_PAGE() {
 
       {user?.is_admin && (
         <UpdatePublicVocab_MODAL
-          {...{ toUpdate_VOCAB }}
-          IS_open={SHOW_updateVocabModal}
-          TOGGLE_modal={() => TOGGLE_updateVocabModal()}
+          {...{ toUpdate_VOCAB, toUpdate_TRS }}
+          IS_open={modal_STATES.update}
+          TOGGLE_modal={() => TOGGLE_modal("update")}
           onSuccess={(updated_VOCAB: Vocab_PROPS) => {
-            SET_updateVocabModal(false);
-
-            SET_vocabs((prev) =>
-              prev.map((vocab) => {
-                if (vocab.id === updated_VOCAB.id) return updated_VOCAB;
-                return vocab;
-              })
-            );
+            TOGGLE_modal("update");
             HIGHLIGHT_vocab(updated_VOCAB.id);
             toast.show(t("notifications.vocabUpdated"), {
               type: "green",
@@ -222,41 +186,33 @@ export default function Explore_PAGE() {
 
       <SavePublicVocabToList_MODAL
         vocab={targetSave_VOCAB}
-        TOGGLE_open={TOGGLE_saveVocabModal}
-        IS_open={SHOW_saveVocabModal}
+        trs={targetSave_TRS}
+        TOGGLE_open={() => TOGGLE_modal("save")}
+        IS_open={modal_STATES.save}
         user={user}
-        onSuccess={(saved_VOCAB: Vocab_PROPS) => {
-          TOGGLE_saveVocabModal();
-          z_CREATE_privateVocab(saved_VOCAB);
-          toast.show(
-            t("notifications.publicVocabSavedInAPrivateListPre") +
-              `"${
-                z_lists.find((l) => l.id === saved_VOCAB.list_id)?.name || ""
-              }"` +
-              t("notifications.publicVocabSavedInAPrivateListPost"),
-            {
-              type: "green",
-              duration: 5000,
-            }
-          );
+        onSuccess={() => {
+          TOGGLE_modal("save");
+          toast.show(t("notifications.savedVocab"), {
+            type: "green",
+            duration: 5000,
+          });
         }}
       />
 
       {user?.is_admin && (
         <DeleteVocab_MODAL
           user={user}
-          IS_open={SHOW_deleteVocabModal}
+          IS_open={modal_STATES.delete}
           is_public={true}
           vocab_id={toDeleteVocab_ID}
-          CLOSE_modal={() => SET_deleteVocabModal(false)}
+          CLOSE_modal={() => TOGGLE_modal("delete")}
           onSuccess={() => {
-            SET_vocabs((prev) => prev.filter((v) => v.id !== toDeleteVocab_ID));
             SET_toDeleteVocab(undefined);
             toast.show(t("notifications.vocabDeleted"), {
               type: "green",
               duration: 5000,
             });
-            SET_deleteVocabModal(false);
+            TOGGLE_modal("delete");
           }}
         />
       )}

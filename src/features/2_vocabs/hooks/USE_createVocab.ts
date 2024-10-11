@@ -113,8 +113,8 @@ export default function USE_createVocab() {
       // Success handling
       if (onSuccess) {
         onSuccess(newVocab);
-        console.log("🟢 Vocab created successfully 🟢");
       }
+      console.log("🟢 Vocab created successfully 🟢");
 
       return { success: true, data: newVocab };
     } catch (error: any) {

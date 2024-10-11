@@ -23,7 +23,6 @@ interface VocabFront_PROPS {
   trs: Translation_PROPS[] | undefined;
   difficulty: 0 | 1 | 2 | 3 | undefined;
   description: string | undefined;
-
   TOGGLE_open: () => void;
   highlighted?: boolean;
 }
@@ -32,7 +31,6 @@ export default function Vocab_FRONT({
   trs,
   difficulty,
   description,
-
   TOGGLE_open,
   highlighted,
 }: VocabFront_PROPS) {

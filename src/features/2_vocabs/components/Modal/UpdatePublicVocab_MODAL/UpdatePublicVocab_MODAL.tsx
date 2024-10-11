@@ -39,10 +39,12 @@ import List_CONTROLLER from "../../Inputs/InputControllers/List_CONTROLLER";
 import CreateMyVocab_FOOTER from "../../Footer/CreateMyVocab_FOOTER/CreateMyVocab_FOOTER";
 import USE_updateVocab from "../../../hooks/USE_updateVocab";
 import UpdateMyVocab_FOOTER from "../../Footer/UpdateMyVocab_FOOTER/UpdateMyVocab_FOOTER";
+import { Translation_MODEL } from "@/src/db/watermelon_MODELS";
 
 interface UpdatePublicVocabModal_PROPS {
   IS_open: boolean;
   toUpdate_VOCAB: Vocab_PROPS | undefined;
+  toUpdate_TRS: Translation_MODEL[] | undefined;
   TOGGLE_modal: () => void;
   onSuccess: (new_VOCAB: Vocab_PROPS) => void;
 }
@@ -58,6 +60,7 @@ export default function UpdatePublicVocab_MODAL(
   const {
     IS_open,
     toUpdate_VOCAB,
+    toUpdate_TRS,
     TOGGLE_modal: TOGGLE_vocabModal,
     onSuccess = () => {},
   } = props;
@@ -126,7 +129,15 @@ export default function UpdatePublicVocab_MODAL(
 
   useEffect(() => {
     if (IS_open) {
-      setValue("translations", toUpdate_VOCAB?.translations || []);
+      const p = toUpdate_TRS?.map((x) => ({
+        text: x.text,
+        highlights: x.highlights,
+        lang_id: x.lang_id,
+      }));
+
+      console.log(p);
+
+      setValue("translations", p ? p : []);
       setValue("description", toUpdate_VOCAB?.description || "");
     }
   }, [IS_open]);

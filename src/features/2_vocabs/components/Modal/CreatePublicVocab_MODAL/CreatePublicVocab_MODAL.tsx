@@ -78,10 +78,8 @@ export default function CreatePublicVocab_MODAL(
     const { description, translations } = data;
     const result = await CREATE_vocab({
       user,
-      list_id: undefined,
       difficulty: 3,
       description,
-
       translations,
       is_public: true,
       onSuccess: (new_VOCAB: Vocab_PROPS) => {
@@ -122,6 +120,11 @@ export default function CreatePublicVocab_MODAL(
   useEffect(() => {
     RESET_dbError();
   }, [formValues]);
+
+  useEffect(() => {
+    if (IS_open)
+      setValue("translations", GET_defaultTranslations(["en", "de"]) || []);
+  }, [IS_open]);
 
   return (
     <Big_MODAL {...{ open: IS_open }}>

@@ -33,10 +33,15 @@ import { EmptyFlatList_BOTTM } from "@/src/features/1_lists";
 import { USE_searchedLists } from "../../hooks/USE_searchedLists/USE_searchedLists";
 import Big_MODAL from "@/src/components/Modals/Big_MODAL/Big_MODAL";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
+import { Lists_DB } from "@/src/db";
+import { Q } from "@nozbe/watermelondb";
+import { withObservables } from "@nozbe/watermelondb/react";
+import { t } from "i18next";
+import { List_MODEL } from "@/src/db/watermelon_MODELS";
 interface SelectListModal_PROPS {
   open: boolean;
   title: string;
-  current_LIST?: List_PROPS | undefined;
+  current_LIST?: List_MODEL | undefined;
   submit_ACTION: (list: List_PROPS) => void;
   cancel_ACTION: () => void;
   IS_inAction: boolean;
@@ -55,7 +60,7 @@ export default function SelectMyList_MODAL({
   const [SHOW_createListModal, TOGGLE_createListModal] = USE_toggle(false);
 
   const [selectedModal_LIST, SET_selectedModalList] = useState<
-    List_PROPS | undefined
+    List_MODEL | undefined
   >(current_LIST);
 
   const { z_lists, z_CREATE_privateList } = USE_zustand();
@@ -89,61 +94,14 @@ export default function SelectMyList_MODAL({
           <SearchBar value={search} SET_value={SEARCH_lists} />
         </Subnav>
 
-        {!ARE_listsSearching &&
-          z_lists.length > 0 &&
-          searched_LISTS.length > 0 && (
-            <FlatList
-              data={searched_LISTS}
-              keyboardShouldPersistTaps="always"
-              ListFooterComponent={
-                <Btn
-                  iconLeft={<ICON_X color="primary" />}
-                  text={t("btn.createList")}
-                  onPress={TOGGLE_createListModal}
-                  type="seethrough_primary"
-                  style={{ flex: 1 }}
-                />
-              }
-              renderItem={({ item }: { item: List_PROPS }) => (
-                <Btn
-                  key={item.id + "list btn" + item.name}
-                  text={item.name}
-                  iconRight={
-                    item.id === selectedModal_LIST?.id && (
-                      <ICON_checkMark color="primary" />
-                    )
-                  }
-                  onPress={() => {
-                    SET_selectedModalList(item);
-                  }}
-                  type={
-                    item.id === selectedModal_LIST?.id ? "active" : "simple"
-                  }
-                  style={[
-                    { flex: 1, marginBottom: 8 },
-                    item.id !== selectedModal_LIST?.id && { paddingRight: 40 },
-                  ]}
-                  text_STYLES={{ flex: 1 }}
-                />
-              )}
-              keyExtractor={(item) => item.id + "list btn" + item.name}
-              style={{ padding: 12, flex: 1 }}
-            />
-          )}
-
-        {ARE_listsSearching && <Styled_TEXT>Loading</Styled_TEXT>}
-        {!ARE_listsSearching && z_lists.length === 0 && (
-          <EmptyFlatList_BOTTM
-            emptyBox_TEXT={
-              search === ""
-                ? t("label.youDontHaveAnyLists")
-                : t("label.noListsFound")
-            }
-            {...{ search, TOGGLE_createListModal }}
-            btn_TEXT={t("btn.createList")}
-            btn_ACTION={TOGGLE_createListModal}
-          />
-        )}
+        <MyLists_FLATLIST
+          user_id={user?.id || ""}
+          {...{
+            TOGGLE_createListModal,
+            selectedModal_LIST,
+            SET_selectedModalList,
+          }}
+        />
 
         <Footer
           btnLeft={
@@ -179,3 +137,75 @@ export default function SelectMyList_MODAL({
     </Big_MODAL>
   );
 }
+
+function _MyLists_FLATLIST({
+  lists,
+  TOGGLE_createListModal,
+  selectedModal_LIST,
+  SET_selectedModalList,
+}: {
+  lists: List_MODEL[];
+  TOGGLE_createListModal: () => void;
+  selectedModal_LIST: List_MODEL | undefined;
+  SET_selectedModalList: React.Dispatch<React.SetStateAction<List_MODEL>>;
+}) {
+  if (lists && lists.length > 0) {
+    return (
+      <FlatList
+        data={lists}
+        keyboardShouldPersistTaps="always"
+        ListFooterComponent={
+          <Btn
+            iconLeft={<ICON_X color="primary" />}
+            text={t("btn.createList")}
+            onPress={TOGGLE_createListModal}
+            type="seethrough_primary"
+            style={{ flex: 1 }}
+          />
+        }
+        renderItem={({ item }: { item: List_PROPS }) => (
+          <Btn
+            key={item.id + "list btn" + item.name}
+            text={item.name}
+            iconRight={
+              item.id === selectedModal_LIST?.id && (
+                <ICON_checkMark color="primary" />
+              )
+            }
+            onPress={() => {
+              SET_selectedModalList(item);
+            }}
+            type={item.id === selectedModal_LIST?.id ? "active" : "simple"}
+            style={[
+              { flex: 1, marginBottom: 8 },
+              item.id !== selectedModal_LIST?.id && { paddingRight: 40 },
+            ]}
+            text_STYLES={{ flex: 1 }}
+          />
+        )}
+        keyExtractor={(item) => item.id + "list btn" + item.name}
+        style={{ padding: 12, flex: 1 }}
+      />
+    );
+  }
+
+  if (!lists || lists.length === 0) {
+    return (
+      <EmptyFlatList_BOTTM
+        emptyBox_TEXT={t("label.youDontHaveAnyLists")}
+        btn_TEXT={t("btn.createList")}
+        btn_ACTION={TOGGLE_createListModal}
+      />
+    );
+  }
+}
+
+const enhance = withObservables(
+  ["user_id"],
+  ({ user_id }: { user_id: string }) => ({
+    // vocabs: Vocabs_DB.query(Q.where("list_id", list_id)),
+    lists: Lists_DB.query(Q.where("user_id", user_id)),
+  })
+);
+
+export const MyLists_FLATLIST = enhance(_MyLists_FLATLIST);

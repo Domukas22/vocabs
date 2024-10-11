@@ -27,6 +27,7 @@ import USE_zustand from "@/src/zustand";
 import UpdateMyVocab_MODAL from "@/src/features/2_vocabs/components/Modal/UpdateMyVocab_MODAL/UpdateMyVocab_MODAL";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 import { Translation_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
+import Btn from "@/src/components/Btn/Btn";
 
 export default function SingleList_PAGE() {
   const { user } = USE_auth();
@@ -34,12 +35,18 @@ export default function SingleList_PAGE() {
   const toast = useToast();
   const router = useRouter();
   const [search, SET_search] = useState("");
-  const { selected_LIST } = USE_selectedList();
   const { z_display_SETTINGS } = USE_zustand();
 
-  const [vocabs, SET_vocabs] = useState<Vocab_PROPS[]>(
-    selected_LIST?.vocabs || []
-  );
+  const { selected_LIST } = USE_selectedList();
+
+  const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
+    { name: "displaySettings" },
+    { name: "listSettings" },
+    { name: "create" },
+    { name: "delete" },
+    { name: "update" },
+  ]);
+
   const [toUpdate_VOCAB, SET_toUpdateVocab] = useState<
     Vocab_MODEL | undefined
   >();
@@ -54,24 +61,7 @@ export default function SingleList_PAGE() {
     highlight: HIGHLIGHT_listName,
   } = USE_highlightBoolean();
 
-  const { IS_createModalOpen, TOGGLE_createVocabModal, onCreate_SUCCESS } =
-    USE_createVocabModal({ selected_LIST, HIGHLIGHT_vocab });
-
-  const { IS_updateModalOpen, TOGGLE_updateVocabModal, onUpdate_SUCCESS } =
-    USE_updateVocabModal({ selected_LIST, HIGHLIGHT_vocab });
-
-  const {
-    IS_deleteModalOpen,
-    TOGGLE_deleteVocabModal,
-    onDelete_SUCCESS,
-    delete_ID,
-    SET_deleteId,
-  } = USE_deleteVocabModal({ selected_LIST });
-
-  const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
-    { name: "displaySettings" },
-    { name: "listSettings" },
-  ]);
+  const [delete_ID, SET_deleteId] = useState("");
 
   function HANDLE_updateModal({
     clear = false,
@@ -84,7 +74,7 @@ export default function SingleList_PAGE() {
   }) {
     SET_toUpdateVocab(!clear && vocab ? vocab : undefined);
     SET_toUpdateTRS(!clear && trs ? trs : undefined);
-    TOGGLE_updateVocabModal();
+    TOGGLE_modal("update");
   }
 
   return (
@@ -97,7 +87,7 @@ export default function SingleList_PAGE() {
       />
       <MyVocabs_SUBNAV
         {...{ search, SET_search }}
-        onPlusIconPress={() => TOGGLE_createVocabModal()}
+        onPlusIconPress={() => TOGGLE_modal("create")}
         TOGGLE_displaySettings={() => TOGGLE_modal("displaySettings")}
       />
 
@@ -113,10 +103,10 @@ export default function SingleList_PAGE() {
         }}
         list_id={selected_LIST?.id || ""}
         SHOW_bottomBtn={true}
-        TOGGLE_createVocabModal={() => TOGGLE_createVocabModal()}
+        TOGGLE_createVocabModal={() => TOGGLE_modal("create")}
         PREPARE_vocabDelete={(id: string) => {
           SET_deleteId(id);
-          TOGGLE_deleteVocabModal();
+          TOGGLE_modal("delete");
         }}
         {...{
           search,
@@ -125,18 +115,32 @@ export default function SingleList_PAGE() {
         }}
       />
       <CreateMyVocab_MODAL
-        IS_open={IS_createModalOpen}
+        IS_open={modal_STATES.create}
         initial_LIST={selected_LIST}
-        TOGGLE_modal={TOGGLE_createVocabModal}
-        onSuccess={(new_VOCAB: Vocab_PROPS) => onCreate_SUCCESS(new_VOCAB)}
+        TOGGLE_modal={() => TOGGLE_modal("create")}
+        onSuccess={(new_VOCAB: Vocab_MODEL) => {
+          TOGGLE_modal("create");
+          HIGHLIGHT_vocab(new_VOCAB.id);
+          toast.show(t("notifications.vocabCreated"), {
+            type: "green",
+            duration: 3000,
+          });
+        }}
       />
       <UpdateMyVocab_MODAL
         toUpdate_VOCAB={toUpdate_VOCAB}
         toUpdate_TRS={toUpdate_TRS}
         list={selected_LIST}
-        IS_open={IS_updateModalOpen}
-        TOGGLE_modal={TOGGLE_updateVocabModal}
-        onSuccess={onUpdate_SUCCESS}
+        IS_open={modal_STATES.update}
+        TOGGLE_modal={() => TOGGLE_modal("update")}
+        onSuccess={(updated_VOCAB: Vocab_MODEL) => {
+          TOGGLE_modal("update");
+          HIGHLIGHT_vocab(updated_VOCAB.id);
+          toast.show(t("notifications.vocabUpdated"), {
+            type: "green",
+            duration: 3000,
+          });
+        }}
       />
       <MyVocabDisplaySettings_MODAL
         open={modal_STATES.displaySettings}
@@ -155,146 +159,20 @@ export default function SingleList_PAGE() {
 
       <DeleteVocab_MODAL
         user={user}
-        IS_open={IS_deleteModalOpen}
+        IS_open={modal_STATES.delete}
         is_public={false}
         vocab_id={delete_ID || ""}
         list_id={selected_LIST?.id}
-        CLOSE_modal={TOGGLE_deleteVocabModal}
-        onSuccess={onDelete_SUCCESS}
+        CLOSE_modal={() => TOGGLE_modal("delete")}
+        onSuccess={() => {
+          toast.show(t("notifications.vocabDeleted"), {
+            type: "green",
+            duration: 5000,
+          });
+
+          TOGGLE_modal("delete");
+        }}
       />
     </Page_WRAP>
   );
-}
-
-function USE_createVocabModal({
-  selected_LIST,
-  HIGHLIGHT_vocab,
-}: {
-  selected_LIST: List_PROPS;
-  HIGHLIGHT_vocab: (id: string) => void;
-}) {
-  const { t } = useTranslation();
-  const toast = useToast();
-  const { z_CREATE_privateVocab, z_lists } = USE_zustand();
-  const [IS_createModalOpen, SET_createModalOpen] = useState(false);
-
-  function TOGGLE_createVocabModal() {
-    SET_createModalOpen(!IS_createModalOpen);
-  }
-
-  function onCreate_SUCCESS(new_VOCAB: Vocab_PROPS) {
-    z_CREATE_privateVocab(new_VOCAB);
-    TOGGLE_createVocabModal();
-
-    if (new_VOCAB.list_id === selected_LIST.id) {
-      HIGHLIGHT_vocab(new_VOCAB.id);
-      toast.show(t("notifications.vocabCreated"), {
-        type: "green",
-        duration: 3000,
-      });
-    } else {
-      const target_LIST =
-        z_lists.find((l) => l.id === new_VOCAB.list_id)?.name || "";
-      toast.show(
-        `${t(
-          "notifications.vocabCreatedInAnotherListPre"
-        )} "${target_LIST}" ${t(
-          "notifications.vocabCreatedInAnotherListPost"
-        )}`,
-        { type: "green", duration: 5000 }
-      );
-    }
-  }
-
-  return { IS_createModalOpen, TOGGLE_createVocabModal, onCreate_SUCCESS };
-}
-
-function USE_updateVocabModal({
-  selected_LIST,
-  HIGHLIGHT_vocab,
-}: {
-  selected_LIST: List_PROPS;
-  HIGHLIGHT_vocab: (id: string) => void;
-}) {
-  const { t } = useTranslation();
-  const toast = useToast();
-  const {
-    z_UPDATE_privateVocab,
-    z_lists,
-    z_printed_VOCABS,
-    z_SET_printedVocabs,
-  } = USE_zustand();
-  const [IS_updateModalOpen, SET_updateModalOpen] = useState(false);
-
-  // Function to toggle the update vocab modal
-  function TOGGLE_updateVocabModal() {
-    SET_updateModalOpen(!IS_updateModalOpen);
-  }
-
-  // Function called upon successful update of a vocab
-  function onUpdate_SUCCESS(updated_VOCAB: Vocab_PROPS) {
-    z_UPDATE_privateVocab(updated_VOCAB);
-    TOGGLE_updateVocabModal();
-
-    if (updated_VOCAB.list_id === selected_LIST.id) {
-      HIGHLIGHT_vocab(updated_VOCAB.id);
-      toast.show(t("notifications.vocabUpdated"), {
-        type: "green",
-        duration: 3000,
-      });
-    } else {
-      const target_LIST =
-        z_lists.find((l) => l.id === updated_VOCAB.list_id)?.name || "";
-      z_SET_printedVocabs(
-        z_printed_VOCABS.filter((vocab) => vocab.id !== updated_VOCAB.id)
-      );
-      toast.show(
-        `${t(
-          "notifications.vocabUpdatedInAnotherListPre"
-        )} "${target_LIST}" ${t(
-          "notifications.vocabUpdatedInAnotherListPost"
-        )}`,
-        { type: "green", duration: 5000 }
-      );
-    }
-  }
-
-  return { IS_updateModalOpen, TOGGLE_updateVocabModal, onUpdate_SUCCESS };
-}
-function USE_deleteVocabModal({
-  selected_LIST,
-}: {
-  selected_LIST: List_PROPS;
-}) {
-  const { t } = useTranslation();
-  const toast = useToast();
-  const { z_DELETE_privateVocab } = USE_zustand();
-  const [IS_deleteModalOpen, SET_deleteModalOpen] = useState(false);
-  const [delete_ID, SET_deleteId] = useState<string | undefined>();
-
-  // Function to toggle the delete vocab modal
-  function TOGGLE_deleteVocabModal() {
-    SET_deleteModalOpen(!IS_deleteModalOpen);
-  }
-
-  // Function called upon successful deletion of a vocab
-  function onDelete_SUCCESS() {
-    if (delete_ID) {
-      z_DELETE_privateVocab(selected_LIST.id, delete_ID);
-      toast.show(t("notifications.vocabDeleted"), {
-        type: "green",
-        duration: 5000,
-      });
-
-      TOGGLE_deleteVocabModal(); // Close the modal
-    }
-  }
-
-  return {
-    IS_deleteModalOpen,
-    TOGGLE_deleteVocabModal,
-    delete_ID,
-    SET_deleteId,
-    onDelete_SUCCESS,
-  };
 }

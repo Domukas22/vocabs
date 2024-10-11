@@ -252,7 +252,8 @@
     "vocabUpdatedInAnotherListPost": "erneut",
     "publicVocabSavedInAPrivateListPre": "Vokabel in der Liste ",
     "publicVocabSavedInAPrivateListPost": "gespeichert",
-    "vocabPublishedToPublic": "Vokabel veröffentlicht"
+    "vocabPublishedToPublic": "Vokabel veröffentlicht",
+    "savedVocab": "Vokabel gespeichert"
   },
   "notification": {
     "atLeast1LangError": "Mindestens 1 Sprache muss ausgewählt sein"

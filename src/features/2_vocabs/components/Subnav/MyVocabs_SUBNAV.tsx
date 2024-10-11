@@ -11,13 +11,11 @@ import { useMemo } from "react";
 
 export default function Vocabs_SUBNAV({
   search,
-
   SET_search,
   TOGGLE_displaySettings,
   onPlusIconPress,
 }: {
   search: string;
-
   SET_search: (val: string) => void;
   TOGGLE_displaySettings: () => void;
   onPlusIconPress: () => void;

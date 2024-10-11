@@ -128,6 +128,7 @@ export default function CreateMyVocab_MODAL({
   useEffect(() => {
     RESET_dbError();
   }, [formValues]);
+
   useEffect(() => {
     if (IS_open)
       setValue(

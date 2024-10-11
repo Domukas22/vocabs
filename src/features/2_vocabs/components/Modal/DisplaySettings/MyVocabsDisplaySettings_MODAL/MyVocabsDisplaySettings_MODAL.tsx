@@ -35,7 +35,6 @@ export function MyVocabDisplaySettings_MODAL({
 }: DisplaySettingsModal_PROPS) {
   const [view, SET_view] = useState<"preview" | "sort" | "filter">("preview");
   const { t } = useTranslation();
-
   const { z_display_SETTINGS } = USE_zustand();
 
   return (
