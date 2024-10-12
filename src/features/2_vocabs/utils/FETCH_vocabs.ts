@@ -47,18 +47,23 @@ const FETCH_vocabs = ({
     conditions.push(Q.where("difficulty", Q.oneOf(difficultyFilters)));
   }
 
-  // New Section: Filter by translations' lang_id
-  // if (langFilters && langFilters.length > 0) {
-  //   // where the vocab has a trasnaltion with on of the langFitlers
-  //   conditions.push(Q.where("translations.lang_id", Q.oneOf(langFilters)));
-  // }
-
-  if (search) {
+  if (langFilters && langFilters.length > 0) {
     conditions.push(
-      Q.where("description", Q.like(`${Q.sanitizeLikeString(search)}%`))
+      Q.or(
+        langFilters.map((lang) =>
+          Q.where("lang_ids", Q.like(`%${Q.sanitizeLikeString(lang)}%`))
+        )
+      )
     );
   }
-
+  if (search) {
+    conditions.push(
+      Q.or([
+        Q.where("description", Q.like(`%${Q.sanitizeLikeString(search)}%`)),
+        Q.where("searchable", Q.like(`%${Q.sanitizeLikeString(search)}%`)),
+      ])
+    );
+  }
   // Handle sorting
   switch (sorting) {
     case "shuffle":

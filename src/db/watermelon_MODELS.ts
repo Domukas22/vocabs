@@ -17,6 +17,24 @@ import { Associations } from "@nozbe/watermelondb/Model";
 const sanitize = (rawHighlights: number[]) => {
   return Array.isArray(rawHighlights) ? rawHighlights.map(String) : [];
 };
+const sanitizeTranslations = (
+  rawTranslations: any[]
+): { lang_id: string; text: string; highlights: number[] }[] => {
+  if (!Array.isArray(rawTranslations)) return [];
+
+  return rawTranslations?.map((item) => {
+    // Ensure each translation item has the correct structure
+    return {
+      lang_id: typeof item.lang_id === "string" ? item.lang_id : "",
+      text: typeof item.text === "string" ? item.text : "",
+      highlights: Array.isArray(item.highlights)
+        ? item.highlights.map((highlight: number) =>
+            typeof highlight === "number" ? highlight : 0
+          )
+        : [],
+    };
+  });
+};
 
 export class List_MODEL extends Model {
   static table = "lists";
@@ -44,18 +62,18 @@ export class Vocab_MODEL extends Model {
   static table = "vocabs";
   static associations: Associations = {
     list: { type: "belongs_to", key: "list_id" },
-    translations: { type: "has_many", foreignKey: "vocab_id" },
   };
 
-  @children("translations") translations!: Translation_MODEL[];
   @relation("lists", "list_id") list!: List_MODEL | undefined;
 
-  @text("user_id") user_id!: string | undefined;
   @field("difficulty") difficulty!: 1 | 2 | 3 | undefined;
   @text("description") description!: string | undefined;
   @field("image") image!: string | undefined;
   @field("is_public") is_public!: boolean;
-  @json("lang_ids", sanitize) lang_ids!: string[] | undefined;
+
+  @json("trs", sanitizeTranslations) trs!: string[] | undefined;
+  @text("lang_ids") lang_ids!: string | undefined;
+  @text("searchable") searchable!: string | undefined;
 
   @readonly @date("created_at") createdAt!: number;
   @readonly @date("updated_at") updatedAt!: number;
@@ -63,25 +81,6 @@ export class Vocab_MODEL extends Model {
 }
 // ---------------------------------------------------------------
 
-export class Translation_MODEL extends Model {
-  static table = "translations";
-
-  static associations: Associations = {
-    vocab: { type: "belongs_to", key: "vocab_id" },
-  };
-
-  @relation("vocabs", "vocab_id") vocab!: Vocab_MODEL;
-
-  @text("user_id") user_id!: string | undefined;
-  @field("lang_id") lang_id!: string;
-  @text("text") text!: string;
-  @json("highlights", sanitize) highlights!: number[] | undefined;
-  @field("is_public") is_public!: boolean;
-
-  @readonly @date("created_at") createdAt!: number;
-  @readonly @date("updated_at") updatedAt!: number;
-  @readonly @date("deleted_at") deleted_at!: number;
-}
 // ---------------------------------------------------------------
 // ---------------------------------------------------------------
 // ---------------------------------------------------------------

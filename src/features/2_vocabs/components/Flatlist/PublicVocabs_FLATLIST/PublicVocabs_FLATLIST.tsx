@@ -34,11 +34,9 @@ function _PublicVocabs_FLATLIST({
   HANDLE_updateModal: ({
     clear,
     vocab,
-    trs,
   }: {
     clear?: boolean;
     vocab?: Vocab_PROPS;
-    trs?: Translation_MODEL;
   }) => void;
   PREPARE_vocabDelete?: (id: string) => {};
   PREPARE_toSaveVocab: ({

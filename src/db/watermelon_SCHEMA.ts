@@ -24,7 +24,11 @@ export default appSchema({
       columns: [
         { name: "user_id", type: "string", isIndexed: true }, // Reference to the user
         { name: "name", type: "string" },
-        { name: "default_LANGS", type: "string" }, // Array of language ids stored as stringified JSON
+        { name: "default_LANGS", type: "string" },
+
+        { name: "public", type: "boolean" },
+        { name: "public_and_private", type: "boolean" },
+
         { name: "created_at", type: "number" },
         { name: "updated_at", type: "number" },
         { name: "deleted_at", type: "number" },
@@ -40,22 +44,11 @@ export default appSchema({
         { name: "description", type: "string", isOptional: true },
         { name: "image", type: "string", isOptional: true },
         { name: "is_public", type: "boolean" },
-        { name: "lang_ids", type: "string", isOptional: true },
-        { name: "created_at", type: "number" },
-        { name: "updated_at", type: "number" },
-        { name: "deleted_at", type: "number" },
-      ],
-    }),
 
-    tableSchema({
-      name: "translations",
-      columns: [
-        { name: "vocab_id", type: "string", isIndexed: true }, // Reference to vocab
-        { name: "user_id", type: "string", isIndexed: true }, // Reference to user
-        { name: "lang_id", type: "string", isIndexed: true }, // Reference to the language
-        { name: "text", type: "string" },
-        { name: "highlights", type: "string", isOptional: true }, // Store highlights as stringified JSON array
-        { name: "is_public", type: "boolean" },
+        { name: "trs", type: "string", isOptional: true },
+        { name: "lang_ids", type: "string", isOptional: true },
+        { name: "searchable", type: "string", isOptional: true },
+
         { name: "created_at", type: "number" },
         { name: "updated_at", type: "number" },
         { name: "deleted_at", type: "number" },

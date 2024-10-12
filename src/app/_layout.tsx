@@ -52,8 +52,6 @@ export default function _layout() {
 function Main_LAYOUT() {
   const { SET_auth, SET_userData } = USE_auth();
   const { ARE_languagesLoading, languages } = USE_langs();
-  const { FETCH_myLists } = USE_fetchMyLists();
-  const { z_SET_lists } = USE_zustand();
 
   const router = useRouter();
   const [loaded] = useFonts({
@@ -97,12 +95,7 @@ function Main_LAYOUT() {
     const res = await FETCH_userData(user.id);
     if (res.success) {
       SET_userData(res.data);
-      const lists = await FETCH_myLists({ user_id: user.id });
-      if (lists.success && lists.lists) {
-        z_SET_lists(lists.lists);
-      } else {
-        console.error(lists.msg);
-      }
+
       return res.data; // Return user data if successful
     }
     return null; // Return null if fetching failed

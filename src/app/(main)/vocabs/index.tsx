@@ -167,7 +167,7 @@ export default function MyLists_PAGE() {
         onSuccess={(deleted_LIST?: List_PROPS) => {
           if (!deleted_LIST) return;
           SET_targetList(undefined);
-          z_DELETE_privateList(deleted_LIST?.id);
+          TOGGLE_modal("delete");
           toast.show(
             t("notifications.listDeletedPre") +
               `"${deleted_LIST?.name}"` +

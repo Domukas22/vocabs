@@ -18,7 +18,7 @@ import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import USE_zustand from "@/src/zustand";
 import { Language_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 import languages from "@/src/constants/languages";
-import { Languages_DB, Translations_DB, Vocabs_DB } from "@/src/db";
+import { Vocabs_DB } from "@/src/db";
 import GET_uniqueLanguagesInAList from "@/src/features/4_languages/utils/GET_uniqueLanguagesInAList/GET_uniqueLanguagesInAList";
 import { Q } from "@nozbe/watermelondb";
 import { withObservables } from "@nozbe/watermelondb/react";
@@ -36,14 +36,12 @@ function _MyVocabPreview_BLOCKS({ vocabs }: { vocabs: Vocab_MODEL[] }) {
     const fetchLanguages = async () => {
       // Assuming you have access to a proper list of Language_MODEL instances
 
-      const vocab_IDS = vocabs?.map((v) => v.id);
-
-      const trs = await Translations_DB.query(
-        Q.where("vocab_id", Q.oneOf(vocab_IDS))
-      ).fetch();
-
-      const lang_IDs = trs.reduce((acc, translation) => {
-        if (!acc.includes(translation.lang_id)) acc.push(translation.lang_id);
+      const lang_IDs = vocabs.reduce((acc, vocab) => {
+        vocab.trs?.forEach((translation) => {
+          if (!acc.includes(translation.lang_id)) {
+            acc.push(translation.lang_id);
+          }
+        });
         return acc;
       }, [] as string[]);
 

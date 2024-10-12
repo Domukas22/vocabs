@@ -51,10 +51,6 @@ export default function SingleList_PAGE() {
     Vocab_MODEL | undefined
   >();
 
-  const [toUpdate_TRS, SET_toUpdateTRS] = useState<
-    Translation_MODEL[] | undefined
-  >();
-
   const { highlighted_ID, highlight: HIGHLIGHT_vocab } = USE_highlighedId();
   const {
     isHighlighted: IS_listNameHighlighted,
@@ -66,14 +62,11 @@ export default function SingleList_PAGE() {
   function HANDLE_updateModal({
     clear = false,
     vocab,
-    trs,
   }: {
     clear?: boolean;
     vocab?: Vocab_MODEL;
-    trs?: Translation_MODEL[];
   }) {
     SET_toUpdateVocab(!clear && vocab ? vocab : undefined);
-    SET_toUpdateTRS(!clear && trs ? trs : undefined);
     TOGGLE_modal("update");
   }
 
@@ -129,7 +122,6 @@ export default function SingleList_PAGE() {
       />
       <UpdateMyVocab_MODAL
         toUpdate_VOCAB={toUpdate_VOCAB}
-        toUpdate_TRS={toUpdate_TRS}
         list={selected_LIST}
         IS_open={modal_STATES.update}
         TOGGLE_modal={() => TOGGLE_modal("update")}

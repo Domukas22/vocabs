@@ -42,8 +42,6 @@ function _MyList_BTN({
 
   // console.log([list.name, diff_1_count, diff_2_count, diff_3_count]);
 
-  console.log(vocabs?.[0]?.difficulty);
-
   return (
     <Pressable
       style={({ pressed }) => [
@@ -59,8 +57,8 @@ function _MyList_BTN({
       </Styled_TEXT>
 
       <Styled_TEXT type="label_small" style={{ textAlign: "left" }}>
-        {list.vocabs && list.vocabs?.length > 0
-          ? `${list.vocabs.length} ${t("other.vocabs")}`
+        {total_count > 0
+          ? `${total_count} ${t("other.vocabs")}`
           : t("other.emptyList")}
       </Styled_TEXT>
 

@@ -9,9 +9,6 @@ import Highlighted_TEXT from "@/src/components/Highlighted_TEXT/Highlighted_TEXT
 import { StyleSheet } from "react-native";
 import { MyColors } from "@/src/constants/MyColors";
 import { Translation_MODEL } from "@/src/db/watermelon_MODELS";
-import { Translations_DB, Vocabs_DB } from "@/src/db";
-import { withObservables } from "@nozbe/watermelondb/react";
-import { Q } from "@nozbe/watermelondb";
 
 export function VocabBack_TRS({
   trs,

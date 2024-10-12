@@ -87,7 +87,7 @@ function _Public_VOCAB({
                   type="simple"
                   style={{ flex: 1 }}
                   onPress={() => {
-                    HANDLE_updateModal({ vocab, trs });
+                    HANDLE_updateModal({ vocab });
                   }}
                   text={t("btn.editVocabAsAdmin")}
                   text_STYLES={{

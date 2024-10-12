@@ -1,4 +1,4 @@
-import db, { Translations_DB, Vocabs_DB } from "@/src/db";
+import db, { Vocabs_DB } from "@/src/db";
 import { useCallback, useMemo, useState } from "react";
 import {
   TranslationCreation_PROPS,
@@ -91,58 +91,57 @@ export default function USE_updateVocab() {
 
       const updatedVocab = await db.write(async () => {
         const vocab = await Vocabs_DB.find(vocab_id);
+
+        let trs = [];
+
+        if (incodming_TRS) {
+          // Process the incoming translations (incodming_TRS) with the current translations (trs)
+
+          // Update existing translations or delete if not found in incodming_TRS
+          trs = trs
+            .filter((existingTR) => {
+              const updated_TR = incodming_TRS.find(
+                (tr) => tr.lang_id === existingTR.lang
+              );
+
+              if (!updated_TR) {
+                // Translation not found in incoming, so it should be removed
+                return false; // Filter out
+              } else {
+                // Update existing translation with new data
+                existingTR.text = updated_TR.text;
+                existingTR.highlights = updated_TR.highlights;
+                return true; // Keep this translation
+              }
+            })
+            .concat(
+              // Add new translations that are not present in the existing trs
+              incodming_TRS
+                .filter(
+                  (i_TR) =>
+                    !trs.some((existingTR) => existingTR.lang === i_TR.lang_id)
+                )
+                .map((new_TR) => ({
+                  lang: new_TR.lang_id,
+                  text: new_TR.text,
+                  highlights: new_TR.highlights || [],
+                }))
+            );
+        }
+
         await vocab.update((v: Vocab_MODEL) => {
           v.user_id = is_public ? null : user?.id;
           v.list.set(is_public ? null : list);
           v.difficulty = difficulty || 3;
           v.description = description || "";
           v.is_public = is_public;
-          v.lang_ids = // ["en", "de"]
-            incodming_TRS && incodming_TRS.length > 0
-              ? incodming_TRS?.reduce((acc, tr) => {
-                  if (!acc.includes(tr.lang_id)) acc.push(tr.lang_id);
-                  return acc;
-                }, [] as string[])
-              : [];
-        });
-
-        const old_TRS = await Translations_DB.query(
-          Q.where("vocab_id", vocab.id)
-        ).fetch();
-
-        old_TRS.forEach(async (old_TR) => {
-          // if a tr is in the old_TRS, but not in the incodming_TRS, delete it
-          const SHOULD_delete = !incodming_TRS?.some(
-            (i_TR) => i_TR.lang_id === old_TR.lang_id
-          );
-          const updated_TR = incodming_TRS?.find(
-            (tr) => tr.lang_id === old_TR.lang_id
-          );
-
-          if (SHOULD_delete) {
-            await old_TR.destroyPermanently();
-            return;
-          } else if (updated_TR && !SHOULD_delete) {
-            await old_TR.update((old_TR) => {
-              old_TR.text = updated_TR.text;
-              old_TR.highlights = updated_TR.highlights;
-              old_TR.is_public = is_public;
-            });
-          }
-        });
-
-        incodming_TRS?.forEach(async (i_TR) => {
-          const IS_new = !old_TRS.some((o_TR) => o_TR.lang_id === i_TR.lang_id);
-          if (IS_new) {
-            await Translations_DB.create((tr) => {
-              tr.vocab.set(vocab);
-              tr.user_id = vocab.user_id;
-              tr.lang_id = i_TR.lang_id;
-              tr.text = i_TR.text;
-              tr.highlights = i_TR.highlights;
-              tr.is_public = vocab.is_public;
-            });
-          }
+          v.trs = incodming_TRS ? incodming_TRS : [];
+          v.lang_ids = incodming_TRS
+            ? incodming_TRS.map((t) => t.lang_id)?.join(",")
+            : "";
+          v.searchable = incodming_TRS
+            ? incodming_TRS.map((t) => t.text)?.join(",")
+            : "";
         });
 
         return vocab;

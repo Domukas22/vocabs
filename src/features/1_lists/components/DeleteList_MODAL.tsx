@@ -10,6 +10,8 @@ import USE_deleteList from "../hooks/USE_deleteList";
 import { List_PROPS, User_PROPS } from "@/src/db/props";
 import USE_zustand from "@/src/zustand";
 import { useToast } from "react-native-toast-notifications";
+import db, { Lists_DB, Vocabs_DB } from "@/src/db";
+import { Q } from "@nozbe/watermelondb";
 
 interface DeleteListModal_PROPS {
   user_id: string | undefined;
@@ -29,17 +31,19 @@ export default function DeleteList_MODAL({
   const { t } = useTranslation();
   const { DELETE_list, IS_deletingList, error, RESET_error } = USE_deleteList();
 
-  const handleDelete = async () => {
-    const result = await DELETE_list({
-      user_id,
-      list_id: list_id,
-      onSuccess,
-      cleanup: CLOSE_modal,
-    });
+  const del = async () => {
+    await db.write(async () => {
+      const list = await Lists_DB.find(list_id || "");
 
-    if (!result.success) {
-      console.log(result.msg); // Log internal message for debugging.
-    }
+      const vocabs = await Vocabs_DB.query(Q.where("list_id", list?.id));
+
+      vocabs?.forEach(async (v) => {
+        await v.markAsDeleted();
+      });
+
+      await list.markAsDeleted();
+    });
+    if (onSuccess) onSuccess();
   };
 
   return (
@@ -70,7 +74,7 @@ export default function DeleteList_MODAL({
           iconRight={
             IS_deletingList ? <ActivityIndicator color="black" /> : null
           }
-          onPress={handleDelete}
+          onPress={del}
           type="action"
           style={{ flex: 1 }}
         />

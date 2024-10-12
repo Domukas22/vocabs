@@ -16,13 +16,10 @@ import VocabBack_DESC from "../Components/VocabBack_DESC/VocabBack_DESC";
 import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
 import VocabBack_BTNS from "../Components/VocabBack_BTNS/VocabBack_BTNS";
 import VocabBackDifficultyEdit_BTNS from "../Components/VocabBackDifficultyEdit_BTNS/VocabBackDifficultyEdit_BTNS";
-import { Translations_DB } from "@/src/db";
-import { Q } from "@nozbe/watermelondb";
-import { withObservables } from "@nozbe/watermelondb/react";
+
 import { Translation_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 
 interface VocabProps {
-  trs: Translation_MODEL[];
   vocab: Vocab_MODEL;
   highlighted: boolean;
 
@@ -38,14 +35,19 @@ interface VocabProps {
 }
 
 // TOGGLE_vocabModal needs to also pass in th etranslations, so we dont have to pass them async and get a delayed manageVocabModal update
-function _MyVocab({ trs, vocab, highlighted, HANDLE_updateModal }: VocabProps) {
+export default function MyVocab({
+  vocab,
+  highlighted,
+  HANDLE_updateModal,
+}: VocabProps) {
   const [open, TOGGLE_open] = USE_toggle();
   const [SHOW_difficultyEdits, TOGGLE_difficultyEdits] = USE_toggle(false);
+
+  const trs = vocab?.trs || [];
 
   const handleEdit = () => {
     HANDLE_updateModal({
       vocab,
-      trs,
     });
   };
 
@@ -124,15 +126,6 @@ function _MyVocab({ trs, vocab, highlighted, HANDLE_updateModal }: VocabProps) {
     </View>
   );
 }
-
-const enhance = withObservables(
-  ["vocab"],
-  ({ vocab }: { vocab: Vocab_MODEL }) => ({
-    trs: vocab.translations,
-  })
-);
-
-export const MyVocab = enhance(_MyVocab);
 
 const s = StyleSheet.create({
   vocab: {

@@ -12,8 +12,8 @@ import {
 } from "@/src/components/icons/icons";
 import Label from "@/src/components/Label/Label";
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
-import { Translations_DB, Vocabs_DB } from "@/src/db";
-import { Language_PROPS, DisplaySettings_PROPS } from "@/src/db/props";
+import { Vocabs_DB } from "@/src/db";
+
 import { Language_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 import USE_zustand from "@/src/zustand";
 import { Q } from "@nozbe/watermelondb";
@@ -38,14 +38,12 @@ function _VocabFilter_BLOCKS({
     const fetchLanguages = async () => {
       // Assuming you have access to a proper list of Language_MODEL instances
 
-      const vocab_IDS = vocabs?.map((v) => v.id) || [];
-
-      const trs = await Translations_DB.query(
-        Q.where("vocab_id", Q.oneOf(vocab_IDS))
-      ).fetch();
-
-      const lang_IDs = trs.reduce((acc, translation) => {
-        if (!acc.includes(translation.lang_id)) acc.push(translation.lang_id);
+      const lang_IDs = vocabs?.reduce((acc, vocab) => {
+        vocab.trs?.forEach((translation) => {
+          if (!acc.includes(translation.lang_id)) {
+            acc.push(translation.lang_id);
+          }
+        });
         return acc;
       }, [] as string[]);
 

@@ -69,6 +69,7 @@ const USE_zustand = create<ZustandStore>((set) => ({
   // z_SET_printedVocabsLoading: (val) => set({ z_ARE_printedVocabsLoading: val }),
 
   z_display_SETTINGS: {
+    ALLOW_action: true,
     SHOW_description: true,
     SHOW_flags: true,
     SHOW_difficulty: true,

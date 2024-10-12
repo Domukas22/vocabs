@@ -1,4 +1,4 @@
-import db, { Translations_DB, Vocabs_DB } from "@/src/db";
+import db, { Vocabs_DB } from "@/src/db";
 import { useCallback, useMemo, useState } from "react";
 import {
   TranslationCreation_PROPS,
@@ -84,28 +84,10 @@ export default function USE_createVocab() {
           vocab.difficulty = difficulty || 3;
           vocab.description = description || "";
           vocab.is_public = is_public;
-
-          vocab.lang_ids = // ["en", "de"]
-            translations && translations.length > 0
-              ? translations?.reduce((acc, tr) => {
-                  if (!acc.includes(tr.lang_id)) acc.push(tr.lang_id);
-                  return acc;
-                }, [] as string[])
-              : [];
+          vocab.trs = translations;
+          vocab.lang_ids = translations?.map((t) => t.lang_id).join(",");
+          vocab.searchable = translations?.map((t) => t.text).join(",");
         });
-
-        if (translations) {
-          translations.map(async (translation) => {
-            return await Translations_DB.create((trans) => {
-              trans.vocab.set(vocab);
-              trans.user_id = is_public ? undefined : user?.id;
-              trans.lang_id = translation.lang_id;
-              trans.text = translation.text;
-              trans.highlights = translation.highlights;
-              trans.is_public = is_public;
-            });
-          });
-        }
 
         return vocab;
       });

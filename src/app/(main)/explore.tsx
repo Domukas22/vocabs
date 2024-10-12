@@ -219,3 +219,17 @@ export default function Explore_PAGE() {
     </Page_WRAP>
   );
 }
+
+const vocab = {
+  id: 1,
+  description: "A nice description",
+  trs: [
+    { lang: "en", text: "English translation.", highlights: [1, 2, 3] },
+    { lang: "de", text: "German translation.", highlights: [1, 2, 3] },
+    { lang: "fr", text: "French translation.", highlights: [1, 2, 3] },
+    { lang: "lt", text: "Lithuanian translation.", highlights: [1, 2, 3] },
+    { lang: "ru", text: "Russian translation.", highlights: [1, 2, 3] },
+  ],
+  searchable:
+    "English translation. German translation. French translation. Lithuanian translation. Russian translation.",
+};

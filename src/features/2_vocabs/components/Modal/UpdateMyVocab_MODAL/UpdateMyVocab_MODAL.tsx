@@ -41,8 +41,7 @@ import USE_updateVocab from "../../../hooks/USE_updateVocab";
 import UpdateMyVocab_FOOTER from "../../Footer/UpdateMyVocab_FOOTER/UpdateMyVocab_FOOTER";
 import PublishPrivateVocabAsAdmin_MODAL from "../PublishPrivateVocabAsAdmin_MODAL/PublishPrivateVocabAsAdmin_MODAL";
 import { useToast } from "react-native-toast-notifications";
-import { withObservables } from "@nozbe/watermelondb/react";
-import { Lists_DB, Translations_DB, Vocabs_DB } from "@/src/db";
+
 import {
   List_MODEL,
   Translation_MODEL,
@@ -69,7 +68,7 @@ export type UpdateMyVocabData_PROPS = {
 export default function UpdateMyVocab_MODAL({
   toUpdate_VOCAB,
   list,
-  toUpdate_TRS,
+
   IS_open,
   TOGGLE_modal: TOGGLE_vocabModal,
   onSuccess = () => {},
@@ -145,13 +144,7 @@ export default function UpdateMyVocab_MODAL({
   useEffect(() => {
     const fn = async () => {
       if (IS_open) {
-        const p = toUpdate_TRS?.map((x) => ({
-          text: x.text,
-          highlights: x.highlights,
-          lang_id: x.lang_id,
-        }));
-
-        setValue("translations", p ? p : []);
+        setValue("translations", toUpdate_VOCAB?.trs || []);
         setValue("description", toUpdate_VOCAB?.description || "");
         setValue("difficulty", toUpdate_VOCAB?.difficulty || 3);
         setValue("list", list || undefined);

@@ -7,18 +7,14 @@ import { ICON_X } from "@/src/components/icons/icons";
 import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
 import { DisplaySettings_PROPS, Vocab_PROPS } from "@/src/db/props";
 import { useTranslation } from "react-i18next";
-import { MyVocab } from "../../Vocab/My_VOCAB/My_VOCAB";
+import MyVocab from "../../Vocab/My_VOCAB/My_VOCAB";
 import React, { useEffect, useState } from "react";
 import SwipeableExample from "@/src/components/SwipeableExample/SwipeableExample";
-import USE_searchedVocabs from "../../../hooks/USE_searchedVocabs";
-import USE_filteredVocabs from "../../../hooks/USE_filteredVocabs";
+
 import { EmptyFlatList_BOTTM, List_SKELETONS } from "@/src/features/1_lists";
 import USE_zustand from "@/src/zustand";
 import { Translation_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 import { withObservables } from "@nozbe/watermelondb/react";
-import { Vocabs_DB } from "@/src/db";
-import { Q } from "@nozbe/watermelondb";
-import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import FETCH_vocabs, { VocabFilter_PROPS } from "../../../utils/FETCH_vocabs";
 
 function _MyVocabs_FLATLIST({
@@ -39,11 +35,9 @@ function _MyVocabs_FLATLIST({
   HANDLE_updateModal: ({
     clear,
     vocab,
-    trs,
   }: {
     clear?: boolean;
     vocab?: Vocab_PROPS;
-    trs?: Translation_MODEL[];
   }) => void;
 
   PREPARE_vocabDelete?: (id: string) => void;
@@ -52,22 +46,18 @@ function _MyVocabs_FLATLIST({
   const { z_display_SETTINGS } = USE_zustand();
   const { t } = useTranslation();
 
+  console.log("-----------------------------------------------------");
+  console.log("TRS: ", vocabs?.[0]?.trs);
+
   const [loading, SET_loading] = useState(false);
 
   if (loading) return <List_SKELETONS />;
-
-  console.log(
-    "VOCABS: ",
-    vocabs?.map((v) => v.lang_ids)
-  );
-  console.log("SETTINGS: ", z_display_SETTINGS.langFilters);
 
   if (vocabs && vocabs?.length > 0) {
     return (
       <Styled_FLATLIST
         data={vocabs}
         renderItem={({ item }) => {
-          console.log(item.lang_ids);
           return (
             <SwipeableExample
               rightBtn_ACTION={() => {
