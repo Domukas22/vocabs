@@ -7,7 +7,6 @@ import Small_MODAL from "@/src/components/Modals/Small_MODAL/Small_MODAL";
 import { useTranslation } from "react-i18next";
 import USE_createList from "../../hooks/USE_createList";
 import Error_TEXT from "@/src/components/Error_TEXT/Error_TEXT";
-import { List_PROPS, User_PROPS } from "@/src/db/props";
 import { Controller, useForm } from "react-hook-form";
 import { TextInput } from "react-native";
 import IS_listNameTaken from "../../utils/IS_listNameTaken";
@@ -21,7 +20,7 @@ interface CreateListModal_PROPS {
   IS_open: boolean;
   currentList_NAMES: string[];
   CLOSE_modal: () => void;
-  onSuccess: (newList: List_PROPS) => void;
+  onSuccess: (newList: List_MODEL) => void;
 }
 
 type NewList_PROPS = {

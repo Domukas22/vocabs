@@ -6,15 +6,15 @@ import { MAX_TRANSLATION_LENGTH } from "@/src/constants/globalVars";
 import TrInput_BLOCK from "../../InputBlocks/TrInput_BLOCK";
 import { Control, Controller } from "react-hook-form";
 import { CreateMyVocabData_PROPS } from "../../../Modal/CreateMyVocab_MODAL/CreateMyVocab_MODAL";
-import { TranslationCreation_PROPS } from "@/src/db/props";
+import { tr_PROPS } from "@/src/db/props";
 import { CreatePublicVocabData_PROPS } from "../../../Modal/CreatePublicVocab_MODAL/CreatePublicVocab_MODAL";
 
 interface TrInputController_PROPS {
-  tr: TranslationCreation_PROPS;
+  tr: tr_PROPS;
   diff: 1 | 2 | 3 | undefined;
   index: number;
   control: Control<CreatePublicVocabData_PROPS, any>;
-  OPEN_highlights: (tr: TranslationCreation_PROPS) => void;
+  OPEN_highlights: (tr: tr_PROPS) => void;
 }
 
 export default function TrInput_CONTROLLER({

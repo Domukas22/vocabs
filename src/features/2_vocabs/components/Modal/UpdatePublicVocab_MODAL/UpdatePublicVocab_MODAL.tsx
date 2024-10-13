@@ -8,13 +8,7 @@ import { ICON_X } from "@/src/components/icons/icons";
 import React, { useEffect, useState } from "react";
 import { View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import {
-  Language_PROPS,
-  List_PROPS,
-  TranslationCreation_PROPS,
-  User_PROPS,
-  Vocab_PROPS,
-} from "@/src/db/props";
+import { tr_PROPS } from "@/src/db/props";
 
 import TrHighlights_MODAL from "../TrHighlights_MODAL";
 import SelectMultipleLanguages_MODAL from "@/src/features/4_languages/components/SelectMultipleLanguages_MODAL/SelectMultipleLanguages_MODAL";
@@ -39,19 +33,23 @@ import List_CONTROLLER from "../../Inputs/InputControllers/List_CONTROLLER";
 import CreateMyVocab_FOOTER from "../../Footer/CreateMyVocab_FOOTER/CreateMyVocab_FOOTER";
 import USE_updateVocab from "../../../hooks/USE_updateVocab";
 import UpdateMyVocab_FOOTER from "../../Footer/UpdateMyVocab_FOOTER/UpdateMyVocab_FOOTER";
-import { Translation_MODEL } from "@/src/db/watermelon_MODELS";
+import {
+  Language_MODEL,
+  User_MODEL,
+  Vocab_MODEL,
+} from "@/src/db/watermelon_MODELS";
 
 interface UpdatePublicVocabModal_PROPS {
   IS_open: boolean;
-  toUpdate_VOCAB: Vocab_PROPS | undefined;
-  toUpdate_TRS: Translation_MODEL[] | undefined;
+  toUpdate_VOCAB: Vocab_MODEL | undefined;
+  toUpdate_TRS: tr_PROPS[] | undefined;
   TOGGLE_modal: () => void;
-  onSuccess: (new_VOCAB: Vocab_PROPS) => void;
+  onSuccess: (new_VOCAB: Vocab_MODEL) => void;
 }
 
 export type UpdatePublicVocabData_PROPS = {
   description: string;
-  translations: TranslationCreation_PROPS[];
+  translations: tr_PROPS[];
 };
 
 export default function UpdatePublicVocab_MODAL(
@@ -66,7 +64,7 @@ export default function UpdatePublicVocab_MODAL(
   } = props;
 
   const { t } = useTranslation();
-  const { user }: { user: User_PROPS } = USE_auth();
+  const { user }: { user: User_MODEL } = USE_auth();
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
     { name: "langs", initialValue: false },
@@ -74,9 +72,7 @@ export default function UpdatePublicVocab_MODAL(
     { name: "list", initialValue: false },
   ]);
 
-  const [target_TR, SET_targetTr] = useState<
-    TranslationCreation_PROPS | undefined
-  >(undefined);
+  const [target_TR, SET_targetTr] = useState<tr_PROPS | undefined>(undefined);
 
   const { UPDATE_vocab, IS_updatingVocab, db_ERROR, RESET_dbError } =
     USE_updateVocab();
@@ -89,7 +85,7 @@ export default function UpdatePublicVocab_MODAL(
       description,
       translations,
       is_public: true,
-      onSuccess: (updated_VOCAB: Vocab_PROPS) => {
+      onSuccess: (updated_VOCAB: Vocab_MODEL) => {
         onSuccess(updated_VOCAB);
         reset();
       },
@@ -203,12 +199,12 @@ export default function UpdatePublicVocab_MODAL(
           open={modal_STATES.langs}
           TOGGLE_open={() => TOGGLE_modal("langs")}
           trs={form_TRS}
-          SUBMIT_langs={(new_LANGS: Language_PROPS[]) =>
+          SUBMIT_langs={(new_LANGS: Language_MODEL[]) =>
             // adds/deletes current translations based on new languages provided
             HANLDE_selectedLangs({
               new_LANGS,
               current_TRS: form_TRS,
-              SET_trs: (updated_TRS: TranslationCreation_PROPS[]) => {
+              SET_trs: (updated_TRS: tr_PROPS[]) => {
                 setValue("translations", updated_TRS);
 
                 if (updated_TRS.length) {
@@ -224,7 +220,7 @@ export default function UpdatePublicVocab_MODAL(
           tr={target_TR}
           diff={0}
           TOGGLE_open={() => TOGGLE_modal("highlights")}
-          SET_trs={(trs: TranslationCreation_PROPS[]) => {
+          SET_trs={(trs: tr_PROPS[]) => {
             setValue("translations", trs);
           }}
           SUBMIT_highlights={({ lang_id, highlights }) =>
@@ -233,7 +229,7 @@ export default function UpdatePublicVocab_MODAL(
               new_HIGHLIGHTS: highlights,
               lang_id,
               current_TRS: form_TRS,
-              SET_trs: (updated_TRS: TranslationCreation_PROPS[]) =>
+              SET_trs: (updated_TRS: tr_PROPS[]) =>
                 setValue("translations", updated_TRS),
             })
           }

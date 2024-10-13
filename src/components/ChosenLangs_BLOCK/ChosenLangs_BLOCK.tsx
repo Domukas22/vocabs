@@ -6,7 +6,8 @@ import Block from "@/src/components/Block/Block";
 import Btn from "@/src/components/Btn/Btn";
 import { ICON_flag, ICON_X } from "@/src/components/icons/icons";
 import Label from "@/src/components/Label/Label";
-import { Language_PROPS, TranslationCreation_PROPS } from "@/src/db/props";
+import { tr_PROPS } from "@/src/db/props";
+import { Language_MODEL } from "@/src/db/watermelon_MODELS";
 import { View } from "react-native";
 
 import { useTranslation } from "react-i18next";
@@ -20,11 +21,11 @@ import EmptyFlatList_BOTTM from "../EmptyFlatList_BOTTM/EmptyFlatList_BOTTM";
 
 interface ChosenLangsInputs_PROPS {
   label: string;
-  trs: TranslationCreation_PROPS[];
+  trs: tr_PROPS[];
   REMOVE_lang: (lang_id: string) => void;
   toggle: () => void;
   error: FieldError | undefined;
-  langs?: Language_PROPS | undefined;
+  langs?: Language_MODEL | undefined;
 }
 
 export default function ChosenLangs_BLOCK({
@@ -42,7 +43,7 @@ export default function ChosenLangs_BLOCK({
     <>
       <Block>
         <Label>{label || "NO LABEL PROVIDED"}</Label>
-        {langs?.map((lang: Language_PROPS) => {
+        {langs?.map((lang: Language_MODEL) => {
           return (
             <Btn
               key={"chosen lang" + lang.id}

@@ -10,7 +10,7 @@ import {
   ICON_shuffle,
 } from "@/src/components/icons/icons";
 import Label from "@/src/components/Label/Label";
-import { Language_PROPS, DisplaySettings_PROPS } from "@/src/db/props";
+
 import { t } from "i18next";
 import VocabFrontLang_BLOCK from "../VocabFrontLang_BLOCK/VocabFrontLang_BLOCK";
 import USE_zustand from "@/src/zustand";
@@ -19,7 +19,7 @@ export default function VocabSorting_BLOCKS() {
   const { z_display_SETTINGS, z_SET_displaySettings } = USE_zustand();
   return (
     <Block row={false}>
-      <Label>{t("modal.z_display_SETTINGS.label.sorting")}</Label>
+      <Label>{t("label.sortVocabs")}</Label>
       <Btn
         text={t("btn.sortByShuffling")}
         iconRight={

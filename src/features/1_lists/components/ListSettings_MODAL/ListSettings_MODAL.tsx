@@ -12,7 +12,6 @@ import SelectMultipleLanguages_MODAL from "@/src/features/4_languages/components
 import Confirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
-import { Language_PROPS, List_PROPS } from "@/src/db/props";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 import GET_langs from "@/src/features/4_languages/utils/GET_langs";
 import { useMemo, useState } from "react";
@@ -29,7 +28,7 @@ import { useToast } from "react-native-toast-notifications";
 import { useRouter } from "expo-router";
 import UpdateList_MODAL from "../UpdateList_MODAL";
 import { MyColors } from "@/src/constants/MyColors";
-import { List_MODEL } from "@/src/db/watermelon_MODELS";
+import { List_MODEL, Language_MODEL } from "@/src/db/watermelon_MODELS";
 import USE_updateListDefaultLangs from "../../hooks/USE_updateListDefaultLangs";
 
 interface ListSettingsModal_PROPS {
@@ -66,8 +65,8 @@ export default function ListSettings_MODAL({
     USE_toggle(false);
 
   const langs = useMemo(
-    () => GET_langs({ languages, target: list?.default_LANGS }),
-    [list?.default_LANGS]
+    () => GET_langs({ languages, target: list?.default_lang_ids }),
+    [list?.default_lang_ids]
   );
 
   const {
@@ -187,7 +186,7 @@ export default function ListSettings_MODAL({
         open={SHOW_langSeletionModal}
         TOGGLE_open={TOGGLE_langSelectionModal}
         langs={langs}
-        SUBMIT_langs={(langs: Language_PROPS[]) => {
+        SUBMIT_langs={(langs: Language_MODEL[]) => {
           UPDATE_langs(langs.map((l) => l.id));
         }}
         languages={languages}
@@ -200,7 +199,7 @@ export default function ListSettings_MODAL({
         current_NAME={list?.name}
         IS_open={SHOW_renameListModal}
         CLOSE_modal={() => TOGGLE_renameListModal()}
-        onSuccess={(updated_LIST?: List_PROPS) => {
+        onSuccess={(updated_LIST?: List_MODEL) => {
           if (updated_LIST) {
             z_RENAME_privateList(updated_LIST);
             HIGHLIGHT_modalListName();
@@ -213,7 +212,7 @@ export default function ListSettings_MODAL({
         IS_open={SHOW_deleteModal}
         list_id={list?.id}
         CLOSE_modal={() => SET_deleteModal(false)}
-        onSuccess={(deleted_LIST?: List_PROPS) => {
+        onSuccess={(deleted_LIST?: List_MODEL) => {
           if (!deleted_LIST) return;
           SET_deleteModal(false);
           z_DELETE_privateList(deleted_LIST?.id);

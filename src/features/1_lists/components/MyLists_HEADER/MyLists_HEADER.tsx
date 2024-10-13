@@ -5,7 +5,7 @@
 import Btn from "@/src/components/Btn/Btn";
 import Header from "@/src/components/Header/Header";
 import { ICON_X } from "@/src/components/icons/icons";
-import { List_PROPS } from "@/src/db/props";
+import { List_MODEL } from "@/src/db/watermelon_MODELS";
 import { useTranslation } from "react-i18next";
 
 export default function MyLists_HEADER({
@@ -13,7 +13,7 @@ export default function MyLists_HEADER({
   lists,
 }: {
   TOGGLE_createListModal: () => void;
-  lists: List_PROPS[];
+  lists: List_MODEL[];
 }) {
   const { t } = useTranslation();
   return (

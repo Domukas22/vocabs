@@ -7,7 +7,7 @@ import { useRouter } from "expo-router";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import { useEffect, useRef, useState } from "react";
 
-import { List_PROPS } from "@/src/db/props";
+import { List_MODEL } from "@/src/db/watermelon_MODELS";
 import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
 
 import {
@@ -45,7 +45,7 @@ export default function MyLists_PAGE() {
   const toast = useToast();
 
   const { highlighted_ID, highlight } = USE_highlighedId();
-  const [target_LIST, SET_targetList] = useState<List_PROPS | undefined>(
+  const [target_LIST, SET_targetList] = useState<List_MODEL | undefined>(
     undefined
   );
   const {
@@ -63,11 +63,11 @@ export default function MyLists_PAGE() {
     { name: "delete", initialValue: false },
   ]);
 
-  function PREPARE_listRename(list: List_PROPS) {
+  function PREPARE_listRename(list: List_MODEL) {
     SET_targetList(list);
     TOGGLE_modal("rename");
   }
-  function PREPADE_deleteList(list: List_PROPS) {
+  function PREPADE_deleteList(list: List_MODEL) {
     SET_targetList(list);
     TOGGLE_modal("delete");
   }
@@ -87,7 +87,7 @@ export default function MyLists_PAGE() {
 
       <MyLists_FLATLIST
         user_id={user?.id || ""}
-        SELECT_list={(list: List_PROPS) => {
+        SELECT_list={(list: List_MODEL) => {
           SET_selectedList(list);
           router.push("/(main)/vocabs/list");
         }}
@@ -101,7 +101,7 @@ export default function MyLists_PAGE() {
       {/* {!ARE_listsSearching && searched_LISTS.length > 0 ? (
         <MyLists_FLATLIST
           user_id={user?.id || ""}
-          SELECT_list={(list: List_PROPS) => {
+          SELECT_list={(list: List_MODEL) => {
             SET_selectedList(list);
             router.push("/(main)/vocabs/list");
           }}
@@ -131,7 +131,7 @@ export default function MyLists_PAGE() {
         IS_open={modal_STATES.create}
         currentList_NAMES={z_lists?.map((l) => l.name)}
         CLOSE_modal={() => TOGGLE_modal("create")}
-        onSuccess={(newList: List_PROPS) => {
+        onSuccess={(newList: List_MODEL) => {
           highlight(newList?.id);
           list_REF?.current?.scrollToOffset({ animated: true, offset: 0 });
           z_CREATE_privateList(newList);
@@ -147,7 +147,7 @@ export default function MyLists_PAGE() {
         current_NAME={target_LIST?.name}
         IS_open={modal_STATES.rename}
         CLOSE_modal={() => TOGGLE_modal("rename")}
-        onSuccess={(updated_LIST?: List_PROPS) => {
+        onSuccess={(updated_LIST?: List_MODEL) => {
           if (updated_LIST) {
             z_RENAME_privateList(updated_LIST);
             highlight(updated_LIST.id);
@@ -164,7 +164,7 @@ export default function MyLists_PAGE() {
         IS_open={modal_STATES.delete}
         list_id={target_LIST?.id}
         CLOSE_modal={() => TOGGLE_modal("delete")}
-        onSuccess={(deleted_LIST?: List_PROPS) => {
+        onSuccess={(deleted_LIST?: List_MODEL) => {
           if (!deleted_LIST) return;
           SET_targetList(undefined);
           TOGGLE_modal("delete");

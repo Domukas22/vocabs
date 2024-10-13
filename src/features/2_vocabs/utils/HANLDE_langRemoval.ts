@@ -2,12 +2,12 @@
 //
 //
 
-import { TranslationCreation_PROPS } from "@/src/db/props";
+import { tr_PROPS } from "@/src/db/props";
 
 export interface HANDLE_langRemoval_PROPS {
   lang_id: string;
-  current_TRS: TranslationCreation_PROPS[];
-  SET_trs: (langs: TranslationCreation_PROPS[]) => void;
+  current_TRS: tr_PROPS[];
+  SET_trs: (langs: tr_PROPS[]) => void;
 }
 
 export default function HANDLE_langRemoval({

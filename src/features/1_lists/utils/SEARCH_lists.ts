@@ -2,14 +2,14 @@
 //
 //
 
-import { List_PROPS } from "@/src/db/props";
+import { List_MODEL } from "@/src/db/watermelon_MODELS";
 
 export default function SEARCH_lists({
   search,
   lists,
 }: {
   search: string;
-  lists: List_PROPS[];
+  lists: List_MODEL[];
 }) {
   if (search === "") return lists;
 

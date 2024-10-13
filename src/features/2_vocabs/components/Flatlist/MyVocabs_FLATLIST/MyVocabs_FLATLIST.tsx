@@ -5,7 +5,7 @@
 import Btn from "@/src/components/Btn/Btn";
 import { ICON_X } from "@/src/components/icons/icons";
 import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
-import { DisplaySettings_PROPS, Vocab_PROPS } from "@/src/db/props";
+
 import { useTranslation } from "react-i18next";
 import MyVocab from "../../Vocab/My_VOCAB/My_VOCAB";
 import React, { useEffect, useState } from "react";
@@ -13,7 +13,8 @@ import SwipeableExample from "@/src/components/SwipeableExample/SwipeableExample
 
 import { EmptyFlatList_BOTTM, List_SKELETONS } from "@/src/features/1_lists";
 import USE_zustand from "@/src/zustand";
-import { Translation_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
+import { tr_PROPS } from "@/src/db/props";
+import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 import { withObservables } from "@nozbe/watermelondb/react";
 import FETCH_vocabs, { VocabFilter_PROPS } from "../../../utils/FETCH_vocabs";
 
@@ -37,7 +38,7 @@ function _MyVocabs_FLATLIST({
     vocab,
   }: {
     clear?: boolean;
-    vocab?: Vocab_PROPS;
+    vocab?: Vocab_MODEL;
   }) => void;
 
   PREPARE_vocabDelete?: (id: string) => void;

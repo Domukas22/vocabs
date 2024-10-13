@@ -7,7 +7,7 @@ import { StyleSheet, View } from "react-native";
 import React, { useMemo } from "react";
 
 import { USE_toggle } from "@/src/hooks/USE_toggle";
-import { DisplaySettings_PROPS, Vocab_PROPS } from "@/src/db/props";
+import { tr_PROPS } from "@/src/db/props";
 import Vocab_FRONT from "../Components/Vocab_FRONT/Vocab_FRONT";
 
 import USE_updateVocabDifficulty from "../../../hooks/USE_updateVocabDifficulty";
@@ -17,7 +17,7 @@ import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
 import VocabBack_BTNS from "../Components/VocabBack_BTNS/VocabBack_BTNS";
 import VocabBackDifficultyEdit_BTNS from "../Components/VocabBackDifficultyEdit_BTNS/VocabBackDifficultyEdit_BTNS";
 
-import { Translation_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
+import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 
 interface VocabProps {
   vocab: Vocab_MODEL;
@@ -30,7 +30,7 @@ interface VocabProps {
   }: {
     clear?: boolean;
     vocab?: Vocab_MODEL;
-    trs?: Translation_MODEL[];
+    trs?: tr_PROPS[];
   }) => void;
 }
 

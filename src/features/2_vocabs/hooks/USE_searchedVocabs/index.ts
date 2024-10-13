@@ -2,24 +2,23 @@
 //
 //
 
+import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 import React, { useEffect, useState, useCallback } from "react";
-import { Vocab_PROPS } from "@/src/db/props";
-
 export default function USE_searchedVocabs({
   vocabs,
   search,
 }: {
-  vocabs: Vocab_PROPS[];
+  vocabs: Vocab_MODEL[];
   search: string;
 }) {
-  const [searched_VOCABS, SET_searchedVocabs] = useState<Vocab_PROPS[]>(vocabs);
+  const [searched_VOCABS, SET_searchedVocabs] = useState<Vocab_MODEL[]>(vocabs);
   const [ARE_vocabsSearching, SET_areVocabsSearching] = useState(false);
 
   useEffect(() => {
     const filter = async () => {
       SET_areVocabsSearching(true);
       // Use setTimeout to offload filtering to the event loop
-      const filtered = await new Promise<Vocab_PROPS[]>((resolve) => {
+      const filtered = await new Promise<Vocab_MODEL[]>((resolve) => {
         setTimeout(() => {
           const result = vocabs.filter(
             (vocab) =>

@@ -6,7 +6,7 @@ import Btn from "@/src/components/Btn/Btn";
 import { ICON_X } from "@/src/components/icons/icons";
 import { MyList_BTN } from "@/src/features/1_lists/components/MyList_BTN/MyList_BTN";
 import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
-import { List_PROPS } from "@/src/db/props";
+
 import { useTranslation } from "react-i18next";
 import SwipeableExample from "@/src/components/SwipeableExample/SwipeableExample";
 import Label from "@/src/components/Label/Label";
@@ -22,12 +22,12 @@ import { take } from "@nozbe/watermelondb/QueryDescription";
 
 interface MyListsFlatlist_PROPS {
   _ref: React.RefObject<FlatList>;
-  lists: List_PROPS[];
+  lists: List_MODEL[];
   SHOW_bottomBtn: boolean;
   highlighted_ID?: string | undefined;
-  SELECT_list: (list: List_PROPS) => void;
-  PREPARE_listRename: (list: List_PROPS) => void;
-  PREPADE_deleteList: (list: List_PROPS) => void;
+  SELECT_list: (list: List_MODEL) => void;
+  PREPARE_listRename: (list: List_MODEL) => void;
+  PREPADE_deleteList: (list: List_MODEL) => void;
   TOGGLE_createListModal: () => void;
 }
 
@@ -48,7 +48,7 @@ function _MyLists_FLATLIST({
       _ref={_ref}
       style={{ flex: 1 }}
       data={lists}
-      renderItem={({ item }: { item: List_PROPS }) => (
+      renderItem={({ item }: { item: List_MODEL }) => (
         <SwipeableExample
           leftBtn_ACTION={() => {
             PREPARE_listRename(item);

@@ -17,11 +17,7 @@ import {
 } from "@/src/features/2_vocabs";
 import { useRouter } from "expo-router";
 import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
-import {
-  DisplaySettings_PROPS,
-  PublicVocabDisplaySettings_PROPS,
-  Vocab_PROPS,
-} from "@/src/db/props";
+import { tr_PROPS } from "@/src/db/props";
 import React, { useEffect, useMemo, useState } from "react";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 import ListSettings_MODAL from "@/src/features/1_lists/components/ListSettings_MODAL/ListSettings_MODAL";
@@ -46,7 +42,7 @@ import CreatePublicVocab_MODAL from "@/src/features/2_vocabs/components/Modal/Cr
 import UpdatePublicVocab_MODAL from "@/src/features/2_vocabs/components/Modal/UpdatePublicVocab_MODAL/UpdatePublicVocab_MODAL";
 import SavePublicVocabToList_MODAL from "@/src/features/2_vocabs/components/Modal/SavePublicVocabToList_MODAL/SavePublicVocabToList_MODAL";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
-import { Translation_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
+import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 
 export default function Explore_PAGE() {
   const { user } = USE_auth();
@@ -72,10 +68,10 @@ export default function Explore_PAGE() {
   ] = USE_toggle(false);
 
   const [targetSave_VOCAB, SET_targetSaveVocab] = useState<
-    Vocab_PROPS | undefined
+    Vocab_MODEL | undefined
   >(undefined);
   const [targetSave_TRS, SET_targetSaveTRS] = useState<
-    Translation_MODEL[] | undefined
+    tr_PROPS[] | undefined
   >();
 
   const { highlighted_ID, highlight: HIGHLIGHT_vocab } = USE_highlighedId();
@@ -84,9 +80,7 @@ export default function Explore_PAGE() {
     Vocab_MODEL | undefined
   >();
 
-  const [toUpdate_TRS, SET_toUpdateTRS] = useState<
-    Translation_MODEL[] | undefined
-  >();
+  const [toUpdate_TRS, SET_toUpdateTRS] = useState<tr_PROPS[] | undefined>();
   const [toDeleteVocab_ID, SET_toDeleteVocab] = useState<string | undefined>();
 
   function HANDLE_updateModal({
@@ -96,7 +90,7 @@ export default function Explore_PAGE() {
   }: {
     clear?: boolean;
     vocab?: Vocab_MODEL;
-    trs?: Translation_MODEL[];
+    trs?: tr_PROPS[];
   }) {
     SET_toUpdateVocab(!clear && vocab ? vocab : undefined);
     SET_toUpdateTRS(!clear && trs ? trs : undefined);
@@ -107,8 +101,8 @@ export default function Explore_PAGE() {
     vocab,
     trs,
   }: {
-    vocab: Vocab_PROPS;
-    trs: Translation_MODEL[];
+    vocab: Vocab_MODEL;
+    trs: tr_PROPS[];
   }) => {
     SET_targetSaveVocab(vocab);
     SET_targetSaveTRS(trs);
@@ -157,7 +151,7 @@ export default function Explore_PAGE() {
         <CreatePublicVocab_MODAL
           IS_open={modal_STATES.create}
           TOGGLE_modal={() => TOGGLE_modal("create")}
-          onSuccess={(new_VOCAB: Vocab_PROPS) => {
+          onSuccess={(new_VOCAB: Vocab_MODEL) => {
             TOGGLE_modal("create");
             HIGHLIGHT_vocab(new_VOCAB.id);
             toast.show(t("notifications.vocabCreated"), {
@@ -173,7 +167,7 @@ export default function Explore_PAGE() {
           {...{ toUpdate_VOCAB, toUpdate_TRS }}
           IS_open={modal_STATES.update}
           TOGGLE_modal={() => TOGGLE_modal("update")}
-          onSuccess={(updated_VOCAB: Vocab_PROPS) => {
+          onSuccess={(updated_VOCAB: Vocab_MODEL) => {
             TOGGLE_modal("update");
             HIGHLIGHT_vocab(updated_VOCAB.id);
             toast.show(t("notifications.vocabUpdated"), {

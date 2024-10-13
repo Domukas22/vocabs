@@ -5,7 +5,7 @@
 import Btn from "@/src/components/Btn/Btn";
 import { ICON_X } from "@/src/components/icons/icons";
 import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
-import { DisplaySettings_PROPS, Vocab_PROPS } from "@/src/db/props";
+import { tr_PROPS } from "@/src/db/props";
 
 import { useTranslation } from "react-i18next";
 import { Public_VOCAB } from "../../Vocab/Public_VOCAB/Public_VOCAB";
@@ -15,7 +15,7 @@ import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import USE_zustand from "@/src/zustand";
 import { withObservables } from "@nozbe/watermelondb/react";
 import FETCH_vocabs, { VocabFilter_PROPS } from "../../../utils/FETCH_vocabs";
-import { Translation_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
+import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 import { Vocabs_DB } from "@/src/db";
 import { Q } from "@nozbe/watermelondb";
 import { EmptyFlatList_BOTTM, List_SKELETONS } from "@/src/features/1_lists";
@@ -36,15 +36,15 @@ function _PublicVocabs_FLATLIST({
     vocab,
   }: {
     clear?: boolean;
-    vocab?: Vocab_PROPS;
+    vocab?: Vocab_MODEL;
   }) => void;
   PREPARE_vocabDelete?: (id: string) => {};
   PREPARE_toSaveVocab: ({
     vocab,
     trs,
   }: {
-    vocab: Vocab_PROPS;
-    trs: Translation_MODEL[];
+    vocab: Vocab_MODEL;
+    trs: tr_PROPS[];
   }) => void;
 }) {
   const { t } = useTranslation();

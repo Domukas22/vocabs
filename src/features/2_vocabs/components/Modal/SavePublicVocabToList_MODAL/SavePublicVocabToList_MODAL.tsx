@@ -5,18 +5,22 @@
 import SelectMyList_MODAL from "@/src/features/1_lists/components/SelectMyList_MODAL/SelectMyList_MODAL";
 import USE_createVocab from "../../../hooks/USE_createVocab";
 import { useState } from "react";
-import { List_PROPS, User_PROPS, Vocab_PROPS } from "@/src/db/props";
+import { tr_PROPS } from "@/src/db/props";
 import USE_zustand from "@/src/zustand";
 import { CreateMyVocabData_PROPS } from "../CreateMyVocab_MODAL/CreateMyVocab_MODAL";
-import { List_MODEL, Translation_MODEL } from "@/src/db/watermelon_MODELS";
+import {
+  List_MODEL,
+  Vocab_MODEL,
+  User_MODEL,
+} from "@/src/db/watermelon_MODELS";
 
 interface SavePublicVocabToListModal_PROPS {
-  vocab: Vocab_PROPS | undefined;
-  trs: Translation_MODEL[] | undefined;
+  vocab: Vocab_MODEL | undefined;
+  trs: tr_PROPS[] | undefined;
   IS_open: boolean;
   TOGGLE_open: () => void;
-  user: User_PROPS;
-  onSuccess: (new_VOCAB: Vocab_PROPS) => void;
+  user: User_MODEL;
+  onSuccess: (new_VOCAB: Vocab_MODEL) => void;
 }
 
 export default function SavePublicVocabToList_MODAL({
@@ -40,7 +44,7 @@ export default function SavePublicVocabToList_MODAL({
       description: vocab?.description,
       translations: trs || [],
       is_public: false,
-      onSuccess: (new_VOCAB: Vocab_PROPS) => {
+      onSuccess: (new_VOCAB: Vocab_MODEL) => {
         onSuccess(new_VOCAB);
       },
     });

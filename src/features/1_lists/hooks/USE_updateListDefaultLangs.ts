@@ -67,7 +67,7 @@ export default function USE_updateListDefaultLangs() {
       const updated_LIST = await db.write(async () => {
         const list = await Lists_DB.find(list_id);
         await list.update((list: List_MODEL) => {
-          list.default_LANGS = new_LANGS;
+          list.default_lang_ids = new_LANGS;
         });
       });
 

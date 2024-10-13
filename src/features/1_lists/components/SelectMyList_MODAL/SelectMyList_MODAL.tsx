@@ -22,7 +22,6 @@ import {
   SafeAreaView,
   View,
 } from "react-native";
-import { List_PROPS } from "@/src/db/props";
 
 import { useTranslation } from "react-i18next";
 import CreateList_MODAL from "@/src/features/1_lists/components/CreateList_MODAL/CreateList_MODAL";
@@ -42,7 +41,7 @@ interface SelectListModal_PROPS {
   open: boolean;
   title: string;
   current_LIST?: List_MODEL | undefined;
-  submit_ACTION: (list: List_PROPS) => void;
+  submit_ACTION: (list: List_MODEL) => void;
   cancel_ACTION: () => void;
   IS_inAction: boolean;
 }
@@ -129,7 +128,7 @@ export default function SelectMyList_MODAL({
         IS_open={SHOW_createListModal}
         currentList_NAMES={z_lists?.map((l) => l.name)}
         CLOSE_modal={() => TOGGLE_createListModal()}
-        onSuccess={(newList: List_PROPS) => {
+        onSuccess={(newList: List_MODEL) => {
           z_CREATE_privateList(newList);
           SET_selectedModalList(newList);
         }}
@@ -163,7 +162,7 @@ function _MyLists_FLATLIST({
             style={{ flex: 1 }}
           />
         }
-        renderItem={({ item }: { item: List_PROPS }) => (
+        renderItem={({ item }: { item: List_MODEL }) => (
           <Btn
             key={item.id + "list btn" + item.name}
             text={item.name}

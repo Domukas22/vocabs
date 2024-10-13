@@ -13,7 +13,7 @@ import {
 } from "@/src/features/2_vocabs";
 import { useRouter } from "expo-router";
 import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
-import { List_PROPS, DisplaySettings_PROPS, Vocab_PROPS } from "@/src/db/props";
+
 import React, { useEffect, useState } from "react";
 import ListSettings_MODAL from "@/src/features/1_lists/components/ListSettings_MODAL/ListSettings_MODAL";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
@@ -26,7 +26,7 @@ import { useToast } from "react-native-toast-notifications";
 import USE_zustand from "@/src/zustand";
 import UpdateMyVocab_MODAL from "@/src/features/2_vocabs/components/Modal/UpdateMyVocab_MODAL/UpdateMyVocab_MODAL";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
-import { Translation_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
+import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 import Btn from "@/src/components/Btn/Btn";
 
 export default function SingleList_PAGE() {

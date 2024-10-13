@@ -2,7 +2,8 @@
 //
 //
 
-import { Language_PROPS, TranslationCreation_PROPS } from "@/src/db/props";
+import { tr_PROPS } from "@/src/db/props";
+import { Language_MODEL } from "@/src/db/watermelon_MODELS";
 import Block from "@/src/components/Block/Block";
 import { ICON_flag } from "@/src/components/icons/icons";
 import Btn from "@/src/components/Btn/Btn";
@@ -20,9 +21,9 @@ import { USE_langs } from "@/src/context/Langs_CONTEXT";
 import { FieldError } from "react-hook-form";
 
 interface VocabTranslationInputs_PROPS {
-  tr: TranslationCreation_PROPS;
+  tr: tr_PROPS;
   diff: 0 | 1 | 2 | 3;
-  OPEN_highlights: (tr: TranslationCreation_PROPS) => void;
+  OPEN_highlights: (tr: tr_PROPS) => void;
   error: FieldError | undefined;
   isSubmitted: boolean;
   onChange: (...event: any[]) => void;
@@ -41,7 +42,7 @@ export default function TrInput_BLOCK({
   const { languages } = USE_langs();
 
   const lang = useMemo(
-    () => languages?.find((lang: Language_PROPS) => lang.id === tr.lang_id),
+    () => languages?.find((lang: Language_MODEL) => lang.id === tr.lang_id),
     []
   );
 

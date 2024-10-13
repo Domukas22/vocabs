@@ -1,12 +1,13 @@
 //
 //
 //
-import { User_PROPS } from "@/src/db/props";
+
+import { User_MODEL } from "@/src/db/watermelon_MODELS";
 import { supabase } from "@/src/lib/supabase";
 import { useCallback, useMemo, useState } from "react";
 
 interface VocabDelete_PROPS {
-  user?: User_PROPS;
+  user?: User_MODEL;
   vocab_id: string;
   list_id?: string;
   is_public: boolean;

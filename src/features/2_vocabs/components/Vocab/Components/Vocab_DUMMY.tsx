@@ -7,13 +7,8 @@ import { ICON_difficultyDot, ICON_flag } from "@/src/components/icons/icons";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
-import {
-  DisplaySettings_PROPS,
-  TranslationCreation_PROPS,
-  Vocab_PROPS,
-  Language_PROPS,
-  PublicVocabDisplaySettings_PROPS,
-} from "@/src/db/props";
+import { Language_MODEL } from "@/src/db/watermelon_MODELS";
+
 import USE_zustand from "@/src/zustand";
 import i18next from "i18next";
 import { useMemo } from "react";
@@ -34,7 +29,7 @@ export default function Vocab_DUMMY({
   const { t } = useTranslation();
 
   const { languages } = USE_langs();
-  const lang: Language_PROPS = useMemo(
+  const lang: Language_MODEL = useMemo(
     () => languages?.find((lang) => lang.id === frontTrLang_ID),
     [frontTrLang_ID]
   );

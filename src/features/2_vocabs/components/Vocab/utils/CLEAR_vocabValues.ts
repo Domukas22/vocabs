@@ -2,19 +2,18 @@
 //
 //
 
-import { Language_PROPS, List_PROPS } from "@/src/db/props";
-
 import GET_langs from "@/src/features/4_languages/utils/GET_langs";
 import GET_defaultTranslations from "@/src/features/2_vocabs/utils/GET_defaultTranslations";
 import { PrivateVocabSet_PROPS } from "../../../hooks/USE_myVocabValues";
+import { Language_MODEL, List_MODEL } from "@/src/db/watermelon_MODELS";
 
 export default function CLEAR_vocabValues({
   languages,
   selected_LIST,
   set_FNs,
 }: {
-  languages: Language_PROPS[];
-  selected_LIST: List_PROPS;
+  languages: Language_MODEL[];
+  selected_LIST: List_MODEL;
   set_FNs: PrivateVocabSet_PROPS;
 }) {
   const {

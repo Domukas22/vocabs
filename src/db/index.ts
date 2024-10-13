@@ -2,20 +2,19 @@
 //
 //
 
-//
-//
-//
-
-import { Platform } from "react-native";
 import { Database } from "@nozbe/watermelondb";
 import SQLiteAdapter from "@nozbe/watermelondb/adapters/sqlite";
+import { v4 as uuidv4 } from "uuid";
+import { setGenerator } from "@nozbe/watermelondb/utils/common/randomId";
 
 import schema from "./watermelon_SCHEMA";
 import migrations from "./migrations";
+import "react-native-get-random-values";
 
 import {
+  User_MODEL,
   List_MODEL,
-  Translation_MODEL,
+  ListAccess_MODEL,
   Vocab_MODEL,
   Language_MODEL,
 } from "./watermelon_MODELS";
@@ -37,14 +36,19 @@ const adapter = new SQLiteAdapter({
   },
 });
 
+// Set the custom ID generator to use UUIDs
+setGenerator(() => uuidv4());
+
 // Then, make a Watermelon database from it!
 const db = new Database({
   adapter,
-  modelClasses: [List_MODEL, Vocab_MODEL, Language_MODEL],
+  modelClasses: [User_MODEL, List_MODEL, Vocab_MODEL, Language_MODEL],
 });
 
 export default db;
 
-export const Lists_DB = db.get<List_MODEL>("lists"),
+export const Users_DB = db.get<User_MODEL>("users"),
+  Lists_DB = db.get<List_MODEL>("lists"),
+  ListAccess_DB = db.get<ListAccess_MODEL>("list_access"),
   Vocabs_DB = db.get<Vocab_MODEL>("vocabs"),
   Languages_DB = db.get<Language_MODEL>("languages");

@@ -201,7 +201,7 @@ export default function Register_PAGE() {
 //       user.payment_date = "";
 //       user.payment_amount = 0;
 //       user.payment_type = "0";
-//       user.app_lang_id = "en";
+//       user.preferred_lang_id = "en";
 //     });
 //   });
 // }

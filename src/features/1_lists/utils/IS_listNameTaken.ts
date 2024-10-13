@@ -1,14 +1,14 @@
 //
 //
 
-import { List_PROPS } from "@/src/db/props";
+import { List_MODEL } from "@/src/db/watermelon_MODELS";
 
 export default function IS_listNameTaken({
   lists = [],
   name,
   list_id,
 }: {
-  lists: List_PROPS[];
+  lists: List_MODEL[];
   name: string | undefined;
   list_id: string | undefined;
 }) {

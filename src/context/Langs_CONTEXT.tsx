@@ -9,7 +9,7 @@ import React, {
   ReactNode,
 } from "react";
 import { supabase } from "@/src/lib/supabase";
-import { Language_PROPS } from "../db/props";
+import { Language_MODEL } from "../db/watermelon_MODELS";
 
 interface Language {
   id: string; // Adjust according to your schema
@@ -18,7 +18,7 @@ interface Language {
 }
 
 interface LanguageContextType {
-  languages: Language_PROPS[];
+  languages: Language_MODEL[];
   ARE_languagesLoading: boolean;
   languages_ERROR: string | undefined;
 }
@@ -32,7 +32,7 @@ interface LangsProviderProps {
 }
 
 export const Langs_PROVIDER: React.FC<LangsProviderProps> = ({ children }) => {
-  const [languages, setLanguages] = useState<Language_PROPS[]>([]);
+  const [languages, setLanguages] = useState<Language_MODEL[]>([]);
   const [ARE_languagesLoading, SET_areLanguagesLoading] =
     useState<boolean>(true);
   const [error, setError] = useState<string | undefined>(undefined);

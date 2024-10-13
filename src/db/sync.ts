@@ -7,6 +7,8 @@ export async function syncDatabase() {
   // await synchronize();
 }
 
+// TODO ==> What if UUID already exists?
+
 // Higher-level function to execute synchronization
 export async function executeSync() {
   try {

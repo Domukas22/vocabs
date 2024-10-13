@@ -6,7 +6,7 @@ import { MyColors } from "@/src/constants/MyColors";
 import { StyleSheet, View } from "react-native";
 
 import { USE_toggle } from "@/src/hooks/USE_toggle";
-import { DisplaySettings_PROPS } from "@/src/db/props";
+import { DisplaySettings_PROPS, tr_PROPS } from "@/src/db/props";
 
 import Vocab_FRONT from "../Components/Vocab_FRONT/Vocab_FRONT";
 import { VocabBack_TRS } from "../Components/VocabBack_TRS/VocabBack_TRS";
@@ -15,11 +15,11 @@ import Btn from "@/src/components/Btn/Btn";
 import { useTranslation } from "react-i18next";
 import { ICON_X } from "@/src/components/icons/icons";
 import { withObservables } from "@nozbe/watermelondb/react";
-import { Translation_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
+import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 
 interface VocabProps {
   vocab: Vocab_MODEL | undefined;
-  trs: Translation_MODEL[];
+  trs: tr_PROPS[];
   displaySettings: DisplaySettings_PROPS;
   highlighted?: boolean;
   IS_admin: boolean;
@@ -35,7 +35,7 @@ interface VocabProps {
     trs,
   }: {
     vocab: Vocab_MODEL;
-    trs: Translation_MODEL[];
+    trs: tr_PROPS[];
   }) => void;
 }
 

@@ -163,7 +163,8 @@
     "vocabFrontLangExplanation1": "The selected language will be the one shown at the front of the vocab when it's closed.",
     "filterByLanguage": "Filter by language",
     "missingTranslation": "Missing translation in ",
-    "noVocabsFound": "No vocabs found"
+    "noVocabsFound": "No vocabs found",
+    "sortVocabs": "Sort vocabs"
   },
   "modal": {
     "displaySettings": {

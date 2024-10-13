@@ -5,14 +5,15 @@ import { ActivityIndicator } from "react-native";
 import { useToast } from "react-native-toast-notifications";
 import USE_deleteVocab from "../../../hooks/USE_deleteVocab";
 import Error_TEXT from "@/src/components/Error_TEXT/Error_TEXT";
-import { User_PROPS, Vocab_PROPS } from "@/src/db/props";
+
 import USE_createVocab from "../../../hooks/USE_createVocab";
 import { CreatePublicVocabData_PROPS } from "../CreatePublicVocab_MODAL/CreatePublicVocab_MODAL";
+import { User_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 
 interface PublishPrivateVocabAsAdmin_PROPS {
-  user?: User_PROPS;
+  user?: User_MODEL;
   IS_open: boolean;
-  vocab: Vocab_PROPS | undefined;
+  vocab: Vocab_MODEL | undefined;
   CLOSE_modal: () => void | undefined;
   onSuccess: () => void | undefined;
 }

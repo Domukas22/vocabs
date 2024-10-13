@@ -2,7 +2,7 @@
 //
 //
 
-import { TranslationCreation_PROPS } from "@/src/db/props";
+import { tr_PROPS } from "@/src/db/props";
 
 export default function HANLDE_selectedHighlights({
   new_HIGHLIGHTS,
@@ -12,8 +12,8 @@ export default function HANLDE_selectedHighlights({
 }: {
   new_HIGHLIGHTS: number[];
   lang_id: string;
-  current_TRS: TranslationCreation_PROPS[];
-  SET_trs: (langs: TranslationCreation_PROPS[]) => void;
+  current_TRS: tr_PROPS[];
+  SET_trs: (langs: tr_PROPS[]) => void;
 }) {
   let updated_TRS = [...current_TRS].map((tr) => {
     if (tr.lang_id === lang_id) tr.highlights = new_HIGHLIGHTS;

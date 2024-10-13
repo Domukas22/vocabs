@@ -6,7 +6,7 @@ import Block from "@/src/components/Block/Block";
 import Label from "@/src/components/Label/Label";
 import Settings_TOGGLE from "@/src/components/Settings_TOGGLE/Settings_TOGGLE";
 import { MyColors } from "@/src/constants/MyColors";
-import { Language_PROPS, DisplaySettings_PROPS } from "@/src/db/props";
+
 import Vocab_DUMMY from "@/src/features/2_vocabs/components/Vocab/Components/Vocab_DUMMY";
 import i18next, { t } from "i18next";
 import { ScrollView, View } from "react-native";

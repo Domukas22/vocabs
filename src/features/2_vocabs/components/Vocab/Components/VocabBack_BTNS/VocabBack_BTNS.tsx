@@ -3,8 +3,8 @@
 
 import Btn from "@/src/components/Btn/Btn";
 import { ICON_difficultyDot } from "@/src/components/icons/icons";
-import { Vocab_PROPS } from "@/src/db/props";
-import { Translation_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
+
+import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 

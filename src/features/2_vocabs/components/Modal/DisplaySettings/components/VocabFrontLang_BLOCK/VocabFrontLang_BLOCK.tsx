@@ -16,7 +16,7 @@ import {
 import Label from "@/src/components/Label/Label";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
-import { Language_PROPS, DisplaySettings_PROPS } from "@/src/db/props";
+
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 import i18next, { t } from "i18next";
 import { useMemo, useState } from "react";

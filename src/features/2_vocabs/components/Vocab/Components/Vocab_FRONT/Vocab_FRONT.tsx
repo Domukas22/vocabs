@@ -8,19 +8,15 @@ import Label from "@/src/components/Label/Label";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
-import {
-  DisplaySettings_PROPS,
-  Translation_PROPS,
-  TranslationCreation_PROPS,
-  Language_PROPS,
-} from "@/src/db/props";
+import { tr_PROPS } from "@/src/db/props";
+
 import USE_zustand from "@/src/zustand";
 import i18next, { t } from "i18next";
 import { useMemo } from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 
 interface VocabFront_PROPS {
-  trs: Translation_PROPS[] | undefined;
+  trs: tr_PROPS[] | undefined;
   difficulty: 0 | 1 | 2 | 3 | undefined;
   description: string | undefined;
   TOGGLE_open: () => void;

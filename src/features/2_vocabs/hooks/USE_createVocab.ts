@@ -1,24 +1,20 @@
 import db, { Vocabs_DB } from "@/src/db";
 import { useCallback, useMemo, useState } from "react";
-import {
-  TranslationCreation_PROPS,
-  User_PROPS,
-  Vocab_PROPS,
-} from "@/src/db/props";
+import { tr_PROPS } from "@/src/db/props";
 import {
   Vocab_MODEL,
-  Translation_MODEL,
   List_MODEL,
+  User_MODEL,
 } from "@/src/db/watermelon_MODELS";
 
 interface VocabCreation_MODEL {
-  user?: User_PROPS | undefined;
+  user?: User_MODEL | undefined;
   list?: List_MODEL | undefined;
   difficulty?: 1 | 2 | 3;
   description?: string | "";
-  translations: TranslationCreation_PROPS[] | undefined;
+  translations: tr_PROPS[] | undefined;
   is_public?: boolean;
-  onSuccess: (new_VOCAB: Vocab_PROPS) => void;
+  onSuccess: (new_VOCAB: Vocab_MODEL) => void;
 }
 
 export default function USE_createVocab() {

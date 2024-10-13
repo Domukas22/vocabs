@@ -5,11 +5,11 @@ import { ActivityIndicator } from "react-native";
 import { useToast } from "react-native-toast-notifications";
 import USE_deleteVocab from "../../../hooks/USE_deleteVocab";
 import Error_TEXT from "@/src/components/Error_TEXT/Error_TEXT";
-import { User_PROPS } from "@/src/db/props";
+import { User_MODEL } from "@/src/db/watermelon_MODELS";
 import db, { Vocabs_DB } from "@/src/db";
 
 interface DeleteVocabModal_PROPS {
-  user?: User_PROPS;
+  user?: User_MODEL;
   IS_open: boolean;
   is_public?: boolean;
   vocab_id: string | undefined;

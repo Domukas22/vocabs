@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo } from "react";
 import { supabase } from "@/src/lib/supabase";
 import { useToast } from "react-native-toast-notifications";
 import { useTranslation } from "react-i18next";
-import { List_PROPS } from "@/src/db/props";
+
 import db, { Lists_DB } from "@/src/db";
 import { List_MODEL } from "@/src/db/watermelon_MODELS";
 import { USER_ID } from "@/src/constants/globalVars";
@@ -11,7 +11,7 @@ export interface CreateList_PROPS {
   name: string;
   user_id: string | undefined;
   currentList_NAMES: string[];
-  onSuccess?: (newList: List_PROPS) => void;
+  onSuccess?: (newList: List_MODEL) => void;
   cleanup?: () => void;
 }
 
@@ -35,7 +35,7 @@ export default function USE_createList() {
     cleanup,
   }: CreateList_PROPS): Promise<{
     success: boolean;
-    newList?: List_PROPS | undefined;
+    newList?: List_MODEL | undefined;
     msg?: string;
   }> => {
     SET_createListError(null); // Clear previous error
@@ -71,7 +71,7 @@ export default function USE_createList() {
         const newList = await Lists_DB.create((newList: List_MODEL) => {
           newList.name = name;
           newList.user_id = user_id;
-          newList.default_LANGS = ["en", "de"];
+          newList.default_lang_ids = ["en", "de"];
         });
         return newList;
       });

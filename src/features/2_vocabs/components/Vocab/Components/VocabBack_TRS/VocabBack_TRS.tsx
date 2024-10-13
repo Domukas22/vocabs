@@ -2,19 +2,18 @@
 //
 //
 
-import { Translation_PROPS } from "@/src/db/props";
 import { View } from "react-native";
 import { ICON_flag } from "@/src/components/icons/icons";
 import Highlighted_TEXT from "@/src/components/Highlighted_TEXT/Highlighted_TEXT";
 import { StyleSheet } from "react-native";
 import { MyColors } from "@/src/constants/MyColors";
-import { Translation_MODEL } from "@/src/db/watermelon_MODELS";
+import { tr_PROPS } from "@/src/db/props";
 
 export function VocabBack_TRS({
   trs,
   difficulty = 0,
 }: {
-  trs: Translation_MODEL[];
+  trs: tr_PROPS[];
   difficulty: 0 | 1 | 2 | 3 | undefined;
 }) {
   return trs && trs.length > 0

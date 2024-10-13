@@ -8,13 +8,14 @@ import { ICON_X } from "@/src/components/icons/icons";
 import React, { useEffect, useState } from "react";
 import { View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { tr_PROPS } from "@/src/db/props";
+
 import {
-  Language_PROPS,
-  List_PROPS,
-  TranslationCreation_PROPS,
-  User_PROPS,
-  Vocab_PROPS,
-} from "@/src/db/props";
+  Vocab_MODEL,
+  Language_MODEL,
+  List_MODEL,
+  User_MODEL,
+} from "@/src/db/watermelon_MODELS";
 
 import TrHighlights_MODAL from "../TrHighlights_MODAL";
 import SelectMultipleLanguages_MODAL from "@/src/features/4_languages/components/SelectMultipleLanguages_MODAL/SelectMultipleLanguages_MODAL";
@@ -41,12 +42,12 @@ import CreateMyVocab_FOOTER from "../../Footer/CreateMyVocab_FOOTER/CreateMyVoca
 interface CreatePublicVocabModal_PROPS {
   IS_open: boolean;
   TOGGLE_modal: () => void;
-  onSuccess: (new_VOCAB: Vocab_PROPS) => void;
+  onSuccess: (new_VOCAB: Vocab_MODEL) => void;
 }
 
 export type CreatePublicVocabData_PROPS = {
   description: string;
-  translations: TranslationCreation_PROPS[];
+  translations: tr_PROPS[];
 };
 
 export default function CreatePublicVocab_MODAL(
@@ -59,7 +60,7 @@ export default function CreatePublicVocab_MODAL(
   } = props;
 
   const { t } = useTranslation();
-  const { user }: { user: User_PROPS } = USE_auth();
+  const { user }: { user: User_MODEL } = USE_auth();
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
     { name: "langs", initialValue: false },
@@ -67,9 +68,7 @@ export default function CreatePublicVocab_MODAL(
     { name: "list", initialValue: false },
   ]);
 
-  const [target_TR, SET_targetTr] = useState<
-    TranslationCreation_PROPS | undefined
-  >(undefined);
+  const [target_TR, SET_targetTr] = useState<tr_PROPS | undefined>(undefined);
 
   const { CREATE_vocab, IS_creatingVocab, db_ERROR, RESET_dbError } =
     USE_createVocab();
@@ -82,7 +81,7 @@ export default function CreatePublicVocab_MODAL(
       description,
       translations,
       is_public: true,
-      onSuccess: (new_VOCAB: Vocab_PROPS) => {
+      onSuccess: (new_VOCAB: Vocab_MODEL) => {
         onSuccess(new_VOCAB);
         reset();
       },
@@ -187,12 +186,12 @@ export default function CreatePublicVocab_MODAL(
           open={modal_STATES.langs}
           TOGGLE_open={() => TOGGLE_modal("langs")}
           trs={form_TRS}
-          SUBMIT_langs={(new_LANGS: Language_PROPS[]) =>
+          SUBMIT_langs={(new_LANGS: Language_MODEL[]) =>
             // adds/deletes current translations based on new languages provided
             HANLDE_selectedLangs({
               new_LANGS,
               current_TRS: form_TRS,
-              SET_trs: (updated_TRS: TranslationCreation_PROPS[]) => {
+              SET_trs: (updated_TRS: tr_PROPS[]) => {
                 setValue("translations", updated_TRS);
 
                 if (updated_TRS.length) {
@@ -208,7 +207,7 @@ export default function CreatePublicVocab_MODAL(
           tr={target_TR}
           diff={0}
           TOGGLE_open={() => TOGGLE_modal("highlights")}
-          SET_trs={(trs: TranslationCreation_PROPS[]) => {
+          SET_trs={(trs: tr_PROPS[]) => {
             setValue("translations", trs);
           }}
           SUBMIT_highlights={({ lang_id, highlights }) =>
@@ -217,7 +216,7 @@ export default function CreatePublicVocab_MODAL(
               new_HIGHLIGHTS: highlights,
               lang_id,
               current_TRS: form_TRS,
-              SET_trs: (updated_TRS: TranslationCreation_PROPS[]) =>
+              SET_trs: (updated_TRS: tr_PROPS[]) =>
                 setValue("translations", updated_TRS),
             })
           }

@@ -9,7 +9,8 @@ import { View } from "react-native";
 import Header from "@/src/components/Header/Header";
 import Footer from "@/src/components/Footer/Footer";
 import Label from "@/src/components/Label/Label";
-import { Language_PROPS, TranslationCreation_PROPS } from "@/src/db/props";
+import { tr_PROPS } from "@/src/db/props";
+import { Language_MODEL } from "@/src/db/watermelon_MODELS";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
 import Big_MODAL from "@/src/components/Modals/Big_MODAL/Big_MODAL";
@@ -22,10 +23,10 @@ import { USE_langs } from "@/src/context/Langs_CONTEXT";
 
 interface TrHighlightsModal_PROPS {
   open: boolean;
-  tr: TranslationCreation_PROPS | undefined;
+  tr: tr_PROPS | undefined;
   diff: 0 | 1 | 2 | 3;
   TOGGLE_open: () => void;
-  SET_trs: (trs: TranslationCreation_PROPS[]) => void;
+  SET_trs: (trs: tr_PROPS[]) => void;
   SUBMIT_highlights: ({
     lang_id,
     highlights,

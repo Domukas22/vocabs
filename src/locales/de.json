@@ -166,7 +166,8 @@
     "vocabFrontLangExplanation1": "Die ausgewählte Sprache wird vorne des Vokabels angezeigt, wenn es geschlossen ist.",
     "filterByLanguage": "Nach Sprache filtern",
     "missingTranslation": "Fehlende Übersetzung auf ",
-    "noVocabsFound": "Keine Vokabel gefunden"
+    "noVocabsFound": "Keine Vokabel gefunden",
+    "sortVocabs": "Vokabeln sortieren"
   },
   "modal": {
     "displaySettings": {
