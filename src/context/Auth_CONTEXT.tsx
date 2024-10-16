@@ -3,11 +3,12 @@
 //
 
 import { createContext, useState, ReactNode, useContext } from "react";
+import { User_MODEL } from "../db/watermelon_MODELS";
 
 const Auth_CONTEXT = createContext<any>(null);
 
 export const Auth_PROVIDER = ({ children }: { children: ReactNode }) => {
-  const [user, SET_user] = useState(null);
+  const [user, SET_user] = useState<User_MODEL | null>(null);
 
   const SET_auth = (authUser: any) => {
     SET_user(authUser);

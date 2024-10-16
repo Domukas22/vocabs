@@ -30,7 +30,7 @@ import { useToast } from "react-native-toast-notifications";
 import DeleteList_MODAL from "@/src/features/1_lists/components/DeleteList_MODAL";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 import { FlatList } from "react-native";
-import { Lists_DB } from "@/src/db";
+import { Lists_DB, Users_DB } from "@/src/db";
 import { Q } from "@nozbe/watermelondb";
 import { USER_ID } from "@/src/constants/globalVars";
 
@@ -86,7 +86,7 @@ export default function MyLists_PAGE() {
       )}
 
       <MyLists_FLATLIST
-        user_id={user?.id || ""}
+        user_id={user?.id}
         SELECT_list={(list: List_MODEL) => {
           SET_selectedList(list);
           router.push("/(main)/vocabs/list");
@@ -98,36 +98,9 @@ export default function MyLists_PAGE() {
         PREPARE_listRename={PREPARE_listRename}
         PREPADE_deleteList={PREPADE_deleteList}
       />
-      {/* {!ARE_listsSearching && searched_LISTS.length > 0 ? (
-        <MyLists_FLATLIST
-          user_id={user?.id || ""}
-          SELECT_list={(list: List_MODEL) => {
-            SET_selectedList(list);
-            router.push("/(main)/vocabs/list");
-          }}
-          SHOW_bottomBtn={search === ""}
-          TOGGLE_createListModal={() => TOGGLE_modal("create")}
-          highlighted_ID={highlighted_ID}
-          _ref={list_REF}
-          PREPARE_listRename={PREPARE_listRename}
-          PREPADE_deleteList={PREPADE_deleteList}
-        />
-      ) : !ARE_listsSearching ? (
-        <EmptyFlatList_BOTTM
-          emptyBox_TEXT={
-            search === ""
-              ? t("label.youDontHaveAnyLists")
-              : t("label.noListsFound")
-          }
-          btn_TEXT={t("btn.createList")}
-          btn_ACTION={() => TOGGLE_modal("create")}
-        />
-      ) : ARE_listsSearching ? (
-        <List_SKELETONS />
-      ) : null} */}
 
       <CreateList_MODAL
-        user_id={user?.id}
+        user={user}
         IS_open={modal_STATES.create}
         currentList_NAMES={z_lists?.map((l) => l.name)}
         CLOSE_modal={() => TOGGLE_modal("create")}

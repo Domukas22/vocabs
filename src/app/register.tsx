@@ -34,8 +34,10 @@ import { useTranslation } from "react-i18next";
 import Error_TEXT from "../components/Error_TEXT/Error_TEXT";
 import LoginRegister_SWITCH from "../features/0_authentication/components/LoginRegister_SWTICH";
 import db, { Users_DB } from "../db";
+import { User_MODEL } from "../db/watermelon_MODELS";
 
 type RegisterData_PROPS = {
+  username: string;
   email: string;
   password: string;
 };
@@ -47,13 +49,19 @@ export default function Register_PAGE() {
   const router = useRouter();
 
   const register = async (data: RegisterData_PROPS) => {
-    const { email, password } = data;
-    if (!email || !password) return;
+    const { username, email, password } = data;
+    if (!email || !password || !username) return;
     SET_loading(true);
 
     const { error } = await supabase.auth.signUp({
       email,
       password,
+
+      options: {
+        data: {
+          username,
+        },
+      },
     });
 
     // await createUser(email);
@@ -63,6 +71,16 @@ export default function Register_PAGE() {
     if (error) {
       SET_internalError(error.message);
     } else {
+      await db.write(async () => {
+        await Users_DB.create((user: User_MODEL) => {
+          (user.username = username),
+            (user.email = email),
+            (user.is_premium = false),
+            (user.is_admin = false),
+            (user.preferred_lang_id = "en");
+        });
+      });
+
       router.push("/(main)/vocabs"); // Navigate to main route on success
     }
   };
@@ -73,6 +91,7 @@ export default function Register_PAGE() {
     formState: { errors, isSubmitted },
   } = useForm({
     defaultValues: {
+      username: "",
       email: "",
       password: "",
     },
@@ -97,6 +116,37 @@ export default function Register_PAGE() {
             }
           />
           <Block noBorder>
+            <Label>Create a username</Label>
+
+            <Controller
+              control={control}
+              rules={{
+                required: {
+                  value: true,
+                  message: "Please provide an username",
+                },
+                minLength: {
+                  value: 5,
+                  message: "Username must be at least 5 characters long",
+                },
+              }}
+              render={({
+                field: { onChange, onBlur, value },
+                fieldState: { error },
+              }) => (
+                <StyledText_INPUT
+                  {...{ value, error, isSubmitted, onBlur }}
+                  SET_value={(val) => {
+                    onChange(val);
+                    SET_internalError("");
+                  }}
+                />
+              )}
+              name="username"
+            />
+            {errors.username && <Error_TEXT text={errors.username.message} />}
+          </Block>
+          <Block noBorder>
             <Label>What is your E-Mail?</Label>
 
             <Controller
@@ -111,25 +161,22 @@ export default function Register_PAGE() {
                   message: "Please provide a valid E-Mail address",
                 },
               }}
-              render={({ field: { onChange, onBlur, value } }) => (
+              render={({
+                field: { onChange, onBlur, value },
+                fieldState: { error },
+              }) => (
                 <StyledText_INPUT
-                  placeholder="email@gmail.com..."
-                  onBlur={onBlur}
+                  {...{ value, error, isSubmitted, onBlur }}
                   SET_value={(val) => {
                     onChange(val);
                     SET_internalError("");
                   }}
-                  value={value}
-                  error={!!errors.email}
                   props={{ keyboardType: "email-address" }}
-                  IS_errorCorrected={
-                    isSubmitted && !errors.email && !internal_ERROR
-                  }
                 />
               )}
               name="email"
             />
-            {errors.email && <Error_TEXT>{errors.email.message}</Error_TEXT>}
+            {errors.email && <Error_TEXT text={errors.email.message} />}
           </Block>
 
           {/* --------------------------------------------------------------------------------------------------- */}
@@ -148,19 +195,16 @@ export default function Register_PAGE() {
                   message: `Password must be at least 6 characters long.`,
                 },
               }}
-              render={({ field: { onChange, onBlur, value } }) => (
+              render={({
+                field: { onChange, onBlur, value },
+                fieldState: { error },
+              }) => (
                 <StyledText_INPUT
-                  placeholder="Password..."
-                  onBlur={onBlur}
+                  {...{ value, error, isSubmitted, onBlur }}
                   SET_value={(val) => {
                     onChange(val);
                     SET_internalError("");
                   }}
-                  value={value}
-                  error={!!errors.password}
-                  IS_errorCorrected={
-                    isSubmitted && !errors.password && !internal_ERROR
-                  }
                   props={{
                     secureTextEntry: true,
                   }}
@@ -168,9 +212,7 @@ export default function Register_PAGE() {
               )}
               name="password"
             />
-            {errors.password && (
-              <Error_TEXT>{errors.password.message}</Error_TEXT>
-            )}
+            {errors.password && <Error_TEXT text={errors.password.message} />}
           </Block>
 
           {/* --------------------------------------------------------------------------------------------------- */}
@@ -191,17 +233,3 @@ export default function Register_PAGE() {
     </Page_WRAP>
   );
 }
-
-// async function createUser(email: string) {
-//   await db.write(async () => {
-//     await Users_DB.create((user: User_MODEL) => {
-//       user.email = email;
-//       user.is_premium = false;
-//       user.is_admin = false;
-//       user.payment_date = "";
-//       user.payment_amount = 0;
-//       user.payment_type = "0";
-//       user.preferred_lang_id = "en";
-//     });
-//   });
-// }

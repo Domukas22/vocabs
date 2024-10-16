@@ -3,9 +3,8 @@ import { supabase } from "@/src/lib/supabase";
 import { useToast } from "react-native-toast-notifications";
 import { useTranslation } from "react-i18next";
 
-import db, { Lists_DB } from "@/src/db";
-import { List_MODEL } from "@/src/db/watermelon_MODELS";
-import { USER_ID } from "@/src/constants/globalVars";
+import db, { Lists_DB, Users_DB } from "@/src/db";
+import { List_MODEL, User_MODEL } from "@/src/db/watermelon_MODELS";
 
 export interface CreateList_PROPS {
   name: string;
@@ -67,11 +66,16 @@ export default function USE_createList() {
 
     SET_creatingList(true);
     try {
+      const user = await Users_DB.find(user_id);
+      if (!user) throw new Error("🔴 User not found in Watermelon 🔴");
+
       const new_LIST = await db.write(async () => {
         const newList = await Lists_DB.create((newList: List_MODEL) => {
+          newList.user?.set(user);
           newList.name = name;
-          newList.user_id = user_id;
           newList.default_lang_ids = ["en", "de"];
+          newList.is_public = false;
+          newList.is_public_and_private = false;
         });
         return newList;
       });

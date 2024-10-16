@@ -71,6 +71,7 @@ export default function General_PAGE() {
                 {vocabLimit - totalVocabs} vocabs left until you reach the limit
               </Styled_TEXT>
               <Styled_TEXT type="label">{user?.email}</Styled_TEXT>
+              <Styled_TEXT type="label">{user?.username}</Styled_TEXT>
             </View>
             <View
               style={{

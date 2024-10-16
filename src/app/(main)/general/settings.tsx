@@ -61,12 +61,24 @@ export default function Settings_PAGE() {
         styles={{ position: "relative", alignItems: "flex-start" }}
       >
         <View style={{ flex: 1 }}>
-          <Styled_TEXT type="text_18_bold">Email</Styled_TEXT>
+          <Styled_TEXT type="text_18_bold">{t("label.username")}</Styled_TEXT>
+
+          <Styled_TEXT>{user?.username || "---"}</Styled_TEXT>
+        </View>
+        <Btn text="Edit" />
+      </Block>
+      <Block
+        row={true}
+        styles={{ position: "relative", alignItems: "flex-start" }}
+      >
+        <View style={{ flex: 1 }}>
+          <Styled_TEXT type="text_18_bold">{t("label.email")}</Styled_TEXT>
 
           <Styled_TEXT>{user?.email || "---"}</Styled_TEXT>
         </View>
         <Btn text="Edit" />
       </Block>
+
       <Block styles={{ gap: 12 }}>
         <Styled_TEXT type="text_18_bold">{t("blockLabels.uiLang")}</Styled_TEXT>
         <View style={{ flexDirection: "row", gap: 8 }}>

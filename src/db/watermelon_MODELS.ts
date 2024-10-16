@@ -45,14 +45,11 @@ export class User_MODEL extends Model {
 
   @text("username") username!: string;
   @text("email") email!: string;
-
-  @field("is_admin") is_admin!: boolean;
-  @field("is_premium") is_premium!: boolean;
-
-  @text("payment_date") payment_date!: string;
-  @text("payment_amount") payment_amount!: number;
-  @text("payment_type") payment_type!: string;
+  @field("max_vocabs") max_vocabs!: number;
   @text("preferred_lang_id") preferred_lang_id!: string;
+
+  @field("list_submit_attempt_count") list_submit_attempt_count!: number;
+  @field("accepted_list_submit_count") accepted_list_submit_count!: number;
 
   @readonly @date("created_at") createdAt!: number;
   @readonly @date("updated_at") updatedAt!: number;
@@ -63,17 +60,19 @@ export class List_MODEL extends Model {
   static table = "lists";
   static associations: Associations = {
     user: { type: "belongs_to", key: "user_id" },
+    original_creator: { type: "belongs_to", key: "user_id" },
     vocabs: { type: "has_many", foreignKey: "list_id" },
   };
 
-  @immutableRelation("users", "user_id") user!: User_MODEL | undefined;
+  @immutableRelation("users", "user_id") user!: User_MODEL;
+  @relation("users", "original_creator_id") original_creator!: User_MODEL;
   @children("vocabs") vocabs!: Vocab_MODEL[];
 
   @text("name") name!: string;
   @json("default_lang_ids", sanitize) default_lang_ids!: string[] | undefined;
-
-  @field("is_public") is_public!: boolean;
-  @field("is_public_and_private") is_public_and_private!: boolean;
+  @field("is_submitted_for_publish") is_submitted_for_publish!: boolean;
+  @field("has_been_submitted") has_been_submitted!: boolean;
+  @text("type") type!: "private" | "public" | "shared" | "draft";
 
   @readonly @date("created_at") createdAt!: number;
   @readonly @date("updated_at") updatedAt!: number;
@@ -92,33 +91,25 @@ export class ListAccess_MODEL extends Model {
     user: { type: "belongs_to", key: "participant_id" },
   };
 
-  @immutableRelation("lists", "list_id") list!: List_MODEL | undefined;
-  @immutableRelation("users", "participant_id") participant!:
-    | User_MODEL
-    | undefined;
+  @immutableRelation("lists", "list_id") list!: List_MODEL;
+  @immutableRelation("users", "participant_id") participant!: User_MODEL;
 
   @readonly @date("created_at") createdAt!: number;
-  @readonly @date("deleted_at") deleted_at!: number;
 }
 // ===================================================================================
 export class Vocab_MODEL extends Model {
   static table = "vocabs";
   static associations: Associations = {
-    user: { type: "belongs_to", key: "user_id" },
     list: { type: "belongs_to", key: "list_id" },
   };
 
-  @immutableRelation("users", "user_id") user!: User_MODEL | undefined;
-  @relation("lists", "list_id") list!: List_MODEL | undefined;
+  @relation("lists", "list_id") list!: List_MODEL;
 
-  @field("difficulty") difficulty!: 1 | 2 | 3 | undefined;
+  @field("difficulty") difficulty!: 1 | 2 | 3;
   @text("description") description!: string | undefined;
-
   @json("trs", sanitizeTranslations) trs!: tr_PROPS[] | undefined;
   @text("lang_ids") lang_ids!: string | undefined;
   @text("searchable") searchable!: string | undefined;
-
-  @field("is_public") is_public!: boolean;
 
   @readonly @date("created_at") createdAt!: number;
   @readonly @date("updated_at") updatedAt!: number;
@@ -141,4 +132,43 @@ export class Language_MODEL extends Model {
   @readonly @date("created_at") createdAt!: number;
   @readonly @date("updated_at") updatedAt!: number;
   @readonly @date("deleted_at") deleted_at!: number;
+}
+export class Notifications_MODEL extends Model {
+  static table = "notifications";
+
+  static associations: Associations = {
+    user: { type: "belongs_to", key: "user_id" },
+  };
+
+  @immutableRelation("users", "user_id") user!: User_MODEL;
+
+  @text("title") title!: string;
+  @text("paragraph") paragraph!: string;
+  @text("type") type!:
+    | "vocabsAdded"
+    | "list_publication_accepted"
+    | "list_published"
+    | "changedUsername"
+    | "changedEmail"
+    | "changedPassword"
+    | "warning";
+  @field("is_read") is_read!: boolean;
+
+  @readonly @date("created_at") createdAt!: number;
+}
+
+export class Paymentss_MODEL extends Model {
+  static table = "payments";
+
+  static associations: Associations = {
+    user: { type: "belongs_to", key: "user_id" },
+  };
+
+  @immutableRelation("users", "user_id") user!: User_MODEL;
+
+  @text("item") item!: string;
+  @text("amount") amount!: number;
+  @text("payment_method") payment_method!: string;
+
+  @readonly @date("created_at") createdAt!: number;
 }

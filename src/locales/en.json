@@ -164,7 +164,9 @@
     "filterByLanguage": "Filter by language",
     "missingTranslation": "Missing translation in ",
     "noVocabsFound": "No vocabs found",
-    "sortVocabs": "Sort vocabs"
+    "sortVocabs": "Sort vocabs",
+    "username": "Username",
+    "email": "Email"
   },
   "modal": {
     "displaySettings": {

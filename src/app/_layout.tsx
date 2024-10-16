@@ -16,9 +16,7 @@ import { Styled_TEXT } from "../components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "../constants/MyColors";
 import { ICON_toastNotification } from "../components/icons/icons";
 import Notification_BOX from "../components/Notification_BOX/Notification_BOX";
-import USE_fetchMyLists from "../features/1_lists/hooks/USE_fetchMyLists";
-import USE_zustand from "../zustand";
-import { executeSync } from "../db/sync";
+import { User_MODEL } from "../db/watermelon_MODELS";
 
 export default function _layout() {
   return (

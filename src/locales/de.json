@@ -167,7 +167,9 @@
     "filterByLanguage": "Nach Sprache filtern",
     "missingTranslation": "Fehlende Übersetzung auf ",
     "noVocabsFound": "Keine Vokabel gefunden",
-    "sortVocabs": "Vokabeln sortieren"
+    "sortVocabs": "Vokabeln sortieren",
+    "username": "Benutzername",
+    "email": "Email"
   },
   "modal": {
     "displaySettings": {

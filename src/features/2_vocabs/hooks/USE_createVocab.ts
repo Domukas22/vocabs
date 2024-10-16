@@ -1,4 +1,4 @@
-import db, { Vocabs_DB } from "@/src/db";
+import db, { Users_DB, Vocabs_DB } from "@/src/db";
 import { useCallback, useMemo, useState } from "react";
 import { tr_PROPS } from "@/src/db/props";
 import {
@@ -73,9 +73,11 @@ export default function USE_createVocab() {
     try {
       SET_isCreatingVocab(true);
 
+      const user_db = await Users_DB.find(user?.id || "");
+      if (!user) throw new Error("🔴 User not found in Watermelon 🔴");
       const newVocab = await db.write(async () => {
         const vocab = await Vocabs_DB.create((vocab: Vocab_MODEL) => {
-          vocab.user_id = is_public ? null : user?.id;
+          vocab.user?.set(is_public ? null : user_db);
           vocab.list?.set(is_public ? null : list);
           vocab.difficulty = difficulty || 3;
           vocab.description = description || "";

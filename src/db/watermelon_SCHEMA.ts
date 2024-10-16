@@ -8,17 +8,15 @@ export default appSchema({
       columns: [
         { name: "username", type: "string", isIndexed: true },
         { name: "email", type: "string" },
-        { name: "is_premium", type: "boolean" },
-        { name: "is_admin", type: "boolean" },
-
-        { name: "payment_date", type: "string", isOptional: true },
-        { name: "payment_amount", type: "number", isOptional: true },
-        { name: "payment_type", type: "string", isOptional: true },
+        { name: "max_vocabs", type: "number" },
         { name: "preferred_lang_id", type: "string" },
+
+        { name: "list_submit_attempt_count", type: "number" },
+        { name: "accepted_list_submit_count", type: "number" },
 
         { name: "created_at", type: "number" },
         { name: "updated_at", type: "number" },
-        { name: "deleted_at", type: "number" },
+        { name: "deleted_at", type: "number", isOptional: true },
       ],
     }),
 
@@ -26,16 +24,17 @@ export default appSchema({
       name: "lists",
       columns: [
         { name: "user_id", type: "string", isIndexed: true },
+        { name: "original_creator_id", type: "string" },
 
         { name: "name", type: "string" },
         { name: "default_lang_ids", type: "string", isOptional: true },
-
-        { name: "is_public", type: "boolean" },
-        { name: "is_public_and_private", type: "boolean" },
+        { name: "is_submitted_for_publish", type: "boolean" },
+        { name: "has_been_submitted", type: "boolean" },
+        { name: "type", type: "string" },
 
         { name: "created_at", type: "number" },
         { name: "updated_at", type: "number" },
-        { name: "deleted_at", type: "number" },
+        { name: "deleted_at", type: "number", isOptional: true },
       ],
     }),
 
@@ -45,7 +44,6 @@ export default appSchema({
         { name: "list_id", type: "string", isIndexed: true },
         { name: "participant_id", type: "string", isIndexed: true },
         { name: "created_at", type: "number" },
-        { name: "deleted_at", type: "number" },
       ],
     }),
 
@@ -53,20 +51,16 @@ export default appSchema({
       name: "vocabs",
       columns: [
         { name: "list_id", type: "string", isIndexed: true },
-        { name: "user_id", type: "string", isIndexed: true },
 
-        { name: "difficulty", type: "number", isOptional: true },
+        { name: "difficulty", type: "number" },
         { name: "description", type: "string", isOptional: true },
-
         { name: "trs", type: "string", isOptional: true },
         { name: "lang_ids", type: "string", isOptional: true },
         { name: "searchable", type: "string", isOptional: true },
 
-        { name: "is_public", type: "boolean" },
-
         { name: "created_at", type: "number" },
         { name: "updated_at", type: "number" },
-        { name: "deleted_at", type: "number" },
+        { name: "deleted_at", type: "number", isOptional: true },
       ],
     }),
 
@@ -86,7 +80,34 @@ export default appSchema({
 
         { name: "created_at", type: "number" },
         { name: "updated_at", type: "number" },
-        { name: "deleted_at", type: "number" },
+        { name: "deleted_at", type: "number", isOptional: true },
+      ],
+    }),
+
+    tableSchema({
+      name: "notifications",
+      columns: [
+        { name: "user_id", type: "string", isIndexed: true },
+
+        { name: "title", type: "string" },
+        { name: "paragraph", type: "string" },
+        { name: "type", type: "string" },
+        { name: "is_read", type: "boolean" },
+
+        { name: "created_at", type: "number" },
+      ],
+    }),
+
+    tableSchema({
+      name: "payments",
+      columns: [
+        { name: "user_id", type: "string", isIndexed: true },
+
+        { name: "item", type: "string" },
+        { name: "amount", type: "number" },
+        { name: "payment_method", type: "string" },
+
+        { name: "created_at", type: "number" },
       ],
     }),
   ],

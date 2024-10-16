@@ -124,7 +124,7 @@ export default function SelectMyList_MODAL({
         />
       </KeyboardAvoidingView>
       <CreateList_MODAL
-        user_id={user?.id}
+        user={user}
         IS_open={SHOW_createListModal}
         currentList_NAMES={z_lists?.map((l) => l.name)}
         CLOSE_modal={() => TOGGLE_createListModal()}

@@ -11,12 +11,12 @@ import { Controller, useForm } from "react-hook-form";
 import { TextInput } from "react-native";
 import IS_listNameTaken from "../../utils/IS_listNameTaken";
 import USE_zustand from "@/src/zustand";
-import { List_MODEL } from "@/src/db/watermelon_MODELS";
+import { List_MODEL, User_MODEL } from "@/src/db/watermelon_MODELS";
 import db, { Lists_DB, Users_DB } from "@/src/db";
 import { USER_ID } from "@/src/constants/globalVars";
 
 interface CreateListModal_PROPS {
-  user_id: string | undefined;
+  user: User_MODEL | undefined;
   IS_open: boolean;
   currentList_NAMES: string[];
   CLOSE_modal: () => void;
@@ -28,7 +28,7 @@ type NewList_PROPS = {
 };
 
 export default function CreateList_MODAL({
-  user_id,
+  user,
   IS_open,
   currentList_NAMES,
   CLOSE_modal,
@@ -62,7 +62,7 @@ export default function CreateList_MODAL({
     const { name } = data;
     const newList = await CREATE_list({
       name,
-      user_id,
+      user_id: user?.id,
       currentList_NAMES,
       onSuccess,
       cleanup: () => {

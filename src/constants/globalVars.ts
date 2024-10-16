@@ -14,26 +14,23 @@ export const maxVocabTranslations = 5;
 export const MAX_DESCRIPTION_LENGTH = 200;
 export const MAX_TRANSLATION_LENGTH = 200;
 
-export const level_0_limits = { lists: 15, vocabs: 100 };
-export const level_1_limits = { lists: 50, vocabs: 1000 };
-export const level_2_limits = { lists: 100, vocabs: 5000 };
-export const level_3_limits = { lists: 150, vocabs: 3000 };
-export const level_4_limits = { lists: 200, vocabs: 4000 };
-export const level_5_limits = { lists: 250, vocabs: 5000 };
-export const level_6_limits = { lists: 300, vocabs: 6000 };
-export const level_7_limits = { lists: 350, vocabs: 7000 };
-export const level_8_limits = { lists: 400, vocabs: 8000 };
-export const level_9_limits = { lists: 450, vocabs: 9000 };
-export const level_10_limits = { lists: 500, vocabs: 10000 };
-
-export const DEFAULT_TAG_SUGGESTIONS = [
-  "Movie",
-  "Funny",
-  "Book",
-  "Real life",
-  "Family",
-  "Friends",
-  "Home",
-  "Food",
-  "Travel",
-];
+const pricing = {
+  offer1: {
+    amount: 500,
+    price: 4.99,
+    discount: "0%",
+    priceProVocab: "1 cent pro vocab",
+  },
+  offer2: {
+    amount: 1000,
+    price: 7.99,
+    discount: "15%",
+    priceProVocab: "0.7 cents pro vocab",
+  },
+  offer3: {
+    amount: 2000,
+    price: 9.99,
+    discount: "30%",
+    priceProVocab: "0.35 cents pro vocab",
+  },
+};
