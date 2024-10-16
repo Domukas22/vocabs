@@ -43,6 +43,7 @@ import UpdatePublicVocab_MODAL from "@/src/features/2_vocabs/components/Modal/Up
 import SavePublicVocabToList_MODAL from "@/src/features/2_vocabs/components/Modal/SavePublicVocabToList_MODAL/SavePublicVocabToList_MODAL";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
+import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 
 export default function Explore_PAGE() {
   const { user } = USE_auth();
@@ -56,63 +57,7 @@ export default function Explore_PAGE() {
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
     { name: "displaySettings" },
     { name: "save" },
-    { name: "create" },
-    { name: "delete" },
-    { name: "update" },
   ]);
-
-  const [
-    SHOW_createPublicVocabModal,
-    TOGGLE_createPublicVocabModal,
-    SET_createPublicVocabModal,
-  ] = USE_toggle(false);
-
-  const [targetSave_VOCAB, SET_targetSaveVocab] = useState<
-    Vocab_MODEL | undefined
-  >(undefined);
-  const [targetSave_TRS, SET_targetSaveTRS] = useState<
-    tr_PROPS[] | undefined
-  >();
-
-  const { highlighted_ID, highlight: HIGHLIGHT_vocab } = USE_highlighedId();
-
-  const [toUpdate_VOCAB, SET_toUpdateVocab] = useState<
-    Vocab_MODEL | undefined
-  >();
-
-  const [toUpdate_TRS, SET_toUpdateTRS] = useState<tr_PROPS[] | undefined>();
-  const [toDeleteVocab_ID, SET_toDeleteVocab] = useState<string | undefined>();
-
-  function HANDLE_updateModal({
-    clear = false,
-    vocab,
-    trs,
-  }: {
-    clear?: boolean;
-    vocab?: Vocab_MODEL;
-    trs?: tr_PROPS[];
-  }) {
-    SET_toUpdateVocab(!clear && vocab ? vocab : undefined);
-    SET_toUpdateTRS(!clear && trs ? trs : undefined);
-    TOGGLE_modal("update");
-  }
-
-  const PREPARE_toSaveVocab = ({
-    vocab,
-    trs,
-  }: {
-    vocab: Vocab_MODEL;
-    trs: tr_PROPS[];
-  }) => {
-    SET_targetSaveVocab(vocab);
-    SET_targetSaveTRS(trs);
-    TOGGLE_modal("save");
-  };
-
-  const PREPARE_vocabDelete = (id: string) => {
-    SET_toDeleteVocab(id);
-    TOGGLE_modal("delete");
-  };
 
   return (
     <Page_WRAP>
@@ -128,7 +73,7 @@ export default function Explore_PAGE() {
         <List_SKELETONS />
       ) : null} */}
 
-      <PublicVocabs_FLATLIST
+      {/* <PublicVocabs_FLATLIST
         highlightedVocab_ID={highlighted_ID}
         SHOW_bottomBtn={true}
         {...{
@@ -137,7 +82,8 @@ export default function Explore_PAGE() {
           PREPARE_vocabDelete,
           HANDLE_updateModal,
         }}
-      />
+      /> */}
+      <Styled_TEXT>Public vocabs here</Styled_TEXT>
 
       {/* <PublicVocabDisplaySettings_MODAL
         open={SHOW_displaySettings}
@@ -147,38 +93,7 @@ export default function Explore_PAGE() {
         available_LANGS={available_LANGS}
       />  */}
 
-      {user?.is_admin && (
-        <CreatePublicVocab_MODAL
-          IS_open={modal_STATES.create}
-          TOGGLE_modal={() => TOGGLE_modal("create")}
-          onSuccess={(new_VOCAB: Vocab_MODEL) => {
-            TOGGLE_modal("create");
-            HIGHLIGHT_vocab(new_VOCAB.id);
-            toast.show(t("notifications.vocabCreated"), {
-              type: "green",
-              duration: 3000,
-            });
-          }}
-        />
-      )}
-
-      {user?.is_admin && (
-        <UpdatePublicVocab_MODAL
-          {...{ toUpdate_VOCAB, toUpdate_TRS }}
-          IS_open={modal_STATES.update}
-          TOGGLE_modal={() => TOGGLE_modal("update")}
-          onSuccess={(updated_VOCAB: Vocab_MODEL) => {
-            TOGGLE_modal("update");
-            HIGHLIGHT_vocab(updated_VOCAB.id);
-            toast.show(t("notifications.vocabUpdated"), {
-              type: "green",
-              duration: 3000,
-            });
-          }}
-        />
-      )}
-
-      <SavePublicVocabToList_MODAL
+      {/* <SavePublicVocabToList_MODAL
         vocab={targetSave_VOCAB}
         trs={targetSave_TRS}
         TOGGLE_open={() => TOGGLE_modal("save")}
@@ -191,39 +106,7 @@ export default function Explore_PAGE() {
             duration: 5000,
           });
         }}
-      />
-
-      {user?.is_admin && (
-        <DeleteVocab_MODAL
-          user={user}
-          IS_open={modal_STATES.delete}
-          is_public={true}
-          vocab_id={toDeleteVocab_ID}
-          CLOSE_modal={() => TOGGLE_modal("delete")}
-          onSuccess={() => {
-            SET_toDeleteVocab(undefined);
-            toast.show(t("notifications.vocabDeleted"), {
-              type: "green",
-              duration: 5000,
-            });
-            TOGGLE_modal("delete");
-          }}
-        />
-      )}
+      /> */}
     </Page_WRAP>
   );
 }
-
-const vocab = {
-  id: 1,
-  description: "A nice description",
-  trs: [
-    { lang: "en", text: "English translation.", highlights: [1, 2, 3] },
-    { lang: "de", text: "German translation.", highlights: [1, 2, 3] },
-    { lang: "fr", text: "French translation.", highlights: [1, 2, 3] },
-    { lang: "lt", text: "Lithuanian translation.", highlights: [1, 2, 3] },
-    { lang: "ru", text: "Russian translation.", highlights: [1, 2, 3] },
-  ],
-  searchable:
-    "English translation. German translation. French translation. Lithuanian translation. Russian translation.",
-};

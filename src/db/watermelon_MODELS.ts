@@ -59,14 +59,16 @@ export class User_MODEL extends Model {
 export class List_MODEL extends Model {
   static table = "lists";
   static associations: Associations = {
-    user: { type: "belongs_to", key: "user_id" },
-    original_creator: { type: "belongs_to", key: "user_id" },
     vocabs: { type: "has_many", foreignKey: "list_id" },
   };
-
-  @immutableRelation("users", "user_id") user!: User_MODEL;
-  @relation("users", "original_creator_id") original_creator!: User_MODEL;
   @children("vocabs") vocabs!: Vocab_MODEL[];
+
+  /////////////////////////////////////////////////////////////////
+  // Becasue we don't really need to fetch lists by users,
+  // we provide simple text strings instead of WatermelonDB relations
+  @text("user_id") user_id!: string;
+  @text("original_creator_id") original_creator_id!: string;
+  /////////////////////////////////////////////////////////////////
 
   @text("name") name!: string;
   @json("default_lang_ids", sanitize) default_lang_ids!: string[] | undefined;

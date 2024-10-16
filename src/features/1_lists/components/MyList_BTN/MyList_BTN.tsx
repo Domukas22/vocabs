@@ -55,7 +55,30 @@ function _MyList_BTN({
       <Styled_TEXT type="text_18_bold" style={{ textAlign: "left", flex: 1 }}>
         {list?.name || "INSERT LIST NAME"}
       </Styled_TEXT>
-
+      {list?.type === "shared" && (
+        <Styled_TEXT
+          type="label_small"
+          style={{
+            textAlign: "left",
+            color: MyColors.text_green,
+            fontSize: 16,
+          }}
+        >
+          Shared with 14 people
+        </Styled_TEXT>
+      )}
+      {list?.is_submitted_for_publish && !list?.has_been_submitted && (
+        <Styled_TEXT
+          type="label_small"
+          style={{
+            textAlign: "left",
+            color: MyColors.text_yellow,
+            fontSize: 16,
+          }}
+        >
+          Submitted for publish
+        </Styled_TEXT>
+      )}
       <Styled_TEXT type="label_small" style={{ textAlign: "left" }}>
         {total_count > 0
           ? `${total_count} ${t("other.vocabs")}`
@@ -101,31 +124,3 @@ const s = StyleSheet.create({
     borderColor: MyColors.border_green,
   },
 });
-
-function VocabDifficultyCount({
-  count,
-  difficulty,
-}: {
-  count: number;
-  difficulty: 1 | 2 | 3;
-}) {
-  const textColor = {
-    color:
-      difficulty === 3
-        ? MyColors.text_difficulty_3
-        : difficulty === 2
-        ? MyColors.text_difficulty_2
-        : MyColors.text_difficulty_1,
-  };
-
-  return (
-    <View style={{ flexDirection: "row", gap: 2, alignItems: "center" }}>
-      <ICON_difficultyDot big={true} difficulty={difficulty} />
-      <View>
-        <Styled_TEXT type="text_15_bold" style={textColor}>
-          {count}
-        </Styled_TEXT>
-      </View>
-    </View>
-  );
-}

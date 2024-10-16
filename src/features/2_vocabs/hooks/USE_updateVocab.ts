@@ -32,13 +32,11 @@ export default function USE_updateVocab() {
   );
 
   const UPDATE_vocab = async ({
-    user,
     vocab_id,
     list,
     difficulty,
     description,
     translations: incodming_TRS,
-    is_public = false,
     onSuccess,
   }: VocabUpdate_MODEL): Promise<{
     success: boolean;
@@ -56,30 +54,12 @@ export default function USE_updateVocab() {
       };
     }
 
-    if (is_public && !user?.is_admin) {
-      SET_error("Only admins can update public vocabs.");
+    if (!list || !list.id) {
+      SET_error(errorMessage);
       return {
         success: false,
-        msg: "🔴 Only admins can update public vocabs 🔴",
+        msg: "🔴 List is required for updating private vocabs 🔴",
       };
-    }
-
-    if (!is_public) {
-      if (!user?.id) {
-        SET_error(errorMessage);
-        return {
-          success: false,
-          msg: "🔴 User ID is required for updating private vocabs 🔴",
-        };
-      }
-
-      if (!list || !list.id) {
-        SET_error(errorMessage);
-        return {
-          success: false,
-          msg: "🔴 List is required for updating private vocabs 🔴",
-        };
-      }
     }
 
     try {
@@ -125,19 +105,15 @@ export default function USE_updateVocab() {
             );
         }
 
-        await vocab.update((v: Vocab_MODEL) => {
-          v.user_id = is_public ? null : user?.id;
-          v.list.set(is_public ? null : list);
-          v.difficulty = difficulty || 3;
-          v.description = description || "";
-          v.is_public = is_public;
-          v.trs = incodming_TRS ? incodming_TRS : [];
-          v.lang_ids = incodming_TRS
-            ? incodming_TRS.map((t) => t.lang_id)?.join(",")
-            : "";
-          v.searchable = incodming_TRS
-            ? incodming_TRS.map((t) => t.text)?.join(",")
-            : "";
+        await vocab.update((vocab: Vocab_MODEL) => {
+          vocab.list.set(list);
+
+          vocab.difficulty = difficulty || 3;
+          vocab.description = description || "";
+          vocab.trs = incodming_TRS || [];
+          vocab.lang_ids =
+            incodming_TRS?.map((t) => t.lang_id)?.join(",") || "";
+          vocab.searchable = incodming_TRS?.map((t) => t.text)?.join(",") || "";
         });
 
         return vocab;

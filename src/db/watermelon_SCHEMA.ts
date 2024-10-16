@@ -24,7 +24,7 @@ export default appSchema({
       name: "lists",
       columns: [
         { name: "user_id", type: "string", isIndexed: true },
-        { name: "original_creator_id", type: "string" },
+        { name: "original_creator_id", type: "string", isIndexed: true },
 
         { name: "name", type: "string" },
         { name: "default_lang_ids", type: "string", isOptional: true },

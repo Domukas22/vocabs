@@ -8,12 +8,11 @@ import {
 } from "@/src/db/watermelon_MODELS";
 
 interface VocabCreation_MODEL {
-  user?: User_MODEL | undefined;
+  user_id?: string | undefined;
   list?: List_MODEL | undefined;
   difficulty?: 1 | 2 | 3;
   description?: string | "";
   translations: tr_PROPS[] | undefined;
-  is_public?: boolean;
   onSuccess: (new_VOCAB: Vocab_MODEL) => void;
 }
 
@@ -29,12 +28,10 @@ export default function USE_createVocab() {
   );
 
   const CREATE_vocab = async ({
-    user,
     list,
     difficulty,
     description,
     translations,
-    is_public = false,
     onSuccess,
   }: VocabCreation_MODEL): Promise<{
     success: boolean;
@@ -43,45 +40,23 @@ export default function USE_createVocab() {
   }> => {
     SET_error(null); // Clear any previous error
 
-    // Initial validation checks
-    if (is_public && !user?.is_admin) {
-      SET_error("Only admins can create public vocabs.");
+    if (!list || !list.id) {
+      SET_error(errorMessage);
       return {
         success: false,
-        msg: "🔴 Only admins can create public vocabs 🔴",
+        msg: "🔴 List is required for creating private vocabs 🔴",
       };
-    }
-
-    if (!is_public) {
-      if (!user?.id) {
-        SET_error(errorMessage);
-        return {
-          success: false,
-          msg: "🔴 User ID is required for creating private vocabs 🔴",
-        };
-      }
-
-      if (!list || !list.id) {
-        SET_error(errorMessage);
-        return {
-          success: false,
-          msg: "🔴 List is required for creating private vocabs 🔴",
-        };
-      }
     }
 
     try {
       SET_isCreatingVocab(true);
 
-      const user_db = await Users_DB.find(user?.id || "");
-      if (!user) throw new Error("🔴 User not found in Watermelon 🔴");
       const newVocab = await db.write(async () => {
         const vocab = await Vocabs_DB.create((vocab: Vocab_MODEL) => {
-          vocab.user?.set(is_public ? null : user_db);
-          vocab.list?.set(is_public ? null : list);
+          vocab.list?.set(list);
+
           vocab.difficulty = difficulty || 3;
           vocab.description = description || "";
-          vocab.is_public = is_public;
           vocab.trs = translations;
           vocab.lang_ids = translations?.map((t) => t.lang_id).join(",");
           vocab.searchable = translations?.map((t) => t.text).join(",");

@@ -74,7 +74,7 @@ export default function USE_renameList() {
     try {
       const updated_LIST = await db.write(async () => {
         const list = await Lists_DB.find(list_id);
-        await list.update((list: List_MODEL) => {
+        return await list.update((list: List_MODEL) => {
           list.name = newName;
         });
       });

@@ -59,7 +59,6 @@ export default function CreateMyVocab_MODAL({
   onSuccess = () => {},
 }: CreateMyVocabModal_PROPS) {
   const { t } = useTranslation();
-  const { user }: { user: User_MODEL } = USE_auth();
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
     { name: "langs", initialValue: false },
@@ -75,13 +74,10 @@ export default function CreateMyVocab_MODAL({
   const create = async (data: CreateMyVocabData_PROPS) => {
     const { list, description, difficulty, translations } = data;
     const result = await CREATE_vocab({
-      user,
       list,
       difficulty,
       description,
-
       translations,
-      is_public: false,
       onSuccess: (new_VOCAB: Vocab_MODEL) => {
         onSuccess(new_VOCAB);
         reset();
