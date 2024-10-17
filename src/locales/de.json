@@ -14,7 +14,9 @@
     "deleteList": "Liste löschen?",
     "selectTags": "Tags auswählen",
     "publicPrivateVocabToPublicAsAdmin": "Vokabel veröffentlichen?",
-    "renameList": "Liste umbenennen"
+    "renameList": "Liste umbenennen",
+    "cancelListSharing": "Aufhören Liste zu teilen?",
+    "cancelListPublishing": "Veröffentlichung der Liste aufheben?"
   },
   "blockLabels": {
     "uiLang": "App Sprache"
@@ -68,7 +70,9 @@
     "selectTags": "Tags wählen",
     "createTagPre": "Tag ",
     "createTagPost": "hinfügen",
-    "confirmPublish": "Ja, veröffentlichen"
+    "confirmPublish": "Ja, veröffentlichen",
+    "confirmStop": "Ja, aufhören",
+    "confirmListUnpublish": "Ja, aufheben"
   },
   "pages": {
     "about": {

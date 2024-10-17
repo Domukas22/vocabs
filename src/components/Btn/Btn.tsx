@@ -33,6 +33,7 @@ export default function Btn({
   stayPressed = false,
   tiny = false,
   topRightIconCount = 0,
+
   props,
 }: Btn) {
   return (

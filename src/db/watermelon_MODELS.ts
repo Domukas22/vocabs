@@ -71,6 +71,7 @@ export class List_MODEL extends Model {
   /////////////////////////////////////////////////////////////////
 
   @text("name") name!: string;
+  @text("description") description!: string;
   @json("default_lang_ids", sanitize) default_lang_ids!: string[] | undefined;
   @field("is_submitted_for_publish") is_submitted_for_publish!: boolean;
   @field("has_been_submitted") has_been_submitted!: boolean;
@@ -88,13 +89,10 @@ export class List_MODEL extends Model {
 // ===================================================================================
 export class ListAccess_MODEL extends Model {
   static table = "list_access";
-  static associations: Associations = {
-    list: { type: "belongs_to", key: "list_id" },
-    user: { type: "belongs_to", key: "participant_id" },
-  };
 
-  @immutableRelation("lists", "list_id") list!: List_MODEL;
-  @immutableRelation("users", "participant_id") participant!: User_MODEL;
+  @text("owner_id") owner_id!: string;
+  @text("participant_id") participant_id!: string;
+  @text("list_id") list_id!: string;
 
   @readonly @date("created_at") createdAt!: number;
 }

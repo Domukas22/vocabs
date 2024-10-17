@@ -12,7 +12,7 @@ import Vocab_FRONT from "../Components/Vocab_FRONT/Vocab_FRONT";
 
 import USE_updateVocabDifficulty from "../../../hooks/USE_updateVocabDifficulty";
 import { VocabBack_TRS } from "../Components/VocabBack_TRS/VocabBack_TRS";
-import VocabBack_DESC from "../Components/VocabBack_DESC/VocabBack_DESC";
+import VocabBottomText_WRAP from "../Components/VocabBottomText_WRAP/VocabBottomText_WRAP";
 import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
 import VocabBack_BTNS from "../Components/VocabBack_BTNS/VocabBack_BTNS";
 import VocabBackDifficultyEdit_BTNS from "../Components/VocabBackDifficultyEdit_BTNS/VocabBackDifficultyEdit_BTNS";
@@ -96,8 +96,7 @@ export default function MyVocab({
       {open && (
         <>
           <VocabBack_TRS trs={trs} difficulty={vocab?.difficulty} />
-
-          <VocabBack_DESC desc={vocab.description} />
+          <VocabBottomText_WRAP desc={vocab.description} />
 
           <View style={{ padding: 12 }}>
             {!SHOW_difficultyEdits ? (

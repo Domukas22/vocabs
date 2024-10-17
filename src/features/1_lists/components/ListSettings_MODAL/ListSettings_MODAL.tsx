@@ -62,8 +62,10 @@ export default function ListSettings_MODAL({
   const router = useRouter();
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
-    { name: "listSharing" },
-    { name: "listPublishing" },
+    { name: "listSharingInfo" },
+    { name: "listPublishingInfo" },
+    { name: "listSharingCancel" },
+    { name: "listPublishingCancel" },
   ]);
 
   const { SHARE_list, IS_sharingList, shareList_ERROR, RESET_shareListerror } =
@@ -219,7 +221,7 @@ export default function ListSettings_MODAL({
               />
               <Btn
                 iconLeft={<ICON_questionMark />}
-                onPress={() => TOGGLE_modal("listSharing")}
+                onPress={() => TOGGLE_modal("listSharingInfo")}
               />
             </View>
           </Block>
@@ -249,7 +251,7 @@ export default function ListSettings_MODAL({
               type="delete"
               stayPressed={IS_sharingList}
               text_STYLES={{ flex: 1 }}
-              onPress={() => share(false)}
+              onPress={() => TOGGLE_modal("listSharingCancel")}
             />
           </Block>
         )}
@@ -275,7 +277,7 @@ export default function ListSettings_MODAL({
               />
               <Btn
                 iconLeft={<ICON_questionMark />}
-                onPress={() => TOGGLE_modal("listPublishing")}
+                onPress={() => TOGGLE_modal("listPublishingInfo")}
               />
             </View>
           </Block>
@@ -297,7 +299,7 @@ export default function ListSettings_MODAL({
               type="delete"
               text_STYLES={{ flex: 1 }}
               stayPressed={IS_publishingList}
-              onPress={() => publish(false)}
+              onPress={() => TOGGLE_modal("listPublishingCancel")}
             />
           </Block>
         )}
@@ -359,13 +361,44 @@ export default function ListSettings_MODAL({
       />
 
       <HowDoesSharingListWork_MODAL
-        open={modal_STATES.listSharing}
-        TOGGLE_modal={() => TOGGLE_modal("listSharing")}
+        open={modal_STATES.listSharingInfo}
+        TOGGLE_modal={() => TOGGLE_modal("listSharingInfo")}
       />
       <HowDoesPublishingListWork_MODAL
-        open={modal_STATES.listPublishing}
-        TOGGLE_modal={() => TOGGLE_modal("listPublishing")}
+        open={modal_STATES.listPublishingInfo}
+        TOGGLE_modal={() => TOGGLE_modal("listPublishingInfo")}
       />
+
+      <Confirmation_MODAL
+        open={modal_STATES.listSharingCancel}
+        toggle={() => TOGGLE_modal("listSharingCancel")}
+        title={t("header.cancelListSharing")}
+        action={() => {
+          share(false);
+          TOGGLE_modal("listSharingCancel");
+        }}
+        actionBtnText={t("btn.confirmStop")}
+      >
+        <Styled_TEXT style={{ color: MyColors.text_red }}>
+          The people you have selected won't be able to view your list anymore
+        </Styled_TEXT>
+      </Confirmation_MODAL>
+
+      <Confirmation_MODAL
+        open={modal_STATES.listPublishingCancel}
+        toggle={() => TOGGLE_modal("listPublishingCancel")}
+        title={t("header.cancelListPublishing")}
+        action={() => {
+          publish(false);
+          TOGGLE_modal("listPublishingCancel");
+        }}
+        actionBtnText={t("btn.confirmListUnpublish")}
+      >
+        <Styled_TEXT style={{ color: MyColors.text_red }}>
+          Your list will not be reviewed for publishing and you will not receive
+          any new vocabs
+        </Styled_TEXT>
+      </Confirmation_MODAL>
 
       <DeleteList_MODAL
         user_id={user?.id}

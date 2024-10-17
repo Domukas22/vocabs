@@ -17,6 +17,8 @@ import { tr_PROPS } from "@/src/db/props";
 import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 import { withObservables } from "@nozbe/watermelondb/react";
 import FETCH_vocabs, { VocabFilter_PROPS } from "../../../utils/FETCH_vocabs";
+import Vocab from "../../Vocab/Vocab";
+import { View } from "react-native";
 
 function _MyVocabs_FLATLIST({
   list_id,
@@ -70,6 +72,15 @@ function _MyVocabs_FLATLIST({
                 highlighted={highlightedVocab_ID === item.id}
                 {...{ HANDLE_updateModal }}
               />
+              {/* <Vocab
+                vocab={item}
+                vocab_BACK={(TOGGLE_vocab: () => void) => (
+                  <View style={{ gap: 8, padding: 12 }}>
+                    <Btn text={t("btn.saveVocabToList")} onPress={() => {}} />
+                    <Btn text={t("btn.close")} onPress={TOGGLE_vocab} />
+                  </View>
+                )}
+              ></Vocab> */}
             </SwipeableExample>
           );
         }}
@@ -114,70 +125,3 @@ const enhance = withObservables(
 );
 
 export const MyVocabs_FLATLIST = enhance(_MyVocabs_FLATLIST);
-
-// function GET_filteredVocabs({ vocabs, displaySettings }) {
-//   let result = [...vocabs];
-
-//   const { sorting, sortDirection, difficultyFilters, langFilters } =
-//     displaySettings;
-
-//   // Apply difficulty filters
-//   if (difficultyFilters && difficultyFilters.length > 0) {
-//     result = result.filter((vocab) =>
-//       difficultyFilters.includes(vocab?.difficulty)
-//     );
-//   }
-
-//   // Apply langauge filters
-//   if (langFilters && langFilters.length > 0) {
-//     result = result.filter((vocab) => {
-//       // Get the unique language IDs from the vocab's translations
-//       const vocabLangIds = vocab.translations?.map((tr) => tr.lang_id) || [];
-
-//       // Check if every langFilter is present in vocabLangIds
-//       return langFilters.every((langId) => vocabLangIds.includes(langId));
-//     });
-//   }
-
-//   // Apply sorting
-//   if (sorting) {
-//     result = result.sort((a, b) => {
-//       let comparison = 0;
-
-//       switch (sorting) {
-//         case "difficulty":
-//           comparison = a.difficulty - b.difficulty;
-//           break;
-//         case "date":
-//           comparison =
-//             new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-//           break;
-//         case "shuffle":
-//           comparison = Math.random() - 0.5; // Randomize order
-//           break;
-//         default:
-//           break;
-//       }
-
-//       // Apply sorting direction
-//       if (sortDirection === "descending") {
-//         comparison = -comparison;
-//       }
-
-//       return comparison;
-//     });
-//   }
-
-//   return result;
-// }
-// function GET_searchedVocabs({ vocabs, search }) {
-//   const result = vocabs?.filter(
-//     (vocab) =>
-//       vocab.description?.toLowerCase().includes(search.toLowerCase().trim()) ||
-//       vocab.translations?.some((tr) =>
-//         tr.text.toLowerCase().includes(search.toLowerCase().trim())
-//       )
-//   );
-
-//   return result;
-// }

@@ -39,6 +39,8 @@ import Btn from "@/src/components/Btn/Btn";
 import VocabDifficulty_COUNTS from "@/src/features/1_lists/components/VocabDifficulty_COUNTS/VocabDifficulty_COUNTS";
 
 import { MyColors } from "@/src/constants/MyColors";
+
+import Transition_BTN from "@/src/components/Transition_BTN/Transition_BTN";
 import { ICON_arrow } from "@/src/components/icons/icons";
 
 export default function MyLists_PAGE() {
@@ -59,72 +61,37 @@ export default function MyLists_PAGE() {
       <View style={{ padding: 12, gap: 12 }}>
         {/* -------------------------------- */}
 
-        <Selection_BTN
-          title="📁 Public lists"
-          paragraph="Choose and save a list you like"
-        />
-        <Selection_BTN
-          title="🔤 All public vocabs"
-          paragraph="Search all public vocabs in the app"
-        />
-        <Selection_BTN
-          title="🔒 Shared lists"
-          paragraph="Find a list your friend created"
-        />
+        <Transition_BTN
+          onPress={() => router.push("/(main)/explore/public_lists")}
+        >
+          <Styled_TEXT type="text_18_bold">📁 Public lists</Styled_TEXT>
+          <Styled_TEXT type="label_small">
+            Choose and save a list you like
+          </Styled_TEXT>
+          <ICON_arrow direction="right" style={{ alignItems: "flex-end" }} />
+        </Transition_BTN>
+
+        <Transition_BTN
+          onPress={() => router.push("/(main)/explore/public_vocabs")}
+        >
+          <Styled_TEXT type="text_18_bold">🔤 All public vocabs</Styled_TEXT>
+          <Styled_TEXT type="label_small">
+            Search all public vocabs in the app
+          </Styled_TEXT>
+          <ICON_arrow direction="right" style={{ alignItems: "flex-end" }} />
+        </Transition_BTN>
+        <Transition_BTN
+          onPress={() => router.push("/(main)/explore/shared_lists")}
+        >
+          <Styled_TEXT type="text_18_bold">🔒 Shared lists</Styled_TEXT>
+          <Styled_TEXT type="label_small">
+            Find a list your friend created
+          </Styled_TEXT>
+          <ICON_arrow direction="right" style={{ alignItems: "flex-end" }} />
+        </Transition_BTN>
 
         {/* -------------------------------- */}
       </View>
     </Page_WRAP>
   );
 }
-
-function Selection_BTN({
-  title,
-  paragraph,
-}: {
-  title: string;
-  paragraph: string;
-}) {
-  return (
-    <Pressable
-      style={({ pressed }) => [
-        s.btn,
-        pressed && s.pressed,
-        { width: "100%", minWidth: "100%" },
-      ]}
-      onPress={() => {}}
-    >
-      <Styled_TEXT type="text_18_bold">{title}</Styled_TEXT>
-      <Styled_TEXT type="label_small">{paragraph}</Styled_TEXT>
-
-      <View
-        style={{
-          width: "100%",
-          alignItems: "flex-end",
-        }}
-      >
-        <ICON_arrow direction="right" />
-      </View>
-    </Pressable>
-  );
-}
-
-///-----------------------------------------
-const s = StyleSheet.create({
-  btn: {
-    borderWidth: 1,
-    borderColor: MyColors.border_white_005,
-
-    backgroundColor: MyColors.btn_2,
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    minHeight: 44,
-    borderRadius: 12,
-    gap: 2,
-
-    width: "100%",
-  },
-  pressed: {
-    backgroundColor: MyColors.btn_3,
-  },
-});

@@ -27,6 +27,7 @@ export default appSchema({
         { name: "original_creator_id", type: "string", isIndexed: true },
 
         { name: "name", type: "string" },
+        { name: "description", type: "string" },
         { name: "default_lang_ids", type: "string", isOptional: true },
         { name: "is_submitted_for_publish", type: "boolean" },
         { name: "has_been_submitted", type: "boolean" },
@@ -41,8 +42,9 @@ export default appSchema({
     tableSchema({
       name: "list_access",
       columns: [
-        { name: "list_id", type: "string", isIndexed: true },
+        { name: "owner_id", type: "string", isIndexed: true },
         { name: "participant_id", type: "string", isIndexed: true },
+        { name: "list_id", type: "string", isIndexed: true },
         { name: "created_at", type: "number" },
       ],
     }),

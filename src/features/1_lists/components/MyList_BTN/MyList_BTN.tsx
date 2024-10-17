@@ -18,6 +18,7 @@ import { List_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 import { Vocabs_DB } from "@/src/db";
 import { Q } from "@nozbe/watermelondb";
 import { withObservables } from "@nozbe/watermelondb/react";
+import Transition_BTN from "@/src/components/Transition_BTN/Transition_BTN";
 
 function _MyList_BTN({
   diff_1_count,
@@ -39,19 +40,19 @@ function _MyList_BTN({
   highlighted: boolean;
 }) {
   const { t } = useTranslation();
+  const IS_submitted = useMemo(
+    () => list?.is_submitted_for_publish,
+    [list?.is_submitted_for_publish]
+  );
+  const IS_accepted = useMemo(
+    () => list?.has_been_submitted,
+    [list?.has_been_submitted]
+  );
 
   // console.log([list.name, diff_1_count, diff_2_count, diff_3_count]);
 
   return (
-    <Pressable
-      style={({ pressed }) => [
-        s.btn,
-        pressed && s.pressed,
-        highlighted && s.highlighted,
-        { width: "100%", minWidth: "100%" },
-      ]}
-      onPress={onPress}
-    >
+    <Transition_BTN {...{ onPress }}>
       <Styled_TEXT type="text_18_bold" style={{ textAlign: "left", flex: 1 }}>
         {list?.name || "INSERT LIST NAME"}
       </Styled_TEXT>
@@ -67,7 +68,7 @@ function _MyList_BTN({
           Shared with 14 people
         </Styled_TEXT>
       )}
-      {list?.is_submitted_for_publish && !list?.has_been_submitted && (
+      {IS_submitted && !IS_accepted && (
         <Styled_TEXT
           type="label_small"
           style={{
@@ -88,7 +89,7 @@ function _MyList_BTN({
       <VocabDifficulty_COUNTS
         difficulties={{ diff_1_count, diff_2_count, diff_3_count }}
       />
-    </Pressable>
+    </Transition_BTN>
   );
 }
 
@@ -101,26 +102,3 @@ const enhance = withObservables([], ({ list }: { list: List_MODEL }) => ({
 }));
 
 export const MyList_BTN = enhance(_MyList_BTN);
-
-const s = StyleSheet.create({
-  btn: {
-    borderWidth: 1,
-    borderColor: MyColors.border_white_005,
-
-    backgroundColor: MyColors.btn_2,
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    minHeight: 44,
-    borderRadius: 12,
-    gap: 2,
-    flex: 1,
-    width: "100%",
-  },
-  pressed: {
-    backgroundColor: MyColors.btn_3,
-  },
-  highlighted: {
-    backgroundColor: MyColors.btn_green,
-    borderColor: MyColors.border_green,
-  },
-});

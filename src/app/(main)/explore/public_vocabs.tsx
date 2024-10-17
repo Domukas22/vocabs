@@ -44,6 +44,18 @@ import SavePublicVocabToList_MODAL from "@/src/features/2_vocabs/components/Moda
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
+import Btn from "@/src/components/Btn/Btn";
+import { ICON_X } from "@/src/components/icons/icons";
+import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
+import SwipeableExample from "@/src/components/SwipeableExample/SwipeableExample";
+import MyVocab from "@/src/features/2_vocabs/components/Vocab/My_VOCAB/My_VOCAB";
+import { StyleSheet, View } from "react-native";
+import { MyColors } from "@/src/constants/MyColors";
+import Vocab_FRONT from "@/src/features/2_vocabs/components/Vocab/Components/Vocab_FRONT/Vocab_FRONT";
+import { VocabBack_TRS } from "@/src/features/2_vocabs/components/Vocab/Components/VocabBack_TRS/VocabBack_TRS";
+import VocabBottomText_WRAP from "@/src/features/2_vocabs/components/Vocab/Components/VocabBottomText_WRAP/VocabBottomText_WRAP";
+import Vocab from "@/src/features/2_vocabs/components/Vocab/Vocab";
+import PublicVocab_BACK from "@/src/features/2_vocabs/components/Vocab/Components/PublicVocab_BACK/PublicVocab_BACK";
 
 export default function Explore_PAGE() {
   const { user } = USE_auth();
@@ -59,31 +71,59 @@ export default function Explore_PAGE() {
     { name: "save" },
   ]);
 
+  const [target_VOCAB, SET_targetVocab] = useState<Vocab_MODEL | undefined>();
+
+  const [vocabs, SET_vocabs] = useState<Vocab_MODEL[]>([]);
+  const { FETCH_publicVocabs, ARE_publicVocabsFetching, publicVocabs_ERROR } =
+    USE_fetchPublicVocabs({ user_id: user?.id || "" });
+
+  const getVocabs = async () => {
+    const vocabs = await FETCH_publicVocabs();
+    if (vocabs?.success && vocabs.data) {
+      SET_vocabs(vocabs.data);
+    }
+    console.log("VOCABS: ", vocabs?.data?.length);
+  };
+
+  useEffect(() => {
+    getVocabs();
+  }, []);
+
   return (
     <Page_WRAP>
       <PublicVocabs_HEADER />
       <PublicVocabs_SUBNAV
         {...{ search, SET_search }}
-        TOGGLE_createPublicVocabModal={() => TOGGLE_modal("create")}
         TOGGLE_displaySettings={() => TOGGLE_modal("displaySettings")}
-        is_admin={user?.is_admin}
       />
 
-      {/* {ARE_vocabsSearching || ARE_publicVocabsFetching ? (
-        <List_SKELETONS />
-      ) : null} */}
+      {/* {vocabs &&
+        vocabs.map((v) => <Styled_TEXT>{v.trs?.[0]?.text}</Styled_TEXT>)} */}
 
-      {/* <PublicVocabs_FLATLIST
-        highlightedVocab_ID={highlighted_ID}
-        SHOW_bottomBtn={true}
-        {...{
-          search,
-          PREPARE_toSaveVocab,
-          PREPARE_vocabDelete,
-          HANDLE_updateModal,
+      <Styled_FLATLIST
+        data={vocabs}
+        renderItem={({ item }) => {
+          // const [open, TOGGLE_open] = USE_toggle(false);
+
+          return (
+            <Vocab
+              vocab={item}
+              vocab_BACK={(TOGGLE_vocab: () => void) => (
+                <PublicVocab_BACK
+                  {...{ TOGGLE_vocab }}
+                  SAVE_vocab={() => {
+                    SET_targetVocab(item);
+                    TOGGLE_modal("save");
+                  }}
+                  list={item?.list || undefined}
+                />
+              )}
+              SHOW_list
+            ></Vocab>
+          );
         }}
-      /> */}
-      <Styled_TEXT>Public vocabs here</Styled_TEXT>
+        keyExtractor={(item) => "PublicVocab" + item.id}
+      />
 
       {/* <PublicVocabDisplaySettings_MODAL
         open={SHOW_displaySettings}
@@ -93,20 +133,18 @@ export default function Explore_PAGE() {
         available_LANGS={available_LANGS}
       />  */}
 
-      {/* <SavePublicVocabToList_MODAL
-        vocab={targetSave_VOCAB}
-        trs={targetSave_TRS}
-        TOGGLE_open={() => TOGGLE_modal("save")}
+      <SavePublicVocabToList_MODAL
+        vocab={target_VOCAB}
         IS_open={modal_STATES.save}
-        user={user}
         onSuccess={() => {
           TOGGLE_modal("save");
           toast.show(t("notifications.savedVocab"), {
             type: "green",
-            duration: 5000,
+            duration: 3000,
           });
         }}
-      /> */}
+        TOGGLE_open={() => TOGGLE_modal("save")}
+      />
     </Page_WRAP>
   );
 }

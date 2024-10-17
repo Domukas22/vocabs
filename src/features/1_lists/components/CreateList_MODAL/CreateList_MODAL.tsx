@@ -18,7 +18,7 @@ import { USER_ID } from "@/src/constants/globalVars";
 interface CreateListModal_PROPS {
   user: User_MODEL | undefined;
   IS_open: boolean;
-  currentList_NAMES: string[];
+  currentList_NAMES?: string[];
   CLOSE_modal: () => void;
   onSuccess: (newList: List_MODEL) => void;
 }

@@ -11,7 +11,9 @@
     "deleteList": "Delete list?",
     "selectTags": "Select tags",
     "publicPrivateVocabToPublicAsAdmin": "Publish vocab?",
-    "renameList": "Rename list"
+    "renameList": "Rename list",
+    "cancelListSharing": "Stop sharing list?",
+    "cancelListPublishing": "Unpublish list?"
   },
   "blockLabels": {
     "uiLang": "App language"
@@ -65,7 +67,9 @@
     "selectTags": "Select tags",
     "createTagPre": "Create tag ",
     "createTagPost": " ",
-    "confirmPublish": "Yes, publish"
+    "confirmPublish": "Yes, publish",
+    "confirmStop": "Yes, stop",
+    "confirmListUnpublish": "Yes, unpublish"
   },
   "pages": {
     "about": {

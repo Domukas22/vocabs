@@ -44,6 +44,7 @@ interface SelectListModal_PROPS {
   submit_ACTION: (list: List_MODEL) => void;
   cancel_ACTION: () => void;
   IS_inAction: boolean;
+  lists: List_MODEL[] | undefined;
 }
 
 export default function SelectMyList_MODAL({
@@ -53,6 +54,7 @@ export default function SelectMyList_MODAL({
   submit_ACTION,
   cancel_ACTION,
   IS_inAction,
+  lists,
 }: SelectListModal_PROPS) {
   const { t } = useTranslation();
   const { user } = USE_auth();
