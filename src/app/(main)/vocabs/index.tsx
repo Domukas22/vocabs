@@ -33,6 +33,8 @@ import { FlatList } from "react-native";
 import { Lists_DB, Users_DB } from "@/src/db";
 import { Q } from "@nozbe/watermelondb";
 import { USER_ID } from "@/src/constants/globalVars";
+import Btn from "@/src/components/Btn/Btn";
+import { mySync } from "@/src/db/sync";
 
 export default function MyLists_PAGE() {
   const { user } = USE_auth();
@@ -80,6 +82,8 @@ export default function MyLists_PAGE() {
           lists: z_lists,
         }}
       />
+
+      <Btn text="Sync" style={{ margin: 12 }} onPress={mySync} />
 
       {z_lists.length > 5 && (
         <MyLists_SUBNAV {...{ search, SET_search: SEARCH_lists }} />
@@ -137,19 +141,13 @@ export default function MyLists_PAGE() {
         IS_open={modal_STATES.delete}
         list_id={target_LIST?.id}
         CLOSE_modal={() => TOGGLE_modal("delete")}
-        onSuccess={(deleted_LIST?: List_MODEL) => {
-          if (!deleted_LIST) return;
+        onSuccess={() => {
           SET_targetList(undefined);
           TOGGLE_modal("delete");
-          toast.show(
-            t("notifications.listDeletedPre") +
-              `"${deleted_LIST?.name}"` +
-              t("notifications.listDeletedPost"),
-            {
-              type: "green",
-              duration: 5000,
-            }
-          );
+          toast.show(t("notifications.listDeleted"), {
+            type: "green",
+            duration: 5000,
+          });
         }}
       />
     </Page_WRAP>

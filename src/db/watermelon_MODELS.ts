@@ -74,7 +74,7 @@ export class List_MODEL extends Model {
   @text("description") description!: string;
   @json("default_lang_ids", sanitize) default_lang_ids!: string[] | undefined;
   @field("is_submitted_for_publish") is_submitted_for_publish!: boolean;
-  @field("has_been_submitted") has_been_submitted!: boolean;
+  @field("was_accepted_for_publish") was_accepted_for_publish!: boolean;
   @text("type") type!: "private" | "public" | "shared" | "draft";
 
   @readonly @date("created_at") createdAt!: number;

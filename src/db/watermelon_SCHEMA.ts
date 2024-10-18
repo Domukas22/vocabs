@@ -30,7 +30,7 @@ export default appSchema({
         { name: "description", type: "string" },
         { name: "default_lang_ids", type: "string", isOptional: true },
         { name: "is_submitted_for_publish", type: "boolean" },
-        { name: "has_been_submitted", type: "boolean" },
+        { name: "was_accepted_for_publish", type: "boolean" },
         { name: "type", type: "string" },
 
         { name: "created_at", type: "number" },

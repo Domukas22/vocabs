@@ -62,6 +62,7 @@ export default function CreateList_MODAL({
     const { name } = data;
     const newList = await CREATE_list({
       name,
+      description: "",
       user_id: user?.id,
       currentList_NAMES,
       onSuccess,

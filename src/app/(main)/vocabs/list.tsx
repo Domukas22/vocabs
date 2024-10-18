@@ -28,6 +28,7 @@ import UpdateMyVocab_MODAL from "@/src/features/2_vocabs/components/Modal/Update
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 import Btn from "@/src/components/Btn/Btn";
+import { mySync } from "@/src/db/sync";
 
 export default function SingleList_PAGE() {
   const { user } = USE_auth();
@@ -78,6 +79,7 @@ export default function SingleList_PAGE() {
         btnDots_ACTION={() => TOGGLE_modal("listSettings")}
         IS_listNameHighlighted={IS_listNameHighlighted}
       />
+      <Btn text="Sync" style={{ margin: 12 }} onPress={mySync} />
       <MyVocabs_SUBNAV
         {...{ search, SET_search }}
         onPlusIconPress={() => TOGGLE_modal("create")}

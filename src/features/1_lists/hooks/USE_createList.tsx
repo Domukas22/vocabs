@@ -8,8 +8,9 @@ import { List_MODEL, User_MODEL } from "@/src/db/watermelon_MODELS";
 
 export interface CreateList_PROPS {
   name: string;
+  description: string;
   user_id: string | undefined;
-  currentList_NAMES: string[];
+  currentList_NAMES: string[] | undefined;
   onSuccess?: (newList: List_MODEL) => void;
   cleanup?: () => void;
 }
@@ -28,6 +29,7 @@ export default function USE_createList() {
 
   const CREATE_list = async ({
     name,
+    description,
     user_id,
     currentList_NAMES,
     onSuccess,
@@ -72,10 +74,12 @@ export default function USE_createList() {
         const newList = await Lists_DB.create((newList: List_MODEL) => {
           newList.user_id = user_id;
           newList.original_creator_id = user_id;
-          newList.name = name;
+
+          newList.name = name || "";
+          newList.description = description || "";
           newList.default_lang_ids = ["en", "de"];
           newList.is_submitted_for_publish = false;
-          newList.has_been_submitted = false;
+          newList.was_accepted_for_publish = false;
           newList.type = "private";
         });
         return newList;

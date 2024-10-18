@@ -32,6 +32,8 @@ export default function DeleteList_MODAL({
   const { DELETE_list, IS_deletingList, error, RESET_error } = USE_deleteList();
 
   const del = async () => {
+    console.log("log");
+
     await db.write(async () => {
       const list = await Lists_DB.find(list_id || "");
 
@@ -43,7 +45,7 @@ export default function DeleteList_MODAL({
 
       await list.markAsDeleted();
     });
-    if (onSuccess) onSuccess();
+    onSuccess();
   };
 
   return (

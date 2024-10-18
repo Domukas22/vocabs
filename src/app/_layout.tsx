@@ -74,7 +74,7 @@ function Main_LAYOUT() {
             const userData = await fetchUserData(session.user);
             if (userData) {
               // await executeSync(); // Sync after fetching user data
-              router.push("/(main)/explore");
+              router.push("/(main)/vocabs");
             }
           } else {
             SET_auth(null);
