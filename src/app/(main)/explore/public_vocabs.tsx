@@ -82,7 +82,6 @@ export default function Explore_PAGE() {
     if (vocabs?.success && vocabs.data) {
       SET_vocabs(vocabs.data);
     }
-    console.log("VOCABS: ", vocabs?.data?.length);
   };
 
   useEffect(() => {

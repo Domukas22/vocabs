@@ -41,7 +41,6 @@ export default function USE_fetchVocabsOfASharedList() {
         };
       }
 
-      console.log("🟢 Fetched vocabs for the list 🟢");
       return {
         success: true,
         data: vocabData, // returning the fetched vocabs

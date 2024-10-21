@@ -20,12 +20,12 @@ export default function USE_fetchLangs() {
       const { data, error } = await query;
 
       if (error) {
-        console.log("🔴 Error fetching languages 🔴 : ", error);
+        console.error("🔴 Error fetching languages 🔴 : ", error);
         return { success: false, msg: "🔴 Error fetching languages 🔴" };
       }
       return { success: true, data };
     } catch (error) {
-      console.log("🔴 Error fetching languages 🔴 : ", error);
+      console.error("🔴 Error fetching languages 🔴 : ", error);
       return { success: false, msg: "🔴 Error fetching languages 🔴" };
     } finally {
       SET_areLangsLoading(false); // Ensure the loading state is reset

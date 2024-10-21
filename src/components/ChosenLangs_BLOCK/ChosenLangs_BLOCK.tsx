@@ -6,51 +6,55 @@ import Block from "@/src/components/Block/Block";
 import Btn from "@/src/components/Btn/Btn";
 import { ICON_flag, ICON_X } from "@/src/components/icons/icons";
 import Label from "@/src/components/Label/Label";
-import { tr_PROPS } from "@/src/db/props";
 import { Language_MODEL } from "@/src/db/watermelon_MODELS";
 import { View } from "react-native";
 
 import { useTranslation } from "react-i18next";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import i18next from "i18next";
-import { USE_langs } from "@/src/context/Langs_CONTEXT";
-import GET_langsFromTranslations from "@/src/features/4_languages/utils/GET_langsFromTranslations";
 import { Styled_TEXT } from "../Styled_TEXT/Styled_TEXT";
 import { FieldError } from "react-hook-form";
-import EmptyFlatList_BOTTM from "../EmptyFlatList_BOTTM/EmptyFlatList_BOTTM";
+import FETCH_langs from "@/src/features/4_languages/hooks/FETCH_langs";
 
 interface ChosenLangsInputs_PROPS {
   label: string;
-  trs: tr_PROPS[];
+  default_lang_ids: string[] | undefined;
   REMOVE_lang: (lang_id: string) => void;
   toggle: () => void;
-  error: FieldError | undefined;
-  langs?: Language_MODEL | undefined;
+  error: string | null;
 }
 
 export default function ChosenLangs_BLOCK({
   label,
-  trs,
+  default_lang_ids = [],
   REMOVE_lang = () => {},
   toggle = () => {},
   error,
-  langs,
 }: ChosenLangsInputs_PROPS) {
   const { t } = useTranslation();
   const currentAppLanguage = useMemo(() => i18next.language, []);
+
+  const [selected_LANGS, SET_selectedLangs] = useState<Language_MODEL[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const langs = await FETCH_langs({ lang_ids: default_lang_ids });
+      SET_selectedLangs(langs);
+    })();
+  }, [default_lang_ids]);
 
   return (
     <>
       <Block>
         <Label>{label || "NO LABEL PROVIDED"}</Label>
-        {langs?.map((lang: Language_MODEL) => {
+        {selected_LANGS?.map((lang: Language_MODEL) => {
           return (
             <Btn
               key={"chosen lang" + lang.id}
               type="active"
               iconLeft={
                 <View style={{ marginRight: 4 }}>
-                  <ICON_flag lang={lang?.id} big={true} />
+                  <ICON_flag lang={lang?.lang_id} big={true} />
                 </View>
               }
               text={
@@ -60,7 +64,7 @@ export default function ChosenLangs_BLOCK({
               }
               iconRight={<ICON_X rotate={true} color="primary" big={true} />}
               text_STYLES={{ flex: 1 }}
-              onPress={() => REMOVE_lang(lang?.id || "")}
+              onPress={() => REMOVE_lang(lang?.lang_id || "")}
             />
           );
         })}
@@ -70,7 +74,7 @@ export default function ChosenLangs_BLOCK({
           type="seethrough_primary"
           onPress={toggle}
         />
-        {error && <Styled_TEXT type="text_error">{error.message}</Styled_TEXT>}
+        {error && <Styled_TEXT type="text_error">{error}</Styled_TEXT>}
       </Block>
       {/* <EmptyFlatList_BOTTM 
     emptyBox_TEXT={t("emptyText.noLangsSelected")},

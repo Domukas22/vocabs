@@ -72,7 +72,7 @@ export default function UpdateList_MODAL({
     });
 
     if (!updatedList.success) {
-      console.log(updatedList.msg); // Log internal message for debugging.
+      console.error(updatedList.msg);
     }
   };
 

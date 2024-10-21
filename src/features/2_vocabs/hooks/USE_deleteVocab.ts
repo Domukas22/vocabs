@@ -153,7 +153,6 @@ export default function USE_deleteVocab() {
         };
       }
 
-      console.log("🟢 Vocab and translations deleted successfully 🟢");
       if (onSuccess) onSuccess();
 
       return { success: true, data: deletedVocabData };

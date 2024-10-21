@@ -41,7 +41,6 @@ export default function USE_fetchPublicLists() {
         vocab_COUNT: list.vocabs[0]?.count || 0,
       }));
 
-      console.log("🟢 Fetched public lists 🟢");
       return {
         success: true,
         data: formattedData, // returning the fetched lists with vocab counts

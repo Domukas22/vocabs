@@ -27,8 +27,6 @@ export default async function FETCH_myLists({
 
       return;
     }
-
-    console.log("🟢 Fetched my lists 🟢");
   } catch (error) {
     console.error("🔴 Unexpected error fetching lists: 🔴", error);
   } finally {

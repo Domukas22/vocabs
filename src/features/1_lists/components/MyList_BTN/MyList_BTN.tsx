@@ -49,8 +49,6 @@ function _MyList_BTN({
     [list?.has_been_submitted]
   );
 
-  // console.log([list.name, diff_1_count, diff_2_count, diff_3_count]);
-
   return (
     <Transition_BTN {...{ onPress }}>
       <Styled_TEXT type="text_18_bold" style={{ textAlign: "left", flex: 1 }}>

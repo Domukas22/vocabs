@@ -16,6 +16,8 @@ export interface CreateList_PROPS {
 }
 
 export default function USE_createList() {
+  "CREATE";
+
   const [IS_creatingList, SET_creatingList] = useState(false);
   const [createList_ERROR, SET_createListError] = useState<string | null>(null);
 
@@ -66,8 +68,6 @@ export default function USE_createList() {
       };
     }
 
-    console.log(user_id);
-
     SET_creatingList(true);
     try {
       const new_LIST = await db.write(async () => {
@@ -84,15 +84,13 @@ export default function USE_createList() {
         });
         return newList;
       });
-      console.log("🟢 List created 🟢");
-
       if (onSuccess) onSuccess(new_LIST);
       if (cleanup) cleanup();
 
       return { success: true, new_LIST };
     } catch (error: any) {
       // Handle specific errors
-      console.log("🔴 Error creating list 🔴", error.message);
+      console.error("🔴 Error creating list 🔴", error.message);
       SET_createListError(errorMessage);
 
       return {

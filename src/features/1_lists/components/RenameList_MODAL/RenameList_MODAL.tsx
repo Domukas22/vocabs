@@ -80,7 +80,9 @@ export default function RenameList_MODAL({
       list_id,
       currentList_NAMES,
       onSuccess,
-      cleanup: HANLDE_toggle,
+      cleanup: () => {
+        HANLDE_toggle();
+      },
     });
 
     if (!newList.success) {

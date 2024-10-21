@@ -42,7 +42,6 @@ export default function USE_fetchOnePublicList() {
         };
       }
 
-      console.log("🟢 Fetched the public list 🟢");
       return {
         success: true,
         data: listData, // returning the fetched list with vocab count

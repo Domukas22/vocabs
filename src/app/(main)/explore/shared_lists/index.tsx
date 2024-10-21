@@ -100,8 +100,6 @@ export default function SharedLists_PAGE() {
           </Styled_TEXT>
         }
         renderItem={({ item }) => {
-          console.log("🟢🟢", item);
-
           return (
             <Transition_BTN
               onPress={() =>

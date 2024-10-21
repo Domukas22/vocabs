@@ -90,10 +90,6 @@ export default function USE_deleteList() {
           msg: `🔴 Error deleting list with ID ${list_id} 🔴: ${deleteError.message}`,
         };
       }
-
-      // Log success message
-      console.log("🟢 List deleted successfully 🟢");
-
       // Post-delete callback
       if (onSuccess) onSuccess(deletedListData);
       if (cleanup) cleanup();

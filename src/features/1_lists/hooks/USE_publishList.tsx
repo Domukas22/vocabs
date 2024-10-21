@@ -65,8 +65,6 @@ export default function USE_publishList() {
         });
       });
 
-      console.log("🟢 List published successfully 🟢");
-
       if (onSuccess && updated_LIST) onSuccess(updated_LIST);
 
       return { success: true, updatedList: updated_LIST };

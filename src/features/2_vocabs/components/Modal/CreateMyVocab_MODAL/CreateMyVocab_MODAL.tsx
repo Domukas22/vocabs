@@ -5,13 +5,13 @@
 import Btn from "@/src/components/Btn/Btn";
 import Header from "@/src/components/Header/Header";
 import { ICON_X } from "@/src/components/icons/icons";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { tr_PROPS } from "@/src/db/props";
 
 import TrHighlights_MODAL from "../TrHighlights_MODAL";
-import SelectMultipleLanguages_MODAL from "@/src/features/4_languages/components/SelectMultipleLanguages_MODAL/SelectMultipleLanguages_MODAL";
+import SelectLangs_MODAL from "@/src/features/4_languages/components/SelectMultipleLanguages_MODAL/SelectLangs_MODAL";
 import { useTranslation } from "react-i18next";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
@@ -26,7 +26,7 @@ import HANLDE_selectedLangs from "../../../utils/HANLDE_selectedLangs";
 import HANLDE_selectedHighlights from "../../../utils/HANDLE_selectedTrs";
 
 import ChosenLangs_CONTROLLER from "../../Inputs/InputControllers/ChosenLangs_CONTROLLER";
-import TrInput_CONTROLLER from "../../Inputs/InputControllers/TrInput_CONTROLLER";
+import TrInput_CONTROLLERS from "../../Inputs/InputControllers/TrInput_CONTROLLER";
 import Description_CONTROLER from "../../Inputs/InputControllers/Description_CONTROLER";
 import Difficulty_CONTROLLER from "../../Inputs/InputControllers/Difficulty_CONTROLLER";
 import List_CONTROLLER from "../../Inputs/InputControllers/List_CONTROLLER";
@@ -37,6 +37,7 @@ import {
   Vocab_MODEL,
   Language_MODEL,
 } from "@/src/db/watermelon_MODELS";
+import FETCH_langs from "@/src/features/4_languages/hooks/FETCH_langs";
 
 interface CreateMyVocabModal_PROPS {
   IS_open: boolean;
@@ -61,9 +62,9 @@ export default function CreateMyVocab_MODAL({
   const { t } = useTranslation();
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
-    { name: "langs", initialValue: false },
-    { name: "highlights", initialValue: false },
-    { name: "list", initialValue: false },
+    { name: "selectLangs" },
+    { name: "highlights" },
+    { name: "list" },
   ]);
 
   const [target_TR, SET_targetTr] = useState<tr_PROPS | undefined>(undefined);
@@ -113,7 +114,6 @@ export default function CreateMyVocab_MODAL({
     shouldFocusError: true,
     mode: "onSubmit",
   });
-  console.log(initial_LIST?.default_lang_ids);
 
   const form_TRS = getValues("translations") || [];
   const submit = (data: CreateMyVocabData_PROPS) => create(data);
@@ -132,6 +132,19 @@ export default function CreateMyVocab_MODAL({
         ) || []
       );
   }, [IS_open]);
+
+  const [selected_LANGS, SET_selectedLangs] = useState<Language_MODEL[]>([]);
+
+  useEffect(() => {
+    const fetchSelectedLangs = async () => {
+      const langs = await FETCH_langs({
+        lang_ids: getValues("translations")?.map((tr) => tr.lang_id),
+      });
+      SET_selectedLangs(langs);
+    };
+
+    fetchSelectedLangs();
+  }, [getValues("translations")]);
 
   return (
     <Big_MODAL {...{ open: IS_open }}>
@@ -163,20 +176,18 @@ export default function CreateMyVocab_MODAL({
 
           <ChosenLangs_CONTROLLER
             {...{ control, trigger }}
-            TOGGLE_langModal={() => TOGGLE_modal("langs")}
+            TOGGLE_langModal={() => TOGGLE_modal("selectLangs")}
           />
 
-          {form_TRS.map((tr, index) => (
-            <TrInput_CONTROLLER
-              {...{ tr, index, control }}
-              diff={getValues("difficulty")}
-              OPEN_highlights={() => {
-                SET_targetTr(tr);
-                TOGGLE_modal("highlights");
-              }}
-              key={tr.lang_id + "InputsBlock"}
-            />
-          ))}
+          <TrInput_CONTROLLERS
+            {...{ control, selected_LANGS }}
+            trs={form_TRS}
+            diff={getValues("difficulty")}
+            OPEN_highlights={(tr: tr_PROPS) => {
+              SET_targetTr(tr);
+              TOGGLE_modal("highlights");
+            }}
+          />
 
           <Description_CONTROLER {...{ control }} />
           <Difficulty_CONTROLLER {...{ control }} />
@@ -195,14 +206,13 @@ export default function CreateMyVocab_MODAL({
         />
 
         {/* ------------------------------ MODALS ------------------------------  */}
-        <SelectMultipleLanguages_MODAL
-          open={modal_STATES.langs}
-          TOGGLE_open={() => TOGGLE_modal("langs")}
-          trs={form_TRS}
-          SUBMIT_langs={(new_LANGS: Language_MODEL[]) =>
-            // adds/deletes current translations based on new languages provided
+        <SelectLangs_MODAL
+          open={modal_STATES.selectLangs}
+          TOGGLE_open={() => TOGGLE_modal("selectLangs")}
+          lang_ids={getValues("translations")?.map((tr) => tr.lang_id) || []}
+          SUBMIT_langIds={(lang_ids: string[]) => {
             HANLDE_selectedLangs({
-              new_LANGS,
+              newLang_IDS: lang_ids,
               current_TRS: form_TRS,
               SET_trs: (updated_TRS: tr_PROPS[]) => {
                 setValue("translations", updated_TRS);
@@ -211,8 +221,9 @@ export default function CreateMyVocab_MODAL({
                   clearErrors("translations");
                 }
               },
-            })
-          }
+            });
+          }}
+          IS_inAction={false}
         />
 
         <TrHighlights_MODAL

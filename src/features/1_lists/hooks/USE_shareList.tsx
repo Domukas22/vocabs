@@ -6,8 +6,8 @@ import db, { Lists_DB } from "@/src/db";
 export interface ShareList_PROPS {
   list_id: string;
   user_id: string;
-  IS_shared: boolean;
-  onSuccess: (updatedList: List_MODEL) => void;
+  SHOULD_share: boolean;
+  onSuccess: () => Promise<void>;
 }
 
 export default function USE_shareList() {
@@ -25,7 +25,7 @@ export default function USE_shareList() {
   const SHARE_list = async ({
     list_id,
     user_id,
-    IS_shared,
+    SHOULD_share,
     onSuccess,
   }: ShareList_PROPS): Promise<{
     success: boolean;
@@ -53,16 +53,25 @@ export default function USE_shareList() {
 
     SET_sharingList(true);
     try {
-      const updated_LIST = await db.write(async () => {
-        const list = await Lists_DB.find(list_id);
-        return await list.update((list: List_MODEL) => {
-          list.type = IS_shared ? "shared" : "private";
-        });
-      });
+      const { data: updated_LIST, error } = await supabase
+        .from("lists")
+        .update({ type: SHOULD_share ? "shared" : "private" })
+        .eq("id", list_id)
+        .eq("user_id", user_id)
+        .select("*")
+        .single();
 
-      console.log("🟢 List shared successfully 🟢");
+      if (error) {
+        SET_shareListError(errorMessage);
+        return {
+          success: false,
+          msg: "🔴 Error sharing list 🔴: " + error.message,
+        };
+      }
 
-      if (onSuccess && updated_LIST) onSuccess(updated_LIST);
+      if (onSuccess) {
+        (async () => await onSuccess())();
+      }
 
       return { success: true, updated_LIST };
     } catch (error: any) {

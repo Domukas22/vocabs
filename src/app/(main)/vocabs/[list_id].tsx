@@ -11,26 +11,25 @@ import {
   MyVocabs_FLATLIST,
   DeleteVocab_MODAL,
 } from "@/src/features/2_vocabs";
-import { useRouter } from "expo-router";
-import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
+import { useLocalSearchParams, useRouter } from "expo-router";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import ListSettings_MODAL from "@/src/features/1_lists/components/ListSettings_MODAL/ListSettings_MODAL";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import USE_highlighedId from "@/src/hooks/USE_highlighedId/USE_highlighedId";
 import { USE_highlightBoolean } from "@/src/hooks/USE_highlightBoolean/USE_highlightBoolean";
 import { useTranslation } from "react-i18next";
-import { USE_langs } from "@/src/context/Langs_CONTEXT";
 
 import { useToast } from "react-native-toast-notifications";
 import USE_zustand from "@/src/zustand";
 import UpdateMyVocab_MODAL from "@/src/features/2_vocabs/components/Modal/UpdateMyVocab_MODAL/UpdateMyVocab_MODAL";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
-import Btn from "@/src/components/Btn/Btn";
-import { mySync } from "@/src/db/sync";
 
-export default function SingleList_PAGE() {
+import { withObservables } from "@nozbe/watermelondb/react";
+import { USE_observeList } from "@/src/features/1_lists/hooks/USE_observeList";
+
+function __SingleList_PAGE({ selected_LIST = undefined }) {
   const { user } = USE_auth();
   const { t } = useTranslation();
   const toast = useToast();
@@ -38,12 +37,10 @@ export default function SingleList_PAGE() {
   const [search, SET_search] = useState("");
   const { z_display_SETTINGS } = USE_zustand();
 
-  const { selected_LIST } = USE_selectedList();
-
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
     { name: "displaySettings" },
     { name: "listSettings" },
-    { name: "create" },
+    { name: "createVocab" },
     { name: "delete" },
     { name: "update" },
   ]);
@@ -74,31 +71,29 @@ export default function SingleList_PAGE() {
   return (
     <Page_WRAP>
       <MyVocabs_HEADER
-        list_NAME={selected_LIST?.name && selected_LIST.name}
+        list_NAME={selected_LIST?.name || ""}
         btnBack_ACTION={() => router.back()}
         btnDots_ACTION={() => TOGGLE_modal("listSettings")}
         IS_listNameHighlighted={IS_listNameHighlighted}
       />
-      <Btn text="Sync" style={{ margin: 12 }} onPress={mySync} />
+      {/* <Styled_TEXT>{list?.type}</Styled_TEXT> */}
       <MyVocabs_SUBNAV
         {...{ search, SET_search }}
-        onPlusIconPress={() => TOGGLE_modal("create")}
+        onPlusIconPress={() => TOGGLE_modal("createVocab")}
         TOGGLE_displaySettings={() => TOGGLE_modal("displaySettings")}
       />
 
       <MyVocabs_FLATLIST
         filters={{
           search: search,
-          list: selected_LIST,
-          is_public: false,
+          list_id: selected_LIST?.id,
           difficultyFilters: z_display_SETTINGS.difficultyFilters || [],
           langFilters: z_display_SETTINGS.langFilters || [],
           sorting: z_display_SETTINGS.sorting,
           sortDirection: z_display_SETTINGS.sortDirection,
         }}
-        list_id={selected_LIST?.id || ""}
         SHOW_bottomBtn={true}
-        TOGGLE_createVocabModal={() => TOGGLE_modal("create")}
+        TOGGLE_createVocabModal={() => TOGGLE_modal("createVocab")}
         PREPARE_vocabDelete={(id: string) => {
           SET_deleteId(id);
           TOGGLE_modal("delete");
@@ -110,11 +105,11 @@ export default function SingleList_PAGE() {
         }}
       />
       <CreateMyVocab_MODAL
-        IS_open={modal_STATES.create}
+        IS_open={modal_STATES.createVocab}
         initial_LIST={selected_LIST}
-        TOGGLE_modal={() => TOGGLE_modal("create")}
+        TOGGLE_modal={() => TOGGLE_modal("createVocab")}
         onSuccess={(new_VOCAB: Vocab_MODEL) => {
-          TOGGLE_modal("create");
+          TOGGLE_modal("createVocab");
           HIGHLIGHT_vocab(new_VOCAB.id);
           toast.show(t("notifications.vocabCreated"), {
             type: "green",
@@ -139,11 +134,11 @@ export default function SingleList_PAGE() {
       <MyVocabDisplaySettings_MODAL
         open={modal_STATES.displaySettings}
         TOGGLE_open={() => TOGGLE_modal("displaySettings")}
-        list_id={selected_LIST?.id || ""}
+        list_id={selected_LIST?.id}
       />
 
       <ListSettings_MODAL
-        list={selected_LIST}
+        selected_LIST={selected_LIST}
         open={modal_STATES.listSettings}
         TOGGLE_open={() => TOGGLE_modal("listSettings")}
         user_id={user?.id}
@@ -169,4 +164,21 @@ export default function SingleList_PAGE() {
       />
     </Page_WRAP>
   );
+}
+
+export default function SingleList_PAGE() {
+  const { list_id } = useLocalSearchParams();
+
+  const listObservable = USE_observeList(
+    typeof list_id === "string" ? list_id : ""
+  );
+
+  const enhance = withObservables(["selected_LIST"], ({ selected_LIST }) => ({
+    selected_LIST,
+  }));
+
+  const EnhancedPage = enhance(__SingleList_PAGE);
+
+  // Pass the observable to the EnhancedPage
+  return <EnhancedPage selected_LIST={listObservable} />;
 }

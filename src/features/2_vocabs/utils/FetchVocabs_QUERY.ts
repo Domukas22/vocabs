@@ -15,7 +15,7 @@ export interface VocabFilter_PROPS {
   sortDirection?: "ascending" | "descending";
 }
 
-const FETCH_vocabs = ({
+const FetchVocabs_QUERY = ({
   search,
   list_id,
   difficultyFilters,
@@ -77,7 +77,7 @@ const FETCH_vocabs = ({
   // Combine all conditions with Q.and
   query = query.extend(Q.and(...conditions));
 
-  return query.observe();
+  return query;
 };
 
-export default FETCH_vocabs;
+export default FetchVocabs_QUERY;

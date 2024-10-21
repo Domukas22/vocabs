@@ -54,7 +54,6 @@ export default function USE_fetchPublicVocabs({
         };
       }
 
-      console.log("🟢 Fetched public vocabs 🟢");
       return {
         success: true,
         data: vocabData, // returning the fetched data

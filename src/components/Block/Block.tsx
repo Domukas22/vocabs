@@ -9,19 +9,17 @@ import React from "react";
 import Label from "../Label/Label";
 
 interface _Input_WRAP {
-  label?: string;
-  labelIcon?: React.ReactNode;
   row?: boolean;
-  noBorder?: boolean;
-  children: React.ReactNode;
   styles?: StyleProp<ViewStyle>;
+  children: React.ReactNode;
+  noBorder?: boolean;
 }
 
 export default function Block({
   row = false,
-  noBorder = false,
-  children,
   styles,
+  children,
+  noBorder = false,
 }: _Input_WRAP) {
   return (
     <View

@@ -59,7 +59,6 @@ export default function USE_fetchMyLists() {
         };
       }
 
-      console.log("🟢 Fetched my lists 🟢");
       return { success: true, lists };
     } catch (error: any) {
       // Handle different types of errors

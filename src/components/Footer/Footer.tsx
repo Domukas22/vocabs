@@ -15,7 +15,7 @@ interface _header {
 export default function Footer({ contentAbove, btnLeft, btnRight }: _header) {
   return (
     <View style={s.parent}>
-      {contentAbove && contentAbove}
+      <View style={{ width: "100%" }}>{contentAbove && contentAbove}</View>
       <View style={s.bottom}>
         {btnLeft && btnLeft}
         {btnRight && btnRight}

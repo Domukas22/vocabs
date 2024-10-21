@@ -14,6 +14,7 @@ import { Associations } from "@nozbe/watermelondb/Model";
 import { tr_PROPS } from "./props";
 
 const sanitize = (rawHighlights: number[]) => {
+  if (!rawHighlights) return [];
   return Array.isArray(rawHighlights) ? rawHighlights.map(String) : [];
 };
 const sanitizeTranslations = (rawTranslations: tr_PROPS[]) => {
@@ -119,7 +120,9 @@ export class Vocab_MODEL extends Model {
 export class Language_MODEL extends Model {
   static table = "languages";
 
+  @text("lang_id") lang_id!: string;
   @text("lang_in_en") lang_in_en!: string;
+
   @text("lang_in_de") lang_in_de!: string;
   @text("country_in_en") country_in_en!: string;
   @text("country_in_de") country_in_de!: string;

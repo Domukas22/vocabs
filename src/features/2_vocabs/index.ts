@@ -2,7 +2,7 @@
 //
 //
 
-export { MyVocabs_FLATLIST } from "./components/Flatlist/MyVocabs_FLATLIST/MyVocabs_FLATLIST";
+export { default as MyVocabs_FLATLIST } from "./components/Flatlist/MyVocabs_FLATLIST/MyVocabs_FLATLIST";
 
 export { default as MyVocabs_HEADER } from "./components/Header/PrivateVocab_HEADER";
 export { default as PublicVocabs_HEADER } from "./components/Header/PublicVocab_HEADER";

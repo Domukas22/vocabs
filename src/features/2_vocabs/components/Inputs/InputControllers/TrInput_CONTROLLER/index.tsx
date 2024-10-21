@@ -8,24 +8,29 @@ import { Control, Controller } from "react-hook-form";
 import { CreateMyVocabData_PROPS } from "../../../Modal/CreateMyVocab_MODAL/CreateMyVocab_MODAL";
 import { tr_PROPS } from "@/src/db/props";
 import { CreatePublicVocabData_PROPS } from "../../../Modal/CreatePublicVocab_MODAL/CreatePublicVocab_MODAL";
+import USE_selectedLangs from "@/src/features/4_languages/hooks/USE_selectedLangs";
+import { Language_MODEL } from "@/src/db/watermelon_MODELS";
 
 interface TrInputController_PROPS {
-  tr: tr_PROPS;
+  trs: tr_PROPS[] | undefined;
   diff: 1 | 2 | 3 | undefined;
-  index: number;
   control: Control<CreatePublicVocabData_PROPS, any>;
+  selected_LANGS: Language_MODEL[] | undefined;
   OPEN_highlights: (tr: tr_PROPS) => void;
 }
 
-export default function TrInput_CONTROLLER({
-  tr,
+export default function TrInput_CONTROLLERS({
+  trs,
   diff,
-  index,
   control,
+  selected_LANGS,
   OPEN_highlights,
 }: TrInputController_PROPS) {
-  return (
+  console.log(selected_LANGS);
+
+  return trs?.map((tr, index) => (
     <Controller
+      key={tr?.lang_id + "controller"}
       control={control}
       name={`translations.${index}.text`}
       rules={{
@@ -45,10 +50,16 @@ export default function TrInput_CONTROLLER({
       }) => {
         return (
           <TrInput_BLOCK
+            key={tr?.lang_id + "langBlock"}
+            lang={
+              selected_LANGS
+                ? selected_LANGS?.find((lang) => lang.lang_id === tr.lang_id)
+                : undefined
+            }
             {...{ tr, diff, error, isSubmitted, OPEN_highlights, onChange }}
           />
         );
       }}
     />
-  );
+  ));
 }

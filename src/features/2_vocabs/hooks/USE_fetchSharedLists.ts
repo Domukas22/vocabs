@@ -76,7 +76,6 @@ export default function USE_fetchSharedLists() {
         vocab_COUNT: list.vocabs[0]?.count || 0,
       }));
 
-      console.log("🟢 Fetched shared lists 🟢");
       return {
         success: true,
         data: formattedData, // returning the fetched shared lists with vocab counts

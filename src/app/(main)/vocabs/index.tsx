@@ -30,11 +30,11 @@ import { useToast } from "react-native-toast-notifications";
 import DeleteList_MODAL from "@/src/features/1_lists/components/DeleteList_MODAL";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 import { FlatList } from "react-native";
-import { Lists_DB, Users_DB } from "@/src/db";
+import db, { Languages_DB, Lists_DB, Users_DB } from "@/src/db";
 import { Q } from "@nozbe/watermelondb";
 import { USER_ID } from "@/src/constants/globalVars";
 import Btn from "@/src/components/Btn/Btn";
-import { mySync } from "@/src/db/sync";
+import { sync } from "@/src/db/sync";
 
 export default function MyLists_PAGE() {
   const { user } = USE_auth();
@@ -56,8 +56,8 @@ export default function MyLists_PAGE() {
     z_RENAME_privateList,
     z_DELETE_privateList,
   } = USE_zustand();
-  const { searched_LISTS, search, SEARCH_lists, ARE_listsSearching } =
-    USE_searchedLists(z_lists);
+
+  const [search, SET_search] = useState("");
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
     { name: "create", initialValue: false },
@@ -83,17 +83,15 @@ export default function MyLists_PAGE() {
         }}
       />
 
-      <Btn text="Sync" style={{ margin: 12 }} onPress={mySync} />
+      {/* <Btn text="Sync" style={{ margin: 12 }} onPress={sync} /> */}
 
-      {z_lists.length > 5 && (
-        <MyLists_SUBNAV {...{ search, SET_search: SEARCH_lists }} />
-      )}
+      {z_lists.length > 5 && <MyLists_SUBNAV {...{ search, SET_search }} />}
 
       <MyLists_FLATLIST
         user_id={user?.id}
         SELECT_list={(list: List_MODEL) => {
           SET_selectedList(list);
-          router.push("/(main)/vocabs/list");
+          router.push(`/(main)/vocabs/${list.id}`);
         }}
         SHOW_bottomBtn={search === ""}
         TOGGLE_createListModal={() => TOGGLE_modal("create")}

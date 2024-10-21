@@ -89,8 +89,6 @@ export default function USE_updateList() {
         };
       }
 
-      console.log("🟢 List updated successfully 🟢");
-
       if (onSuccess && updatedList) onSuccess(updatedList);
 
       return { success: true, updatedList };

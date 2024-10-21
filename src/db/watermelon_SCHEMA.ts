@@ -69,7 +69,7 @@ export default appSchema({
     tableSchema({
       name: "languages",
       columns: [
-        { name: "image_url", type: "string" },
+        { name: "lang_id", type: "string" },
 
         { name: "lang_in_en", type: "string" },
         { name: "lang_in_de", type: "string" },

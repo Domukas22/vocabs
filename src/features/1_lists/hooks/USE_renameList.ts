@@ -79,7 +79,6 @@ export default function USE_renameList() {
         });
       });
 
-      console.log("🟢 List renamed 🟢");
       if (onSuccess && updated_LIST) onSuccess(updated_LIST);
       if (cleanup) cleanup();
 

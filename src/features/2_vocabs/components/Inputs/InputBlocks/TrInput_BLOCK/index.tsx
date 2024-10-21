@@ -22,6 +22,7 @@ import { FieldError } from "react-hook-form";
 
 interface VocabTranslationInputs_PROPS {
   tr: tr_PROPS;
+  lang: Language_MODEL | undefined;
   diff: 0 | 1 | 2 | 3;
   OPEN_highlights: (tr: tr_PROPS) => void;
   error: FieldError | undefined;
@@ -31,30 +32,21 @@ interface VocabTranslationInputs_PROPS {
 
 export default function TrInput_BLOCK({
   tr,
+  lang,
   diff,
-  OPEN_highlights,
   error,
   isSubmitted,
   onChange,
+  OPEN_highlights,
 }: VocabTranslationInputs_PROPS) {
   const { t } = useTranslation();
-  const appLang = useMemo(() => i18next.language, []);
-  const { languages } = USE_langs();
-
-  const lang = useMemo(
-    () => languages?.find((lang: Language_MODEL) => lang.id === tr.lang_id),
-    []
-  );
-
   const inputREF = useRef(null);
   const [isFocused, setIsFocused] = useState(false);
+  const appLang = useMemo(() => i18next.language, []);
 
   return (
-    <Block
-      labelIcon={<ICON_flag lang={tr?.lang_id} />}
-      styles={{ padding: 12 }}
-    >
-      <Label icon={<ICON_flag lang={lang?.id} big />}>{`${t(
+    <Block styles={{ padding: 12 }}>
+      <Label icon={<ICON_flag lang={lang?.lang_id} big />}>{`${t(
         "word.translation"
       )} auf ${lang?.[`lang_in_${appLang || "en"}`]} *`}</Label>
 

@@ -46,7 +46,7 @@ export const FETCH_userData = async (userId: string) => {
 
     return { success: true, data };
   } catch (error) {
-    console.log("🔴 Error fetching user data 🔴", error);
+    console.error("🔴 Error fetching user data 🔴", error);
     return { success: false, msg: error?.message };
   }
 };

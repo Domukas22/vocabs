@@ -31,6 +31,7 @@ import FETCH_vocabs, {
   VocabFilter_PROPS,
 } from "@/src/features/2_vocabs/utils/FETCH_vocabs";
 import { withObservables } from "@nozbe/watermelondb/react";
+import { sync } from "@/src/db/sync";
 
 export default function General_PAGE() {
   const { t } = useTranslation();
@@ -40,6 +41,8 @@ export default function General_PAGE() {
 
   const lougout = async () => {
     const { error } = await supabase.auth.signOut();
+    await sync();
+
     if (error) {
       Alert.alert("Logout error", "Error signing out");
     } else {

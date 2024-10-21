@@ -11,7 +11,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { tr_PROPS } from "@/src/db/props";
 
 import TrHighlights_MODAL from "../TrHighlights_MODAL";
-import SelectMultipleLanguages_MODAL from "@/src/features/4_languages/components/SelectMultipleLanguages_MODAL/SelectMultipleLanguages_MODAL";
+import SelectLangs_MODAL from "@/src/features/4_languages/components/SelectMultipleLanguages_MODAL/SelectLangs_MODAL";
 import { useTranslation } from "react-i18next";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
@@ -26,7 +26,7 @@ import HANLDE_selectedLangs from "../../../utils/HANLDE_selectedLangs";
 import HANLDE_selectedHighlights from "../../../utils/HANDLE_selectedTrs";
 
 import ChosenLangs_CONTROLLER from "../../Inputs/InputControllers/ChosenLangs_CONTROLLER";
-import TrInput_CONTROLLER from "../../Inputs/InputControllers/TrInput_CONTROLLER";
+import TrInput_CONTROLLERS from "../../Inputs/InputControllers/TrInput_CONTROLLER";
 import Description_CONTROLER from "../../Inputs/InputControllers/Description_CONTROLER";
 import Difficulty_CONTROLLER from "../../Inputs/InputControllers/Difficulty_CONTROLLER";
 import List_CONTROLLER from "../../Inputs/InputControllers/List_CONTROLLER";
@@ -131,8 +131,6 @@ export default function UpdatePublicVocab_MODAL(
         lang_id: x.lang_id,
       }));
 
-      console.log(p);
-
       setValue("translations", p ? p : []);
       setValue("description", toUpdate_VOCAB?.description || "");
     }
@@ -172,7 +170,7 @@ export default function UpdatePublicVocab_MODAL(
           />
 
           {form_TRS.map((tr, index) => (
-            <TrInput_CONTROLLER
+            <TrInput_CONTROLLERS
               {...{ tr, index, control }}
               diff={undefined}
               OPEN_highlights={() => {
@@ -195,7 +193,7 @@ export default function UpdatePublicVocab_MODAL(
         />
 
         {/* ------------------------------ MODALS ------------------------------  */}
-        <SelectMultipleLanguages_MODAL
+        <SelectLangs_MODAL
           open={modal_STATES.langs}
           TOGGLE_open={() => TOGGLE_modal("langs")}
           trs={form_TRS}

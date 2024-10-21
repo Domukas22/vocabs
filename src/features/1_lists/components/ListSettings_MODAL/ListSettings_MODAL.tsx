@@ -12,7 +12,7 @@ import {
   ICON_X,
 } from "@/src/components/icons/icons";
 import Big_MODAL from "@/src/components/Modals/Big_MODAL/Big_MODAL";
-import SelectMultipleLanguages_MODAL from "@/src/features/4_languages/components/SelectMultipleLanguages_MODAL/SelectMultipleLanguages_MODAL";
+import SelectLangs_MODAL from "@/src/features/4_languages/components/SelectMultipleLanguages_MODAL/SelectLangs_MODAL";
 import Confirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
@@ -38,9 +38,11 @@ import Label from "@/src/components/Label/Label";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 import USE_shareList from "../../hooks/USE_shareList";
 import USE_publishList from "../../hooks/USE_publishList";
+import { sync } from "@/src/db/sync";
+import db, { Lists_DB } from "@/src/db";
 
 interface ListSettingsModal_PROPS {
-  list: List_MODEL;
+  selected_LIST: List_MODEL;
   open: boolean;
   TOGGLE_open: () => void;
   backToIndex: () => void;
@@ -49,83 +51,47 @@ interface ListSettingsModal_PROPS {
 
 export default function ListSettings_MODAL({
   open = false,
-  list,
+  selected_LIST,
   TOGGLE_open = () => {},
   backToIndex = () => {},
   HIGHLIGHT_listName,
 }: ListSettingsModal_PROPS) {
-  const { languages } = USE_langs();
   const { t } = useTranslation();
   const { user } = USE_auth();
-  const { z_lists, z_DELETE_privateList, z_RENAME_privateList } = USE_zustand();
   const toast = useToast();
   const router = useRouter();
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
+    { name: "deleteList" },
+    { name: "selectLangs" },
+    { name: "renameList" },
     { name: "listSharingInfo" },
     { name: "listPublishingInfo" },
     { name: "listSharingCancel" },
     { name: "listPublishingCancel" },
   ]);
 
-  const { SHARE_list, IS_sharingList, shareList_ERROR, RESET_shareListerror } =
-    USE_shareList();
+  const { SHARE_list, IS_sharingList } = USE_shareList();
+  const { PUBLISH_list, IS_publishingList } = USE_publishList();
 
   const share = (bool: boolean) => {
     SHARE_list({
-      list_id: list?.id,
+      list_id: selected_LIST?.id,
       user_id: user?.id,
-      IS_shared: bool,
-      onSuccess: () => {},
+      SHOULD_share: bool,
+      onSuccess: async () => await sync(),
     });
   };
-
-  const {
-    PUBLISH_list,
-    IS_publishingList,
-    RESET_publishListError,
-    publishList_ERROR,
-  } = USE_publishList();
-
   const publish = (bool: boolean) => {
     PUBLISH_list({
-      list_id: list?.id,
+      list_id: selected_LIST?.id,
       user_id: user?.id,
       isSubmittedForPublish: bool,
-      onSuccess: () => {},
+      onSuccess: async () => {
+        await sync();
+      },
     });
   };
-
-  const [
-    SHOW_langSeletionModal,
-    TOGGLE_langSelectionModal,
-    SET_langSelectionModal,
-  ] = USE_toggle(false);
-  const [SHOW_deleteModal, TOGGLE_deleteModal, SET_deleteModal] =
-    USE_toggle(false);
-  const [SHOW_renameListModal, TOGGLE_renameListModal, SET_updateListModal] =
-    USE_toggle(false);
-
-  const langs = useMemo(
-    () => GET_langs({ languages, target: list?.default_lang_ids }),
-    [list?.default_lang_ids]
-  );
-
-  const { IS_updatingDefaultListTRs } = USE_myListActions({
-    afterDelete_ACTION: () => {
-      TOGGLE_deleteModal();
-      TOGGLE_open();
-      backToIndex();
-    },
-    afterRename_ACTION: () => {
-      TOGGLE_renameListModal();
-      TOGGLE_open();
-      HIGHLIGHT_listName();
-    },
-    afterDefaultTrEdit_ACTION: () => {
-      SET_langSelectionModal(false);
-    },
-  });
 
   const [IS_listNameHighlighted, SET_isListNameHighlighted] = useState(false);
   const HIGHLIGHT_modalListName = () => {
@@ -144,16 +110,14 @@ export default function ListSettings_MODAL({
     RESET_error,
   } = USE_updateListDefaultLangs();
 
-  const UPDATE_langs = (new_LANGS: string[]) => {
-    if (!new_LANGS) return;
+  const UPDATE_langs = (newLang_IDS: string[]) => {
+    if (!newLang_IDS) return;
     UPDATE_defaultLangs({
       user_id: user?.id || "",
-      list_id: list?.id,
-      new_LANGS,
+      list_id: selected_LIST?.id,
+      newLang_IDS,
     });
   };
-
-  console.log(list?.type);
 
   return (
     <Big_MODAL open={open}>
@@ -183,26 +147,30 @@ export default function ListSettings_MODAL({
                   : MyColors.text_white,
               }}
             >
-              {list?.name || "NO LIST NAME PROVIDED"}
+              {selected_LIST?.name || "NO LIST NAME PROVIDED"}
             </Styled_TEXT>
             {/* <Styled_TEXT>{user?.email || "---"}</Styled_TEXT> */}
           </View>
-          <Btn text="Edit" onPress={TOGGLE_renameListModal} />
+          <Btn text="Edit" onPress={() => TOGGLE_modal("renameList")} />
         </Block>
 
         <ChosenLangs_BLOCK
           label={t("label.defaultVocabLangs")}
-          langs={langs}
-          toggle={TOGGLE_langSelectionModal}
+          default_lang_ids={selected_LIST?.default_lang_ids}
+          toggle={() => TOGGLE_modal("selectLangs")}
           REMOVE_lang={(targetLang_ID) => {
+            if (!selected_LIST?.default_lang_ids) return;
             UPDATE_langs(
-              langs.filter((l) => l.id !== targetLang_ID)?.map((x) => x.id)
+              selected_LIST?.default_lang_ids?.filter(
+                (lang_id) => lang_id !== targetLang_ID
+              )
             );
           }}
+          error={updateDefaultLangs_ERROR}
         />
         {/* -------------------------------------------------------------------------------------------------- */}
 
-        {list?.type === "private" && (
+        {selected_LIST?.type === "private" && (
           <Block>
             <Label>Share your list with chosen people</Label>
             <View style={{ flexDirection: "row", gap: 8 }}>
@@ -227,7 +195,7 @@ export default function ListSettings_MODAL({
           </Block>
         )}
 
-        {list?.type === "shared" && (
+        {selected_LIST?.type === "shared" && (
           <Block>
             <Styled_TEXT style={{ color: MyColors.text_green }}>
               This list is shared with 14 people
@@ -258,58 +226,64 @@ export default function ListSettings_MODAL({
 
         {/* -------------------------------------------------------------------------------------------------- */}
 
-        {!list?.is_submitted_for_publish && !list?.has_been_submitted && (
-          <Block>
-            <Label>Publish your list and get free vocabs</Label>
-            <View style={{ flexDirection: "row", gap: 8 }}>
+        {!selected_LIST?.is_submitted_for_publish &&
+          !selected_LIST?.was_accepted_for_publish && (
+            <Block>
+              <Label>Publish your list and get free vocabs</Label>
+              <View style={{ flexDirection: "row", gap: 8 }}>
+                <Btn
+                  text={!IS_publishingList ? "Submit for publish" : ""}
+                  iconRight={
+                    IS_publishingList ? (
+                      <ActivityIndicator color="white" />
+                    ) : null
+                  }
+                  style={{ flex: 1 }}
+                  stayPressed={IS_publishingList}
+                  text_STYLES={{
+                    textAlign: "left",
+                    flex: 1,
+                  }}
+                  onPress={() => publish(true)}
+                />
+                <Btn
+                  iconLeft={<ICON_questionMark />}
+                  onPress={() => TOGGLE_modal("listPublishingInfo")}
+                />
+              </View>
+            </Block>
+          )}
+        {selected_LIST?.is_submitted_for_publish &&
+          !selected_LIST?.was_accepted_for_publish && (
+            <Block>
+              <Styled_TEXT style={{ color: MyColors.text_yellow }}>
+                This list is being reviewed for publishing, which shouldn't take
+                longer than a few days. You'll be notified as soon as the list
+                is accepted or rejected.
+              </Styled_TEXT>
               <Btn
-                text={!IS_publishingList ? "Submit for publish" : ""}
+                text={!IS_publishingList ? "I changed my mind - unpublish" : ""}
                 iconRight={
-                  IS_publishingList ? <ActivityIndicator color="white" /> : null
+                  IS_publishingList ? (
+                    <ActivityIndicator color={MyColors.icon_red} />
+                  ) : null
                 }
-                style={{ flex: 1 }}
+                type="delete"
+                text_STYLES={{ flex: 1 }}
                 stayPressed={IS_publishingList}
-                text_STYLES={{
-                  textAlign: "left",
-                  flex: 1,
-                }}
-                onPress={() => publish(true)}
+                onPress={() => TOGGLE_modal("listPublishingCancel")}
               />
-              <Btn
-                iconLeft={<ICON_questionMark />}
-                onPress={() => TOGGLE_modal("listPublishingInfo")}
-              />
-            </View>
-          </Block>
-        )}
-        {list?.is_submitted_for_publish && !list?.has_been_submitted && (
-          <Block>
-            <Styled_TEXT style={{ color: MyColors.text_yellow }}>
-              This list is being reviewed for publishing, which shouldn't take
-              longer than a few days. You'll be notified as soon as the list is
-              accepted or rejected.
-            </Styled_TEXT>
-            <Btn
-              text={!IS_publishingList ? "I changed my mind - unpublish" : ""}
-              iconRight={
-                IS_publishingList ? (
-                  <ActivityIndicator color={MyColors.icon_red} />
-                ) : null
-              }
-              type="delete"
-              text_STYLES={{ flex: 1 }}
-              stayPressed={IS_publishingList}
-              onPress={() => TOGGLE_modal("listPublishingCancel")}
-            />
-          </Block>
-        )}
-        {!list?.is_submitted_for_publish && list?.has_been_submitted && (
-          <Block>
-            <Styled_TEXT style={{ color: MyColors.text_green }}>
-              Great Work! You have received 57 vocabs for publishing this list.
-            </Styled_TEXT>
-          </Block>
-        )}
+            </Block>
+          )}
+        {!selected_LIST?.is_submitted_for_publish &&
+          selected_LIST?.was_accepted_for_publish && (
+            <Block>
+              <Styled_TEXT style={{ color: MyColors.text_green }}>
+                Great Work! You have received 57 vocabs for publishing this
+                list.
+              </Styled_TEXT>
+            </Block>
+          )}
         {/* -------------------------------------------------------------------------------------------------- */}
 
         <Dropdown_BLOCK
@@ -319,7 +293,7 @@ export default function ListSettings_MODAL({
           <Btn
             type="delete"
             text={t("btn.deleteList")}
-            onPress={TOGGLE_deleteModal}
+            onPress={() => TOGGLE_modal("deleteList")}
           />
         </Dropdown_BLOCK>
       </ScrollView>
@@ -335,29 +309,23 @@ export default function ListSettings_MODAL({
       />
 
       {/* ------------------------------ MODALS ------------------------------  */}
-      <SelectMultipleLanguages_MODAL
-        open={SHOW_langSeletionModal}
-        TOGGLE_open={TOGGLE_langSelectionModal}
-        langs={langs}
-        SUBMIT_langs={(langs: Language_MODEL[]) => {
-          UPDATE_langs(langs.map((l) => l.id));
+      <SelectLangs_MODAL
+        open={modal_STATES.selectLangs}
+        TOGGLE_open={() => TOGGLE_modal("selectLangs")}
+        lang_ids={selected_LIST?.default_lang_ids}
+        SUBMIT_langIds={(lang_ids: string[]) => {
+          UPDATE_langs(lang_ids);
         }}
-        languages={languages}
-        IS_inAction={IS_updatingDefaultListTRs}
+        IS_inAction={IS_updatingDefaultLangs}
       />
 
       <RenameList_MODAL
-        list_id={list?.id}
+        list_id={selected_LIST?.id}
         user_id={user?.id}
-        current_NAME={list?.name}
-        IS_open={SHOW_renameListModal}
-        CLOSE_modal={() => TOGGLE_renameListModal()}
-        onSuccess={(updated_LIST?: List_MODEL) => {
-          if (updated_LIST) {
-            z_RENAME_privateList(updated_LIST);
-            HIGHLIGHT_modalListName();
-          }
-        }}
+        current_NAME={selected_LIST?.name}
+        IS_open={modal_STATES.renameList}
+        CLOSE_modal={() => TOGGLE_modal("renameList")}
+        onSuccess={HIGHLIGHT_modalListName}
       />
 
       <HowDoesSharingListWork_MODAL
@@ -402,13 +370,12 @@ export default function ListSettings_MODAL({
 
       <DeleteList_MODAL
         user_id={user?.id}
-        IS_open={SHOW_deleteModal}
-        list_id={list?.id}
-        CLOSE_modal={() => SET_deleteModal(false)}
+        IS_open={modal_STATES.deleteList}
+        list_id={selected_LIST?.id}
+        CLOSE_modal={() => TOGGLE_modal("deleteList")}
         onSuccess={(deleted_LIST?: List_MODEL) => {
           if (!deleted_LIST) return;
-          SET_deleteModal(false);
-          z_DELETE_privateList(deleted_LIST?.id);
+          TOGGLE_modal("deleteList");
           toast.show(
             t("notifications.listDeletedPre") +
               `"${deleted_LIST?.name}"` +

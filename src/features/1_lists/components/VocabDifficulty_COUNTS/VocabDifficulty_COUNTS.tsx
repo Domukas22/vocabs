@@ -2,9 +2,6 @@
 //
 //
 
-import list from "@/src/app/(main)/vocabs/list";
-import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
-import { t } from "i18next";
 import React from "react";
 import { View } from "react-native";
 import SingleVocabDifficulty_COUNT from "./SingleVocabDifficulty_COUNT/SingleVocabDifficulty_COUNT";

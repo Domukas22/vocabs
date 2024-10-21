@@ -19,10 +19,10 @@ import { withObservables } from "@nozbe/watermelondb/react";
 import FETCH_vocabs, { VocabFilter_PROPS } from "../../../utils/FETCH_vocabs";
 import Vocab from "../../Vocab/Vocab";
 import { View } from "react-native";
+import FetchVocabs_QUERY from "../../../utils/FetchVocabs_QUERY";
 
-function _MyVocabs_FLATLIST({
-  list_id,
-  vocabs,
+export default function MyVocabs_FLATLIST({
+  filters,
   highlightedVocab_ID,
   SHOW_bottomBtn,
   TOGGLE_createVocabModal,
@@ -30,8 +30,7 @@ function _MyVocabs_FLATLIST({
   PREPARE_vocabDelete,
   search,
 }: {
-  list_id: string;
-  vocabs: Vocab_MODEL[];
+  filters: VocabFilter_PROPS;
   SHOW_bottomBtn: React.ReactNode;
   TOGGLE_createVocabModal: () => void;
   highlightedVocab_ID: string;
@@ -48,18 +47,12 @@ function _MyVocabs_FLATLIST({
 }) {
   const { z_display_SETTINGS } = USE_zustand();
   const { t } = useTranslation();
+  const _vocabs = USE_observedVocabs(filters);
 
-  console.log("-----------------------------------------------------");
-  console.log("TRS: ", vocabs?.[0]?.trs);
-
-  const [loading, SET_loading] = useState(false);
-
-  if (loading) return <List_SKELETONS />;
-
-  if (vocabs && vocabs?.length > 0) {
+  if (_vocabs && _vocabs?.length > 0) {
     return (
       <Styled_FLATLIST
-        data={vocabs}
+        data={_vocabs}
         renderItem={({ item }) => {
           return (
             <SwipeableExample
@@ -72,15 +65,6 @@ function _MyVocabs_FLATLIST({
                 highlighted={highlightedVocab_ID === item.id}
                 {...{ HANDLE_updateModal }}
               />
-              {/* <Vocab
-                vocab={item}
-                vocab_BACK={(TOGGLE_vocab: () => void) => (
-                  <View style={{ gap: 8, padding: 12 }}>
-                    <Btn text={t("btn.saveVocabToList")} onPress={() => {}} />
-                    <Btn text={t("btn.close")} onPress={TOGGLE_vocab} />
-                  </View>
-                )}
-              ></Vocab> */}
             </SwipeableExample>
           );
         }}
@@ -98,7 +82,7 @@ function _MyVocabs_FLATLIST({
       />
     );
   }
-  if (!loading && vocabs?.length === 0) {
+  if (_vocabs?.length === 0) {
     return (
       <EmptyFlatList_BOTTM
         // emptyBox_TEXT={t("label.thisListIsEmpty")}
@@ -116,12 +100,22 @@ function _MyVocabs_FLATLIST({
   }
 }
 
-const enhance = withObservables(
-  ["filters"],
-  ({ filters }: { filters: VocabFilter_PROPS }) => ({
-    // vocabs: Vocabs_DB.query(Q.where("list_id", list_id)),
-    vocabs: FETCH_vocabs(filters),
-  })
-);
+function USE_observedVocabs(filters: VocabFilter_PROPS) {
+  const [vocabs, SET_vocabs] = useState<Vocab_MODEL[] | undefined>(undefined);
 
-export const MyVocabs_FLATLIST = enhance(_MyVocabs_FLATLIST);
+  useEffect(() => {
+    const quries = FetchVocabs_QUERY(filters);
+    const query = quries.observe();
+
+    const subscription = query.subscribe({
+      next: (updated_VOCABS) => {
+        SET_vocabs(updated_VOCABS?.length > 0 ? updated_VOCABS : undefined); // Set the first item or undefined if empty
+      },
+    });
+
+    // No need for explicit unsubscribe; Watermelon handles this
+    return () => subscription.unsubscribe(); // Clean up the subscription
+  }, [filters]);
+
+  return vocabs;
+}

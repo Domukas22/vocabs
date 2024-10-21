@@ -49,7 +49,6 @@ export const Langs_PROVIDER: React.FC<LangsProviderProps> = ({ children }) => {
           throw error;
         }
         setLanguages(data);
-        console.log(`🟢 Fetched ${data?.length} langs🟢`);
       } catch (error) {
         console.error("Error fetching languages:", error);
         setError((error as any).message); // Cast to any for TypeScript

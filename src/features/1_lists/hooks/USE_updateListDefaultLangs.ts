@@ -5,7 +5,7 @@ import { List_MODEL } from "@/src/db/watermelon_MODELS";
 export interface RenameList_PROPS {
   user_id: string | undefined;
   list_id: string | undefined;
-  new_LANGS: string[] | undefined;
+  newLang_IDS: string[] | undefined;
   onSuccess?: (updated_LIST: List_MODEL) => void;
   cleanup?: () => void;
 }
@@ -25,7 +25,7 @@ export default function USE_updateListDefaultLangs() {
   );
 
   const UPDATE_defaultLangs = async ({
-    new_LANGS,
+    newLang_IDS,
     user_id,
     list_id,
     onSuccess,
@@ -46,7 +46,7 @@ export default function USE_updateListDefaultLangs() {
       };
     }
 
-    if (!new_LANGS) {
+    if (!newLang_IDS) {
       SET_renameListError(errorMessage);
       return {
         success: false,
@@ -67,11 +67,10 @@ export default function USE_updateListDefaultLangs() {
       const updated_LIST = await db.write(async () => {
         const list = await Lists_DB.find(list_id);
         await list.update((list: List_MODEL) => {
-          list.default_lang_ids = new_LANGS;
+          list.default_lang_ids = newLang_IDS;
         });
       });
 
-      console.log("🟢 Default list langs updated 🟢");
       if (onSuccess && updated_LIST) onSuccess(updated_LIST);
       if (cleanup) cleanup();
 

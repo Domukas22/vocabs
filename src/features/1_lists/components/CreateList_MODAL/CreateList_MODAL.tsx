@@ -75,7 +75,7 @@ export default function CreateList_MODAL({
     });
 
     if (!newList.success) {
-      console.log(newList.msg); // Log internal message for debugging.
+      console.error(newList.msg); // Log internal message for debugging.
     }
   };
 
