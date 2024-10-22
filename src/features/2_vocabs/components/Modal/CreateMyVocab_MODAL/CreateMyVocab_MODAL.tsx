@@ -146,6 +146,11 @@ export default function CreateMyVocab_MODAL({
     fetchSelectedLangs();
   }, [getValues("translations")]);
 
+  const target_LANG = useMemo(
+    () => selected_LANGS.find((l) => l.lang_id === target_TR?.lang_id),
+    [selected_LANGS, target_TR]
+  );
+
   return (
     <Big_MODAL {...{ open: IS_open }}>
       <View style={{ zIndex: 1, flex: 1 }}>
@@ -229,6 +234,7 @@ export default function CreateMyVocab_MODAL({
         <TrHighlights_MODAL
           open={modal_STATES.highlights}
           tr={target_TR}
+          target_LANG={target_LANG}
           diff={getValues("difficulty")}
           TOGGLE_open={() => TOGGLE_modal("highlights")}
           SET_trs={(trs: tr_PROPS[]) => {

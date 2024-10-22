@@ -21,6 +21,7 @@ import Subnav from "@/src/components/Subnav/Subnav";
 interface TrHighlightsModal_PROPS {
   open: boolean;
   tr: tr_PROPS | undefined;
+  target_LANG: Language_MODEL | undefined;
   diff: 0 | 1 | 2 | 3;
   TOGGLE_open: () => void;
   SET_trs: (trs: tr_PROPS[]) => void;
@@ -35,22 +36,21 @@ interface TrHighlightsModal_PROPS {
 
 export default function TrHighlights_MODAL({
   open,
+  target_LANG,
   tr,
   diff,
   TOGGLE_open,
   SUBMIT_highlights,
 }: TrHighlightsModal_PROPS) {
-  const { languages } = USE_langs();
   const { t } = useTranslation();
   const appLang = useMemo(() => i18next.language, []);
-  const lang = useMemo(() => languages.find((l) => l.id === tr?.lang_id), [tr]);
 
   const [highlights, SET_highlights] = useState(
     tr?.highlights.map(Number) || []
   );
 
   function submit() {
-    SUBMIT_highlights({ lang_id: lang?.id, highlights });
+    SUBMIT_highlights({ lang_id: target_LANG?.lang_id || "", highlights });
 
     TOGGLE_open();
   }
@@ -90,11 +90,14 @@ export default function TrHighlights_MODAL({
         />
       </Subnav>
 
-      <ScrollView style={{ flex: 1, padding: 16, gap: 8 }}>
-        <Label icon={<ICON_flag lang={lang?.id} />}>
+      <ScrollView style={{ flex: 1, padding: 16 }}>
+        <Label
+          icon={<ICON_flag lang={target_LANG?.lang_id} />}
+          styles={{ marginBottom: 12 }}
+        >
           {appLang === "en"
-            ? `${lang?.lang_in_en} ${t("word.highlights")}`
-            : `${t("word.highlights")} auf ${lang?.lang_in_de}`}
+            ? `${target_LANG?.lang_in_en} ${t("word.highlights")}`
+            : `${t("word.highlights")} auf ${target_LANG?.lang_in_de}`}
         </Label>
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 4 }}>
           {view === "letter"
@@ -224,9 +227,12 @@ function GET_wordBtns({
   SEThighlights: React.Dispatch<React.SetStateAction<number[]>>;
 }) {
   const words = text.split(" ");
+
+  // Calculate the start and end index for each word
   const wordOffsets = words.reduce((acc, word, idx) => {
-    const start = idx === 0 ? 0 : acc[idx - 1].end + 1;
-    acc.push({ start, end: start + word.length - 1 });
+    const start = acc.length === 0 ? 0 : acc[acc.length - 1].end + 2; // +1 for space, +1 to move to next word
+    const end = start + word.length - 1;
+    acc.push({ start, end });
     return acc;
   }, [] as { start: number; end: number }[]);
 
@@ -259,14 +265,13 @@ function GET_wordBtns({
       word,
       index,
       active:
-        wordOffsets[index].start >= 0 && wordOffsets[index].end >= 0
-          ? wordOffsets[index].end + 1 - wordOffsets[index].start ===
-            word
-              .split("")
-              .filter((_, i) =>
-                highlights.includes(wordOffsets[index].start + i)
-              ).length
-          : false,
+        wordOffsets[index].start >= 0 &&
+        wordOffsets[index].end >= 0 &&
+        wordOffsets[index].end + 1 - wordOffsets[index].start ===
+          word
+            .split("")
+            .filter((_, i) => highlights.includes(wordOffsets[index].start + i))
+            .length,
       diff,
       HANDLE_word,
     })

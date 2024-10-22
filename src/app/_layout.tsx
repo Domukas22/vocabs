@@ -38,10 +38,10 @@ export default function _layout() {
             ),
           }}
           style={{
-            bottom: 400,
             zIndex: 9999, // Ensure it's a high value to stay on top
             elevation: 9999, // For Android devices
           }}
+          offsetBottom={120}
         >
           <Main_LAYOUT />
         </ToastProvider>

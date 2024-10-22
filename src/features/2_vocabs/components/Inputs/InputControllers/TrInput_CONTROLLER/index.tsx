@@ -26,8 +26,6 @@ export default function TrInput_CONTROLLERS({
   selected_LANGS,
   OPEN_highlights,
 }: TrInputController_PROPS) {
-  console.log(selected_LANGS);
-
   return trs?.map((tr, index) => (
     <Controller
       key={tr?.lang_id + "controller"}
