@@ -1,7 +1,3 @@
-//
-//
-//
-
 import { MyColors } from "@/src/constants/MyColors";
 import { Styled_TEXT } from "../Styled_TEXT/Styled_TEXT";
 
@@ -31,9 +27,10 @@ export default function Highlighted_TEXT({
 
   return (
     <Styled_TEXT>
-      {text?.split("").map((letter, index) => {
+      {/* Use Array.from() to handle emojis properly */}
+      {Array.from(text).map((char, index) => {
         const isHighlighted =
-          highlights?.map(Number)?.includes(index) && letter !== " ";
+          highlights?.map(Number)?.includes(index) && char !== " ";
         return (
           <Styled_TEXT
             key={index}
@@ -42,12 +39,8 @@ export default function Highlighted_TEXT({
               isHighlighted && diff === 1 && { textDecorationLine },
               light && { fontFamily: "Nunito-Light" },
             ]}
-            // style={[
-            //   isHighlighted && { color },
-            //   diff === 1 && { textDecorationLine: "underline" },
-            // ]}
           >
-            {letter}
+            {char}
           </Styled_TEXT>
         );
       })}
