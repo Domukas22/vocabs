@@ -13,7 +13,8 @@
     "publicPrivateVocabToPublicAsAdmin": "Publish vocab?",
     "renameList": "Rename list",
     "cancelListSharing": "Stop sharing list?",
-    "cancelListPublishing": "Unpublish list?"
+    "cancelListPublishing": "Unpublish list?",
+    "selectUsers": "Select users"
   },
   "blockLabels": {
     "uiLang": "App language"
@@ -69,7 +70,8 @@
     "createTagPost": " ",
     "confirmPublish": "Yes, publish",
     "confirmStop": "Yes, stop",
-    "confirmListUnpublish": "Yes, unpublish"
+    "confirmListUnpublish": "Yes, unpublish",
+    "all": "All"
   },
   "pages": {
     "about": {
@@ -269,5 +271,8 @@
     "provideAListName": "Please provide a list name",
     "listNameTaken": "You already have a list named ",
     "noListSelected": "No list selected"
+  },
+  "undertext": {
+    "shared": "Shared"
   }
 }

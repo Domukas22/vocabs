@@ -5,7 +5,7 @@
 import Btn from "@/src/components/Btn/Btn";
 import Header from "@/src/components/Header/Header";
 import { ICON_arrow, ICON_X } from "@/src/components/icons/icons";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
@@ -17,9 +17,6 @@ import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 
 import Big_MODAL from "@/src/components/Modals/Big_MODAL/Big_MODAL";
 import SelectMyList_MODAL from "@/src/features/1_lists/components/SelectMyList_MODAL/SelectMyList_MODAL";
-import USE_createVocab from "../../../hooks/USE_createVocab";
-
-import GET_defaultTranslations from "@/src/features/2_vocabs/utils/GET_defaultTranslations";
 import { useForm } from "react-hook-form";
 import HANLDE_selectedLangs from "../../../utils/HANLDE_selectedLangs";
 import HANLDE_selectedHighlights from "../../../utils/HANDLE_selectedTrs";
@@ -32,13 +29,18 @@ import List_CONTROLLER from "../../Inputs/InputControllers/List_CONTROLLER";
 import CreateMyVocab_FOOTER from "../../Footer/CreateMyVocab_FOOTER/CreateMyVocab_FOOTER";
 import USE_updateVocab from "../../../hooks/USE_updateVocab";
 import UpdateMyVocab_FOOTER from "../../Footer/UpdateMyVocab_FOOTER/UpdateMyVocab_FOOTER";
-import PublishPrivateVocabAsAdmin_MODAL from "../PublishPrivateVocabAsAdmin_MODAL/PublishPrivateVocabAsAdmin_MODAL";
 import { useToast } from "react-native-toast-notifications";
 
-import { List_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
+import {
+  Language_MODEL,
+  List_MODEL,
+  User_MODEL,
+  Vocab_MODEL,
+} from "@/src/db/watermelon_MODELS";
 import { tr_PROPS } from "@/src/db/props";
 
 import { Q } from "@nozbe/watermelondb";
+import FETCH_langs from "@/src/features/4_languages/hooks/FETCH_langs";
 
 interface UpdateMyVocabModal_PROPS {
   IS_open: boolean;
@@ -69,7 +71,7 @@ export default function UpdateMyVocab_MODAL({
   const toast = useToast();
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
-    { name: "langs", initialValue: false },
+    { name: "selectLangs", initialValue: false },
     { name: "highlights", initialValue: false },
     { name: "list", initialValue: false },
     { name: "publish", initialValue: false },
@@ -142,6 +144,24 @@ export default function UpdateMyVocab_MODAL({
     fn();
   }, [IS_open]);
 
+  const [selected_LANGS, SET_selectedLangs] = useState<Language_MODEL[]>([]);
+
+  useEffect(() => {
+    const fetchSelectedLangs = async () => {
+      const langs = await FETCH_langs({
+        lang_ids: getValues("translations")?.map((tr) => tr.lang_id),
+      });
+      SET_selectedLangs(langs);
+    };
+
+    fetchSelectedLangs();
+  }, [getValues("translations")]);
+
+  const target_LANG = useMemo(
+    () => selected_LANGS.find((l) => l.lang_id === target_TR?.lang_id),
+    [selected_LANGS, target_TR]
+  );
+
   return (
     <Big_MODAL {...{ open: IS_open }}>
       <View style={{ zIndex: 1, flex: 1 }}>
@@ -149,27 +169,15 @@ export default function UpdateMyVocab_MODAL({
           title={t("modal.vocab.headerCreate")}
           big={true}
           btnRight={
-            <View style={{ flexDirection: "row", gap: 8 }}>
-              {user?.is_admin && (
-                <Btn
-                  type="seethrough"
-                  iconLeft={<ICON_arrow direction="right" color="green" />}
-                  onPress={() => {
-                    TOGGLE_modal("publish");
-                  }}
-                  style={{ borderRadius: 100 }}
-                />
-              )}
-              <Btn
-                type="seethrough"
-                iconLeft={<ICON_X big={true} rotate={true} />}
-                onPress={() => {
-                  TOGGLE_vocabModal();
-                  reset();
-                }}
-                style={{ borderRadius: 100 }}
-              />
-            </View>
+            <Btn
+              type="seethrough"
+              iconLeft={<ICON_X big={true} rotate={true} />}
+              onPress={() => {
+                TOGGLE_vocabModal();
+                reset();
+              }}
+              style={{ borderRadius: 100 }}
+            />
           }
         />
 
@@ -184,22 +192,18 @@ export default function UpdateMyVocab_MODAL({
 
           <ChosenLangs_CONTROLLER
             {...{ control, trigger }}
-            TOGGLE_langModal={() => TOGGLE_modal("langs")}
+            TOGGLE_langModal={() => TOGGLE_modal("selectLangs")}
           />
 
-          {form_TRS &&
-            form_TRS.length > 0 &&
-            form_TRS?.map((tr, index) => (
-              <TrInput_CONTROLLERS
-                {...{ tr, index, control }}
-                diff={getValues("difficulty")}
-                OPEN_highlights={() => {
-                  SET_targetTr(tr);
-                  TOGGLE_modal("highlights");
-                }}
-                key={tr.lang_id + "InputsBlock"}
-              />
-            ))}
+          <TrInput_CONTROLLERS
+            {...{ control, selected_LANGS }}
+            trs={form_TRS}
+            diff={getValues("difficulty")}
+            OPEN_highlights={(tr: tr_PROPS) => {
+              SET_targetTr(tr);
+              TOGGLE_modal("highlights");
+            }}
+          />
 
           <Description_CONTROLER {...{ control }} />
           <Difficulty_CONTROLLER {...{ control }} />
@@ -219,25 +223,28 @@ export default function UpdateMyVocab_MODAL({
 
         {/* ------------------------------ MODALS ------------------------------  */}
         <SelectLangs_MODAL
-          open={modal_STATES.langs}
-          TOGGLE_open={() => TOGGLE_modal("langs")}
-          trs={form_TRS}
-          SUBMIT_langs={(new_LANGS: Language_MODEL[]) =>
-            // adds/deletes current translations based on new languages provided
+          open={modal_STATES.selectLangs}
+          TOGGLE_open={() => TOGGLE_modal("selectLangs")}
+          lang_ids={getValues("translations")?.map((tr) => tr.lang_id) || []}
+          SUBMIT_langIds={(lang_ids: string[]) => {
             HANLDE_selectedLangs({
-              new_LANGS,
+              newLang_IDS: lang_ids,
               current_TRS: form_TRS,
               SET_trs: (updated_TRS: tr_PROPS[]) => {
                 setValue("translations", updated_TRS);
-                if (updated_TRS.length) clearErrors("translations");
+                if (updated_TRS.length) {
+                  clearErrors("translations");
+                }
               },
-            })
-          }
+            });
+          }}
+          IS_inAction={false}
         />
 
         <TrHighlights_MODAL
           open={modal_STATES.highlights}
           tr={target_TR}
+          target_LANG={target_LANG}
           diff={getValues("difficulty")}
           TOGGLE_open={() => TOGGLE_modal("highlights")}
           SET_trs={(trs: tr_PROPS[]) => {
@@ -270,21 +277,6 @@ export default function UpdateMyVocab_MODAL({
           }}
           IS_inAction={false}
           current_LIST={getValues("list")}
-        />
-
-        <PublishPrivateVocabAsAdmin_MODAL
-          user={user}
-          IS_open={modal_STATES.publish}
-          vocab={toUpdate_VOCAB}
-          CLOSE_modal={() => TOGGLE_modal("publish")}
-          onSuccess={() => {
-            TOGGLE_modal("publish");
-            TOGGLE_vocabModal();
-            toast.show(t("notifications.vocabPublishedToPublic"), {
-              type: "green",
-              duration: 5000,
-            });
-          }}
         />
       </View>
     </Big_MODAL>

@@ -6,13 +6,17 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 import { MyColors } from "@/src/constants/MyColors";
 
-interface _header {
+interface Footer_PROPS {
   contentAbove?: React.ReactNode;
   btnLeft?: React.ReactNode;
   btnRight?: React.ReactNode;
 }
 
-export default function Footer({ contentAbove, btnLeft, btnRight }: _header) {
+export default function Footer({
+  contentAbove,
+  btnLeft,
+  btnRight,
+}: Footer_PROPS) {
   return (
     <View style={s.parent}>
       <View style={{ width: "100%" }}>{contentAbove && contentAbove}</View>

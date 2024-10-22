@@ -3,7 +3,7 @@ import { ICON_flag, ICON_X } from "@/src/components/icons/icons";
 import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
 import { Language_MODEL } from "@/src/db/watermelon_MODELS";
 import React, { useEffect, useMemo, useState } from "react";
-import { View } from "react-native";
+import { FlatList, View } from "react-native";
 import FETCH_langs from "../../hooks/FETCH_langs";
 import i18next from "i18next";
 
@@ -11,12 +11,14 @@ interface LangFlatlist_PROPS {
   search: string | undefined;
   selected_LANGS: Language_MODEL[] | undefined;
   SELECT_lang: (l: Language_MODEL) => void;
+  view: "all" | "selected";
 }
 
 export default function Lang_FLATLIST({
   search,
   selected_LANGS,
   SELECT_lang,
+  view,
 }: LangFlatlist_PROPS) {
   const appLang = useMemo(() => i18next.language, []);
 
@@ -32,7 +34,11 @@ export default function Lang_FLATLIST({
   return (
     <Styled_FLATLIST
       gap={8}
-      data={all_LANGS}
+      data={
+        view === "selected"
+          ? all_LANGS.filter((x) => selected_LANGS?.some((l) => l.id === x.id))
+          : all_LANGS
+      }
       keyboardShouldPersistTaps="always"
       renderItem={({ item }) => {
         const IS_selected = selected_LANGS?.some((l) => l.id === item.id);

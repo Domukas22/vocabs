@@ -8,18 +8,19 @@ import { ICON_3dots, ICON_arrow } from "@/src/components/icons/icons";
 
 export default function MyVocabs_HEADER({
   list_NAME,
+  undertextGreen,
   btnBack_ACTION,
   btnDots_ACTION,
-  IS_listNameHighlighted,
 }: {
   list_NAME: string | undefined;
+  undertextGreen: string | undefined;
   btnBack_ACTION: () => void;
   btnDots_ACTION: () => void;
-  IS_listNameHighlighted: boolean;
 }) {
   return (
     <Header
       title={list_NAME || "INSERT LIST NAME"}
+      {...{ undertextGreen }}
       btnLeft={
         <Btn
           type="seethrough"
@@ -36,7 +37,6 @@ export default function MyVocabs_HEADER({
           style={{ borderRadius: 100 }}
         />
       }
-      IS_titleHighlighted={IS_listNameHighlighted}
     />
   );
 }

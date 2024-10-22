@@ -24,12 +24,16 @@ import { useToast } from "react-native-toast-notifications";
 import USE_zustand from "@/src/zustand";
 import UpdateMyVocab_MODAL from "@/src/features/2_vocabs/components/Modal/UpdateMyVocab_MODAL/UpdateMyVocab_MODAL";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
-import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
+import { List_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 
 import { withObservables } from "@nozbe/watermelondb/react";
 import { USE_observeList } from "@/src/features/1_lists/hooks/USE_observeList";
 
-function __SingleList_PAGE({ selected_LIST = undefined }) {
+function __SingleList_PAGE({
+  selected_LIST = undefined,
+}: {
+  selected_LIST: List_MODEL | undefined;
+}) {
   const { user } = USE_auth();
   const { t } = useTranslation();
   const toast = useToast();
@@ -50,10 +54,6 @@ function __SingleList_PAGE({ selected_LIST = undefined }) {
   >();
 
   const { highlighted_ID, highlight: HIGHLIGHT_vocab } = USE_highlighedId();
-  const {
-    isHighlighted: IS_listNameHighlighted,
-    highlight: HIGHLIGHT_listName,
-  } = USE_highlightBoolean();
 
   const [delete_ID, SET_deleteId] = useState("");
 
@@ -72,9 +72,11 @@ function __SingleList_PAGE({ selected_LIST = undefined }) {
     <Page_WRAP>
       <MyVocabs_HEADER
         list_NAME={selected_LIST?.name || ""}
+        undertextGreen={
+          selected_LIST?.type === "shared" ? t("undertext.shared") : ""
+        }
         btnBack_ACTION={() => router.back()}
         btnDots_ACTION={() => TOGGLE_modal("listSettings")}
-        IS_listNameHighlighted={IS_listNameHighlighted}
       />
       {/* <Styled_TEXT>{list?.type}</Styled_TEXT> */}
       <MyVocabs_SUBNAV
@@ -143,7 +145,6 @@ function __SingleList_PAGE({ selected_LIST = undefined }) {
         TOGGLE_open={() => TOGGLE_modal("listSettings")}
         user_id={user?.id}
         backToIndex={() => router.back()}
-        HIGHLIGHT_listName={HIGHLIGHT_listName}
       />
 
       <DeleteVocab_MODAL

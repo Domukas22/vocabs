@@ -80,7 +80,7 @@ const enhance_allLists = withObservables(
   ["user_id"],
   ({ user_id }: { user_id: string }) => ({
     lists: Lists_DB.query(
-      Q.where("user_id", user_id),
+      Q.where("user_id", user_id || ""),
       Q.sortBy("created_at", Q.asc)
     ),
   })

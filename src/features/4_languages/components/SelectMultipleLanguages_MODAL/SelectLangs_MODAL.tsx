@@ -4,8 +4,8 @@
 
 import SearchBar from "@/src/components/SearchBar/SearchBar";
 import Subnav from "@/src/components/Subnav/Subnav";
-import React, { useEffect, useState } from "react";
-import { KeyboardAvoidingView, Platform } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { FlatList, KeyboardAvoidingView, Platform, View } from "react-native";
 
 import Big_MODAL from "@/src/components/Modals/Big_MODAL/Big_MODAL";
 
@@ -16,6 +16,10 @@ import Lang_FLATLIST from "../Lang_FLATLIST/Lang_FLATLIST";
 import LangModal_FOOTER from "./LangModal_FOOTER/LangModal_FOOTER";
 import LangModal_HEADER from "./LangModal_HEADER/LangModal_HEADER";
 import USE_selectedLangs from "../../hooks/USE_selectedLangs";
+import { t } from "i18next";
+import Btn from "@/src/components/Btn/Btn";
+import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
+import SearchAndSelect_SUBNAV from "@/src/components/SearchAndSelect_SUBNAV/SearchAndSelect_SUBNAV";
 
 interface SelectLanguagesModal_PROPS {
   open: boolean;
@@ -46,8 +50,11 @@ export default function SelectLangs_MODAL({
 
   const submit = () => {
     SUBMIT_langIds(selected_LANGS?.map((l) => l.lang_id) || []);
+    SET_search("");
     TOGGLE_open();
   };
+
+  const [view, SET_view] = useState<"all" | "selected">("all");
 
   return (
     <Big_MODAL {...{ open }}>
@@ -56,12 +63,12 @@ export default function SelectLangs_MODAL({
         style={{ flex: 1 }}
       >
         <LangModal_HEADER {...{ IS_inAction, cancel }} />
+        <SearchAndSelect_SUBNAV
+          {...{ view, SET_view, search, SET_search }}
+          selected_COUNT={selected_LANGS.length}
+        />
 
-        <Subnav>
-          <SearchBar value={search} SET_value={SET_search} />
-        </Subnav>
-
-        <Lang_FLATLIST {...{ search, selected_LANGS, SELECT_lang }} />
+        <Lang_FLATLIST {...{ search, selected_LANGS, SELECT_lang, view }} />
 
         <LangModal_FOOTER
           {...{

@@ -15,38 +15,35 @@ import Big_MODAL from "@/src/components/Modals/Big_MODAL/Big_MODAL";
 import SelectLangs_MODAL from "@/src/features/4_languages/components/SelectMultipleLanguages_MODAL/SelectLangs_MODAL";
 import Confirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
-import { USE_langs } from "@/src/context/Langs_CONTEXT";
-import { USE_toggle } from "@/src/hooks/USE_toggle";
-import GET_langs from "@/src/features/4_languages/utils/GET_langs";
-import { useMemo, useState } from "react";
+
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, ScrollView, View } from "react-native";
-import USE_myListActions from "../../hooks/USE_myListActions";
+
 import RenameList_MODAL from "../RenameList_MODAL/RenameList_MODAL";
 import Footer from "@/src/components/Footer/Footer";
 import Dropdown_BLOCK from "@/src/components/Dropdown_BLOCK/Dropdown_BLOCK";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import DeleteList_MODAL from "../DeleteList_MODAL";
-import USE_zustand from "@/src/zustand";
+
 import { useToast } from "react-native-toast-notifications";
 import { useRouter } from "expo-router";
-import UpdateList_MODAL from "../UpdateList_MODAL";
+
 import { MyColors } from "@/src/constants/MyColors";
-import { List_MODEL, Language_MODEL } from "@/src/db/watermelon_MODELS";
+import { List_MODEL } from "@/src/db/watermelon_MODELS";
 import USE_updateListDefaultLangs from "../../hooks/USE_updateListDefaultLangs";
 import Label from "@/src/components/Label/Label";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 import USE_shareList from "../../hooks/USE_shareList";
 import USE_publishList from "../../hooks/USE_publishList";
 import { sync } from "@/src/db/sync";
-import db, { Lists_DB } from "@/src/db";
+import SelectUsers_MODAL from "@/src/features/5_users/components/SelectUsers_MODAL/SelectUsers_MODAL";
 
 interface ListSettingsModal_PROPS {
   selected_LIST: List_MODEL;
   open: boolean;
   TOGGLE_open: () => void;
   backToIndex: () => void;
-  HIGHLIGHT_listName: () => void;
 }
 
 export default function ListSettings_MODAL({
@@ -54,7 +51,6 @@ export default function ListSettings_MODAL({
   selected_LIST,
   TOGGLE_open = () => {},
   backToIndex = () => {},
-  HIGHLIGHT_listName,
 }: ListSettingsModal_PROPS) {
   const { t } = useTranslation();
   const { user } = USE_auth();
@@ -69,13 +65,16 @@ export default function ListSettings_MODAL({
     { name: "listPublishingInfo" },
     { name: "listSharingCancel" },
     { name: "listPublishingCancel" },
+    { name: "selectUsers" },
   ]);
 
   const { SHARE_list, IS_sharingList } = USE_shareList();
   const { PUBLISH_list, IS_publishingList } = USE_publishList();
 
-  const share = (bool: boolean) => {
-    SHARE_list({
+  const share = async (bool: boolean) => {
+    await sync();
+
+    await SHARE_list({
       list_id: selected_LIST?.id,
       user_id: user?.id,
       SHOULD_share: bool,
@@ -208,6 +207,7 @@ export default function ListSettings_MODAL({
                 textAlign: "left",
                 flex: 1,
               }}
+              onPress={() => TOGGLE_modal("selectUsers")}
             />
             <Btn
               text={!IS_sharingList ? "Unshare this list" : ""}
@@ -335,6 +335,12 @@ export default function ListSettings_MODAL({
       <HowDoesPublishingListWork_MODAL
         open={modal_STATES.listPublishingInfo}
         TOGGLE_modal={() => TOGGLE_modal("listPublishingInfo")}
+      />
+
+      <SelectUsers_MODAL
+        open={modal_STATES.selectUsers}
+        TOGGLE_open={() => TOGGLE_modal("selectUsers")}
+        list_id={selected_LIST?.id}
       />
 
       <Confirmation_MODAL

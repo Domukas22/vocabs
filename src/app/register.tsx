@@ -56,7 +56,6 @@ export default function Register_PAGE() {
     const { error } = await supabase.auth.signUp({
       email,
       password,
-
       options: {
         data: {
           username,
@@ -70,6 +69,7 @@ export default function Register_PAGE() {
 
     if (error) {
       SET_internalError(error.message);
+      console.error(error);
     } else {
       await db.write(async () => {
         await Users_DB.create((user: User_MODEL) => {

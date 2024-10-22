@@ -9,7 +9,6 @@ import { ActivityIndicator } from "react-native";
 import SelectedLang_SCROLLER from "../../SelectedLang_SCROLLER/SelectedLang_SCROLLER";
 import { Language_MODEL } from "@/src/db/watermelon_MODELS";
 import { useMemo } from "react";
-import { map } from "@nozbe/watermelondb/utils/rx";
 
 interface LangModalFooter_PROPS {
   selected_LANGS: Language_MODEL[] | undefined;
