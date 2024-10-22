@@ -14,7 +14,8 @@
     "renameList": "Rename list",
     "cancelListSharing": "Stop sharing list?",
     "cancelListPublishing": "Unpublish list?",
-    "selectUsers": "Select users"
+    "selectUsers": "Select users",
+    "getVocabs": "Get vocabs"
   },
   "blockLabels": {
     "uiLang": "App language"

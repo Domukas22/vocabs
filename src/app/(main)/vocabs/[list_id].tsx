@@ -28,6 +28,8 @@ import { List_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 
 import { withObservables } from "@nozbe/watermelondb/react";
 import { USE_observeList } from "@/src/features/1_lists/hooks/USE_observeList";
+import { sync } from "@/src/db/sync";
+import Btn from "@/src/components/Btn/Btn";
 
 function __SingleList_PAGE({
   selected_LIST = undefined,

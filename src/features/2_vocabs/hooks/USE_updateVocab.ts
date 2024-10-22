@@ -106,8 +106,7 @@ export default function USE_updateVocab() {
         }
 
         await vocab.update((vocab: Vocab_MODEL) => {
-          vocab.list.set(list);
-
+          vocab.list_id = list?.id;
           vocab.difficulty = difficulty || 3;
           vocab.description = description || "";
           vocab.trs = incodming_TRS || [];

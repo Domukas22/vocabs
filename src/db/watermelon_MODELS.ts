@@ -13,9 +13,13 @@ import {
 import { Associations } from "@nozbe/watermelondb/Model";
 import { tr_PROPS } from "./props";
 
-const sanitize = (rawHighlights: number[]) => {
-  if (!rawHighlights) return [];
-  return Array.isArray(rawHighlights) ? rawHighlights.map(String) : [];
+const SANITIZE_langIds = (rawLangIds: string[]) => {
+  console.log("Raw Language IDs:", rawLangIds); // Log input for debugging
+  return Array.isArray(rawLangIds)
+    ? rawLangIds
+        .filter((id) => id !== undefined) // Filter out undefined values
+        .map((id) => (typeof id === "string" ? id : String(id)))
+    : [];
 };
 const sanitizeTranslations = (rawTranslations: tr_PROPS[]) => {
   if (!Array.isArray(rawTranslations)) return [];
@@ -73,7 +77,9 @@ export class List_MODEL extends Model {
 
   @text("name") name!: string;
   @text("description") description!: string;
-  @json("default_lang_ids", sanitize) default_lang_ids!: string[] | undefined;
+  @json("default_lang_ids", SANITIZE_langIds) default_lang_ids!:
+    | string[]
+    | undefined;
   @field("is_submitted_for_publish") is_submitted_for_publish!: boolean;
   @field("was_accepted_for_publish") was_accepted_for_publish!: boolean;
   @text("type") type!: "private" | "public" | "shared" | "draft";
@@ -100,11 +106,12 @@ export class ListAccess_MODEL extends Model {
 // ===================================================================================
 export class Vocab_MODEL extends Model {
   static table = "vocabs";
-  static associations: Associations = {
-    list: { type: "belongs_to", key: "list_id" },
-  };
+  // static associations: Associations = {
+  //   list: { type: "belongs_to", key: "list_id" },
+  // };
 
-  @relation("lists", "list_id") list!: List_MODEL;
+  // @relation("lists", "list_id") list!: List_MODEL;
+  @text("list_id") list_id!: string | undefined;
 
   @field("difficulty") difficulty!: 1 | 2 | 3;
   @text("description") description!: string | undefined;

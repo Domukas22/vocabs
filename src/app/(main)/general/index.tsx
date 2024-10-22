@@ -40,8 +40,8 @@ export default function General_PAGE() {
   const { user } = USE_auth();
 
   const lougout = async () => {
-    const { error } = await supabase.auth.signOut();
     await sync();
+    const { error } = await supabase.auth.signOut();
 
     if (error) {
       Alert.alert("Logout error", "Error signing out");
@@ -148,6 +148,13 @@ export default function General_PAGE() {
             text="Premium"
             iconRight={<ICON_arrow direction="right" />}
             onPress={() => router.push("/(main)/general/premium")}
+            text_STYLES={{ flex: 1, marginLeft: 4 }}
+          />
+          <Btn
+            // iconLeft={<ICON_premium />}
+            text="Get vocabs"
+            iconRight={<ICON_arrow direction="right" />}
+            onPress={() => router.push("/(main)/general/getVocabs")}
             text_STYLES={{ flex: 1, marginLeft: 4 }}
           />
 

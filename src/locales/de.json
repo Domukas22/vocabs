@@ -17,7 +17,8 @@
     "renameList": "Liste umbenennen",
     "cancelListSharing": "Aufhören Liste zu teilen?",
     "cancelListPublishing": "Veröffentlichung der Liste aufheben?",
-    "selectUsers": "Nutzer wählen"
+    "selectUsers": "Nutzer wählen",
+    "getVocabs": "Vokabel holen"
   },
   "blockLabels": {
     "uiLang": "App Sprache"

@@ -16,7 +16,7 @@ import SelectLangs_MODAL from "@/src/features/4_languages/components/SelectMulti
 import Confirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, ScrollView, View } from "react-native";
 
@@ -38,6 +38,8 @@ import USE_shareList from "../../hooks/USE_shareList";
 import USE_publishList from "../../hooks/USE_publishList";
 import { sync } from "@/src/db/sync";
 import SelectUsers_MODAL from "@/src/features/5_users/components/SelectUsers_MODAL/SelectUsers_MODAL";
+import { supabase } from "@/src/lib/supabase";
+import db, { Lists_DB } from "@/src/db";
 
 interface ListSettingsModal_PROPS {
   selected_LIST: List_MODEL;
@@ -73,22 +75,27 @@ export default function ListSettings_MODAL({
 
   const share = async (bool: boolean) => {
     await sync();
-
-    await SHARE_list({
+    SHARE_list({
       list_id: selected_LIST?.id,
       user_id: user?.id,
       SHOULD_share: bool,
-      onSuccess: async () => await sync(),
-    });
-  };
-  const publish = (bool: boolean) => {
-    PUBLISH_list({
-      list_id: selected_LIST?.id,
-      user_id: user?.id,
-      isSubmittedForPublish: bool,
       onSuccess: async () => {
         await sync();
       },
+    });
+    // await db.write(async () => {
+    //   await selected_LIST.update((list: List_MODEL) => {
+    //     list.type = bool ? "shared" : "private";
+    //   });
+    // });
+  };
+  const publish = async (bool: boolean) => {
+    await sync();
+    await PUBLISH_list({
+      list_id: selected_LIST?.id,
+      user_id: user?.id,
+      isSubmittedForPublish: bool,
+      onSuccess: async (updated_LIST) => {},
     });
   };
 
@@ -111,6 +118,7 @@ export default function ListSettings_MODAL({
 
   const UPDATE_langs = (newLang_IDS: string[]) => {
     if (!newLang_IDS) return;
+
     UPDATE_defaultLangs({
       user_id: user?.id || "",
       list_id: selected_LIST?.id,
@@ -152,6 +160,7 @@ export default function ListSettings_MODAL({
           </View>
           <Btn text="Edit" onPress={() => TOGGLE_modal("renameList")} />
         </Block>
+        <Btn text="Sync" style={{ margin: 12 }} onPress={sync} />
 
         <ChosenLangs_BLOCK
           label={t("label.defaultVocabLangs")}

@@ -7,7 +7,7 @@ export interface ShareList_PROPS {
   list_id: string;
   user_id: string;
   SHOULD_share: boolean;
-  onSuccess: () => Promise<void>;
+  onSuccess: (updated_LIST: List_MODEL) => Promise<void>;
 }
 
 export default function USE_shareList() {
@@ -69,9 +69,7 @@ export default function USE_shareList() {
         };
       }
 
-      if (onSuccess) {
-        (async () => await onSuccess())();
-      }
+      if (onSuccess) onSuccess(updated_LIST);
 
       return { success: true, updated_LIST };
     } catch (error: any) {

@@ -53,8 +53,7 @@ export default function USE_createVocab() {
 
       const newVocab = await db.write(async () => {
         const vocab = await Vocabs_DB.create((vocab: Vocab_MODEL) => {
-          vocab.list?.set(list);
-
+          vocab.list_id = list?.id;
           vocab.difficulty = difficulty || 3;
           vocab.description = description || "";
           vocab.trs = translations;

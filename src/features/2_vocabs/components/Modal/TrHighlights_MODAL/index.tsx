@@ -57,8 +57,6 @@ export default function TrHighlights_MODAL({
     TOGGLE_open();
   }
 
-  console.log(tr?.highlights);
-
   useEffect(() => {
     SET_highlights(tr?.highlights.map(Number) || []);
   }, [tr, open]);
