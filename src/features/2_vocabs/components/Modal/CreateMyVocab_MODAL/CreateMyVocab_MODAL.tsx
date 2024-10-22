@@ -221,7 +221,6 @@ export default function CreateMyVocab_MODAL({
               current_TRS: form_TRS,
               SET_trs: (updated_TRS: tr_PROPS[]) => {
                 setValue("translations", updated_TRS);
-
                 if (updated_TRS.length) {
                   clearErrors("translations");
                 }

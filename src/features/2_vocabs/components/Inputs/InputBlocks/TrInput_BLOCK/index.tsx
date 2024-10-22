@@ -72,22 +72,6 @@ export default function TrInput_BLOCK({
             )}
           </View>
         )}
-        {/* <View
-          style={{
-            position: "absolute",
-            bottom: 12,
-            right: 12,
-
-            zIndex: 10,
-          }}
-        >
-          <Btn
-            iconLeft={<ICON_difficultyDot difficulty={diff} big />}
-            type="seethrough"
-            onPress={() => {}}
-          />
-        </View> */}
-
         <StyledText_INPUT
           multiline
           value={tr.text}

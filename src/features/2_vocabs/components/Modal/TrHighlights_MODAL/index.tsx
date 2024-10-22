@@ -57,7 +57,7 @@ export default function TrHighlights_MODAL({
 
   useEffect(() => {
     SET_highlights(tr?.highlights.map(Number) || []);
-  }, [tr]);
+  }, [tr, open]);
 
   const [view, SET_view] = useState<"word" | "letter">("word");
 
@@ -226,56 +226,61 @@ function GET_wordBtns({
   diff: 0 | 1 | 2 | 3;
   SEThighlights: React.Dispatch<React.SetStateAction<number[]>>;
 }) {
-  const words = text.split(" ");
+  // Split text into characters to handle each individually, including spaces and punctuation
+  const characters = text.split("");
 
-  // Calculate the start and end index for each word
-  const wordOffsets = words.reduce((acc, word, idx) => {
-    const start = acc.length === 0 ? 0 : acc[acc.length - 1].end + 2; // +1 for space, +1 to move to next word
-    const end = start + word.length - 1;
-    acc.push({ start, end });
+  // Group characters into words while keeping spaces and punctuation as separate buttons
+  const wordsAndSymbols = characters.reduce((acc, char, index) => {
+    const lastGroup = acc[acc.length - 1];
+
+    // Group letters together into words, treat punctuation and spaces as separate
+    if (/\w/.test(char)) {
+      if (lastGroup && /\w/.test(lastGroup[lastGroup.length - 1])) {
+        lastGroup.push({ char, index });
+      } else {
+        acc.push([{ char, index }]);
+      }
+    } else {
+      acc.push([{ char, index }]);
+    }
+
     return acc;
-  }, [] as { start: number; end: number }[]);
+  }, [] as { char: string; index: number }[][]);
 
-  function HANDLE_word(index: number) {
-    const { start, end } = wordOffsets[index];
-    const allIndexes = Array.from(
-      { length: end - start + 1 },
-      (_, i) => start + i
-    );
+  function HANDLE_word(wordIndexes: number[]) {
+    const allHighlighted = wordIndexes.every((i) => highlights.includes(i));
 
     let updatedIndexes: number[];
-    const allHighlighted = allIndexes.every((i) => highlights.includes(i));
-
     if (allHighlighted) {
       // Remove all indexes of the word
-      updatedIndexes = highlights.filter((i) => !allIndexes.includes(i));
+      updatedIndexes = highlights.filter((i) => !wordIndexes.includes(i));
     } else {
       // Add all indexes of the word
       updatedIndexes = [
         ...highlights,
-        ...allIndexes.filter((i) => !highlights.includes(i)),
+        ...wordIndexes.filter((i) => !highlights.includes(i)),
       ];
     }
 
     SEThighlights(updatedIndexes);
   }
 
-  return words.map((word, index) =>
-    HighlightByWord_BTN({
+  // Render buttons for each word or symbol group
+  return wordsAndSymbols.map((group, groupIndex) => {
+    const word = group.map((charObj) => charObj.char).join(""); // Reconstruct the word/symbol group
+    const wordIndexes = group.map((charObj) => charObj.index);
+
+    // Determine if the entire word/symbol is highlighted
+    const active = wordIndexes.every((index) => highlights.includes(index));
+
+    return HighlightByWord_BTN({
       word,
-      index,
-      active:
-        wordOffsets[index].start >= 0 &&
-        wordOffsets[index].end >= 0 &&
-        wordOffsets[index].end + 1 - wordOffsets[index].start ===
-          word
-            .split("")
-            .filter((_, i) => highlights.includes(wordOffsets[index].start + i))
-            .length,
+      index: groupIndex,
+      active,
       diff,
-      HANDLE_word,
-    })
-  );
+      HANDLE_word: () => HANDLE_word(wordIndexes),
+    });
+  });
 }
 
 function HighlightByWord_BTN({
@@ -289,7 +294,7 @@ function HighlightByWord_BTN({
   index: number;
   active: boolean;
   diff: 0 | 1 | 2 | 3;
-  HANDLE_word: (index: number) => void;
+  HANDLE_word: () => void;
 }) {
   const btnType = () => (active ? `difficulty_${diff || 3}_active` : "simple");
 
@@ -300,12 +305,16 @@ function HighlightByWord_BTN({
       type={btnType()}
       style={{
         marginRight: 4,
-        borderRadius: 8,
+        marginBottom: 4,
         paddingVertical: 0,
         height: 50,
       }}
-      onPress={() => HANDLE_word(index)}
-      text_STYLES={{ fontSize: 18, fontFamily: "Nunito-SemiBold" }}
+      onPress={HANDLE_word}
+      text_STYLES={{
+        fontSize: 18,
+        fontFamily: "Nunito-SemiBold",
+        // textDecorationLine: "underline",
+      }}
     />
   );
 }
