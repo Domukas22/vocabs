@@ -82,7 +82,7 @@ function Main_LAYOUT() {
             await sync();
             if (userData) {
               // await executeSync(); // Sync after fetching user data
-              router.push("/(main)/vocabs");
+              router.push("/(main)/explore");
             }
           } else {
             SET_auth(null);
