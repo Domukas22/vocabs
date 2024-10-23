@@ -5,7 +5,7 @@
 import HANDLE_langRemoval from "@/src/features/2_vocabs/utils/HANLDE_langRemoval";
 
 import { Control, Controller } from "react-hook-form";
-import { CreateMyVocabData_PROPS } from "../../../2_vocabs/components/Modal/CreateMyVocab_MODAL/CreateMyVocab_MODAL";
+import { CreateMyVocabData_PROPS } from "../../../2_vocabs/components/Modal/CreateVocab_MODAL/CreateVocab_MODAL";
 import TinyLang_SCROLLER from "@/src/features/4_languages/components/TinyLang_SCROLLER/TinyLang_SCROLLER";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import Btn from "@/src/components/Btn/Btn";

@@ -19,7 +19,6 @@ import {
   MyLists_SUBNAV,
 } from "@/src/features/1_lists";
 
-import USE_zustand from "@/src/zustand";
 import { useTranslation } from "react-i18next";
 import { USE_searchedLists } from "@/src/features/1_lists/hooks/USE_searchedLists/USE_searchedLists";
 import USE_highlighedId from "@/src/hooks/USE_highlighedId/USE_highlighedId";
@@ -46,7 +45,6 @@ import { ICON_arrow } from "@/src/components/icons/icons";
 export default function MyLists_PAGE() {
   const { user } = USE_auth();
   const { t } = useTranslation();
-  const { z_SET_printedVocabs } = USE_zustand();
 
   const router = useRouter();
   const list_REF = useRef<FlatList<any>>(null);

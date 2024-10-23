@@ -4,7 +4,7 @@
 
 import DifficultyInput_BLOCK from "../../InputBlocks/DifficulyInput_BLOCK";
 import { Control, Controller } from "react-hook-form";
-import { CreateMyVocabData_PROPS } from "../../../Modal/CreateMyVocab_MODAL/CreateMyVocab_MODAL";
+import { CreateMyVocabData_PROPS } from "../../../Modal/CreateVocab_MODAL/CreateVocab_MODAL";
 
 interface DifficultyController_PROPS {
   control: Control<CreateMyVocabData_PROPS, any>;

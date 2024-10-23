@@ -14,7 +14,6 @@ import { Associations } from "@nozbe/watermelondb/Model";
 import { tr_PROPS } from "./props";
 
 const SANITIZE_langIds = (rawLangIds: string[]) => {
-  console.log("Raw Language IDs:", rawLangIds); // Log input for debugging
   return Array.isArray(rawLangIds)
     ? rawLangIds
         .filter((id) => id !== undefined) // Filter out undefined values
@@ -77,12 +76,17 @@ export class List_MODEL extends Model {
 
   @text("name") name!: string;
   @text("description") description!: string;
-  @json("default_lang_ids", SANITIZE_langIds) default_lang_ids!:
-    | string[]
-    | undefined;
   @field("is_submitted_for_publish") is_submitted_for_publish!: boolean;
   @field("was_accepted_for_publish") was_accepted_for_publish!: boolean;
   @text("type") type!: "private" | "public" | "shared" | "draft";
+
+  @json("default_lang_ids", SANITIZE_langIds) default_lang_ids!:
+    | string[]
+    | undefined;
+
+  @json("collected_lang_ids", SANITIZE_langIds) collected_lang_ids!:
+    | string[]
+    | undefined;
 
   @readonly @date("created_at") createdAt!: number;
   @readonly @date("updated_at") updatedAt!: number;
@@ -135,8 +139,9 @@ export class Language_MODEL extends Model {
   @text("country_in_de") country_in_de!: string;
 
   @text("translation_example") translation_example!: string;
-  @field("translation_example_highlights")
-  translation_example_highlights!: number[];
+
+  @json("translation_example_highlights", SANITIZE_langIds)
+  translation_example_highlights!: string[] | undefined;
   @text("description_example") description_example!: string;
 
   @readonly @date("created_at") createdAt!: number;

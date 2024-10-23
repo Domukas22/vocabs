@@ -38,6 +38,7 @@ import {
   Language_MODEL,
 } from "@/src/db/watermelon_MODELS";
 import FETCH_langs from "@/src/features/4_languages/hooks/FETCH_langs";
+import USE_collectListLangs from "@/src/features/1_lists/hooks/USE_collectListLangs";
 
 interface CreateMyVocabModal_PROPS {
   IS_open: boolean;
@@ -53,7 +54,7 @@ export type CreateMyVocabData_PROPS = {
   translations: tr_PROPS[];
 };
 
-export default function CreateMyVocab_MODAL({
+export default function CreateVocab_MODAL({
   IS_open,
   TOGGLE_modal: TOGGLE_vocabModal,
   initial_LIST,
@@ -71,6 +72,21 @@ export default function CreateMyVocab_MODAL({
 
   const { CREATE_vocab, IS_creatingVocab, db_ERROR, RESET_dbError } =
     USE_createVocab();
+  const {
+    COLLECT_langs,
+    IS_collectingLangs,
+    collectLangs_ERROR,
+    RESET_collectLangsError,
+  } = USE_collectListLangs();
+
+  const collectLangs = async (list_id: string) => {
+    const updated_LIST = await COLLECT_langs({
+      list_id,
+    });
+    if (!updated_LIST.success) {
+      console.error(updated_LIST.msg); // Log internal message for debugging.
+    }
+  };
 
   const create = async (data: CreateMyVocabData_PROPS) => {
     const { list, description, difficulty, translations } = data;
@@ -81,6 +97,7 @@ export default function CreateMyVocab_MODAL({
       translations,
       onSuccess: (new_VOCAB: Vocab_MODEL) => {
         onSuccess(new_VOCAB);
+        collectLangs(new_VOCAB.list_id || "");
         reset();
       },
     });

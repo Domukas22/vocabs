@@ -21,7 +21,10 @@ export default function USE_createList() {
   const [IS_creatingList, SET_creatingList] = useState(false);
   const [createList_ERROR, SET_createListError] = useState<string | null>(null);
 
-  const RESET_error = useCallback(() => SET_createListError(null), []);
+  const RESET_createListError = useCallback(
+    () => SET_createListError(null),
+    []
+  );
 
   const errorMessage = useMemo(
     () =>
@@ -38,7 +41,7 @@ export default function USE_createList() {
     cleanup,
   }: CreateList_PROPS): Promise<{
     success: boolean;
-    newList?: List_MODEL | undefined;
+    new_LIST?: List_MODEL | undefined;
     msg?: string;
   }> => {
     SET_createListError(null); // Clear previous error
@@ -102,5 +105,10 @@ export default function USE_createList() {
     }
   };
 
-  return { CREATE_list, IS_creatingList, createList_ERROR, RESET_error };
+  return {
+    CREATE_list,
+    IS_creatingList,
+    createList_ERROR,
+    RESET_createListError,
+  };
 }

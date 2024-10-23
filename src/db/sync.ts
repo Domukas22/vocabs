@@ -1,8 +1,9 @@
 import { synchronize } from "@nozbe/watermelondb/sync";
 import db from "./index";
 import { supabase } from "../lib/supabase";
-import { List_MODEL, Vocab_MODEL } from "./watermelon_MODELS";
+import { Language_MODEL, List_MODEL, Vocab_MODEL } from "./watermelon_MODELS";
 import { json } from "@nozbe/watermelondb/decorators";
+import languages from "../constants/languages";
 
 // Using built-in SyncLogger
 let isSyncing = false; // Flag to indicate if a sync is already in progress
@@ -31,8 +32,10 @@ export async function sync() {
 
         const updatedChanges = {
           ...data.changes,
-          lists: TURN_defaultLangIdsIntoJson(data.changes.lists),
+          lists: TURN_listLangIdsIntoJson(data.changes.lists),
           vocabs: TURN_VocabtrsIntoJson(data.changes.vocabs),
+          languages: TURN_langExampleHighlights(data.changes.languages),
+          // languages: TURN_VocabtrsIntoJson(data.changes.vocabs),
         };
 
         return { changes: updatedChanges, timestamp: data.timestamp };
@@ -59,7 +62,7 @@ export async function sync() {
   }
 }
 
-function TURN_defaultLangIdsIntoJson(lists: {
+function TURN_listLangIdsIntoJson(lists: {
   created?: List_MODEL[];
   updated?: List_MODEL[];
   deleted?: string[];
@@ -70,12 +73,37 @@ function TURN_defaultLangIdsIntoJson(lists: {
       lists.updated?.map((list) => ({
         ...list,
         default_lang_ids: JSON.stringify(list.default_lang_ids), // Convert array to JSON string
+        collected_lang_ids: JSON.stringify(list.collected_lang_ids), // Convert array to JSON string
       })) || [], // Default to an empty array if undefined
     created:
       lists.created?.map((list) => ({
         ...list,
         default_lang_ids: JSON.stringify(list.default_lang_ids), // Convert array to JSON string
+        collected_lang_ids: JSON.stringify(list.collected_lang_ids), // Convert array to JSON string
       })) || [], // Default to an empty array if undefined
+  };
+}
+function TURN_langExampleHighlights(languages: {
+  created?: Language_MODEL[];
+  updated?: Language_MODEL[];
+  deleted?: string[];
+}) {
+  return {
+    ...languages,
+    updated:
+      languages.updated?.map((list) => ({
+        ...list,
+        translation_example_highlights: JSON.stringify(
+          list.translation_example_highlights
+        ),
+      })) || [],
+    created:
+      languages.created?.map((list) => ({
+        ...list,
+        translation_example_highlights: JSON.stringify(
+          list.translation_example_highlights
+        ),
+      })) || [],
   };
 }
 function TURN_VocabtrsIntoJson(vocabs: {

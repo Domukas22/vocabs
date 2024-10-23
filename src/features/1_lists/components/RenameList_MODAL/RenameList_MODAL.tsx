@@ -11,7 +11,7 @@ import Label from "@/src/components/Label/Label";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import StyledText_INPUT from "@/src/components/StyledText_INPUT/StyledText_INPUT";
 import USE_renameList from "../../hooks/USE_renameList";
-import USE_zustand from "@/src/zustand";
+
 import { useToast } from "react-native-toast-notifications";
 import { Controller, useForm } from "react-hook-form";
 import { List_MODEL } from "@/src/db/watermelon_MODELS";
@@ -44,14 +44,11 @@ export default function RenameList_MODAL({
   const toast = useToast();
   const inputREF = useRef<TextInput>(null);
   const [isFocused, setIsFocused] = useState(false);
-  const { z_lists } = USE_zustand();
+
   const { RENAME_list, IS_renamingList, renameList_ERROR, RESET_error } =
     USE_renameList();
 
-  const currentList_NAMES = useMemo(
-    () => z_lists?.map((l) => l.name),
-    [z_lists]
-  );
+  const currentList_NAMES = [];
 
   const {
     control,
@@ -129,7 +126,7 @@ export default function RenameList_MODAL({
           validate: {
             uniqueName: (value) => {
               const IS_nameTaken = IS_listNameTaken({
-                lists: z_lists,
+                lists: [],
                 name: value,
                 list_id,
               });

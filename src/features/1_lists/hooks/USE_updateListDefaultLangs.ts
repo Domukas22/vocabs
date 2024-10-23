@@ -64,8 +64,6 @@ export default function USE_updateListDefaultLangs() {
 
     SET_renamingList(true);
     try {
-      console.log(newLang_IDS);
-
       const updated_LIST = await db.write(async () => {
         const list = await Lists_DB.find(list_id);
         await list.update((list: List_MODEL) => {

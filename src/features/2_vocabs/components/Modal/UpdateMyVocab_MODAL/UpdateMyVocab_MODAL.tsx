@@ -41,6 +41,7 @@ import { tr_PROPS } from "@/src/db/props";
 
 import { Q } from "@nozbe/watermelondb";
 import FETCH_langs from "@/src/features/4_languages/hooks/FETCH_langs";
+import USE_collectListLangs from "@/src/features/1_lists/hooks/USE_collectListLangs";
 
 interface UpdateMyVocabModal_PROPS {
   IS_open: boolean;
@@ -81,6 +82,21 @@ export default function UpdateMyVocab_MODAL({
 
   const { UPDATE_vocab, IS_updatingVocab, db_ERROR, RESET_dbError } =
     USE_updateVocab();
+  const {
+    COLLECT_langs,
+    IS_collectingLangs,
+    collectLangs_ERROR,
+    RESET_collectLangsError,
+  } = USE_collectListLangs();
+
+  const collectLangs = async (list_id: string | undefined) => {
+    const updated_LIST = await COLLECT_langs({
+      list_id,
+    });
+    if (!updated_LIST.success) {
+      console.error(updated_LIST.msg); // Log internal message for debugging.
+    }
+  };
 
   const update = async (data: UpdateMyVocabData_PROPS) => {
     const { list, description, difficulty, translations } = data;
@@ -92,8 +108,9 @@ export default function UpdateMyVocab_MODAL({
       description,
       translations,
       is_public: false,
-      onSuccess: (new_VOCAB: Vocab_MODEL) => {
-        onSuccess(new_VOCAB);
+      onSuccess: (updated_VOCAB: Vocab_MODEL) => {
+        onSuccess(updated_VOCAB);
+        collectLangs(updated_VOCAB?.list_id);
         reset();
       },
     });

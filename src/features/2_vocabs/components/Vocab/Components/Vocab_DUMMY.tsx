@@ -2,70 +2,78 @@
 //
 //
 
+import Block from "@/src/components/Block/Block";
 import Highlighted_TEXT from "@/src/components/Highlighted_TEXT/Highlighted_TEXT";
 import { ICON_difficultyDot, ICON_flag } from "@/src/components/icons/icons";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
 import { USE_langs } from "@/src/context/Langs_CONTEXT";
 import { Language_MODEL } from "@/src/db/watermelon_MODELS";
+import FETCH_langs from "@/src/features/4_languages/hooks/FETCH_langs";
+import { _DisplaySettings_PROPS } from "@/src/utils/DisplaySettings";
 
-import USE_zustand from "@/src/zustand";
 import i18next from "i18next";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Image, Pressable, StyleSheet, View } from "react-native";
+import { DisplaySettingsModalView_PROPS } from "../../Modal/DisplaySettings/DisplaySettings_MODAL/DisplaySettings_MODAL";
 
 interface VocabFront_PROPS {
-  HAS_difficulty?: boolean;
+  view: DisplaySettingsModalView_PROPS;
+  z_display_SETTINGS: _DisplaySettings_PROPS | undefined;
+  SHOW_difficultyDot?: boolean;
 }
 
 export default function Vocab_DUMMY({
-  HAS_difficulty = true,
+  view = "preview",
+  z_display_SETTINGS,
+  SHOW_difficultyDot = true,
 }: VocabFront_PROPS) {
-  const { z_display_SETTINGS, z_SET_displaySettings } = USE_zustand();
-  const { SHOW_description, SHOW_flags, SHOW_difficulty, frontTrLang_ID } =
-    z_display_SETTINGS;
-
   const { t } = useTranslation();
+  const [lang, SET_alang] = useState<Language_MODEL | undefined>();
 
-  const { languages } = USE_langs();
-  const lang: Language_MODEL = useMemo(
-    () => languages?.find((lang) => lang.id === frontTrLang_ID),
-    [frontTrLang_ID]
-  );
+  useEffect(() => {
+    (async () => {
+      const langs = await FETCH_langs({
+        lang_ids: [z_display_SETTINGS?.frontTrLang_ID || "en"],
+      });
 
-  return (
-    <View>
-      {/* {SHOW_image && (
-        <Image
-          source={require("@/src/assets/images/dummyImage.jpg")}
-          style={{ height: 160, width: "100%" }}
-        />
-      )} */}
+      if (langs?.[0]) {
+        SET_alang(langs[0]);
+      }
+    })();
+  }, [z_display_SETTINGS?.frontTrLang_ID]);
 
+  return view === "preview" ? (
+    <Block>
       <View>
-        <Highlighted_TEXT
-          text={lang?.translation_example || "INSERT TRANSLATION"}
-          highlights={lang?.translation_example_highlights}
-          diff={3}
-        />
+        <View>
+          <Highlighted_TEXT
+            text={lang?.translation_example || "INSERT TRANSLATION"}
+            highlights={lang?.translation_example_highlights || []}
+            diff={3}
+          />
 
-        {SHOW_description && (
-          <Styled_TEXT type="label_small">
-            {t("vocabDummy.description")}
-          </Styled_TEXT>
-        )}
-        {(SHOW_flags || SHOW_difficulty) && (
-          <View style={s.iconWrap}>
-            {SHOW_flags && <ICON_flag lang={frontTrLang_ID} />}
-            {SHOW_difficulty && HAS_difficulty && (
-              <ICON_difficultyDot difficulty={3} />
-            )}
-          </View>
-        )}
+          {z_display_SETTINGS?.SHOW_description && (
+            <Styled_TEXT type="label_small">
+              {lang?.description_example || "INSERT DESCRIPTION"}
+            </Styled_TEXT>
+          )}
+          {(z_display_SETTINGS?.SHOW_flags ||
+            z_display_SETTINGS?.SHOW_difficulty) && (
+            <View style={s.iconWrap}>
+              {z_display_SETTINGS?.SHOW_flags && (
+                <ICON_flag lang={z_display_SETTINGS?.frontTrLang_ID} />
+              )}
+              {z_display_SETTINGS?.SHOW_difficulty && SHOW_difficultyDot && (
+                <ICON_difficultyDot difficulty={3} />
+              )}
+            </View>
+          )}
+        </View>
       </View>
-    </View>
-  );
+    </Block>
+  ) : null;
 }
 
 const s = StyleSheet.create({

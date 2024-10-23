@@ -25,7 +25,7 @@ import { USE_toggle } from "@/src/hooks/USE_toggle";
 import Confirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
 import Dropdown_BLOCK from "@/src/components/Dropdown_BLOCK/Dropdown_BLOCK";
 import { useMemo } from "react";
-import USE_zustand from "@/src/zustand";
+
 import { vocabLimit } from "@/src/constants/globalVars";
 import FETCH_vocabs, {
   VocabFilter_PROPS,
@@ -52,15 +52,7 @@ export default function General_PAGE() {
 
   const [IS_logoutModalOpen, TOGGLE_logoutModal] = USE_toggle();
 
-  const { z_lists } = USE_zustand();
-
-  const totalVocabs = useMemo(
-    () =>
-      z_lists.reduce((count, list) => {
-        return (count += list.vocabs?.length || 0);
-      }, 0),
-    [z_lists]
-  );
+  const totalVocabs = 0;
 
   return (
     <Page_WRAP>

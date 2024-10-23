@@ -19,7 +19,6 @@ import {
   MyLists_SUBNAV,
 } from "@/src/features/1_lists";
 
-import USE_zustand from "@/src/zustand";
 import { useTranslation } from "react-i18next";
 import { USE_searchedLists } from "@/src/features/1_lists/hooks/USE_searchedLists/USE_searchedLists";
 import USE_highlighedId from "@/src/hooks/USE_highlighedId/USE_highlighedId";
@@ -40,7 +39,6 @@ export default function MyLists_PAGE() {
   const { user } = USE_auth();
   const { t } = useTranslation();
   const { SET_selectedList } = USE_selectedList();
-  const { z_SET_printedVocabs } = USE_zustand();
 
   const router = useRouter();
   const list_REF = useRef<FlatList<any>>(null);
@@ -50,12 +48,6 @@ export default function MyLists_PAGE() {
   const [target_LIST, SET_targetList] = useState<List_MODEL | undefined>(
     undefined
   );
-  const {
-    z_lists,
-    z_CREATE_privateList,
-    z_RENAME_privateList,
-    z_DELETE_privateList,
-  } = USE_zustand();
 
   const [search, SET_search] = useState("");
 
@@ -79,13 +71,13 @@ export default function MyLists_PAGE() {
       <MyLists_HEADER
         {...{
           TOGGLE_createListModal: () => TOGGLE_modal("create"),
-          lists: z_lists,
+          lists: target_LIST,
         }}
       />
 
       {/* <Btn text="Sync" style={{ margin: 12 }} onPress={sync} /> */}
 
-      {z_lists.length > 5 && <MyLists_SUBNAV {...{ search, SET_search }} />}
+      {/* {z_lists.length > 5 && <MyLists_SUBNAV {...{ search, SET_search }} />} */}
 
       <MyLists_FLATLIST
         user_id={user?.id}
@@ -104,12 +96,11 @@ export default function MyLists_PAGE() {
       <CreateList_MODAL
         user={user}
         IS_open={modal_STATES.create}
-        currentList_NAMES={z_lists?.map((l) => l.name)}
+        currentList_NAMES={[]}
         CLOSE_modal={() => TOGGLE_modal("create")}
         onSuccess={(newList: List_MODEL) => {
           highlight(newList?.id);
           list_REF?.current?.scrollToOffset({ animated: true, offset: 0 });
-          z_CREATE_privateList(newList);
           toast.show(t("notifications.listCreated"), {
             type: "green",
             duration: 5000,
@@ -124,7 +115,6 @@ export default function MyLists_PAGE() {
         CLOSE_modal={() => TOGGLE_modal("rename")}
         onSuccess={(updated_LIST?: List_MODEL) => {
           if (updated_LIST) {
-            z_RENAME_privateList(updated_LIST);
             highlight(updated_LIST.id);
             toast.show(t("notifications.listRenamed"), {
               type: "green",

@@ -1,4 +1,3 @@
-import USE_zustand from "@/src/zustand";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useToast } from "react-native-toast-notifications";

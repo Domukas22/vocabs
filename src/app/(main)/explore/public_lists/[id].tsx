@@ -19,7 +19,6 @@ import {
   MyLists_SUBNAV,
 } from "@/src/features/1_lists";
 
-import USE_zustand from "@/src/zustand";
 import { useTranslation } from "react-i18next";
 import { USE_searchedLists } from "@/src/features/1_lists/hooks/USE_searchedLists/USE_searchedLists";
 import USE_highlighedId from "@/src/hooks/USE_highlighedId/USE_highlighedId";
@@ -49,6 +48,8 @@ import Vocab from "@/src/features/2_vocabs/components/Vocab/Vocab";
 import vocabs from "../../vocabs";
 import SavePublicVocabToList_MODAL from "@/src/features/2_vocabs/components/Modal/SavePublicVocabToList_MODAL/SavePublicVocabToList_MODAL";
 import USE_fetchOnePublicList from "@/src/features/2_vocabs/hooks/USE_fetchOnePublicList";
+import PublicVocabs_SUBNAV from "@/src/features/1_lists/components/PublicVocabs_SUBNAV";
+import { DisplaySettings_MODAL } from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/DisplaySettings_MODAL";
 
 export default function PublicListVocabs_PAGE() {
   const { user } = USE_auth();
@@ -61,6 +62,13 @@ export default function PublicListVocabs_PAGE() {
     USE_fetchVocabsOfAPublicList();
   const { FETCH_onePublicList, IS_publicListFetching, publicList_ERROR } =
     USE_fetchOnePublicList();
+
+  const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
+    { name: "save" },
+    { name: "displaySettings" },
+  ]);
+
+  const [search, SET_search] = useState("");
 
   const [vocabs, SET_vocabs] = useState<Vocab_MODEL[]>([]);
   const [list, SET_list] = useState<List_MODEL | undefined>(undefined);
@@ -82,8 +90,6 @@ export default function PublicListVocabs_PAGE() {
     GET_vocabs();
     GET_list();
   }, []);
-
-  const { modal_STATES, TOGGLE_modal } = USE_modalToggles([{ name: "save" }]);
 
   const [target_VOCAB, SET_targetVocab] = useState<Vocab_MODEL | undefined>();
 
@@ -110,6 +116,10 @@ export default function PublicListVocabs_PAGE() {
         }
         title={list?.name || "..."}
       />
+      <PublicVocabs_SUBNAV
+        TOGGLE_displaySettings={() => TOGGLE_modal("displaySettings")}
+        {...{ search, SET_search }}
+      />
 
       <Styled_FLATLIST
         data={vocabs}
@@ -135,7 +145,7 @@ export default function PublicListVocabs_PAGE() {
         }}
         keyExtractor={(item) => "PublicVocab" + item.id}
       />
-
+      {/* ---------------------- MODALS ---------------------- */}
       <SavePublicVocabToList_MODAL
         vocab={target_VOCAB}
         IS_open={modal_STATES.save}
@@ -147,6 +157,12 @@ export default function PublicListVocabs_PAGE() {
           });
         }}
         TOGGLE_open={() => TOGGLE_modal("save")}
+      />
+
+      <DisplaySettings_MODAL
+        open={modal_STATES.displaySettings}
+        TOGGLE_open={() => TOGGLE_modal("displaySettings")}
+        HAS_difficulties={false}
       />
     </Page_WRAP>
   );

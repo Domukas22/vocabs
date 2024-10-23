@@ -8,7 +8,7 @@ import { ActivityIndicator } from "react-native";
 import Error_TEXT from "@/src/components/Error_TEXT/Error_TEXT";
 import USE_deleteList from "../hooks/USE_deleteList";
 import { List_MODEL } from "@/src/db/watermelon_MODELS";
-import USE_zustand from "@/src/zustand";
+
 import { useToast } from "react-native-toast-notifications";
 import db, { Lists_DB, Vocabs_DB } from "@/src/db";
 import { Q } from "@nozbe/watermelondb";

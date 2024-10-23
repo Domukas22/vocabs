@@ -12,6 +12,7 @@ import USE_updateList from "../hooks/USE_updateList";
 import Error_TEXT from "@/src/components/Error_TEXT/Error_TEXT";
 import { List_MODEL, User_MODEL } from "@/src/db/watermelon_MODELS";
 import { Controller, useForm } from "react-hook-form";
+import USE_collectListLangs from "../hooks/USE_collectListLangs";
 
 interface UpdateListModal_PROPS {
   user: User_MODEL;
@@ -65,6 +66,7 @@ export default function UpdateList_MODAL({
       currentList_NAMES,
       onSuccess: (updatedList) => {
         onSuccess(updatedList);
+
         setTimeout(() => {
           reset({ name: updatedList.name });
         }, 0);

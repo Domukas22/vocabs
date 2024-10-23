@@ -13,7 +13,7 @@ import {
 } from "@/src/features/2_vocabs";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ListSettings_MODAL from "@/src/features/1_lists/components/ListSettings_MODAL/ListSettings_MODAL";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import USE_highlighedId from "@/src/hooks/USE_highlighedId/USE_highlighedId";
@@ -21,7 +21,7 @@ import { USE_highlightBoolean } from "@/src/hooks/USE_highlightBoolean/USE_highl
 import { useTranslation } from "react-i18next";
 
 import { useToast } from "react-native-toast-notifications";
-import USE_zustand from "@/src/zustand";
+
 import UpdateMyVocab_MODAL from "@/src/features/2_vocabs/components/Modal/UpdateMyVocab_MODAL/UpdateMyVocab_MODAL";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 import { List_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
@@ -30,6 +30,15 @@ import { withObservables } from "@nozbe/watermelondb/react";
 import { USE_observeList } from "@/src/features/1_lists/hooks/USE_observeList";
 import { sync } from "@/src/db/sync";
 import Btn from "@/src/components/Btn/Btn";
+import { DisplaySettings_MODAL } from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/DisplaySettings_MODAL";
+import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
+import USE_displaySettings from "@/src/hooks/USE_displaySettings/USE_displaySettings";
+import USE_observedVocabs, {
+  USE_observeVocabs,
+} from "@/src/features/1_lists/hooks/USE_observeVocabs";
+import FetchVocabs_QUERY from "@/src/features/2_vocabs/utils/FetchVocabs_QUERY";
+import USE_zustand from "@/src/zustand";
+import USE_aggregateVocabLangs from "@/src/features/2_vocabs/hooks/USE_aggregateVocabLangs";
 
 function __SingleList_PAGE({
   selected_LIST = undefined,
@@ -41,7 +50,6 @@ function __SingleList_PAGE({
   const toast = useToast();
   const router = useRouter();
   const [search, SET_search] = useState("");
-  const { z_display_SETTINGS } = USE_zustand();
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
     { name: "displaySettings" },
@@ -56,7 +64,6 @@ function __SingleList_PAGE({
   >();
 
   const { highlighted_ID, highlight: HIGHLIGHT_vocab } = USE_highlighedId();
-
   const [delete_ID, SET_deleteId] = useState("");
 
   function HANDLE_updateModal({
@@ -69,6 +76,12 @@ function __SingleList_PAGE({
     SET_toUpdateVocab(!clear && vocab ? vocab : undefined);
     TOGGLE_modal("update");
   }
+  const { z_display_SETTINGS } = USE_zustand();
+  const vocabs = USE_observedVocabs({
+    search,
+    list_id: selected_LIST?.id,
+    z_display_SETTINGS,
+  });
 
   return (
     <Page_WRAP>
@@ -88,14 +101,7 @@ function __SingleList_PAGE({
       />
 
       <MyVocabs_FLATLIST
-        filters={{
-          search: search,
-          list_id: selected_LIST?.id,
-          difficultyFilters: z_display_SETTINGS.difficultyFilters || [],
-          langFilters: z_display_SETTINGS.langFilters || [],
-          sorting: z_display_SETTINGS.sorting,
-          sortDirection: z_display_SETTINGS.sortDirection,
-        }}
+        {...{ vocabs }}
         SHOW_bottomBtn={true}
         TOGGLE_createVocabModal={() => TOGGLE_modal("createVocab")}
         PREPARE_vocabDelete={(id: string) => {
@@ -104,7 +110,7 @@ function __SingleList_PAGE({
         }}
         {...{
           search,
-          highlightedVocab_ID: highlighted_ID,
+          highlightedVocab_ID: highlighted_ID || "",
           HANDLE_updateModal,
         }}
       />
@@ -135,10 +141,15 @@ function __SingleList_PAGE({
           });
         }}
       />
-      <MyVocabDisplaySettings_MODAL
+      {/* <MyVocabDisplaySettings_MODAL
         open={modal_STATES.displaySettings}
         TOGGLE_open={() => TOGGLE_modal("displaySettings")}
         list_id={selected_LIST?.id}
+      /> */}
+      <DisplaySettings_MODAL
+        open={modal_STATES.displaySettings}
+        TOGGLE_open={() => TOGGLE_modal("displaySettings")}
+        collectedLang_IDS={selected_LIST?.collected_lang_ids}
       />
 
       <ListSettings_MODAL

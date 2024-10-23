@@ -7,6 +7,7 @@ import USE_deleteVocab from "../../../hooks/USE_deleteVocab";
 import Error_TEXT from "@/src/components/Error_TEXT/Error_TEXT";
 import { User_MODEL } from "@/src/db/watermelon_MODELS";
 import db, { Vocabs_DB } from "@/src/db";
+import USE_collectListLangs from "@/src/features/1_lists/hooks/USE_collectListLangs";
 
 interface DeleteVocabModal_PROPS {
   user?: User_MODEL;
@@ -31,12 +32,33 @@ export default function DeleteVocab_MODAL({
   const { DELETE_vocab, IS_deletingVocab, error, RESET_error } =
     USE_deleteVocab();
 
+  const {
+    COLLECT_langs,
+    IS_collectingLangs,
+    collectLangs_ERROR,
+    RESET_collectLangsError,
+  } = USE_collectListLangs();
+
+  const collectLangs = async (list_id: string | undefined) => {
+    const updated_LIST = await COLLECT_langs({
+      list_id,
+    });
+    if (!updated_LIST.success) {
+      console.error(updated_LIST.msg); // Log internal message for debugging.
+    }
+  };
+
   const del = async () => {
+    let list_id;
     await db.write(async () => {
-      const vocab = await Vocabs_DB.find(vocab_id);
+      const vocab = await Vocabs_DB.find(vocab_id || "");
+      list_id = vocab?.list_id;
       await vocab.markAsDeleted();
     });
-    if (onSuccess) onSuccess();
+    if (onSuccess) {
+      onSuccess();
+      collectLangs(list_id);
+    }
   };
 
   return (

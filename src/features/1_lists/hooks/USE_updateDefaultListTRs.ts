@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { supabase } from "@/src/lib/supabase";
-import USE_zustand from "@/src/zustand";
+
 import { useToast } from "react-native-toast-notifications";
 import { useTranslation } from "react-i18next";
 
@@ -12,8 +12,6 @@ export default function USE_updateDefaultListTRs() {
   >(null);
   const toast = useToast();
   const { t } = useTranslation();
-
-  const { z_UPDATE_defaultListTRs } = USE_zustand();
 
   const UPDATE_defaultListTRs = async (
     targetList_ID: string,
@@ -37,8 +35,6 @@ export default function USE_updateDefaultListTRs() {
         SET_updateDefaultTRsError("🔴 Error updating default_lang_ids 🔴");
         return { success: false, msg: "🔴 Error updating default_lang_ids 🔴" };
       }
-
-      z_UPDATE_defaultListTRs(targetList_ID, newDefaultTRs);
 
       toast.show(t("notifications.defaultTRsUpdated"), {
         type: "green",

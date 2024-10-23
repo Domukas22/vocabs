@@ -8,8 +8,8 @@ import SelectMyList_MODAL, {
 import USE_createVocab from "../../../hooks/USE_createVocab";
 import { useState } from "react";
 import { tr_PROPS } from "@/src/db/props";
-import USE_zustand from "@/src/zustand";
-import { CreateMyVocabData_PROPS } from "../CreateMyVocab_MODAL/CreateMyVocab_MODAL";
+
+import { CreateMyVocabData_PROPS } from "../CreateVocab_MODAL/CreateVocab_MODAL";
 import { List_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 import Btn from "@/src/components/Btn/Btn";
 import Footer from "@/src/components/Footer/Footer";

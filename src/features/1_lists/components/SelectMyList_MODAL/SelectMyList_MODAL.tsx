@@ -25,7 +25,7 @@ import {
 
 import { useTranslation } from "react-i18next";
 import CreateList_MODAL from "@/src/features/1_lists/components/CreateList_MODAL/CreateList_MODAL";
-import USE_zustand from "@/src/zustand";
+
 import SEARCH_lists from "@/src/features/1_lists/utils/SEARCH_lists";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 import { EmptyFlatList_BOTTM } from "@/src/features/1_lists";
@@ -64,10 +64,7 @@ export default function SelectMyList_MODAL({
     List_MODEL | undefined
   >(current_LIST);
 
-  const { z_lists, z_CREATE_privateList } = USE_zustand();
-
-  const { searched_LISTS, search, SEARCH_lists, ARE_listsSearching } =
-    USE_searchedLists(z_lists);
+  const [search, SET_search] = useState("");
 
   useEffect(() => {
     SET_selectedModalList(current_LIST);
@@ -92,7 +89,10 @@ export default function SelectMyList_MODAL({
           }
         />
         <Subnav>
-          <SearchBar value={search} SET_value={SEARCH_lists} />
+          <SearchBar
+            value={search}
+            SET_value={(val: string) => SET_search(val)}
+          />
         </Subnav>
 
         <MyLists_FLATLIST
@@ -128,10 +128,9 @@ export default function SelectMyList_MODAL({
       <CreateList_MODAL
         user={user}
         IS_open={SHOW_createListModal}
-        currentList_NAMES={z_lists?.map((l) => l.name)}
+        currentList_NAMES={[]}
         CLOSE_modal={() => TOGGLE_createListModal()}
         onSuccess={(newList: List_MODEL) => {
-          z_CREATE_privateList(newList);
           SET_selectedModalList(newList);
         }}
       />

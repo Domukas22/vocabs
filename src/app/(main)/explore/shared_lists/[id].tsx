@@ -19,7 +19,6 @@ import {
   MyLists_SUBNAV,
 } from "@/src/features/1_lists";
 
-import USE_zustand from "@/src/zustand";
 import { useTranslation } from "react-i18next";
 import { USE_searchedLists } from "@/src/features/1_lists/hooks/USE_searchedLists/USE_searchedLists";
 import USE_highlighedId from "@/src/hooks/USE_highlighedId/USE_highlighedId";

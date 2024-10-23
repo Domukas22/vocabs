@@ -5,7 +5,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Define the display object type for TypeScript
-export type DisplaySettings_PROPS = {
+export type _DisplaySettings_PROPS = {
   SHOW_description: boolean;
   SHOW_flags: boolean;
   SHOW_difficulty: boolean;

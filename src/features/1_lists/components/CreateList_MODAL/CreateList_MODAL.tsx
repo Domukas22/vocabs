@@ -10,10 +10,11 @@ import Error_TEXT from "@/src/components/Error_TEXT/Error_TEXT";
 import { Controller, useForm } from "react-hook-form";
 import { TextInput } from "react-native";
 import IS_listNameTaken from "../../utils/IS_listNameTaken";
-import USE_zustand from "@/src/zustand";
+
 import { List_MODEL, User_MODEL } from "@/src/db/watermelon_MODELS";
 import db, { Lists_DB, Users_DB } from "@/src/db";
 import { USER_ID } from "@/src/constants/globalVars";
+import USE_collectListLangs from "../../hooks/USE_collectListLangs";
 
 interface CreateListModal_PROPS {
   user: User_MODEL | undefined;
@@ -36,10 +37,14 @@ export default function CreateList_MODAL({
 }: CreateListModal_PROPS) {
   const inputREF = useRef<TextInput>(null);
   const [isFocused, setIsFocused] = useState(false);
-  const { z_lists } = USE_zustand();
+
   const { t } = useTranslation();
-  const { CREATE_list, IS_creatingList, createList_ERROR, RESET_error } =
-    USE_createList();
+  const {
+    CREATE_list,
+    IS_creatingList,
+    createList_ERROR,
+    RESET_createListError,
+  } = USE_createList();
 
   const {
     control,
@@ -65,7 +70,9 @@ export default function CreateList_MODAL({
       description: "",
       user_id: user?.id,
       currentList_NAMES,
-      onSuccess,
+      onSuccess: (new_LIST: List_MODEL) => {
+        onSuccess(new_LIST);
+      },
       cleanup: () => {
         setTimeout(() => {
           // doesn't call for some reason without the timeout
@@ -80,7 +87,7 @@ export default function CreateList_MODAL({
   };
 
   const HANLDE_toggle = () => {
-    RESET_error();
+    RESET_createListError();
     CLOSE_modal();
     reset();
   };
@@ -116,7 +123,7 @@ export default function CreateList_MODAL({
           validate: {
             uniqueName: (value) => {
               const IS_nameTaken = IS_listNameTaken({
-                lists: z_lists,
+                lists: [],
                 name: value,
                 list_id: "new",
               });

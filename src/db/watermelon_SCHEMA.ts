@@ -28,10 +28,12 @@ export default appSchema({
 
         { name: "name", type: "string" },
         { name: "description", type: "string" },
-        { name: "default_lang_ids", type: "string", isOptional: true },
         { name: "is_submitted_for_publish", type: "boolean" },
         { name: "was_accepted_for_publish", type: "boolean" },
         { name: "type", type: "string" },
+
+        { name: "default_lang_ids", type: "string", isOptional: true },
+        { name: "collected_lang_ids", type: "string", isOptional: true },
 
         { name: "created_at", type: "number" },
         { name: "updated_at", type: "number" },

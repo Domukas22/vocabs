@@ -8,7 +8,6 @@ import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import { useEffect, useRef, useState } from "react";
 import { List_MODEL } from "@/src/db/watermelon_MODELS";
 
-import USE_zustand from "@/src/zustand";
 import { useTranslation } from "react-i18next";
 import USE_highlighedId from "@/src/hooks/USE_highlighedId/USE_highlighedId";
 
@@ -27,10 +26,14 @@ import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/St
 import Subnav from "@/src/components/Subnav/Subnav";
 import SearchBar from "@/src/components/SearchBar/SearchBar";
 import {
-  DisplaySettings_PROPS,
+  _DisplaySettings_PROPS,
   GET_displaySettings,
   SET_localStorageDisplaySettings,
 } from "@/src/utils/DisplaySettings";
+import USE_displaySettings from "@/src/hooks/USE_displaySettings/USE_displaySettings";
+import { DisplaySettings_MODAL } from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/DisplaySettings_MODAL";
+import USE_modalToggles from "@/src/hooks/USE_modalToggles";
+import PublicVocabs_SUBNAV from "@/src/features/1_lists/components/PublicVocabs_SUBNAV";
 
 export default function PublicLists_PAGE() {
   const router = useRouter();
@@ -52,33 +55,6 @@ export default function PublicLists_PAGE() {
     GET_lists();
   }, []);
 
-  // -------------------------------------------------------------------------------------------------------------
-  const [display_SETTINGS, SET_displaySettings] = useState<
-    DisplaySettings_PROPS | undefined
-  >();
-
-  // Function to fetch and set display settings
-  const fetchDisplaySettings = async () => {
-    const settings = await GET_displaySettings();
-    SET_displaySettings(settings);
-  };
-
-  // Load settings when the component mounts
-  useEffect(() => {
-    fetchDisplaySettings();
-  }, []);
-
-  // Function to update settings (example)
-  const upd = async () => {
-    await SET_localStorageDisplaySettings({
-      SHOW_flags: !display_SETTINGS?.SHOW_flags,
-    }); // Example update
-    fetchDisplaySettings(); // Fetch settings again to update state
-  };
-  // -------------------------------------------------------------------------------------------------------------
-
-  console.log(display_SETTINGS?.SHOW_flags);
-
   return (
     <Page_WRAP>
       <Header
@@ -98,10 +74,6 @@ export default function PublicLists_PAGE() {
         }
         title="Public lists"
       />
-      <Btn text="Toggle flags" onPress={upd} />
-      <Subnav>
-        <SearchBar value={search} SET_value={SET_search} />
-      </Subnav>
 
       <Styled_FLATLIST
         data={lists}
