@@ -13,14 +13,14 @@ import USE_highlighedId from "@/src/hooks/USE_highlighedId/USE_highlighedId";
 
 import React from "react";
 import { useToast } from "react-native-toast-notifications";
-import { FlatList } from "react-native";
+import { FlatList, View } from "react-native";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import Header from "@/src/components/Header/Header";
 import Btn from "@/src/components/Btn/Btn";
 
 import { MyColors } from "@/src/constants/MyColors";
 import Transition_BTN from "@/src/components/Transition_BTN/Transition_BTN";
-import { ICON_arrow } from "@/src/components/icons/icons";
+import { ICON_arrow, ICON_flag } from "@/src/components/icons/icons";
 import USE_fetchPublicLists from "@/src/features/2_vocabs/hooks/USE_fetchPublicLists";
 import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
 import Subnav from "@/src/components/Subnav/Subnav";
@@ -95,17 +95,35 @@ export default function PublicLists_PAGE() {
               {item.name && (
                 <Styled_TEXT type="text_18_bold">{item.name}</Styled_TEXT>
               )}
-              {item.description && (
+              {/* {item.description && (
                 <Styled_TEXT type="label_small">{item.description}</Styled_TEXT>
-              )}
+              )} */}
               {item.vocab_COUNT && (
                 <Styled_TEXT
-                  type="text_15_bold"
-                  style={{ color: MyColors.text_primary, textAlign: "right" }}
+                  type="label_small"
+                  // style={{ color: MyColors.text_primary }}
                 >
                   {item.vocab_COUNT} vocabs
                 </Styled_TEXT>
               )}
+              {item.collected_lang_ids &&
+                item.collected_lang_ids.length > 0 && (
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      gap: 4,
+
+                      justifyContent: "flex-end",
+                    }}
+                  >
+                    {item.collected_lang_ids.map((lang_id, index) => (
+                      <ICON_flag
+                        lang={lang_id}
+                        key={item.id + lang_id + index}
+                      />
+                    ))}
+                  </View>
+                )}
             </Transition_BTN>
           );
         }}

@@ -5,12 +5,16 @@ export interface VocabFilter_PROPS {
   search?: string;
   list_id?: string | undefined;
   z_display_SETTINGS: DisplaySettings_PROPS | undefined;
+  start?: number; // New parameter for start index
+  end?: number; // New parameter for end index
 }
 
 export const BUILD_fetchVocabsOfPublicListQuery = ({
   search,
   list_id,
   z_display_SETTINGS,
+  start = 0, // Default start index
+  end = 10, // Default end index (can be overridden)
 }: VocabFilter_PROPS) => {
   // Start with a base query
   let query = supabase.from("vocabs").select("*");
@@ -50,6 +54,9 @@ export const BUILD_fetchVocabsOfPublicListQuery = ({
       // Shuffling is not natively supported, should be handled on the frontend if needed
       break;
   }
+
+  // Limit the results based on start and end values
+  query = query.range(start, end - 1); // Supabase uses zero-based indexing for range
 
   return query;
 };

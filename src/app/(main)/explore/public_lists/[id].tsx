@@ -28,7 +28,13 @@ import React from "react";
 import { useToast } from "react-native-toast-notifications";
 import DeleteList_MODAL from "@/src/features/1_lists/components/DeleteList_MODAL";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
-import { FlatList, Pressable, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  Pressable,
+  StyleSheet,
+  View,
+} from "react-native";
 import { Lists_DB, Users_DB } from "@/src/db";
 import { Q } from "@nozbe/watermelondb";
 import { USER_ID } from "@/src/constants/globalVars";
@@ -70,12 +76,19 @@ export default function PublicListVocabs_PAGE() {
   const { list, IS_listFetching, listFetch_ERROR } = USE_fetchOnePublicList(
     typeof id === "string" ? id : ""
   );
-  const { vocabs, ARE_vocabsFetching, fetchVocabs_ERROR } =
-    USE_supabaseVocabsOfAList({
-      search,
-      list_id: typeof id === "string" ? id : "",
-      z_display_SETTINGS,
-    });
+  const {
+    vocabs,
+    ARE_vocabsFetching,
+    fetchVocabs_ERROR,
+    LOAD_more,
+    IS_loadingMore,
+    HAS_reachedEnd,
+  } = USE_supabaseVocabsOfAList({
+    search,
+    list_id: typeof id === "string" ? id : "",
+    z_display_SETTINGS,
+    paginateBy: 3,
+  });
 
   const collectedLangIds = useMemo(() => {
     // if this is not defiend and we pass the collected ids directly into the display modal
@@ -136,6 +149,19 @@ export default function PublicListVocabs_PAGE() {
           );
         }}
         keyExtractor={(item) => "PublicVocab" + item.id}
+        ListFooterComponent={
+          !HAS_reachedEnd && !ARE_vocabsFetching && !IS_loadingMore ? (
+            <Btn
+              text={!IS_loadingMore ? "Load more" : ""}
+              iconRight={
+                IS_loadingMore ? <ActivityIndicator color="white" /> : null
+              }
+              onPress={LOAD_more}
+            />
+          ) : HAS_reachedEnd ? (
+            <Styled_TEXT>The end</Styled_TEXT>
+          ) : null
+        }
       />
       {/* ---------------------- MODALS ---------------------- */}
       <SavePublicVocabToList_MODAL

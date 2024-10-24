@@ -18,6 +18,7 @@ export default function USE_fetchPublicLists() {
           id,
           name,
           description,
+          collected_lang_ids,
           vocabs(count)
         `
         )
