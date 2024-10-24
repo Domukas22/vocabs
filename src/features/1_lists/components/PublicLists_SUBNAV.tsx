@@ -10,7 +10,7 @@ import USE_zustand from "@/src/zustand";
 import { useMemo } from "react";
 import USE_getActiveFilterCount from "../../2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/utils/USE_getActiveFilterCount";
 
-export default function PublicVocabs_SUBNAV({
+export default function PublicLists_SUBNAV({
   search,
   SET_search,
   TOGGLE_displaySettings,
@@ -19,8 +19,8 @@ export default function PublicVocabs_SUBNAV({
   SET_search: (val: string) => void;
   TOGGLE_displaySettings: () => void;
 }) {
-  const { z_vocabDisplay_SETTINGS } = USE_zustand();
-  const activeFilter_COUNT = USE_getActiveFilterCount(z_vocabDisplay_SETTINGS);
+  const { z_listDisplay_SETTINGS } = USE_zustand();
+  const activeFilter_COUNT = USE_getActiveFilterCount(z_listDisplay_SETTINGS);
 
   return (
     <Subnav>

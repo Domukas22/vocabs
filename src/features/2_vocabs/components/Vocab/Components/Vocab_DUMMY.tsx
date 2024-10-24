@@ -16,7 +16,7 @@ import i18next from "i18next";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Image, Pressable, StyleSheet, View } from "react-native";
-import { DisplaySettingsModalView_PROPS } from "../../Modal/DisplaySettings/DisplaySettings_MODAL/DisplaySettings_MODAL";
+import { DisplaySettingsModalView_PROPS } from "../../Modal/DisplaySettings/DisplaySettings_MODAL/VocabDisplaySettings_MODAL";
 
 interface VocabFront_PROPS {
   view: DisplaySettingsModalView_PROPS;

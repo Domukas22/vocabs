@@ -8,7 +8,6 @@ export { default as MyVocabs_HEADER } from "./components/Header/PrivateVocab_HEA
 export { default as PublicVocabs_HEADER } from "./components/Header/PublicVocab_HEADER";
 
 export { default as MyVocabs_SUBNAV } from "./components/Subnav/MyVocabs_SUBNAV";
-export { default as PublicVocabs_SUBNAV } from "./components/Subnav/PublicVocabs_SUBNAV";
 
 export { default as CreateMyVocab_MODAL } from "./components/Modal/CreateVocab_MODAL/CreateVocab_MODAL";
 

@@ -46,7 +46,7 @@ import VocabDifficulty_COUNTS from "@/src/features/1_lists/components/VocabDiffi
 import { MyColors } from "@/src/constants/MyColors";
 
 import Transition_BTN from "@/src/components/Transition_BTN/Transition_BTN";
-import { ICON_arrow } from "@/src/components/icons/icons";
+import { ICON_arrow, ICON_download } from "@/src/components/icons/icons";
 import USE_supabaseVocabsOfAList from "@/src/features/2_vocabs/hooks/USE_supabaseVocabsOfAList";
 import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
 import PublicVocab_BACK from "@/src/features/2_vocabs/components/Vocab/Components/PublicVocab_BACK/PublicVocab_BACK";
@@ -54,10 +54,11 @@ import Vocab from "@/src/features/2_vocabs/components/Vocab/Vocab";
 import vocabs from "../../vocabs";
 import SavePublicVocabToList_MODAL from "@/src/features/2_vocabs/components/Modal/SavePublicVocabToList_MODAL/SavePublicVocabToList_MODAL";
 import USE_fetchOnePublicList from "@/src/features/2_vocabs/hooks/USE_fetchOnePublicList";
-import PublicVocabs_SUBNAV from "@/src/features/1_lists/components/PublicVocabs_SUBNAV";
-import { DisplaySettings_MODAL } from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/DisplaySettings_MODAL";
+import PublicVocabs_SUBNAV from "@/src/components/PublicVocabs_SUBNAV";
+import { VocabDisplaySettings_MODAL } from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/VocabDisplaySettings_MODAL";
 import USE_zustand from "@/src/zustand";
 import USE_langs_2 from "@/src/features/4_languages/hooks/USE_langs_2";
+import USE_debounceSearch from "@/src/hooks/USE_debounceSearch/USE_debounceSearch";
 
 export default function PublicListVocabs_PAGE() {
   const { t } = useTranslation();
@@ -65,7 +66,7 @@ export default function PublicListVocabs_PAGE() {
   const { z_vocabDisplay_SETTINGS } = USE_zustand();
   const toast = useToast();
   const router = useRouter();
-  const [search, SET_search] = useState("");
+  const { search, debouncedSearch, SET_search } = USE_debounceSearch();
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
     { name: "save" },
@@ -84,7 +85,7 @@ export default function PublicListVocabs_PAGE() {
     IS_loadingMore,
     HAS_reachedEnd,
   } = USE_supabaseVocabsOfAList({
-    search,
+    search: debouncedSearch,
     list,
     z_vocabDisplay_SETTINGS,
     paginateBy: 3,
@@ -110,8 +111,9 @@ export default function PublicListVocabs_PAGE() {
         }
         btnRight={
           <Btn
-            iconLeft={<ICON_arrow direction="left" />}
-            style={{ opacity: 0, pointerEvents: "none" }}
+            type="seethrough"
+            iconLeft={<ICON_download />}
+            style={{ borderRadius: 100 }}
           />
         }
         title={list?.name || "..."}
@@ -172,7 +174,7 @@ export default function PublicListVocabs_PAGE() {
         TOGGLE_open={() => TOGGLE_modal("save")}
       />
 
-      <DisplaySettings_MODAL
+      <VocabDisplaySettings_MODAL
         open={modal_STATES.displaySettings}
         TOGGLE_open={() => TOGGLE_modal("displaySettings")}
         collectedLang_IDS={collectedLangIds}

@@ -15,10 +15,10 @@ import USE_zustand, {
 import i18next, { t } from "i18next";
 import { useState, useEffect, useMemo } from "react";
 import { ScrollView, View } from "react-native";
-import { DisplaySettingsModalView_PROPS } from "../DisplaySettings_MODAL/DisplaySettings_MODAL";
+import { DisplaySettingsModalView_PROPS } from "../DisplaySettings_MODAL/VocabDisplaySettings_MODAL";
 
 //
-export default function FrontLanguageToggles_BLOCK({
+export default function VocabFrontLanguageToggles_BLOCK({
   view = "preview",
   langs = [],
   appLang = "en",

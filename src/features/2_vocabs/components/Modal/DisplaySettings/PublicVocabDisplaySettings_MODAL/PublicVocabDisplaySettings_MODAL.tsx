@@ -5,7 +5,7 @@
 import React, { useState } from "react";
 import { ScrollView } from "react-native";
 import { DisplaySettings_PROPS } from "@/src/db/props";
-import DisplaySettings_SUBNAV from "../components/DisplaySettings_SUBNAV/DisplaySettings_SUBNAV";
+import VocabDisplaySettings_SUBNAV from "../components/VocabDisplaySettings_SUBNAV/VocabDisplaySettings_SUBNAV";
 
 import { Language_MODEL } from "@/src/db/watermelon_MODELS";
 
@@ -54,7 +54,9 @@ export default function PublicVocabDisplaySettings_MODAL({
         }
       />
 
-      <DisplaySettings_SUBNAV {...{ view: "preview", SET_view: () => {} }} />
+      <VocabDisplaySettings_SUBNAV
+        {...{ view: "preview", SET_view: () => {} }}
+      />
       <Block>
         <Vocab_DUMMY {...{ displaySettings }} HAS_difficulty={false} />
       </Block>

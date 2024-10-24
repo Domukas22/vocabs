@@ -7,7 +7,7 @@ import Subnav from "@/src/components/Subnav/Subnav";
 import React from "react";
 import { ScrollView } from "react-native";
 
-export default function DisplaySettings_SUBNAV({
+export default function VocabDisplaySettings_SUBNAV({
   view,
   activeFilter_COUNT = 0,
   SET_view,

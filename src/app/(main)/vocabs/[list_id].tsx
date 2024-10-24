@@ -30,7 +30,7 @@ import { withObservables } from "@nozbe/watermelondb/react";
 import { USE_observeList } from "@/src/features/1_lists/hooks/USE_observeList";
 import { sync } from "@/src/db/sync";
 import Btn from "@/src/components/Btn/Btn";
-import { DisplaySettings_MODAL } from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/DisplaySettings_MODAL";
+import { VocabDisplaySettings_MODAL } from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/VocabDisplaySettings_MODAL";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import USE_displaySettings from "@/src/hooks/USE_displaySettings/USE_displaySettings";
 import USE_observedVocabs, {
@@ -146,7 +146,7 @@ function __SingleList_PAGE({
         TOGGLE_open={() => TOGGLE_modal("displaySettings")}
         list_id={selected_LIST?.id}
       /> */}
-      <DisplaySettings_MODAL
+      <VocabDisplaySettings_MODAL
         open={modal_STATES.displaySettings}
         TOGGLE_open={() => TOGGLE_modal("displaySettings")}
         collectedLang_IDS={selected_LIST?.collected_lang_ids}

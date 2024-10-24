@@ -5,7 +5,7 @@ import Label from "@/src/components/Label/Label";
 import { UpdateDisplaySettings_PROPS } from "@/src/hooks/USE_displaySettings/USE_displaySettings";
 import { _DisplaySettings_PROPS } from "@/src/utils/DisplaySettings";
 import { t } from "i18next";
-import { DisplaySettingsModalView_PROPS } from "../DisplaySettings_MODAL/DisplaySettings_MODAL";
+import { DisplaySettingsModalView_PROPS } from "../DisplaySettings_MODAL/VocabDisplaySettings_MODAL";
 import GET_handledDifficulties from "../DisplaySettings_MODAL/utils/GET_handledDifficulties";
 import {
   z_vocabDisplaySettings_PROPS,

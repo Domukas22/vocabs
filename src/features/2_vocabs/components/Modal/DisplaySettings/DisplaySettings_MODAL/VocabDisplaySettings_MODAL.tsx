@@ -5,12 +5,8 @@
 import React, { useMemo, useState } from "react";
 import { ScrollView, View } from "react-native";
 
-import DisplaySettings_SUBNAV from "../components/DisplaySettings_SUBNAV/DisplaySettings_SUBNAV";
+import VocabDisplaySettings_SUBNAV from "../components/VocabDisplaySettings_SUBNAV/VocabDisplaySettings_SUBNAV";
 
-import { MyVocabPreview_BLOCKS } from "../components/VocabPreview_BLOCK/private/MyVocabPreview_BLOCKS";
-import { VocabFilter_BLOCKS } from "../components/VocabFilter_BLOCKS/VocabFilter_BLOCKS";
-import VocabSorting_BLOCKS from "../components/VocabSorting_BLOCKS/VocabSorting_BLOCKS";
-import VocabSortDirection_BLOCK from "../components/VocabSortDirection_BLOCK/VocabSortDirection_BLOCK";
 import Footer from "@/src/components/Footer/Footer";
 import Btn from "@/src/components/Btn/Btn";
 import Big_MODAL from "@/src/components/Modals/Big_MODAL/Big_MODAL";
@@ -28,15 +24,15 @@ import USE_zustand from "@/src/zustand";
 import USE_displaySettings from "@/src/hooks/USE_displaySettings/USE_displaySettings";
 import GET_activeFilterCount from "./utils/USE_getActiveFilterCount";
 import USE_getActiveFilterCount from "./utils/USE_getActiveFilterCount";
-import PreviewToggles_BLOCK from "../components/PreviewToggles_BLOCK";
+import VocabPreviewToggles_BLOCK from "../components/VocabPreviewToggles_BLOCK";
 import DifficultyFilters_BLOCK from "../components/DifficultyFilters_BLOCK";
-import Sorting_BLOCK from "../Sorting_BLOCK";
-import SortDirection_BLOCK from "../SortDirection_BLOCK";
+import VocabSorting_BLOCK from "../VocabSorting_BLOCK";
+import VocabSortDirection_BLOCK from "../VocabSortDirection_BLOCK";
 import Label from "@/src/components/Label/Label";
-import FrontLanguageToggles_BLOCK from "../components/FrontLanguageToggles_BLOCK";
+import VocabFrontLanguageToggles_BLOCK from "../components/VocabFrontLanguageToggles_BLOCK";
 import USE_langs from "@/src/features/4_languages/hooks/USE_langs";
 import i18next from "i18next";
-import LangFilters_BLOCK from "../components/LangFilters_BLOCK";
+import VocabLangFilters_BLOCK from "../components/VocabLangFilters_BLOCK";
 import USE_langs_2 from "@/src/features/4_languages/hooks/USE_langs_2";
 
 interface DisplaySettingsModal_PROPS {
@@ -48,7 +44,7 @@ interface DisplaySettingsModal_PROPS {
 
 export type DisplaySettingsModalView_PROPS = "preview" | "sort" | "filter";
 
-export function DisplaySettings_MODAL({
+export function VocabDisplaySettings_MODAL({
   open,
   HAS_difficulties = true,
   collectedLang_IDS = [],
@@ -84,11 +80,13 @@ export function DisplaySettings_MODAL({
         }
       />
 
-      <DisplaySettings_SUBNAV {...{ view, SET_view, activeFilter_COUNT }} />
+      <VocabDisplaySettings_SUBNAV
+        {...{ view, SET_view, activeFilter_COUNT }}
+      />
       <Vocab_DUMMY {...{ view, z_vocabDisplay_SETTINGS }} />
 
       <ScrollView style={{ flex: 1 }}>
-        <PreviewToggles_BLOCK
+        <VocabPreviewToggles_BLOCK
           {...{
             view,
             z_vocabDisplay_SETTINGS,
@@ -96,7 +94,7 @@ export function DisplaySettings_MODAL({
             HAS_difficulties,
           }}
         />
-        <FrontLanguageToggles_BLOCK
+        <VocabFrontLanguageToggles_BLOCK
           {...{
             view,
             langs,
@@ -105,7 +103,7 @@ export function DisplaySettings_MODAL({
             z_SET_vocabDisplaySettings,
           }}
         />
-        <Sorting_BLOCK
+        <VocabSorting_BLOCK
           {...{
             view,
             z_vocabDisplay_SETTINGS,
@@ -114,7 +112,7 @@ export function DisplaySettings_MODAL({
           }}
         />
 
-        <SortDirection_BLOCK
+        <VocabSortDirection_BLOCK
           {...{
             view,
             z_vocabDisplay_SETTINGS,
@@ -130,7 +128,7 @@ export function DisplaySettings_MODAL({
             HAS_difficulties,
           }}
         />
-        <LangFilters_BLOCK
+        <VocabLangFilters_BLOCK
           {...{
             view,
             langs,

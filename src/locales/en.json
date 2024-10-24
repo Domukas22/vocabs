@@ -173,7 +173,8 @@
     "noVocabsFound": "No vocabs found",
     "sortVocabs": "Sort vocabs",
     "username": "Username",
-    "email": "Email"
+    "email": "Email",
+    "sortLists": "Sort lists"
   },
   "modal": {
     "displaySettings": {

@@ -176,7 +176,8 @@
     "noVocabsFound": "Keine Vokabel gefunden",
     "sortVocabs": "Vokabeln sortieren",
     "username": "Benutzername",
-    "email": "Email"
+    "email": "Email",
+    "sortLists": "Listen sortieren"
   },
   "modal": {
     "displaySettings": {

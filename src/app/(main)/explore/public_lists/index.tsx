@@ -5,7 +5,7 @@
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
 import { useRouter } from "expo-router";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { List_MODEL } from "@/src/db/watermelon_MODELS";
 
 import { useTranslation } from "react-i18next";
@@ -13,7 +13,7 @@ import USE_highlighedId from "@/src/hooks/USE_highlighedId/USE_highlighedId";
 
 import React from "react";
 import { useToast } from "react-native-toast-notifications";
-import { FlatList, View } from "react-native";
+import { ActivityIndicator, FlatList, View } from "react-native";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import Header from "@/src/components/Header/Header";
 import Btn from "@/src/components/Btn/Btn";
@@ -31,29 +31,61 @@ import {
   SET_localStorageDisplaySettings,
 } from "@/src/utils/DisplaySettings";
 import USE_displaySettings from "@/src/hooks/USE_displaySettings/USE_displaySettings";
-import { DisplaySettings_MODAL } from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/DisplaySettings_MODAL";
+import { VocabDisplaySettings_MODAL } from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/VocabDisplaySettings_MODAL";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
-import PublicVocabs_SUBNAV from "@/src/features/1_lists/components/PublicVocabs_SUBNAV";
+import PublicVocabs_SUBNAV from "@/src/components/PublicVocabs_SUBNAV";
+import USE_fetchPublicSupabaseLists from "@/src/features/2_vocabs/hooks/USE_fetchPublicSupabaseLists";
+import USE_zustand from "@/src/zustand";
+import PublicLists_SUBNAV from "@/src/features/1_lists/components/PublicLists_SUBNAV";
+import USE_debounceSearch from "@/src/hooks/USE_debounceSearch/USE_debounceSearch";
+import ListDisplaySettings_MODAL from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/ListDisplaySettings_MODAL";
+import USE_collectPublicListLangs from "@/src/features/2_vocabs/hooks/USE_collectPublicListLangs";
+
+function Hooss(delay: number) {
+  const [search, SET_search] = useState("");
+  const [debouncedSearch, SET_debouncedSearch] = useState(search);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      SET_debouncedSearch(search);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [search, delay]);
+
+  return { search, SET_search, debouncedSearch };
+}
 
 export default function PublicLists_PAGE() {
   const router = useRouter();
-  const [search, SET_search] = useState("");
+  const { search, debouncedSearch, SET_search } = USE_debounceSearch();
+  const { z_listDisplay_SETTINGS } = USE_zustand();
+  const { collectedLang_IDS, ARE_langIdsCollecting, collectLangIds_ERROR } =
+    USE_collectPublicListLangs();
 
-  const { FETCH_publicLists, ARE_publicListsFetching, publicLists_ERROR } =
-    USE_fetchSupabaseLists();
+  const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
+    { name: "displaySettings" },
+  ]);
 
-  const [lists, SET_lists] = useState<List_MODEL[]>([]);
+  const {
+    publicLists,
+    ARE_listsFetching,
+    publicLists_ERROR,
+    LOAD_more,
+    IS_loadingMore,
+    HAS_reachedEnd,
+  } = USE_fetchPublicSupabaseLists({
+    search: debouncedSearch,
+    z_listDisplay_SETTINGS,
+    paginateBy: 2,
+  });
 
-  const GET_lists = async () => {
-    const lists = await FETCH_publicLists();
-    if (lists?.success && lists.data) {
-      SET_lists(lists.data);
-    }
-  };
-
-  useEffect(() => {
-    GET_lists();
-  }, []);
+  // const collectedLangIds = useMemo(() => {
+  //   // infinite loop occurs if not defined
+  //   return list?.collected_lang_ids || [];
+  // }, [list?.collected_lang_ids]);
 
   return (
     <Page_WRAP>
@@ -75,8 +107,12 @@ export default function PublicLists_PAGE() {
         title="📁 Public lists"
       />
 
+      <PublicLists_SUBNAV
+        TOGGLE_displaySettings={() => TOGGLE_modal("displaySettings")}
+        {...{ search, SET_search }}
+      />
       <Styled_FLATLIST
-        data={lists}
+        data={publicLists}
         ListHeaderComponent={
           <Styled_TEXT
             type="text_22_bold"
@@ -116,18 +152,41 @@ export default function PublicLists_PAGE() {
                       justifyContent: "flex-end",
                     }}
                   >
-                    {item.collected_lang_ids.map((lang_id, index) => (
-                      <ICON_flag
-                        lang={lang_id}
-                        key={item.id + lang_id + index}
-                      />
-                    ))}
+                    {item.collected_lang_ids?.map(
+                      (lang_id: string, index: number) => (
+                        <ICON_flag
+                          lang={lang_id}
+                          key={item.id + lang_id + index}
+                        />
+                      )
+                    )}
                   </View>
                 )}
             </Transition_BTN>
           );
         }}
         keyExtractor={(item) => "PublicVocab" + item.id}
+        ListFooterComponent={
+          !HAS_reachedEnd && !ARE_listsFetching ? (
+            <Btn
+              text={!IS_loadingMore ? "Load more" : ""}
+              iconRight={
+                IS_loadingMore ? <ActivityIndicator color="white" /> : null
+              }
+              onPress={LOAD_more}
+            />
+          ) : HAS_reachedEnd ? (
+            <Styled_TEXT>The end</Styled_TEXT>
+          ) : null
+        }
+      />
+
+      {/* ------------------------ MODALS --------------------------------- */}
+
+      <ListDisplaySettings_MODAL
+        open={modal_STATES.displaySettings}
+        TOGGLE_open={() => TOGGLE_modal("displaySettings")}
+        collectedLang_IDS={collectedLang_IDS}
       />
     </Page_WRAP>
   );

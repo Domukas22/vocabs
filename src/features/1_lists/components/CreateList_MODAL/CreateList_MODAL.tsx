@@ -140,7 +140,7 @@ export default function CreateList_MODAL({
             {...{ value, error, isSubmitted, isFocused, setIsFocused }}
             SET_value={(val) => {
               onChange(val);
-              RESET_error();
+              RESET_createListError();
             }}
             value={value}
             props={{ keyboardType: "default" }} // Changed to "default" for list names

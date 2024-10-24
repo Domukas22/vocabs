@@ -13,13 +13,13 @@ import Label from "@/src/components/Label/Label";
 import { UpdateDisplaySettings_PROPS } from "@/src/hooks/USE_displaySettings/USE_displaySettings";
 import { _DisplaySettings_PROPS } from "@/src/utils/DisplaySettings";
 import { t } from "i18next";
-import { DisplaySettingsModalView_PROPS } from "./DisplaySettings_MODAL/DisplaySettings_MODAL";
+import { DisplaySettingsModalView_PROPS } from "./DisplaySettings_MODAL/VocabDisplaySettings_MODAL";
 import {
   z_vocabDisplaySettings_PROPS,
   z_setVocabDisplaySettings_PROPS,
 } from "@/src/zustand";
 
-export default function Sorting_BLOCK({
+export default function VocabSorting_BLOCK({
   view = "preview",
   z_vocabDisplay_SETTINGS,
   HAS_difficulties = true,

@@ -6,13 +6,13 @@ import { UpdateDisplaySettings_PROPS } from "@/src/hooks/USE_displaySettings/USE
 import { _DisplaySettings_PROPS } from "@/src/utils/DisplaySettings";
 import { t } from "i18next";
 import { View } from "react-native";
-import { DisplaySettingsModalView_PROPS } from "../DisplaySettings_MODAL/DisplaySettings_MODAL";
+import { DisplaySettingsModalView_PROPS } from "../DisplaySettings_MODAL/VocabDisplaySettings_MODAL";
 import {
   z_vocabDisplaySettings_PROPS,
   z_setVocabDisplaySettings_PROPS,
 } from "@/src/zustand";
 
-export default function PreviewToggles_BLOCK({
+export default function VocabPreviewToggles_BLOCK({
   view,
   z_vocabDisplay_SETTINGS,
   z_SET_vocabDisplaySettings,
