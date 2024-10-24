@@ -5,7 +5,7 @@
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { List_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
@@ -41,7 +41,7 @@ import { MyColors } from "@/src/constants/MyColors";
 
 import Transition_BTN from "@/src/components/Transition_BTN/Transition_BTN";
 import { ICON_arrow } from "@/src/components/icons/icons";
-import USE_fetchVocabsOfAPublicList from "@/src/features/2_vocabs/hooks/USE_fetchVocabsOfAPublicList";
+import USE_supabaseVocabsOfAList from "@/src/features/2_vocabs/hooks/USE_supabaseVocabsOfAList";
 import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
 import PublicVocab_BACK from "@/src/features/2_vocabs/components/Vocab/Components/PublicVocab_BACK/PublicVocab_BACK";
 import Vocab from "@/src/features/2_vocabs/components/Vocab/Vocab";
@@ -50,46 +50,38 @@ import SavePublicVocabToList_MODAL from "@/src/features/2_vocabs/components/Moda
 import USE_fetchOnePublicList from "@/src/features/2_vocabs/hooks/USE_fetchOnePublicList";
 import PublicVocabs_SUBNAV from "@/src/features/1_lists/components/PublicVocabs_SUBNAV";
 import { DisplaySettings_MODAL } from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/DisplaySettings_MODAL";
+import USE_zustand from "@/src/zustand";
+import USE_langs_2 from "@/src/features/4_languages/hooks/USE_langs_2";
 
 export default function PublicListVocabs_PAGE() {
   const { user } = USE_auth();
   const { t } = useTranslation();
+  const { id } = useLocalSearchParams();
+  const { z_display_SETTINGS } = USE_zustand();
   const toast = useToast();
   const router = useRouter();
-  const { id } = useLocalSearchParams();
-
-  const { FETCH_vocabsOfPublicList, ARE_vocabsFetching, vocabs_ERROR } =
-    USE_fetchVocabsOfAPublicList();
-  const { FETCH_onePublicList, IS_publicListFetching, publicList_ERROR } =
-    USE_fetchOnePublicList();
+  const [search, SET_search] = useState("");
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
     { name: "save" },
     { name: "displaySettings" },
   ]);
 
-  const [search, SET_search] = useState("");
+  const { list, IS_listFetching, listFetch_ERROR } = USE_fetchOnePublicList(
+    typeof id === "string" ? id : ""
+  );
+  const { vocabs, ARE_vocabsFetching, fetchVocabs_ERROR } =
+    USE_supabaseVocabsOfAList({
+      search,
+      list_id: typeof id === "string" ? id : "",
+      z_display_SETTINGS,
+    });
 
-  const [vocabs, SET_vocabs] = useState<Vocab_MODEL[]>([]);
-  const [list, SET_list] = useState<List_MODEL | undefined>(undefined);
-
-  const GET_vocabs = async () => {
-    const vocabs = await FETCH_vocabsOfPublicList(id);
-    if (vocabs?.success && vocabs.data) {
-      SET_vocabs(vocabs.data);
-    }
-  };
-  const GET_list = async () => {
-    const list = await FETCH_onePublicList(id);
-    if (list?.success && list.data) {
-      SET_list(list.data);
-    }
-  };
-
-  useEffect(() => {
-    GET_vocabs();
-    GET_list();
-  }, []);
+  const collectedLangIds = useMemo(() => {
+    // if this is not defiend and we pass the collected ids directly into the display modal
+    // it creates an infinite loop for some reaosn
+    return list?.collected_lang_ids || [];
+  }, [list?.collected_lang_ids]);
 
   const [target_VOCAB, SET_targetVocab] = useState<Vocab_MODEL | undefined>();
 
@@ -162,6 +154,8 @@ export default function PublicListVocabs_PAGE() {
       <DisplaySettings_MODAL
         open={modal_STATES.displaySettings}
         TOGGLE_open={() => TOGGLE_modal("displaySettings")}
+        // collectedLang_IDS={["en", "de"]}
+        collectedLang_IDS={collectedLangIds}
         HAS_difficulties={false}
       />
     </Page_WRAP>

@@ -29,6 +29,7 @@ import Header from "@/src/components/Header/Header";
 import { ChooseAList_FLATLIST } from "@/src/features/1_lists/components/ChooseAList_FLATLIST/ChooseAList_FLATLIST";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
+import USE_collectListLangs from "@/src/features/1_lists/hooks/USE_collectListLangs";
 
 interface SavePublicVocabToListModal_PROPS {
   vocab: Vocab_MODEL | undefined;
@@ -48,12 +49,29 @@ export default function SavePublicVocabToList_MODAL({
   ]);
 
   const { user } = USE_auth();
+
   const { CREATE_vocab, IS_creatingVocab, db_ERROR, RESET_dbError } =
     USE_createVocab();
 
   const [selected_LIST, SET_selectedList] = useState<List_MODEL | undefined>(
     undefined
   );
+
+  const {
+    COLLECT_langs,
+    IS_collectingLangs,
+    collectLangs_ERROR,
+    RESET_collectLangsError,
+  } = USE_collectListLangs();
+
+  const collectLangs = async (list_id: string) => {
+    const updated_LIST = await COLLECT_langs({
+      list_id,
+    });
+    if (!updated_LIST.success) {
+      console.error(updated_LIST.msg); // Log internal message for debugging.
+    }
+  };
 
   const create = async () => {
     const result = await CREATE_vocab({
@@ -63,6 +81,7 @@ export default function SavePublicVocabToList_MODAL({
       translations: vocab?.trs || [],
       onSuccess: (new_VOCAB: Vocab_MODEL) => {
         onSuccess(new_VOCAB);
+        collectLangs(new_VOCAB?.list_id || "");
       },
     });
 

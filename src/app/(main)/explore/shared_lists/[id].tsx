@@ -41,7 +41,7 @@ import { MyColors } from "@/src/constants/MyColors";
 
 import Transition_BTN from "@/src/components/Transition_BTN/Transition_BTN";
 import { ICON_arrow } from "@/src/components/icons/icons";
-import USE_fetchVocabsOfAPublicList from "@/src/features/2_vocabs/hooks/USE_fetchVocabsOfAPublicList";
+import USE_supabaseVocabsOfAList from "@/src/features/2_vocabs/hooks/USE_supabaseVocabsOfAList";
 import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
 import PublicVocab_BACK from "@/src/features/2_vocabs/components/Vocab/Components/PublicVocab_BACK/PublicVocab_BACK";
 import Vocab from "@/src/features/2_vocabs/components/Vocab/Vocab";
@@ -58,7 +58,7 @@ export default function PublicListVocabs_PAGE() {
   const { id } = useLocalSearchParams();
 
   const { FETCH_vocabsOfPublicList, ARE_vocabsFetching, vocabs_ERROR } =
-    USE_fetchVocabsOfAPublicList();
+    USE_supabaseVocabsOfAList();
   const { FETCH_oneSharedList, IS_sharedListFetching, sharedList_ERROR } =
     USE_fetchOneSharedList();
 

@@ -83,7 +83,7 @@ function Main_LAYOUT() {
             if (userData) {
               // await executeSync(); // Sync after fetching user data
               // router.push("/(main)/explore/public_lists");
-              router.push("/(main)/vocabs");
+              router.push("/(main)/explore/public_lists");
             }
           } else {
             SET_auth(null);
@@ -138,13 +138,13 @@ export async function syncLanguages() {
     for (const lang of languages) {
       // Check if the language already exists in WatermelonDB
       const existingLang = await Languages_DB.query(
-        Q.where("lang_id", lang.id)
+        Q.where("lang_id", lang?.lang_id)
       ).fetch();
 
       if (!existingLang || existingLang.length === 0) {
         // If it doesn't exist, create a new record
         await Languages_DB.create((l) => {
-          l._raw.id = lang.id;
+          l._raw.id = lang?.lang_id;
           l.lang_id = lang.lang_id;
           l.lang_in_en = lang.lang_in_en;
           l.lang_in_de = lang.lang_in_de;

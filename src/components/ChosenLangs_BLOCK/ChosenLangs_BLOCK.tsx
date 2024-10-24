@@ -50,7 +50,7 @@ export default function ChosenLangs_BLOCK({
         {selected_LANGS?.map((lang: Language_MODEL) => {
           return (
             <Btn
-              key={"chosen lang" + lang.id}
+              key={"chosen lang" + lang?.lang_id}
               type="active"
               iconLeft={
                 <View style={{ marginRight: 4 }}>

@@ -19,7 +19,7 @@ export default function SelectedLang_SCROLLER({
       {selected_LANGS?.map((lang, i) => {
         return (
           <Btn
-            key={lang?.id + "tiny selected lang buttons"}
+            key={lang?.lang_id + "tiny selected lang buttons"}
             iconLeft={<ICON_flag lang={lang?.lang_id} />}
             text={lang?.lang_id?.toUpperCase()}
             iconRight={<ICON_X color="primary" rotate={true} />}

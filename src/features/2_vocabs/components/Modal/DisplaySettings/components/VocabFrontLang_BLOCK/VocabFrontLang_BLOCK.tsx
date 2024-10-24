@@ -31,7 +31,7 @@ export default function VocabFrontLang_BLOCK({
 }) {
   const { languages } = USE_langs();
   const lang = useMemo(
-    () => languages.find((lang) => lang.id === selectedLang_ID),
+    () => languages.find((lang) => lang?.lang_id === selectedLang_ID),
     [languages, selectedLang_ID]
   );
 
@@ -44,7 +44,7 @@ export default function VocabFrontLang_BLOCK({
       <Label>{t("label.vocabFrontLang")}</Label>
       <View style={{ gap: 8, flexDirection: "row" }}>
         <Btn
-          iconLeft={<ICON_flag lang={lang?.id} />}
+          iconLeft={<ICON_flag lang={lang?.lang_id} />}
           text={lang?.[`lang_in_${appLang}`]}
           iconRight={<ICON_dropdownArrow />}
           onPress={TOGGLE_modal}

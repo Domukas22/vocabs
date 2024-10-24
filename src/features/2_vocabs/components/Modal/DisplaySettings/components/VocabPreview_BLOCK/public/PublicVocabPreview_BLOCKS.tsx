@@ -74,26 +74,26 @@ export default function PublicVocabPreview_BLOCKS({
           <ScrollView>
             {available_LANGS.map((lang, index) => (
               <Btn
-                key={"Select lang" + lang.id + lang.lang_in_en}
+                key={"Select lang" + lang?.lang_id + lang.lang_in_en}
                 iconLeft={
                   <View style={{ marginRight: 4 }}>
-                    <ICON_flag lang={lang?.id} big={true} />
+                    <ICON_flag lang={lang?.lang_id} big={true} />
                   </View>
                 }
                 text={appLang === "en" ? lang.lang_in_en : lang.lang_in_de}
                 iconRight={
-                  displaySettings.frontTrLang_ID === lang.id && (
+                  displaySettings.frontTrLang_ID === lang?.lang_id && (
                     <ICON_checkMark color="primary" />
                   )
                 }
                 onPress={() => {
                   SET_displaySettings((p) => ({
                     ...p,
-                    frontTrLang_ID: lang.id,
+                    frontTrLang_ID: lang?.lang_id,
                   }));
                 }}
                 type={
-                  displaySettings.frontTrLang_ID === lang.id
+                  displaySettings.frontTrLang_ID === lang?.lang_id
                     ? "active"
                     : "simple"
                 }

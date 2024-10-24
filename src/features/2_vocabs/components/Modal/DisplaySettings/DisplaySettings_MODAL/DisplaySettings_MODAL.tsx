@@ -37,6 +37,7 @@ import FrontLanguageToggles_BLOCK from "../components/FrontLanguageToggles_BLOCK
 import USE_langs from "@/src/features/4_languages/hooks/USE_langs";
 import i18next from "i18next";
 import LangFilters_BLOCK from "../components/LangFilters_BLOCK";
+import USE_langs_2 from "@/src/features/4_languages/hooks/USE_langs_2";
 
 interface DisplaySettingsModal_PROPS {
   open: boolean;
@@ -58,7 +59,10 @@ export function DisplaySettings_MODAL({
 
   const { z_display_SETTINGS, z_SET_displaySettings } = USE_zustand();
   const activeFilter_COUNT = USE_getActiveFilterCount(z_display_SETTINGS);
-  const langs = USE_langs({ lang_ids: collectedLang_IDS });
+  const { langs, ARE_langsFetching, fetchLangs_ERROR } = USE_langs_2({
+    lang_ids: collectedLang_IDS,
+  });
+
   const appLang = useMemo(() => i18next.language, [i18next.language]);
 
   // TODO: Create a "display settings correction" function, which:

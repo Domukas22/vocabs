@@ -54,11 +54,11 @@ export default function TinyLang_SCROLLER({
       >
         {langs?.map((lang) => (
           <Btn
-            key={lang.id + "tiny selected lang buttons"}
-            iconLeft={<ICON_flag lang={lang.id} />}
-            text={lang?.id?.toUpperCase()}
+            key={lang?.lang_id + "tiny selected lang buttons"}
+            iconLeft={<ICON_flag lang={lang?.lang_id} />}
+            text={lang?.lang_id?.toUpperCase()}
             iconRight={<ICON_X color="primary" rotate={true} />}
-            onPress={() => REMOVE_lang(lang.id)}
+            onPress={() => REMOVE_lang(lang?.lang_id)}
             type="active"
             tiny={true}
             style={{ marginRight: 8 }}

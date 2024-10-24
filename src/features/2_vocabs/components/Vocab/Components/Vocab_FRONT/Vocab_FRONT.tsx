@@ -49,7 +49,7 @@ export default function Vocab_FRONT({
   const { languages } = USE_langs();
   const appLang = useMemo(() => i18next.language, [i18next.language]);
   const targetLang = useMemo(
-    () => languages?.find((lang) => lang.id === frontTrLang_ID),
+    () => languages?.find((lang) => lang?.lang_id === frontTrLang_ID),
     [frontTrLang_ID]
   );
 

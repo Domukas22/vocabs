@@ -110,13 +110,8 @@ export class ListAccess_MODEL extends Model {
 // ===================================================================================
 export class Vocab_MODEL extends Model {
   static table = "vocabs";
-  // static associations: Associations = {
-  //   list: { type: "belongs_to", key: "list_id" },
-  // };
 
-  // @relation("lists", "list_id") list!: List_MODEL;
   @text("list_id") list_id!: string | undefined;
-
   @field("difficulty") difficulty!: 1 | 2 | 3;
   @text("description") description!: string | undefined;
   @json("trs", sanitizeTranslations) trs!: tr_PROPS[] | undefined;
