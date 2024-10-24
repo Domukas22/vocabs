@@ -30,9 +30,9 @@ export default function Vocab_FRONT({
   TOGGLE_open,
   highlighted,
 }: VocabFront_PROPS) {
-  const { z_display_SETTINGS } = USE_zustand();
+  const { z_vocabDisplay_SETTINGS } = USE_zustand();
   const { SHOW_description, SHOW_flags, SHOW_difficulty, frontTrLang_ID } =
-    z_display_SETTINGS;
+    z_vocabDisplay_SETTINGS;
 
   const front_TR = useMemo(() => {
     return trs && trs.length > 0

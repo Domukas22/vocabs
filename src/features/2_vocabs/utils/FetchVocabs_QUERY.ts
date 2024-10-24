@@ -6,18 +6,18 @@ import { Q, Query } from "@nozbe/watermelondb";
 import { Vocabs_DB } from "@/src/db";
 import { List_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 import { _DisplaySettings_PROPS } from "@/src/utils/DisplaySettings";
-import { DisplaySettings_PROPS } from "@/src/zustand";
+import { z_vocabDisplaySettings_PROPS } from "@/src/zustand";
 
 export interface VocabFilter_PROPS {
   search?: string;
   list_id?: string | undefined;
-  z_display_SETTINGS: DisplaySettings_PROPS | undefined;
+  z_vocabDisplay_SETTINGS: z_vocabDisplaySettings_PROPS | undefined;
 }
 
 const FetchVocabs_QUERY = ({
   search,
   list_id,
-  z_display_SETTINGS,
+  z_vocabDisplay_SETTINGS,
 }: VocabFilter_PROPS): Query<Vocab_MODEL> => {
   // Start with the base query
   let query = Vocabs_DB?.query();
@@ -30,21 +30,21 @@ const FetchVocabs_QUERY = ({
   }
 
   if (
-    z_display_SETTINGS?.difficultyFilters &&
-    z_display_SETTINGS?.difficultyFilters.length > 0
+    z_vocabDisplay_SETTINGS?.difficultyFilters &&
+    z_vocabDisplay_SETTINGS?.difficultyFilters.length > 0
   ) {
     conditions.push(
-      Q.where("difficulty", Q.oneOf(z_display_SETTINGS?.difficultyFilters))
+      Q.where("difficulty", Q.oneOf(z_vocabDisplay_SETTINGS?.difficultyFilters))
     );
   }
 
   if (
-    z_display_SETTINGS?.langFilters &&
-    z_display_SETTINGS?.langFilters.length > 0
+    z_vocabDisplay_SETTINGS?.langFilters &&
+    z_vocabDisplay_SETTINGS?.langFilters.length > 0
   ) {
     conditions.push(
       Q.or(
-        z_display_SETTINGS?.langFilters.map((lang) =>
+        z_vocabDisplay_SETTINGS?.langFilters.map((lang) =>
           Q.where("lang_ids", Q.like(`%${Q.sanitizeLikeString(lang)}%`))
         )
       )
@@ -59,7 +59,7 @@ const FetchVocabs_QUERY = ({
     );
   }
   // Handle sorting
-  switch (z_display_SETTINGS?.sorting) {
+  switch (z_vocabDisplay_SETTINGS?.sorting) {
     case "shuffle":
       // query = query.extend(
       //   Q.sortBy("difficulty", sort.direction === "ascending" ? Q.asc : Q.desc)
@@ -69,7 +69,9 @@ const FetchVocabs_QUERY = ({
       query = query.extend(
         Q.sortBy(
           "difficulty",
-          z_display_SETTINGS?.sortDirection === "ascending" ? Q.asc : Q.desc
+          z_vocabDisplay_SETTINGS?.sortDirection === "ascending"
+            ? Q.asc
+            : Q.desc
         )
       );
       break;
@@ -77,7 +79,9 @@ const FetchVocabs_QUERY = ({
       query = query.extend(
         Q.sortBy(
           "created_at",
-          z_display_SETTINGS?.sortDirection === "ascending" ? Q.asc : Q.desc
+          z_vocabDisplay_SETTINGS?.sortDirection === "ascending"
+            ? Q.asc
+            : Q.desc
         )
       );
 

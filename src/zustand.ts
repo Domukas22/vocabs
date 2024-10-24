@@ -6,7 +6,12 @@
 import { create } from "zustand";
 import { Vocab_MODEL, List_MODEL } from "./db/watermelon_MODELS";
 
-export type DisplaySettings_PROPS = {
+export type z_listDisplaySettings_PROPS = {
+  sorting: "date";
+  sortDirection: "ascending" | "descending";
+  langFilters: string[];
+};
+export type z_vocabDisplaySettings_PROPS = {
   SHOW_description: boolean;
   SHOW_flags: boolean;
   SHOW_difficulty: boolean;
@@ -17,17 +22,29 @@ export type DisplaySettings_PROPS = {
   langFilters: string[]; // Assuming language filters are represented by language codes or IDs as strings
 };
 
-export type SetDisplaySettings_PROPS = (
-  newSettings: Partial<DisplaySettings_PROPS>
+export type z_setlistDisplaySettings_PROPS = (
+  newSettings: Partial<z_listDisplaySettings_PROPS>
+) => void;
+
+export type z_setVocabDisplaySettings_PROPS = (
+  newSettings: Partial<z_vocabDisplaySettings_PROPS>
 ) => void;
 
 interface ZustandStore {
-  z_display_SETTINGS: DisplaySettings_PROPS;
-  z_SET_displaySettings: SetDisplaySettings_PROPS;
+  z_vocabDisplay_SETTINGS: z_vocabDisplaySettings_PROPS;
+  z_SET_vocabDisplaySettings: z_setVocabDisplaySettings_PROPS;
+
+  z_listDisplay_SETTINGS: z_listDisplaySettings_PROPS;
+  z_SET_listDisplaySettings: z_setlistDisplaySettings_PROPS;
 }
 
 const USE_zustand = create<ZustandStore>((set) => ({
-  z_display_SETTINGS: {
+  z_listDisplay_SETTINGS: {
+    sorting: "date",
+    sortDirection: "ascending",
+    langFilters: [],
+  },
+  z_vocabDisplay_SETTINGS: {
     SHOW_description: true,
     SHOW_flags: true,
     SHOW_difficulty: true,
@@ -37,10 +54,19 @@ const USE_zustand = create<ZustandStore>((set) => ({
     difficultyFilters: [],
     langFilters: [],
   },
-  z_SET_displaySettings: (newSettings) => {
+
+  z_SET_listDisplaySettings: (newSettings) => {
     set((state) => ({
-      z_display_SETTINGS: {
-        ...state.z_display_SETTINGS,
+      z_listDisplay_SETTINGS: {
+        ...state.z_listDisplay_SETTINGS,
+        ...newSettings,
+      },
+    }));
+  },
+  z_SET_vocabDisplaySettings: (newSettings) => {
+    set((state) => ({
+      z_vocabDisplay_SETTINGS: {
+        ...state.z_vocabDisplay_SETTINGS,
         ...newSettings,
       },
     }));

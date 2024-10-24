@@ -1,7 +1,19 @@
 import { supabase } from "@/src/lib/supabase";
 import { useState, useCallback } from "react";
 
-export default function USE_fetchPublicLists() {
+// const {
+//   publicLists_ERROR,
+//   ARE_listsFetching,
+//   fetchLists_ERROR,
+//   LOAD_more,
+//   IS_loadingMore,
+// } = USE_fetchPublicSupabaseLists({
+//   search,
+//   z_listDisplay_SETTINGS,
+//   paginateBy: 10
+// });
+
+export default function USE_fetchPublicSupabaseLists() {
   const [ARE_publicListsFetching, SET_publicListsFetching] = useState(false);
   const [publicLists_ERROR, SET_error] = useState<string | null>(null);
 

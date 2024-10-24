@@ -76,11 +76,11 @@ function __SingleList_PAGE({
     SET_toUpdateVocab(!clear && vocab ? vocab : undefined);
     TOGGLE_modal("update");
   }
-  const { z_display_SETTINGS } = USE_zustand();
+  const { z_vocabDisplay_SETTINGS } = USE_zustand();
   const vocabs = USE_observedVocabs({
     search,
     list_id: selected_LIST?.id,
-    z_display_SETTINGS,
+    z_vocabDisplay_SETTINGS,
   });
 
   return (

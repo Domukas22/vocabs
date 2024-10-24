@@ -3,13 +3,20 @@ import {
   BUILD_fetchVocabsOfPublicListQuery,
   VocabFilter_PROPS,
 } from "../utils/BUILD_fetchVocabsOfPublicListQuery";
+import { List_MODEL } from "@/src/db/watermelon_MODELS";
+import { z_vocabDisplaySettings_PROPS } from "@/src/zustand";
 
 export default function USE_supabaseVocabsOfAList({
   search,
-  list_id,
-  z_display_SETTINGS,
+  list,
+  z_vocabDisplay_SETTINGS,
   paginateBy = 10, // Default value for pagination
-}: VocabFilter_PROPS & { paginateBy?: number }) {
+}: {
+  search: string;
+  list: List_MODEL | undefined;
+  z_vocabDisplay_SETTINGS: z_vocabDisplaySettings_PROPS;
+  paginateBy?: number;
+}) {
   const [ARE_vocabsFetching, SET_vocabsFetching] = useState(false);
   const [fetchVocabs_ERROR, SET_error] = useState<string | null>(null);
   const [vocabs, SET_vocabs] = useState<any[]>([]);
@@ -26,11 +33,11 @@ export default function USE_supabaseVocabsOfAList({
     fetchVocabs({ start: 0, end: paginateBy }); // Fetch the initial set of vocabs
     SET_hasReachedEnd(false);
   }, [
-    list_id,
+    list?.id,
     search,
-    z_display_SETTINGS?.langFilters,
-    z_display_SETTINGS?.sorting,
-    z_display_SETTINGS?.sortDirection,
+    z_vocabDisplay_SETTINGS?.langFilters,
+    z_vocabDisplay_SETTINGS?.sorting,
+    z_vocabDisplay_SETTINGS?.sortDirection,
   ]); // Depend on relevant changes
 
   const fetchVocabs = async ({
@@ -40,9 +47,9 @@ export default function USE_supabaseVocabsOfAList({
     start: number;
     end: number;
   }) => {
-    if (!list_id) {
-      console.error("🔴 List ID is required. 🔴");
-      SET_error("🔴 List ID is required. 🔴");
+    if (!list?.id) {
+      // console.error("🔴 List ID is required. 🔴");
+      // SET_error("🔴 List ID is required. 🔴");
       SET_vocabs([]);
       return;
     }
@@ -54,8 +61,8 @@ export default function USE_supabaseVocabsOfAList({
       // Build the query using the helper function
       const query = BUILD_fetchVocabsOfPublicListQuery({
         search,
-        list_id,
-        z_display_SETTINGS,
+        list_id: list?.id,
+        z_vocabDisplay_SETTINGS,
         start,
         end,
       });

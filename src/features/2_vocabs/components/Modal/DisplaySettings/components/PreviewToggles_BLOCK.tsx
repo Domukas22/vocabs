@@ -7,16 +7,19 @@ import { _DisplaySettings_PROPS } from "@/src/utils/DisplaySettings";
 import { t } from "i18next";
 import { View } from "react-native";
 import { DisplaySettingsModalView_PROPS } from "../DisplaySettings_MODAL/DisplaySettings_MODAL";
-import { DisplaySettings_PROPS, SetDisplaySettings_PROPS } from "@/src/zustand";
+import {
+  z_vocabDisplaySettings_PROPS,
+  z_setVocabDisplaySettings_PROPS,
+} from "@/src/zustand";
 
 export default function PreviewToggles_BLOCK({
   view,
-  z_display_SETTINGS,
-  z_SET_displaySettings,
+  z_vocabDisplay_SETTINGS,
+  z_SET_vocabDisplaySettings,
 }: {
   view: DisplaySettingsModalView_PROPS;
-  z_display_SETTINGS: DisplaySettings_PROPS | undefined;
-  z_SET_displaySettings: SetDisplaySettings_PROPS | undefined;
+  z_vocabDisplay_SETTINGS: z_vocabDisplaySettings_PROPS | undefined;
+  z_SET_vocabDisplaySettings: z_setVocabDisplaySettings_PROPS | undefined;
 }) {
   return view === "preview" ? (
     <Block>
@@ -33,33 +36,33 @@ export default function PreviewToggles_BLOCK({
         >
           <Settings_TOGGLE
             text={t("toggle.showDescription")}
-            active={z_display_SETTINGS?.SHOW_description || false}
+            active={z_vocabDisplay_SETTINGS?.SHOW_description || false}
             onPress={() => {
-              if (z_SET_displaySettings) {
-                z_SET_displaySettings({
-                  SHOW_description: !z_display_SETTINGS?.SHOW_description,
+              if (z_SET_vocabDisplaySettings) {
+                z_SET_vocabDisplaySettings({
+                  SHOW_description: !z_vocabDisplay_SETTINGS?.SHOW_description,
                 });
               }
             }}
           />
           <Settings_TOGGLE
             text={t("toggle.showFlags")}
-            active={z_display_SETTINGS?.SHOW_flags || false}
+            active={z_vocabDisplay_SETTINGS?.SHOW_flags || false}
             onPress={() => {
-              if (z_SET_displaySettings) {
-                z_SET_displaySettings({
-                  SHOW_flags: !z_display_SETTINGS?.SHOW_flags,
+              if (z_SET_vocabDisplaySettings) {
+                z_SET_vocabDisplaySettings({
+                  SHOW_flags: !z_vocabDisplay_SETTINGS?.SHOW_flags,
                 });
               }
             }}
           />
           <Settings_TOGGLE
             text={t("toggle.showDifficulty")}
-            active={z_display_SETTINGS?.SHOW_difficulty || false}
+            active={z_vocabDisplay_SETTINGS?.SHOW_difficulty || false}
             onPress={() => {
-              if (z_SET_displaySettings) {
-                z_SET_displaySettings({
-                  SHOW_difficulty: !z_display_SETTINGS?.SHOW_difficulty,
+              if (z_SET_vocabDisplaySettings) {
+                z_SET_vocabDisplaySettings({
+                  SHOW_difficulty: !z_vocabDisplay_SETTINGS?.SHOW_difficulty,
                 });
               }
             }}

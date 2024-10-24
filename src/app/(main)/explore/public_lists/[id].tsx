@@ -60,10 +60,9 @@ import USE_zustand from "@/src/zustand";
 import USE_langs_2 from "@/src/features/4_languages/hooks/USE_langs_2";
 
 export default function PublicListVocabs_PAGE() {
-  const { user } = USE_auth();
   const { t } = useTranslation();
   const { id } = useLocalSearchParams();
-  const { z_display_SETTINGS } = USE_zustand();
+  const { z_vocabDisplay_SETTINGS } = USE_zustand();
   const toast = useToast();
   const router = useRouter();
   const [search, SET_search] = useState("");
@@ -76,6 +75,7 @@ export default function PublicListVocabs_PAGE() {
   const { list, IS_listFetching, listFetch_ERROR } = USE_fetchOnePublicList(
     typeof id === "string" ? id : ""
   );
+
   const {
     vocabs,
     ARE_vocabsFetching,
@@ -85,22 +85,17 @@ export default function PublicListVocabs_PAGE() {
     HAS_reachedEnd,
   } = USE_supabaseVocabsOfAList({
     search,
-    list_id: typeof id === "string" ? id : "",
-    z_display_SETTINGS,
+    list,
+    z_vocabDisplay_SETTINGS,
     paginateBy: 3,
   });
 
   const collectedLangIds = useMemo(() => {
-    // if this is not defiend and we pass the collected ids directly into the display modal
-    // it creates an infinite loop for some reaosn
+    // infinite loop occurs if not defined
     return list?.collected_lang_ids || [];
   }, [list?.collected_lang_ids]);
 
   const [target_VOCAB, SET_targetVocab] = useState<Vocab_MODEL | undefined>();
-
-  const [targetSave_VOCAB, SET_targetSaveVocab] = useState<
-    Vocab_MODEL | undefined
-  >(undefined);
 
   return (
     <Page_WRAP>
@@ -150,7 +145,7 @@ export default function PublicListVocabs_PAGE() {
         }}
         keyExtractor={(item) => "PublicVocab" + item.id}
         ListFooterComponent={
-          !HAS_reachedEnd && !ARE_vocabsFetching && !IS_loadingMore ? (
+          !HAS_reachedEnd && !ARE_vocabsFetching ? (
             <Btn
               text={!IS_loadingMore ? "Load more" : ""}
               iconRight={
@@ -180,7 +175,6 @@ export default function PublicListVocabs_PAGE() {
       <DisplaySettings_MODAL
         open={modal_STATES.displaySettings}
         TOGGLE_open={() => TOGGLE_modal("displaySettings")}
-        // collectedLang_IDS={["en", "de"]}
         collectedLang_IDS={collectedLangIds}
         HAS_difficulties={false}
       />

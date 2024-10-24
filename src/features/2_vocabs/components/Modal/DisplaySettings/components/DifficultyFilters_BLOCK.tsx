@@ -7,24 +7,27 @@ import { _DisplaySettings_PROPS } from "@/src/utils/DisplaySettings";
 import { t } from "i18next";
 import { DisplaySettingsModalView_PROPS } from "../DisplaySettings_MODAL/DisplaySettings_MODAL";
 import GET_handledDifficulties from "../DisplaySettings_MODAL/utils/GET_handledDifficulties";
-import { DisplaySettings_PROPS, SetDisplaySettings_PROPS } from "@/src/zustand";
+import {
+  z_vocabDisplaySettings_PROPS,
+  z_setVocabDisplaySettings_PROPS,
+} from "@/src/zustand";
 
 export default function DifficultyFilters_BLOCK({
   view = "preview",
   HAS_difficulties = true,
-  z_display_SETTINGS,
-  z_SET_displaySettings,
+  z_vocabDisplay_SETTINGS,
+  z_SET_vocabDisplaySettings,
 }: {
   view: DisplaySettingsModalView_PROPS;
   HAS_difficulties: boolean;
-  z_display_SETTINGS: DisplaySettings_PROPS | undefined;
-  z_SET_displaySettings: SetDisplaySettings_PROPS | undefined;
+  z_vocabDisplay_SETTINGS: z_vocabDisplaySettings_PROPS | undefined;
+  z_SET_vocabDisplaySettings: z_setVocabDisplaySettings_PROPS | undefined;
 }) {
   function TOGGLE_difficulty(diff: 1 | 2 | 3) {
-    if (z_SET_displaySettings) {
-      z_SET_displaySettings({
+    if (z_SET_vocabDisplaySettings) {
+      z_SET_vocabDisplaySettings({
         difficultyFilters: GET_handledDifficulties({
-          difficultyFilters: z_display_SETTINGS?.difficultyFilters || [],
+          difficultyFilters: z_vocabDisplay_SETTINGS?.difficultyFilters || [],
           incoming_DIFF: diff,
         }),
       });
@@ -37,7 +40,7 @@ export default function DifficultyFilters_BLOCK({
       <Btn
         text={t("difficulty.easy")}
         iconRight={
-          z_display_SETTINGS?.difficultyFilters.some((nr) => nr === 1) ? (
+          z_vocabDisplay_SETTINGS?.difficultyFilters.some((nr) => nr === 1) ? (
             <ICON_X big={true} rotate={true} color="difficulty_1" />
           ) : (
             <ICON_difficultyDot big={true} difficulty={1} />
@@ -45,7 +48,7 @@ export default function DifficultyFilters_BLOCK({
         }
         onPress={() => TOGGLE_difficulty(1)}
         type={
-          z_display_SETTINGS?.difficultyFilters.some((nr) => nr === 1)
+          z_vocabDisplay_SETTINGS?.difficultyFilters.some((nr) => nr === 1)
             ? "difficulty_1_active"
             : "simple"
         }
@@ -55,7 +58,7 @@ export default function DifficultyFilters_BLOCK({
       <Btn
         text={t("difficulty.medium")}
         iconRight={
-          z_display_SETTINGS?.difficultyFilters.some((nr) => nr === 2) ? (
+          z_vocabDisplay_SETTINGS?.difficultyFilters.some((nr) => nr === 2) ? (
             <ICON_X big={true} rotate={true} color="difficulty_2" />
           ) : (
             <ICON_difficultyDot big={true} difficulty={2} />
@@ -63,7 +66,7 @@ export default function DifficultyFilters_BLOCK({
         }
         onPress={() => TOGGLE_difficulty(2)}
         type={
-          z_display_SETTINGS?.difficultyFilters.some((nr) => nr === 2)
+          z_vocabDisplay_SETTINGS?.difficultyFilters.some((nr) => nr === 2)
             ? "difficulty_2_active"
             : "simple"
         }
@@ -73,7 +76,7 @@ export default function DifficultyFilters_BLOCK({
       <Btn
         text={t("difficulty.hard")}
         iconRight={
-          z_display_SETTINGS?.difficultyFilters.some((nr) => nr === 3) ? (
+          z_vocabDisplay_SETTINGS?.difficultyFilters.some((nr) => nr === 3) ? (
             <ICON_X big={true} rotate={true} color="difficulty_3" />
           ) : (
             <ICON_difficultyDot big={true} difficulty={3} />
@@ -81,7 +84,7 @@ export default function DifficultyFilters_BLOCK({
         }
         onPress={() => TOGGLE_difficulty(3)}
         type={
-          z_display_SETTINGS?.difficultyFilters.some((nr) => nr === 3)
+          z_vocabDisplay_SETTINGS?.difficultyFilters.some((nr) => nr === 3)
             ? "difficulty_3_active"
             : "simple"
         }

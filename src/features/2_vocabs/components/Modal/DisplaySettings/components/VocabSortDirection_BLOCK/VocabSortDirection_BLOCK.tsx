@@ -12,19 +12,21 @@ import { useTranslation } from "react-i18next";
 
 export default function VocabSortDirection_BLOCK() {
   const { t } = useTranslation();
-  const { z_display_SETTINGS, z_SET_displaySettings } = USE_zustand();
+  const { z_vocabDisplay_SETTINGS, z_SET_vocabDisplaySettings } = USE_zustand();
   return (
     <Block>
       <Label>{t("label.sortDirection")}</Label>
       <Btn
         text={
-          z_display_SETTINGS?.sorting === "difficulty"
+          z_vocabDisplay_SETTINGS?.sorting === "difficulty"
             ? t("btn.easyToHard")
             : t("btn.newToOld")
         }
-        onPress={() => z_SET_displaySettings({ sortDirection: "ascending" })}
+        onPress={() =>
+          z_SET_vocabDisplaySettings({ sortDirection: "ascending" })
+        }
         type={
-          z_display_SETTINGS?.sortDirection === "ascending"
+          z_vocabDisplay_SETTINGS?.sortDirection === "ascending"
             ? "active"
             : "simple"
         }
@@ -32,13 +34,15 @@ export default function VocabSortDirection_BLOCK() {
       />
       <Btn
         text={
-          z_display_SETTINGS?.sorting === "difficulty"
+          z_vocabDisplay_SETTINGS?.sorting === "difficulty"
             ? t("btn.hardToEasy")
             : t("btn.oldToNew")
         }
-        onPress={() => z_SET_displaySettings({ sortDirection: "descending" })}
+        onPress={() =>
+          z_SET_vocabDisplaySettings({ sortDirection: "descending" })
+        }
         type={
-          z_display_SETTINGS?.sortDirection === "descending"
+          z_vocabDisplay_SETTINGS?.sortDirection === "descending"
             ? "active"
             : "simple"
         }

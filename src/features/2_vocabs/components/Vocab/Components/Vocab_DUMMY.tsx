@@ -20,13 +20,13 @@ import { DisplaySettingsModalView_PROPS } from "../../Modal/DisplaySettings/Disp
 
 interface VocabFront_PROPS {
   view: DisplaySettingsModalView_PROPS;
-  z_display_SETTINGS: _DisplaySettings_PROPS | undefined;
+  z_vocabDisplay_SETTINGS: _DisplaySettings_PROPS | undefined;
   SHOW_difficultyDot?: boolean;
 }
 
 export default function Vocab_DUMMY({
   view = "preview",
-  z_display_SETTINGS,
+  z_vocabDisplay_SETTINGS,
   SHOW_difficultyDot = true,
 }: VocabFront_PROPS) {
   const { t } = useTranslation();
@@ -35,14 +35,14 @@ export default function Vocab_DUMMY({
   useEffect(() => {
     (async () => {
       const langs = await FETCH_langs({
-        lang_ids: [z_display_SETTINGS?.frontTrLang_ID || "en"],
+        lang_ids: [z_vocabDisplay_SETTINGS?.frontTrLang_ID || "en"],
       });
 
       if (langs?.[0]) {
         SET_alang(langs[0]);
       }
     })();
-  }, [z_display_SETTINGS?.frontTrLang_ID]);
+  }, [z_vocabDisplay_SETTINGS?.frontTrLang_ID]);
 
   return view === "preview" ? (
     <Block>
@@ -54,20 +54,19 @@ export default function Vocab_DUMMY({
             diff={3}
           />
 
-          {z_display_SETTINGS?.SHOW_description && (
+          {z_vocabDisplay_SETTINGS?.SHOW_description && (
             <Styled_TEXT type="label_small">
               {lang?.description_example || "INSERT DESCRIPTION"}
             </Styled_TEXT>
           )}
-          {(z_display_SETTINGS?.SHOW_flags ||
-            z_display_SETTINGS?.SHOW_difficulty) && (
+          {(z_vocabDisplay_SETTINGS?.SHOW_flags ||
+            z_vocabDisplay_SETTINGS?.SHOW_difficulty) && (
             <View style={s.iconWrap}>
-              {z_display_SETTINGS?.SHOW_flags && (
-                <ICON_flag lang={z_display_SETTINGS?.frontTrLang_ID} />
+              {z_vocabDisplay_SETTINGS?.SHOW_flags && (
+                <ICON_flag lang={z_vocabDisplay_SETTINGS?.frontTrLang_ID} />
               )}
-              {z_display_SETTINGS?.SHOW_difficulty && SHOW_difficultyDot && (
-                <ICON_difficultyDot difficulty={3} />
-              )}
+              {z_vocabDisplay_SETTINGS?.SHOW_difficulty &&
+                SHOW_difficultyDot && <ICON_difficultyDot difficulty={3} />}
             </View>
           )}
         </View>

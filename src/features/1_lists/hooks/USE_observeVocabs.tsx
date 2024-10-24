@@ -5,21 +5,25 @@ import { Q, Query } from "@nozbe/watermelondb";
 import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 import FetchVocabs_QUERY from "../../2_vocabs/utils/FetchVocabs_QUERY";
 import { _DisplaySettings_PROPS } from "@/src/utils/DisplaySettings";
-import { DisplaySettings_PROPS } from "@/src/zustand";
+import { z_vocabDisplaySettings_PROPS } from "@/src/zustand";
 
 export default function USE_observedVocabs({
   search,
   list_id,
-  z_display_SETTINGS,
+  z_vocabDisplay_SETTINGS,
 }: {
   search: string;
   list_id: string | undefined;
-  z_display_SETTINGS: DisplaySettings_PROPS | undefined;
+  z_vocabDisplay_SETTINGS: z_vocabDisplaySettings_PROPS | undefined;
 }) {
   const [vocabs, SET_vocabs] = useState<Vocab_MODEL[] | undefined>(undefined);
 
   useEffect(() => {
-    const quries = FetchVocabs_QUERY({ search, list_id, z_display_SETTINGS });
+    const quries = FetchVocabs_QUERY({
+      search,
+      list_id,
+      z_vocabDisplay_SETTINGS,
+    });
     const query = quries.observe();
 
     const subscription = query.subscribe({
@@ -30,7 +34,7 @@ export default function USE_observedVocabs({
 
     // No need for explicit unsubscribe; Watermelon handles this
     return () => subscription.unsubscribe(); // Clean up the subscription
-  }, [search, list_id, z_display_SETTINGS]);
+  }, [search, list_id, z_vocabDisplay_SETTINGS]);
 
   return vocabs;
 }

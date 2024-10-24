@@ -10,43 +10,47 @@ import { _DisplaySettings_PROPS } from "@/src/utils/DisplaySettings";
 import { t } from "i18next";
 import { DisplaySettingsModalView_PROPS } from "./DisplaySettings_MODAL/DisplaySettings_MODAL";
 import { useMemo } from "react";
-import { DisplaySettings_PROPS, SetDisplaySettings_PROPS } from "@/src/zustand";
+import {
+  z_vocabDisplaySettings_PROPS,
+  z_setVocabDisplaySettings_PROPS,
+} from "@/src/zustand";
 
 export default function SortDirection_BLOCK({
   view = "preview",
-  z_display_SETTINGS,
+  z_vocabDisplay_SETTINGS,
   HAS_difficulties = true,
-  z_SET_displaySettings,
+  z_SET_vocabDisplaySettings,
 }: {
   view: DisplaySettingsModalView_PROPS;
-  z_display_SETTINGS: DisplaySettings_PROPS | undefined;
+  z_vocabDisplay_SETTINGS: z_vocabDisplaySettings_PROPS | undefined;
   HAS_difficulties?: boolean;
-  z_SET_displaySettings: SetDisplaySettings_PROPS | undefined;
+  z_SET_vocabDisplaySettings: z_setVocabDisplaySettings_PROPS | undefined;
 }) {
   function SET_sortDirection(direction: "ascending" | "descending") {
-    if (z_SET_displaySettings) {
-      z_SET_displaySettings({ sortDirection: direction });
+    if (z_SET_vocabDisplaySettings) {
+      z_SET_vocabDisplaySettings({ sortDirection: direction });
     }
   }
 
   const show = useMemo(
     () =>
       view === "sort" &&
-      (z_display_SETTINGS?.sorting === "date" ||
-        (z_display_SETTINGS?.sorting === "difficulty" && HAS_difficulties)),
-    [view, z_display_SETTINGS?.sorting]
+      (z_vocabDisplay_SETTINGS?.sorting === "date" ||
+        (z_vocabDisplay_SETTINGS?.sorting === "difficulty" &&
+          HAS_difficulties)),
+    [view, z_vocabDisplay_SETTINGS?.sorting]
   );
 
   return show ? (
     <Block>
       <Label>{t("label.sortDirection")}</Label>
-      {z_display_SETTINGS?.sorting === "difficulty" && HAS_difficulties ? (
+      {z_vocabDisplay_SETTINGS?.sorting === "difficulty" && HAS_difficulties ? (
         <>
           <Btn
             text={t("btn.easyToHard")}
             onPress={() => SET_sortDirection("ascending")}
             type={
-              z_display_SETTINGS?.sortDirection === "ascending"
+              z_vocabDisplay_SETTINGS?.sortDirection === "ascending"
                 ? "active"
                 : "simple"
             }
@@ -56,7 +60,7 @@ export default function SortDirection_BLOCK({
             text={t("btn.hardToEasy")}
             onPress={() => SET_sortDirection("descending")}
             type={
-              z_display_SETTINGS?.sortDirection === "descending"
+              z_vocabDisplay_SETTINGS?.sortDirection === "descending"
                 ? "active"
                 : "simple"
             }
@@ -64,13 +68,13 @@ export default function SortDirection_BLOCK({
           />
         </>
       ) : null}
-      {z_display_SETTINGS?.sorting === "date" ? (
+      {z_vocabDisplay_SETTINGS?.sorting === "date" ? (
         <>
           <Btn
             text={t("btn.newToOld")}
             onPress={() => SET_sortDirection("ascending")}
             type={
-              z_display_SETTINGS?.sortDirection === "ascending"
+              z_vocabDisplay_SETTINGS?.sortDirection === "ascending"
                 ? "active"
                 : "simple"
             }
@@ -80,7 +84,7 @@ export default function SortDirection_BLOCK({
             text={t("btn.oldToNew")}
             onPress={() => SET_sortDirection("descending")}
             type={
-              z_display_SETTINGS?.sortDirection === "descending"
+              z_vocabDisplay_SETTINGS?.sortDirection === "descending"
                 ? "active"
                 : "simple"
             }

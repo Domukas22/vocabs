@@ -57,8 +57,8 @@ export function DisplaySettings_MODAL({
   const { t } = useTranslation();
   const [view, SET_view] = useState<DisplaySettingsModalView_PROPS>("preview");
 
-  const { z_display_SETTINGS, z_SET_displaySettings } = USE_zustand();
-  const activeFilter_COUNT = USE_getActiveFilterCount(z_display_SETTINGS);
+  const { z_vocabDisplay_SETTINGS, z_SET_vocabDisplaySettings } = USE_zustand();
+  const activeFilter_COUNT = USE_getActiveFilterCount(z_vocabDisplay_SETTINGS);
   const { langs, ARE_langsFetching, fetchLangs_ERROR } = USE_langs_2({
     lang_ids: collectedLang_IDS,
   });
@@ -85,14 +85,14 @@ export function DisplaySettings_MODAL({
       />
 
       <DisplaySettings_SUBNAV {...{ view, SET_view, activeFilter_COUNT }} />
-      <Vocab_DUMMY {...{ view, z_display_SETTINGS }} />
+      <Vocab_DUMMY {...{ view, z_vocabDisplay_SETTINGS }} />
 
       <ScrollView style={{ flex: 1 }}>
         <PreviewToggles_BLOCK
           {...{
             view,
-            z_display_SETTINGS,
-            z_SET_displaySettings,
+            z_vocabDisplay_SETTINGS,
+            z_SET_vocabDisplaySettings,
             HAS_difficulties,
           }}
         />
@@ -101,15 +101,15 @@ export function DisplaySettings_MODAL({
             view,
             langs,
             appLang,
-            z_display_SETTINGS,
-            z_SET_displaySettings,
+            z_vocabDisplay_SETTINGS,
+            z_SET_vocabDisplaySettings,
           }}
         />
         <Sorting_BLOCK
           {...{
             view,
-            z_display_SETTINGS,
-            z_SET_displaySettings,
+            z_vocabDisplay_SETTINGS,
+            z_SET_vocabDisplaySettings,
             HAS_difficulties,
           }}
         />
@@ -117,16 +117,16 @@ export function DisplaySettings_MODAL({
         <SortDirection_BLOCK
           {...{
             view,
-            z_display_SETTINGS,
-            z_SET_displaySettings,
+            z_vocabDisplay_SETTINGS,
+            z_SET_vocabDisplaySettings,
             HAS_difficulties,
           }}
         />
         <DifficultyFilters_BLOCK
           {...{
             view,
-            z_display_SETTINGS,
-            z_SET_displaySettings,
+            z_vocabDisplay_SETTINGS,
+            z_SET_vocabDisplaySettings,
             HAS_difficulties,
           }}
         />
@@ -135,8 +135,8 @@ export function DisplaySettings_MODAL({
             view,
             langs,
             appLang,
-            z_display_SETTINGS,
-            z_SET_displaySettings,
+            z_vocabDisplay_SETTINGS,
+            z_SET_vocabDisplaySettings,
             HAS_difficulties,
           }}
         />

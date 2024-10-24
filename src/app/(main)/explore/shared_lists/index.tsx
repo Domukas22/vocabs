@@ -41,7 +41,7 @@ import { MyColors } from "@/src/constants/MyColors";
 
 import Transition_BTN from "@/src/components/Transition_BTN/Transition_BTN";
 import { ICON_arrow, ICON_difficultyDot } from "@/src/components/icons/icons";
-import USE_fetchPublicLists from "@/src/features/2_vocabs/hooks/USE_fetchPublicLists";
+import USE_fetchSupabaseLists from "@/src/features/2_vocabs/hooks/USE_fetchPublicSupabaseLists";
 import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
 import USE_fetchSharedLists from "@/src/features/2_vocabs/hooks/USE_fetchSharedLists";
 

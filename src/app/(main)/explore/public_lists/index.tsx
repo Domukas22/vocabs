@@ -21,7 +21,7 @@ import Btn from "@/src/components/Btn/Btn";
 import { MyColors } from "@/src/constants/MyColors";
 import Transition_BTN from "@/src/components/Transition_BTN/Transition_BTN";
 import { ICON_arrow, ICON_flag } from "@/src/components/icons/icons";
-import USE_fetchPublicLists from "@/src/features/2_vocabs/hooks/USE_fetchPublicLists";
+import USE_fetchSupabaseLists from "@/src/features/2_vocabs/hooks/USE_fetchPublicSupabaseLists";
 import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
 import Subnav from "@/src/components/Subnav/Subnav";
 import SearchBar from "@/src/components/SearchBar/SearchBar";
@@ -40,7 +40,7 @@ export default function PublicLists_PAGE() {
   const [search, SET_search] = useState("");
 
   const { FETCH_publicLists, ARE_publicListsFetching, publicLists_ERROR } =
-    USE_fetchPublicLists();
+    USE_fetchSupabaseLists();
 
   const [lists, SET_lists] = useState<List_MODEL[]>([]);
 
@@ -72,7 +72,7 @@ export default function PublicLists_PAGE() {
             style={{ opacity: 0, pointerEvents: "none" }}
           />
         }
-        title="Public lists"
+        title="📁 Public lists"
       />
 
       <Styled_FLATLIST

@@ -9,8 +9,8 @@ import { Language_MODEL } from "@/src/db/watermelon_MODELS";
 import FETCH_langs from "@/src/features/4_languages/hooks/FETCH_langs";
 import USE_langs from "@/src/features/4_languages/hooks/USE_langs";
 import USE_zustand, {
-  DisplaySettings_PROPS,
-  SetDisplaySettings_PROPS,
+  z_vocabDisplaySettings_PROPS,
+  z_setVocabDisplaySettings_PROPS,
 } from "@/src/zustand";
 import i18next, { t } from "i18next";
 import { useState, useEffect, useMemo } from "react";
@@ -22,14 +22,14 @@ export default function FrontLanguageToggles_BLOCK({
   view = "preview",
   langs = [],
   appLang = "en",
-  z_display_SETTINGS,
-  z_SET_displaySettings,
+  z_vocabDisplay_SETTINGS,
+  z_SET_vocabDisplaySettings,
 }: {
   view: DisplaySettingsModalView_PROPS;
   langs: Language_MODEL[] | undefined;
   appLang: string | undefined;
-  z_display_SETTINGS: DisplaySettings_PROPS | undefined;
-  z_SET_displaySettings: SetDisplaySettings_PROPS | undefined;
+  z_vocabDisplay_SETTINGS: z_vocabDisplaySettings_PROPS | undefined;
+  z_SET_vocabDisplaySettings: z_setVocabDisplaySettings_PROPS | undefined;
 }) {
   return view === "preview" && langs && langs?.length > 0 ? (
     <Block>
@@ -45,17 +45,17 @@ export default function FrontLanguageToggles_BLOCK({
             }
             text={appLang === "en" ? lang.lang_in_en : lang.lang_in_de}
             iconRight={
-              z_display_SETTINGS?.frontTrLang_ID === lang?.lang_id && (
+              z_vocabDisplay_SETTINGS?.frontTrLang_ID === lang?.lang_id && (
                 <ICON_checkMark color="primary" />
               )
             }
             onPress={() => {
-              if (z_SET_displaySettings) {
-                z_SET_displaySettings({ frontTrLang_ID: lang?.lang_id });
+              if (z_SET_vocabDisplaySettings) {
+                z_SET_vocabDisplaySettings({ frontTrLang_ID: lang?.lang_id });
               }
             }}
             type={
-              z_display_SETTINGS?.frontTrLang_ID === lang?.lang_id
+              z_vocabDisplay_SETTINGS?.frontTrLang_ID === lang?.lang_id
                 ? "active"
                 : "simple"
             }

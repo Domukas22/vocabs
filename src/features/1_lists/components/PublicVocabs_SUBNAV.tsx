@@ -19,8 +19,8 @@ export default function PublicVocabs_SUBNAV({
   SET_search: (val: string) => void;
   TOGGLE_displaySettings: () => void;
 }) {
-  const { z_display_SETTINGS } = USE_zustand();
-  const activeFilter_COUNT = USE_getActiveFilterCount(z_display_SETTINGS);
+  const { z_vocabDisplay_SETTINGS } = USE_zustand();
+  const activeFilter_COUNT = USE_getActiveFilterCount(z_vocabDisplay_SETTINGS);
 
   return (
     <Subnav>

@@ -11,7 +11,10 @@ import { _DisplaySettings_PROPS } from "@/src/utils/DisplaySettings";
 import { t } from "i18next";
 import { DisplaySettingsModalView_PROPS } from "../DisplaySettings_MODAL/DisplaySettings_MODAL";
 import GET_handledDifficulties from "../DisplaySettings_MODAL/utils/GET_handledDifficulties";
-import { DisplaySettings_PROPS, SetDisplaySettings_PROPS } from "@/src/zustand";
+import {
+  z_vocabDisplaySettings_PROPS,
+  z_setVocabDisplaySettings_PROPS,
+} from "@/src/zustand";
 import { useCallback } from "react";
 import { Language_MODEL } from "@/src/db/watermelon_MODELS";
 import { View } from "react-native";
@@ -20,35 +23,35 @@ export default function LangFilters_BLOCK({
   view = "preview",
   langs = [],
   appLang = "en",
-  z_display_SETTINGS,
-  z_SET_displaySettings,
+  z_vocabDisplay_SETTINGS,
+  z_SET_vocabDisplaySettings,
 }: {
   view: DisplaySettingsModalView_PROPS;
   langs: Language_MODEL[] | undefined;
   appLang: string | undefined;
-  z_display_SETTINGS: DisplaySettings_PROPS | undefined;
-  z_SET_displaySettings: SetDisplaySettings_PROPS | undefined;
+  z_vocabDisplay_SETTINGS: z_vocabDisplaySettings_PROPS | undefined;
+  z_SET_vocabDisplaySettings: z_setVocabDisplaySettings_PROPS | undefined;
 }) {
   const SELECT_langFilter = useCallback(
     (incoming_LANG: string) => {
       const newLangs = GET_handledLangs({
-        langFilters: z_display_SETTINGS?.langFilters || [],
+        langFilters: z_vocabDisplay_SETTINGS?.langFilters || [],
         incoming_LANG,
       });
 
       const correctedFrontLangId = GET_handledFrontLangId({
-        frontLang_ID: z_display_SETTINGS?.frontTrLang_ID || "en",
+        frontLang_ID: z_vocabDisplay_SETTINGS?.frontTrLang_ID || "en",
         newLang_IDS: newLangs,
       });
 
-      if (z_SET_displaySettings) {
-        z_SET_displaySettings({
+      if (z_SET_vocabDisplaySettings) {
+        z_SET_vocabDisplaySettings({
           langFilters: newLangs,
           frontTrLang_ID: correctedFrontLangId,
         });
       }
     },
-    [z_display_SETTINGS]
+    [z_vocabDisplay_SETTINGS]
   );
 
   return view === "filter" ? (
@@ -65,14 +68,14 @@ export default function LangFilters_BLOCK({
             }
             text={lang[`lang_in_${appLang || "en"}`]}
             iconRight={
-              z_display_SETTINGS?.langFilters.some(
+              z_vocabDisplay_SETTINGS?.langFilters.some(
                 (lang_ID) => lang_ID === lang?.lang_id
               ) ? (
                 <ICON_X big rotate color="primary" />
               ) : null
             }
             type={
-              z_display_SETTINGS?.langFilters.some(
+              z_vocabDisplay_SETTINGS?.langFilters.some(
                 (lang_ID) => lang_ID === lang?.lang_id
               )
                 ? "active"

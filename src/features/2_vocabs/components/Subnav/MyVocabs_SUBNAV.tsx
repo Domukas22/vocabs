@@ -20,13 +20,16 @@ export default function Vocabs_SUBNAV({
   TOGGLE_displaySettings: () => void;
   onPlusIconPress: () => void;
 }) {
-  const { z_display_SETTINGS } = USE_zustand();
+  const { z_vocabDisplay_SETTINGS } = USE_zustand();
 
   const active_COUNT = useMemo(
     () =>
-      z_display_SETTINGS.difficultyFilters.length +
-      z_display_SETTINGS.langFilters.length,
-    [z_display_SETTINGS.difficultyFilters, z_display_SETTINGS.langFilters]
+      z_vocabDisplay_SETTINGS.difficultyFilters.length +
+      z_vocabDisplay_SETTINGS.langFilters.length,
+    [
+      z_vocabDisplay_SETTINGS.difficultyFilters,
+      z_vocabDisplay_SETTINGS.langFilters,
+    ]
   );
 
   return (
