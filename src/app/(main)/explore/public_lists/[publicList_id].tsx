@@ -22,12 +22,13 @@ import PublicList_HEADER from "@/src/features/1_lists/components/PublicList_HEAD
 import ExporeSingleList_SUBNAV from "@/src/components/ExporeSingleList_SUBNAV";
 import ExploreVocabs_FLATLIST from "@/src/features/2_vocabs/components/ExploreVocabs_FLATLIST";
 import ExploreVocabsFlatlistBottom_SECTION from "@/src/features/2_vocabs/components/ExploreVocabsFlatlistBottom_SECTION";
+import VocabsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/VocabsFlatlistHeader_SECTION";
 
 export default function PublicListVocabs_PAGE() {
   const toast = useToast();
   const { t } = useTranslation();
   const { publicList_id } = useLocalSearchParams();
-  const { z_vocabDisplay_SETTINGS } = USE_zustand();
+  const { z_vocabDisplay_SETTINGS, z_SET_vocabDisplaySettings } = USE_zustand();
   const { search, debouncedSearch, SET_search } = USE_debounceSearch();
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
@@ -81,7 +82,13 @@ export default function PublicListVocabs_PAGE() {
           SET_targetVocab(vocab);
           TOGGLE_modal("save");
         }}
+        listHeader_EL={
+          <VocabsFlatlistHeader_SECTION
+            {...{ search, z_vocabDisplay_SETTINGS, z_SET_vocabDisplaySettings }}
+          />
+        }
       />
+
       {/* ------------------------------------------------------------------ MODALS ------------------------------------------------------------------ */}
       <SavePublicVocabToList_MODAL
         vocab={target_VOCAB}

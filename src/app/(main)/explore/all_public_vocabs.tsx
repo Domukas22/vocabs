@@ -24,6 +24,7 @@ import ExporeSingleList_SUBNAV from "@/src/components/ExporeSingleList_SUBNAV";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
 import { View } from "react-native";
+import VocabsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/VocabsFlatlistHeader_SECTION";
 
 export default function AllPublicVocabs_PAGE() {
   const { t } = useTranslation();
@@ -65,18 +66,20 @@ export default function AllPublicVocabs_PAGE() {
       <ExploreVocabs_FLATLIST
         {...{
           vocabs,
-          search,
           IS_loadingMore,
           HAS_reachedEnd,
           ARE_vocabsFetching,
           LOAD_more,
-          z_vocabDisplay_SETTINGS,
-          z_SET_vocabDisplaySettings,
         }}
         SAVE_vocab={(vocab: Vocab_MODEL) => {
           SET_targetVocab(vocab);
           TOGGLE_modal("save");
         }}
+        listHeader_EL={
+          <VocabsFlatlistHeader_SECTION
+            {...{ search, z_vocabDisplay_SETTINGS, z_SET_vocabDisplaySettings }}
+          />
+        }
       />
       {/* ------------------------- MODALS ------------------------- */}
       <VocabDisplaySettings_MODAL

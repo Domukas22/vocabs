@@ -17,11 +17,13 @@ import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 import ListDisplaySettings_MODAL from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/ListDisplaySettings_MODAL";
 import ExploreListsBottom_SECTION from "@/src/features/1_lists/components/ExploreListsBottom_SECTION";
 import ExploreLists_FLATLIST from "@/src/features/1_lists/components/ExploreLists_FLATLIST";
+import VocabsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/VocabsFlatlistHeader_SECTION";
+import ListsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/ListsFlatlistHeader_SECTION";
 
 export default function SharedLists_PAGE() {
   const { user } = USE_auth();
   const { search, debouncedSearch, SET_search } = USE_debounceSearch();
-  const { z_listDisplay_SETTINGS } = USE_zustand();
+  const { z_listDisplay_SETTINGS, z_SET_listDisplaySettings } = USE_zustand();
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
     { name: "displaySettings" },
@@ -62,6 +64,11 @@ export default function SharedLists_PAGE() {
           ARE_listsFetching,
           LOAD_more,
         }}
+        listHeader_EL={
+          <ListsFlatlistHeader_SECTION
+            {...{ search, z_listDisplay_SETTINGS, z_SET_listDisplaySettings }}
+          />
+        }
       />
       {/* ------------------------------------------------ MODALS ------------------------------------------------ */}
 

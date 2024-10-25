@@ -16,10 +16,12 @@ export default function ExploreLists_FLATLIST({
   ARE_listsFetching,
   LOAD_more,
   type = "public",
+  listHeader_EL,
 }: {
   lists: List_MODEL[] | undefined;
   IS_loadingMore: boolean;
   HAS_reachedEnd: boolean;
+  listHeader_EL: React.ReactNode;
   ARE_listsFetching: boolean;
   LOAD_more: () => void;
   type: "public" | "shared";
@@ -28,7 +30,7 @@ export default function ExploreLists_FLATLIST({
   return (
     <Styled_FLATLIST
       data={lists}
-      ListHeaderComponent={<Flatlist_HEADER title="Explore all public lists" />}
+      ListHeaderComponent={listHeader_EL}
       renderItem={({ item }) => {
         return (
           <ExploreList_BTN

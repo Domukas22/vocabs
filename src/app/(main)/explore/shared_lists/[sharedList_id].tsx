@@ -23,9 +23,10 @@ import { VocabDisplaySettings_MODAL } from "@/src/features/2_vocabs/components/M
 import ExporeSingleList_SUBNAV from "@/src/components/ExporeSingleList_SUBNAV";
 import ExploreVocabs_FLATLIST from "@/src/features/2_vocabs/components/ExploreVocabs_FLATLIST";
 import ExploreVocabsFlatlistBottom_SECTION from "@/src/features/2_vocabs/components/ExploreVocabsFlatlistBottom_SECTION";
+import VocabsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/VocabsFlatlistHeader_SECTION";
 
 export default function PublicListVocabs_PAGE() {
-  const { z_vocabDisplay_SETTINGS } = USE_zustand();
+  const { z_vocabDisplay_SETTINGS, z_SET_vocabDisplaySettings } = USE_zustand();
   const { search, debouncedSearch, SET_search } = USE_debounceSearch();
   const { t } = useTranslation();
   const { sharedList_id } = useLocalSearchParams();
@@ -85,6 +86,11 @@ export default function PublicListVocabs_PAGE() {
           SET_targetVocab(vocab);
           TOGGLE_modal("save");
         }}
+        listHeader_EL={
+          <VocabsFlatlistHeader_SECTION
+            {...{ search, z_vocabDisplay_SETTINGS, z_SET_vocabDisplaySettings }}
+          />
+        }
       />
 
       {/* -------------------------------------------- MODALS -------------------------------------------- */}
