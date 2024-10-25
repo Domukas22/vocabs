@@ -84,6 +84,7 @@ export default function PublicListVocabs_PAGE() {
         }}
         listHeader_EL={
           <VocabsFlatlistHeader_SECTION
+            totalVocabs={list?.vocabs?.[0]?.count}
             {...{ search, z_vocabDisplay_SETTINGS, z_SET_vocabDisplaySettings }}
           />
         }

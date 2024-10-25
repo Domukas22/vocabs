@@ -19,6 +19,8 @@ import ExploreListsBottom_SECTION from "@/src/features/1_lists/components/Explor
 import ExploreLists_FLATLIST from "@/src/features/1_lists/components/ExploreLists_FLATLIST";
 import VocabsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/VocabsFlatlistHeader_SECTION";
 import ListsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/ListsFlatlistHeader_SECTION";
+import USE_totalPublicListCount from "@/src/features/1_lists/hooks/USE_totalPublicListCount";
+import USE_totalSharedListCount from "@/src/features/1_lists/hooks/USE_totalSharedListCount";
 
 export default function SharedLists_PAGE() {
   const { user } = USE_auth();
@@ -31,6 +33,9 @@ export default function SharedLists_PAGE() {
 
   const { collectedLang_IDS, ARE_langIdsCollecting, collectLangIds_ERROR } =
     USE_collectSharedListLangs(user?.id);
+
+  const { total_COUNT, IS_totalCountFetching, fetchTotalCount_ERROR } =
+    USE_totalSharedListCount(user?.id);
 
   const {
     sharedLists,
@@ -66,6 +71,7 @@ export default function SharedLists_PAGE() {
         }}
         listHeader_EL={
           <ListsFlatlistHeader_SECTION
+            totalLists={total_COUNT}
             {...{ search, z_listDisplay_SETTINGS, z_SET_listDisplaySettings }}
           />
         }

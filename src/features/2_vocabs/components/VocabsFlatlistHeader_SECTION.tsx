@@ -15,12 +15,14 @@ import {
 
 type VocabsFlatlistHeader_SECTIONProps = {
   search: string;
+  totalVocabs: number | null;
   z_vocabDisplay_SETTINGS: z_vocabDisplaySettings_PROPS;
   z_SET_vocabDisplaySettings: z_setVocabDisplaySettings_PROPS;
 };
 
 export default function VocabsFlatlistHeader_SECTION({
   search,
+  totalVocabs = 0,
   z_vocabDisplay_SETTINGS,
   z_SET_vocabDisplaySettings,
 }: VocabsFlatlistHeader_SECTIONProps) {
@@ -52,7 +54,7 @@ export default function VocabsFlatlistHeader_SECTION({
         ) : appliedFiltersCount > 0 ? (
           `${appliedFiltersCount} filters applied`
         ) : (
-          "Browse through 57 public lists"
+          `Browse through ${totalVocabs ? totalVocabs : 0} vocabs`
         )}
       </Styled_TEXT>
 

@@ -18,6 +18,7 @@ import ExploreListsBottom_SECTION from "@/src/features/1_lists/components/Explor
 import PublicLists_HEADER from "@/src/features/1_lists/components/PublicLists_HEADER";
 import ExploreLists_FLATLIST from "@/src/features/1_lists/components/ExploreLists_FLATLIST";
 import ListsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/ListsFlatlistHeader_SECTION";
+import USE_totalPublicListCount from "@/src/features/1_lists/hooks/USE_totalPublicListCount";
 
 export default function PublicLists_PAGE() {
   const { search, debouncedSearch, SET_search } = USE_debounceSearch();
@@ -29,6 +30,9 @@ export default function PublicLists_PAGE() {
 
   const { collectedLang_IDS, ARE_langIdsCollecting, collectLangIds_ERROR } =
     USE_collectPublicListLangs();
+
+  const { total_COUNT, IS_totalCountFetching, fetchTotalCount_ERROR } =
+    USE_totalPublicListCount();
 
   const {
     lists,
@@ -63,6 +67,7 @@ export default function PublicLists_PAGE() {
         }}
         listHeader_EL={
           <ListsFlatlistHeader_SECTION
+            totalLists={total_COUNT}
             {...{ search, z_listDisplay_SETTINGS, z_SET_listDisplaySettings }}
           />
         }

@@ -39,7 +39,7 @@ export default function USE_fetchOnePublicList(list_id: string) {
         // Fetch the public list with the specified list ID
         const { data: listData, error: listError } = await supabase
           .from("lists")
-          .select("*")
+          .select("*, vocabs(count)")
           .eq("id", list_id)
           .eq("type", "public")
           .single(); // Ensures only one item is fetched

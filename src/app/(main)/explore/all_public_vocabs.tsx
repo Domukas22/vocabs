@@ -25,6 +25,7 @@ import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
 import { View } from "react-native";
 import VocabsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/VocabsFlatlistHeader_SECTION";
+import USE_fetchTotalPublicVocabCount from "@/src/features/2_vocabs/hooks/USE_fetchTotalPublicVocabCount";
 
 export default function AllPublicVocabs_PAGE() {
   const { t } = useTranslation();
@@ -40,6 +41,9 @@ export default function AllPublicVocabs_PAGE() {
   ]);
 
   const [target_VOCAB, SET_targetVocab] = useState<Vocab_MODEL | undefined>();
+
+  const { total_COUNT, IS_totalCountFetching, fetchTotalCount_ERROR } =
+    USE_fetchTotalPublicVocabCount();
 
   const {
     vocabs,
@@ -77,6 +81,7 @@ export default function AllPublicVocabs_PAGE() {
         }}
         listHeader_EL={
           <VocabsFlatlistHeader_SECTION
+            totalVocabs={total_COUNT}
             {...{ search, z_vocabDisplay_SETTINGS, z_SET_vocabDisplaySettings }}
           />
         }

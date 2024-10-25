@@ -17,11 +17,13 @@ import {
 
 type ListsFlatlistHeader_SECTIONProps = {
   search: string;
+  totalLists: number | null;
   z_listDisplay_SETTINGS: z_listDisplaySettings_PROPS;
   z_SET_listDisplaySettings: z_setlistDisplaySettings_PROPS;
 };
 export default function ListsFlatlistHeader_SECTION({
   search,
+  totalLists = 0,
   z_listDisplay_SETTINGS,
   z_SET_listDisplaySettings,
 }: ListsFlatlistHeader_SECTIONProps) {
@@ -46,7 +48,7 @@ export default function ListsFlatlistHeader_SECTION({
         ) : appliedFiltersCount > 0 ? (
           `${appliedFiltersCount} filters applied`
         ) : (
-          "Browse through 57 public lists"
+          `Browse through ${totalLists ? totalLists : 0} public lists`
         )}
       </Styled_TEXT>
 
