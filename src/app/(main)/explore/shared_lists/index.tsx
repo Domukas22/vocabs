@@ -10,13 +10,25 @@ import SharedList_FLATLIST from "@/src/features/1_lists/components/SharedList_FL
 import USE_fetchSharedSupabaseLists from "@/src/features/2_vocabs/hooks/USE_fetchSharedSupabaseLists";
 import USE_debounceSearch from "@/src/hooks/USE_debounceSearch/USE_debounceSearch";
 import USE_zustand from "@/src/zustand";
-import AllSharedListsBottom_SECTION from "@/src/features/1_lists/components/AllSharedListsBottom_SECTION";
-import SharedLists_SUBNAV from "@/src/features/1_lists/components/SharedLists_SUBNAV";
+
+import USE_collectSharedListLangs from "@/src/features/2_vocabs/hooks/USE_collectSharedListLangs";
+import ExploreLists_SUBNAV from "@/src/features/1_lists/components/ExploreLists_SUBNAV";
+import USE_modalToggles from "@/src/hooks/USE_modalToggles";
+import ListDisplaySettings_MODAL from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/ListDisplaySettings_MODAL";
+import ExploreListsBottom_SECTION from "@/src/features/1_lists/components/ExploreListsBottom_SECTION";
+import ExploreLists_FLATLIST from "@/src/features/1_lists/components/ExploreLists_FLATLIST";
 
 export default function SharedLists_PAGE() {
   const { user } = USE_auth();
   const { search, debouncedSearch, SET_search } = USE_debounceSearch();
   const { z_listDisplay_SETTINGS } = USE_zustand();
+
+  const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
+    { name: "displaySettings" },
+  ]);
+
+  const { collectedLang_IDS, ARE_langIdsCollecting, collectLangIds_ERROR } =
+    USE_collectSharedListLangs(user?.id);
 
   const {
     sharedLists,
@@ -36,20 +48,27 @@ export default function SharedLists_PAGE() {
     <Page_WRAP>
       <SharedLists_HEADER />
 
-      <SharedLists_SUBNAV {...{ search, SET_search }} />
+      <ExploreLists_SUBNAV
+        TOGGLE_displaySettings={() => TOGGLE_modal("displaySettings")}
+        {...{ search, SET_search, ARE_langIdsCollecting }}
+      />
 
-      <SharedList_FLATLIST
+      <ExploreLists_FLATLIST
         lists={sharedLists}
-        bottom_SECTION={
-          <AllSharedListsBottom_SECTION
-            {...{
-              IS_loadingMore,
-              HAS_reachedEnd,
-              ARE_listsFetching,
-              LOAD_more,
-            }}
-          />
-        }
+        type="shared"
+        {...{
+          IS_loadingMore,
+          HAS_reachedEnd,
+          ARE_listsFetching,
+          LOAD_more,
+        }}
+      />
+      {/* ------------------------------------------------ MODALS ------------------------------------------------ */}
+
+      <ListDisplaySettings_MODAL
+        open={modal_STATES.displaySettings}
+        TOGGLE_open={() => TOGGLE_modal("displaySettings")}
+        collectedLang_IDS={collectedLang_IDS}
       />
     </Page_WRAP>
   );

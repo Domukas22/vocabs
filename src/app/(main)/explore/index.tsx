@@ -70,7 +70,7 @@ export default function Explore_PAGE() {
         </Transition_BTN>
 
         <Transition_BTN
-          onPress={() => router.push("/(main)/explore/public_vocabs")}
+          onPress={() => router.push("/(main)/explore/all_public_vocabs")}
         >
           <Styled_TEXT type="text_18_bold">🔤 All public vocabs</Styled_TEXT>
           <Styled_TEXT type="label_small">

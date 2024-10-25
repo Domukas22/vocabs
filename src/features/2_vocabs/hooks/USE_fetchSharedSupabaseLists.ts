@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/src/lib/supabase";
 import { z_listDisplaySettings_PROPS } from "@/src/zustand";
+import { BUILD_fetchSharedListsQuery } from "../../1_lists/utils/BUILD_fetchSharedListsQuery";
 
 export default function USE_fetchSharedSupabaseLists({
   search,
@@ -58,25 +59,20 @@ export default function USE_fetchSharedSupabaseLists({
         }
 
         // Extract unique list IDs from the fetched access data
-        const listIds = [...new Set(accessData?.map((entry) => entry.list_id))];
+        const list_ids = [
+          ...new Set(accessData?.map((entry) => entry.list_id)),
+        ];
+
+        const query = BUILD_fetchSharedListsQuery({
+          search,
+          list_ids,
+          z_listDisplay_SETTINGS,
+          start,
+          end,
+        });
 
         // Fetch lists that match the list IDs and apply search filtering
-        const { data: listData, error: listError } = await supabase
-          .from("lists")
-          .select(
-            `
-            id,
-            name,
-            description,
-            collected_lang_ids,
-            vocabs(count),
-            owner:users!lists_2_user_id_fkey(username)
-          `
-          )
-          .in("id", listIds)
-          .ilike("name", `%${search}%`)
-          // .or(`name.ilike.%${search}%,owner.username.ilike.%${search}%`) // cant search by owner for some reason. it doesnt recognize the artificially created "owner" property
-          .range(start, end - 1); // Fetch records between start and end indices
+        const { data: listData, error: listError } = await query;
 
         // Check for errors in fetching lists
         if (listError) {

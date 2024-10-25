@@ -3,13 +3,15 @@ import { z_listDisplaySettings_PROPS } from "@/src/zustand";
 
 export interface ListFilter_PROPS {
   search?: string;
+  list_ids: string[];
   z_listDisplay_SETTINGS: z_listDisplaySettings_PROPS | undefined;
   start?: number; // New parameter for start index
   end?: number; // New parameter for end index
 }
 
-export const BUILD_fetchPublicListsQuery = ({
+export const BUILD_fetchSharedListsQuery = ({
   search,
+  list_ids,
   z_listDisplay_SETTINGS,
   start = 0, // Default start index
   end = 10, // Default end index (can be overridden)
@@ -26,8 +28,12 @@ export const BUILD_fetchPublicListsQuery = ({
       `
   );
 
+  if (list_ids && list_ids.length > 0) {
+    query = query.in("id", list_ids);
+  }
+
   // Add filtering for public lists
-  query = query.eq("type", "public");
+  query = query.eq("type", "shared");
 
   // Apply search filters if present
   if (search) {

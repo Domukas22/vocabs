@@ -1,8 +1,14 @@
+//
+//
+//
+//
+
 import { useState, useEffect, useCallback } from "react";
 import { z_listDisplaySettings_PROPS } from "@/src/zustand";
-import { supabase } from "@/src/lib/supabase";
 import { BUILD_fetchPublicListsQuery } from "../../1_lists/utils/BUILD_fetchPublicListsQuery";
-export default function USE_fetchPublicSupabaseLists({
+import { supabase } from "@/src/lib/supabase";
+
+export default function USE_fetchPublicLists({
   search,
   z_listDisplay_SETTINGS,
   paginateBy = 10, // Default pagination size
@@ -12,8 +18,8 @@ export default function USE_fetchPublicSupabaseLists({
   paginateBy?: number;
 }) {
   const [ARE_listsFetching, SET_listsFetching] = useState(false);
-  const [publicLists_ERROR, SET_error] = useState<string | null>(null);
-  const [publicLists, SET_publicLists] = useState<any[]>([]);
+  const [fetchLists_ERROR, SET_error] = useState<string | null>(null);
+  const [lists, SET_lists] = useState<any[]>([]);
   const [start, SET_start] = useState(0); // Start index for pagination
   const [end, SET_end] = useState(paginateBy); // End index for pagination
   const [IS_loadingMore, SET_loadingMore] = useState(false);
@@ -22,7 +28,7 @@ export default function USE_fetchPublicSupabaseLists({
   // Fetch public lists whenever the search or relevant settings change
   useEffect(() => {
     // Reset pagination and fetch the first set of lists
-    SET_publicLists([]); // Clear the previous lists
+    SET_lists([]); // Clear the previous lists
     SET_start(0); // Reset start index
     SET_end(paginateBy); // Reset end index
     fetchPublicLists({ start: 0, end: paginateBy }); // Fetch initial set of public lists
@@ -47,8 +53,8 @@ export default function USE_fetchPublicSupabaseLists({
         const { data: listData, error: listError } = await query;
 
         if (listError) {
-          console.error("Error fetching public lists:", listError);
-          SET_error("🔴 Error fetching public lists. 🔴");
+          console.error(`Error fetching public lists:`, listError);
+          SET_error(`🔴 Error fetching public lists. 🔴`);
           return;
         }
 
@@ -63,10 +69,10 @@ export default function USE_fetchPublicSupabaseLists({
         }));
 
         // Update the list state with fetched data
-        SET_publicLists((prev) => [...prev, ...formattedData]);
+        SET_lists((prev) => [...prev, ...formattedData]);
       } catch (error) {
-        console.error("🔴 Unexpected error fetching public lists: 🔴", error);
-        SET_error("🔴 Unexpected error occurred. 🔴");
+        console.error(`🔴 Unexpected error fetching public lists: 🔴`, error);
+        SET_error(`🔴 Unexpected error occurred. 🔴`);
       } finally {
         SET_listsFetching(false);
       }
@@ -90,9 +96,9 @@ export default function USE_fetchPublicSupabaseLists({
   };
 
   return {
-    publicLists,
+    lists,
     ARE_listsFetching,
-    publicLists_ERROR,
+    fetchLists_ERROR,
     LOAD_more,
     IS_loadingMore,
     HAS_reachedEnd,

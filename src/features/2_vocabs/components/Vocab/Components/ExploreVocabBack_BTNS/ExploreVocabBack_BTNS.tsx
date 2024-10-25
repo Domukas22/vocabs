@@ -4,13 +4,11 @@
 
 import Btn from "@/src/components/Btn/Btn";
 import { ICON_X } from "@/src/components/icons/icons";
-import { List_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
-
 import { View } from "react-native";
 
-export default function PublicVocabBack_BTNS({
+export default function ExploreVocabBack_BTNS({
   list,
   SAVE_vocab,
   TOGGLE_vocab,

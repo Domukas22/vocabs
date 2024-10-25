@@ -14,13 +14,14 @@ import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 import USE_supabaseVocabsOfAList from "@/src/features/2_vocabs/hooks/USE_supabaseVocabsOfAList";
 import SavePublicVocabToList_MODAL from "@/src/features/2_vocabs/components/Modal/SavePublicVocabToList_MODAL/SavePublicVocabToList_MODAL";
 import USE_fetchOnePublicList from "@/src/features/2_vocabs/hooks/USE_fetchOnePublicList";
-import OnePublicList_SUBNAV from "@/src/components/OnePublicList_SUBNAV";
+
 import { VocabDisplaySettings_MODAL } from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/VocabDisplaySettings_MODAL";
 import USE_zustand from "@/src/zustand";
 import USE_debounceSearch from "@/src/hooks/USE_debounceSearch/USE_debounceSearch";
 import PublicList_HEADER from "@/src/features/1_lists/components/PublicList_HEADER";
-import OnePublicListBottom_SECTION from "@/src/features/1_lists/components/OnePublicListBottom_SECTION";
-import PublicListVocabs_FLATLIST from "@/src/features/2_vocabs/components/PublicListVocabs_FLATLIST";
+import ExporeSingleList_SUBNAV from "@/src/components/ExporeSingleList_SUBNAV";
+import ExploreVocabs_FLATLIST from "@/src/features/2_vocabs/components/ExploreVocabs_FLATLIST";
+import ExploreVocabsFlatlistBottom_SECTION from "@/src/features/2_vocabs/components/ExploreVocabsFlatlistBottom_SECTION";
 
 export default function PublicListVocabs_PAGE() {
   const toast = useToast();
@@ -62,24 +63,20 @@ export default function PublicListVocabs_PAGE() {
   return (
     <Page_WRAP>
       <PublicList_HEADER list_NAME={list?.name} {...{ IS_listFetching }} />
-      <OnePublicList_SUBNAV
+      <ExporeSingleList_SUBNAV
         TOGGLE_displaySettings={() => TOGGLE_modal("displaySettings")}
-        loading={IS_listFetching || ARE_vocabsFetching}
+        loading={IS_listFetching}
         {...{ search, SET_search }}
       />
 
-      <PublicListVocabs_FLATLIST
-        {...{ vocabs }}
-        bottom_SECTION={
-          <OnePublicListBottom_SECTION
-            {...{
-              IS_loadingMore,
-              HAS_reachedEnd,
-              ARE_vocabsFetching,
-              LOAD_more,
-            }}
-          />
-        }
+      <ExploreVocabs_FLATLIST
+        {...{
+          vocabs,
+          IS_loadingMore,
+          HAS_reachedEnd,
+          ARE_vocabsFetching,
+          LOAD_more,
+        }}
         SAVE_vocab={(vocab: Vocab_MODEL) => {
           SET_targetVocab(vocab);
           TOGGLE_modal("save");

@@ -3,17 +3,16 @@
 //
 
 import Btn from "@/src/components/Btn/Btn";
-import { ICON_displaySettings, ICON_X } from "@/src/components/icons/icons";
+import { ICON_displaySettings } from "@/src/components/icons/icons";
 import SearchBar from "@/src/components/SearchBar/SearchBar";
 import Subnav from "@/src/components/Subnav/Subnav";
 import USE_zustand from "@/src/zustand";
-import { useMemo } from "react";
+
 import USE_getActiveFilterCount from "../features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/utils/USE_getActiveFilterCount";
-import { t } from "i18next";
 import { MyColors } from "@/src/constants/MyColors";
 import { ActivityIndicator } from "react-native";
 
-export default function OnePublicList_SUBNAV({
+export default function ExporeSingleList_SUBNAV({
   search,
   loading,
   SET_search,

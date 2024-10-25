@@ -25,7 +25,7 @@ export default function PublicVocabs_HEADER() {
           style={{ opacity: 0, pointerEvents: "none" }}
         />
       }
-      title="🔤 Explore vocabs"
+      title="🔤 All public vocabs"
     />
   );
 }

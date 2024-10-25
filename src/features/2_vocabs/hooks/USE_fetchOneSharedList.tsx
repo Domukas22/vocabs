@@ -9,6 +9,8 @@ export default function USE_fetchOneSharedList(listId: string) {
   const [sharedList, SET_sharedList] = useState<any | null>(null);
   const cacheRef = useRef(cache); // Reference to cache map to avoid recreating
 
+  console.log(listId);
+
   useEffect(() => {
     const fetchOneSharedList = async () => {
       // Check if listId is provided

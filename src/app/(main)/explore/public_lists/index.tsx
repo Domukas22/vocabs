@@ -7,35 +7,36 @@ import React from "react";
 import { _DisplaySettings_PROPS } from "@/src/utils/DisplaySettings";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 
-import USE_fetchPublicSupabaseLists from "@/src/features/2_vocabs/hooks/USE_fetchPublicSupabaseLists";
+import USE_fetchPublicLists from "@/src/features/2_vocabs/hooks/USE_fetchPublicLists";
 import USE_zustand from "@/src/zustand";
-import PublicLists_SUBNAV from "@/src/features/1_lists/components/PublicLists_SUBNAV";
+import ExploreLists_SUBNAV from "@/src/features/1_lists/components/ExploreLists_SUBNAV";
 import USE_debounceSearch from "@/src/hooks/USE_debounceSearch/USE_debounceSearch";
 import ListDisplaySettings_MODAL from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/ListDisplaySettings_MODAL";
 import USE_collectPublicListLangs from "@/src/features/2_vocabs/hooks/USE_collectPublicListLangs";
 
-import AllPublicListsBottom_SECTION from "@/src/features/1_lists/components/AllPublicListsBottom_SECTION";
+import ExploreListsBottom_SECTION from "@/src/features/1_lists/components/ExploreListsBottom_SECTION";
 import PublicLists_HEADER from "@/src/features/1_lists/components/PublicLists_HEADER";
-import PublisList_FLATLIST from "@/src/features/1_lists/components/PublisList_FLATLIST";
+import ExploreLists_FLATLIST from "@/src/features/1_lists/components/ExploreLists_FLATLIST";
 
 export default function PublicLists_PAGE() {
   const { search, debouncedSearch, SET_search } = USE_debounceSearch();
   const { z_listDisplay_SETTINGS } = USE_zustand();
-  const { collectedLang_IDS, ARE_langIdsCollecting, collectLangIds_ERROR } =
-    USE_collectPublicListLangs();
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
     { name: "displaySettings" },
   ]);
 
+  const { collectedLang_IDS, ARE_langIdsCollecting, collectLangIds_ERROR } =
+    USE_collectPublicListLangs();
+
   const {
-    publicLists,
+    lists,
     ARE_listsFetching,
-    publicLists_ERROR,
+    fetchLists_ERROR,
     LOAD_more,
     IS_loadingMore,
     HAS_reachedEnd,
-  } = USE_fetchPublicSupabaseLists({
+  } = USE_fetchPublicLists({
     search: debouncedSearch,
     z_listDisplay_SETTINGS,
     paginateBy: 2,
@@ -45,25 +46,23 @@ export default function PublicLists_PAGE() {
     <Page_WRAP>
       <PublicLists_HEADER />
 
-      <PublicLists_SUBNAV
+      <ExploreLists_SUBNAV
         TOGGLE_displaySettings={() => TOGGLE_modal("displaySettings")}
         {...{ search, SET_search, ARE_langIdsCollecting }}
       />
-      <PublisList_FLATLIST
-        lists={publicLists}
-        bottom_SECTION={
-          <AllPublicListsBottom_SECTION
-            {...{
-              IS_loadingMore,
-              HAS_reachedEnd,
-              ARE_listsFetching,
-              LOAD_more,
-            }}
-          />
-        }
+
+      <ExploreLists_FLATLIST
+        type="public"
+        {...{
+          lists,
+          IS_loadingMore,
+          HAS_reachedEnd,
+          ARE_listsFetching,
+          LOAD_more,
+        }}
       />
 
-      {/* ------------------------ MODALS --------------------------------- */}
+      {/* ------------------------------------------------ MODALS ------------------------------------------------ */}
 
       <ListDisplaySettings_MODAL
         open={modal_STATES.displaySettings}

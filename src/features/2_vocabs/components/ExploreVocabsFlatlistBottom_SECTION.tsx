@@ -6,7 +6,7 @@ import Btn from "@/src/components/Btn/Btn";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { ActivityIndicator } from "react-native";
 
-export default function OnePublicListBottom_SECTION({
+export default function ExploreVocabsFlatlistBottom_SECTION({
   IS_loadingMore,
   HAS_reachedEnd,
   ARE_vocabsFetching,

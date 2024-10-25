@@ -8,7 +8,7 @@ import Transition_BTN from "@/src/components/Transition_BTN/Transition_BTN";
 import { List_MODEL } from "@/src/db/watermelon_MODELS";
 import { View } from "react-native";
 
-export default function SharedList_BTN({
+export default function ExploreList_BTN({
   list,
   GO_toList,
 }: {
@@ -26,14 +26,14 @@ export default function SharedList_BTN({
           Created by: {list.owner.username}
         </Styled_TEXT>
       )}
-      {list?.vocab_COUNT && (
-        <Styled_TEXT
-          type="label_small"
-          // style={{ color: MyColors.text_primary }}
-        >
-          {list?.vocab_COUNT} vocabs
-        </Styled_TEXT>
-      )}
+
+      <Styled_TEXT
+        type="label_small"
+        // style={{ color: MyColors.text_primary }}
+      >
+        {list?.vocab_COUNT > 0 ? `${list.vocab_COUNT} vocabs` : "Empty list"}
+      </Styled_TEXT>
+
       {list?.collected_lang_ids && list?.collected_lang_ids.length > 0 && (
         <View
           style={{

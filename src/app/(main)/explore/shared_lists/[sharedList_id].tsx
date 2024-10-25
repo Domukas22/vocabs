@@ -17,11 +17,12 @@ import SavePublicVocabToList_MODAL from "@/src/features/2_vocabs/components/Moda
 import USE_fetchOneSharedList from "@/src/features/2_vocabs/hooks/USE_fetchOneSharedList";
 import USE_zustand from "@/src/zustand";
 import USE_debounceSearch from "@/src/hooks/USE_debounceSearch/USE_debounceSearch";
-import SharedListVocabs_FLATLIST from "@/src/features/2_vocabs/components/SharedListVocabs_FLATLIST";
-import OneSharedListBottom_SECTION from "@/src/features/1_lists/components/OneSharedListBottom_SECTION";
 import OneSharedList_HEADER from "@/src/features/1_lists/components/OneSharedList_HEADER";
-import OneSharedList_SUBNAV from "@/src/components/OneSharedList_SUBNAV";
+
 import { VocabDisplaySettings_MODAL } from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/VocabDisplaySettings_MODAL";
+import ExporeSingleList_SUBNAV from "@/src/components/ExporeSingleList_SUBNAV";
+import ExploreVocabs_FLATLIST from "@/src/features/2_vocabs/components/ExploreVocabs_FLATLIST";
+import ExploreVocabsFlatlistBottom_SECTION from "@/src/features/2_vocabs/components/ExploreVocabsFlatlistBottom_SECTION";
 
 export default function PublicListVocabs_PAGE() {
   const { z_vocabDisplay_SETTINGS } = USE_zustand();
@@ -66,24 +67,20 @@ export default function PublicListVocabs_PAGE() {
         list_NAME={sharedList?.name}
         {...{ ARE_vocabsFetching }}
       />
-      <OneSharedList_SUBNAV
+      <ExporeSingleList_SUBNAV
         TOGGLE_displaySettings={() => TOGGLE_modal("displaySettings")}
-        loading={IS_sharedListFetching}
+        loading={false}
         {...{ search, SET_search }}
       />
 
-      <SharedListVocabs_FLATLIST
-        {...{ vocabs }}
-        bottom_SECTION={
-          <OneSharedListBottom_SECTION
-            {...{
-              IS_loadingMore,
-              HAS_reachedEnd,
-              ARE_vocabsFetching,
-              LOAD_more,
-            }}
-          />
-        }
+      <ExploreVocabs_FLATLIST
+        {...{
+          vocabs,
+          IS_loadingMore,
+          HAS_reachedEnd,
+          ARE_vocabsFetching,
+          LOAD_more,
+        }}
         SAVE_vocab={(vocab: Vocab_MODEL) => {
           SET_targetVocab(vocab);
           TOGGLE_modal("save");

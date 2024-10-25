@@ -12,7 +12,7 @@ import USE_getActiveFilterCount from "../../2_vocabs/components/Modal/DisplaySet
 import { ActivityIndicator } from "react-native";
 import { MyColors } from "@/src/constants/MyColors";
 
-export default function PublicLists_SUBNAV({
+export default function ExploreLists_SUBNAV({
   search,
   ARE_langIdsCollecting,
   SET_search,
