@@ -68,7 +68,6 @@ export default function ListDisplaySettings_MODAL({
 
   // TODO: Create a "display settings correction" function, which:
   // - if modal doesnt have difficulties, yet the selected sorting is by difficulty, change it to sorting "date"
-  // console.log(collectedLang_IDS);
 
   return (
     <Big_MODAL {...{ open }}>

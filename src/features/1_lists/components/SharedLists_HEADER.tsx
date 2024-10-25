@@ -7,7 +7,7 @@ import Header from "@/src/components/Header/Header";
 import { ICON_arrow } from "@/src/components/icons/icons";
 import { useRouter } from "expo-router";
 
-export default function PublicVocabs_HEADER() {
+export default function SharedLists_HEADER() {
   const router = useRouter();
   return (
     <Header
@@ -25,7 +25,7 @@ export default function PublicVocabs_HEADER() {
           style={{ opacity: 0, pointerEvents: "none" }}
         />
       }
-      title="🔤 Explore vocabs"
+      title="🔒 Shared lists"
     />
   );
 }

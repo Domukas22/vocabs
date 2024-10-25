@@ -8,18 +8,19 @@ import SearchBar from "@/src/components/SearchBar/SearchBar";
 import Subnav from "@/src/components/Subnav/Subnav";
 import USE_zustand from "@/src/zustand";
 import { useMemo } from "react";
-import USE_getActiveFilterCount from "../../2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/utils/USE_getActiveFilterCount";
-import { ActivityIndicator } from "react-native";
+import USE_getActiveFilterCount from "../features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/utils/USE_getActiveFilterCount";
+import { t } from "i18next";
 import { MyColors } from "@/src/constants/MyColors";
+import { ActivityIndicator } from "react-native";
 
-export default function PublicLists_SUBNAV({
+export default function OneSharedList_SUBNAV({
   search,
-  ARE_langIdsCollecting,
+  loading,
   SET_search,
   TOGGLE_displaySettings,
 }: {
   search: string;
-  ARE_langIdsCollecting: boolean;
+  loading: boolean;
   SET_search: (val: string) => void;
   TOGGLE_displaySettings: () => void;
 }) {
@@ -32,7 +33,7 @@ export default function PublicLists_SUBNAV({
       <Btn
         type="simple"
         iconLeft={
-          ARE_langIdsCollecting ? (
+          loading ? (
             <ActivityIndicator color={MyColors.icon_gray} />
           ) : (
             <ICON_displaySettings />
@@ -40,7 +41,7 @@ export default function PublicLists_SUBNAV({
         }
         style={{ borderRadius: 100 }}
         onPress={() => {
-          if (!ARE_langIdsCollecting) TOGGLE_displaySettings();
+          if (!loading) TOGGLE_displaySettings();
         }}
         topRightIconCount={activeFilter_COUNT}
       />

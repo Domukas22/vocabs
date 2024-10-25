@@ -14,12 +14,12 @@ import { VocabBack_TRS } from "./Components/VocabBack_TRS/VocabBack_TRS";
 export default function Vocab({
   vocab,
   highlighted = false,
-  vocab_BACK: vocabBack_BTNS,
+  vocabBack_BTNS,
   SHOW_list = false,
 }: {
   vocab: Vocab_MODEL | undefined;
   highlighted?: boolean;
-  vocab_BACK: (TOGGLE_vocab: () => void) => React.ReactNode;
+  vocabBack_BTNS: (TOGGLE_vocab: () => void) => React.ReactNode;
   SHOW_list?: boolean;
   SHOW_username?: boolean;
 }) {

@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/src/lib/supabase";
+import Delay from "@/src/utils/Delay";
 
 export default function USE_collectPublicListLangs() {
   const [ARE_langIdsCollecting, SET_langIdsCollecting] = useState(false);

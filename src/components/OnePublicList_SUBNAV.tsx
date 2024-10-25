@@ -11,13 +11,16 @@ import { useMemo } from "react";
 import USE_getActiveFilterCount from "../features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/utils/USE_getActiveFilterCount";
 import { t } from "i18next";
 import { MyColors } from "@/src/constants/MyColors";
+import { ActivityIndicator } from "react-native";
 
-export default function PublicVocabs_SUBNAV({
+export default function OnePublicList_SUBNAV({
   search,
+  loading,
   SET_search,
   TOGGLE_displaySettings,
 }: {
   search: string;
+  loading: boolean;
   SET_search: (val: string) => void;
   TOGGLE_displaySettings: () => void;
 }) {
@@ -29,9 +32,17 @@ export default function PublicVocabs_SUBNAV({
       <SearchBar value={search} SET_value={SET_search} />
       <Btn
         type="simple"
-        iconLeft={<ICON_displaySettings />}
+        iconLeft={
+          loading ? (
+            <ActivityIndicator color={MyColors.icon_gray} />
+          ) : (
+            <ICON_displaySettings />
+          )
+        }
         style={{ borderRadius: 100 }}
-        onPress={TOGGLE_displaySettings}
+        onPress={() => {
+          if (!loading) TOGGLE_displaySettings();
+        }}
         topRightIconCount={activeFilter_COUNT}
       />
     </Subnav>

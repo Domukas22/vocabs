@@ -76,6 +76,8 @@ export default function USE_fetchPublicSupabaseLists({
 
   // Function to load more lists (for pagination)
   const LOAD_more = async () => {
+    if (IS_loadingMore) return;
+
     const newStart = start + paginateBy;
     const newEnd = end + paginateBy;
 

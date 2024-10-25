@@ -56,7 +56,7 @@ export default function VocabLangFilters_BLOCK({
 
   return view === "filter" ? (
     <Block>
-      <Label>{t("label.filterByDifficulty")}</Label>
+      <Label>{t("label.filterByLanguage")}</Label>
       {langs?.map((lang, index) => {
         return (
           <Btn

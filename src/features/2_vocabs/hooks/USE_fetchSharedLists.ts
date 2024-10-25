@@ -51,6 +51,7 @@ export default function USE_fetchSharedLists() {
           id,
           name,
           description,
+          collected_lang_ids,
           vocabs(count),
           owner:users!lists_2_user_id_fkey(username)
         `

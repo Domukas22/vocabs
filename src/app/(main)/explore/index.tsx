@@ -42,7 +42,7 @@ import { MyColors } from "@/src/constants/MyColors";
 import Transition_BTN from "@/src/components/Transition_BTN/Transition_BTN";
 import { ICON_arrow } from "@/src/components/icons/icons";
 
-export default function MyLists_PAGE() {
+export default function Explore_PAGE() {
   const { user } = USE_auth();
   const { t } = useTranslation();
 

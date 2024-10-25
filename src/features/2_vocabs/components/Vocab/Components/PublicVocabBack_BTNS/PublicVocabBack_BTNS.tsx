@@ -10,12 +10,17 @@ import { useTranslation } from "react-i18next";
 
 import { View } from "react-native";
 
-export default function PublicVocab_BACK({
+export default function PublicVocabBack_BTNS({
   list,
   SAVE_vocab,
   TOGGLE_vocab,
 }: {
-  list: List_MODEL | undefined;
+  list?:
+    | {
+        name: string | undefined;
+        id: string | undefined;
+      }
+    | undefined;
   SAVE_vocab: () => void;
   TOGGLE_vocab: () => void;
 }) {
@@ -30,12 +35,10 @@ export default function PublicVocab_BACK({
         onPress={SAVE_vocab}
       />
 
-      {list && (
+      {list && list?.name && list?.id && (
         <Btn
           text={`See list "${list.name}"`}
-          onPress={() =>
-            router.push(`/(main)/explore/public_lists/${list.name}`)
-          }
+          onPress={() => router.push(`/(main)/explore/public_lists/${list.id}`)}
         />
       )}
 

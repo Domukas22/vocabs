@@ -3,6 +3,7 @@
 //
 
 import { supabase } from "@/src/lib/supabase";
+import Delay from "@/src/utils/Delay";
 import { useState, useEffect, useRef, useMemo } from "react";
 
 const cache = new Map<string, any>(); // Basic in-memory cache
@@ -17,6 +18,7 @@ export default function USE_fetchOnePublicList(list_id: string) {
     // Memoized fetch function to avoid unnecessary calls
     const fetchOnePublicList = async () => {
       // Check if listId is provided
+
       if (!list_id) {
         console.error("🔴 List ID is required. 🔴");
         SET_error("🔴 List ID is required. 🔴");
