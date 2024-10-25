@@ -15,7 +15,8 @@
     "cancelListSharing": "Stop sharing list?",
     "cancelListPublishing": "Unpublish list?",
     "selectUsers": "Select users",
-    "getVocabs": "Get vocabs"
+    "getVocabs": "Get vocabs",
+    "copyListAndVocabs": "Copy this list and it's vocabs?"
   },
   "blockLabels": {
     "uiLang": "App language"
@@ -72,7 +73,8 @@
     "confirmPublish": "Yes, publish",
     "confirmStop": "Yes, stop",
     "confirmListUnpublish": "Yes, unpublish",
-    "all": "All"
+    "all": "All",
+    "confirmListCopy": "Yes, copy"
   },
   "pages": {
     "about": {
@@ -261,7 +263,8 @@
     "publicVocabSavedInAPrivateListPre": "Saved vocab in the list\t",
     "publicVocabSavedInAPrivateListPost": " ",
     "vocabPublishedToPublic": "Vocab published to public",
-    "savedVocab": "Vocab saved"
+    "savedVocab": "Vocab saved",
+    "listAndVocabsCopied": "List and vocabs copied"
   },
   "notification": {
     "atLeast1LangError": "Atleast 1 language must be selected"

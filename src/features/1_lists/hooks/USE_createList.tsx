@@ -10,7 +10,6 @@ export interface CreateList_PROPS {
   name: string;
   description: string;
   user_id: string | undefined;
-  currentList_NAMES: string[] | undefined;
   onSuccess?: (newList: List_MODEL) => void;
   cleanup?: () => void;
 }
@@ -36,7 +35,6 @@ export default function USE_createList() {
     name,
     description,
     user_id,
-    currentList_NAMES,
     onSuccess,
     cleanup,
   }: CreateList_PROPS): Promise<{
@@ -52,14 +50,6 @@ export default function USE_createList() {
       return {
         success: false,
         msg: "🔴 List name not provided for list creation 🔴",
-      };
-    }
-
-    if (currentList_NAMES?.some((listName) => listName === name)) {
-      SET_createListError("You already have a list with that name");
-      return {
-        success: false,
-        msg: "🔴 List name already exists 🔴",
       };
     }
 

@@ -12,9 +12,11 @@ import { ActivityIndicator } from "react-native";
 export default function PublicList_HEADER({
   list_NAME,
   IS_listFetching,
+  TOGGLE_saveListModal = () => {},
 }: {
   list_NAME: string | undefined;
   IS_listFetching: boolean;
+  TOGGLE_saveListModal: () => void;
 }) {
   const router = useRouter();
   return (
@@ -37,6 +39,7 @@ export default function PublicList_HEADER({
               <ICON_download />
             )
           }
+          onPress={TOGGLE_saveListModal}
           style={{ borderRadius: 100 }}
         />
       }

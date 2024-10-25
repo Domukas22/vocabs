@@ -38,6 +38,7 @@ function _ChooseAList_FLATLIST({
   return (
     <Styled_FLATLIST
       style={{ flex: 1 }}
+      gap={8}
       data={lists}
       renderItem={({ item }: { item: List_MODEL }) => (
         <Btn
@@ -49,7 +50,7 @@ function _ChooseAList_FLATLIST({
             SELECT_list(item);
           }}
           type={selected_LIST?.id === item.id ? "active" : "simple"}
-          style={[{ flex: 1, marginBottom: 8 }]}
+          style={[{ flex: 1 }]}
           text_STYLES={{ flex: 1 }}
         />
       )}

@@ -12,9 +12,11 @@ import { ActivityIndicator } from "react-native";
 export default function OneSharedList_HEADER({
   list_NAME,
   ARE_vocabsFetching,
+  TOGGLE_saveListModal = () => {},
 }: {
   list_NAME: string | undefined;
   ARE_vocabsFetching: boolean;
+  TOGGLE_saveListModal: () => void;
 }) {
   const router = useRouter();
   return (
@@ -37,6 +39,7 @@ export default function OneSharedList_HEADER({
               <ICON_download />
             )
           }
+          onPress={TOGGLE_saveListModal}
           style={{ borderRadius: 100 }}
         />
       }

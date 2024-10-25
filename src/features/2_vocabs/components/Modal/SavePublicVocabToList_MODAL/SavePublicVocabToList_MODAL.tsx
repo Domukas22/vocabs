@@ -142,7 +142,6 @@ export default function SavePublicVocabToList_MODAL({
         // currentList_NAMES={z_lists?.map((l) => l.name)}
         CLOSE_modal={() => TOGGLE_modal("create")}
         onSuccess={(newList: List_MODEL) => {
-          TOGGLE_modal("create");
           SET_selectedList(newList);
         }}
       />

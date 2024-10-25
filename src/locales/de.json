@@ -18,7 +18,8 @@
     "cancelListSharing": "Aufhören Liste zu teilen?",
     "cancelListPublishing": "Veröffentlichung der Liste aufheben?",
     "selectUsers": "Nutzer wählen",
-    "getVocabs": "Vokabel holen"
+    "getVocabs": "Vokabel holen",
+    "copyListAndVocabs": "Diese Liste und ihre Vokabeln kopieren?"
   },
   "blockLabels": {
     "uiLang": "App Sprache"
@@ -75,7 +76,8 @@
     "confirmPublish": "Ja, veröffentlichen",
     "confirmStop": "Ja, aufhören",
     "confirmListUnpublish": "Ja, aufheben",
-    "all": "Alle"
+    "all": "Alle",
+    "confirmListCopy": "Ja, kopieren"
   },
   "pages": {
     "about": {
@@ -264,7 +266,8 @@
     "publicVocabSavedInAPrivateListPre": "Vokabel in der Liste ",
     "publicVocabSavedInAPrivateListPost": "gespeichert",
     "vocabPublishedToPublic": "Vokabel veröffentlicht",
-    "savedVocab": "Vokabel gespeichert"
+    "savedVocab": "Vokabel gespeichert",
+    "listAndVocabsCopied": "Liste und Vokabeln kopiert"
   },
   "notification": {
     "atLeast1LangError": "Mindestens 1 Sprache muss ausgewählt sein"

@@ -5,7 +5,7 @@
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { useMemo, useState } from "react";
-import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
+import { List_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 
 import { useTranslation } from "react-i18next";
 import React from "react";
@@ -24,11 +24,15 @@ import ExporeSingleList_SUBNAV from "@/src/components/ExporeSingleList_SUBNAV";
 import ExploreVocabs_FLATLIST from "@/src/features/2_vocabs/components/ExploreVocabs_FLATLIST";
 import ExploreVocabsFlatlistBottom_SECTION from "@/src/features/2_vocabs/components/ExploreVocabsFlatlistBottom_SECTION";
 import VocabsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/VocabsFlatlistHeader_SECTION";
+import { USE_auth } from "@/src/context/Auth_CONTEXT";
+import USE_copyListAndItsVocabs from "@/src/features/1_lists/hooks/USE_copyListAndItsVocabs";
+import CopyListAndVocabs_MODAL from "@/src/features/1_lists/components/CopyListAndVocabs_MODAL";
 
 export default function PublicListVocabs_PAGE() {
   const { z_vocabDisplay_SETTINGS, z_SET_vocabDisplaySettings } = USE_zustand();
   const { search, debouncedSearch, SET_search } = USE_debounceSearch();
   const { t } = useTranslation();
+  const { user } = USE_auth();
   const { sharedList_id } = useLocalSearchParams();
   const [target_VOCAB, SET_targetVocab] = useState<Vocab_MODEL | undefined>();
   const toast = useToast();
@@ -41,7 +45,34 @@ export default function PublicListVocabs_PAGE() {
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
     { name: "save" },
     { name: "displaySettings" },
+    { name: "saveList" },
   ]);
+
+  const {
+    COPY_listAndVocabs,
+    IS_copyingList,
+    copyList_ERROR,
+    RESET_copyListError,
+  } = USE_copyListAndItsVocabs();
+
+  const copy = async () => {
+    if (!sharedList || IS_copyingList) return;
+    const new_LIST = await COPY_listAndVocabs({
+      list: sharedList,
+      user_id: user?.id,
+      onSuccess: (new_LIST: List_MODEL) => {
+        TOGGLE_modal("saveList");
+        toast.show(t("notifications.listAndVocabsCopied"), {
+          type: "green",
+          duration: 5000,
+        });
+      },
+    });
+
+    if (!new_LIST.success) {
+      console.error(new_LIST.msg); // Log internal message for debugging.
+    }
+  };
 
   const {
     vocabs,
@@ -66,6 +97,7 @@ export default function PublicListVocabs_PAGE() {
     <Page_WRAP>
       <OneSharedList_HEADER
         list_NAME={sharedList?.name}
+        TOGGLE_saveListModal={() => TOGGLE_modal("saveList")}
         {...{ ARE_vocabsFetching }}
       />
       <ExporeSingleList_SUBNAV
@@ -114,6 +146,14 @@ export default function PublicListVocabs_PAGE() {
         TOGGLE_open={() => TOGGLE_modal("displaySettings")}
         collectedLang_IDS={collectedLang_IDS}
         HAS_difficulties={false}
+      />
+      <CopyListAndVocabs_MODAL
+        error={copyList_ERROR}
+        IS_open={modal_STATES.saveList}
+        IS_copying={IS_copyingList}
+        copy={copy}
+        RESET_error={RESET_copyListError}
+        CLOSE_modal={() => TOGGLE_modal("saveList")}
       />
     </Page_WRAP>
   );
