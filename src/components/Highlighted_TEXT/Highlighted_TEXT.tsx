@@ -37,6 +37,7 @@ export default function Highlighted_TEXT({
             style={[
               isHighlighted && { color: highlightTextColor },
               isHighlighted && diff === 1 && { textDecorationLine },
+              // { fontFamily: "Nunito-Medium" },
               light && { fontFamily: "Nunito-Light" },
             ]}
           >

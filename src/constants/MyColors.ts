@@ -99,7 +99,7 @@ export const MyColors = {
   // Text colors
   text_difficulty_3: primitives.red1,
   text_difficulty_2: primitives.yellow1,
-  text_difficulty_1: primitives.white095,
+  text_difficulty_1: primitives.white06,
 
   text_green: primitives.green1,
   text_red: primitives.red1,

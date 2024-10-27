@@ -52,7 +52,7 @@ export default function DeleteVocab_MODAL({
     let list_id;
     await db.write(async () => {
       const vocab = await Vocabs_DB.find(vocab_id || "");
-      list_id = vocab?.list_id;
+      list_id = vocab?.list?.id;
       await vocab.markAsDeleted();
     });
     if (onSuccess) {

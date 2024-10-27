@@ -39,17 +39,24 @@ import USE_observedVocabs, {
 import FetchVocabs_QUERY from "@/src/features/2_vocabs/utils/FetchVocabs_QUERY";
 import USE_zustand from "@/src/zustand";
 import USE_aggregateVocabLangs from "@/src/features/2_vocabs/hooks/USE_aggregateVocabLangs";
+import VocabsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/VocabsFlatlistHeader_SECTION";
+import { Lists_DB, Vocabs_DB } from "@/src/db";
+import { Q } from "@nozbe/watermelondb";
+import USE_debounceSearch from "@/src/hooks/USE_debounceSearch/USE_debounceSearch";
 
 function __SingleList_PAGE({
   selected_LIST = undefined,
+  totalVocab_COUNT = 0,
 }: {
   selected_LIST: List_MODEL | undefined;
+  totalVocab_COUNT: number | undefined;
 }) {
   const { user } = USE_auth();
   const { t } = useTranslation();
   const toast = useToast();
   const router = useRouter();
-  const [search, SET_search] = useState("");
+
+  const { search, debouncedSearch, SET_search } = USE_debounceSearch();
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
     { name: "displaySettings" },
@@ -76,9 +83,9 @@ function __SingleList_PAGE({
     SET_toUpdateVocab(!clear && vocab ? vocab : undefined);
     TOGGLE_modal("update");
   }
-  const { z_vocabDisplay_SETTINGS } = USE_zustand();
+  const { z_vocabDisplay_SETTINGS, z_SET_vocabDisplaySettings } = USE_zustand();
   const vocabs = USE_observedVocabs({
-    search,
+    search: debouncedSearch,
     list_id: selected_LIST?.id,
     z_vocabDisplay_SETTINGS,
   });
@@ -102,6 +109,12 @@ function __SingleList_PAGE({
 
       <MyVocabs_FLATLIST
         {...{ vocabs }}
+        listHeader_EL={
+          <VocabsFlatlistHeader_SECTION
+            totalVocabs={totalVocab_COUNT ? totalVocab_COUNT : 0}
+            {...{ search, z_vocabDisplay_SETTINGS, z_SET_vocabDisplaySettings }}
+          />
+        }
         SHOW_bottomBtn={true}
         TOGGLE_createVocabModal={() => TOGGLE_modal("createVocab")}
         PREPARE_vocabDelete={(id: string) => {
@@ -182,17 +195,35 @@ function __SingleList_PAGE({
 
 export default function SingleList_PAGE() {
   const { list_id } = useLocalSearchParams();
+  const [list, setList] = useState<List_MODEL | null>(null);
 
+  // Fetch the list asynchronously based on `list_id`
+  useEffect(() => {
+    const fetchList = async () => {
+      if (typeof list_id !== "string") {
+        return;
+      }
+
+      const foundList = await Lists_DB.find(list_id);
+      setList(foundList);
+    };
+
+    fetchList();
+  }, [list_id]);
+
+  // Observe the selected list
   const listObservable = USE_observeList(
     typeof list_id === "string" ? list_id : ""
   );
 
+  // Use withObservables to pass the observed list and computed total count to the page
   const enhance = withObservables(["selected_LIST"], ({ selected_LIST }) => ({
-    selected_LIST,
+    selected_LIST: list ? list : undefined,
+    totalVocab_COUNT: list?.vocab_COUNT ? list?.vocab_COUNT : undefined, // Observe vocabs count if needed
   }));
 
   const EnhancedPage = enhance(__SingleList_PAGE);
 
-  // Pass the observable to the EnhancedPage
-  return <EnhancedPage selected_LIST={listObservable} />;
+  // Render the enhanced page
+  return list ? <EnhancedPage selected_LIST={listObservable} /> : null;
 }

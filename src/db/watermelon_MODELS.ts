@@ -95,7 +95,7 @@ export class List_MODEL extends Model {
   @lazy diff_1 = this.vocabs.extend(Q.where("difficulty", 1)).observeCount();
   @lazy diff_2 = this.vocabs.extend(Q.where("difficulty", 2)).observeCount();
   @lazy diff_3 = this.vocabs.extend(Q.where("difficulty", 3)).observeCount();
-  @lazy totalVocabs = this.vocabs.observeCount();
+  @lazy vocab_COUNT = this.vocabs.observeCount();
 }
 // ===================================================================================
 export class ListAccess_MODEL extends Model {
@@ -110,8 +110,12 @@ export class ListAccess_MODEL extends Model {
 // ===================================================================================
 export class Vocab_MODEL extends Model {
   static table = "vocabs";
+  static associations: Associations = {
+    list: { type: "belongs_to", key: "list_id" },
+  };
 
-  @text("list_id") list_id!: string | undefined;
+  @relation("lists", "list_id") list!: List_MODEL;
+  // @text("list_id") list_id!: string | undefined;
   @field("difficulty") difficulty!: 1 | 2 | 3;
   @text("description") description!: string | undefined;
   @json("trs", sanitizeTranslations) trs!: tr_PROPS[] | undefined;

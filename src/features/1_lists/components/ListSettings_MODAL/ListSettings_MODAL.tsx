@@ -160,7 +160,6 @@ export default function ListSettings_MODAL({
           </View>
           <Btn text="Edit" onPress={() => TOGGLE_modal("renameList")} />
         </Block>
-        <Btn text="Sync" style={{ margin: 12 }} onPress={sync} />
 
         <ChosenLangs_BLOCK
           label={t("label.defaultVocabLangs")}

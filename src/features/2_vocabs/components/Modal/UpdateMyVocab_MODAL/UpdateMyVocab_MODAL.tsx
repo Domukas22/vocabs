@@ -110,7 +110,7 @@ export default function UpdateMyVocab_MODAL({
       is_public: false,
       onSuccess: (updated_VOCAB: Vocab_MODEL) => {
         onSuccess(updated_VOCAB);
-        collectLangs(updated_VOCAB?.list_id);
+        collectLangs(updated_VOCAB?.list?.id);
         reset();
       },
     });

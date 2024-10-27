@@ -97,7 +97,7 @@ export default function CreateVocab_MODAL({
       translations,
       onSuccess: (new_VOCAB: Vocab_MODEL) => {
         onSuccess(new_VOCAB);
-        collectLangs(new_VOCAB.list_id || "");
+        collectLangs(new_VOCAB.list?.id || "");
         reset();
       },
     });

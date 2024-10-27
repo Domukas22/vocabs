@@ -12,7 +12,7 @@ export default function SingleVocabDifficulty_COUNT({
   difficulty,
 }: {
   count: number;
-  difficulty: 1 | 2 | 3;
+  difficulty: 0 | 1 | 2 | 3;
 }) {
   const textColor = {
     color:
@@ -20,7 +20,9 @@ export default function SingleVocabDifficulty_COUNT({
         ? MyColors.text_difficulty_3
         : difficulty === 2
         ? MyColors.text_difficulty_2
-        : MyColors.text_difficulty_1,
+        : difficulty === 1
+        ? MyColors.text_difficulty_1
+        : MyColors.text_primary,
   };
 
   return (

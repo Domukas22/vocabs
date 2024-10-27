@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/src/lib/supabase";
 
 export default function USE_totalSharedListCount(participant_id: string) {
-  const [total_COUNT, SET_totalCount] = useState<number | null>(null);
+  const [vocab_COUNT, SET_totalCount] = useState<number | null>(null);
   const [IS_totalCountFetching, SET_totalCountFetching] = useState(false);
   const [fetchTotalCount_ERROR, SET_fetchTotalCount_ERROR] = useState<
     string | null
@@ -72,7 +72,7 @@ export default function USE_totalSharedListCount(participant_id: string) {
   }, [fetchTotalCount]);
 
   return {
-    total_COUNT,
+    vocab_COUNT,
     IS_totalCountFetching,
     fetchTotalCount_ERROR,
   };

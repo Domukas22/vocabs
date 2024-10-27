@@ -46,6 +46,9 @@ export async function sync() {
           changes,
         });
 
+        console.log("🟢 LIST CREATED 🟢: ", changes?.lists?.created?.[0]);
+        // console.log(changes?.vocabs?.created?.[0]);
+
         if (error && error?.message) {
           console.error("🔴 Push error: 🔴", error?.message);
         } else {

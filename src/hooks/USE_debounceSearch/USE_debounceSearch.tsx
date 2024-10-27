@@ -6,6 +6,11 @@ export default function USE_debounceSearch() {
   const [debouncedSearch, SET_debouncedSearch] = useState("");
 
   useEffect(() => {
+    // if empty, fetch instantly
+    if (search === "") {
+      SET_debouncedSearch(search);
+      return;
+    }
     const handler = setTimeout(() => {
       SET_debouncedSearch(search);
     }, 500); // Adjust the debounce delay (in milliseconds) as needed

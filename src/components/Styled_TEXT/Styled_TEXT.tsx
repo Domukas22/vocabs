@@ -13,10 +13,12 @@ export type ThemedTextProps = TextProps & {
     | "text_18_light"
     | "text_15_bold"
     | "text_15_semibold"
+    | "text_14_semibold"
+    | "text_14_medium"
     | "label"
     | "label_small"
     | "text_error"
-    | "vocabTitle";
+    | "list_title";
 };
 
 export function Styled_TEXT({
@@ -67,6 +69,14 @@ const s = StyleSheet.create({
     fontSize: 15,
     fontFamily: "Nunito-SemiBold",
   },
+  text_14_semibold: {
+    fontSize: 14,
+    fontFamily: "Nunito-SemiBold",
+  },
+  text_14_medium: {
+    fontSize: 14,
+    fontFamily: "Nunito-Medium",
+  },
   label: {
     fontSize: 18,
     fontFamily: "Nunito-Light",
@@ -74,7 +84,7 @@ const s = StyleSheet.create({
   },
   label_small: {
     fontSize: 14,
-    fontFamily: "Nunito-Light",
+    fontFamily: "Nunito-Medium",
     color: MyColors.text_white_06,
   },
   text_error: {
@@ -83,9 +93,9 @@ const s = StyleSheet.create({
     color: MyColors.text_red,
   },
 
-  vocabTitle: {
+  list_title: {
     fontSize: 18,
     color: MyColors.text_white,
-    fontFamily: "Nunito-Medium",
+    fontFamily: "Nunito-Bold",
   },
 });

@@ -42,7 +42,7 @@ export default function AllPublicVocabs_PAGE() {
 
   const [target_VOCAB, SET_targetVocab] = useState<Vocab_MODEL | undefined>();
 
-  const { total_COUNT, IS_totalCountFetching, fetchTotalCount_ERROR } =
+  const { vocab_COUNT, IS_totalCountFetching, fetchTotalCount_ERROR } =
     USE_fetchTotalPublicVocabCount();
 
   const {
@@ -81,7 +81,7 @@ export default function AllPublicVocabs_PAGE() {
         }}
         listHeader_EL={
           <VocabsFlatlistHeader_SECTION
-            totalVocabs={total_COUNT}
+            totalVocabs={vocab_COUNT}
             {...{ search, z_vocabDisplay_SETTINGS, z_SET_vocabDisplaySettings }}
           />
         }

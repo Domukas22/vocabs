@@ -25,7 +25,7 @@ export default function PublicLists_HEADER() {
           style={{ opacity: 0, pointerEvents: "none" }}
         />
       }
-      title="📁 Public lists"
+      title="⭐ Public lists"
     />
   );
 }

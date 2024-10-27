@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/src/lib/supabase";
 
 export default function USE_totalPublicListCount() {
-  const [total_COUNT, SET_total_COUNT] = useState<number | null>(null);
+  const [vocab_COUNT, SET_vocab_COUNT] = useState<number | null>(null);
   const [IS_totalCountFetching, SET_totalCountFetching] = useState(false);
   const [fetchTotalCount_ERROR, SET_error] = useState<string | null>(null);
 
@@ -25,7 +25,7 @@ export default function USE_totalPublicListCount() {
       }
 
       // Update total count state
-      SET_total_COUNT(count || 0);
+      SET_vocab_COUNT(count || 0);
     } catch (error) {
       console.error(
         `🔴 Unexpected error fetching total public list count: 🔴`,
@@ -43,7 +43,7 @@ export default function USE_totalPublicListCount() {
   }, [fetchTotalCount]);
 
   return {
-    total_COUNT,
+    vocab_COUNT,
     IS_totalCountFetching,
     fetchTotalCount_ERROR,
   };

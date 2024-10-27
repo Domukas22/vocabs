@@ -33,10 +33,12 @@ export default function MyVocabs_FLATLIST({
   HANDLE_updateModal,
   PREPARE_vocabDelete,
   TOGGLE_createVocabModal,
+  listHeader_EL,
 }: {
   vocabs: Vocab_MODEL[] | undefined;
   SHOW_bottomBtn: React.ReactNode;
   highlightedVocab_ID: string;
+  listHeader_EL: React.ReactNode;
   HANDLE_updateModal: ({
     clear,
     vocab,
@@ -45,42 +47,40 @@ export default function MyVocabs_FLATLIST({
     vocab?: Vocab_MODEL;
   }) => void;
   TOGGLE_createVocabModal: () => void;
-
   PREPARE_vocabDelete?: (id: string) => void;
 }) {
   const { t } = useTranslation();
 
-  if (vocabs && vocabs?.length > 0) {
-    return (
-      <Styled_FLATLIST
-        data={vocabs}
-        renderItem={({ item }) => {
-          return (
-            <SwipeableExample
-              rightBtn_ACTION={() => {
-                if (PREPARE_vocabDelete) PREPARE_vocabDelete(item.id);
-              }}
-            >
-              <MyVocab
-                vocab={item}
-                highlighted={highlightedVocab_ID === item.id}
-                {...{ HANDLE_updateModal }}
-              />
-            </SwipeableExample>
-          );
-        }}
-        keyExtractor={(item) => "Vocab" + item.id}
-        ListFooterComponent={
-          SHOW_bottomBtn ? (
-            <Btn
-              text={t("btn.createVocab")}
-              iconLeft={<ICON_X color="primary" />}
-              type="seethrough_primary"
-              onPress={TOGGLE_createVocabModal}
+  return (
+    <Styled_FLATLIST
+      data={vocabs}
+      renderItem={({ item }) => {
+        return (
+          <SwipeableExample
+            rightBtn_ACTION={() => {
+              if (PREPARE_vocabDelete) PREPARE_vocabDelete(item.id);
+            }}
+          >
+            <MyVocab
+              vocab={item}
+              highlighted={highlightedVocab_ID === item.id}
+              {...{ HANDLE_updateModal }}
             />
-          ) : null
-        }
-      />
-    );
-  }
+          </SwipeableExample>
+        );
+      }}
+      keyExtractor={(item) => "Vocab" + item.id}
+      ListHeaderComponent={listHeader_EL}
+      ListFooterComponent={
+        SHOW_bottomBtn ? (
+          <Btn
+            text={t("btn.createVocab")}
+            iconLeft={<ICON_X color="primary" />}
+            type="seethrough_primary"
+            onPress={TOGGLE_createVocabModal}
+          />
+        ) : null
+      }
+    />
+  );
 }

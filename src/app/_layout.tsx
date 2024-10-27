@@ -76,7 +76,7 @@ function Main_LAYOUT() {
             SET_auth(session.user);
             const userData = await fetchUserData(session.user);
 
-            await CLEAN_dirtyItems(session.user.id);
+            // await CLEAN_dirtyItems(session.user.id);
             await syncLanguages();
 
             await sync();

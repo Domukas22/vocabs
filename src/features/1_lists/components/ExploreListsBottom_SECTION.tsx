@@ -20,6 +20,7 @@ export default function ExploreListsBottom_SECTION({
   if (!HAS_reachedEnd && !ARE_listsFetching) {
     return (
       <Btn
+        type="seethrough"
         text={!IS_loadingMore ? "Load more" : ""}
         iconRight={IS_loadingMore ? <ActivityIndicator color="white" /> : null}
         onPress={LOAD_more}

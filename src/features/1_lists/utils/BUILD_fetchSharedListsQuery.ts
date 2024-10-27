@@ -37,7 +37,7 @@ export const BUILD_fetchSharedListsQuery = ({
 
   // Apply search filters if present
   if (search) {
-    query = query.or(`name.ilike.%${search}%`);
+    query = query.or(`name.ilike.%${search}%,description.ilike.%${search}%`);
   }
 
   if (

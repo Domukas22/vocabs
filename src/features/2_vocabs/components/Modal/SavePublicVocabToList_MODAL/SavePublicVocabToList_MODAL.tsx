@@ -81,7 +81,7 @@ export default function SavePublicVocabToList_MODAL({
       translations: vocab?.trs || [],
       onSuccess: (new_VOCAB: Vocab_MODEL) => {
         onSuccess(new_VOCAB);
-        collectLangs(new_VOCAB?.list_id || "");
+        collectLangs(new_VOCAB?.list?.id || "");
       },
     });
 

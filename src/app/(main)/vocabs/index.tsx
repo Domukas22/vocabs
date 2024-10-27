@@ -75,7 +75,7 @@ export default function MyLists_PAGE() {
         }}
       />
 
-      {/* <Btn text="Sync" style={{ margin: 12 }} onPress={sync} /> */}
+      <Btn text="Sync" style={{ margin: 12 }} onPress={sync} />
 
       {/* {z_lists.length > 5 && <MyLists_SUBNAV {...{ search, SET_search }} />} */}
 

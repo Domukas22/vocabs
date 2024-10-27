@@ -31,7 +31,7 @@ export default function PublicLists_PAGE() {
   const { collectedLang_IDS, ARE_langIdsCollecting, collectLangIds_ERROR } =
     USE_collectPublicListLangs();
 
-  const { total_COUNT, IS_totalCountFetching, fetchTotalCount_ERROR } =
+  const { vocab_COUNT, IS_totalCountFetching, fetchTotalCount_ERROR } =
     USE_totalPublicListCount();
 
   const {
@@ -67,7 +67,7 @@ export default function PublicLists_PAGE() {
         }}
         listHeader_EL={
           <ListsFlatlistHeader_SECTION
-            totalLists={total_COUNT}
+            totalLists={vocab_COUNT}
             {...{ search, z_listDisplay_SETTINGS, z_SET_listDisplaySettings }}
           />
         }

@@ -88,7 +88,8 @@ export default function USE_copyListAndItsVocabs() {
         await Promise.all(
           vocabsToCopy.map((vocab: Vocab_MODEL) =>
             Vocabs_DB.create((newVocab: Vocab_MODEL) => {
-              newVocab.list_id = copiedList.id;
+              // newVocab.list_id = copiedList.id;
+              newVocab.list.set(copiedList);
               newVocab.difficulty = vocab.difficulty;
               newVocab.description = vocab.description;
               newVocab.trs = vocab.trs;

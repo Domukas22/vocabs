@@ -7,35 +7,32 @@ import { View } from "react-native";
 import SingleVocabDifficulty_COUNT from "./SingleVocabDifficulty_COUNT/SingleVocabDifficulty_COUNT";
 
 export default function VocabDifficulty_COUNTS({
-  difficulties,
+  diff_1_count,
+  diff_2_count = 0,
+  diff_3_count = 0,
 }: {
-  difficulties:
-    | {
-        diff_1_count: number;
-        diff_2_count: number;
-        diff_3_count: number;
-      }
-    | undefined;
+  diff_1_count: number;
+  diff_2_count: number;
+  diff_3_count: number;
 }) {
   return (
-    <View style={{ flexDirection: "row", gap: 8, justifyContent: "flex-end" }}>
-      {difficulties?.diff_1_count ? (
-        <SingleVocabDifficulty_COUNT
-          count={difficulties.diff_1_count}
-          difficulty={1}
-        />
+    <View
+      style={{
+        flexDirection: "row",
+        gap: 8,
+        // marginTop: 4,
+        justifyContent: "flex-end",
+      }}
+    >
+      {diff_3_count > 0 ? (
+        <SingleVocabDifficulty_COUNT count={diff_3_count} difficulty={3} />
       ) : null}
-      {difficulties?.diff_2_count ? (
-        <SingleVocabDifficulty_COUNT
-          count={difficulties.diff_2_count}
-          difficulty={2}
-        />
+
+      {diff_2_count > 0 ? (
+        <SingleVocabDifficulty_COUNT count={diff_2_count} difficulty={2} />
       ) : null}
-      {difficulties?.diff_3_count ? (
-        <SingleVocabDifficulty_COUNT
-          count={difficulties.diff_3_count}
-          difficulty={3}
-        />
+      {diff_1_count > 0 ? (
+        <SingleVocabDifficulty_COUNT count={diff_1_count} difficulty={1} />
       ) : null}
     </View>
   );

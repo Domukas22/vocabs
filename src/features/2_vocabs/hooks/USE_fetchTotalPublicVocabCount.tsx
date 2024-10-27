@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/src/lib/supabase";
 
 export default function USE_fetchTotalPublicVocabCount() {
-  const [total_COUNT, SET_total_COUNT] = useState<number | null>(null);
+  const [vocab_COUNT, SET_vocab_COUNT] = useState<number | null>(null);
   const [IS_totalCountFetching, SET_totalCountFetching] =
     useState<boolean>(false);
   const [fetchTotalCount_ERROR, SET_fetchTotalCount_ERROR] = useState<
@@ -33,7 +33,7 @@ export default function USE_fetchTotalPublicVocabCount() {
         const publicListIds = publicLists?.map((list) => list.id) || [];
 
         if (publicListIds.length === 0) {
-          SET_total_COUNT(0);
+          SET_vocab_COUNT(0);
           SET_totalCountFetching(false);
           return;
         }
@@ -56,7 +56,7 @@ export default function USE_fetchTotalPublicVocabCount() {
         }
 
         // Set the total count
-        SET_total_COUNT(count || 0);
+        SET_vocab_COUNT(count || 0);
       } catch (error) {
         console.error(
           "Unexpected error fetching total public vocab count:",
@@ -73,7 +73,7 @@ export default function USE_fetchTotalPublicVocabCount() {
   }, []);
 
   return {
-    total_COUNT,
+    vocab_COUNT,
     IS_totalCountFetching,
     fetchTotalCount_ERROR,
   };
