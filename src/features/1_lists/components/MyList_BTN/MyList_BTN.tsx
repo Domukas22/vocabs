@@ -51,15 +51,42 @@ function _MyList_BTN({
         description={list?.description}
         IS_shared={list?.type === "shared"}
         IS_submitted={IS_submitted && !IS_accepted}
-      />
+        {...{ vocab_COUNT }}
+      >
+        <Styled_TEXT type="list_title">{list?.name}</Styled_TEXT>
 
-      <ListBtn_BOTTOM>
+        {list?.type === "shared" && (
+          <Styled_TEXT
+            type="label_small"
+            style={{
+              textAlign: "left",
+              color: MyColors.text_green,
+              fontSize: 16,
+            }}
+          >
+            Shared list
+          </Styled_TEXT>
+        )}
+        {IS_submitted && !IS_accepted && (
+          <Styled_TEXT
+            type="label_small"
+            style={{
+              textAlign: "left",
+              color: MyColors.text_yellow,
+              fontSize: 16,
+            }}
+          >
+            Submitted for publish
+          </Styled_TEXT>
+        )}
+        {list?.description && (
+          <Styled_TEXT type="label_small">{list?.description}</Styled_TEXT>
+        )}
         <VocabCount_LABEL {...{ vocab_COUNT }} />
-
         <VocabDifficulty_COUNTS
           {...{ diff_1_count, diff_2_count, diff_3_count }}
         />
-      </ListBtn_BOTTOM>
+      </ListBtn_TOP>
     </Transition_BTN>
   );
 }

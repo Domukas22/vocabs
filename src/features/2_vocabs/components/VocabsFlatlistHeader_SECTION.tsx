@@ -16,12 +16,14 @@ import {
 type VocabsFlatlistHeader_SECTIONProps = {
   search: string;
   totalVocabs: number | null;
+  list_NAME: string | undefined;
   z_vocabDisplay_SETTINGS: z_vocabDisplaySettings_PROPS;
   z_SET_vocabDisplaySettings: z_setVocabDisplaySettings_PROPS;
 };
 
 export default function VocabsFlatlistHeader_SECTION({
   search,
+  list_NAME = "INSERT LIST NAME",
   totalVocabs = 0,
   z_vocabDisplay_SETTINGS,
   z_SET_vocabDisplaySettings,
@@ -45,18 +47,23 @@ export default function VocabsFlatlistHeader_SECTION({
 
   return (
     <View style={styles.headerContainer}>
-      <Styled_TEXT type="label">
-        {search !== "" ? (
-          <>
-            Search results for
-            <Styled_TEXT type="text_18_medium"> '{search}' </Styled_TEXT>
-          </>
-        ) : appliedFiltersCount > 0 ? (
-          `${appliedFiltersCount} filters applied`
-        ) : (
-          `Browse through ${totalVocabs ? totalVocabs : 0} vocabs`
+      <View>
+        {search === "" && (
+          <Styled_TEXT type="text_22_bold">{list_NAME}</Styled_TEXT>
         )}
-      </Styled_TEXT>
+        <Styled_TEXT type="label">
+          {search !== "" ? (
+            <>
+              Search results for
+              <Styled_TEXT type="text_18_medium"> '{search}' </Styled_TEXT>
+            </>
+          ) : appliedFiltersCount > 0 ? (
+            `${appliedFiltersCount} filters applied`
+          ) : (
+            `Browse through ${totalVocabs ? totalVocabs : 0} vocabs`
+          )}
+        </Styled_TEXT>
+      </View>
 
       {appliedFiltersCount > 0 && (
         <View style={styles.filtersContainer}>
@@ -65,7 +72,18 @@ export default function VocabsFlatlistHeader_SECTION({
               key={diff + "diffFilter"}
               iconLeft={<ICON_difficultyDot difficulty={diff} />}
               text={"Difficulty: " + diff}
-              iconRight={<ICON_X color="primary" rotate={true} />}
+              iconRight={
+                <ICON_X
+                  color={
+                    diff === 1
+                      ? "difficulty_1"
+                      : diff === 2
+                      ? "difficulty_2"
+                      : "difficulty_3"
+                  }
+                  rotate={true}
+                />
+              }
               type={
                 diff === 1
                   ? "difficulty_1_active"

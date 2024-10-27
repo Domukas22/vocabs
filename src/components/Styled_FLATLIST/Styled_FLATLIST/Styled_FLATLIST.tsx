@@ -19,10 +19,12 @@ export default function Styled_FLATLIST<T>({
   padding = 12,
   gap = 12,
   _ref,
+  onScroll,
   ...rest
 }: StyledFlatListProps<T>) {
   return (
     <FlatList
+      onScroll={onScroll}
       ref={_ref}
       data={data}
       renderItem={(info: ListRenderItemInfo<T>) => (

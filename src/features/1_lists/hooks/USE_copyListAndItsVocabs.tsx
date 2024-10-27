@@ -90,7 +90,7 @@ export default function USE_copyListAndItsVocabs() {
             Vocabs_DB.create((newVocab: Vocab_MODEL) => {
               // newVocab.list_id = copiedList.id;
               newVocab.list.set(copiedList);
-              newVocab.difficulty = vocab.difficulty;
+              newVocab.difficulty = 3;
               newVocab.description = vocab.description;
               newVocab.trs = vocab.trs;
               newVocab.lang_ids = vocab.lang_ids;

@@ -8,6 +8,8 @@ import { List_MODEL } from "@/src/db/watermelon_MODELS";
 import { useRouter } from "expo-router";
 import ExploreList_BTN from "./ExploreList_BTN";
 import ExploreListsBottom_SECTION from "./ExploreListsBottom_SECTION";
+import { NativeSyntheticEvent, NativeScrollEvent } from "react-native";
+import { HEADER_MARGIN } from "@/src/constants/globalVars";
 
 export default function ExploreLists_FLATLIST({
   lists,
@@ -17,6 +19,7 @@ export default function ExploreLists_FLATLIST({
   LOAD_more,
   type = "public",
   listHeader_EL,
+  onScroll,
 }: {
   lists: List_MODEL[] | undefined;
   IS_loadingMore: boolean;
@@ -25,11 +28,13 @@ export default function ExploreLists_FLATLIST({
   ARE_listsFetching: boolean;
   LOAD_more: () => void;
   type: "public" | "shared";
+  onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
 }) {
   const router = useRouter();
   return (
     <Styled_FLATLIST
       data={lists}
+      {...{ onScroll }}
       ListHeaderComponent={listHeader_EL}
       renderItem={({ item }) => {
         return (
@@ -45,6 +50,7 @@ export default function ExploreLists_FLATLIST({
           />
         );
       }}
+      style={{ marginTop: HEADER_MARGIN || 68 }}
       keyExtractor={(item) => "PublicVocab" + item.id}
       ListFooterComponent={
         <ExploreListsBottom_SECTION

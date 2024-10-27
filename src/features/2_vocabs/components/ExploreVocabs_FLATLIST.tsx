@@ -6,7 +6,7 @@ import ExploreVocabsFlatlistBottom_SECTION from "./ExploreVocabsFlatlistBottom_S
 import Flatlist_HEADER from "@/src/components/Flatlist_HEADER";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
-import { View } from "react-native";
+import { NativeScrollEvent, NativeSyntheticEvent, View } from "react-native";
 import React from "react";
 import {
   z_setVocabDisplaySettings_PROPS,
@@ -19,6 +19,7 @@ import {
   ICON_X,
 } from "@/src/components/icons/icons";
 import VocabsFlatlistHeader_SECTION from "./VocabsFlatlistHeader_SECTION";
+import { HEADER_MARGIN } from "@/src/constants/globalVars";
 
 export default function ExploreVocabs_FLATLIST({
   vocabs,
@@ -28,6 +29,7 @@ export default function ExploreVocabs_FLATLIST({
   ARE_vocabsFetching,
   LOAD_more,
   SAVE_vocab,
+  onScroll,
 }: {
   vocabs: Vocab_MODEL[] | undefined;
   listHeader_EL: React.ReactNode;
@@ -36,9 +38,11 @@ export default function ExploreVocabs_FLATLIST({
   ARE_vocabsFetching: boolean;
   LOAD_more: () => void;
   SAVE_vocab: (vocab: Vocab_MODEL) => void;
+  onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
 }) {
   return (
     <Styled_FLATLIST
+      {...{ onScroll }}
       data={vocabs}
       renderItem={({ item }) => {
         return (
@@ -55,6 +59,7 @@ export default function ExploreVocabs_FLATLIST({
           />
         );
       }}
+      style={{ marginTop: HEADER_MARGIN || 68 }}
       keyExtractor={(item) => "PublicVocab" + item.id}
       ListHeaderComponent={listHeader_EL}
       ListFooterComponent={

@@ -5,7 +5,6 @@
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
 import {
   CreateMyVocab_MODAL,
-  MyVocabDisplaySettings_MODAL,
   MyVocabs_HEADER,
   MyVocabs_SUBNAV,
   MyVocabs_FLATLIST,
@@ -33,16 +32,17 @@ import Btn from "@/src/components/Btn/Btn";
 import { VocabDisplaySettings_MODAL } from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/VocabDisplaySettings_MODAL";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import USE_displaySettings from "@/src/hooks/USE_displaySettings/USE_displaySettings";
-import USE_observedVocabs, {
-  USE_observeVocabs,
-} from "@/src/features/1_lists/hooks/USE_observeVocabs";
+import USE_observedVocabs from "@/src/features/1_lists/hooks/USE_observeVocabs";
 import FetchVocabs_QUERY from "@/src/features/2_vocabs/utils/FetchVocabs_QUERY";
 import USE_zustand from "@/src/zustand";
-import USE_aggregateVocabLangs from "@/src/features/2_vocabs/hooks/USE_aggregateVocabLangs";
+
 import VocabsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/VocabsFlatlistHeader_SECTION";
 import { Lists_DB, Vocabs_DB } from "@/src/db";
 import { Q } from "@nozbe/watermelondb";
 import USE_debounceSearch from "@/src/hooks/USE_debounceSearch/USE_debounceSearch";
+import List_HEADER from "@/src/components/Header/List_HEADER";
+import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
+import USE_getActiveFilterCount from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/utils/USE_getActiveFilterCount";
 
 function __SingleList_PAGE({
   selected_LIST = undefined,
@@ -90,27 +90,41 @@ function __SingleList_PAGE({
     z_vocabDisplay_SETTINGS,
   });
 
+  const { showTitle, handleScroll } = USE_showListHeaderTitle();
+  const activeFilter_COUNT = USE_getActiveFilterCount(z_vocabDisplay_SETTINGS);
+
   return (
     <Page_WRAP>
-      <MyVocabs_HEADER
+      {/* <MyVocabs_HEADER
         list_NAME={selected_LIST?.name || ""}
         undertextGreen={
           selected_LIST?.type === "shared" ? t("undertext.shared") : ""
         }
         btnBack_ACTION={() => router.back()}
         btnDots_ACTION={() => TOGGLE_modal("listSettings")}
-      />
+      /> */}
       {/* <Styled_TEXT>{list?.type}</Styled_TEXT> */}
-      <MyVocabs_SUBNAV
+      {/* <MyVocabs_SUBNAV
         {...{ search, SET_search }}
         onPlusIconPress={() => TOGGLE_modal("createVocab")}
         TOGGLE_displaySettings={() => TOGGLE_modal("displaySettings")}
+      /> */}
+      <List_HEADER
+        SHOW_listName={showTitle}
+        list_NAME={selected_LIST?.name}
+        GO_back={() => router.back()}
+        OPEN_displaySettings={() => TOGGLE_modal("displaySettings")}
+        OPEN_listSettings={() => TOGGLE_modal("listSettings")}
+        OPEN_createvocab={() => TOGGLE_modal("createVocab")}
+        {...{ search, SET_search, activeFilter_COUNT }}
       />
 
       <MyVocabs_FLATLIST
         {...{ vocabs }}
+        onScroll={handleScroll}
         listHeader_EL={
           <VocabsFlatlistHeader_SECTION
+            list_NAME={selected_LIST?.name}
             totalVocabs={totalVocab_COUNT ? totalVocab_COUNT : 0}
             {...{ search, z_vocabDisplay_SETTINGS, z_SET_vocabDisplaySettings }}
           />

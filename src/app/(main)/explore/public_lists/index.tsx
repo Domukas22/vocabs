@@ -19,6 +19,10 @@ import PublicLists_HEADER from "@/src/features/1_lists/components/PublicLists_HE
 import ExploreLists_FLATLIST from "@/src/features/1_lists/components/ExploreLists_FLATLIST";
 import ListsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/ListsFlatlistHeader_SECTION";
 import USE_totalPublicListCount from "@/src/features/1_lists/hooks/USE_totalPublicListCount";
+import List_HEADER from "@/src/components/Header/List_HEADER";
+import USE_getActiveFilterCount from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/utils/USE_getActiveFilterCount";
+import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
+import { useRouter } from "expo-router";
 
 export default function PublicLists_PAGE() {
   const { search, debouncedSearch, SET_search } = USE_debounceSearch();
@@ -47,13 +51,19 @@ export default function PublicLists_PAGE() {
     paginateBy: 2,
   });
 
+  const { showTitle, handleScroll } = USE_showListHeaderTitle();
+  const activeFilter_COUNT = USE_getActiveFilterCount(z_listDisplay_SETTINGS);
+  const router = useRouter();
+
   return (
     <Page_WRAP>
-      <PublicLists_HEADER />
-
-      <ExploreLists_SUBNAV
-        TOGGLE_displaySettings={() => TOGGLE_modal("displaySettings")}
-        {...{ search, SET_search, ARE_langIdsCollecting }}
+      <List_HEADER
+        SHOW_listName={showTitle}
+        list_NAME="⭐ Public lists"
+        GO_back={() => router.back()}
+        OPEN_displaySettings={() => TOGGLE_modal("displaySettings")}
+        IS_searchBig={true}
+        {...{ search, SET_search, activeFilter_COUNT }}
       />
 
       <ExploreLists_FLATLIST
@@ -65,9 +75,11 @@ export default function PublicLists_PAGE() {
           ARE_listsFetching,
           LOAD_more,
         }}
+        onScroll={handleScroll}
         listHeader_EL={
           <ListsFlatlistHeader_SECTION
             totalLists={vocab_COUNT}
+            list_NAME="⭐ Public lists"
             {...{ search, z_listDisplay_SETTINGS, z_SET_listDisplaySettings }}
           />
         }

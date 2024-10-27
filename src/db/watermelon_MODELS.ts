@@ -79,6 +79,7 @@ export class List_MODEL extends Model {
   @field("is_submitted_for_publish") is_submitted_for_publish!: boolean;
   @field("was_accepted_for_publish") was_accepted_for_publish!: boolean;
   @text("type") type!: "private" | "public" | "shared" | "draft";
+  @field("saved_count") saved_count!: number;
 
   @json("default_lang_ids", SANITIZE_langIds) default_lang_ids!:
     | string[]

@@ -3,7 +3,7 @@
 //
 
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useMemo, useState } from "react";
 import { List_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 import { useTranslation } from "react-i18next";
@@ -18,22 +18,32 @@ import USE_fetchOnePublicList from "@/src/features/2_vocabs/hooks/USE_fetchOnePu
 import { VocabDisplaySettings_MODAL } from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/VocabDisplaySettings_MODAL";
 import USE_zustand from "@/src/zustand";
 import USE_debounceSearch from "@/src/hooks/USE_debounceSearch/USE_debounceSearch";
-import PublicList_HEADER from "@/src/features/1_lists/components/PublicList_HEADER";
-import ExporeSingleList_SUBNAV from "@/src/components/ExporeSingleList_SUBNAV";
+
 import ExploreVocabs_FLATLIST from "@/src/features/2_vocabs/components/ExploreVocabs_FLATLIST";
-import ExploreVocabsFlatlistBottom_SECTION from "@/src/features/2_vocabs/components/ExploreVocabsFlatlistBottom_SECTION";
+
 import VocabsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/VocabsFlatlistHeader_SECTION";
 import USE_copyListAndItsVocabs from "@/src/features/1_lists/hooks/USE_copyListAndItsVocabs";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import CopyListAndVocabs_MODAL from "@/src/features/1_lists/components/CopyListAndVocabs_MODAL";
+import List_HEADER from "@/src/components/Header/List_HEADER";
+import USE_getActiveFilterCount from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/utils/USE_getActiveFilterCount";
+
+import { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
+import USE_incrementListSavedCount from "@/src/features/1_lists/hooks/USE_incrementListSavedCount";
+import Btn from "@/src/components/Btn/Btn";
+import { supabase } from "@/src/lib/supabase";
+import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
 
 export default function PublicListVocabs_PAGE() {
   const toast = useToast();
   const { user } = USE_auth();
+  const router = useRouter();
   const { t } = useTranslation();
   const { publicList_id } = useLocalSearchParams();
   const { z_vocabDisplay_SETTINGS, z_SET_vocabDisplaySettings } = USE_zustand();
   const { search, debouncedSearch, SET_search } = USE_debounceSearch();
+
+  const activeFilter_COUNT = USE_getActiveFilterCount(z_vocabDisplay_SETTINGS);
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
     { name: "save" },
@@ -45,12 +55,21 @@ export default function PublicListVocabs_PAGE() {
     typeof publicList_id === "string" ? publicList_id : ""
   );
 
+  const { showTitle, handleScroll } = USE_showListHeaderTitle();
+
   const {
     COPY_listAndVocabs,
     IS_copyingList,
     copyList_ERROR,
     RESET_copyListError,
   } = USE_copyListAndItsVocabs();
+
+  const {
+    INCREMENT_listSavedCount,
+    IS_incrementingSavedCount,
+    incrementSavedCount_ERROR,
+    RESET_incrementSavedCountError,
+  } = USE_incrementListSavedCount();
 
   const copy = async () => {
     if (!list || IS_copyingList) return;
@@ -65,6 +84,18 @@ export default function PublicListVocabs_PAGE() {
         });
       },
     });
+
+    if (new_LIST.success && typeof list?.id === "string") {
+      const incrementResult = await INCREMENT_listSavedCount({
+        list_id: list?.id,
+        onSuccess: () => {},
+      });
+
+      if (!incrementResult.success) {
+        console.error(incrementResult.msg);
+        return;
+      }
+    }
 
     if (!new_LIST.success) {
       console.error(new_LIST.msg); // Log internal message for debugging.
@@ -82,11 +113,11 @@ export default function PublicListVocabs_PAGE() {
     search: debouncedSearch,
     list,
     z_vocabDisplay_SETTINGS,
-    paginateBy: 3,
+    paginateBy: 10,
   });
 
   const collectedLangIds = useMemo(() => {
-    // infinite loop occurs if not defined
+    // infinite loop   occurs if not defined
     return list?.collected_lang_ids || [];
   }, [list?.collected_lang_ids]);
 
@@ -94,15 +125,15 @@ export default function PublicListVocabs_PAGE() {
 
   return (
     <Page_WRAP>
-      <PublicList_HEADER
+      <List_HEADER
+        SHOW_listName={showTitle}
         list_NAME={list?.name}
-        TOGGLE_saveListModal={() => TOGGLE_modal("saveList")}
-        {...{ IS_listFetching }}
-      />
-      <ExporeSingleList_SUBNAV
-        TOGGLE_displaySettings={() => TOGGLE_modal("displaySettings")}
-        loading={IS_listFetching}
-        {...{ search, SET_search }}
+        GO_back={() => router.back()}
+        LIKE_list={() => {}}
+        OPEN_displaySettings={() => TOGGLE_modal("displaySettings")}
+        OPEN_search={() => {}}
+        SAVE_list={() => TOGGLE_modal("saveList")}
+        {...{ search, SET_search, activeFilter_COUNT }}
       />
 
       <ExploreVocabs_FLATLIST
@@ -112,6 +143,7 @@ export default function PublicListVocabs_PAGE() {
           HAS_reachedEnd,
           ARE_vocabsFetching,
           LOAD_more,
+          onScroll: handleScroll,
         }}
         SAVE_vocab={(vocab: Vocab_MODEL) => {
           SET_targetVocab(vocab);
@@ -120,6 +152,7 @@ export default function PublicListVocabs_PAGE() {
         listHeader_EL={
           <VocabsFlatlistHeader_SECTION
             totalVocabs={list?.vocabs?.[0]?.count}
+            list_NAME={list?.name}
             {...{ search, z_vocabDisplay_SETTINGS, z_SET_vocabDisplaySettings }}
           />
         }

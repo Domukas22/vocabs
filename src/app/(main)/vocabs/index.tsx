@@ -34,6 +34,7 @@ import { Q } from "@nozbe/watermelondb";
 import { USER_ID } from "@/src/constants/globalVars";
 import Btn from "@/src/components/Btn/Btn";
 import { sync } from "@/src/db/sync";
+import { supabase } from "@/src/lib/supabase";
 
 export default function MyLists_PAGE() {
   const { user } = USE_auth();
@@ -75,10 +76,25 @@ export default function MyLists_PAGE() {
         }}
       />
 
-      <Btn text="Sync" style={{ margin: 12 }} onPress={sync} />
+      {/* <Btn text="Sync" style={{ margin: 12 }} onPress={sync} />
 
-      {/* {z_lists.length > 5 && <MyLists_SUBNAV {...{ search, SET_search }} />} */}
 
+      <Btn
+        text="Increment"
+        onPress={async () => {
+          const id = "e64168f9-60c3-45a6-b4c9-a91f516d87fd";
+          await supabase.rpc("increment_list_saved_count", {
+            list_id: id,
+          });
+          await supabase.rpc("increment_list_saved_count", {
+            list_id: "59c495d4-838d-44b1-b080-3dfead95928b",
+          });
+
+          await supabase.rpc("increment_list_saved_count", {
+            list_id: "5c937b3a-ccbb-4ce8-83d3-dff134d71432",
+          });
+        }}
+      /> */}
       <MyLists_FLATLIST
         user_id={user?.id}
         SELECT_list={(list: List_MODEL) => {

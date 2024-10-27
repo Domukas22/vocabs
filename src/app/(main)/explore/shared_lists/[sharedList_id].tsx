@@ -27,6 +27,9 @@ import VocabsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/Voc
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import USE_copyListAndItsVocabs from "@/src/features/1_lists/hooks/USE_copyListAndItsVocabs";
 import CopyListAndVocabs_MODAL from "@/src/features/1_lists/components/CopyListAndVocabs_MODAL";
+import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
+import List_HEADER from "@/src/components/Header/List_HEADER";
+import USE_getActiveFilterCount from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/utils/USE_getActiveFilterCount";
 
 export default function PublicListVocabs_PAGE() {
   const { z_vocabDisplay_SETTINGS, z_SET_vocabDisplaySettings } = USE_zustand();
@@ -36,6 +39,7 @@ export default function PublicListVocabs_PAGE() {
   const { sharedList_id } = useLocalSearchParams();
   const [target_VOCAB, SET_targetVocab] = useState<Vocab_MODEL | undefined>();
   const toast = useToast();
+  const router = useRouter();
 
   const { sharedList, IS_sharedListFetching, sharedList_ERROR } =
     USE_fetchOneSharedList(
@@ -47,6 +51,8 @@ export default function PublicListVocabs_PAGE() {
     { name: "displaySettings" },
     { name: "saveList" },
   ]);
+
+  const { showTitle, handleScroll } = USE_showListHeaderTitle();
 
   const {
     COPY_listAndVocabs,
@@ -88,6 +94,8 @@ export default function PublicListVocabs_PAGE() {
     paginateBy: 3,
   });
 
+  const activeFilter_COUNT = USE_getActiveFilterCount(z_vocabDisplay_SETTINGS);
+
   const collectedLang_IDS = useMemo(() => {
     // infinite loop occurs if not defined
     return sharedList?.collected_lang_ids || [];
@@ -95,7 +103,7 @@ export default function PublicListVocabs_PAGE() {
 
   return (
     <Page_WRAP>
-      <OneSharedList_HEADER
+      {/* <OneSharedList_HEADER
         list_NAME={sharedList?.name}
         TOGGLE_saveListModal={() => TOGGLE_modal("saveList")}
         {...{ ARE_vocabsFetching }}
@@ -104,6 +112,17 @@ export default function PublicListVocabs_PAGE() {
         TOGGLE_displaySettings={() => TOGGLE_modal("displaySettings")}
         loading={false}
         {...{ search, SET_search }}
+      /> */}
+
+      <List_HEADER
+        SHOW_listName={showTitle}
+        list_NAME={sharedList?.name}
+        GO_back={() => router.back()}
+        LIKE_list={() => {}}
+        OPEN_displaySettings={() => TOGGLE_modal("displaySettings")}
+        OPEN_search={() => {}}
+        SAVE_list={() => TOGGLE_modal("saveList")}
+        {...{ search, SET_search, activeFilter_COUNT }}
       />
 
       <ExploreVocabs_FLATLIST

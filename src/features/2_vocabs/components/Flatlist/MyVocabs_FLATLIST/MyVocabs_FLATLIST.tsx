@@ -18,13 +18,14 @@ import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 import { withObservables } from "@nozbe/watermelondb/react";
 import FETCH_vocabs, { VocabFilter_PROPS } from "../../../utils/FETCH_vocabs";
 import Vocab from "../../Vocab/Vocab";
-import { View } from "react-native";
+import { NativeScrollEvent, NativeSyntheticEvent, View } from "react-native";
 import FetchVocabs_QUERY from "../../../utils/FetchVocabs_QUERY";
 import USE_displaySettings from "@/src/hooks/USE_displaySettings/USE_displaySettings";
 import USE_observedVocabs, {
   USE_observeVocabs,
 } from "@/src/features/1_lists/hooks/USE_observeVocabs";
 import { Query } from "@nozbe/watermelondb";
+import { HEADER_MARGIN } from "@/src/constants/globalVars";
 
 export default function MyVocabs_FLATLIST({
   vocabs,
@@ -34,6 +35,7 @@ export default function MyVocabs_FLATLIST({
   PREPARE_vocabDelete,
   TOGGLE_createVocabModal,
   listHeader_EL,
+  onScroll,
 }: {
   vocabs: Vocab_MODEL[] | undefined;
   SHOW_bottomBtn: React.ReactNode;
@@ -48,11 +50,13 @@ export default function MyVocabs_FLATLIST({
   }) => void;
   TOGGLE_createVocabModal: () => void;
   PREPARE_vocabDelete?: (id: string) => void;
+  onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
 }) {
   const { t } = useTranslation();
 
   return (
     <Styled_FLATLIST
+      {...{ onScroll }}
       data={vocabs}
       renderItem={({ item }) => {
         return (
@@ -69,6 +73,7 @@ export default function MyVocabs_FLATLIST({
           </SwipeableExample>
         );
       }}
+      style={{ marginTop: HEADER_MARGIN || 68 }}
       keyExtractor={(item) => "Vocab" + item.id}
       ListHeaderComponent={listHeader_EL}
       ListFooterComponent={

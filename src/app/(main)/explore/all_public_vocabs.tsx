@@ -26,6 +26,10 @@ import { MyColors } from "@/src/constants/MyColors";
 import { View } from "react-native";
 import VocabsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/VocabsFlatlistHeader_SECTION";
 import USE_fetchTotalPublicVocabCount from "@/src/features/2_vocabs/hooks/USE_fetchTotalPublicVocabCount";
+import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
+import USE_getActiveFilterCount from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/utils/USE_getActiveFilterCount";
+import List_HEADER from "@/src/components/Header/List_HEADER";
+import { useRouter } from "expo-router";
 
 export default function AllPublicVocabs_PAGE() {
   const { t } = useTranslation();
@@ -58,13 +62,19 @@ export default function AllPublicVocabs_PAGE() {
     paginateBy: 5,
   });
 
+  const { showTitle, handleScroll } = USE_showListHeaderTitle();
+  const activeFilter_COUNT = USE_getActiveFilterCount(z_vocabDisplay_SETTINGS);
+  const router = useRouter();
+
   return (
     <Page_WRAP>
-      <PublicVocabs_HEADER />
-      <ExporeSingleList_SUBNAV
-        {...{ search, SET_search }}
-        loading={ARE_langIdsCollecting}
-        TOGGLE_displaySettings={() => TOGGLE_modal("displaySettings")}
+      <List_HEADER
+        SHOW_listName={showTitle}
+        list_NAME="🔤 All public vocabs"
+        GO_back={() => router.back()}
+        OPEN_displaySettings={() => TOGGLE_modal("displaySettings")}
+        IS_searchBig={true}
+        {...{ search, SET_search, activeFilter_COUNT }}
       />
 
       <ExploreVocabs_FLATLIST
@@ -79,8 +89,10 @@ export default function AllPublicVocabs_PAGE() {
           SET_targetVocab(vocab);
           TOGGLE_modal("save");
         }}
+        onScroll={handleScroll}
         listHeader_EL={
           <VocabsFlatlistHeader_SECTION
+            list_NAME="🔤 All public vocabs"
             totalVocabs={vocab_COUNT}
             {...{ search, z_vocabDisplay_SETTINGS, z_SET_vocabDisplaySettings }}
           />

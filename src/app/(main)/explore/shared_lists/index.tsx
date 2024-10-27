@@ -6,7 +6,6 @@ import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import React from "react";
 import SharedLists_HEADER from "@/src/features/1_lists/components/SharedLists_HEADER";
-import SharedList_FLATLIST from "@/src/features/1_lists/components/SharedList_FLATLIST";
 import USE_fetchSharedSupabaseLists from "@/src/features/2_vocabs/hooks/USE_fetchSharedSupabaseLists";
 import USE_debounceSearch from "@/src/hooks/USE_debounceSearch/USE_debounceSearch";
 import USE_zustand from "@/src/zustand";
@@ -21,6 +20,10 @@ import VocabsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/Voc
 import ListsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/ListsFlatlistHeader_SECTION";
 import USE_totalPublicListCount from "@/src/features/1_lists/hooks/USE_totalPublicListCount";
 import USE_totalSharedListCount from "@/src/features/1_lists/hooks/USE_totalSharedListCount";
+import USE_getActiveFilterCount from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/utils/USE_getActiveFilterCount";
+import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
+import { useRouter } from "expo-router";
+import List_HEADER from "@/src/components/Header/List_HEADER";
 
 export default function SharedLists_PAGE() {
   const { user } = USE_auth();
@@ -51,13 +54,19 @@ export default function SharedLists_PAGE() {
     paginateBy: 2,
   });
 
+  const { showTitle, handleScroll } = USE_showListHeaderTitle();
+  const activeFilter_COUNT = USE_getActiveFilterCount(z_listDisplay_SETTINGS);
+  const router = useRouter();
+
   return (
     <Page_WRAP>
-      <SharedLists_HEADER />
-
-      <ExploreLists_SUBNAV
-        TOGGLE_displaySettings={() => TOGGLE_modal("displaySettings")}
-        {...{ search, SET_search, ARE_langIdsCollecting }}
+      <List_HEADER
+        SHOW_listName={showTitle}
+        list_NAME="🔒 Shared lists"
+        GO_back={() => router.back()}
+        OPEN_displaySettings={() => TOGGLE_modal("displaySettings")}
+        IS_searchBig={true}
+        {...{ search, SET_search, activeFilter_COUNT }}
       />
 
       <ExploreLists_FLATLIST
@@ -69,8 +78,10 @@ export default function SharedLists_PAGE() {
           ARE_listsFetching,
           LOAD_more,
         }}
+        onScroll={handleScroll}
         listHeader_EL={
           <ListsFlatlistHeader_SECTION
+            list_NAME="🔒 Shared lists"
             totalLists={vocab_COUNT}
             {...{ search, z_listDisplay_SETTINGS, z_SET_listDisplaySettings }}
           />

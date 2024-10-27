@@ -9,6 +9,7 @@ export default appSchema({
         { name: "username", type: "string", isIndexed: true },
         { name: "email", type: "string" },
         { name: "max_vocabs", type: "number" },
+
         { name: "preferred_lang_id", type: "string" },
 
         { name: "list_submit_attempt_count", type: "number" },
@@ -31,6 +32,7 @@ export default appSchema({
         { name: "is_submitted_for_publish", type: "boolean" },
         { name: "was_accepted_for_publish", type: "boolean" },
         { name: "type", type: "string" },
+        { name: "saved_count", type: "number" },
 
         { name: "default_lang_ids", type: "string", isOptional: true },
         { name: "collected_lang_ids", type: "string", isOptional: true },
