@@ -101,6 +101,8 @@ export default appSchema({
         { name: "is_read", type: "boolean" },
 
         { name: "created_at", type: "number" },
+        { name: "updated_at", type: "number" },
+        { name: "deleted_at", type: "number", isOptional: true },
       ],
     }),
 
@@ -114,6 +116,8 @@ export default appSchema({
         { name: "payment_method", type: "string" },
 
         { name: "created_at", type: "number" },
+        { name: "updated_at", type: "number" },
+        { name: "deleted_at", type: "number", isOptional: true },
       ],
     }),
   ],

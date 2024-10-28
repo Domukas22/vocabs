@@ -17,6 +17,8 @@ import {
   ListAccess_MODEL,
   Vocab_MODEL,
   Language_MODEL,
+  Notifications_MODEL,
+  Payments_MODEL,
 } from "./watermelon_MODELS";
 
 // First, create the adapter to the underlying database:
@@ -42,7 +44,14 @@ setGenerator(() => uuidv4());
 // Then, make a Watermelon database from it!
 const db = new Database({
   adapter,
-  modelClasses: [User_MODEL, List_MODEL, Vocab_MODEL, Language_MODEL],
+  modelClasses: [
+    User_MODEL,
+    List_MODEL,
+    Vocab_MODEL,
+    Language_MODEL,
+    Notifications_MODEL,
+    Payments_MODEL,
+  ],
 });
 
 export default db;
@@ -51,4 +60,6 @@ export const Users_DB = db.get<User_MODEL>("users"),
   Lists_DB = db.get<List_MODEL>("lists"),
   ListAccess_DB = db.get<ListAccess_MODEL>("list_access"),
   Vocabs_DB = db.get<Vocab_MODEL>("vocabs"),
-  Languages_DB = db.get<Language_MODEL>("languages");
+  Languages_DB = db.get<Language_MODEL>("languages"),
+  Notifications_DB = db.get<Notifications_MODEL>("notifications"),
+  Payments_DB = db.get<Payments_MODEL>("payments");

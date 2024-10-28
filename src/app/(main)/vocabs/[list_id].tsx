@@ -95,20 +95,6 @@ function __SingleList_PAGE({
 
   return (
     <Page_WRAP>
-      {/* <MyVocabs_HEADER
-        list_NAME={selected_LIST?.name || ""}
-        undertextGreen={
-          selected_LIST?.type === "shared" ? t("undertext.shared") : ""
-        }
-        btnBack_ACTION={() => router.back()}
-        btnDots_ACTION={() => TOGGLE_modal("listSettings")}
-      /> */}
-      {/* <Styled_TEXT>{list?.type}</Styled_TEXT> */}
-      {/* <MyVocabs_SUBNAV
-        {...{ search, SET_search }}
-        onPlusIconPress={() => TOGGLE_modal("createVocab")}
-        TOGGLE_displaySettings={() => TOGGLE_modal("displaySettings")}
-      /> */}
       <List_HEADER
         SHOW_listName={showTitle}
         list_NAME={selected_LIST?.name}

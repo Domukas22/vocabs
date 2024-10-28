@@ -10,7 +10,7 @@ const USE_showListHeaderTitle = () => {
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const scrollY = event.nativeEvent.contentOffset.y;
-    setShowTitle(scrollY > 5);
+    setShowTitle(scrollY > 40);
   };
 
   return { showTitle, handleScroll };

@@ -83,7 +83,7 @@ function Main_LAYOUT() {
             if (userData) {
               // await executeSync(); // Sync after fetching user data
               // router.push("/(main)/explore/public_lists");
-              router.push("/(main)/explore");
+              router.push("/(main)/general");
             }
           } else {
             SET_auth(null);

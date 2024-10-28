@@ -66,7 +66,7 @@ export default function TrInput_BLOCK({
               <Highlighted_TEXT
                 text={tr.text}
                 highlights={tr.highlights}
-                light
+                // light
                 {...{ diff }}
               />
             )}
@@ -76,6 +76,7 @@ export default function TrInput_BLOCK({
           multiline
           value={tr.text}
           SET_value={onChange}
+          style={{ fontFamily: "Nunito-Medium" }}
           // placeholder={t("placeholder.translation")}
           _ref={inputREF}
           {...{ error, isSubmitted, isFocused, setIsFocused }}

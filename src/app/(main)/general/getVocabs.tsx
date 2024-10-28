@@ -24,28 +24,19 @@ import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import { Vocabs_DB } from "@/src/db";
 import { withObservables } from "@nozbe/watermelondb/react";
 import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
+import { Q } from "@nozbe/watermelondb";
 
 function __GetVocabs_PAGE({
-  vocabs = [],
+  totalUserVocab_COUNT = 0,
 }: {
-  vocabs: Vocab_MODEL[] | undefined;
+  totalUserVocab_COUNT: number | undefined;
 }) {
   const { t } = useTranslation();
   const { user } = USE_auth();
 
-  //   const [vocabs, SET_vocabs]
-
-  //   const totalVocabs = useMemo(() =>
-
-  //     ,[user?.max_vocabs])
-
   return (
     <Page_WRAP>
-      {vocabs &&
-        vocabs?.map((v) => (
-          <Styled_TEXT key={v.id}>{v.trs?.[0]?.text}</Styled_TEXT>
-        ))}
-
+      <Styled_TEXT>Total vocab count: {totalUserVocab_COUNT}</Styled_TEXT>
       <Header
         title={t("header.getVocabs")}
         btnLeft={
@@ -140,10 +131,12 @@ function __GetVocabs_PAGE({
   );
 }
 export default function GetVocabs_PAGE() {
-  // const { user } = USE_auth();
+  const { user } = USE_auth();
 
   const enhance = withObservables([], () => ({
-    vocabs: Vocabs_DB.query(),
+    totalUserVocab_COUNT: Vocabs_DB.query(
+      Q.on("lists", Q.where("user_id", user?.id || ""))
+    ).observeCount(),
   }));
 
   const EnhancedPage = enhance(__GetVocabs_PAGE);

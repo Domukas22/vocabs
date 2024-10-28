@@ -19,7 +19,7 @@ export default function VocabDifficulty_COUNTS({
     <View
       style={{
         flexDirection: "row",
-        gap: 8,
+        gap: 4,
         // marginTop: 4,
         justifyContent: "flex-end",
       }}

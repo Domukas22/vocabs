@@ -16,7 +16,9 @@
     "cancelListPublishing": "Unpublish list?",
     "selectUsers": "Select users",
     "getVocabs": "Get vocabs",
-    "copyListAndVocabs": "Copy this list and it's vocabs?"
+    "copyListAndVocabs": "Copy this list and it's vocabs?",
+    "notifications": "Notifications",
+    "payments": "Payments"
   },
   "blockLabels": {
     "uiLang": "App language"
@@ -131,7 +133,9 @@
         "about": "About us",
         "logout": "Log out",
         "learnMore": "Learn more",
-        "getPremium": "Get premium"
+        "getPremium": "Get premium",
+        "notifications": "Notifications",
+        "payments": "Payments"
       },
       "header": "General"
     }

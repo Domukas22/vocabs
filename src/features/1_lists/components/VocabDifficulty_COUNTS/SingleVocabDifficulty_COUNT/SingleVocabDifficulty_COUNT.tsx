@@ -26,10 +26,10 @@ export default function SingleVocabDifficulty_COUNT({
   };
 
   return (
-    <View style={{ flexDirection: "row", gap: 2, alignItems: "center" }}>
-      <ICON_difficultyDot big={true} difficulty={difficulty} />
+    <View style={{ flexDirection: "row", gap: 0, alignItems: "center" }}>
+      <ICON_difficultyDot difficulty={difficulty} />
       <View>
-        <Styled_TEXT type="text_15_bold" style={textColor}>
+        <Styled_TEXT type="text_14_bold" style={textColor}>
           {count}
         </Styled_TEXT>
       </View>

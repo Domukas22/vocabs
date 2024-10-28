@@ -13,6 +13,10 @@ import {
   ICON_privacyPolicy,
   ICON_contact,
   ICON_about,
+  ICON_notificationBell,
+  ICON_activeCount,
+  ICON_checkMark,
+  ICON_checkMarkFull,
 } from "@/src/components/icons/icons";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
@@ -24,7 +28,7 @@ import { useTranslation } from "react-i18next";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 import Confirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
 import Dropdown_BLOCK from "@/src/components/Dropdown_BLOCK/Dropdown_BLOCK";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { vocabLimit } from "@/src/constants/globalVars";
 import FETCH_vocabs, {
@@ -32,8 +36,19 @@ import FETCH_vocabs, {
 } from "@/src/features/2_vocabs/utils/FETCH_vocabs";
 import { withObservables } from "@nozbe/watermelondb/react";
 import { sync } from "@/src/db/sync";
+import USE_fetchNotifications from "@/src/features/6_notifications/hooks/USE_fetchNotifications";
+import { Notifications_DB, Payments_DB, Vocabs_DB } from "@/src/db";
+import USE_fetchPayments from "@/src/features/7_payments/hooks/USE_fetchPayments";
+import { Notifications_MODEL } from "@/src/db/watermelon_MODELS";
+import { Q } from "@nozbe/watermelondb";
 
-export default function General_PAGE() {
+function _General_PAGE({
+  notification_COUNT,
+  totalUserVocab_COUNT,
+}: {
+  notification_COUNT: number | undefined;
+  totalUserVocab_COUNT: number | undefined;
+}) {
   const { t } = useTranslation();
 
   const { SET_auth } = USE_auth();
@@ -52,18 +67,18 @@ export default function General_PAGE() {
 
   const [IS_logoutModalOpen, TOGGLE_logoutModal] = USE_toggle();
 
-  const totalVocabs = 0;
-
   return (
     <Page_WRAP>
       <Header title={t("page.general.header")} big={true} />
+      {/* <Btn text="Sync" style={{ margin: 12 }} onPress={sync} /> */}
 
       <ScrollView>
         <Block>
           <View style={{ gap: 16 }}>
             <View>
               <Styled_TEXT>
-                {vocabLimit - totalVocabs} vocabs left until you reach the limit
+                {vocabLimit - (totalUserVocab_COUNT ? totalUserVocab_COUNT : 0)}{" "}
+                vocabs left until you reach the limit
               </Styled_TEXT>
               <Styled_TEXT type="label">{user?.email}</Styled_TEXT>
               <Styled_TEXT type="label">{user?.username}</Styled_TEXT>
@@ -81,7 +96,7 @@ export default function General_PAGE() {
                   color: MyColors.text_primary,
                 }}
               >
-                {totalVocabs}
+                {totalUserVocab_COUNT ? totalUserVocab_COUNT : 0}
               </Styled_TEXT>
               <View
                 style={{
@@ -97,7 +112,9 @@ export default function General_PAGE() {
                 <View
                   style={{
                     height: "100%",
-                    width: `${totalVocabs}%`,
+                    width: `${
+                      totalUserVocab_COUNT ? totalUserVocab_COUNT : 0
+                    }%`,
                     borderRadius: 50,
                     backgroundColor: MyColors.icon_primary,
                   }}
@@ -133,6 +150,28 @@ export default function General_PAGE() {
             text={t("page.general.btn.settings")}
             iconRight={<ICON_arrow direction="right" />}
             onPress={() => router.push("/(main)/general/settings")}
+            text_STYLES={{ flex: 1, marginLeft: 4 }}
+          />
+          <Btn
+            iconLeft={
+              <View style={{ flexDirection: "row", gap: 4 }}>
+                <ICON_notificationBell />
+                {typeof notification_COUNT === "number" &&
+                  notification_COUNT > 0 && (
+                    <ICON_activeCount count={notification_COUNT} />
+                  )}
+              </View>
+            }
+            text={t("page.general.btn.notifications")}
+            iconRight={<ICON_arrow direction="right" />}
+            onPress={() => router.push("/(main)/general/notifications")}
+            text_STYLES={{ flex: 1, marginLeft: 4 }}
+          />
+          <Btn
+            iconLeft={<ICON_checkMarkFull />}
+            text={t("page.general.btn.payments")}
+            iconRight={<ICON_arrow direction="right" />}
+            onPress={() => router.push("/(main)/general/payments")}
             text_STYLES={{ flex: 1, marginLeft: 4 }}
           />
           <Btn
@@ -196,4 +235,22 @@ export default function General_PAGE() {
       />
     </Page_WRAP>
   );
+}
+
+export default function General_PAGE() {
+  const { user } = USE_auth();
+
+  const enhance = withObservables([], () => ({
+    notification_COUNT: Notifications_DB.query(
+      Q.where("user_id", user?.id || ""),
+      Q.where("is_read", false)
+    ).observeCount(),
+    totalUserVocab_COUNT: Vocabs_DB.query(
+      Q.on("lists", Q.where("user_id", user?.id || ""))
+    ).observeCount(),
+  }));
+  const EnhancedPage = enhance(_General_PAGE);
+
+  // Render the enhanced page
+  return <EnhancedPage />;
 }

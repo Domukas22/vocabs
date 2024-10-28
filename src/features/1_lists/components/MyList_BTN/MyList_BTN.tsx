@@ -79,13 +79,22 @@ function _MyList_BTN({
             Submitted for publish
           </Styled_TEXT>
         )}
-        {list?.description && (
+        {/* {list?.description && (
           <Styled_TEXT type="label_small">{list?.description}</Styled_TEXT>
-        )}
+        )} */}
+        {/* <View
+          style={{
+            flexDirection: "row",
+            gap: 8,
+            marginTop: 4,
+            justifyContent: "space-between",
+          }}
+        > */}
         <VocabCount_LABEL {...{ vocab_COUNT }} />
         <VocabDifficulty_COUNTS
           {...{ diff_1_count, diff_2_count, diff_3_count }}
         />
+        {/* </View> */}
       </ListBtn_TOP>
     </Transition_BTN>
   );

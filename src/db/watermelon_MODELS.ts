@@ -112,7 +112,7 @@ export class ListAccess_MODEL extends Model {
 export class Vocab_MODEL extends Model {
   static table = "vocabs";
   static associations: Associations = {
-    list: { type: "belongs_to", key: "list_id" },
+    lists: { type: "belongs_to", key: "list_id" },
   };
 
   @relation("lists", "list_id") list!: List_MODEL;
@@ -170,9 +170,11 @@ export class Notifications_MODEL extends Model {
   @field("is_read") is_read!: boolean;
 
   @readonly @date("created_at") createdAt!: number;
+  @readonly @date("updated_at") updatedAt!: number;
+  @readonly @date("deleted_at") deleted_at!: number;
 }
 
-export class Paymentss_MODEL extends Model {
+export class Payments_MODEL extends Model {
   static table = "payments";
 
   static associations: Associations = {
@@ -186,4 +188,6 @@ export class Paymentss_MODEL extends Model {
   @text("payment_method") payment_method!: string;
 
   @readonly @date("created_at") createdAt!: number;
+  @readonly @date("updated_at") updatedAt!: number;
+  @readonly @date("deleted_at") deleted_at!: number;
 }

@@ -19,7 +19,9 @@
     "cancelListPublishing": "Veröffentlichung der Liste aufheben?",
     "selectUsers": "Nutzer wählen",
     "getVocabs": "Vokabel holen",
-    "copyListAndVocabs": "Diese Liste und ihre Vokabeln kopieren?"
+    "copyListAndVocabs": "Diese Liste und ihre Vokabeln kopieren?",
+    "notifications": "Benachrichtigungen",
+    "payments": "Zahlungen"
   },
   "blockLabels": {
     "uiLang": "App Sprache"
@@ -134,7 +136,9 @@
         "about": "Über uns",
         "logout": "Ausloggen",
         "learnMore": "Mehr erfahren",
-        "getPremium": "Premium holen"
+        "getPremium": "Premium holen",
+        "notifications": "Benachrichtigungen",
+        "payments": "Zahlungen"
       },
       "header": "Allgemeines"
     }

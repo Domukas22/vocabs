@@ -30,7 +30,7 @@ export default function ListBtn_TOP({
     <View
       style={{
         paddingTop: 10,
-        paddingBottom: 12,
+        paddingBottom: 10,
         paddingHorizontal: 14,
       }}
     >

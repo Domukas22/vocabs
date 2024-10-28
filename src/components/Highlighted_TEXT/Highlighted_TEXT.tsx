@@ -35,6 +35,7 @@ export default function Highlighted_TEXT({
           <Styled_TEXT
             key={index}
             style={[
+              { fontFamily: "Nunito-Medium" },
               isHighlighted && { color: highlightTextColor },
               isHighlighted && diff === 1 && { textDecorationLine },
               // { fontFamily: "Nunito-Medium" },

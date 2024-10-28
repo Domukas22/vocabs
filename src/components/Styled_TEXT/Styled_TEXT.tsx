@@ -13,6 +13,7 @@ export type ThemedTextProps = TextProps & {
     | "text_18_light"
     | "text_15_bold"
     | "text_15_semibold"
+    | "text_14_bold"
     | "text_14_semibold"
     | "text_14_medium"
     | "label"
@@ -69,6 +70,10 @@ const s = StyleSheet.create({
     fontSize: 15,
     fontFamily: "Nunito-SemiBold",
   },
+  text_14_bold: {
+    fontSize: 14,
+    fontFamily: "Nunito-Bold",
+  },
   text_14_semibold: {
     fontSize: 14,
     fontFamily: "Nunito-SemiBold",
@@ -94,7 +99,7 @@ const s = StyleSheet.create({
   },
 
   list_title: {
-    fontSize: 18,
+    fontSize: 17,
     color: MyColors.text_white,
     fontFamily: "Nunito-Bold",
   },
