@@ -39,22 +39,9 @@ export default function USE_incrementListSavedCount() {
     try {
       SET_isIncrementingSavedCount(true);
 
-      console.log(list_id);
-
       const { data, error } = await supabase.rpc("increment_list_saved_count", {
         list_id,
       });
-
-      console.log("IIIINCREMENT");
-      console.log(data);
-
-      //     const { data, error } = await supabase
-      // .from('lists')
-      // .update({ saved_count: 1 })
-      // .increment('saved_count')
-      // .match({ id: 1 });
-
-      //     console.log(data);
 
       // Handle supabase errors
       if (error) {

@@ -9,12 +9,16 @@ import { z_vocabDisplaySettings_PROPS } from "@/src/zustand";
 
 export default function USE_observedVocabs({
   search,
+  user_id,
   list_id,
   z_vocabDisplay_SETTINGS,
+  fetchAll = false,
 }: {
   search: string;
-  list_id: string | undefined;
+  list_id?: string | undefined;
+  user_id?: string | undefined;
   z_vocabDisplay_SETTINGS: z_vocabDisplaySettings_PROPS | undefined;
+  fetchAll?: boolean;
 }) {
   const [vocabs, SET_vocabs] = useState<Vocab_MODEL[] | undefined>(undefined);
 
@@ -22,7 +26,9 @@ export default function USE_observedVocabs({
     const quries = FetchVocabs_QUERY({
       search,
       list_id,
+      user_id,
       z_vocabDisplay_SETTINGS,
+      fetchAll,
     });
     const query = quries.observe();
 

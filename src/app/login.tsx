@@ -21,6 +21,13 @@ import AuthenticationHeader from "../features/0_authentication/components/Authen
 import Error_TEXT from "../components/Error_TEXT/Error_TEXT";
 import Notification_BOX from "../components/Notification_BOX/Notification_BOX";
 import LoginRegister_SWITCH from "../features/0_authentication/components/LoginRegister_SWTICH";
+import { USE_auth } from "../context/Auth_CONTEXT";
+import * as SecureStore from "expo-secure-store";
+import db, { Users_DB } from "../db";
+import USE_zustand from "../zustand";
+import { FETCH_userFromSupabase, HANDLE_watermelonUser } from "./_layout";
+import { User_MODEL } from "../db/watermelon_MODELS";
+import { Q } from "@nozbe/watermelondb";
 
 type LoginData_PROPS = {
   email: string;
@@ -32,26 +39,30 @@ export default function Login_PAGE() {
   const [internal_ERROR, SET_internalError] = useState("");
   const { t } = useTranslation();
   const router = useRouter(); // Initialize router
+  const { login } = USE_auth();
+  const { z_SET_user } = USE_zustand();
 
-  const login = async (data: LoginData_PROPS) => {
+  const _login = async (data: LoginData_PROPS) => {
     const { email, password } = data;
-
     if (!email || !password) return;
+
     SET_loading(true);
-
-    // Sign in with Supabase
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
+    const { userData, error } = await login(email, password);
     SET_loading(false);
 
     if (error) {
       SET_internalError(error.message);
-    } else {
-      // Navigate to the main application screen on successful login
-      // router.push("/(main)/vocabs"); // Update to your main app route
+    } else if (typeof userData?.id === "string") {
+      // sucessfully logged in --> save user id to local storage
+      await SecureStore.setItemAsync("user_id", userData?.id);
+
+      await HANDLE_watermelonUser({
+        user_id: userData?.id,
+        z_SET_user,
+        router,
+      });
+
+      router.push("/(main)/vocabs");
     }
   };
 
@@ -66,7 +77,7 @@ export default function Login_PAGE() {
     },
   });
 
-  const onSubmit = (data: LoginData_PROPS) => login(data);
+  const onSubmit = (data: LoginData_PROPS) => _login(data);
 
   return (
     <Page_WRAP>

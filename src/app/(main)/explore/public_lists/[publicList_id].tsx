@@ -36,7 +36,7 @@ import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
 
 export default function PublicListVocabs_PAGE() {
   const toast = useToast();
-  const { user } = USE_auth();
+  const { z_user } = USE_zustand();
   const router = useRouter();
   const { t } = useTranslation();
   const { publicList_id } = useLocalSearchParams();
@@ -75,7 +75,7 @@ export default function PublicListVocabs_PAGE() {
     if (!list || IS_copyingList) return;
     const new_LIST = await COPY_listAndVocabs({
       list,
-      user_id: user?.id,
+      user: z_user,
       onSuccess: (new_LIST: List_MODEL) => {
         TOGGLE_modal("saveList");
         toast.show(t("notifications.listAndVocabsCopied"), {

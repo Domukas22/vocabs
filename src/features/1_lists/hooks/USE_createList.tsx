@@ -63,10 +63,19 @@ export default function USE_createList() {
 
     SET_creatingList(true);
     try {
+      const user = await Users_DB.find(user_id);
+
+      if (!user) {
+        SET_createListError(errorMessage);
+        return {
+          success: false,
+          msg: "🔴 User not found in WatermelonDb when creating a list 🔴",
+        };
+      }
       const new_LIST = await db.write(async () => {
         const newList = await Lists_DB.create((newList: List_MODEL) => {
-          newList.user_id = user_id;
-          newList.original_creator_id = user_id;
+          newList.user.set(user);
+          newList.original_creator.set(user);
 
           newList.name = name || "";
           newList.description = description || "";

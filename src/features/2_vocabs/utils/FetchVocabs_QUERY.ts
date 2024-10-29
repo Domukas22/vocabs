@@ -11,13 +11,17 @@ import { z_vocabDisplaySettings_PROPS } from "@/src/zustand";
 export interface VocabFilter_PROPS {
   search?: string;
   list_id?: string | undefined;
+  user_id?: string | undefined;
   z_vocabDisplay_SETTINGS: z_vocabDisplaySettings_PROPS | undefined;
+  fetchAll?: boolean;
 }
 
 const FetchVocabs_QUERY = ({
   search,
   list_id,
+  user_id,
   z_vocabDisplay_SETTINGS,
+  fetchAll = false,
 }: VocabFilter_PROPS): Query<Vocab_MODEL> => {
   // Start with the base query
   let query = Vocabs_DB?.query();
@@ -25,8 +29,10 @@ const FetchVocabs_QUERY = ({
   // Add optional filters using Q.and
   const conditions = [];
 
-  if (list_id) {
+  if (list_id && !fetchAll) {
     conditions.push(Q.where("list_id", list_id));
+  } else if (user_id && fetchAll) {
+    conditions.push(Q.where("user_id", user_id));
   }
 
   if (

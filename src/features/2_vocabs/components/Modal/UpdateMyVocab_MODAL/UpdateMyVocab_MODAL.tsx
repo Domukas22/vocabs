@@ -54,6 +54,7 @@ interface UpdateMyVocabModal_PROPS {
 
 export type UpdateMyVocabData_PROPS = {
   list: List_MODEL | undefined;
+  user: User_MODEL | undefined;
   difficulty: 1 | 2 | 3;
   description: string;
   translations: tr_PROPS[];
@@ -62,13 +63,13 @@ export type UpdateMyVocabData_PROPS = {
 export default function UpdateMyVocab_MODAL({
   toUpdate_VOCAB,
   list,
-
+  user,
   IS_open,
   TOGGLE_modal: TOGGLE_vocabModal,
   onSuccess = () => {},
 }: UpdateMyVocabModal_PROPS) {
   const { t } = useTranslation();
-  const { user }: { user: User_MODEL } = USE_auth();
+
   const toast = useToast();
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([

@@ -4,7 +4,7 @@
 
 // zustand_store.js
 import { create } from "zustand";
-import { Vocab_MODEL, List_MODEL } from "./db/watermelon_MODELS";
+import { Vocab_MODEL, List_MODEL, User_MODEL } from "./db/watermelon_MODELS";
 
 export type z_listDisplaySettings_PROPS = {
   sorting: "date";
@@ -36,9 +36,20 @@ interface ZustandStore {
 
   z_listDisplay_SETTINGS: z_listDisplaySettings_PROPS;
   z_SET_listDisplaySettings: z_setlistDisplaySettings_PROPS;
+
+  z_user: User_MODEL | undefined;
+  z_SET_user: (newUser_CONTENT: User_MODEL | undefined) => void;
 }
 
 const USE_zustand = create<ZustandStore>((set) => ({
+  z_user: undefined,
+
+  z_SET_user: (newUser_CONTENT) => {
+    set(() => ({
+      z_user: newUser_CONTENT,
+    }));
+  },
+
   z_listDisplay_SETTINGS: {
     sorting: "date",
     sortDirection: "ascending",

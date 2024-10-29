@@ -16,7 +16,7 @@ import { List_MODEL } from "@/src/db/watermelon_MODELS";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { withObservables } from "@nozbe/watermelondb/react";
 import { Lists_DB } from "@/src/db";
-import { USER_ID } from "@/src/constants/globalVars";
+import { HEADER_MARGIN, USER_ID } from "@/src/constants/globalVars";
 import { Q } from "@nozbe/watermelondb";
 import { take } from "@nozbe/watermelondb/QueryDescription";
 
@@ -29,6 +29,7 @@ interface MyListsFlatlist_PROPS {
   PREPARE_listRename: (list: List_MODEL) => void;
   PREPADE_deleteList: (list: List_MODEL) => void;
   TOGGLE_createListModal: () => void;
+  onScroll: () => {};
 }
 
 function _MyLists_FLATLIST({
@@ -40,6 +41,7 @@ function _MyLists_FLATLIST({
   PREPARE_listRename,
   PREPADE_deleteList,
   TOGGLE_createListModal,
+  onScroll,
 }: MyListsFlatlist_PROPS) {
   const { t } = useTranslation();
 
@@ -47,7 +49,9 @@ function _MyLists_FLATLIST({
     <Styled_FLATLIST
       _ref={_ref}
       style={{ flex: 1 }}
+      onScroll={onScroll}
       data={lists}
+      style={{ marginTop: HEADER_MARGIN || 68 }}
       renderItem={({ item }: { item: List_MODEL }) => (
         <SwipeableExample
           leftBtn_ACTION={() => {

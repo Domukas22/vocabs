@@ -15,9 +15,10 @@ import { List_MODEL, User_MODEL } from "@/src/db/watermelon_MODELS";
 import db, { Lists_DB, Users_DB } from "@/src/db";
 import { USER_ID } from "@/src/constants/globalVars";
 import USE_collectListLangs from "../../hooks/USE_collectListLangs";
+import { USE_auth } from "@/src/context/Auth_CONTEXT";
 
 interface CreateListModal_PROPS {
-  user: User_MODEL | undefined;
+  user_id: string | undefined;
   IS_open: boolean;
   currentList_NAMES?: string[];
   CLOSE_modal: () => void;
@@ -29,7 +30,7 @@ type NewList_PROPS = {
 };
 
 export default function CreateList_MODAL({
-  user,
+  user_id,
   IS_open,
   currentList_NAMES,
   CLOSE_modal,
@@ -68,7 +69,7 @@ export default function CreateList_MODAL({
     const newList = await CREATE_list({
       name,
       description: "",
-      user_id: user?.id,
+      user_id: user_id,
       currentList_NAMES,
       onSuccess: (new_LIST: List_MODEL) => {
         onSuccess(new_LIST);

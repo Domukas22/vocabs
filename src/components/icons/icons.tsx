@@ -241,6 +241,23 @@ export function ICON_checkMarkFull({ ...props }: {} & ViewProps) {
     </View>
   );
 }
+export function ICON_bookmark({ ...props }: {} & ViewProps) {
+  return (
+    <View {...props}>
+      <Svg
+        width={sizing.big}
+        height={sizing.big}
+        viewBox="0 0 14 20"
+        fill="none"
+      >
+        <Path
+          d="M1.5 0C0.521 0 0 0.926 0 1.692V17.702C0 19.054 1.469 20.01 2.686 19.22L6.631 16.659C6.66601 16.6349 6.70751 16.622 6.75 16.622C6.79249 16.622 6.83399 16.6349 6.869 16.659L10.814 19.22C12.031 20.01 13.5 19.055 13.5 17.702V1.692C13.5 0.926 12.979 0 12 0H1.5Z"
+          fill={MyColors.icon_gray_light}
+        />
+      </Svg>
+    </View>
+  );
+}
 export function ICON_star({ ...props }: {} & ViewProps) {
   return (
     <View {...props}>

@@ -56,6 +56,7 @@ export default appSchema({
     tableSchema({
       name: "vocabs",
       columns: [
+        { name: "user_id", type: "string", isIndexed: true },
         { name: "list_id", type: "string", isIndexed: true },
 
         { name: "difficulty", type: "number" },
@@ -63,6 +64,7 @@ export default appSchema({
         { name: "trs", type: "string", isOptional: true },
         { name: "lang_ids", type: "string", isOptional: true },
         { name: "searchable", type: "string", isOptional: true },
+        { name: "is_marked", type: "boolean" },
 
         { name: "created_at", type: "number" },
         { name: "updated_at", type: "number" },

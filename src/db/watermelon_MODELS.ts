@@ -42,10 +42,14 @@ export class User_MODEL extends Model {
   static associations: Associations = {
     vocabs: { type: "has_many", foreignKey: "user_id" },
     lists: { type: "has_many", foreignKey: "user_id" },
+    notifications: { type: "has_many", foreignKey: "user_id" },
+    payments: { type: "has_many", foreignKey: "user_id" },
   };
 
   @children("vocabs") vocabs!: Vocab_MODEL[];
   @children("lists") lists!: List_MODEL[];
+  @children("notifications") notifications!: Notifications_MODEL[];
+  @children("payments") payments!: Payments_MODEL[];
 
   @text("username") username!: string;
   @text("email") email!: string;
@@ -58,20 +62,39 @@ export class User_MODEL extends Model {
   @readonly @date("created_at") createdAt!: number;
   @readonly @date("updated_at") updatedAt!: number;
   @readonly @date("deleted_at") deleted_at!: number;
+
+  @lazy totalList_COUNT = this.lists
+    .extend(Q.where("deleted_at", Q.eq(null)))
+    .observeCount();
+  @lazy totalVocab_COUNT = this.vocabs
+    .extend(Q.where("deleted_at", Q.eq(null)))
+    .observeCount();
+  @lazy markedVocab_COUNT = this.vocabs
+    .extend(Q.where("is_marked", true), Q.where("deleted_at", Q.eq(null)))
+    .observeCount();
+  @lazy deletedVocab_COUNT = this.vocabs
+    .extend(Q.where("deleted_at", Q.notEq(null)))
+    .observeCount();
+  @lazy unreadNotification_COUNT = this.notifications
+    .extend(Q.where("is_read", false))
+    .observeCount();
 }
 // ===================================================================================
 export class List_MODEL extends Model {
   static table = "lists";
   static associations: Associations = {
     vocabs: { type: "has_many", foreignKey: "list_id" },
+    users: { type: "belongs_to", key: "user_id" },
+    original_creators: { type: "belongs_to", key: "user_id" },
   };
   @children("vocabs") vocabs!: Vocab_MODEL[];
 
   /////////////////////////////////////////////////////////////////
   // Becasue we don't really need to fetch lists by users,
   // we provide simple text strings instead of WatermelonDB relations
-  @text("user_id") user_id!: string;
-  @text("original_creator_id") original_creator_id!: string;
+  @relation("users", "user_id") user!: List_MODEL;
+  @relation("users", "original_creator_id") original_creator!: List_MODEL;
+
   /////////////////////////////////////////////////////////////////
 
   @text("name") name!: string;
@@ -113,15 +136,18 @@ export class Vocab_MODEL extends Model {
   static table = "vocabs";
   static associations: Associations = {
     lists: { type: "belongs_to", key: "list_id" },
+    users: { type: "belongs_to", key: "user_id" },
   };
 
   @relation("lists", "list_id") list!: List_MODEL;
+  @relation("users", "user_id") user!: List_MODEL;
   // @text("list_id") list_id!: string | undefined;
   @field("difficulty") difficulty!: 1 | 2 | 3;
   @text("description") description!: string | undefined;
   @json("trs", sanitizeTranslations) trs!: tr_PROPS[] | undefined;
   @text("lang_ids") lang_ids!: string | undefined;
   @text("searchable") searchable!: string | undefined;
+  @text("is_marked") is_marked!: boolean | undefined;
 
   @readonly @date("created_at") createdAt!: number;
   @readonly @date("updated_at") updatedAt!: number;

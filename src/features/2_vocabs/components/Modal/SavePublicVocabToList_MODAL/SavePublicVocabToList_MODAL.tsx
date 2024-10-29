@@ -31,6 +31,7 @@ import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 import USE_collectListLangs from "@/src/features/1_lists/hooks/USE_collectListLangs";
 import USE_incrementListSavedCount from "@/src/features/1_lists/hooks/USE_incrementListSavedCount";
+import USE_zustand from "@/src/zustand";
 
 interface SavePublicVocabToListModal_PROPS {
   vocab: Vocab_MODEL | undefined;
@@ -49,7 +50,7 @@ export default function SavePublicVocabToList_MODAL({
     { name: "create", initialValue: false },
   ]);
 
-  const { user } = USE_auth();
+  const { z_user } = USE_zustand();
 
   const { CREATE_vocab, IS_creatingVocab, db_ERROR, RESET_dbError } =
     USE_createVocab();
@@ -76,6 +77,7 @@ export default function SavePublicVocabToList_MODAL({
 
   const create = async () => {
     const result = await CREATE_vocab({
+      user: z_user,
       list: selected_LIST,
       difficulty: 3,
       description: vocab?.description,
@@ -114,7 +116,7 @@ export default function SavePublicVocabToList_MODAL({
           {...{ selected_LIST }}
           SELECT_list={(list: List_MODEL) => SET_selectedList(list)}
           TOGGLE_createListModal={() => TOGGLE_modal("create")}
-          user_id={user?.id || ""}
+          user_id={z_user?.id || ""}
         />
 
         <Footer
@@ -138,7 +140,7 @@ export default function SavePublicVocabToList_MODAL({
         />
       </KeyboardAvoidingView>
       <CreateList_MODAL
-        user={user}
+        user={z_user}
         IS_open={modal_STATES.create}
         // currentList_NAMES={z_lists?.map((l) => l.name)}
         CLOSE_modal={() => TOGGLE_modal("create")}

@@ -30,7 +30,7 @@ interface ListHeader_PROPS {
   SET_search: React.Dispatch<React.SetStateAction<string>> | undefined;
   GO_back?: () => void | undefined;
   OPEN_listSettings?: () => void | undefined;
-  OPEN_createvocab?: () => void | undefined;
+  OPEN_create?: () => void | undefined;
   OPEN_displaySettings?: () => void | undefined;
   SAVE_list?: () => void | undefined;
 }
@@ -45,7 +45,7 @@ export default function List_HEADER({
   GO_back,
 
   OPEN_listSettings,
-  OPEN_createvocab,
+  OPEN_create,
 
   OPEN_displaySettings,
   SAVE_list,
@@ -126,10 +126,10 @@ export default function List_HEADER({
               style={{ flex: IS_searchBig ? 0 : 1 }}
             />
           )}
-          {OPEN_createvocab && (
+          {OPEN_create && (
             <Btn
               type="simple_primary_text"
-              onPress={OPEN_createvocab}
+              onPress={OPEN_create}
               iconLeft={<ICON_X color="primary" big />}
               style={{ flex: IS_searchBig ? 0 : 1 }}
             />

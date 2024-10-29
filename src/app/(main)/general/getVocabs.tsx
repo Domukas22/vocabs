@@ -36,7 +36,7 @@ function __GetVocabs_PAGE({
 
   return (
     <Page_WRAP>
-      <Styled_TEXT>Total vocab count: {totalUserVocab_COUNT}</Styled_TEXT>
+      {/* <Styled_TEXT>Total vocab count: {totalUserVocab_COUNT}</Styled_TEXT> */}
       <Header
         title={t("header.getVocabs")}
         btnLeft={

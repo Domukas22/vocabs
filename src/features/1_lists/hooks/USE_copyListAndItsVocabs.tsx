@@ -1,11 +1,15 @@
 import { useState, useCallback, useMemo } from "react";
 import db, { Lists_DB, Vocabs_DB } from "@/src/db";
-import { List_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
+import {
+  List_MODEL,
+  User_MODEL,
+  Vocab_MODEL,
+} from "@/src/db/watermelon_MODELS";
 import { supabase } from "@/src/lib/supabase";
 
 interface CopyListAndVocabs_PROPS {
-  list: List_MODEL;
-  user_id: string;
+  list: List_MODEL | undefined;
+  user: User_MODEL | undefined;
   onSuccess?: (new_LIST: List_MODEL) => void;
 }
 
@@ -23,7 +27,7 @@ export default function USE_copyListAndItsVocabs() {
 
   const COPY_listAndVocabs = async ({
     list,
-    user_id,
+    user,
     onSuccess,
   }: CopyListAndVocabs_PROPS): Promise<{
     success: boolean;
@@ -43,7 +47,7 @@ export default function USE_copyListAndItsVocabs() {
         };
       }
 
-      if (!user_id) {
+      if (!user || !user?.id) {
         const errorMsg = "You must be logged in to copy a list.";
         SET_copyListError(errorMsg);
         return {
@@ -58,8 +62,9 @@ export default function USE_copyListAndItsVocabs() {
       const new_LIST = await db.write(async () => {
         const copiedList = await Lists_DB.create((newList: List_MODEL) => {
           // Copy relevant fields from the existing list
-          newList.user_id = user_id;
-          newList.original_creator_id = user_id;
+          newList.user.set(user);
+          newList.original_creator.set(user);
+
           newList.name = list.name;
           newList.description = list.description;
           newList.is_submitted_for_publish = false; // Set to false initially for a private copy
@@ -89,6 +94,8 @@ export default function USE_copyListAndItsVocabs() {
           vocabsToCopy.map((vocab: Vocab_MODEL) =>
             Vocabs_DB.create((newVocab: Vocab_MODEL) => {
               // newVocab.list_id = copiedList.id;
+
+              newVocab.user.set(user);
               newVocab.list.set(copiedList);
               newVocab.difficulty = 3;
               newVocab.description = vocab.description;

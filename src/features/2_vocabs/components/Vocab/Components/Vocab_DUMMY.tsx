@@ -7,7 +7,6 @@ import Highlighted_TEXT from "@/src/components/Highlighted_TEXT/Highlighted_TEXT
 import { ICON_difficultyDot, ICON_flag } from "@/src/components/icons/icons";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
-import { USE_langs } from "@/src/context/Langs_CONTEXT";
 import { Language_MODEL } from "@/src/db/watermelon_MODELS";
 import FETCH_langs from "@/src/features/4_languages/hooks/FETCH_langs";
 import { _DisplaySettings_PROPS } from "@/src/utils/DisplaySettings";

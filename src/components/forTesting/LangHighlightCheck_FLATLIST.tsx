@@ -1,18 +1,19 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { View, ScrollView, Text, StyleSheet } from "react-native";
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
-import languages from "@/src/constants/languages"; // Adjust based on your project structure
+
 import Highlighted_TEXT from "../Highlighted_TEXT/Highlighted_TEXT";
 import { ICON_flag } from "../icons/icons";
 import Styled_FLATLIST from "../Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
 import { Styled_TEXT } from "../Styled_TEXT/Styled_TEXT";
-import { USE_langs } from "@/src/context/Langs_CONTEXT";
+
 import { USE_searchedLangs } from "@/src/features/4_languages/hooks/USE_searchedLangs/USE_searchedLangs";
 import Subnav from "../Subnav/Subnav";
 import SearchBar from "../SearchBar/SearchBar";
+import { Language_MODEL } from "@/src/db/watermelon_MODELS";
 
 export default function LangHighlightCheck_FLATLIST() {
-  const { languages } = USE_langs();
+  const languages: Language_MODEL[] = [];
   const [highlights, setHighlights] = useState(
     languages.map((item) => item.translation_example_highlights || [])
   );

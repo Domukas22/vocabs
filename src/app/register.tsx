@@ -35,6 +35,10 @@ import Error_TEXT from "../components/Error_TEXT/Error_TEXT";
 import LoginRegister_SWITCH from "../features/0_authentication/components/LoginRegister_SWTICH";
 import db, { Users_DB } from "../db";
 import { User_MODEL } from "../db/watermelon_MODELS";
+import * as SecureStore from "expo-secure-store";
+import { USE_auth } from "../context/Auth_CONTEXT";
+import { HANDLE_watermelonUser } from "./_layout";
+import USE_zustand from "../zustand";
 
 type RegisterData_PROPS = {
   username: string;
@@ -43,46 +47,38 @@ type RegisterData_PROPS = {
 };
 
 export default function Register_PAGE() {
+  const { register } = USE_auth();
   const [loading, SET_loading] = useState(false);
   const [internal_ERROR, SET_internalError] = useState("");
   const { t } = useTranslation();
   const router = useRouter();
+  const { z_SET_user } = USE_zustand();
 
-  const register = async (data: RegisterData_PROPS) => {
+  const _register = async (data: RegisterData_PROPS) => {
     const { username, email, password } = data;
     if (!email || !password || !username) return;
+
     SET_loading(true);
-
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          username,
-        },
-      },
-    });
-
-    // await createUser(email);
-
+    const { userData, error } = await register(username, email, password);
     SET_loading(false);
 
     if (error) {
-      SET_internalError(error.message);
+      SET_internalError(error);
       console.error(error);
-    } else {
-      await db.write(async () => {
-        await Users_DB.create((user: User_MODEL) => {
-          (user.username = username),
-            (user.email = email),
-            (user.is_premium = false),
-            (user.is_admin = false),
-            (user.preferred_lang_id = "en");
-        });
+    } else if (!error && userData && typeof userData?.user?.id === "string") {
+      // account on supabase has been created, now insert user_id into local storage
+      await SecureStore.setItemAsync("user_id", userData?.user?.id);
+
+      await HANDLE_watermelonUser({
+        user_id: userData?.user?.id,
+        z_SET_user,
+        router,
       });
 
-      router.push("/(main)/vocabs"); // Navigate to main route on success
+      router.push("/(main)/vocabs");
     }
+
+    // router.push("/(main)/vocabs"); // Navigate to main route on success
   };
 
   const {
@@ -96,8 +92,8 @@ export default function Register_PAGE() {
       password: "",
     },
   });
-  const onSubmit = (data: RegisterData_PROPS) => register(data);
-
+  const onSubmit = (data: RegisterData_PROPS) => _register(data);
+  // const onSubmit = (data: RegisterData_PROPS) => {};
   return (
     <Page_WRAP>
       <KeyboardAvoidingView

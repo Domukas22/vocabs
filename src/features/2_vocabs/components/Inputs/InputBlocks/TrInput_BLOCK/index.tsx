@@ -17,7 +17,7 @@ import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
 import StyledText_INPUT from "@/src/components/StyledText_INPUT/StyledText_INPUT";
-import { USE_langs } from "@/src/context/Langs_CONTEXT";
+
 import { FieldError } from "react-hook-form";
 
 interface VocabTranslationInputs_PROPS {

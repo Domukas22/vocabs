@@ -30,7 +30,6 @@ import VocabSorting_BLOCK from "../VocabSorting_BLOCK";
 import VocabSortDirection_BLOCK from "../VocabSortDirection_BLOCK";
 import Label from "@/src/components/Label/Label";
 import VocabFrontLanguageToggles_BLOCK from "../components/VocabFrontLanguageToggles_BLOCK";
-import USE_langs from "@/src/features/4_languages/hooks/USE_langs";
 import i18next from "i18next";
 import VocabLangFilters_BLOCK from "../components/VocabLangFilters_BLOCK";
 import USE_langs_2 from "@/src/features/4_languages/hooks/USE_langs_2";

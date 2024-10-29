@@ -1,60 +1,51 @@
-//
-//
-//
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
-import { Slot, Stack, useRouter } from "expo-router";
+import { Slot, useRouter } from "expo-router";
 import { useEffect } from "react";
-import { Auth_PROVIDER, USE_auth } from "../context/Auth_CONTEXT";
+import { ToastProvider } from "react-native-toast-notifications";
+import * as SecureStore from "expo-secure-store";
 import { supabase } from "../lib/supabase";
 import { FETCH_userData } from "../services/userService";
-import { Langs_PROVIDER, USE_langs } from "../context/Langs_CONTEXT";
-import { ToastProvider } from "react-native-toast-notifications";
+
 import "@/src/i18n";
-import { View } from "react-native";
-import { Styled_TEXT } from "../components/Styled_TEXT/Styled_TEXT";
-import { MyColors } from "../constants/MyColors";
-import { ICON_toastNotification } from "../components/icons/icons";
 import Notification_BOX from "../components/Notification_BOX/Notification_BOX";
-import { List_MODEL, User_MODEL } from "../db/watermelon_MODELS";
 import { sync } from "../db/sync";
-import db, { Languages_DB, Lists_DB, Vocabs_DB } from "../db";
+import db, { Languages_DB, Users_DB } from "../db";
 import { Q } from "@nozbe/watermelondb";
+import { Auth_PROVIDER } from "../context/Auth_CONTEXT";
+import USE_zustand from "../zustand";
+import { User_MODEL } from "../db/watermelon_MODELS";
 
 export default function _layout() {
   return (
-    <Langs_PROVIDER>
-      <Auth_PROVIDER>
-        <ToastProvider
-          renderType={{
-            green: (toast) => (
-              <Notification_BOX type="success" text={toast?.message} />
-            ),
-            red: (toast) => (
-              <Notification_BOX type="error" text={toast?.message} />
-            ),
-            custom_warning: (toast) => (
-              <Notification_BOX type="warning" text={toast?.message} />
-            ),
-          }}
-          style={{
-            zIndex: 9999, // Ensure it's a high value to stay on top
-            elevation: 9999, // For Android devices
-          }}
-          offsetBottom={120}
-        >
-          <Main_LAYOUT />
-        </ToastProvider>
-      </Auth_PROVIDER>
-    </Langs_PROVIDER>
+    <Auth_PROVIDER>
+      <ToastProvider
+        renderType={{
+          green: (toast) => (
+            <Notification_BOX type="success" text={toast?.message} />
+          ),
+          red: (toast) => (
+            <Notification_BOX type="error" text={toast?.message} />
+          ),
+          custom_warning: (toast) => (
+            <Notification_BOX type="warning" text={toast?.message} />
+          ),
+        }}
+        style={{
+          zIndex: 9999, // Ensure it's a high value to stay on top
+          elevation: 9999, // For Android devices
+        }}
+        offsetBottom={120}
+      >
+        <Main_LAYOUT />
+      </ToastProvider>
+    </Auth_PROVIDER>
   );
 }
 
 function Main_LAYOUT() {
-  const { SET_auth, SET_userData } = USE_auth();
-  const { ARE_languagesLoading, languages } = USE_langs();
-
   const router = useRouter();
+  const { z_SET_user } = USE_zustand();
   const [loaded] = useFonts({
     "Nunito-Black": require("@/src/assets/fonts/Nunito-Black.ttf"),
     "Nunito-ExtraBold": require("@/src/assets/fonts/Nunito-ExtraBold.ttf"),
@@ -65,55 +56,49 @@ function Main_LAYOUT() {
     "Nunito-Light": require("@/src/assets/fonts/Nunito-Light.ttf"),
   });
 
+  ///////////////////////////////////////////////////////////////////////////////
+  // This fires onces once on load
+  ///////////////////////////////////////////////////////////////////////////////
   useEffect(() => {
-    SplashScreen.hideAsync();
+    (async () => {
+      // Hide splash screen after loading is complete
+      await SplashScreen.hideAsync();
 
-    if (loaded && !ARE_languagesLoading && languages?.length > 0) {
-      // Set up the auth state change listener
-      const { data } = supabase.auth.onAuthStateChange(
-        async (_event, session) => {
-          if (session) {
-            SET_auth(session.user);
-            const userData = await fetchUserData(session.user);
+      // Proceed only if fonts are loaded
+      if (loaded) {
+        await SYNC_langs();
+        await sync();
 
-            // await CLEAN_dirtyItems(session.user.id);
-            await syncLanguages();
+        // Check if user_id exists in Secure Store
+        const user_ID = await SecureStore.getItemAsync("user_id");
 
-            await sync();
-            if (userData) {
-              // await executeSync(); // Sync after fetching user data
-              // router.push("/(main)/explore/public_lists");
-              router.push("/(main)/general");
-            }
-          } else {
-            SET_auth(null);
-            router.push("/welcome");
-          }
+        if (user_ID) {
+          await HANDLE_watermelonUser({
+            user_id: user_ID,
+            z_SET_user,
+            router,
+          });
+        } else {
+          // If user_id does not exist, to welcome screen
+          z_SET_user(undefined); // clear user state as a precaution
+          router.push("/welcome");
         }
-      );
-
-      return () => {
-        data.subscription.unsubscribe(); // Cleanup the listener on unmount
-      };
-    }
-  }, [loaded, ARE_languagesLoading]);
-
-  async function fetchUserData(user) {
-    const res = await FETCH_userData(user.id);
-    if (res.success) {
-      SET_userData(res.data);
-
-      return res.data; // Return user data if successful
-    }
-    return null; // Return null if fetching failed
-  }
+      }
+    })();
+  }, [loaded]);
 
   if (!loaded) return null; // Show nothing while fonts are loading
 
   return <Slot />;
 }
-
-export async function syncLanguages() {
+export async function FETCH_userFromSupabase(userId: string) {
+  const res = await FETCH_userData(userId);
+  if (res.success) {
+    return res.data; // Return user data if successful
+  }
+  return null; // Return null if fetching failed
+}
+async function SYNC_langs() {
   // First, check if there are any languages already in WatermelonDB
   const existingLanguages = await Languages_DB.query().fetch();
 
@@ -160,35 +145,41 @@ export async function syncLanguages() {
   });
 }
 
-async function CLEAN_dirtyItems(user_id: string | undefined = "") {
-  try {
-    // Fetch all lists from the database
-    const allLists = await Lists_DB.query().fetch();
-    // Filter lists where user_id is not "user1"
-    const listsToDelete = allLists.filter((list) => list.user_id !== user_id);
-    // Get the IDs of valid lists (those that are not marked for deletion)
-    const validListIds = allLists
-      .filter((list) => list.user_id === user_id)
-      .map((list) => list.id);
-    // Fetch all vocabs from the database
-    const allVocabs = await Vocabs_DB.query().fetch();
-    // Filter vocabs whose list_id is not in the valid list IDs
-    const vocabsToDelete = allVocabs.filter(
-      (vocab) => !validListIds.includes(vocab?.list_id || "")
-    );
-    // Perform batch deletion in a single transaction
-    if (listsToDelete.length > 0 || vocabsToDelete.length > 0) {
+export async function HANDLE_watermelonUser({ user_id, z_SET_user, router }) {
+  // if user_id is stored, find the watermelonDB user object
+  // Sidenote: can't use .find, becasue it throws a weird error when not found
+  const watermelon_USER = await Users_DB.query(Q.where("id", user_id));
+
+  if (watermelon_USER?.[0]) {
+    // if user found, set user info into context for global refferencing
+    z_SET_user(watermelon_USER?.[0]);
+    router.push("/(main)/vocabs");
+  } else {
+    // else fetch the user from supabase
+
+    const userData = await FETCH_userFromSupabase(user_id);
+    if (userData) {
+      // if user found, create a watermelondb instance
       await db.write(async () => {
-        await db.batch(
-          // Mark the lists as deleted
-          ...listsToDelete.map((list) => list.prepareMarkAsDeleted()),
-          // Mark the vocabs as deleted
-          ...vocabsToDelete.map((vocab) => vocab.prepareMarkAsDeleted())
-        );
+        const newUser = await Users_DB.create((user: User_MODEL) => {
+          user._raw.id = userData.id;
+          user.username = userData.username;
+          user.email = userData.email;
+          user.max_vocabs = userData.max_vocabs;
+          user.list_submit_attempt_count = userData.list_submit_attempt_count;
+          user.preferred_lang_id = userData.preferred_lang_id;
+        });
+
+        if (newUser) {
+          z_SET_user(newUser);
+          router.push("/(main)/vocabs");
+        }
       });
+    } else {
+      // if not found, that means the user doesnt exist -> clear expo secure store and go to welcome screen
+      await SecureStore.setItemAsync("user_id", "");
+      z_SET_user(undefined);
+      router.push("/welcome");
     }
-    console.log("Cleaned up dirty items successfully.");
-  } catch (error) {
-    console.error("Error cleaning dirty items:", error);
   }
 }

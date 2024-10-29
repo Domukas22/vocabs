@@ -2,7 +2,10 @@
 //
 
 import Btn from "@/src/components/Btn/Btn";
-import { ICON_difficultyDot } from "@/src/components/icons/icons";
+import {
+  ICON_bookmark,
+  ICON_difficultyDot,
+} from "@/src/components/icons/icons";
 
 import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 import { useTranslation } from "react-i18next";
@@ -23,26 +26,29 @@ export default function VocabBack_BTNS({
 }) {
   const { t } = useTranslation();
   return (
-    <View style={{ flexDirection: "row", gap: 8 }}>
-      <Btn
-        type="simple"
-        style={{ flex: 1 }}
-        onPress={editBtn_FN}
-        text={t("btn.editVocab")}
-        text_STYLES={{ textAlign: "center" }}
-      />
+    <View style={{ gap: 12 }}>
+      <View style={{ flexDirection: "row", gap: 8 }}>
+        <Btn
+          type="simple"
+          style={{ flex: 1 }}
+          onPress={editBtn_FN}
+          text={t("btn.editVocab")}
+          text_STYLES={{ textAlign: "center" }}
+        />
 
+        <Btn type="simple" onPress={() => {}} iconLeft={<ICON_bookmark />} />
+
+        <Btn
+          type="simple"
+          onPress={TOGGLE_difficultyEdits}
+          iconLeft={
+            vocab?.difficulty && (
+              <ICON_difficultyDot difficulty={vocab.difficulty} big={true} />
+            )
+          }
+        />
+      </View>
       <Btn type="simple" onPress={TOGGLE_vocab} text={t("btn.close")} />
-
-      <Btn
-        type="simple"
-        onPress={TOGGLE_difficultyEdits}
-        iconLeft={
-          vocab?.difficulty && (
-            <ICON_difficultyDot difficulty={vocab.difficulty} big={true} />
-          )
-        }
-      />
     </View>
   );
 }

@@ -41,6 +41,8 @@ import { Notifications_DB, Payments_DB, Vocabs_DB } from "@/src/db";
 import USE_fetchPayments from "@/src/features/7_payments/hooks/USE_fetchPayments";
 import { Notifications_MODEL } from "@/src/db/watermelon_MODELS";
 import { Q } from "@nozbe/watermelondb";
+import * as SecureStore from "expo-secure-store";
+import USE_zustand from "@/src/zustand";
 
 function _General_PAGE({
   notification_COUNT,
@@ -51,17 +53,21 @@ function _General_PAGE({
 }) {
   const { t } = useTranslation();
 
-  const { SET_auth } = USE_auth();
-  const { user } = USE_auth();
+  // const { SET_auth } = USE_auth();
+  const { logout } = USE_auth();
 
-  const lougout = async () => {
+  const { z_user } = USE_zustand();
+
+  const _lougout = async () => {
     await sync();
-    const { error } = await supabase.auth.signOut();
+    const { error } = await logout();
 
     if (error) {
       Alert.alert("Logout error", "Error signing out");
     } else {
-      SET_auth(null);
+      await SecureStore.setItemAsync("user_id", "");
+      router.push("/welcome");
+      // SET_auth(null);
     }
   };
 
@@ -80,8 +86,8 @@ function _General_PAGE({
                 {vocabLimit - (totalUserVocab_COUNT ? totalUserVocab_COUNT : 0)}{" "}
                 vocabs left until you reach the limit
               </Styled_TEXT>
-              <Styled_TEXT type="label">{user?.email}</Styled_TEXT>
-              <Styled_TEXT type="label">{user?.username}</Styled_TEXT>
+              <Styled_TEXT type="label">{z_user?.email}</Styled_TEXT>
+              <Styled_TEXT type="label">{z_user?.username}</Styled_TEXT>
             </View>
             <View
               style={{
@@ -230,7 +236,7 @@ function _General_PAGE({
         open={IS_logoutModalOpen}
         toggle={TOGGLE_logoutModal}
         title={t("modal.logoutConfirmation.header")}
-        action={lougout}
+        action={_lougout}
         actionBtnText={t("btn.confirmLogout")}
       />
     </Page_WRAP>
@@ -238,16 +244,15 @@ function _General_PAGE({
 }
 
 export default function General_PAGE() {
-  const { user } = USE_auth();
+  const { z_user } = USE_zustand();
 
   const enhance = withObservables([], () => ({
-    notification_COUNT: Notifications_DB.query(
-      Q.where("user_id", user?.id || ""),
-      Q.where("is_read", false)
-    ).observeCount(),
-    totalUserVocab_COUNT: Vocabs_DB.query(
-      Q.on("lists", Q.where("user_id", user?.id || ""))
-    ).observeCount(),
+    notification_COUNT: z_user?.unreadNotification_COUNT
+      ? z_user?.unreadNotification_COUNT
+      : undefined,
+    totalUserVocab_COUNT: z_user?.totalVocab_COUNT
+      ? z_user?.totalVocab_COUNT
+      : undefined,
   }));
   const EnhancedPage = enhance(_General_PAGE);
 

@@ -39,6 +39,7 @@ import {
 } from "@/src/db/watermelon_MODELS";
 import FETCH_langs from "@/src/features/4_languages/hooks/FETCH_langs";
 import USE_collectListLangs from "@/src/features/1_lists/hooks/USE_collectListLangs";
+import USE_zustand from "@/src/zustand";
 
 interface CreateMyVocabModal_PROPS {
   IS_open: boolean;
@@ -48,6 +49,7 @@ interface CreateMyVocabModal_PROPS {
 }
 
 export type CreateMyVocabData_PROPS = {
+  user: User_MODEL | undefined;
   list: List_MODEL | undefined;
   difficulty: 1 | 2 | 3;
   description: string;
@@ -69,6 +71,7 @@ export default function CreateVocab_MODAL({
   ]);
 
   const [target_TR, SET_targetTr] = useState<tr_PROPS | undefined>(undefined);
+  const { z_user } = USE_zustand();
 
   const { CREATE_vocab, IS_creatingVocab, db_ERROR, RESET_dbError } =
     USE_createVocab();
@@ -91,6 +94,7 @@ export default function CreateVocab_MODAL({
   const create = async (data: CreateMyVocabData_PROPS) => {
     const { list, description, difficulty, translations } = data;
     const result = await CREATE_vocab({
+      user: z_user,
       list,
       difficulty,
       description,

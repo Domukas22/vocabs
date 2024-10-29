@@ -15,7 +15,6 @@ import { useTranslation } from "react-i18next";
 import i18next from "i18next";
 import Big_MODAL from "@/src/components/Modals/Big_MODAL/Big_MODAL";
 
-import { USE_langs } from "@/src/context/Langs_CONTEXT";
 import Subnav from "@/src/components/Subnav/Subnav";
 import GET_letterBtns from "./GET_letterBtns/GET_letterBtns";
 import GET_wordBtns from "./GET_wordBtns/GET_wordBtns";

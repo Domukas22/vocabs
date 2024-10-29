@@ -7,8 +7,9 @@ import { ICON_difficultyDot, ICON_flag } from "@/src/components/icons/icons";
 import Label from "@/src/components/Label/Label";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
-import { USE_langs } from "@/src/context/Langs_CONTEXT";
+
 import { tr_PROPS } from "@/src/db/props";
+import { Language_MODEL } from "@/src/db/watermelon_MODELS";
 
 import USE_zustand from "@/src/zustand";
 import i18next, { t } from "i18next";
@@ -46,7 +47,7 @@ export default function Vocab_FRONT({
       : null;
   }, [trs, frontTrLang_ID]);
 
-  const { languages } = USE_langs();
+  const languages: Language_MODEL[] = [];
   const appLang = useMemo(() => i18next.language, [i18next.language]);
   const targetLang = useMemo(
     () => languages?.find((lang) => lang?.lang_id === frontTrLang_ID),

@@ -7,7 +7,6 @@ import { ICON_flag, ICON_checkMark } from "@/src/components/icons/icons";
 import Label from "@/src/components/Label/Label";
 import { Language_MODEL } from "@/src/db/watermelon_MODELS";
 import FETCH_langs from "@/src/features/4_languages/hooks/FETCH_langs";
-import USE_langs from "@/src/features/4_languages/hooks/USE_langs";
 import USE_zustand, {
   z_vocabDisplaySettings_PROPS,
   z_setVocabDisplaySettings_PROPS,

@@ -40,6 +40,7 @@ import { sync } from "@/src/db/sync";
 import SelectUsers_MODAL from "@/src/features/5_users/components/SelectUsers_MODAL/SelectUsers_MODAL";
 import { supabase } from "@/src/lib/supabase";
 import db, { Lists_DB } from "@/src/db";
+import USE_zustand from "@/src/zustand";
 
 interface ListSettingsModal_PROPS {
   selected_LIST: List_MODEL;
@@ -55,7 +56,7 @@ export default function ListSettings_MODAL({
   backToIndex = () => {},
 }: ListSettingsModal_PROPS) {
   const { t } = useTranslation();
-  const { user } = USE_auth();
+  const { z_user } = USE_zustand();
   const toast = useToast();
   const router = useRouter();
 
@@ -77,7 +78,7 @@ export default function ListSettings_MODAL({
     await sync();
     SHARE_list({
       list_id: selected_LIST?.id,
-      user_id: user?.id,
+      user_id: z_user?.id,
       SHOULD_share: bool,
       onSuccess: async () => {
         await sync();
@@ -93,7 +94,7 @@ export default function ListSettings_MODAL({
     await sync();
     await PUBLISH_list({
       list_id: selected_LIST?.id,
-      user_id: user?.id,
+      user_id: z_user?.id,
       isSubmittedForPublish: bool,
       onSuccess: async (updated_LIST) => {},
     });
@@ -120,7 +121,7 @@ export default function ListSettings_MODAL({
     if (!newLang_IDS) return;
 
     UPDATE_defaultLangs({
-      user_id: user?.id || "",
+      user_id: z_user?.id || "",
       list_id: selected_LIST?.id,
       newLang_IDS,
     });
@@ -329,7 +330,7 @@ export default function ListSettings_MODAL({
 
       <RenameList_MODAL
         list_id={selected_LIST?.id}
-        user_id={user?.id}
+        user_id={z_user?.id}
         current_NAME={selected_LIST?.name}
         IS_open={modal_STATES.renameList}
         CLOSE_modal={() => TOGGLE_modal("renameList")}
@@ -383,7 +384,7 @@ export default function ListSettings_MODAL({
       </Confirmation_MODAL>
 
       <DeleteList_MODAL
-        user_id={user?.id}
+        user_id={z_user?.id}
         IS_open={modal_STATES.deleteList}
         list_id={selected_LIST?.id}
         CLOSE_modal={() => TOGGLE_modal("deleteList")}
