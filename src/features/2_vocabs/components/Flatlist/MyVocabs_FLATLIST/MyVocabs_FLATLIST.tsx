@@ -21,11 +21,10 @@ import Vocab from "../../Vocab/Vocab";
 import { NativeScrollEvent, NativeSyntheticEvent, View } from "react-native";
 import FetchVocabs_QUERY from "../../../utils/FetchVocabs_QUERY";
 import USE_displaySettings from "@/src/hooks/USE_displaySettings/USE_displaySettings";
-import USE_observedVocabs, {
-  USE_observeVocabs,
-} from "@/src/features/1_lists/hooks/USE_observeVocabs";
+import USE_observedVocabs from "@/src/features/1_lists/hooks/USE_observeVocabs";
 import { Query } from "@nozbe/watermelondb";
 import { HEADER_MARGIN } from "@/src/constants/globalVars";
+import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 
 export default function MyVocabs_FLATLIST({
   vocabs,
@@ -35,12 +34,14 @@ export default function MyVocabs_FLATLIST({
   PREPARE_vocabDelete,
   TOGGLE_createVocabModal,
   listHeader_EL,
+  listFooter_EL,
   onScroll,
 }: {
   vocabs: Vocab_MODEL[] | undefined;
   SHOW_bottomBtn: React.ReactNode;
   highlightedVocab_ID: string;
   listHeader_EL: React.ReactNode;
+  listFooter_EL: React.ReactNode;
   HANDLE_updateModal: ({
     clear,
     vocab,
@@ -76,16 +77,7 @@ export default function MyVocabs_FLATLIST({
       style={{ marginTop: HEADER_MARGIN || 68 }}
       keyExtractor={(item) => "Vocab" + item.id}
       ListHeaderComponent={listHeader_EL}
-      ListFooterComponent={
-        SHOW_bottomBtn ? (
-          <Btn
-            text={t("btn.createVocab")}
-            iconLeft={<ICON_X color="primary" />}
-            type="seethrough_primary"
-            onPress={TOGGLE_createVocabModal}
-          />
-        ) : null
-      }
+      ListFooterComponent={listFooter_EL}
     />
   );
 }

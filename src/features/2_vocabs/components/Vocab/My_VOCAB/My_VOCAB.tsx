@@ -4,7 +4,7 @@
 
 import { MyColors } from "@/src/constants/MyColors";
 import { StyleSheet, View } from "react-native";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 import { tr_PROPS } from "@/src/db/props";
@@ -18,9 +18,14 @@ import VocabBack_BTNS from "../Components/VocabBack_BTNS/VocabBack_BTNS";
 import VocabBackDifficultyEdit_BTNS from "../Components/VocabBackDifficultyEdit_BTNS/VocabBackDifficultyEdit_BTNS";
 
 import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
+import Btn from "@/src/components/Btn/Btn";
+import { useTranslation } from "react-i18next";
+import USE_updateVocabIsMarked from "../../../hooks/USE_updateVocabIsMarked";
+import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
+import { withObservables } from "@nozbe/watermelondb/react";
 
 interface VocabProps {
-  vocab: Vocab_MODEL;
+  _vocab: Vocab_MODEL;
   highlighted: boolean;
 
   HANDLE_updateModal: ({
@@ -35,90 +40,79 @@ interface VocabProps {
 }
 
 // TOGGLE_vocabModal needs to also pass in th etranslations, so we dont have to pass them async and get a delayed manageVocabModal update
-export default function MyVocab({
-  vocab,
-  highlighted,
-  HANDLE_updateModal,
-}: VocabProps) {
+function _MyVocab({ _vocab, highlighted, HANDLE_updateModal }: VocabProps) {
   const [open, TOGGLE_open] = USE_toggle();
-  const [SHOW_difficultyEdits, TOGGLE_difficultyEdits] = USE_toggle(false);
+  const [SHOW_difficultyEdits, TOGGLE_difficultyEdits, SET_difficultyEdit] =
+    USE_toggle(false);
 
-  const trs = vocab?.trs || [];
+  const trs = _vocab?.trs || [];
 
   const handleEdit = () => {
     HANDLE_updateModal({
-      vocab,
+      vocab: _vocab,
     });
   };
 
-  const {
-    UPDATE_privateVocabDifficulty,
-    privateVocabDifficultyEdit_PROPS,
-    updateDifficulty_ERROR,
-  } = USE_updateVocabDifficulty();
-
-  async function EDIT_vocabDifficulty(newDifficulty: 1 | 2 | 3) {
-    if (
-      !privateVocabDifficultyEdit_PROPS.loading &&
-      vocab.difficulty !== newDifficulty
-    ) {
-      const result = await UPDATE_privateVocabDifficulty({
-        vocab_id: vocab.id,
-        newDifficulty,
-      });
-      if (result.success) {
-        TOGGLE_difficultyEdits();
-      }
-    }
-  }
-
   const styles = useMemo(
     () => [
-      s.vocab,
+      s._vocab,
       open && s.vocab_open,
-      open && vocab?.difficulty && s[`difficulty_${vocab?.difficulty}`],
+      open && _vocab?.difficulty && s[`difficulty_${_vocab?.difficulty}`],
       highlighted && s.highlighted,
     ],
-    [open, vocab.difficulty, highlighted]
+    [open, _vocab.difficulty, highlighted]
   );
+  const { t } = useTranslation();
 
   return (
     <View style={styles}>
+      {/* <Styled_TEXT>{_vocab?.is_marked ? "MARKED" : "not marked"}</Styled_TEXT> */}
       {!open && (
         <Vocab_FRONT
           trs={trs || []}
-          difficulty={vocab?.difficulty}
-          description={vocab?.description}
+          difficulty={_vocab?.difficulty}
+          description={_vocab?.description}
           highlighted={highlighted}
           TOGGLE_open={TOGGLE_open}
+          IS_marked={_vocab?.is_marked}
         />
       )}
       {open && (
         <>
-          <VocabBack_TRS trs={trs} difficulty={vocab?.difficulty} />
-          <VocabBottomText_WRAP desc={vocab.description} />
+          <VocabBack_TRS trs={trs} difficulty={_vocab?.difficulty} />
+          <VocabBottomText_WRAP desc={_vocab.description} />
 
-          <View style={{ padding: 12 }}>
+          <View style={{ padding: 12, gap: 8 }}>
             {!SHOW_difficultyEdits ? (
               <VocabBack_BTNS
                 {...{
-                  vocab,
+                  vocab: _vocab,
                   trs,
-                  TOGGLE_vocab: TOGGLE_open,
+
                   TOGGLE_difficultyEdits,
                 }}
                 editBtn_FN={handleEdit}
               />
             ) : (
               <VocabBackDifficultyEdit_BTNS
-                active_DIFFICULTY={vocab.difficulty}
-                privateVocabDifficultyEdit_PROPS={
-                  privateVocabDifficultyEdit_PROPS
-                }
-                EDIT_difficulty={EDIT_vocabDifficulty}
+                active_DIFFICULTY={_vocab.difficulty}
+                UPDATE_difficulty={(diff: 1 | 2 | 3) => {
+                  (async () => {
+                    await _vocab.EDIT_difficulty(diff);
+                    TOGGLE_difficultyEdits();
+                  })();
+                }}
                 TOGGLE_open={TOGGLE_difficultyEdits}
               />
             )}
+            <Btn
+              type="simple"
+              onPress={() => {
+                TOGGLE_open();
+                SET_difficultyEdit(false);
+              }}
+              text={t("btn.close")}
+            />
           </View>
         </>
       )}
@@ -126,8 +120,14 @@ export default function MyVocab({
   );
 }
 
+const enhance = withObservables(["vocab"], ({ vocab }) => ({
+  _vocab: vocab.observe(),
+}));
+const MyVocab = enhance(_MyVocab);
+export default MyVocab;
+
 const s = StyleSheet.create({
-  vocab: {
+  _vocab: {
     width: "100%",
     minWidth: "100%",
     borderRadius: 12,

@@ -15,7 +15,7 @@ export default function ListBtn_BOTTOM({
       style={{
         flexDirection: "row",
         justifyContent: "space-between",
-        paddingVertical: 8,
+        paddingVertical: 6,
         paddingHorizontal: 12,
         borderTopWidth: 1,
         borderTopColor: MyColors.border_white_005,

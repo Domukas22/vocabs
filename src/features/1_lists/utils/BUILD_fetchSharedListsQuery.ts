@@ -47,7 +47,7 @@ export const BUILD_fetchSharedListsQuery = ({
     // Assuming collected_lang_ids is a JSONB array of language strings (e.g., ["en", "de"]).
     query = query.or(
       z_listDisplay_SETTINGS.langFilters
-        .map((lang) => `collected_lang_ids.cs."[\\"${lang}\\"]"`)
+        .map((lang) => `collected_lang_ids.ilike.%${lang}%`)
         .join(",")
     );
   }

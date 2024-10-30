@@ -124,9 +124,8 @@ export default function CreateVocab_MODAL({
   } = useForm<CreateMyVocabData_PROPS>({
     defaultValues: {
       translations:
-        GET_defaultTranslations(
-          initial_LIST?.default_lang_ids || ["en", "de"]
-        ) || [],
+        GET_defaultTranslations(initial_LIST?.default_lang_ids || "en,de") ||
+        [],
       description: "",
       list: initial_LIST,
       difficulty: 3,
@@ -148,9 +147,7 @@ export default function CreateVocab_MODAL({
     if (IS_open)
       setValue(
         "translations",
-        GET_defaultTranslations(
-          initial_LIST?.default_lang_ids || ["en", "de"]
-        ) || []
+        GET_defaultTranslations(initial_LIST?.default_lang_ids || "en,de") || []
       );
   }, [IS_open]);
 

@@ -3,7 +3,12 @@
 //
 
 import Highlighted_TEXT from "@/src/components/Highlighted_TEXT/Highlighted_TEXT";
-import { ICON_difficultyDot, ICON_flag } from "@/src/components/icons/icons";
+import {
+  ICON_bookmark,
+  ICON_bookmark_2,
+  ICON_difficultyDot,
+  ICON_flag,
+} from "@/src/components/icons/icons";
 import Label from "@/src/components/Label/Label";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
@@ -22,6 +27,7 @@ interface VocabFront_PROPS {
   description: string | undefined;
   TOGGLE_open: () => void;
   highlighted?: boolean;
+  IS_marked?: boolean;
 }
 
 export default function Vocab_FRONT({
@@ -29,7 +35,8 @@ export default function Vocab_FRONT({
   difficulty,
   description,
   TOGGLE_open,
-  highlighted,
+  highlighted = false,
+  IS_marked = false,
 }: VocabFront_PROPS) {
   const { z_vocabDisplay_SETTINGS } = USE_zustand();
   const { SHOW_description, SHOW_flags, SHOW_difficulty, frontTrLang_ID } =
@@ -64,34 +71,37 @@ export default function Vocab_FRONT({
       onPress={TOGGLE_open}
     >
       <View style={s.content}>
-        {front_TR ? (
-          <Highlighted_TEXT
-            text={front_TR?.text || "EMPTY TRANSLATION"}
-            highlights={front_TR?.highlights || []}
-            diff={difficulty}
-          />
-        ) : (
-          <Label>
-            {t("label.missingTranslation") +
-              targetLang?.[`lang_in_${appLang || "en"}`]}
-          </Label>
-        )}
+        <View>
+          {front_TR ? (
+            <Highlighted_TEXT
+              text={front_TR?.text || "EMPTY TRANSLATION"}
+              highlights={front_TR?.highlights || []}
+              diff={difficulty}
+            />
+          ) : (
+            <Label>
+              {t("label.missingTranslation") +
+                targetLang?.[`lang_in_${appLang || "en"}`]}
+            </Label>
+          )}
+        </View>
 
-        {SHOW_description && description && (
-          <Styled_TEXT type="label_small">{description}</Styled_TEXT>
-        )}
-
-        {(SHOW_flags || SHOW_difficulty) && (
+        {(SHOW_flags || SHOW_difficulty || IS_marked) && (
           <View style={s.iconWrap}>
             {SHOW_flags &&
               trs &&
               trs.length > 0 &&
               trs?.map((tr) => (
-                <ICON_flag key={"FrontFlag" + tr.lang_id} lang={tr.lang_id} />
+                <ICON_flag
+                  key={"FrontFlag" + tr.lang_id}
+                  lang={tr.lang_id}
+                  big
+                />
               ))}
             {SHOW_difficulty && !!difficulty && (
-              <ICON_difficultyDot difficulty={difficulty} />
+              <ICON_difficultyDot difficulty={difficulty} big />
             )}
+            {IS_marked && <ICON_bookmark_2 active={true} />}
           </View>
         )}
       </View>
@@ -118,6 +128,7 @@ const s = StyleSheet.create({
     justifyContent: "flex-end",
     gap: 4,
     marginTop: 12,
+    alignItems: "center",
   },
   tagWrap: {
     flexDirection: "row",

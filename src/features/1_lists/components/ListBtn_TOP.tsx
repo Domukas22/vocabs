@@ -18,12 +18,12 @@ export default function ListBtn_TOP({
   vocab_COUNT = 0,
   children,
 }: {
-  name: string | undefined;
-  description: string | undefined;
+  name?: string | undefined;
+  description?: string | undefined;
   owner_USERNAME?: string | undefined;
   IS_shared?: boolean;
   IS_submitted?: boolean;
-  vocab_COUNT: number;
+  vocab_COUNT?: number;
   children: React.ReactNode;
 }) {
   return (

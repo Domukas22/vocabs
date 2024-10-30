@@ -91,6 +91,24 @@ function _AllMyVocabs_PAGE({
     z_vocabDisplay_SETTINGS,
   });
 
+  const [displayed_VOCABS, SET_displayedVocabs] = useState<
+    Vocab_MODEL[] | undefined
+  >([]);
+
+  const [allow, SET_allow] = useState(true);
+  useEffect(() => {
+    if (allow && vocabs) {
+      SET_displayedVocabs(vocabs);
+      SET_allow(false);
+    }
+  }, [vocabs, allow]);
+
+  useEffect(() => {
+    if (!allow) {
+      SET_allow(true);
+    }
+  }, [z_vocabDisplay_SETTINGS, debouncedSearch]);
+
   return (
     <Page_WRAP>
       <List_HEADER
@@ -103,7 +121,7 @@ function _AllMyVocabs_PAGE({
       />
 
       <MyVocabs_FLATLIST
-        {...{ vocabs }}
+        vocabs={displayed_VOCABS}
         onScroll={handleScroll}
         listHeader_EL={
           <VocabsFlatlistHeader_SECTION
@@ -131,6 +149,7 @@ function _AllMyVocabs_PAGE({
         onSuccess={(new_VOCAB: Vocab_MODEL) => {
           TOGGLE_modal("createVocab");
           HIGHLIGHT_vocab(new_VOCAB.id);
+          SET_allow(true);
           toast.show(t("notifications.vocabCreated"), {
             type: "green",
             duration: 3000,
@@ -175,6 +194,7 @@ function _AllMyVocabs_PAGE({
             type: "green",
             duration: 5000,
           });
+          SET_allow(true);
 
           TOGGLE_modal("delete");
         }}

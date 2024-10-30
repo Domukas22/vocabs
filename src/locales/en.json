@@ -180,7 +180,8 @@
     "sortVocabs": "Sort vocabs",
     "username": "Username",
     "email": "Email",
-    "sortLists": "Sort lists"
+    "sortLists": "Sort lists",
+    "emptyList": "Empty list"
   },
   "modal": {
     "displaySettings": {
@@ -268,7 +269,8 @@
     "publicVocabSavedInAPrivateListPost": " ",
     "vocabPublishedToPublic": "Vocab published to public",
     "savedVocab": "Vocab saved",
-    "listAndVocabsCopied": "List and vocabs copied"
+    "listAndVocabsCopied": "List and vocabs copied",
+    "markedVocab": "Vocab marked"
   },
   "notification": {
     "atLeast1LangError": "Atleast 1 language must be selected"

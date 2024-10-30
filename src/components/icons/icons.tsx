@@ -241,7 +241,10 @@ export function ICON_checkMarkFull({ ...props }: {} & ViewProps) {
     </View>
   );
 }
-export function ICON_bookmark({ ...props }: {} & ViewProps) {
+export function ICON_bookmark({
+  active = false,
+  ...props
+}: { active: boolean | undefined } & ViewProps) {
   return (
     <View {...props}>
       <Svg
@@ -252,7 +255,28 @@ export function ICON_bookmark({ ...props }: {} & ViewProps) {
       >
         <Path
           d="M1.5 0C0.521 0 0 0.926 0 1.692V17.702C0 19.054 1.469 20.01 2.686 19.22L6.631 16.659C6.66601 16.6349 6.70751 16.622 6.75 16.622C6.79249 16.622 6.83399 16.6349 6.869 16.659L10.814 19.22C12.031 20.01 13.5 19.055 13.5 17.702V1.692C13.5 0.926 12.979 0 12 0H1.5Z"
-          fill={MyColors.icon_gray_light}
+          fill={active ? MyColors.icon_green : MyColors.icon_gray_light}
+        />
+      </Svg>
+    </View>
+  );
+}
+export function ICON_bookmark_2({
+  active = false,
+  big = false,
+  ...props
+}: { active: boolean | undefined; big?: boolean } & ViewProps) {
+  return (
+    <View {...props}>
+      <Svg
+        width={sizing[big ? "big" : "small"]}
+        height={sizing[big ? "big" : "small"]}
+        viewBox="0 0 18 17"
+        fill="none"
+      >
+        <Path
+          d="M8.55696 13.6975L12.707 16.2075C13.467 16.6675 14.397 15.9875 14.197 15.1275L13.097 10.4075L16.767 7.2275C17.437 6.6475 17.077 5.5475 16.197 5.4775L11.367 5.0675L9.47696 0.6075C9.13696 -0.2025 7.97696 -0.2025 7.63696 0.6075L5.74696 5.0575L0.916957 5.4675C0.0369575 5.5375 -0.323043 6.6375 0.346957 7.2175L4.01696 10.3975L2.91696 15.1175C2.71696 15.9775 3.64696 16.6575 4.40696 16.1975L8.55696 13.6975Z"
+          fill={active ? MyColors.icon_green : MyColors.icon_gray_light}
         />
       </Svg>
     </View>

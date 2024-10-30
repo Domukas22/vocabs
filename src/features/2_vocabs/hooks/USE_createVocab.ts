@@ -68,6 +68,7 @@ export default function USE_createVocab() {
           vocab.trs = translations;
           vocab.lang_ids = translations?.map((t) => t.lang_id).join(",");
           vocab.searchable = translations?.map((t) => t.text).join(",");
+          vocab.is_marked = false;
         });
 
         return vocab;

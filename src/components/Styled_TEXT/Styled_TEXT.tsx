@@ -6,6 +6,7 @@ export type ThemedTextProps = TextProps & {
   type?:
     | "text_28_bold"
     | "text_22_bold"
+    | "text_20_bold"
     | "text_18_bold"
     | "text_18_semibold"
     | "text_18_medium"
@@ -40,6 +41,10 @@ const s = StyleSheet.create({
   },
   text_22_bold: {
     fontSize: 22,
+    fontFamily: "Nunito-Bold",
+  },
+  text_20_bold: {
+    fontSize: 20,
     fontFamily: "Nunito-Bold",
   },
   text_18_bold: {

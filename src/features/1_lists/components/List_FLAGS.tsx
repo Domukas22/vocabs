@@ -11,7 +11,7 @@ export default function List_FLAGS({
   lang_ids: string[] | undefined;
 }) {
   return (
-    lang_ids?.length > 0 && (
+    lang_ids && (
       <View
         style={{
           flexDirection: "row",

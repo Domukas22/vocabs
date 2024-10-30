@@ -98,7 +98,7 @@ export default function PublicListVocabs_PAGE() {
 
   const collectedLang_IDS = useMemo(() => {
     // infinite loop occurs if not defined
-    return sharedList?.collected_lang_ids || [];
+    return sharedList?.collected_lang_ids || "";
   }, [sharedList?.collected_lang_ids]);
 
   return (

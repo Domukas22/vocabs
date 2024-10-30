@@ -63,7 +63,11 @@ export default function USE_collectSharedListLangs(
       if (data) {
         // Aggregate and get unique language IDs
         const uniqueLangIds = Array.from(
-          new Set(data.flatMap((list) => list.collected_lang_ids || []))
+          new Set(
+            data.flatMap((list) =>
+              list.collected_lang_ids ? list.collected_lang_ids.split(",") : []
+            )
+          )
         );
 
         // Update state with unique language IDs

@@ -72,6 +72,12 @@ export default function List_HEADER({
     opacity: titleOpacity.value,
   }));
 
+  useEffect(() => {
+    if (IS_searchOpen) {
+      search_REF?.current?.focus();
+    }
+  }, [search_REF, IS_searchOpen]);
+
   return (
     <Animated.View style={[s.all_WRAP, animatedHeaderStyle]}>
       <View style={s.listName_WRAP}>

@@ -4,10 +4,13 @@
 import Btn from "@/src/components/Btn/Btn";
 import {
   ICON_bookmark,
+  ICON_bookmark_2,
   ICON_difficultyDot,
 } from "@/src/components/icons/icons";
+import db, { Vocabs_DB } from "@/src/db";
 
 import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
+import { Q } from "@nozbe/watermelondb";
 import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 
@@ -15,13 +18,13 @@ import { View } from "react-native";
 export default function VocabBack_BTNS({
   vocab,
 
-  TOGGLE_vocab,
   editBtn_FN,
   TOGGLE_difficultyEdits,
 }: {
   vocab: Vocab_MODEL;
-  TOGGLE_vocab: () => void;
+
   TOGGLE_difficultyEdits: () => void;
+
   editBtn_FN: () => void;
 }) {
   const { t } = useTranslation();
@@ -36,7 +39,15 @@ export default function VocabBack_BTNS({
           text_STYLES={{ textAlign: "center" }}
         />
 
-        <Btn type="simple" onPress={() => {}} iconLeft={<ICON_bookmark />} />
+        <Btn
+          type={vocab?.is_marked ? "active_green" : "simple"}
+          onPress={() => {
+            (async () => {
+              await vocab.TOGGLE_marked();
+            })();
+          }}
+          iconLeft={<ICON_bookmark_2 big active={vocab?.is_marked} />}
+        />
 
         <Btn
           type="simple"
@@ -48,7 +59,6 @@ export default function VocabBack_BTNS({
           }
         />
       </View>
-      <Btn type="simple" onPress={TOGGLE_vocab} text={t("btn.close")} />
     </View>
   );
 }

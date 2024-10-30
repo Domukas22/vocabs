@@ -18,7 +18,7 @@ import FETCH_langs from "@/src/features/4_languages/hooks/FETCH_langs";
 
 interface ChosenLangsInputs_PROPS {
   label: string;
-  default_lang_ids: string[] | undefined;
+  default_lang_ids: string | undefined;
   REMOVE_lang: (lang_id: string) => void;
   toggle: () => void;
   error: string | null;
@@ -26,7 +26,7 @@ interface ChosenLangsInputs_PROPS {
 
 export default function ChosenLangs_BLOCK({
   label,
-  default_lang_ids = [],
+  default_lang_ids = "",
   REMOVE_lang = () => {},
   toggle = () => {},
   error,
@@ -38,7 +38,9 @@ export default function ChosenLangs_BLOCK({
 
   useEffect(() => {
     (async () => {
-      const langs = await FETCH_langs({ lang_ids: default_lang_ids });
+      const langs = await FETCH_langs({
+        lang_ids: default_lang_ids ? default_lang_ids.split(",") : [],
+      });
       SET_selectedLangs(langs);
     })();
   }, [default_lang_ids]);

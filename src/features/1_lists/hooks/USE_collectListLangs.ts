@@ -75,7 +75,7 @@ export default function USE_collectListLangs() {
       // Update the collected language IDs in the list
       await db.write(async () => {
         return await list.update((list: List_MODEL) => {
-          list.collected_lang_ids = collectedLangs || [];
+          list.collected_lang_ids = collectedLangs?.join(",") || "";
         });
       });
 

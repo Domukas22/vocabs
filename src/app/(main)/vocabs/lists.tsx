@@ -38,6 +38,11 @@ import List_HEADER from "@/src/components/Header/List_HEADER";
 import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
 import USE_getActiveFilterCount from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/utils/USE_getActiveFilterCount";
 import ListDisplaySettings_MODAL from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/ListDisplaySettings_MODAL";
+import ListsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/ListsFlatlistHeader_SECTION";
+import USE_observedLists from "@/src/features/1_lists/hooks/USE_observedLists";
+import USE_debounceSearch from "@/src/hooks/USE_debounceSearch/USE_debounceSearch";
+import USE_collectMyListLangs from "@/src/features/1_lists/hooks/USE_collectMyListLangs";
+import { sync } from "@/src/db/sync";
 
 export default function MyLists_PAGE() {
   const { z_user } = USE_zustand();
@@ -54,9 +59,9 @@ export default function MyLists_PAGE() {
     undefined
   );
 
-  const [search, SET_search] = useState("");
+  const { search, debouncedSearch, SET_search } = USE_debounceSearch();
   const { showTitle, handleScroll } = USE_showListHeaderTitle();
-  const { z_vocabDisplay_SETTINGS, z_SET_vocabDisplaySettings } = USE_zustand();
+  const { z_listDisplay_SETTINGS, z_SET_listDisplaySettings } = USE_zustand();
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
     { name: "create", initialValue: false },
@@ -73,7 +78,15 @@ export default function MyLists_PAGE() {
     SET_targetList(list);
     TOGGLE_modal("delete");
   }
-  const activeFilter_COUNT = USE_getActiveFilterCount(z_vocabDisplay_SETTINGS);
+  const activeFilter_COUNT = USE_getActiveFilterCount(z_listDisplay_SETTINGS);
+
+  const lists = USE_observedLists({
+    search: debouncedSearch,
+    user_id: z_user?.id,
+    z_listDisplay_SETTINGS,
+  });
+
+  const collectedLang_IDS = USE_collectMyListLangs(z_user);
 
   return (
     <Page_WRAP>
@@ -85,9 +98,8 @@ export default function MyLists_PAGE() {
         OPEN_create={() => TOGGLE_modal("create")}
         {...{ search, SET_search, activeFilter_COUNT }}
       />
-
       <MyLists_FLATLIST
-        user_id={z_user?.id}
+        lists={lists}
         SELECT_list={(list: List_MODEL) => {
           router.push(`/(main)/vocabs/${list.id}`);
         }}
@@ -98,6 +110,13 @@ export default function MyLists_PAGE() {
         PREPARE_listRename={PREPARE_listRename}
         PREPADE_deleteList={PREPADE_deleteList}
         onScroll={handleScroll}
+        listHeader_EL={
+          <ListsFlatlistHeader_SECTION
+            list_NAME="My Lists"
+            totalLists={0}
+            {...{ search, z_listDisplay_SETTINGS, z_SET_listDisplaySettings }}
+          />
+        }
       />
 
       <CreateList_MODAL
@@ -130,7 +149,6 @@ export default function MyLists_PAGE() {
           }
         }}
       />
-
       <DeleteList_MODAL
         user_id={z_user?.id}
         IS_open={modal_STATES.delete}
@@ -148,7 +166,7 @@ export default function MyLists_PAGE() {
       <ListDisplaySettings_MODAL
         open={modal_STATES.displaySettings || false}
         TOGGLE_open={() => TOGGLE_modal("displaySettings")}
-        collectedLang_IDS={[]}
+        collectedLang_IDS={collectedLang_IDS || []}
       />
     </Page_WRAP>
   );

@@ -9,6 +9,7 @@ import {
   readonly,
   relation,
   text,
+  writer,
 } from "@nozbe/watermelondb/decorators";
 import { Associations } from "@nozbe/watermelondb/Model";
 import { tr_PROPS } from "./props";
@@ -104,13 +105,8 @@ export class List_MODEL extends Model {
   @text("type") type!: "private" | "public" | "shared" | "draft";
   @field("saved_count") saved_count!: number;
 
-  @json("default_lang_ids", SANITIZE_langIds) default_lang_ids!:
-    | string[]
-    | undefined;
-
-  @json("collected_lang_ids", SANITIZE_langIds) collected_lang_ids!:
-    | string[]
-    | undefined;
+  @text("collected_lang_ids") default_lang_ids!: string;
+  @text("default_lang_ids") collected_lang_ids!: string;
 
   @readonly @date("created_at") createdAt!: number;
   @readonly @date("updated_at") updatedAt!: number;
@@ -147,7 +143,18 @@ export class Vocab_MODEL extends Model {
   @json("trs", sanitizeTranslations) trs!: tr_PROPS[] | undefined;
   @text("lang_ids") lang_ids!: string | undefined;
   @text("searchable") searchable!: string | undefined;
-  @text("is_marked") is_marked!: boolean | undefined;
+  @field("is_marked") is_marked!: boolean | undefined;
+
+  @writer async TOGGLE_marked() {
+    await this.update((vocab) => {
+      vocab.is_marked = !this.is_marked;
+    });
+  }
+  @writer async EDIT_difficulty(diff: 1 | 2 | 3) {
+    await this.update((vocab) => {
+      vocab.difficulty = diff;
+    });
+  }
 
   @readonly @date("created_at") createdAt!: number;
   @readonly @date("updated_at") updatedAt!: number;

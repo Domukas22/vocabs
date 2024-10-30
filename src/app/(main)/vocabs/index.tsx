@@ -38,6 +38,7 @@ import { Q } from "@nozbe/watermelondb";
 import Btn from "@/src/components/Btn/Btn";
 import GET_userId from "@/src/utils/GET_userId";
 import USE_zustand from "@/src/zustand";
+import { sync } from "@/src/db/sync";
 
 function _MyLists_PAGE({
   totalUserList_COUNT = 0,
@@ -62,8 +63,6 @@ function _MyLists_PAGE({
   return (
     <Page_WRAP>
       <Header title={`My vocabs`} big={true} />
-
-      {/* <Btn text="Get user id" onPress={GET_userId} /> */}
 
       <View style={{ padding: 12, gap: 12 }}>
         <ExplorePage_BTN

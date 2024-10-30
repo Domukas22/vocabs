@@ -78,8 +78,8 @@ export default function PublicLists_PAGE() {
         onScroll={handleScroll}
         listHeader_EL={
           <ListsFlatlistHeader_SECTION
-            totalLists={vocab_COUNT}
             list_NAME="⭐ Public lists"
+            totalLists={vocab_COUNT}
             {...{ search, z_listDisplay_SETTINGS, z_SET_listDisplaySettings }}
           />
         }

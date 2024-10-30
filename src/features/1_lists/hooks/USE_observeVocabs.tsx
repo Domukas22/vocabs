@@ -34,11 +34,10 @@ export default function USE_observedVocabs({
 
     const subscription = query.subscribe({
       next: (updated_VOCABS) => {
-        SET_vocabs(updated_VOCABS?.length > 0 ? updated_VOCABS : undefined); // Set the first item or undefined if empty
+        SET_vocabs(updated_VOCABS?.length > 0 ? updated_VOCABS : []); // Set the first item or undefined if empty
       },
     });
 
-    // No need for explicit unsubscribe; Watermelon handles this
     return () => subscription.unsubscribe(); // Clean up the subscription
   }, [search, list_id, z_vocabDisplay_SETTINGS]);
 

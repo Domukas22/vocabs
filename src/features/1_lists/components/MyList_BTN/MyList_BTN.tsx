@@ -16,6 +16,7 @@ import Transition_BTN from "@/src/components/Transition_BTN/Transition_BTN";
 import ListBtn_BOTTOM from "../ListBtn_BOTTOM";
 import VocabCount_LABEL from "../VocabCount_LABEL";
 import ListBtn_TOP from "../ListBtn_TOP";
+import List_FLAGS from "../List_FLAGS";
 
 function _MyList_BTN({
   diff_1_count = 0,
@@ -79,6 +80,18 @@ function _MyList_BTN({
             Submitted for publish
           </Styled_TEXT>
         )}
+        {vocab_COUNT === 0 && (
+          <Styled_TEXT type="label_small">{t("label.emptyList")}</Styled_TEXT>
+        )}
+        {/* {vocab_COUNT > 0 ? (
+          <VocabDifficulty_COUNTS
+            {...{ diff_1_count, diff_2_count, diff_3_count }}
+          />
+        ) : (
+          <Styled_TEXT type="label_small">{t("label.emptyList")}</Styled_TEXT>
+        )} */}
+
+        {/* <VocabCount_LABEL vocab_COUNT={vocab_COUNT} /> */}
         {/* {list?.description && (
           <Styled_TEXT type="label_small">{list?.description}</Styled_TEXT>
         )} */}
@@ -90,12 +103,22 @@ function _MyList_BTN({
             justifyContent: "space-between",
           }}
         > */}
-        <VocabCount_LABEL {...{ vocab_COUNT }} />
+        {/* <VocabCount_LABEL {...{ vocab_COUNT }} />
         <VocabDifficulty_COUNTS
           {...{ diff_1_count, diff_2_count, diff_3_count }}
-        />
+        /> */}
         {/* </View> */}
       </ListBtn_TOP>
+
+      {vocab_COUNT > 0 && (
+        <ListBtn_BOTTOM>
+          <VocabDifficulty_COUNTS
+            {...{ diff_1_count, diff_2_count, diff_3_count }}
+          />
+
+          <List_FLAGS lang_ids={list?.collected_lang_ids?.split(",") || []} />
+        </ListBtn_BOTTOM>
+      )}
     </Transition_BTN>
   );
 }

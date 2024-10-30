@@ -79,7 +79,7 @@ export default function USE_createList() {
 
           newList.name = name || "";
           newList.description = description || "";
-          newList.default_lang_ids = ["en", "de"];
+          newList.default_lang_ids = "en,de";
           newList.is_submitted_for_publish = false;
           newList.was_accepted_for_publish = false;
           newList.type = "private";

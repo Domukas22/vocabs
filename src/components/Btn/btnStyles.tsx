@@ -10,6 +10,7 @@ export type btnTypes =
   | "simple_primary_text"
   | "action"
   | "active"
+  | "active_green"
   | "delete"
   | "seethrough"
   | "seethrough_primary"
@@ -80,6 +81,18 @@ const s = StyleSheet.create({
   },
   active_text: {
     color: MyColors.text_primary,
+  },
+
+  active_green: {
+    backgroundColor: MyColors.btn_green,
+    borderColor: MyColors.border_green,
+  },
+  active_green_press: {
+    backgroundColor: MyColors.btn_green_press,
+    borderColor: MyColors.border_green,
+  },
+  active_green_text: {
+    color: MyColors.text_green,
   },
 
   delete: {
@@ -186,6 +199,13 @@ const btnStyles = {
       press: s.active_press,
     },
     text: s.active_text,
+  },
+  active_green: {
+    btn: {
+      normal: s.active_green,
+      press: s.active_green_press,
+    },
+    text: s.active_green_text,
   },
   delete: {
     btn: {

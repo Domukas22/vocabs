@@ -102,6 +102,7 @@ export default function USE_copyListAndItsVocabs() {
               newVocab.trs = vocab.trs;
               newVocab.lang_ids = vocab.lang_ids;
               newVocab.searchable = vocab.searchable;
+              newVocab.is_marked = false;
             })
           )
         );

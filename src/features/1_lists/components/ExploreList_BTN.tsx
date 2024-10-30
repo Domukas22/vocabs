@@ -8,6 +8,7 @@ import ListBtn_TOP from "./ListBtn_TOP";
 import List_FLAGS from "./List_FLAGS";
 import ListBtn_BOTTOM from "./ListBtn_BOTTOM";
 import VocabCount_LABEL from "./VocabCount_LABEL";
+import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 
 export default function ExploreList_BTN({
   list,
@@ -18,15 +19,14 @@ export default function ExploreList_BTN({
 }) {
   return (
     <Transition_BTN onPress={GO_toList}>
-      <ListBtn_TOP
-        name={list?.name}
-        description={list?.description}
-        owner_USERNAME={list?.owner?.username}
-      />
+      <ListBtn_TOP>
+        <Styled_TEXT type="list_title">{list?.name}</Styled_TEXT>
+        <Styled_TEXT type="label_small">{list?.description}</Styled_TEXT>
+      </ListBtn_TOP>
 
       <ListBtn_BOTTOM>
         <VocabCount_LABEL vocab_COUNT={list?.vocab_COUNT} />
-        <List_FLAGS lang_ids={list?.collected_lang_ids} />
+        <List_FLAGS lang_ids={list?.collected_lang_ids?.split(",") || []} />
       </ListBtn_BOTTOM>
     </Transition_BTN>
   );

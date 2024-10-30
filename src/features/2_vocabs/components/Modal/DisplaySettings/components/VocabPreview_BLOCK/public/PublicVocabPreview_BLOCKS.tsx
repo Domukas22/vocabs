@@ -6,25 +6,26 @@ import Block from "@/src/components/Block/Block";
 import Label from "@/src/components/Label/Label";
 import Settings_TOGGLE from "@/src/components/Settings_TOGGLE/Settings_TOGGLE";
 import { MyColors } from "@/src/constants/MyColors";
-import { DisplaySettings_PROPS } from "@/src/db/props";
+
 import Vocab_DUMMY from "@/src/features/2_vocabs/components/Vocab/Components/Vocab_DUMMY";
 import i18next, { t } from "i18next";
 import { ScrollView, View } from "react-native";
-import VocabFrontLang_BLOCK from "../../VocabFrontLang_BLOCK/VocabFrontLang_BLOCK";
+
 import Btn from "@/src/components/Btn/Btn";
 import { ICON_checkMark, ICON_flag } from "@/src/components/icons/icons";
 import { useMemo } from "react";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { Language_MODEL } from "@/src/db/watermelon_MODELS";
+import { _DisplaySettings_PROPS } from "@/src/utils/DisplaySettings";
 
 export default function PublicVocabPreview_BLOCKS({
   displaySettings,
   SET_displaySettings,
   available_LANGS,
 }: {
-  displaySettings: DisplaySettings_PROPS;
+  displaySettings: _DisplaySettings_PROPS;
   SET_displaySettings: React.Dispatch<
-    React.SetStateAction<DisplaySettings_PROPS>
+    React.SetStateAction<_DisplaySettings_PROPS>
   >;
   available_LANGS: Language_MODEL[];
 }) {

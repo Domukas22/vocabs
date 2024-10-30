@@ -183,7 +183,8 @@
     "sortVocabs": "Vokabeln sortieren",
     "username": "Benutzername",
     "email": "Email",
-    "sortLists": "Listen sortieren"
+    "sortLists": "Listen sortieren",
+    "emptyList": "Leere Liste"
   },
   "modal": {
     "displaySettings": {
@@ -271,7 +272,8 @@
     "publicVocabSavedInAPrivateListPost": "gespeichert",
     "vocabPublishedToPublic": "Vokabel veröffentlicht",
     "savedVocab": "Vokabel gespeichert",
-    "listAndVocabsCopied": "Liste und Vokabeln kopiert"
+    "listAndVocabsCopied": "Liste und Vokabeln kopiert",
+    "markedVocab": "Vokabel markiert"
   },
   "notification": {
     "atLeast1LangError": "Mindestens 1 Sprache muss ausgewählt sein"

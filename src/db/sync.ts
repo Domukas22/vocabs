@@ -30,9 +30,10 @@ export async function sync() {
         } else {
         }
 
+        console.log(data.changes);
+
         const updatedChanges = {
           ...data.changes,
-          lists: TURN_listLangIdsIntoJson(data.changes.lists),
           vocabs: TURN_VocabtrsIntoJson(data.changes.vocabs),
           languages: TURN_langExampleHighlights(data.changes.languages),
           // languages: TURN_VocabtrsIntoJson(data.changes.vocabs),
@@ -62,27 +63,6 @@ export async function sync() {
   }
 }
 
-function TURN_listLangIdsIntoJson(lists: {
-  created?: List_MODEL[];
-  updated?: List_MODEL[];
-  deleted?: string[];
-}) {
-  return {
-    ...lists,
-    updated:
-      lists.updated?.map((list) => ({
-        ...list,
-        default_lang_ids: JSON.stringify(list.default_lang_ids), // Convert array to JSON string
-        collected_lang_ids: JSON.stringify(list.collected_lang_ids), // Convert array to JSON string
-      })) || [], // Default to an empty array if undefined
-    created:
-      lists.created?.map((list) => ({
-        ...list,
-        default_lang_ids: JSON.stringify(list.default_lang_ids), // Convert array to JSON string
-        collected_lang_ids: JSON.stringify(list.collected_lang_ids), // Convert array to JSON string
-      })) || [], // Default to an empty array if undefined
-  };
-}
 function TURN_langExampleHighlights(languages: {
   created?: Language_MODEL[];
   updated?: Language_MODEL[];

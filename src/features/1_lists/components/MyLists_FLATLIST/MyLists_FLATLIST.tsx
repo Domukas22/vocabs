@@ -22,9 +22,10 @@ import { take } from "@nozbe/watermelondb/QueryDescription";
 
 interface MyListsFlatlist_PROPS {
   _ref: React.RefObject<FlatList>;
-  lists: List_MODEL[];
+  lists: List_MODEL[] | undefined;
   SHOW_bottomBtn: boolean;
   highlighted_ID?: string | undefined;
+  listHeader_EL: React.ReactNode;
   SELECT_list: (list: List_MODEL) => void;
   PREPARE_listRename: (list: List_MODEL) => void;
   PREPADE_deleteList: (list: List_MODEL) => void;
@@ -32,7 +33,7 @@ interface MyListsFlatlist_PROPS {
   onScroll: () => {};
 }
 
-function _MyLists_FLATLIST({
+export default function MyLists_FLATLIST({
   _ref,
   lists,
   SHOW_bottomBtn,
@@ -42,6 +43,7 @@ function _MyLists_FLATLIST({
   PREPADE_deleteList,
   TOGGLE_createListModal,
   onScroll,
+  listHeader_EL,
 }: MyListsFlatlist_PROPS) {
   const { t } = useTranslation();
 
@@ -50,7 +52,8 @@ function _MyLists_FLATLIST({
       _ref={_ref}
       style={{ flex: 1 }}
       onScroll={onScroll}
-      data={lists}
+      data={lists || []}
+      ListHeaderComponent={listHeader_EL}
       style={{ marginTop: HEADER_MARGIN || 68 }}
       renderItem={({ item }: { item: List_MODEL }) => (
         <SwipeableExample
@@ -59,6 +62,7 @@ function _MyLists_FLATLIST({
           }}
           rightBtn_ACTION={() => PREPADE_deleteList(item)}
         >
+          {/* <Styled_TEXT>{item?.collected_lang_ids}</Styled_TEXT> */}
           <MyList_BTN
             list={item}
             onPress={() => SELECT_list(item)}
@@ -80,13 +84,3 @@ function _MyLists_FLATLIST({
     />
   );
 }
-const enhance_allLists = withObservables(
-  ["user_id"],
-  ({ user_id }: { user_id: string }) => ({
-    lists: Lists_DB.query(
-      Q.where("user_id", user_id || ""),
-      Q.sortBy("created_at", Q.asc)
-    ),
-  })
-);
-export const MyLists_FLATLIST = enhance_allLists(_MyLists_FLATLIST);

@@ -118,7 +118,7 @@ export default function PublicListVocabs_PAGE() {
 
   const collectedLangIds = useMemo(() => {
     // infinite loop   occurs if not defined
-    return list?.collected_lang_ids || [];
+    return list?.collected_lang_ids?.split(",") || [];
   }, [list?.collected_lang_ids]);
 
   const [target_VOCAB, SET_targetVocab] = useState<Vocab_MODEL | undefined>();

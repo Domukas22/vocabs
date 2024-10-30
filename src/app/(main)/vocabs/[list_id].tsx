@@ -12,7 +12,7 @@ import {
 } from "@/src/features/2_vocabs";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import ListSettings_MODAL from "@/src/features/1_lists/components/ListSettings_MODAL/ListSettings_MODAL";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import USE_highlighedId from "@/src/hooks/USE_highlighedId/USE_highlighedId";
@@ -43,6 +43,9 @@ import USE_debounceSearch from "@/src/hooks/USE_debounceSearch/USE_debounceSearc
 import List_HEADER from "@/src/components/Header/List_HEADER";
 import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
 import USE_getActiveFilterCount from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/utils/USE_getActiveFilterCount";
+import { notEq } from "@nozbe/watermelondb/QueryDescription";
+import { View } from "react-native";
+import { MyColors } from "@/src/constants/MyColors";
 
 function __SingleList_PAGE({
   selected_LIST = undefined,
@@ -86,11 +89,37 @@ function __SingleList_PAGE({
     TOGGLE_modal("update");
   }
 
-  const vocabs = USE_observedVocabs({
+  const {
+    vocabs,
+    ARE_vocabsFetching,
+    fetchVocabs_ERROR,
+    LOAD_more,
+    IS_loadingMore,
+    HAS_reachedEnd,
+  } = USE_observedVocabs({
     search: debouncedSearch,
     list_id: selected_LIST?.id,
     z_vocabDisplay_SETTINGS,
+    paginateBy: 10,
   });
+
+  const [displayed_VOCABS, SET_displayedVocabs] = useState<
+    Vocab_MODEL[] | undefined
+  >([]);
+
+  const [allow, SET_allow] = useState(true);
+  useEffect(() => {
+    if (allow && vocabs) {
+      SET_displayedVocabs(vocabs);
+      SET_allow(false);
+    }
+  }, [vocabs, allow]);
+
+  useEffect(() => {
+    if (!allow) {
+      SET_allow(true);
+    }
+  }, [z_vocabDisplay_SETTINGS, selected_LIST?.id, debouncedSearch]);
 
   return (
     <Page_WRAP>
@@ -105,7 +134,7 @@ function __SingleList_PAGE({
       />
 
       <MyVocabs_FLATLIST
-        {...{ vocabs }}
+        {...{ vocabs: displayed_VOCABS }}
         onScroll={handleScroll}
         listHeader_EL={
           <VocabsFlatlistHeader_SECTION
@@ -114,7 +143,19 @@ function __SingleList_PAGE({
             {...{ search, z_vocabDisplay_SETTINGS, z_SET_vocabDisplaySettings }}
           />
         }
-        SHOW_bottomBtn={true}
+        listFooter_EL={
+          <NoVocabsFound_SECTION
+            search={search}
+            filter_COUNT={activeFilter_COUNT}
+            RESET_search={() => SET_search("")}
+            RESET_filters={() =>
+              z_SET_vocabDisplaySettings({
+                langFilters: [],
+                difficultyFilters: [],
+              })
+            }
+          />
+        }
         TOGGLE_createVocabModal={() => TOGGLE_modal("createVocab")}
         PREPARE_vocabDelete={(id: string) => {
           SET_deleteId(id);
@@ -133,6 +174,7 @@ function __SingleList_PAGE({
         onSuccess={(new_VOCAB: Vocab_MODEL) => {
           TOGGLE_modal("createVocab");
           HIGHLIGHT_vocab(new_VOCAB.id);
+          SET_allow(true);
           toast.show(t("notifications.vocabCreated"), {
             type: "green",
             duration: 3000,
@@ -148,6 +190,7 @@ function __SingleList_PAGE({
         onSuccess={(updated_VOCAB: Vocab_MODEL) => {
           TOGGLE_modal("update");
           HIGHLIGHT_vocab(updated_VOCAB.id);
+
           toast.show(t("notifications.vocabUpdated"), {
             type: "green",
             duration: 3000,
@@ -162,7 +205,7 @@ function __SingleList_PAGE({
       <VocabDisplaySettings_MODAL
         open={modal_STATES.displaySettings}
         TOGGLE_open={() => TOGGLE_modal("displaySettings")}
-        collectedLang_IDS={selected_LIST?.collected_lang_ids}
+        collectedLang_IDS={selected_LIST?.collected_lang_ids?.split(",") || []}
       />
 
       <ListSettings_MODAL
@@ -181,6 +224,7 @@ function __SingleList_PAGE({
         list_id={selected_LIST?.id}
         CLOSE_modal={() => TOGGLE_modal("delete")}
         onSuccess={() => {
+          SET_allow(true);
           toast.show(t("notifications.vocabDeleted"), {
             type: "green",
             duration: 5000,
@@ -219,11 +263,63 @@ export default function SingleList_PAGE() {
   // Use withObservables to pass the observed list and computed total count to the page
   const enhance = withObservables(["selected_LIST"], ({ selected_LIST }) => ({
     selected_LIST: list ? list : undefined,
-    totalVocab_COUNT: list?.vocab_COUNT ? list?.vocab_COUNT : undefined, // Observe vocabs count if needed
+    totalVocab_COUNT: list?.vocab_COUNT ? list?.vocab_COUNT : undefined,
   }));
 
   const EnhancedPage = enhance(__SingleList_PAGE);
 
   // Render the enhanced page
   return list ? <EnhancedPage selected_LIST={listObservable} /> : null;
+}
+
+function NoVocabsFound_SECTION({
+  search = "",
+  filter_COUNT = 0,
+  RESET_search = () => {},
+  RESET_filters = () => {},
+}) {
+  return (
+    <View style={{ gap: 16 }}>
+      <View
+        style={{
+          paddingVertical: 32,
+          borderWidth: 1,
+          borderStyle: "dashed",
+          borderColor: MyColors.border_white_005,
+          borderRadius: 16,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Styled_TEXT type="label">No vocabs found</Styled_TEXT>
+      </View>
+      <View style={{ gap: 8 }}>
+        {search && filter_COUNT === 0 && (
+          <Btn
+            text={`Clear search '${search}'`}
+            onPress={RESET_search}
+            type="delete"
+          />
+        )}
+        {filter_COUNT > 0 && !search && (
+          <Btn
+            text={`Clear ${filter_COUNT} active filters`}
+            onPress={RESET_filters}
+            type="delete"
+          />
+        )}
+
+        {filter_COUNT > 0 && search !== "" && (
+          <Btn
+            text="Clear search and filters"
+            onPress={() => {
+              RESET_filters();
+              RESET_search();
+            }}
+            type="delete"
+          />
+        )}
+      </View>
+    </View>
+  );
 }

@@ -26,7 +26,7 @@ export default function Highlighted_TEXT({
   const textDecorationLine = diff === 1 ? "underline" : undefined;
 
   return (
-    <Styled_TEXT>
+    <Styled_TEXT style={{ flex: 1 }}>
       {/* Use Array.from() to handle emojis properly */}
       {Array.from(text).map((char, index) => {
         const isHighlighted =
