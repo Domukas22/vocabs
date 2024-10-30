@@ -62,10 +62,10 @@ export default function Vocab_DUMMY({
             z_vocabDisplay_SETTINGS?.SHOW_difficulty) && (
             <View style={s.iconWrap}>
               {z_vocabDisplay_SETTINGS?.SHOW_flags && (
-                <ICON_flag lang={z_vocabDisplay_SETTINGS?.frontTrLang_ID} />
+                <ICON_flag lang={z_vocabDisplay_SETTINGS?.frontTrLang_ID} big />
               )}
               {z_vocabDisplay_SETTINGS?.SHOW_difficulty &&
-                SHOW_difficultyDot && <ICON_difficultyDot difficulty={3} />}
+                SHOW_difficultyDot && <ICON_difficultyDot difficulty={3} big />}
             </View>
           )}
         </View>

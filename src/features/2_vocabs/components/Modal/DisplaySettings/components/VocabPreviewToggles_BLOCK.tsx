@@ -11,6 +11,12 @@ import {
   z_vocabDisplaySettings_PROPS,
   z_setVocabDisplaySettings_PROPS,
 } from "@/src/zustand";
+import {
+  ICON_difficultyDot,
+  ICON_flag,
+  ICON_letterT,
+} from "@/src/components/icons/icons";
+import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 
 export default function VocabPreviewToggles_BLOCK({
   view,
@@ -35,6 +41,7 @@ export default function VocabPreviewToggles_BLOCK({
           }}
         >
           <Settings_TOGGLE
+            icon={<ICON_letterT />}
             text={t("toggle.showDescription")}
             active={z_vocabDisplay_SETTINGS?.SHOW_description || false}
             onPress={() => {
@@ -46,6 +53,12 @@ export default function VocabPreviewToggles_BLOCK({
             }}
           />
           <Settings_TOGGLE
+            icon={
+              <ICON_flag
+                big
+                lang={z_vocabDisplay_SETTINGS?.frontTrLang_ID || "en"}
+              />
+            }
             text={t("toggle.showFlags")}
             active={z_vocabDisplay_SETTINGS?.SHOW_flags || false}
             onPress={() => {
@@ -57,6 +70,7 @@ export default function VocabPreviewToggles_BLOCK({
             }}
           />
           <Settings_TOGGLE
+            icon={<ICON_difficultyDot big difficulty={3} />}
             text={t("toggle.showDifficulty")}
             active={z_vocabDisplay_SETTINGS?.SHOW_difficulty || false}
             onPress={() => {

@@ -44,7 +44,7 @@ import List_HEADER from "@/src/components/Header/List_HEADER";
 import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
 import USE_getActiveFilterCount from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/utils/USE_getActiveFilterCount";
 import { notEq } from "@nozbe/watermelondb/QueryDescription";
-import { View } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 import { MyColors } from "@/src/constants/MyColors";
 
 function __SingleList_PAGE({
@@ -102,7 +102,7 @@ function __SingleList_PAGE({
     search: debouncedSearch,
     list_id: selected_LIST?.id,
     z_vocabDisplay_SETTINGS,
-    paginateBy: 2,
+    paginateBy: 3,
   });
 
   const [displayed_VOCABS, SET_displayedVocabs] = useState<
@@ -129,7 +129,7 @@ function __SingleList_PAGE({
   ]);
 
   return (
-    <Page_WRAP>
+    <Page_WRAP paddingTop>
       <List_HEADER
         SHOW_listName={showTitle}
         list_NAME={selected_LIST?.name}
@@ -153,8 +153,10 @@ function __SingleList_PAGE({
         }
         listFooter_EL={
           <NoVocabsFound_SECTION
+            {...{ HAS_reachedEnd, LOAD_more, IS_loadingMore }}
             search={search}
             filter_COUNT={activeFilter_COUNT}
+            vocabResult_COUNT={displayed_VOCABS?.length || 0}
             RESET_search={() => SET_search("")}
             RESET_filters={() =>
               z_SET_vocabDisplaySettings({
@@ -175,7 +177,7 @@ function __SingleList_PAGE({
           HANDLE_updateModal,
         }}
       />
-      <Btn text="more" onPress={LOAD_more} />
+
       <CreateMyVocab_MODAL
         IS_open={modal_STATES.createVocab}
         initial_LIST={selected_LIST}
@@ -284,33 +286,49 @@ export default function SingleList_PAGE() {
 function NoVocabsFound_SECTION({
   search = "",
   filter_COUNT = 0,
+  vocabResult_COUNT = 0,
   RESET_search = () => {},
   RESET_filters = () => {},
+  HAS_reachedEnd = false,
+  LOAD_more = () => {},
+  IS_loadingMore = false,
 }) {
   return (
     <View style={{ gap: 16 }}>
-      <View
-        style={{
-          paddingVertical: 32,
-          borderWidth: 1,
-          borderStyle: "dashed",
-          borderColor: MyColors.border_white_005,
-          borderRadius: 16,
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Styled_TEXT type="label">No vocabs found</Styled_TEXT>
-      </View>
+      {HAS_reachedEnd && vocabResult_COUNT > 0 && (
+        <View
+          style={{
+            width: "100%",
+            height: 2,
+            borderColor: MyColors.border_white_005,
+            borderTopWidth: 2,
+          }}
+        />
+      )}
+      {vocabResult_COUNT === 0 && (
+        <View
+          style={{
+            paddingVertical: 24,
+            borderWidth: 1,
+            borderStyle: "dashed",
+            borderColor: MyColors.border_white_005,
+            borderRadius: 16,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Styled_TEXT type="label">No vocabs found</Styled_TEXT>
+        </View>
+      )}
       <View style={{ gap: 8 }}>
-        {search && filter_COUNT === 0 && (
+        {search && filter_COUNT === 0 && vocabResult_COUNT === 0 && (
           <Btn
             text={`Clear search '${search}'`}
             onPress={RESET_search}
             type="delete"
           />
         )}
-        {filter_COUNT > 0 && !search && (
+        {filter_COUNT > 0 && !search && vocabResult_COUNT === 0 && (
           <Btn
             text={`Clear ${filter_COUNT} active filters`}
             onPress={RESET_filters}
@@ -318,7 +336,7 @@ function NoVocabsFound_SECTION({
           />
         )}
 
-        {filter_COUNT > 0 && search !== "" && (
+        {filter_COUNT > 0 && search !== "" && vocabResult_COUNT === 0 && (
           <Btn
             text="Clear search and filters"
             onPress={() => {
@@ -326,6 +344,20 @@ function NoVocabsFound_SECTION({
               RESET_search();
             }}
             type="delete"
+          />
+        )}
+        {!HAS_reachedEnd && vocabResult_COUNT > 0 && (
+          <Btn
+            text={!IS_loadingMore ? "Load more" : ""}
+            iconLeft={
+              IS_loadingMore ? <ActivityIndicator color="white" /> : null
+            }
+            onPress={() => {
+              if (!IS_loadingMore) {
+                LOAD_more();
+              }
+            }}
+            type="seethrough"
           />
         )}
       </View>

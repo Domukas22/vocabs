@@ -5,16 +5,19 @@
 import { Pressable, PressableProps, StyleSheet, View } from "react-native";
 import { Styled_TEXT } from "../Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
+import React from "react";
 
 type Btn = PressableProps & {
   text: string;
   active: boolean;
   onPress: () => void;
   last?: boolean;
+  icon?: React.ReactNode;
 };
 
 export default function Settings_TOGGLE({
   text = "Toggle text",
+  icon,
   active = false,
   onPress = () => {},
   last = false,
@@ -28,11 +31,26 @@ export default function Settings_TOGGLE({
         last && { borderBottomWidth: 0 },
       ]}
     >
-      {text && (
-        <Styled_TEXT type="text_18_regular" style={{ flex: 1 }}>
-          {text}
-        </Styled_TEXT>
-      )}
+      <View
+        style={{ flex: 1, gap: 10, flexDirection: "row", alignItems: "center" }}
+      >
+        {icon && (
+          <View
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              width: 26,
+            }}
+          >
+            {icon}
+          </View>
+        )}
+        {text && (
+          <Styled_TEXT type="text_18_regular" style={{ flex: 1 }}>
+            {text}
+          </Styled_TEXT>
+        )}
+      </View>
       <View style={[s.toggle, active && s.toggleActive]}>
         <View style={[s.toggleCircle, active && s.toggleCircleActive]}></View>
       </View>

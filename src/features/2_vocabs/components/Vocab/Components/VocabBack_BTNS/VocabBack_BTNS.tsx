@@ -13,11 +13,11 @@ import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 import { Q } from "@nozbe/watermelondb";
 import { useTranslation } from "react-i18next";
 import { View } from "react-native";
+import { useToast } from "react-native-toast-notifications";
 
 //
 export default function VocabBack_BTNS({
   vocab,
-
   editBtn_FN,
   TOGGLE_difficultyEdits,
 }: {
@@ -28,6 +28,8 @@ export default function VocabBack_BTNS({
   editBtn_FN: () => void;
 }) {
   const { t } = useTranslation();
+  const toast = useToast();
+
   return (
     <View style={{ gap: 12 }}>
       <View style={{ flexDirection: "row", gap: 8 }}>
@@ -44,6 +46,13 @@ export default function VocabBack_BTNS({
           onPress={() => {
             (async () => {
               await vocab.TOGGLE_marked();
+              if (vocab?.is_marked === true) {
+                // only show when marked, dont show when unmarked
+                toast.show(t("notifications.markedVocab"), {
+                  type: "green",
+                  duration: 2000,
+                });
+              }
             })();
           }}
           iconLeft={<ICON_bookmark_2 big active={vocab?.is_marked} />}

@@ -1,5 +1,6 @@
 import { MyColors } from "@/src/constants/MyColors";
 import { Styled_TEXT } from "../Styled_TEXT/Styled_TEXT";
+import { View } from "react-native";
 
 interface RenderTextWithhighlights_PROPS {
   text: string;
@@ -26,7 +27,7 @@ export default function Highlighted_TEXT({
   const textDecorationLine = diff === 1 ? "underline" : undefined;
 
   return (
-    <Styled_TEXT style={{ flex: 1 }}>
+    <Styled_TEXT>
       {/* Use Array.from() to handle emojis properly */}
       {Array.from(text).map((char, index) => {
         const isHighlighted =

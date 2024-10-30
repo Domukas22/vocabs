@@ -23,6 +23,7 @@ import { useTranslation } from "react-i18next";
 import USE_updateVocabIsMarked from "../../../hooks/USE_updateVocabIsMarked";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { withObservables } from "@nozbe/watermelondb/react";
+import { useToast } from "react-native-toast-notifications";
 
 interface VocabProps {
   _vocab: Vocab_MODEL;
@@ -63,6 +64,7 @@ function _MyVocab({ _vocab, highlighted, HANDLE_updateModal }: VocabProps) {
     [open, _vocab.difficulty, highlighted]
   );
   const { t } = useTranslation();
+  const toast = useToast();
 
   return (
     <View style={styles}>
@@ -100,6 +102,10 @@ function _MyVocab({ _vocab, highlighted, HANDLE_updateModal }: VocabProps) {
                   (async () => {
                     await _vocab.EDIT_difficulty(diff);
                     TOGGLE_difficultyEdits();
+                    toast.show(t("notifications.difficultyUpdated"), {
+                      type: "green",
+                      duration: 2000,
+                    });
                   })();
                 }}
                 TOGGLE_open={TOGGLE_difficultyEdits}

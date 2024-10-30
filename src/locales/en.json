@@ -270,7 +270,9 @@
     "vocabPublishedToPublic": "Vocab published to public",
     "savedVocab": "Vocab saved",
     "listAndVocabsCopied": "List and vocabs copied",
-    "markedVocab": "Vocab marked"
+    "markedVocab": "Vocab marked",
+    "demarkedVocab": "Vocab unmarked",
+    "difficultyUpdated": "Difficulty updated"
   },
   "notification": {
     "atLeast1LangError": "Atleast 1 language must be selected"

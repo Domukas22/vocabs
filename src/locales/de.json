@@ -273,7 +273,9 @@
     "vocabPublishedToPublic": "Vokabel veröffentlicht",
     "savedVocab": "Vokabel gespeichert",
     "listAndVocabsCopied": "Liste und Vokabeln kopiert",
-    "markedVocab": "Vokabel markiert"
+    "markedVocab": "Vokabel markiert",
+    "demarkedVocab": "Vokabel unmarkiert",
+    "difficultyUpdated": "Schwierigkeit bearbeitet"
   },
   "notification": {
     "atLeast1LangError": "Mindestens 1 Sprache muss ausgewählt sein"

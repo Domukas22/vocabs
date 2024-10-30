@@ -74,7 +74,7 @@ export default function MyVocabs_FLATLIST({
           </SwipeableExample>
         );
       }}
-      style={{ marginTop: HEADER_MARGIN || 68 }}
+      // style={{ marginTop: HEADER_MARGIN || 68 }}
       keyExtractor={(item) => "Vocab" + item.id}
       ListHeaderComponent={listHeader_EL}
       ListFooterComponent={listFooter_EL}
