@@ -89,6 +89,8 @@ function __SingleList_PAGE({
     TOGGLE_modal("update");
   }
 
+  const [allow, SET_allow] = useState(false);
+
   const {
     vocabs,
     ARE_vocabsFetching,
@@ -100,14 +102,13 @@ function __SingleList_PAGE({
     search: debouncedSearch,
     list_id: selected_LIST?.id,
     z_vocabDisplay_SETTINGS,
-    paginateBy: 10,
+    paginateBy: 2,
   });
 
   const [displayed_VOCABS, SET_displayedVocabs] = useState<
     Vocab_MODEL[] | undefined
   >([]);
 
-  const [allow, SET_allow] = useState(true);
   useEffect(() => {
     if (allow && vocabs) {
       SET_displayedVocabs(vocabs);
@@ -119,7 +120,13 @@ function __SingleList_PAGE({
     if (!allow) {
       SET_allow(true);
     }
-  }, [z_vocabDisplay_SETTINGS, selected_LIST?.id, debouncedSearch]);
+  }, [
+    z_vocabDisplay_SETTINGS,
+    selected_LIST?.id,
+    debouncedSearch,
+    ARE_vocabsFetching,
+    IS_loadingMore,
+  ]);
 
   return (
     <Page_WRAP>
@@ -138,6 +145,7 @@ function __SingleList_PAGE({
         onScroll={handleScroll}
         listHeader_EL={
           <VocabsFlatlistHeader_SECTION
+            vocabResults_COUNT={displayed_VOCABS?.length || 0}
             list_NAME={selected_LIST?.name}
             totalVocabs={totalVocab_COUNT ? totalVocab_COUNT : 0}
             {...{ search, z_vocabDisplay_SETTINGS, z_SET_vocabDisplaySettings }}
@@ -167,6 +175,7 @@ function __SingleList_PAGE({
           HANDLE_updateModal,
         }}
       />
+      <Btn text="more" onPress={LOAD_more} />
       <CreateMyVocab_MODAL
         IS_open={modal_STATES.createVocab}
         initial_LIST={selected_LIST}

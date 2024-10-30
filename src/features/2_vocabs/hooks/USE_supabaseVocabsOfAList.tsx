@@ -20,8 +20,8 @@ export default function USE_supabaseVocabsOfAList({
   const [ARE_vocabsFetching, SET_vocabsFetching] = useState(false);
   const [fetchVocabs_ERROR, SET_error] = useState<string | null>(null);
   const [vocabs, SET_vocabs] = useState<any[]>([]);
-  const [start, SET_start] = useState(0); // Start index for pagination
-  const [end, SET_end] = useState(paginateBy); // End index for pagination
+  const [start, SET_start] = useState(0);
+  const [end, SET_end] = useState(paginateBy);
   const [IS_loadingMore, SET_loadingMore] = useState(false);
   const [HAS_reachedEnd, SET_hasReachedEnd] = useState(false);
 

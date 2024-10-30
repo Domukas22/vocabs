@@ -15,6 +15,7 @@ import {
 
 type VocabsFlatlistHeader_SECTIONProps = {
   search: string;
+  vocabResults_COUNT: number | null;
   totalVocabs: number | null;
   list_NAME: string | undefined;
   z_vocabDisplay_SETTINGS: z_vocabDisplaySettings_PROPS;
@@ -24,6 +25,7 @@ type VocabsFlatlistHeader_SECTIONProps = {
 export default function VocabsFlatlistHeader_SECTION({
   search,
   list_NAME = "INSERT LIST NAME",
+  vocabResults_COUNT = 0,
   totalVocabs = 0,
   z_vocabDisplay_SETTINGS,
   z_SET_vocabDisplaySettings,
@@ -53,11 +55,11 @@ export default function VocabsFlatlistHeader_SECTION({
         <Styled_TEXT type="label">
           {search !== "" ? (
             <>
-              Search results for
+              {vocabResults_COUNT} Search results for
               <Styled_TEXT type="text_18_medium"> '{search}' </Styled_TEXT>
             </>
           ) : appliedFiltersCount > 0 ? (
-            `${appliedFiltersCount} filters applied`
+            `${vocabResults_COUNT} results, ${appliedFiltersCount} filters applied`
           ) : (
             `Browse through ${totalVocabs ? totalVocabs : 0} vocabs`
           )}

@@ -14,6 +14,8 @@ export interface VocabFilter_PROPS {
   user_id?: string | undefined;
   z_vocabDisplay_SETTINGS: z_vocabDisplaySettings_PROPS | undefined;
   fetchAll?: boolean;
+  start: number | undefined;
+  amount: number | undefined;
 }
 
 const FetchVocabs_QUERY = ({
@@ -22,9 +24,13 @@ const FetchVocabs_QUERY = ({
   user_id,
   z_vocabDisplay_SETTINGS,
   fetchAll = false,
+  start = 0,
+  amount = 2,
 }: VocabFilter_PROPS): Query<Vocab_MODEL> => {
   // Start with the base query
   let query = Vocabs_DB?.query();
+
+  console.log("start: ", start, " amount: ", amount);
 
   // Add optional filters using Q.and
   const conditions = [];
@@ -95,7 +101,7 @@ const FetchVocabs_QUERY = ({
   }
 
   // Combine all conditions with Q.and
-  query = query.extend(Q.and(...conditions));
+  query = query.extend(Q.and(...conditions), Q.skip(start), Q.take(amount));
 
   return query;
 };

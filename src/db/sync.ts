@@ -30,8 +30,6 @@ export async function sync() {
         } else {
         }
 
-        console.log(data.changes);
-
         const updatedChanges = {
           ...data.changes,
           vocabs: TURN_VocabtrsIntoJson(data.changes.vocabs),
