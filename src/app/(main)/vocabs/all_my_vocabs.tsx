@@ -32,7 +32,7 @@ import Btn from "@/src/components/Btn/Btn";
 import { VocabDisplaySettings_MODAL } from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/VocabDisplaySettings_MODAL";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import USE_displaySettings from "@/src/hooks/USE_displaySettings/USE_displaySettings";
-import USE_observedVocabs from "@/src/features/1_lists/hooks/USE_observeVocabs";
+import USE_myVocabs from "@/src/features/1_lists/hooks/USE_myVocabs";
 import FetchVocabs_QUERY from "@/src/features/2_vocabs/utils/FetchVocabs_QUERY";
 import USE_zustand from "@/src/zustand";
 
@@ -84,7 +84,7 @@ function _AllMyVocabs_PAGE({
     TOGGLE_modal("update");
   }
 
-  const vocabs = USE_observedVocabs({
+  const vocabs = USE_myVocabs({
     search: debouncedSearch,
     user_id: z_user?.id,
     fetchAll: true,

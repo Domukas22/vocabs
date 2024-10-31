@@ -21,7 +21,7 @@ import Vocab from "../../Vocab/Vocab";
 import { NativeScrollEvent, NativeSyntheticEvent, View } from "react-native";
 import FetchVocabs_QUERY from "../../../utils/FetchVocabs_QUERY";
 import USE_displaySettings from "@/src/hooks/USE_displaySettings/USE_displaySettings";
-import USE_observedVocabs from "@/src/features/1_lists/hooks/USE_observeVocabs";
+import USE_myVocabs from "@/src/features/1_lists/hooks/USE_myVocabs";
 import { Query } from "@nozbe/watermelondb";
 import { HEADER_MARGIN } from "@/src/constants/globalVars";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";

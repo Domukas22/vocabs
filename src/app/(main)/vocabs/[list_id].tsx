@@ -32,7 +32,7 @@ import Btn from "@/src/components/Btn/Btn";
 import { VocabDisplaySettings_MODAL } from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/VocabDisplaySettings_MODAL";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import USE_displaySettings from "@/src/hooks/USE_displaySettings/USE_displaySettings";
-import USE_observedVocabs from "@/src/features/1_lists/hooks/USE_observeVocabs";
+import USE_myVocabs from "@/src/features/1_lists/hooks/USE_myVocabs";
 import FetchVocabs_QUERY from "@/src/features/2_vocabs/utils/FetchVocabs_QUERY";
 import USE_zustand from "@/src/zustand";
 
@@ -46,13 +46,14 @@ import USE_getActiveFilterCount from "@/src/features/2_vocabs/components/Modal/D
 import { notEq } from "@nozbe/watermelondb/QueryDescription";
 import { ActivityIndicator, View } from "react-native";
 import { MyColors } from "@/src/constants/MyColors";
+import { HEADER_MARGIN } from "@/src/constants/globalVars";
 
 function __SingleList_PAGE({
   selected_LIST = undefined,
-  totalVocab_COUNT = 0,
+  totalListVocab_COUNT = 0,
 }: {
   selected_LIST: List_MODEL | undefined;
-  totalVocab_COUNT: number | undefined;
+  totalListVocab_COUNT: number | undefined;
 }) {
   const { t } = useTranslation();
   const toast = useToast();
@@ -89,47 +90,23 @@ function __SingleList_PAGE({
     TOGGLE_modal("update");
   }
 
-  const [allow, SET_allow] = useState(false);
-
   const {
     vocabs,
+    totalFilteredVocab_COUNT,
+    HAS_reachedEnd,
     ARE_vocabsFetching,
     fetchVocabs_ERROR,
     LOAD_more,
     IS_loadingMore,
-    HAS_reachedEnd,
-  } = USE_observedVocabs({
+  } = USE_myVocabs({
     search: debouncedSearch,
     list_id: selected_LIST?.id,
     z_vocabDisplay_SETTINGS,
-    paginateBy: 3,
+    paginateBy: 2,
   });
 
-  const [displayed_VOCABS, SET_displayedVocabs] = useState<
-    Vocab_MODEL[] | undefined
-  >([]);
-
-  useEffect(() => {
-    if (allow && vocabs) {
-      SET_displayedVocabs(vocabs);
-      SET_allow(false);
-    }
-  }, [vocabs, allow]);
-
-  useEffect(() => {
-    if (!allow) {
-      SET_allow(true);
-    }
-  }, [
-    z_vocabDisplay_SETTINGS,
-    selected_LIST?.id,
-    debouncedSearch,
-    ARE_vocabsFetching,
-    IS_loadingMore,
-  ]);
-
   return (
-    <Page_WRAP paddingTop>
+    <Page_WRAP>
       <List_HEADER
         SHOW_listName={showTitle}
         list_NAME={selected_LIST?.name}
@@ -139,24 +116,30 @@ function __SingleList_PAGE({
         OPEN_create={() => TOGGLE_modal("createVocab")}
         {...{ search, SET_search, activeFilter_COUNT }}
       />
+      <View style={{ height: HEADER_MARGIN || 68 }}></View>
 
       <MyVocabs_FLATLIST
-        {...{ vocabs: displayed_VOCABS }}
+        {...{ vocabs }}
         onScroll={handleScroll}
         listHeader_EL={
           <VocabsFlatlistHeader_SECTION
-            vocabResults_COUNT={displayed_VOCABS?.length || 0}
+            vocabResults_COUNT={totalFilteredVocab_COUNT || 0}
             list_NAME={selected_LIST?.name}
-            totalVocabs={totalVocab_COUNT ? totalVocab_COUNT : 0}
+            totalVocabs={totalListVocab_COUNT ? totalListVocab_COUNT : 0}
             {...{ search, z_vocabDisplay_SETTINGS, z_SET_vocabDisplaySettings }}
           />
         }
         listFooter_EL={
           <NoVocabsFound_SECTION
-            {...{ HAS_reachedEnd, LOAD_more, IS_loadingMore }}
-            search={search}
-            filter_COUNT={activeFilter_COUNT}
-            vocabResult_COUNT={displayed_VOCABS?.length || 0}
+            {...{
+              search,
+              LOAD_more,
+              IS_loadingMore,
+              activeFilter_COUNT,
+              totalFilteredVocab_COUNT,
+              HAS_reachedEnd,
+            }}
+            displayedVocab_COUNT={vocabs?.length || 0}
             RESET_search={() => SET_search("")}
             RESET_filters={() =>
               z_SET_vocabDisplaySettings({
@@ -185,7 +168,7 @@ function __SingleList_PAGE({
         onSuccess={(new_VOCAB: Vocab_MODEL) => {
           TOGGLE_modal("createVocab");
           HIGHLIGHT_vocab(new_VOCAB.id);
-          SET_allow(true);
+
           toast.show(t("notifications.vocabCreated"), {
             type: "green",
             duration: 3000,
@@ -208,11 +191,6 @@ function __SingleList_PAGE({
           });
         }}
       />
-      {/* <MyVocabDisplaySettings_MODAL
-        open={modal_STATES.displaySettings}
-        TOGGLE_open={() => TOGGLE_modal("displaySettings")}
-        list_id={selected_LIST?.id}
-      /> */}
       <VocabDisplaySettings_MODAL
         open={modal_STATES.displaySettings}
         TOGGLE_open={() => TOGGLE_modal("displaySettings")}
@@ -235,7 +213,6 @@ function __SingleList_PAGE({
         list_id={selected_LIST?.id}
         CLOSE_modal={() => TOGGLE_modal("delete")}
         onSuccess={() => {
-          SET_allow(true);
           toast.show(t("notifications.vocabDeleted"), {
             type: "green",
             duration: 5000,
@@ -274,7 +251,7 @@ export default function SingleList_PAGE() {
   // Use withObservables to pass the observed list and computed total count to the page
   const enhance = withObservables(["selected_LIST"], ({ selected_LIST }) => ({
     selected_LIST: list ? list : undefined,
-    totalVocab_COUNT: list?.vocab_COUNT ? list?.vocab_COUNT : undefined,
+    totalListVocab_COUNT: list?.vocab_COUNT ? list?.vocab_COUNT : undefined,
   }));
 
   const EnhancedPage = enhance(__SingleList_PAGE);
@@ -285,17 +262,18 @@ export default function SingleList_PAGE() {
 
 function NoVocabsFound_SECTION({
   search = "",
-  filter_COUNT = 0,
-  vocabResult_COUNT = 0,
+  IS_loadingMore = false,
+  HAS_reachedEnd = false,
+  activeFilter_COUNT = 0,
+  totalFilteredVocab_COUNT = 0,
+  displayedVocab_COUNT = 0,
+  LOAD_more = () => {},
   RESET_search = () => {},
   RESET_filters = () => {},
-  HAS_reachedEnd = false,
-  LOAD_more = () => {},
-  IS_loadingMore = false,
 }) {
   return (
     <View style={{ gap: 16 }}>
-      {HAS_reachedEnd && vocabResult_COUNT > 0 && (
+      {HAS_reachedEnd && (
         <View
           style={{
             width: "100%",
@@ -305,7 +283,7 @@ function NoVocabsFound_SECTION({
           }}
         />
       )}
-      {vocabResult_COUNT === 0 && (
+      {totalFilteredVocab_COUNT === 0 && (
         <View
           style={{
             paddingVertical: 24,
@@ -321,22 +299,26 @@ function NoVocabsFound_SECTION({
         </View>
       )}
       <View style={{ gap: 8 }}>
-        {search && filter_COUNT === 0 && vocabResult_COUNT === 0 && (
-          <Btn
-            text={`Clear search '${search}'`}
-            onPress={RESET_search}
-            type="delete"
-          />
-        )}
-        {filter_COUNT > 0 && !search && vocabResult_COUNT === 0 && (
-          <Btn
-            text={`Clear ${filter_COUNT} active filters`}
-            onPress={RESET_filters}
-            type="delete"
-          />
-        )}
+        {search &&
+          activeFilter_COUNT === 0 &&
+          totalFilteredVocab_COUNT === 0 && (
+            <Btn
+              text={`Clear search '${search}'`}
+              onPress={RESET_search}
+              type="delete"
+            />
+          )}
+        {activeFilter_COUNT > 0 &&
+          !search &&
+          totalFilteredVocab_COUNT === 0 && (
+            <Btn
+              text={`Clear ${activeFilter_COUNT} active filters`}
+              onPress={RESET_filters}
+              type="delete"
+            />
+          )}
 
-        {filter_COUNT > 0 && search !== "" && vocabResult_COUNT === 0 && (
+        {activeFilter_COUNT > 0 && search !== "" && (
           <Btn
             text="Clear search and filters"
             onPress={() => {
@@ -346,7 +328,7 @@ function NoVocabsFound_SECTION({
             type="delete"
           />
         )}
-        {!HAS_reachedEnd && vocabResult_COUNT > 0 && (
+        {!HAS_reachedEnd && totalFilteredVocab_COUNT > 0 && (
           <Btn
             text={!IS_loadingMore ? "Load more" : ""}
             iconLeft={

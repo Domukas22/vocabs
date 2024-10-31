@@ -1,21 +1,17 @@
-//
-//
-//
-
 import { Q, Query } from "@nozbe/watermelondb";
 import { Vocabs_DB } from "@/src/db";
-import { List_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
-import { _DisplaySettings_PROPS } from "@/src/utils/DisplaySettings";
+import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 import { z_vocabDisplaySettings_PROPS } from "@/src/zustand";
 
 export interface VocabFilter_PROPS {
   search?: string;
-  list_id?: string | undefined;
-  user_id?: string | undefined;
+  list_id?: string;
+  user_id?: string;
   z_vocabDisplay_SETTINGS: z_vocabDisplaySettings_PROPS | undefined;
   fetchAll?: boolean;
-  start: number | undefined;
-  amount: number | undefined;
+  fetchOnlyForCount?: boolean;
+  excludeIds?: Set<string>; // New param for IDs to exclude
+  amount?: number;
 }
 
 const FetchVocabs_QUERY = ({
@@ -24,15 +20,15 @@ const FetchVocabs_QUERY = ({
   user_id,
   z_vocabDisplay_SETTINGS,
   fetchAll = false,
-  start = 0,
-  amount = 2,
+  excludeIds = new Set(),
+  amount,
+  fetchOnlyForCount = false,
 }: VocabFilter_PROPS): Query<Vocab_MODEL> => {
-  // Start with the base query
   let query = Vocabs_DB?.query();
 
-  console.log("start: ", start, " amount: ", amount);
+  console.log("EXCLUDED: ", excludeIds);
+  console.log("amount: ", amount);
 
-  // Add optional filters using Q.and
   const conditions = [];
 
   if (list_id && !fetchAll) {
@@ -43,25 +39,26 @@ const FetchVocabs_QUERY = ({
 
   if (
     z_vocabDisplay_SETTINGS?.difficultyFilters &&
-    z_vocabDisplay_SETTINGS?.difficultyFilters.length > 0
+    z_vocabDisplay_SETTINGS.difficultyFilters.length > 0
   ) {
     conditions.push(
-      Q.where("difficulty", Q.oneOf(z_vocabDisplay_SETTINGS?.difficultyFilters))
+      Q.where("difficulty", Q.oneOf(z_vocabDisplay_SETTINGS.difficultyFilters))
     );
   }
 
   if (
     z_vocabDisplay_SETTINGS?.langFilters &&
-    z_vocabDisplay_SETTINGS?.langFilters.length > 0
+    z_vocabDisplay_SETTINGS.langFilters.length > 0
   ) {
     conditions.push(
       Q.or(
-        z_vocabDisplay_SETTINGS?.langFilters.map((lang) =>
+        z_vocabDisplay_SETTINGS.langFilters.map((lang) =>
           Q.where("lang_ids", Q.like(`%${Q.sanitizeLikeString(lang)}%`))
         )
       )
     );
   }
+
   if (search) {
     conditions.push(
       Q.or([
@@ -70,20 +67,21 @@ const FetchVocabs_QUERY = ({
       ])
     );
   }
-  // Handle sorting
+
+  if (fetchOnlyForCount) {
+    // if only fetched to find out totla count, return here
+    // ther eis no need for sorting
+    query = query.extend(Q.and(...conditions));
+    return query;
+  }
+
+  // Apply sorting based on user settings
   switch (z_vocabDisplay_SETTINGS?.sorting) {
-    case "shuffle":
-      // query = query.extend(
-      //   Q.sortBy("difficulty", sort.direction === "ascending" ? Q.asc : Q.desc)
-      // );
-      break;
     case "difficulty":
       query = query.extend(
         Q.sortBy(
           "difficulty",
-          z_vocabDisplay_SETTINGS?.sortDirection === "ascending"
-            ? Q.asc
-            : Q.desc
+          z_vocabDisplay_SETTINGS.sortDirection === "ascending" ? Q.asc : Q.desc
         )
       );
       break;
@@ -91,17 +89,16 @@ const FetchVocabs_QUERY = ({
       query = query.extend(
         Q.sortBy(
           "created_at",
-          z_vocabDisplay_SETTINGS?.sortDirection === "ascending"
-            ? Q.asc
-            : Q.desc
+          z_vocabDisplay_SETTINGS.sortDirection === "ascending" ? Q.asc : Q.desc
         )
       );
-
       break;
   }
 
-  // Combine all conditions with Q.and
-  query = query.extend(Q.and(...conditions), Q.skip(start), Q.take(amount));
+  conditions.push(Q.where("id", Q.notIn([...excludeIds])));
+  query = query.extend(Q.take(amount || 10));
+
+  query = query.extend(Q.and(...conditions));
 
   return query;
 };
