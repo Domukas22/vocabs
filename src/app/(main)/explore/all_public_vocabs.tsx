@@ -30,6 +30,8 @@ import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
 import USE_getActiveFilterCount from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/utils/USE_getActiveFilterCount";
 import List_HEADER from "@/src/components/Header/List_HEADER";
 import { useRouter } from "expo-router";
+import Margin_SECTION from "@/src/components/Margin_SECTION";
+import BottomAction_SECTION from "@/src/components/BottomAction_SECTION";
 
 export default function AllPublicVocabs_PAGE() {
   const { t } = useTranslation();
@@ -55,7 +57,7 @@ export default function AllPublicVocabs_PAGE() {
     fetchVocabs_ERROR,
     LOAD_more,
     IS_loadingMore,
-    HAS_reachedEnd,
+    totalFilteredVocab_COUNT,
   } = USE_supabasePublicVocabs({
     search: debouncedSearch,
     z_vocabDisplay_SETTINGS,
@@ -76,15 +78,9 @@ export default function AllPublicVocabs_PAGE() {
         IS_searchBig={true}
         {...{ search, SET_search, activeFilter_COUNT }}
       />
-
+      <Margin_SECTION />
       <ExploreVocabs_FLATLIST
-        {...{
-          vocabs,
-          IS_loadingMore,
-          HAS_reachedEnd,
-          ARE_vocabsFetching,
-          LOAD_more,
-        }}
+        {...{ vocabs }}
         SAVE_vocab={(vocab: Vocab_MODEL) => {
           SET_targetVocab(vocab);
           TOGGLE_modal("save");
@@ -94,7 +90,27 @@ export default function AllPublicVocabs_PAGE() {
           <VocabsFlatlistHeader_SECTION
             list_NAME="🔤 All public vocabs"
             totalVocabs={vocab_COUNT}
+            vocabResults_COUNT={totalFilteredVocab_COUNT}
             {...{ search, z_vocabDisplay_SETTINGS, z_SET_vocabDisplaySettings }}
+          />
+        }
+        listFooter_EL={
+          <BottomAction_SECTION
+            {...{
+              search,
+              LOAD_more,
+              IS_loadingMore,
+              activeFilter_COUNT,
+              totalFilteredResults_COUNT: totalFilteredVocab_COUNT,
+              HAS_reachedEnd: vocabs?.length >= totalFilteredVocab_COUNT,
+            }}
+            RESET_search={() => SET_search("")}
+            RESET_filters={() =>
+              z_SET_vocabDisplaySettings({
+                langFilters: [],
+                difficultyFilters: [],
+              })
+            }
           />
         }
       />

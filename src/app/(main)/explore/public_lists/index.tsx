@@ -23,6 +23,7 @@ import List_HEADER from "@/src/components/Header/List_HEADER";
 import USE_getActiveFilterCount from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/utils/USE_getActiveFilterCount";
 import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
 import { useRouter } from "expo-router";
+import Margin_SECTION from "@/src/components/Margin_SECTION";
 
 export default function PublicLists_PAGE() {
   const { search, debouncedSearch, SET_search } = USE_debounceSearch();
@@ -65,7 +66,7 @@ export default function PublicLists_PAGE() {
         IS_searchBig={true}
         {...{ search, SET_search, activeFilter_COUNT }}
       />
-
+      <Margin_SECTION />
       <ExploreLists_FLATLIST
         type="public"
         {...{

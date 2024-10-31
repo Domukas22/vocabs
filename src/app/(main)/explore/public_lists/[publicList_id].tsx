@@ -33,6 +33,7 @@ import USE_incrementListSavedCount from "@/src/features/1_lists/hooks/USE_increm
 import Btn from "@/src/components/Btn/Btn";
 import { supabase } from "@/src/lib/supabase";
 import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
+import Margin_SECTION from "@/src/components/Margin_SECTION";
 
 export default function PublicListVocabs_PAGE() {
   const toast = useToast();
@@ -135,7 +136,7 @@ export default function PublicListVocabs_PAGE() {
         SAVE_list={() => TOGGLE_modal("saveList")}
         {...{ search, SET_search, activeFilter_COUNT }}
       />
-
+      <Margin_SECTION />
       <ExploreVocabs_FLATLIST
         {...{
           vocabs,

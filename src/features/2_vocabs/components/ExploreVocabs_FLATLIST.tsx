@@ -24,19 +24,13 @@ import { HEADER_MARGIN } from "@/src/constants/globalVars";
 export default function ExploreVocabs_FLATLIST({
   vocabs,
   listHeader_EL,
-  IS_loadingMore,
-  HAS_reachedEnd,
-  ARE_vocabsFetching,
-  LOAD_more,
+  listFooter_EL,
   SAVE_vocab,
   onScroll,
 }: {
   vocabs: Vocab_MODEL[] | undefined;
   listHeader_EL: React.ReactNode;
-  IS_loadingMore: boolean;
-  HAS_reachedEnd: boolean;
-  ARE_vocabsFetching: boolean;
-  LOAD_more: () => void;
+  listFooter_EL: React.ReactNode;
   SAVE_vocab: (vocab: Vocab_MODEL) => void;
   onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
 }) {
@@ -59,19 +53,19 @@ export default function ExploreVocabs_FLATLIST({
           />
         );
       }}
-      style={{ marginTop: HEADER_MARGIN || 68 }}
       keyExtractor={(item) => "PublicVocab" + item.id}
       ListHeaderComponent={listHeader_EL}
-      ListFooterComponent={
-        <ExploreVocabsFlatlistBottom_SECTION
-          {...{
-            IS_loadingMore,
-            HAS_reachedEnd,
-            ARE_vocabsFetching,
-            LOAD_more,
-          }}
-        />
-      }
+      ListFooterComponent={listFooter_EL}
+      // ListFooterComponent={
+      //   <ExploreVocabsFlatlistBottom_SECTION
+      //     {...{
+      //       IS_loadingMore,
+      //       HAS_reachedEnd,
+      //       ARE_vocabsFetching,
+      //       LOAD_more,
+      //     }}
+      //   />
+      // }
     />
   );
 }
