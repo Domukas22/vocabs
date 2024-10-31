@@ -26,9 +26,6 @@ const FetchVocabs_QUERY = ({
 }: VocabFilter_PROPS): Query<Vocab_MODEL> => {
   let query = Vocabs_DB?.query();
 
-  console.log("EXCLUDED: ", excludeIds);
-  console.log("amount: ", amount);
-
   const conditions = [];
 
   if (list_id && !fetchAll) {

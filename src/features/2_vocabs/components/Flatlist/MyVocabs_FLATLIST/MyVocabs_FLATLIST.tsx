@@ -59,6 +59,9 @@ export default function MyVocabs_FLATLIST({
     <Styled_FLATLIST
       {...{ onScroll }}
       data={vocabs}
+      keyExtractor={(item) => "Vocab" + item.id}
+      ListHeaderComponent={listHeader_EL}
+      ListFooterComponent={listFooter_EL}
       renderItem={({ item }) => {
         return (
           <SwipeableExample
@@ -75,9 +78,6 @@ export default function MyVocabs_FLATLIST({
         );
       }}
       // style={{ marginTop: HEADER_MARGIN || 68 }}
-      keyExtractor={(item) => "Vocab" + item.id}
-      ListHeaderComponent={listHeader_EL}
-      ListFooterComponent={listFooter_EL}
     />
   );
 }

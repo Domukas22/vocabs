@@ -29,7 +29,7 @@ import { useToast } from "react-native-toast-notifications";
 import DeleteList_MODAL from "@/src/features/1_lists/components/DeleteList_MODAL";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 import { FlatList } from "react-native";
-import { Users_DB } from "@/src/db";
+import { Lists_DB, Users_DB } from "@/src/db";
 import GET_userId from "@/src/utils/GET_userId";
 import Btn from "@/src/components/Btn/Btn";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
@@ -39,10 +39,13 @@ import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
 import USE_getActiveFilterCount from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/utils/USE_getActiveFilterCount";
 import ListDisplaySettings_MODAL from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/ListDisplaySettings_MODAL";
 import ListsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/ListsFlatlistHeader_SECTION";
-import USE_observedLists from "@/src/features/1_lists/hooks/USE_observedLists";
+import USE_myLists from "@/src/features/1_lists/hooks/USE_myLists";
 import USE_debounceSearch from "@/src/hooks/USE_debounceSearch/USE_debounceSearch";
 import USE_collectMyListLangs from "@/src/features/1_lists/hooks/USE_collectMyListLangs";
 import { sync } from "@/src/db/sync";
+import Margin_SECTION from "@/src/components/Margin_SECTION";
+import BottomAction_SECTION from "@/src/components/BottomAction_SECTION";
+import { Q } from "@nozbe/watermelondb";
 
 export default function MyLists_PAGE() {
   const { z_user } = USE_zustand();
@@ -80,10 +83,21 @@ export default function MyLists_PAGE() {
   }
   const activeFilter_COUNT = USE_getActiveFilterCount(z_listDisplay_SETTINGS);
 
-  const lists = USE_observedLists({
+  const {
+    lists,
+    IS_loadingMore,
+    HAS_reachedEnd,
+    fetchLists_ERROR,
+    ARE_listsFetching,
+    totalFilteredLists_COUNT,
+    LOAD_more,
+    ADD_toDisplayed,
+    REMOVE_fromDisplayed,
+  } = USE_myLists({
     search: debouncedSearch,
     user_id: z_user?.id,
     z_listDisplay_SETTINGS,
+    paginateBy: 2,
   });
 
   const collectedLang_IDS = USE_collectMyListLangs(z_user);
@@ -98,10 +112,11 @@ export default function MyLists_PAGE() {
         OPEN_create={() => TOGGLE_modal("create")}
         {...{ search, SET_search, activeFilter_COUNT }}
       />
+      <Margin_SECTION />
       <MyLists_FLATLIST
         lists={lists}
-        SELECT_list={(list: List_MODEL) => {
-          router.push(`/(main)/vocabs/${list.id}`);
+        SELECT_list={(id: string) => {
+          router.push(`/(main)/vocabs/${id}`);
         }}
         SHOW_bottomBtn={search === ""}
         TOGGLE_createListModal={() => TOGGLE_modal("create")}
@@ -113,8 +128,27 @@ export default function MyLists_PAGE() {
         listHeader_EL={
           <ListsFlatlistHeader_SECTION
             list_NAME="My Lists"
-            totalLists={0}
+            totalLists={totalFilteredLists_COUNT}
             {...{ search, z_listDisplay_SETTINGS, z_SET_listDisplaySettings }}
+          />
+        }
+        listFooter_EL={
+          <BottomAction_SECTION
+            {...{
+              search,
+              LOAD_more,
+              IS_loadingMore,
+              activeFilter_COUNT,
+              totalFilteredResults_COUNT: totalFilteredLists_COUNT,
+              HAS_reachedEnd,
+            }}
+            type="lists"
+            RESET_search={() => SET_search("")}
+            RESET_filters={() =>
+              z_SET_listDisplaySettings({
+                langFilters: [],
+              })
+            }
           />
         }
       />
@@ -127,6 +161,7 @@ export default function MyLists_PAGE() {
         onSuccess={(newList: List_MODEL) => {
           highlight(newList?.id);
           list_REF?.current?.scrollToOffset({ animated: true, offset: 0 });
+          ADD_toDisplayed(newList);
           toast.show(t("notifications.listCreated"), {
             type: "green",
             duration: 5000,
@@ -155,6 +190,7 @@ export default function MyLists_PAGE() {
         list_id={target_LIST?.id}
         CLOSE_modal={() => TOGGLE_modal("delete")}
         onSuccess={() => {
+          REMOVE_fromDisplayed(target_LIST?.id || "");
           SET_targetList(undefined);
           TOGGLE_modal("delete");
           toast.show(t("notifications.listDeleted"), {

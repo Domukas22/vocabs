@@ -73,7 +73,7 @@ function _MyLists_PAGE({
         <ExplorePage_BTN
           title="All my vocabs"
           description={`${totalUserVocab_COUNT} vocabs in total`}
-          onPress={() => router.push("/(main)/vocabs/all_my_vocabs")}
+          onPress={() => router.push("/(main)/vocabs/all_vocabs")}
         />
 
         <ExplorePage_BTN

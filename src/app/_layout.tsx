@@ -159,7 +159,7 @@ export async function HANDLE_watermelonUser({
   if (watermelon_USER?.[0]) {
     // if user found, set user info into context for global refferencing
     z_SET_user(watermelon_USER?.[0]);
-    router.push("/(main)/vocabs/lists");
+    router.push("/(main)/vocabs");
   } else {
     // else fetch the user from supabase
 
@@ -178,7 +178,7 @@ export async function HANDLE_watermelonUser({
 
         if (newUser) {
           z_SET_user(newUser);
-          router.push("/(main)/vocabs/lists");
+          router.push("/(main)/vocabs");
         }
       });
     } else {

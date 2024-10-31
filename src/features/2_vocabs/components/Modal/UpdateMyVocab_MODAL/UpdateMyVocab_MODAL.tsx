@@ -42,12 +42,12 @@ import { tr_PROPS } from "@/src/db/props";
 import { Q } from "@nozbe/watermelondb";
 import FETCH_langs from "@/src/features/4_languages/hooks/FETCH_langs";
 import USE_collectListLangs from "@/src/features/1_lists/hooks/USE_collectListLangs";
+import { Lists_DB } from "@/src/db";
 
 interface UpdateMyVocabModal_PROPS {
+  user: User_MODEL | undefined;
   IS_open: boolean;
   toUpdate_VOCAB: Vocab_MODEL | undefined;
-  list: List_MODEL | undefined;
-  toUpdate_TRS: tr_PROPS[] | undefined;
   TOGGLE_modal: () => void;
   onSuccess: (new_VOCAB: Vocab_MODEL) => void;
 }
@@ -61,10 +61,9 @@ export type UpdateMyVocabData_PROPS = {
 };
 
 export default function UpdateMyVocab_MODAL({
-  toUpdate_VOCAB,
-  list,
   user,
   IS_open,
+  toUpdate_VOCAB,
   TOGGLE_modal: TOGGLE_vocabModal,
   onSuccess = () => {},
 }: UpdateMyVocabModal_PROPS) {
@@ -152,11 +151,15 @@ export default function UpdateMyVocab_MODAL({
 
   useEffect(() => {
     const fn = async () => {
+      const _list = await Lists_DB.query(
+        Q.where("id", toUpdate_VOCAB?.list?.id || "")
+      );
+
       if (IS_open) {
         setValue("translations", toUpdate_VOCAB?.trs || []);
         setValue("description", toUpdate_VOCAB?.description || "");
         setValue("difficulty", toUpdate_VOCAB?.difficulty || 3);
-        setValue("list", list || undefined);
+        setValue("list", _list?.[0] || undefined);
       }
     };
     fn();

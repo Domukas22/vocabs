@@ -41,9 +41,7 @@ export default function ListsFlatlistHeader_SECTION({
 
   return (
     <View style={styles.headerContainer}>
-      {search === "" && (
-        <Styled_TEXT type="text_22_bold">{list_NAME}</Styled_TEXT>
-      )}
+      <Styled_TEXT type="text_22_bold">{list_NAME}</Styled_TEXT>
       <Styled_TEXT type="label">
         {search !== "" ? (
           <>

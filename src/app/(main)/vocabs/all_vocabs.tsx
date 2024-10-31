@@ -54,14 +54,9 @@ import { MyColors } from "@/src/constants/MyColors";
 import { HEADER_MARGIN } from "@/src/constants/globalVars";
 import BottomAction_SECTION from "@/src/components/BottomAction_SECTION";
 import Margin_SECTION from "@/src/components/Margin_SECTION";
+import { USE_totalUserVocabs } from "@/src/hooks/USE_totalUserVocabs";
 
-function __SingleList_PAGE({
-  selected_LIST = undefined,
-  totalListVocab_COUNT = 0,
-}: {
-  selected_LIST: List_MODEL | undefined;
-  totalListVocab_COUNT: number | undefined;
-}) {
+export default function AllVocabs_PAGE() {
   const { t } = useTranslation();
   const toast = useToast();
   const router = useRouter();
@@ -73,6 +68,8 @@ function __SingleList_PAGE({
   const activeFilter_COUNT = USE_getActiveFilterCount(z_vocabDisplay_SETTINGS);
   const { highlighted_ID, highlight: HIGHLIGHT_vocab } = USE_highlighedId();
   const [delete_ID, SET_deleteId] = useState("");
+
+  const totalListVocab_COUNT = USE_totalUserVocabs(z_user);
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
     { name: "displaySettings" },
@@ -109,8 +106,10 @@ function __SingleList_PAGE({
     REMOVE_fromDisplayed,
   } = USE_myVocabs({
     search: debouncedSearch,
-    list_id: selected_LIST?.id,
+    // list_id: "sda",
+    user_id: z_user?.id,
     z_vocabDisplay_SETTINGS,
+    fetchAll: true,
     paginateBy: 2,
   });
 
@@ -118,7 +117,7 @@ function __SingleList_PAGE({
     <Page_WRAP>
       <List_HEADER
         SHOW_listName={showTitle}
-        list_NAME={selected_LIST?.name}
+        list_NAME={"All my vocabs"}
         GO_back={() => router.back()}
         OPEN_displaySettings={() => TOGGLE_modal("displaySettings")}
         OPEN_listSettings={() => TOGGLE_modal("listSettings")}
@@ -133,7 +132,7 @@ function __SingleList_PAGE({
         listHeader_EL={
           <VocabsFlatlistHeader_SECTION
             vocabResults_COUNT={totalFilteredVocab_COUNT || 0}
-            list_NAME={selected_LIST?.name}
+            list_NAME={"All vocabs"}
             totalVocabs={totalListVocab_COUNT ? totalListVocab_COUNT : 0}
             {...{
               search,
@@ -175,7 +174,7 @@ function __SingleList_PAGE({
 
       <CreateMyVocab_MODAL
         IS_open={modal_STATES.createVocab}
-        initial_LIST={selected_LIST}
+        initial_LIST={undefined}
         TOGGLE_modal={() => TOGGLE_modal("createVocab")}
         onSuccess={(new_VOCAB: Vocab_MODEL) => {
           TOGGLE_modal("createVocab");
@@ -189,7 +188,6 @@ function __SingleList_PAGE({
       />
       <UpdateMyVocab_MODAL
         toUpdate_VOCAB={toUpdate_VOCAB}
-        list={selected_LIST}
         user={z_user}
         IS_open={modal_STATES.update}
         TOGGLE_modal={() => TOGGLE_modal("update")}
@@ -206,23 +204,12 @@ function __SingleList_PAGE({
       <VocabDisplaySettings_MODAL
         open={modal_STATES.displaySettings}
         TOGGLE_open={() => TOGGLE_modal("displaySettings")}
-        collectedLang_IDS={selected_LIST?.collected_lang_ids?.split(",") || []}
-      />
-
-      <ListSettings_MODAL
-        selected_LIST={selected_LIST}
-        open={modal_STATES.listSettings}
-        TOGGLE_open={() => TOGGLE_modal("listSettings")}
-        user_id={z_user?.id}
-        backToIndex={() => router.back()}
+        collectedLang_IDS={[]}
       />
 
       <DeleteVocab_MODAL
-        user={z_user}
         IS_open={modal_STATES.delete}
-        is_public={false}
         vocab_id={delete_ID || ""}
-        list_id={selected_LIST?.id}
         CLOSE_modal={() => TOGGLE_modal("delete")}
         onSuccess={() => {
           toast.show(t("notifications.vocabDeleted"), {
@@ -235,39 +222,4 @@ function __SingleList_PAGE({
       />
     </Page_WRAP>
   );
-}
-
-export default function SingleList_PAGE() {
-  const { list_id } = useLocalSearchParams();
-  const [list, setList] = useState<List_MODEL | null>(null);
-
-  // Fetch the list asynchronously based on `list_id`
-  useEffect(() => {
-    const fetchList = async () => {
-      if (typeof list_id !== "string") {
-        return;
-      }
-
-      const foundList = await Lists_DB.find(list_id);
-      setList(foundList);
-    };
-
-    fetchList();
-  }, [list_id]);
-
-  // Observe the selected list
-  const listObservable = USE_observeList(
-    typeof list_id === "string" ? list_id : ""
-  );
-
-  // Use withObservables to pass the observed list and computed total count to the page
-  const enhance = withObservables(["selected_LIST"], ({ selected_LIST }) => ({
-    selected_LIST: list ? list : undefined,
-    totalListVocab_COUNT: list?.vocab_COUNT ? list?.vocab_COUNT : undefined,
-  }));
-
-  const EnhancedPage = enhance(__SingleList_PAGE);
-
-  // Render the enhanced page
-  return list ? <EnhancedPage selected_LIST={listObservable} /> : null;
 }

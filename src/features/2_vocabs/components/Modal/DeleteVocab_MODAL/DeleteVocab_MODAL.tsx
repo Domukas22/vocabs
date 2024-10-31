@@ -10,21 +10,19 @@ import db, { Vocabs_DB } from "@/src/db";
 import USE_collectListLangs from "@/src/features/1_lists/hooks/USE_collectListLangs";
 
 interface DeleteVocabModal_PROPS {
-  user?: User_MODEL;
   IS_open: boolean;
-  is_public?: boolean;
+
   vocab_id: string | undefined;
-  list_id?: string | undefined;
+
   CLOSE_modal: () => void | undefined;
   onSuccess: () => void | undefined;
 }
 
 export default function DeleteVocab_MODAL({
-  user,
   IS_open = false,
-  is_public = false,
+
   vocab_id = undefined,
-  list_id = undefined,
+
   CLOSE_modal = () => {},
   onSuccess = () => {},
 }: DeleteVocabModal_PROPS) {

@@ -107,8 +107,8 @@ export class List_MODEL extends Model {
   @text("type") type!: "private" | "public" | "shared" | "draft";
   @field("saved_count") saved_count!: number;
 
-  @text("collected_lang_ids") default_lang_ids!: string;
-  @text("default_lang_ids") collected_lang_ids!: string;
+  @text("collected_lang_ids") collected_lang_ids!: string;
+  @text("default_lang_ids") default_lang_ids!: string;
 
   @readonly @date("created_at") createdAt!: number;
   @readonly @date("updated_at") updatedAt!: number;

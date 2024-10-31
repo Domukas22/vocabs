@@ -15,6 +15,7 @@ import { FlatList } from "react-native";
 import { List_MODEL } from "@/src/db/watermelon_MODELS";
 
 import { HEADER_MARGIN } from "@/src/constants/globalVars";
+import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 
 interface MyListsFlatlist_PROPS {
   _ref: React.RefObject<FlatList>;
@@ -22,7 +23,8 @@ interface MyListsFlatlist_PROPS {
   SHOW_bottomBtn: boolean;
   highlighted_ID?: string | undefined;
   listHeader_EL: React.ReactNode;
-  SELECT_list: (list: List_MODEL) => void;
+  listFooter_EL: React.ReactNode;
+  SELECT_list: (id: string) => void;
   PREPARE_listRename: (list: List_MODEL) => void;
   PREPADE_deleteList: (list: List_MODEL) => void;
   TOGGLE_createListModal: () => void;
@@ -40,17 +42,18 @@ export default function MyLists_FLATLIST({
   TOGGLE_createListModal,
   onScroll,
   listHeader_EL,
+  listFooter_EL,
 }: MyListsFlatlist_PROPS) {
   const { t } = useTranslation();
 
   return (
     <Styled_FLATLIST
       _ref={_ref}
-      style={{ flex: 1 }}
-      onScroll={onScroll}
       data={lists || []}
+      onScroll={onScroll}
+      keyExtractor={(item) => item?.id}
       ListHeaderComponent={listHeader_EL}
-      style={{ marginTop: HEADER_MARGIN || 68 }}
+      ListFooterComponent={listFooter_EL}
       renderItem={({ item }: { item: List_MODEL }) => (
         <SwipeableExample
           leftBtn_ACTION={() => {
@@ -58,27 +61,19 @@ export default function MyLists_FLATLIST({
           }}
           rightBtn_ACTION={() => PREPADE_deleteList(item)}
         >
-          {/* <Styled_TEXT>{item?.collected_lang_ids}</Styled_TEXT> */}
           {item instanceof List_MODEL && (
             <MyList_BTN
               list={item}
-              onPress={() => SELECT_list(item)}
+              onPress={() => {
+                if (typeof item?.id === "string") {
+                  SELECT_list(item.id);
+                }
+              }}
               highlighted={highlighted_ID === item?.id}
             />
           )}
         </SwipeableExample>
       )}
-      keyExtractor={(item) => item?.id}
-      ListFooterComponent={
-        SHOW_bottomBtn ? (
-          <Btn
-            text={t("btn.createList")}
-            iconLeft={<ICON_X color="primary" />}
-            type="seethrough_primary"
-            onPress={TOGGLE_createListModal}
-          />
-        ) : null
-      }
     />
   );
 }
