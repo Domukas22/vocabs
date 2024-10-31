@@ -98,6 +98,8 @@ function __SingleList_PAGE({
     fetchVocabs_ERROR,
     LOAD_more,
     IS_loadingMore,
+    ADD_toDisplayed,
+    REMOVE_fromDisplayed,
   } = USE_myVocabs({
     search: debouncedSearch,
     list_id: selected_LIST?.id,
@@ -168,7 +170,7 @@ function __SingleList_PAGE({
         onSuccess={(new_VOCAB: Vocab_MODEL) => {
           TOGGLE_modal("createVocab");
           HIGHLIGHT_vocab(new_VOCAB.id);
-
+          // ADD_toDisplayed(new_VOCAB);
           toast.show(t("notifications.vocabCreated"), {
             type: "green",
             duration: 3000,
@@ -217,7 +219,7 @@ function __SingleList_PAGE({
             type: "green",
             duration: 5000,
           });
-
+          // REMOVE_fromDisplayed(delete_ID);
           TOGGLE_modal("delete");
         }}
       />
@@ -267,7 +269,7 @@ function NoVocabsFound_SECTION({
   activeFilter_COUNT = 0,
   totalFilteredVocab_COUNT = 0,
   displayedVocab_COUNT = 0,
-  LOAD_more = () => {},
+  LOAD_more = async () => {},
   RESET_search = () => {},
   RESET_filters = () => {},
 }) {
@@ -334,9 +336,9 @@ function NoVocabsFound_SECTION({
             iconLeft={
               IS_loadingMore ? <ActivityIndicator color="white" /> : null
             }
-            onPress={() => {
+            onPress={async () => {
               if (!IS_loadingMore) {
-                LOAD_more();
+                await LOAD_more();
               }
             }}
             type="seethrough"

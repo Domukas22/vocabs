@@ -9,16 +9,12 @@ import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/St
 
 import { useTranslation } from "react-i18next";
 import SwipeableExample from "@/src/components/SwipeableExample/SwipeableExample";
-import Label from "@/src/components/Label/Label";
+
 import React from "react";
 import { FlatList } from "react-native";
 import { List_MODEL } from "@/src/db/watermelon_MODELS";
-import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
-import { withObservables } from "@nozbe/watermelondb/react";
-import { Lists_DB } from "@/src/db";
-import { HEADER_MARGIN, USER_ID } from "@/src/constants/globalVars";
-import { Q } from "@nozbe/watermelondb";
-import { take } from "@nozbe/watermelondb/QueryDescription";
+
+import { HEADER_MARGIN } from "@/src/constants/globalVars";
 
 interface MyListsFlatlist_PROPS {
   _ref: React.RefObject<FlatList>;
@@ -63,14 +59,16 @@ export default function MyLists_FLATLIST({
           rightBtn_ACTION={() => PREPADE_deleteList(item)}
         >
           {/* <Styled_TEXT>{item?.collected_lang_ids}</Styled_TEXT> */}
-          <MyList_BTN
-            list={item}
-            onPress={() => SELECT_list(item)}
-            highlighted={highlighted_ID === item.id}
-          />
+          {item instanceof List_MODEL && (
+            <MyList_BTN
+              list={item}
+              onPress={() => SELECT_list(item)}
+              highlighted={highlighted_ID === item?.id}
+            />
+          )}
         </SwipeableExample>
       )}
-      keyExtractor={(item) => item.id}
+      keyExtractor={(item) => item?.id}
       ListFooterComponent={
         SHOW_bottomBtn ? (
           <Btn

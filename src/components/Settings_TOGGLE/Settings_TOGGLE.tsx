@@ -2,10 +2,16 @@
 //
 //
 
-import { Pressable, PressableProps, StyleSheet, View } from "react-native";
+import {
+  Pressable,
+  PressableProps,
+  StyleSheet,
+  Switch,
+  View,
+} from "react-native";
 import { Styled_TEXT } from "../Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
-import React from "react";
+import React, { useRef } from "react";
 
 type Btn = PressableProps & {
   text: string;
@@ -24,12 +30,12 @@ export default function Settings_TOGGLE({
 }: Btn) {
   return (
     <Pressable
-      onPress={onPress}
       style={({ pressed }) => [
         s.btn,
         pressed && s.btnPress,
         last && { borderBottomWidth: 0 },
       ]}
+      onPress={onPress}
     >
       <View
         style={{ flex: 1, gap: 10, flexDirection: "row", alignItems: "center" }}
@@ -51,9 +57,13 @@ export default function Settings_TOGGLE({
           </Styled_TEXT>
         )}
       </View>
-      <View style={[s.toggle, active && s.toggleActive]}>
-        <View style={[s.toggleCircle, active && s.toggleCircleActive]}></View>
-      </View>
+      <Switch
+        trackColor={{ false: "#252525", true: MyColors.btn_active_press }}
+        thumbColor={active ? MyColors.icon_primary : MyColors.icon_gray}
+        ios_backgroundColor="#252525"
+        onValueChange={onPress}
+        value={active}
+      />
     </Pressable>
   );
 }

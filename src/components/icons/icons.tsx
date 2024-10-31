@@ -21,29 +21,33 @@ const sizing = {
 export function ICON_flag({
   big = false,
   lang = "en",
+  ...props
 }: {
   big?: boolean;
   lang?: string;
-}) {
+} & ViewProps) {
   const _size = big
     ? { width: sizing.big, height: 14 }
     : { width: sizing.small, height: 11 };
 
   return (
-    <Image
-      style={[_size, { borderRadius: 3 }]}
-      source={{ uri: GET_langFlagUrl(lang) }}
-    />
+    <View {...props}>
+      <Image
+        style={[_size, { borderRadius: 3 }]}
+        source={{ uri: GET_langFlagUrl(lang) }}
+      />
+    </View>
   );
 }
 export function ICON_difficultyDot({
   big = false,
   difficulty = 2,
+  ...props
 }: {
   big?: boolean;
   difficulty?: 0 | 1 | 2 | 3;
   primary?: boolean;
-}) {
+} & ViewProps) {
   const _size = big ? { width: 14, height: 14 } : { width: 11, height: 11 };
 
   const _color =
@@ -56,14 +60,16 @@ export function ICON_difficultyDot({
       : { backgroundColor: MyColors.icon_difficulty_3 };
 
   return (
-    <View
-      style={{
-        width: sizing.small,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <View style={[_size, _color, { borderRadius: 100 }]} />
+    <View {...props}>
+      <View
+        style={{
+          width: sizing.small,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <View style={[_size, _color, { borderRadius: 100 }]} />
+      </View>
     </View>
   );
 }

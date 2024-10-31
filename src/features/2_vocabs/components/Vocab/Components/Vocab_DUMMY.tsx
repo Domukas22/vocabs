@@ -53,21 +53,29 @@ export default function Vocab_DUMMY({
             diff={3}
           />
 
-          {z_vocabDisplay_SETTINGS?.SHOW_description && (
-            <Styled_TEXT type="label_small">
-              {lang?.description_example || "INSERT DESCRIPTION"}
-            </Styled_TEXT>
-          )}
-          {(z_vocabDisplay_SETTINGS?.SHOW_flags ||
-            z_vocabDisplay_SETTINGS?.SHOW_difficulty) && (
-            <View style={s.iconWrap}>
-              {z_vocabDisplay_SETTINGS?.SHOW_flags && (
-                <ICON_flag lang={z_vocabDisplay_SETTINGS?.frontTrLang_ID} big />
-              )}
-              {z_vocabDisplay_SETTINGS?.SHOW_difficulty &&
-                SHOW_difficultyDot && <ICON_difficultyDot difficulty={3} big />}
-            </View>
-          )}
+          <Styled_TEXT
+            type="label_small"
+            style={[
+              !z_vocabDisplay_SETTINGS?.SHOW_description && { opacity: 0.1 },
+            ]}
+          >
+            {lang?.description_example || "INSERT DESCRIPTION"}
+          </Styled_TEXT>
+
+          <View style={s.iconWrap}>
+            <ICON_flag
+              style={[!z_vocabDisplay_SETTINGS?.SHOW_flags && { opacity: 0.1 }]}
+              lang={z_vocabDisplay_SETTINGS?.frontTrLang_ID}
+              big
+            />
+            <ICON_difficultyDot
+              style={[
+                !z_vocabDisplay_SETTINGS?.SHOW_difficulty && { opacity: 0.1 },
+              ]}
+              difficulty={3}
+              big
+            />
+          </View>
         </View>
       </View>
     </Block>

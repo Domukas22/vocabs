@@ -124,10 +124,10 @@ function _MyList_BTN({
 }
 
 const enhance = withObservables([], ({ list }: { list: List_MODEL }) => ({
-  diff_1_count: list.diff_1 ? list.diff_1 : 0,
-  diff_2_count: list.diff_2 ? list.diff_2 : 0,
-  diff_3_count: list.diff_3 ? list.diff_3 : 0,
-  vocab_COUNT: list.vocab_COUNT ? list.vocab_COUNT : 0,
+  diff_1_count: list?.diff_1,
+  diff_2_count: list?.diff_2,
+  diff_3_count: list?.diff_3,
+  vocab_COUNT: list?.vocab_COUNT,
 }));
 
 export const MyList_BTN = enhance(_MyList_BTN);

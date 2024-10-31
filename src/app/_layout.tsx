@@ -1,6 +1,6 @@
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
-import { Slot, useRouter } from "expo-router";
+import { Router, Slot, useRouter } from "expo-router";
 import { useEffect } from "react";
 import { ToastProvider } from "react-native-toast-notifications";
 import * as SecureStore from "expo-secure-store";
@@ -145,7 +145,13 @@ async function SYNC_langs() {
   });
 }
 
-export async function HANDLE_watermelonUser({ user_id, z_SET_user, router }) {
+export async function HANDLE_watermelonUser({
+  user_id,
+  z_SET_user,
+  router,
+}: {
+  router: Router;
+}) {
   // if user_id is stored, find the watermelonDB user object
   // Sidenote: can't use .find, becasue it throws a weird error when not found
   const watermelon_USER = await Users_DB.query(Q.where("id", user_id));
@@ -153,7 +159,7 @@ export async function HANDLE_watermelonUser({ user_id, z_SET_user, router }) {
   if (watermelon_USER?.[0]) {
     // if user found, set user info into context for global refferencing
     z_SET_user(watermelon_USER?.[0]);
-    router.push("/(main)/vocabs");
+    router.push("/(main)/vocabs/lists");
   } else {
     // else fetch the user from supabase
 
@@ -172,7 +178,7 @@ export async function HANDLE_watermelonUser({ user_id, z_SET_user, router }) {
 
         if (newUser) {
           z_SET_user(newUser);
-          router.push("/(main)/vocabs");
+          router.push("/(main)/vocabs/lists");
         }
       });
     } else {
