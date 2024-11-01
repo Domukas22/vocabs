@@ -110,7 +110,7 @@ export default function AllVocabs_PAGE() {
     user_id: z_user?.id,
     z_vocabDisplay_SETTINGS,
     fetchAll: true,
-    paginateBy: 2,
+    paginateBy: 10,
   });
 
   return (

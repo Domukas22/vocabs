@@ -30,6 +30,8 @@ export type z_setVocabDisplaySettings_PROPS = (
   newSettings: Partial<z_vocabDisplaySettings_PROPS>
 ) => void;
 
+export type z_setUser_PROPS = (newUser_CONTENT: User_MODEL | undefined) => void;
+
 interface ZustandStore {
   z_vocabDisplay_SETTINGS: z_vocabDisplaySettings_PROPS;
   z_SET_vocabDisplaySettings: z_setVocabDisplaySettings_PROPS;
@@ -38,7 +40,7 @@ interface ZustandStore {
   z_SET_listDisplaySettings: z_setlistDisplaySettings_PROPS;
 
   z_user: User_MODEL | undefined;
-  z_SET_user: (newUser_CONTENT: User_MODEL | undefined) => void;
+  z_SET_user: z_setUser_PROPS;
 }
 
 const USE_zustand = create<ZustandStore>((set) => ({

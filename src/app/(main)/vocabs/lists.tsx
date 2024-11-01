@@ -97,8 +97,16 @@ export default function MyLists_PAGE() {
     search: debouncedSearch,
     user_id: z_user?.id,
     z_listDisplay_SETTINGS,
-    paginateBy: 2,
+    paginateBy: 10,
   });
+
+  const y = async () => {
+    const existing_LISTS = await Lists_DB.query(
+      Q.where("user_id", z_user?.id || "")
+    ).fetch();
+
+    console.log(existing_LISTS?.length);
+  };
 
   const collectedLang_IDS = USE_collectMyListLangs(z_user);
 
@@ -113,6 +121,8 @@ export default function MyLists_PAGE() {
         {...{ search, SET_search, activeFilter_COUNT }}
       />
       <Margin_SECTION />
+
+      {/* <Btn text="Existing lists" onPress={() => sync(true)} /> */}
       <MyLists_FLATLIST
         lists={lists}
         SELECT_list={(id: string) => {

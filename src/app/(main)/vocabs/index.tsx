@@ -38,7 +38,8 @@ import { Q } from "@nozbe/watermelondb";
 import Btn from "@/src/components/Btn/Btn";
 import GET_userId from "@/src/utils/GET_userId";
 import USE_zustand from "@/src/zustand";
-import { sync } from "@/src/db/sync";
+import { checkUnsyncedChanges, sync } from "@/src/db/sync";
+import SYNC_allFromSupabase from "@/src/features/5_users/utils/fullSync_FNS/SYNC_allFromtSupabase";
 
 function _MyLists_PAGE({
   totalUserList_COUNT = 0,
@@ -53,6 +54,7 @@ function _MyLists_PAGE({
 }) {
   const { t } = useTranslation();
   const { SET_selectedList } = USE_selectedList();
+  const { z_user } = USE_zustand();
 
   const router = useRouter();
   const list_REF = useRef<FlatList<any>>(null);
@@ -63,6 +65,7 @@ function _MyLists_PAGE({
   return (
     <Page_WRAP>
       <Header title={`My vocabs`} big={true} />
+      <View style={{ gap: 8, padding: 12 }}></View>
 
       <View style={{ padding: 12, gap: 12 }}>
         <ExplorePage_BTN

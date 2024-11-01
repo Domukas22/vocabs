@@ -54,6 +54,9 @@ function _MyList_BTN({
         IS_submitted={IS_submitted && !IS_accepted}
         {...{ vocab_COUNT }}
       >
+        <Styled_TEXT type="label_small" style={{ color: MyColors.text_red }}>
+          {list?.id}
+        </Styled_TEXT>
         <Styled_TEXT type="list_title">{list?.name}</Styled_TEXT>
 
         {list?.type === "shared" && (

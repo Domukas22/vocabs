@@ -63,11 +63,14 @@ export default function USE_createVocab() {
         const vocab = await Vocabs_DB.create((vocab: Vocab_MODEL) => {
           vocab.user.set(user);
           vocab.list.set(list);
+
           vocab.difficulty = difficulty || 3;
           vocab.description = description || "";
+
           vocab.trs = translations;
           vocab.lang_ids = translations?.map((t) => t.lang_id).join(",");
           vocab.searchable = translations?.map((t) => t.text).join(",");
+
           vocab.is_marked = false;
         });
 

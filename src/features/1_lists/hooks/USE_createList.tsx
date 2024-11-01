@@ -78,11 +78,11 @@ export default function USE_createList() {
           newList.original_creator.set(user);
 
           newList.name = name || "";
-          newList.description = description || "";
+          newList.type = "private";
           newList.default_lang_ids = "en,de";
+          newList.description = description || "";
           newList.is_submitted_for_publish = false;
           newList.was_accepted_for_publish = false;
-          newList.type = "private";
         });
         return newList;
       });

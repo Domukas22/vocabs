@@ -28,6 +28,7 @@ import USE_zustand from "../zustand";
 import { FETCH_userFromSupabase, HANDLE_watermelonUser } from "./_layout";
 import { User_MODEL } from "../db/watermelon_MODELS";
 import { Q } from "@nozbe/watermelondb";
+import { sync } from "../db/sync";
 
 type LoginData_PROPS = {
   email: string;
@@ -55,12 +56,7 @@ export default function Login_PAGE() {
     } else if (typeof userData?.id === "string") {
       // sucessfully logged in --> save user id to local storage
       await SecureStore.setItemAsync("user_id", userData?.id);
-
-      await HANDLE_watermelonUser({
-        user_id: userData?.id,
-        z_SET_user,
-        router,
-      });
+      await sync("all", userData?.id);
 
       router.push("/(main)/vocabs");
     }

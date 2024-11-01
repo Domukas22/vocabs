@@ -38,10 +38,10 @@ export default function DeleteList_MODAL({
       const vocabs = await Vocabs_DB.query(Q.where("list_id", list?.id));
 
       vocabs?.forEach(async (v) => {
-        await v.markAsDeleted();
+        await v.markAsDeleted(); // to trigger sync
       });
 
-      await list.markAsDeleted();
+      await list.markAsDeleted(); // to trigger sync
     });
     onSuccess();
   };

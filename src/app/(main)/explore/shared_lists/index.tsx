@@ -24,9 +24,10 @@ import USE_getActiveFilterCount from "@/src/features/2_vocabs/components/Modal/D
 import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
 import { useRouter } from "expo-router";
 import List_HEADER from "@/src/components/Header/List_HEADER";
+import Margin_SECTION from "@/src/components/Margin_SECTION";
 
 export default function SharedLists_PAGE() {
-  const { user } = USE_auth();
+  const { z_user } = USE_zustand();
   const { search, debouncedSearch, SET_search } = USE_debounceSearch();
   const { z_listDisplay_SETTINGS, z_SET_listDisplaySettings } = USE_zustand();
 
@@ -35,10 +36,10 @@ export default function SharedLists_PAGE() {
   ]);
 
   const { collectedLang_IDS, ARE_langIdsCollecting, collectLangIds_ERROR } =
-    USE_collectSharedListLangs(user?.id);
+    USE_collectSharedListLangs(z_user?.id);
 
   const { vocab_COUNT, IS_totalCountFetching, fetchTotalCount_ERROR } =
-    USE_totalSharedListCount(user?.id);
+    USE_totalSharedListCount(z_user?.id);
 
   const {
     sharedLists,
@@ -50,7 +51,7 @@ export default function SharedLists_PAGE() {
   } = USE_fetchSharedSupabaseLists({
     search: debouncedSearch,
     z_listDisplay_SETTINGS,
-    user_id: user?.id,
+    user_id: z_user?.id,
     paginateBy: 2,
   });
 
@@ -68,7 +69,7 @@ export default function SharedLists_PAGE() {
         IS_searchBig={true}
         {...{ search, SET_search, activeFilter_COUNT }}
       />
-
+      <Margin_SECTION />
       <ExploreLists_FLATLIST
         lists={sharedLists}
         type="shared"

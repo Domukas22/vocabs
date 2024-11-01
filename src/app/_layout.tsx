@@ -13,8 +13,10 @@ import { sync } from "../db/sync";
 import db, { Languages_DB, Users_DB } from "../db";
 import { Q } from "@nozbe/watermelondb";
 import { Auth_PROVIDER } from "../context/Auth_CONTEXT";
-import USE_zustand from "../zustand";
+import USE_zustand, { z_setUser_PROPS } from "../zustand";
 import { User_MODEL } from "../db/watermelon_MODELS";
+import FETCH_supabaseUser from "../features/5_users/utils/fullSync_FNS/FETCH_userFromSupabase";
+import CHECK_ifUserExistsOnSupabase from "../features/5_users/utils/fullSync_FNS/CHECK_ifUserExistsOnSupabase";
 
 export default function _layout() {
   return (
@@ -67,17 +69,56 @@ function Main_LAYOUT() {
       // Proceed only if fonts are loaded
       if (loaded) {
         await SYNC_langs();
-        await sync();
 
         // Check if user_id exists in Secure Store
         const user_ID = await SecureStore.getItemAsync("user_id");
 
         if (user_ID) {
-          await HANDLE_watermelonUser({
-            user_id: user_ID,
-            z_SET_user,
-            router,
-          });
+          // now lets get the user from local db
+          const watermelon_USER = await GET_watermelonUser(user_ID);
+
+          if (watermelon_USER) {
+            // TODO: if user has updates, they wont be reflected in the context object
+            z_SET_user(watermelon_USER);
+            await sync("all", user_ID);
+            router.push("/(main)/vocabs");
+          } else {
+            // if watermelon user doesnt exist, we need to create one
+            const { success, supabase_USER, msg } = await GET_supabaseUser(
+              user_ID
+            );
+
+            if (success) {
+              const {
+                success: createWatermelonUser_SUCCESS,
+                watermelon_USER: newWatermelon_USER,
+                msg,
+              } = await CREATE_watermelonUser(supabase_USER);
+
+              if (createWatermelonUser_SUCCESS) {
+                // user found, now just create it locally and continue
+                z_SET_user(newWatermelon_USER);
+                await sync("all", user_ID);
+                router.push("/(main)/vocabs");
+              } else {
+                // user exists in supabase authentication, but its not in the users table
+                console.error(msg);
+                // TODO: insert the user into the "users" table
+                z_SET_user(undefined);
+                router.push("/welcome");
+              }
+            } else {
+              // user exists in supabase authentication, but its not in the users table
+              console.error(
+                `🔴 user with ID "${user_ID}" exists in supabase authentication, but its not in the users table 🔴`
+              );
+              // TODO: insert the user into the "users" table
+              z_SET_user(undefined);
+              router.push("/welcome");
+            }
+          }
+
+          router.push("/(main)/vocabs");
         } else {
           // If user_id does not exist, to welcome screen
           z_SET_user(undefined); // clear user state as a precaution
@@ -91,13 +132,7 @@ function Main_LAYOUT() {
 
   return <Slot />;
 }
-export async function FETCH_userFromSupabase(userId: string) {
-  const res = await FETCH_userData(userId);
-  if (res.success) {
-    return res.data; // Return user data if successful
-  }
-  return null; // Return null if fetching failed
-}
+
 async function SYNC_langs() {
   // First, check if there are any languages already in WatermelonDB
   const existingLanguages = await Languages_DB.query().fetch();
@@ -145,12 +180,82 @@ async function SYNC_langs() {
   });
 }
 
-export async function HANDLE_watermelonUser({
+export async function GET_watermelonUser(user_id: string | undefined) {
+  if (!user_id) return undefined;
+
+  const watermelon_USER = await Users_DB.query(Q.where("id", user_id));
+  return watermelon_USER?.[0] ? watermelon_USER?.[0] : undefined;
+}
+export async function GET_supabaseUser(user_id: string | undefined) {
+  if (!user_id) {
+    console.error("🔴 User id not defined when fetching user from supabase 🔴");
+    return {
+      msg: "🔴 User id not defined when fetching user from supabase 🔴",
+      success: false,
+    };
+  }
+
+  let { data: user, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("id", user_id)
+    .single();
+
+  if (error) {
+    console.error(error);
+    return { msg: "🔴 Error fetching user from supabase 🔴", success: false };
+  }
+
+  return { success: true, supabase_USER: user };
+}
+
+export async function CREATE_watermelonUser(
+  supabase_USER: User_MODEL | undefined
+) {
+  if (!supabase_USER) {
+    console.error(
+      "🔴 supabase_USER not defined when creating watermelon user 🔴"
+    );
+    return {
+      msg: "🔴 supabase_USER not defined when creating watermelon user 🔴",
+      success: false,
+    };
+  }
+
+  let watermelon_USER = undefined;
+
+  db.write(async () => {
+    const user = await Users_DB.create((user: User_MODEL) => {
+      user._raw.id = supabase_USER.id;
+      user.username = supabase_USER.username;
+      user.email = supabase_USER.email;
+      user.max_vocabs = supabase_USER.max_vocabs;
+      user.list_submit_attempt_count = supabase_USER.list_submit_attempt_count;
+      user.preferred_lang_id = supabase_USER.preferred_lang_id;
+    });
+
+    if (!user) {
+      console.error("🔴 Something went wrong when creating watermelon user 🔴");
+      return {
+        msg: "🔴 Something went wrong when creating watermelon user 🔴",
+        success: false,
+      };
+    } else {
+      watermelon_USER = user;
+    }
+  });
+
+  return { success: true, watermelon_USER };
+}
+
+export async function HANDLE_contentAndRedirection({
+  router,
   user_id,
   z_SET_user,
-  router,
 }: {
   router: Router;
+  user_id: string;
+  z_SET_user: z_setUser_PROPS;
 }) {
   // if user_id is stored, find the watermelonDB user object
   // Sidenote: can't use .find, becasue it throws a weird error when not found
@@ -163,24 +268,26 @@ export async function HANDLE_watermelonUser({
   } else {
     // else fetch the user from supabase
 
-    const userData = await FETCH_userFromSupabase(user_id);
-    if (userData) {
-      // if user found, create a watermelondb instance
-      await db.write(async () => {
-        const newUser = await Users_DB.create((user: User_MODEL) => {
-          user._raw.id = userData.id;
-          user.username = userData.username;
-          user.email = userData.email;
-          user.max_vocabs = userData.max_vocabs;
-          user.list_submit_attempt_count = userData.list_submit_attempt_count;
-          user.preferred_lang_id = userData.preferred_lang_id;
-        });
+    const { success: checkUserOnSupabase_SUCESS, exists } =
+      await CHECK_ifUserExistsOnSupabase(user_id);
+    if (exists) {
+      await sync("all", user_id);
+      // if user does exist on supabase, perform an complete sync of all data
+      // await db.write(async () => {
+      //   const newUser = await Users_DB.create((user: User_MODEL) => {
+      //     user._raw.id = user_DATA.id;
+      //     user.username = user_DATA.username;
+      //     user.email = user_DATA.email;
+      //     user.max_vocabs = user_DATA.max_vocabs;
+      //     user.list_submit_attempt_count = user_DATA.list_submit_attempt_count;
+      //     user.preferred_lang_id = user_DATA.preferred_lang_id;
+      //   });
 
-        if (newUser) {
-          z_SET_user(newUser);
-          router.push("/(main)/vocabs");
-        }
-      });
+      //   if (newUser) {
+      //     z_SET_user(newUser);
+      //     router.push("/(main)/vocabs");
+      //   }
+      // });
     } else {
       // if not found, that means the user doesnt exist -> clear expo secure store and go to welcome screen
       await SecureStore.setItemAsync("user_id", "");
