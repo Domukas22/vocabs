@@ -34,6 +34,8 @@ import Btn from "@/src/components/Btn/Btn";
 import { supabase } from "@/src/lib/supabase";
 import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
 import Margin_SECTION from "@/src/components/Margin_SECTION";
+import USE_supabaseVocabs from "@/src/hooks/USE_supabaseVocabs";
+import BottomAction_SECTION from "@/src/components/BottomAction_SECTION";
 
 export default function PublicListVocabs_PAGE() {
   const toast = useToast();
@@ -102,19 +104,18 @@ export default function PublicListVocabs_PAGE() {
       console.error(new_LIST.msg); // Log internal message for debugging.
     }
   };
-
   const {
     vocabs,
     ARE_vocabsFetching,
     fetchVocabs_ERROR,
     LOAD_more,
     IS_loadingMore,
-    HAS_reachedEnd,
-  } = USE_supabaseVocabsOfAList({
+    totalFilteredVocab_COUNT,
+  } = USE_supabaseVocabs({
     search: debouncedSearch,
-    list,
     z_vocabDisplay_SETTINGS,
-    paginateBy: 10,
+    paginateBy: 5,
+    targetList_ID: typeof publicList_id === "string" ? publicList_id : "",
   });
 
   const collectedLangIds = useMemo(() => {
@@ -130,22 +131,15 @@ export default function PublicListVocabs_PAGE() {
         SHOW_listName={showTitle}
         list_NAME={list?.name}
         GO_back={() => router.back()}
-        LIKE_list={() => {}}
         OPEN_displaySettings={() => TOGGLE_modal("displaySettings")}
-        OPEN_search={() => {}}
         SAVE_list={() => TOGGLE_modal("saveList")}
         {...{ search, SET_search, activeFilter_COUNT }}
       />
       <Margin_SECTION />
+
       <ExploreVocabs_FLATLIST
-        {...{
-          vocabs,
-          IS_loadingMore,
-          HAS_reachedEnd,
-          ARE_vocabsFetching,
-          LOAD_more,
-          onScroll: handleScroll,
-        }}
+        {...{ vocabs }}
+        onScroll={handleScroll}
         SAVE_vocab={(vocab: Vocab_MODEL) => {
           SET_targetVocab(vocab);
           TOGGLE_modal("save");
@@ -154,7 +148,27 @@ export default function PublicListVocabs_PAGE() {
           <VocabsFlatlistHeader_SECTION
             totalVocabs={list?.vocabs?.[0]?.count}
             list_NAME={list?.name}
+            vocabResults_COUNT={totalFilteredVocab_COUNT}
             {...{ search, z_vocabDisplay_SETTINGS, z_SET_vocabDisplaySettings }}
+          />
+        }
+        listFooter_EL={
+          <BottomAction_SECTION
+            {...{
+              search,
+              LOAD_more,
+              IS_loadingMore,
+              activeFilter_COUNT,
+              totalFilteredResults_COUNT: totalFilteredVocab_COUNT,
+              HAS_reachedEnd: vocabs?.length >= totalFilteredVocab_COUNT,
+            }}
+            RESET_search={() => SET_search("")}
+            RESET_filters={() =>
+              z_SET_vocabDisplaySettings({
+                langFilters: [],
+                difficultyFilters: [],
+              })
+            }
           />
         }
       />

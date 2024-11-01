@@ -50,7 +50,6 @@ export default function ExploreLists_FLATLIST({
           />
         );
       }}
-      style={{ marginTop: HEADER_MARGIN || 68 }}
       keyExtractor={(item) => "PublicVocab" + item.id}
       ListFooterComponent={
         <ExploreListsBottom_SECTION

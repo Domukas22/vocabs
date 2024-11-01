@@ -4,14 +4,21 @@ import { z_vocabDisplaySettings_PROPS } from "@/src/zustand";
 import { BUILD_fetchPublicVocabsQuery } from "../features/2_vocabs/utils/BUILD_fetchPublicVocabsQuery";
 import { BUILD_fetchPublicVocabsCount } from "../features/2_vocabs/utils/BUILD_fetchPublicVocabsQuery copy";
 
-export default function USE_supabasePublicVocabs({
+export default function USE_supabaseVocabs({
   search,
   z_vocabDisplay_SETTINGS,
-  paginateBy = 10, // Default pagination
+  paginateBy = 10,
+
+  fetchByList = false,
+  targetList_ID = undefined,
 }: {
   search: string;
   z_vocabDisplay_SETTINGS: z_vocabDisplaySettings_PROPS;
   paginateBy?: number;
+
+  // either both or none need to be defined
+  fetchByList?: boolean;
+  targetList_ID?: string | undefined;
 }) {
   const [ARE_vocabsFetching, SET_vocabsFetching] = useState(false);
   const [fetchVocabs_ERROR, SET_error] = useState<string | null>(null);
@@ -32,24 +39,27 @@ export default function USE_supabasePublicVocabs({
     z_vocabDisplay_SETTINGS?.langFilters,
     z_vocabDisplay_SETTINGS?.sorting,
     z_vocabDisplay_SETTINGS?.sortDirection,
+    targetList_ID,
   ]);
 
   const fetchTotalCount = async () => {
-    const countQuery = BUILD_fetchPublicVocabsCount({
+    if (fetchByList && !targetList_ID) return;
+
+    const list_ids = targetList_ID
+      ? [targetList_ID]
+      : await fetchPublicListIds();
+
+    const { count, error } = await BUILD_fetchPublicVocabsCount({
       search,
-      list_ids: await fetchPublicListIds(),
+      list_ids,
       z_vocabDisplay_SETTINGS,
     });
-
-    const { count, error } = await countQuery;
 
     if (error) {
       console.error("🔴 Error fetching vocab count: 🔴", error);
       SET_error("🔴 Error fetching vocab count. 🔴");
       return;
     }
-
-    console.log(count);
 
     SET_totalVocabCount(count || 0);
   };
@@ -78,7 +88,12 @@ export default function USE_supabasePublicVocabs({
     SET_error(null);
 
     try {
-      const list_ids = await fetchPublicListIds();
+      if (fetchByList && !targetList_ID) return;
+
+      const list_ids = targetList_ID
+        ? [targetList_ID]
+        : await fetchPublicListIds();
+
       const query = BUILD_fetchPublicVocabsQuery({
         search,
         list_ids,

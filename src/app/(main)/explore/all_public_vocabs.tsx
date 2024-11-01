@@ -15,7 +15,7 @@ import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 import USE_collectPublicListLangs from "@/src/features/2_vocabs/hooks/USE_collectPublicListLangs";
 import USE_zustand from "@/src/zustand";
 import USE_debounceSearch from "@/src/hooks/USE_debounceSearch/USE_debounceSearch";
-import USE_supabasePublicVocabs from "@/src/hooks/USE_supabasePublicVocabs";
+import USE_supabaseVocabs from "@/src/hooks/USE_supabaseVocabs";
 import { VocabDisplaySettings_MODAL } from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/VocabDisplaySettings_MODAL";
 
 import ExploreVocabsFlatlistBottom_SECTION from "@/src/features/2_vocabs/components/ExploreVocabsFlatlistBottom_SECTION";
@@ -58,7 +58,7 @@ export default function AllPublicVocabs_PAGE() {
     LOAD_more,
     IS_loadingMore,
     totalFilteredVocab_COUNT,
-  } = USE_supabasePublicVocabs({
+  } = USE_supabaseVocabs({
     search: debouncedSearch,
     z_vocabDisplay_SETTINGS,
     paginateBy: 5,
