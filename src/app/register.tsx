@@ -37,7 +37,7 @@ import db, { Users_DB } from "../db";
 import { User_MODEL } from "../db/watermelon_MODELS";
 import * as SecureStore from "expo-secure-store";
 import { USE_auth } from "../context/Auth_CONTEXT";
-import { HANDLE_watermelonUser } from "./_layout";
+import { HANDLE_userRouting, HANDLE_watermelonUser } from "./_layout";
 import USE_zustand from "../zustand";
 import { sync } from "../db/sync";
 
@@ -69,7 +69,7 @@ export default function Register_PAGE() {
     } else if (!error && userData && typeof userData?.user?.id === "string") {
       // account on supabase has been created, now insert user_id into local storage
       await SecureStore.setItemAsync("user_id", userData?.user?.id);
-      await sync("all", userData?.id);
+      await HANDLE_userRouting(router, userData?.user?.id, z_SET_user);
 
       router.push("/(main)/vocabs");
     }

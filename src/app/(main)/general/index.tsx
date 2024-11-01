@@ -59,7 +59,7 @@ function _General_PAGE({
   const { z_user } = USE_zustand();
 
   const _lougout = async () => {
-    await sync();
+    await sync("all", z_user?.id);
     const { error } = await logout();
 
     if (error) {

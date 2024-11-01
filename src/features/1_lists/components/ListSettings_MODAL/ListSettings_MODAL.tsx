@@ -75,13 +75,13 @@ export default function ListSettings_MODAL({
   const { PUBLISH_list, IS_publishingList } = USE_publishList();
 
   const share = async (bool: boolean) => {
-    await sync();
+    await sync("all", z_user?.id);
     SHARE_list({
       list_id: selected_LIST?.id,
       user_id: z_user?.id,
       SHOULD_share: bool,
       onSuccess: async () => {
-        await sync();
+        await sync("all", z_user?.id);
       },
     });
     // await db.write(async () => {
@@ -91,7 +91,7 @@ export default function ListSettings_MODAL({
     // });
   };
   const publish = async (bool: boolean) => {
-    await sync();
+    await sync("all", z_user?.id);
     await PUBLISH_list({
       list_id: selected_LIST?.id,
       user_id: z_user?.id,
