@@ -9,9 +9,9 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./src/assets/images/splash.png",
+      "image": "./src/assets/images/logo_2.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#2d2d2d"
     },
     "ios": {
       "supportsTablet": true,
@@ -39,10 +39,7 @@
             "extraPods": [
               {
                 "name": "simdjson",
-                "configurations": [
-                  "Debug",
-                  "Release"
-                ],
+                "configurations": ["Debug", "Release"],
                 "path": "../node_modules/@nozbe/simdjson",
                 "modular_headers": true
               }

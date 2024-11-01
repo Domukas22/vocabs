@@ -3,7 +3,7 @@
 //
 
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
-import { useRouter } from "expo-router";
+import { SplashScreen, useRouter } from "expo-router";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import { useEffect, useRef, useState } from "react";
 
@@ -39,7 +39,6 @@ import Btn from "@/src/components/Btn/Btn";
 import GET_userId from "@/src/utils/GET_userId";
 import USE_zustand from "@/src/zustand";
 import { checkUnsyncedChanges, sync } from "@/src/db/sync";
-import SYNC_allFromSupabase from "@/src/features/5_users/utils/fullSync_FNS/SYNC_allFromtSupabase";
 
 function _MyLists_PAGE({
   totalUserList_COUNT = 0,
