@@ -13,6 +13,7 @@ import SwipeableExample from "@/src/components/SwipeableExample/SwipeableExample
 
 import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 import { NativeScrollEvent, NativeSyntheticEvent, View } from "react-native";
+import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 
 export default function MyVocabs_FLATLIST({
   vocabs,
@@ -43,17 +44,15 @@ export default function MyVocabs_FLATLIST({
   PREPARE_vocabDelete?: (id: string) => void;
   onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
 }) {
-  const { t } = useTranslation();
-
   return (
     <Styled_FLASHLIST
       {...{ onScroll }}
+      // data={vocabs}
       data={vocabs}
-      keyExtractor={(item) => "Vocab" + item.id}
+      keyExtractor={(item, index) => "Vocab" + item.id}
       ListHeaderComponent={listHeader_EL}
       ListFooterComponent={listFooter_EL}
-      headerPadding
-      // extraData={IS_searching}
+      extraData={IS_searching}
       renderItem={({ item }) => {
         return (
           <SwipeableExample

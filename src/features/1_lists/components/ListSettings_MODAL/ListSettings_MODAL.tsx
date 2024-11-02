@@ -16,7 +16,7 @@ import SelectLangs_MODAL from "@/src/features/4_languages/components/SelectMulti
 import Confirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, ScrollView, View } from "react-native";
 
@@ -30,17 +30,19 @@ import { useToast } from "react-native-toast-notifications";
 import { useRouter } from "expo-router";
 
 import { MyColors } from "@/src/constants/MyColors";
-import { List_MODEL } from "@/src/db/watermelon_MODELS";
+import { List_MODEL, User_MODEL } from "@/src/db/watermelon_MODELS";
 import USE_updateListDefaultLangs from "../../hooks/USE_updateListDefaultLangs";
 import Label from "@/src/components/Label/Label";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 import USE_shareList from "../../hooks/USE_shareList";
 import USE_publishList from "../../hooks/USE_publishList";
-import { sync } from "@/src/db/sync";
+import { PUSH_changes, sync } from "@/src/db/sync";
 import SelectUsers_MODAL from "@/src/features/5_users/components/SelectUsers_MODAL/SelectUsers_MODAL";
 import { supabase } from "@/src/lib/supabase";
 import db, { Lists_DB } from "@/src/db";
 import USE_zustand from "@/src/zustand";
+import USE_fetchListAccesses from "@/src/features/5_users/hooks/USE_fetchListAccesses";
+import USE_supabaseUsers from "@/src/features/5_users/hooks/USE_supabaseUsers";
 
 interface ListSettingsModal_PROPS {
   selected_LIST: List_MODEL;
@@ -74,6 +76,42 @@ export default function ListSettings_MODAL({
   const { SHARE_list, IS_sharingList } = USE_shareList();
   const { PUBLISH_list, IS_publishingList } = USE_publishList();
 
+  const [selectedUser_IDS, SET_selectedUserIds] = useState<Set<string>>(
+    new Set()
+  );
+
+  const { FETCH_accesses, ARE_accessesFetching, accessesFetch_ERROR } =
+    USE_fetchListAccesses();
+
+  const {
+    users: selected_USERS,
+    IS_fetching: ARE_selectedusersFetching,
+    error: fetchSelectedUsers_ERROR,
+    LOAD_more: LOAD_moreSelectedUsers,
+    IS_loadingMore: IS_loadingMoreSelectedUsers,
+    total_COUNT: totalSelectedFilteredUser_COUNT,
+  } = USE_supabaseUsers({
+    search: "",
+    paginateBy: 9999,
+    onlySelected: true,
+    selected_IDS: Array.from(selectedUser_IDS),
+    view: "selected",
+  });
+
+  async function SELECT_usersByListAccess() {
+    const accesses = await FETCH_accesses({
+      user_id: z_user?.id || "",
+      list_id: selected_LIST?.id || "",
+    });
+    if (accesses.success && accesses.data) {
+      SET_selectedUserIds(new Set(accesses.data.map((x) => x.participant_id)));
+    }
+  }
+
+  useEffect(() => {
+    if (open) SELECT_usersByListAccess();
+  }, [open]);
+
   const share = async (bool: boolean) => {
     await sync("all", z_user?.id);
     SHARE_list({
@@ -91,13 +129,15 @@ export default function ListSettings_MODAL({
     // });
   };
   const publish = async (bool: boolean) => {
-    await sync("all", z_user?.id);
-    await PUBLISH_list({
-      list_id: selected_LIST?.id,
-      user_id: z_user?.id,
-      isSubmittedForPublish: bool,
-      onSuccess: async (updated_LIST) => {},
-    });
+    await selected_LIST.SUBMIT_forPublishing(bool);
+    await PUSH_changes();
+    // await sync("all", z_user?.id);
+    // await PUBLISH_list({
+    //   list_id: selected_LIST?.id,
+    //   user_id: z_user?.id,
+    //   isSubmittedForPublish: bool,
+    //   onSuccess: async (updated_LIST) => {},
+    // });
   };
 
   const [IS_listNameHighlighted, SET_isListNameHighlighted] = useState(false);
@@ -176,6 +216,24 @@ export default function ListSettings_MODAL({
           }}
           error={updateDefaultLangs_ERROR}
         />
+
+        <Block>
+          <Label>
+            Reset the difficulty of every vocab in this list to "Hard"
+          </Label>
+          <Btn
+            text="Reset all vocabs"
+            onPress={() => {
+              (async () => {
+                await selected_LIST.RESET_allVocabsDifficulty();
+                toast.show("Difficulties reset", {
+                  type: "green",
+                  duration: 5000,
+                });
+              })();
+            }}
+          />
+        </Block>
         {/* -------------------------------------------------------------------------------------------------- */}
 
         {selected_LIST?.type === "private" && (
@@ -206,8 +264,9 @@ export default function ListSettings_MODAL({
         {selected_LIST?.type === "shared" && (
           <Block>
             <Styled_TEXT style={{ color: MyColors.text_green }}>
-              This list is shared with 14 people
+              This list is shared with {selected_USERS?.length || 0} people
             </Styled_TEXT>
+            <SharedWithUsers_BULLETS users={selected_USERS || []} />
             <Btn
               text="Edit people list"
               style={{ flex: 1 }}
@@ -452,4 +511,43 @@ function HowDoesPublishingListWork_MODAL({
       />
     </Big_MODAL>
   );
+}
+
+export function SharedWithUsers_BULLETS({
+  users = [],
+}: {
+  users: User_MODEL[];
+}) {
+  const maxPrint = 10;
+
+  return users.length > 0 ? (
+    <View
+      style={{
+        flexDirection: "row",
+        gap: 6,
+        flexWrap: "wrap",
+        paddingBottom: 4,
+      }}
+    >
+      {users.slice(0, maxPrint).map((u, index) => (
+        <View
+          key={u.id}
+          style={{
+            borderWidth: 1,
+            borderColor: MyColors.border_white_005,
+            backgroundColor: MyColors.btn_1,
+            paddingVertical: 5,
+            paddingHorizontal: 12,
+            borderRadius: 50,
+          }}
+        >
+          <Styled_TEXT>
+            {index < maxPrint - 1 || users.length <= maxPrint
+              ? u.username
+              : `+${users.length - maxPrint}`}
+          </Styled_TEXT>
+        </View>
+      ))}
+    </View>
+  ) : null;
 }

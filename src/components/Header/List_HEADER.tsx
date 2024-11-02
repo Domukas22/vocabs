@@ -79,90 +79,108 @@ export default function List_HEADER({
   }, [search_REF, IS_searchOpen]);
 
   return (
-    <Animated.View style={[s.all_WRAP, animatedHeaderStyle]}>
-      <View style={s.listName_WRAP}>
-        <Animated.View style={animatedTitleStyle}>
-          <Styled_TEXT
-            type="list_title"
-            numberOfLines={1}
-            style={{ height: 34 }}
-          >
-            {list_NAME}
-          </Styled_TEXT>
-        </Animated.View>
-      </View>
-
-      {!IS_searchOpen && (
-        <View style={s.btn_WRAP}>
-          {GO_back && (
-            <Btn
-              onPress={GO_back}
-              iconLeft={<ICON_arrow direction="left" />}
-              style={{ flex: IS_searchBig ? 0 : 1 }}
-            />
-          )}
-          {search !== undefined && SET_search && IS_searchBig && (
-            <SearchBar
-              _ref={search_REF}
-              value={search}
-              SET_value={SET_search}
-            />
-          )}
-          {search !== undefined && SET_search && !IS_searchBig && (
-            <Btn
-              onPress={() => SET_searchOpen(true)}
-              iconLeft={<ICON_search />}
-              style={{ flex: IS_searchBig ? 0 : 1 }}
-            />
-          )}
-
-          {OPEN_displaySettings && (
-            <Btn
-              onPress={OPEN_displaySettings}
-              iconLeft={<ICON_displaySettings />}
-              style={{ flex: IS_searchBig ? 0 : 1 }}
-              topRightIconCount={activeFilter_COUNT}
-            />
-          )}
-
-          {OPEN_listSettings && (
-            <Btn
-              onPress={OPEN_listSettings}
-              iconLeft={<ICON_3dots />}
-              style={{ flex: IS_searchBig ? 0 : 1 }}
-            />
-          )}
-          {OPEN_create && (
-            <Btn
-              type="simple_primary_text"
-              onPress={OPEN_create}
-              iconLeft={<ICON_X color="primary" big />}
-              style={{ flex: IS_searchBig ? 0 : 1 }}
-            />
-          )}
-          {SAVE_list && (
-            <Btn
-              onPress={SAVE_list}
-              type="action"
-              iconLeft={<ICON_download />}
-              style={{ flex: IS_searchBig ? 0 : 1 }}
-            />
-          )}
+    <View
+      style={{
+        position: "relative",
+        width: "100%",
+        height: 62,
+        // borderWidth: 1,
+        // borderColor: "yellow",
+        zIndex: 50,
+      }}
+    >
+      <Animated.View style={[s.all_WRAP, animatedHeaderStyle]}>
+        <View style={s.listName_WRAP}>
+          <Animated.View style={animatedTitleStyle}>
+            <Styled_TEXT
+              type="list_title"
+              numberOfLines={1}
+              style={{ height: 34 }}
+            >
+              {list_NAME}
+            </Styled_TEXT>
+          </Animated.View>
         </View>
-      )}
-      {IS_searchOpen && !IS_searchBig && search !== undefined && SET_search && (
-        <View style={s.btn_WRAP}>
-          <SearchBar _ref={search_REF} value={search} SET_value={SET_search} />
-          <Btn
-            text="Cancel"
-            onPress={() => {
-              SET_searchOpen(false);
-              SET_search("");
-            }}
-          />
-        </View>
-      )}
-    </Animated.View>
+
+        {!IS_searchOpen && (
+          <View style={s.btn_WRAP}>
+            {GO_back && (
+              <Btn
+                onPress={GO_back}
+                iconLeft={<ICON_arrow direction="left" />}
+                style={{ flex: IS_searchBig ? 0 : 1 }}
+              />
+            )}
+            {search !== undefined && SET_search && IS_searchBig && (
+              <SearchBar
+                _ref={search_REF}
+                value={search}
+                SET_value={SET_search}
+              />
+            )}
+            {search !== undefined && SET_search && !IS_searchBig && (
+              <Btn
+                onPress={() => SET_searchOpen(true)}
+                iconLeft={<ICON_search />}
+                style={{ flex: IS_searchBig ? 0 : 1 }}
+              />
+            )}
+
+            {OPEN_displaySettings && (
+              <Btn
+                onPress={OPEN_displaySettings}
+                iconLeft={<ICON_displaySettings />}
+                style={{ flex: IS_searchBig ? 0 : 1 }}
+                topRightIconCount={activeFilter_COUNT}
+              />
+            )}
+
+            {OPEN_listSettings && (
+              <Btn
+                onPress={OPEN_listSettings}
+                iconLeft={<ICON_3dots />}
+                style={{ flex: IS_searchBig ? 0 : 1 }}
+              />
+            )}
+            {OPEN_create && (
+              <Btn
+                type="simple_primary_text"
+                onPress={OPEN_create}
+                iconLeft={<ICON_X color="primary" big />}
+                style={{ flex: IS_searchBig ? 0 : 1 }}
+              />
+            )}
+            {SAVE_list && (
+              <Btn
+                onPress={SAVE_list}
+                type="action"
+                iconLeft={<ICON_download />}
+                style={{ flex: IS_searchBig ? 0 : 1 }}
+              />
+            )}
+          </View>
+        )}
+        {IS_searchOpen &&
+          !IS_searchBig &&
+          search !== undefined &&
+          SET_search && (
+            <View style={s.btn_WRAP}>
+              <SearchBar
+                _ref={search_REF}
+                value={search}
+                SET_value={SET_search}
+              />
+              <Btn
+                text="Cancel"
+                onPress={() => {
+                  SET_searchOpen(false);
+                  SET_search("");
+                }}
+              />
+            </View>
+          )}
+      </Animated.View>
+    </View>
   );
 }
 

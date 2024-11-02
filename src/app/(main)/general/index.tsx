@@ -83,7 +83,7 @@ function _General_PAGE({
           <View style={{ gap: 16 }}>
             <View>
               <Styled_TEXT>
-                {vocabLimit - (totalUserVocab_COUNT ? totalUserVocab_COUNT : 0)}{" "}
+                {(z_user?.max_vocabs || 200) - (totalUserVocab_COUNT || 0)}{" "}
                 vocabs left until you reach the limit
               </Styled_TEXT>
               <Styled_TEXT type="label">{z_user?.email}</Styled_TEXT>
@@ -132,7 +132,7 @@ function _General_PAGE({
                   color: MyColors.text_white_06,
                 }}
               >
-                {vocabLimit}
+                {z_user?.max_vocabs || 200}
               </Styled_TEXT>
             </View>
             <View style={{ flexDirection: "row", gap: 8 }}>

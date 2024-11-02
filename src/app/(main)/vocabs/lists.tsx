@@ -43,7 +43,7 @@ import USE_myLists from "@/src/features/1_lists/hooks/USE_myLists";
 import USE_debounceSearch from "@/src/hooks/USE_debounceSearch/USE_debounceSearch";
 import USE_collectMyListLangs from "@/src/features/1_lists/hooks/USE_collectMyListLangs";
 import { sync } from "@/src/db/sync";
-import Margin_SECTION from "@/src/components/Margin_SECTION";
+
 import BottomAction_SECTION from "@/src/components/BottomAction_SECTION";
 import { Q } from "@nozbe/watermelondb";
 

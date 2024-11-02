@@ -47,16 +47,15 @@ export default function MyLists_FLATLIST({
   blurAndDisable,
 }: MyListsFlatlist_PROPS) {
   const { t } = useTranslation();
-  console.log(blurAndDisable);
+
   return (
     <Styled_FLASHLIST
-      _ref={_ref}
+      // _ref={_ref}
       data={lists || []}
       onScroll={onScroll}
       keyExtractor={(item) => item?.id}
       ListHeaderComponent={listHeader_EL}
       ListFooterComponent={listFooter_EL}
-      headerPadding
       extraData={blurAndDisable}
       renderItem={({ item }: { item: List_MODEL }) => (
         <SwipeableExample

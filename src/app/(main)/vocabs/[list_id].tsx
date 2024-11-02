@@ -53,7 +53,6 @@ import {
 import { MyColors } from "@/src/constants/MyColors";
 import { HEADER_MARGIN } from "@/src/constants/globalVars";
 import BottomAction_SECTION from "@/src/components/BottomAction_SECTION";
-import Margin_SECTION from "@/src/components/Margin_SECTION";
 
 function __SingleList_PAGE({
   selected_LIST = undefined,
@@ -126,7 +125,6 @@ function __SingleList_PAGE({
         OPEN_create={() => TOGGLE_modal("createVocab")}
         {...{ search, SET_search, activeFilter_COUNT }}
       />
-      {/* <Margin_SECTION /> */}
 
       <MyVocabs_FLATLIST
         {...{ vocabs }}
@@ -136,7 +134,9 @@ function __SingleList_PAGE({
             vocabResults_COUNT={totalFilteredVocab_COUNT || 0}
             list_NAME={selected_LIST?.name}
             IS_searching={IS_debouncing}
-            totalVocabs={totalListVocab_COUNT ? totalListVocab_COUNT : 0}
+            totalVocabs={
+              totalFilteredVocab_COUNT ? totalFilteredVocab_COUNT : 0
+            }
             {...{
               search,
               z_vocabDisplay_SETTINGS,
@@ -242,35 +242,38 @@ function __SingleList_PAGE({
 
 export default function SingleList_PAGE() {
   const { list_id } = useLocalSearchParams();
-  const [list, setList] = useState<List_MODEL | null>(null);
+  // const [list, setList] = useState<List_MODEL | null>(null);
 
   // Fetch the list asynchronously based on `list_id`
-  useEffect(() => {
-    const fetchList = async () => {
-      if (typeof list_id !== "string") {
-        return;
-      }
+  // useEffect(() => {
+  //   const fetchList = async () => {
+  //     if (typeof list_id !== "string") {
+  //       return;
+  //     }
 
-      const foundList = await Lists_DB.find(list_id);
-      setList(foundList);
-    };
+  //     const foundList = await Lists_DB.find(list_id);
+  //     setList(foundList);
+  //   };
 
-    fetchList();
-  }, [list_id]);
+  //   fetchList();
+  // }, [list_id]);
 
-  // Observe the selected list
-  const listObservable = USE_observeList(
-    typeof list_id === "string" ? list_id : ""
-  );
+  // // Observe the selected list
+  // const listObservable = USE_observeList(
+  //   typeof list_id === "string" ? list_id : ""
+  // );
 
   // Use withObservables to pass the observed list and computed total count to the page
   const enhance = withObservables(["selected_LIST"], ({ selected_LIST }) => ({
-    selected_LIST: list ? list : undefined,
-    totalListVocab_COUNT: list?.vocab_COUNT ? list?.vocab_COUNT : undefined,
+    // selected_LIST: list ? list : undefined,
+    selected_LIST: Lists_DB.findAndObserve(
+      typeof list_id === "string" ? list_id : ""
+    ),
+    // totalListVocab_COUNT: list?.vocab_COUNT ? list?.vocab_COUNT : undefined,
   }));
 
   const EnhancedPage = enhance(__SingleList_PAGE);
 
   // Render the enhanced page
-  return list ? <EnhancedPage selected_LIST={listObservable} /> : null;
+  return <EnhancedPage totalListVocab_COUNT={0} />;
 }

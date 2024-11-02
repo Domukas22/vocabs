@@ -110,6 +110,39 @@ export class List_MODEL extends Model {
   @text("collected_lang_ids") collected_lang_ids!: string;
   @text("default_lang_ids") default_lang_ids!: string;
 
+  @writer async RESET_allVocabsDifficulty() {
+    // Get all vocabs where list_id matches this list's ID
+    const vocabsToUpdate = await this.collections
+      .get("vocabs")
+      .query(Q.where("list_id", this.id))
+      .fetch();
+
+    // Prepare update for each vocab to set difficulty to 1
+    const updates = vocabsToUpdate.map((vocab) =>
+      vocab.prepareUpdate((v) => {
+        v.difficulty = 3;
+      })
+    );
+
+    // Execute all updates in a single batch
+    await this.batch(...updates);
+  }
+
+  // @writer async addComment(body, author) {
+  //   const newComment = await this.collections.get('comments').create(comment => {
+  //     comment.post.set(this)
+  //     comment.author.set(author)
+  //     comment.body = body
+  //   })
+  //   return newComment
+  // }
+
+  @writer async SUBMIT_forPublishing(val: boolean) {
+    await this.update((vocab) => {
+      vocab.is_submitted_for_publish = val;
+    });
+  }
+
   @readonly @date("created_at") createdAt!: number;
   @readonly @date("updated_at") updatedAt!: number;
   @readonly @date("deleted_at") deleted_at!: number;

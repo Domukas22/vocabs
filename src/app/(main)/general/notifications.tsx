@@ -29,12 +29,13 @@ import ExploreList_BTN from "@/src/features/1_lists/components/ExploreList_BTN";
 import ExploreListsBottom_SECTION from "@/src/features/1_lists/components/ExploreListsBottom_SECTION";
 import { Notifications_MODEL } from "@/src/db/watermelon_MODELS";
 import USE_updateNotification from "@/src/features/6_notifications/hooks/USE_updateNotification";
+import USE_zustand from "@/src/zustand";
 
 export default function Notifications_PAGE() {
   const { t } = useTranslation();
-  const { user } = USE_auth();
+  const { z_user } = USE_zustand();
   const { notifications, ARE_notificationsFetching, fetchNotifications_ERROR } =
-    USE_fetchNotifications(user?.id);
+    USE_fetchNotifications(z_user?.id);
 
   const {
     EDIT_notificationReadStatus,

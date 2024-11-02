@@ -24,7 +24,6 @@ import USE_getActiveFilterCount from "@/src/features/2_vocabs/components/Modal/D
 import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
 import { useRouter } from "expo-router";
 import List_HEADER from "@/src/components/Header/List_HEADER";
-import Margin_SECTION from "@/src/components/Margin_SECTION";
 
 export default function SharedLists_PAGE() {
   const { z_user } = USE_zustand();
@@ -69,7 +68,7 @@ export default function SharedLists_PAGE() {
         IS_searchBig={true}
         {...{ search, SET_search, activeFilter_COUNT }}
       />
-      <Margin_SECTION />
+
       <ExploreLists_FLATLIST
         lists={sharedLists}
         type="shared"

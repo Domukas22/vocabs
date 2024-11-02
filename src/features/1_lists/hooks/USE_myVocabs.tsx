@@ -25,6 +25,7 @@ export default function USE_myVocabs({
   const [fetchVocabs_ERROR, SET_error] = useState<string | null>(null);
   const [IS_loadingMore, SET_loadingMore] = useState(false);
   const [printed_IDS, SET_printedIds] = useState(new Set<string>());
+  const [initialFetch, SET_initialFetch] = useState(false);
 
   const HAS_reachedEnd = useMemo(
     () => vocabs.length >= totalFilteredVocab_COUNT,
@@ -74,6 +75,14 @@ export default function USE_myVocabs({
       SET_error("🔴 Unexpected error occurred. 🔴");
     } finally {
       SET_vocabsFetching(false);
+      if (!initialFetch) {
+        SET_initialFetch(true);
+        setTimeout(() => {
+          // this prevents the page from ficking at the beginning
+          // if you remove this, each time you navigate to a page which uses this hook, the flatlist with jumo down very quickly at the beginnig
+          // this has something to do with the flashlist component
+        }, 0);
+      }
     }
   };
 
@@ -137,5 +146,6 @@ export default function USE_myVocabs({
     LOAD_more,
     ADD_toDisplayed,
     REMOVE_fromDisplayed,
+    initialFetch,
   };
 }

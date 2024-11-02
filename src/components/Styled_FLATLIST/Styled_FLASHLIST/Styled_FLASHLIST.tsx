@@ -37,7 +37,7 @@ export default function Styled_FLASHLIST<T>({
           // </View>
         )}
         keyExtractor={keyExtractor}
-        estimatedItemSize={100} // Adjust based on the approximate size of your items
+        estimatedItemSize={100}
         contentContainerStyle={{
           padding,
           paddingBottom: 40,

@@ -30,7 +30,7 @@ import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
 import USE_getActiveFilterCount from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/utils/USE_getActiveFilterCount";
 import List_HEADER from "@/src/components/Header/List_HEADER";
 import { useRouter } from "expo-router";
-import Margin_SECTION from "@/src/components/Margin_SECTION";
+
 import BottomAction_SECTION from "@/src/components/BottomAction_SECTION";
 
 export default function AllPublicVocabs_PAGE() {
@@ -78,7 +78,7 @@ export default function AllPublicVocabs_PAGE() {
         IS_searchBig={true}
         {...{ search, SET_search, activeFilter_COUNT }}
       />
-      <Margin_SECTION />
+
       <ExploreVocabs_FLATLIST
         {...{ vocabs }}
         SAVE_vocab={(vocab: Vocab_MODEL) => {

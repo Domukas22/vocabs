@@ -32,12 +32,13 @@ import {
   Payments_MODEL,
 } from "@/src/db/watermelon_MODELS";
 import USE_fetchPayments from "@/src/features/7_payments/hooks/USE_fetchPayments";
+import USE_zustand from "@/src/zustand";
 
 export default function Payments_PAGE() {
   const { t } = useTranslation();
-  const { user } = USE_auth();
+  const { z_user } = USE_zustand();
   const { payments, ARE_paymentsFetching, fetchPayments_ERROR } =
-    USE_fetchPayments(user?.id);
+    USE_fetchPayments(z_user?.id);
 
   return (
     <Page_WRAP>
