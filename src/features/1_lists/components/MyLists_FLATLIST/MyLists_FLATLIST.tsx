@@ -2,16 +2,16 @@
 //
 //
 
-import Btn from "@/src/components/Btn/Btn";
+import Btn, { Btn_BLUR } from "@/src/components/Btn/Btn";
 import { ICON_X } from "@/src/components/icons/icons";
 import { MyList_BTN } from "@/src/features/1_lists/components/MyList_BTN/MyList_BTN";
-import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
+import Styled_FLASHLIST from "@/src/components/Styled_FLATLIST/Styled_FLASHLIST/Styled_FLASHLIST";
 
 import { useTranslation } from "react-i18next";
 import SwipeableExample from "@/src/components/SwipeableExample/SwipeableExample";
 
 import React from "react";
-import { FlatList } from "react-native";
+import { FlatList, View } from "react-native";
 import { List_MODEL } from "@/src/db/watermelon_MODELS";
 
 import { HEADER_MARGIN } from "@/src/constants/globalVars";
@@ -21,6 +21,7 @@ interface MyListsFlatlist_PROPS {
   _ref: React.RefObject<FlatList>;
   lists: List_MODEL[] | undefined;
   SHOW_bottomBtn: boolean;
+  blurAndDisable: boolean;
   highlighted_ID?: string | undefined;
   listHeader_EL: React.ReactNode;
   listFooter_EL: React.ReactNode;
@@ -43,26 +44,34 @@ export default function MyLists_FLATLIST({
   onScroll,
   listHeader_EL,
   listFooter_EL,
+  blurAndDisable,
 }: MyListsFlatlist_PROPS) {
   const { t } = useTranslation();
-
+  console.log(blurAndDisable);
   return (
-    <Styled_FLATLIST
+    <Styled_FLASHLIST
       _ref={_ref}
       data={lists || []}
       onScroll={onScroll}
       keyExtractor={(item) => item?.id}
       ListHeaderComponent={listHeader_EL}
       ListFooterComponent={listFooter_EL}
+      headerPadding
+      extraData={blurAndDisable}
       renderItem={({ item }: { item: List_MODEL }) => (
         <SwipeableExample
           leftBtn_ACTION={() => {
-            PREPARE_listRename(item);
+            if (!blurAndDisable) {
+              PREPARE_listRename(item);
+            }
           }}
-          rightBtn_ACTION={() => PREPADE_deleteList(item)}
+          rightBtn_ACTION={() => {
+            if (!blurAndDisable) PREPADE_deleteList(item);
+          }}
         >
           {item instanceof List_MODEL && (
             <MyList_BTN
+              blurAndDisable={blurAndDisable}
               list={item}
               onPress={() => {
                 if (typeof item?.id === "string") {

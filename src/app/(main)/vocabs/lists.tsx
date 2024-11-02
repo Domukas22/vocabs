@@ -28,7 +28,7 @@ import React from "react";
 import { useToast } from "react-native-toast-notifications";
 import DeleteList_MODAL from "@/src/features/1_lists/components/DeleteList_MODAL";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
-import { FlatList } from "react-native";
+import { FlatList, Keyboard } from "react-native";
 import { Lists_DB, Users_DB } from "@/src/db";
 import GET_userId from "@/src/utils/GET_userId";
 import Btn from "@/src/components/Btn/Btn";
@@ -62,7 +62,8 @@ export default function MyLists_PAGE() {
     undefined
   );
 
-  const { search, debouncedSearch, SET_search } = USE_debounceSearch();
+  const { search, debouncedSearch, IS_debouncing, SET_search } =
+    USE_debounceSearch();
   const { showTitle, handleScroll } = USE_showListHeaderTitle();
   const { z_listDisplay_SETTINGS, z_SET_listDisplaySettings } = USE_zustand();
 
@@ -100,15 +101,17 @@ export default function MyLists_PAGE() {
     paginateBy: 10,
   });
 
-  const y = async () => {
-    const existing_LISTS = await Lists_DB.query(
-      Q.where("user_id", z_user?.id || "")
-    ).fetch();
-
-    console.log(existing_LISTS?.length);
-  };
-
   const collectedLang_IDS = USE_collectMyListLangs(z_user);
+
+  const [printed_LISTS, SET_printedLists] = useState<List_MODEL[]>([]);
+
+  useEffect(() => {
+    if (!ARE_listsFetching && !IS_loadingMore) {
+      SET_printedLists(lists);
+      return;
+    }
+    SET_printedLists(printed_LISTS);
+  }, [search, IS_debouncing, ARE_listsFetching, IS_loadingMore, lists]);
 
   return (
     <Page_WRAP>
@@ -120,13 +123,13 @@ export default function MyLists_PAGE() {
         OPEN_create={() => TOGGLE_modal("create")}
         {...{ search, SET_search, activeFilter_COUNT }}
       />
-      <Margin_SECTION />
 
       {/* <Btn text="Existing lists" onPress={() => sync(true)} /> */}
       <MyLists_FLATLIST
-        lists={lists}
+        lists={printed_LISTS}
         SELECT_list={(id: string) => {
           router.push(`/(main)/vocabs/${id}`);
+          Keyboard.dismiss();
         }}
         SHOW_bottomBtn={search === ""}
         TOGGLE_createListModal={() => TOGGLE_modal("create")}
@@ -138,6 +141,7 @@ export default function MyLists_PAGE() {
         listHeader_EL={
           <ListsFlatlistHeader_SECTION
             list_NAME="My Lists"
+            IS_searching={IS_debouncing || ARE_listsFetching}
             totalLists={totalFilteredLists_COUNT}
             {...{ search, z_listDisplay_SETTINGS, z_SET_listDisplaySettings }}
           />
@@ -148,6 +152,7 @@ export default function MyLists_PAGE() {
               search,
               LOAD_more,
               IS_loadingMore,
+
               activeFilter_COUNT,
               totalFilteredResults_COUNT: totalFilteredLists_COUNT,
               HAS_reachedEnd,

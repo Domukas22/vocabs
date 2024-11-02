@@ -22,10 +22,11 @@ export default function USE_fetchUsers() {
 
       try {
         // Create a base query for fetching users
-        let query = supabase
-          .from("users")
-          .select("id, username")
-          .neq("id", myUser_ID || "");
+        let query = supabase.from("users").select("id, username");
+
+        if (myUser_ID) {
+          query = query.neq("id", myUser_ID);
+        }
 
         // Add search filter if search term is provided
         if (search) {

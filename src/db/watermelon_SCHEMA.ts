@@ -43,15 +43,15 @@ export default appSchema({
       ],
     }),
 
-    tableSchema({
-      name: "list_access",
-      columns: [
-        { name: "owner_id", type: "string", isIndexed: true },
-        { name: "participant_id", type: "string", isIndexed: true },
-        { name: "list_id", type: "string", isIndexed: true },
-        { name: "created_at", type: "number" },
-      ],
-    }),
+    // tableSchema({
+    //   name: "list_access",
+    //   columns: [
+    //     { name: "owner_id", type: "string", isIndexed: true },
+    //     { name: "participant_id", type: "string", isIndexed: true },
+    //     { name: "list_id", type: "string", isIndexed: true },
+    //     { name: "created_at", type: "number" },
+    //   ],
+    // }),
 
     tableSchema({
       name: "vocabs",

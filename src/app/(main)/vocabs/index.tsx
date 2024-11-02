@@ -35,10 +35,10 @@ import Header from "@/src/components/Header/Header";
 import { withObservables } from "@nozbe/watermelondb/react";
 import { Lists_DB, Users_DB, Vocabs_DB } from "@/src/db";
 import { Q } from "@nozbe/watermelondb";
-import Btn from "@/src/components/Btn/Btn";
+import Btn, { ShimmerEffect } from "@/src/components/Btn/Btn";
 import GET_userId from "@/src/utils/GET_userId";
 import USE_zustand from "@/src/zustand";
-import { checkUnsyncedChanges, sync } from "@/src/db/sync";
+import { checkUnsyncedChanges, PUSH_changes, sync } from "@/src/db/sync";
 
 function _MyLists_PAGE({
   totalUserList_COUNT = 0,
@@ -64,7 +64,14 @@ function _MyLists_PAGE({
   return (
     <Page_WRAP>
       <Header title={`My vocabs`} big={true} />
-      <View style={{ gap: 8, padding: 12 }}></View>
+
+      <View style={{ gap: 8, padding: 12 }}>
+        <Btn
+          text="Push changes"
+          onPress={PUSH_changes}
+          // style={{ width: 200 }}
+        />
+      </View>
 
       <View style={{ padding: 12, gap: 12 }}>
         <ExplorePage_BTN

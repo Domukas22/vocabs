@@ -1,5 +1,5 @@
-import React from "react";
-import { View, StyleSheet } from "react-native";
+import React, { useMemo } from "react";
+import { View, StyleSheet, ActivityIndicator } from "react-native";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import Btn from "@/src/components/Btn/Btn";
 import {
@@ -14,9 +14,11 @@ import {
   z_setVocabDisplaySettings_PROPS,
   z_vocabDisplaySettings_PROPS,
 } from "@/src/zustand";
+import Flashlist_LABEL from "@/src/components/Flashlist_LABEL";
 
 type ListsFlatlistHeader_SECTIONProps = {
   search: string;
+  IS_searching: boolean;
   totalLists: number | null;
   list_NAME: string | undefined;
   z_listDisplay_SETTINGS: z_listDisplaySettings_PROPS;
@@ -24,6 +26,7 @@ type ListsFlatlistHeader_SECTIONProps = {
 };
 export default function ListsFlatlistHeader_SECTION({
   search,
+  IS_searching = false,
   list_NAME = "INSERT LIST NAME",
   totalLists = 0,
   z_listDisplay_SETTINGS,
@@ -42,18 +45,11 @@ export default function ListsFlatlistHeader_SECTION({
   return (
     <View style={styles.headerContainer}>
       <Styled_TEXT type="text_22_bold">{list_NAME}</Styled_TEXT>
-      <Styled_TEXT type="label">
-        {search !== "" ? (
-          <>
-            Search results for
-            <Styled_TEXT type="text_18_medium"> '{search}' </Styled_TEXT>
-          </>
-        ) : appliedFiltersCount > 0 ? (
-          `${appliedFiltersCount} filters applied`
-        ) : (
-          `Browse through ${totalLists ? totalLists : 0} public lists`
-        )}
-      </Styled_TEXT>
+      <Flashlist_LABEL
+        {...{ IS_searching, search, appliedFiltersCount }}
+        totalResult_COUNT={totalLists || 0}
+        target="lists"
+      />
 
       {appliedFiltersCount > 0 && (
         <View style={styles.filtersContainer}>

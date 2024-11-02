@@ -3,7 +3,7 @@
 //
 
 import Flatlist_HEADER from "@/src/components/Flatlist_HEADER";
-import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
+import Styled_FLASHLIST from "@/src/components/Styled_FLATLIST/Styled_FLASHLIST/Styled_FLASHLIST";
 import { List_MODEL } from "@/src/db/watermelon_MODELS";
 import { useRouter } from "expo-router";
 import ExploreList_BTN from "./ExploreList_BTN";
@@ -32,7 +32,7 @@ export default function ExploreLists_FLATLIST({
 }) {
   const router = useRouter();
   return (
-    <Styled_FLATLIST
+    <Styled_FLASHLIST
       data={lists}
       {...{ onScroll }}
       ListHeaderComponent={listHeader_EL}

@@ -1,19 +1,22 @@
 import React from "react";
 import { View } from "react-native";
 import { FlashList, FlashListProps } from "@shopify/flash-list";
+import { HEADER_MARGIN } from "@/src/constants/globalVars";
 
 interface StyledFlatListProps<T> extends FlashListProps<T> {
   padding?: number; // Optional padding
   gap?: number; // Optional gap between items
   _ref?: React.RefObject<FlashList<T>>;
+  headerPadding?: boolean;
 }
 
-export default function Styled_FLATLIST<T>({
+export default function Styled_FLASHLIST<T>({
   data,
   renderItem,
   keyExtractor,
   padding = 12,
   gap = 12,
+  headerPadding = false,
   _ref,
   onScroll,
   ...rest
@@ -38,6 +41,7 @@ export default function Styled_FLATLIST<T>({
         contentContainerStyle={{
           padding,
           paddingBottom: 40,
+          paddingTop: headerPadding ? HEADER_MARGIN || 80 : 0,
         }}
         ListFooterComponentStyle={{ marginBottom: 50 }}
         ListFooterComponent={<View />} // For bottom padding

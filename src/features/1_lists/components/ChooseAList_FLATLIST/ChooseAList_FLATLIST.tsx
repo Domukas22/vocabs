@@ -5,7 +5,7 @@
 import Btn from "@/src/components/Btn/Btn";
 import { ICON_checkMark, ICON_X } from "@/src/components/icons/icons";
 import { MyList_BTN } from "@/src/features/1_lists/components/MyList_BTN/MyList_BTN";
-import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
+import Styled_FLASHLIST from "@/src/components/Styled_FLATLIST/Styled_FLASHLIST/Styled_FLASHLIST";
 
 import { useTranslation } from "react-i18next";
 import SwipeableExample from "@/src/components/SwipeableExample/SwipeableExample";
@@ -36,7 +36,7 @@ function _ChooseAList_FLATLIST({
   const { t } = useTranslation();
 
   return (
-    <Styled_FLATLIST
+    <Styled_FLASHLIST
       style={{ flex: 1 }}
       gap={8}
       data={lists}

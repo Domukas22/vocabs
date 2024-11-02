@@ -11,6 +11,7 @@ import { useMemo } from "react";
 export default function BottomAction_SECTION({
   type = "list",
   search = "",
+  IS_debouncing = false,
   IS_loadingMore = false,
   HAS_reachedEnd = false,
   activeFilter_COUNT = 0,
@@ -49,22 +50,28 @@ export default function BottomAction_SECTION({
         </View>
       )}
       <View style={{ gap: 8 }}>
-        {search && activeFilter_COUNT === 0 && HAS_reachedEnd && (
-          <Btn
-            text={`Clear search '${search}'`}
-            onPress={RESET_search}
-            type="delete"
-          />
-        )}
-        {activeFilter_COUNT > 0 && !search && HAS_reachedEnd && (
-          <Btn
-            text={`Clear ${activeFilter_COUNT} active filters`}
-            onPress={RESET_filters}
-            type="delete"
-          />
-        )}
+        {search &&
+          activeFilter_COUNT === 0 &&
+          HAS_reachedEnd &&
+          !IS_debouncing && (
+            <Btn
+              text={`Clear search '${search}'`}
+              onPress={RESET_search}
+              type="delete"
+            />
+          )}
+        {activeFilter_COUNT > 0 &&
+          !search &&
+          HAS_reachedEnd &&
+          !IS_debouncing && (
+            <Btn
+              text={`Clear ${activeFilter_COUNT} active filters`}
+              onPress={RESET_filters}
+              type="delete"
+            />
+          )}
 
-        {activeFilter_COUNT > 0 && search !== "" && (
+        {activeFilter_COUNT > 0 && search !== "" && !IS_debouncing && (
           <Btn
             text="Clear search and filters"
             onPress={() => {
@@ -74,20 +81,22 @@ export default function BottomAction_SECTION({
             type="delete"
           />
         )}
-        {!HAS_reachedEnd && totalFilteredResults_COUNT > 0 && (
-          <Btn
-            text={!IS_loadingMore ? "Load more" : ""}
-            iconLeft={
-              IS_loadingMore ? <ActivityIndicator color="white" /> : null
-            }
-            onPress={async () => {
-              if (!IS_loadingMore) {
-                await LOAD_more();
+        {!HAS_reachedEnd &&
+          totalFilteredResults_COUNT > 0 &&
+          !IS_debouncing && (
+            <Btn
+              text={!IS_loadingMore ? "Load more" : ""}
+              iconLeft={
+                IS_loadingMore ? <ActivityIndicator color="white" /> : null
               }
-            }}
-            type="seethrough"
-          />
-        )}
+              onPress={async () => {
+                if (!IS_loadingMore) {
+                  await LOAD_more();
+                }
+              }}
+              type="seethrough"
+            />
+          )}
       </View>
     </View>
   );

@@ -1,5 +1,5 @@
-import React from "react";
-import { View, StyleSheet } from "react-native";
+import React, { useMemo } from "react";
+import { View, StyleSheet, ActivityIndicator } from "react-native";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import Btn from "@/src/components/Btn/Btn";
 import {
@@ -12,9 +12,11 @@ import {
   z_setVocabDisplaySettings_PROPS,
   z_vocabDisplaySettings_PROPS,
 } from "@/src/zustand";
+import Flashlist_LABEL from "@/src/components/Flashlist_LABEL";
 
 type VocabsFlatlistHeader_SECTIONProps = {
   search: string;
+  IS_searching: boolean;
   vocabResults_COUNT: number | null;
   totalVocabs: number | null;
   list_NAME: string | undefined;
@@ -24,6 +26,7 @@ type VocabsFlatlistHeader_SECTIONProps = {
 
 export default function VocabsFlatlistHeader_SECTION({
   search,
+  IS_searching = false,
   list_NAME = "INSERT LIST NAME",
   vocabResults_COUNT = 0,
   totalVocabs = 0,
@@ -32,7 +35,7 @@ export default function VocabsFlatlistHeader_SECTION({
 }: VocabsFlatlistHeader_SECTIONProps) {
   const difficultyFilters = z_vocabDisplay_SETTINGS.difficultyFilters || [];
   const langFilters = z_vocabDisplay_SETTINGS.langFilters || [];
-
+  console.log(IS_searching);
   const handleRemoveDifficultyFilter = (diff: number) => {
     z_SET_vocabDisplaySettings({
       difficultyFilters: difficultyFilters.filter((d) => d !== diff),
@@ -47,23 +50,55 @@ export default function VocabsFlatlistHeader_SECTION({
 
   const appliedFiltersCount = difficultyFilters.length + langFilters.length;
 
+  const label = useMemo(
+    () =>
+      IS_searching
+        ? "searching"
+        : search !== ""
+        ? "search_results"
+        : appliedFiltersCount > 0
+        ? "filters_applied"
+        : "default",
+    [IS_searching, search, appliedFiltersCount]
+  );
+  const GET_label = () => {
+    let res;
+    switch (label) {
+      case "searching":
+        res = (
+          <>
+            <ActivityIndicator color="gray" /> Searching...
+          </>
+        );
+        break;
+      case "search_results":
+        res = (
+          <>
+            {vocabResults_COUNT} Search results for
+            <Styled_TEXT type="text_18_medium"> '{search}' </Styled_TEXT>
+          </>
+        );
+        break;
+      case "filters_applied":
+        res = `${vocabResults_COUNT} results, ${appliedFiltersCount} filters applied`;
+        break;
+      default:
+        res = `Browse through ${totalVocabs ? totalVocabs : 0} vocabs`;
+    }
+
+    return res;
+  };
+
   return (
     <View style={styles.headerContainer}>
       <View>
         <Styled_TEXT type="text_20_bold">{list_NAME}</Styled_TEXT>
 
-        <Styled_TEXT type="label">
-          {search !== "" ? (
-            <>
-              {vocabResults_COUNT} Search results for
-              <Styled_TEXT type="text_18_medium"> '{search}' </Styled_TEXT>
-            </>
-          ) : appliedFiltersCount > 0 ? (
-            `${vocabResults_COUNT} results, ${appliedFiltersCount} filters applied`
-          ) : (
-            `Browse through ${totalVocabs ? totalVocabs : 0} vocabs`
-          )}
-        </Styled_TEXT>
+        <Flashlist_LABEL
+          {...{ IS_searching, search, appliedFiltersCount }}
+          totalResult_COUNT={totalVocabs || 0}
+          target="vocabs"
+        />
       </View>
 
       {appliedFiltersCount > 0 && (

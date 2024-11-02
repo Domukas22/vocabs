@@ -57,11 +57,49 @@ export async function sync(
           changes,
         });
 
-        console.log(changes?.lists);
-
         if (error && error?.message) {
           console.error("🔴 Push error: 🔴", error?.message);
         } else {
+        }
+      },
+      migrationsEnabledAtVersion: 1,
+      sendCreatedAsUpdated: true,
+    });
+  } catch (error) {
+    console.error("🔴 Sync error: 🔴", error);
+  } finally {
+    // Reset the flag after sync operation finishes
+    isSyncing = false;
+  }
+}
+
+export async function PUSH_changes() {
+  if (isSyncing) return;
+  isSyncing = true;
+
+  try {
+    // TODO: when making updates, create a fucntion PUSH_updates, which simply pushes the created/update/deleted things, without having to pull anything
+    await synchronize({
+      database: db,
+      pullChanges: async () => {
+        return {
+          changes: {
+            lists: { updated: [], created: [], deleted: [] },
+            users: { updated: [], created: [], deleted: [] },
+            vocabs: { updated: [], created: [], deleted: [] },
+            notifications: { updated: [], created: [], deleted: [] },
+            payments: { updated: [], created: [], deleted: [] },
+            languages: { updated: [], created: [], deleted: [] },
+          },
+          timestamp: Date.now(),
+        };
+      },
+
+      pushChanges: async ({ changes }) => {
+        const { error } = await supabase.rpc("push_all", { changes });
+
+        if (error) {
+          console.error("🔴 Push error: 🔴", error?.message);
         }
       },
       migrationsEnabledAtVersion: 1,

@@ -35,7 +35,7 @@ const s = StyleSheet.create({
   view: {
     maxWidth: 700,
     width: "100%",
-
+    // minHeight: "100%",
     flex: 1,
   },
 });

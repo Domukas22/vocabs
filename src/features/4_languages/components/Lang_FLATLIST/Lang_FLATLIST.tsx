@@ -1,6 +1,6 @@
 import Btn from "@/src/components/Btn/Btn";
 import { ICON_flag, ICON_X } from "@/src/components/icons/icons";
-import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
+import Styled_FLASHLIST from "@/src/components/Styled_FLATLIST/Styled_FLASHLIST/Styled_FLASHLIST";
 import { Language_MODEL } from "@/src/db/watermelon_MODELS";
 import React, { useEffect, useMemo, useState } from "react";
 import { FlatList, View } from "react-native";
@@ -32,7 +32,7 @@ export default function Lang_FLATLIST({
   }, [search]);
 
   return (
-    <Styled_FLATLIST
+    <Styled_FLASHLIST
       gap={8}
       data={
         view === "selected"

@@ -31,6 +31,8 @@ const s = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     gap: 6,
+    position: "relative",
+    // overflow: "hidden",
   },
   btnTiny: {
     paddingVertical: 4,

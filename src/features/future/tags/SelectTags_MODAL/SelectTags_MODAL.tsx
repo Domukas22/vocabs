@@ -27,7 +27,7 @@ import languages from "@/src/constants/languages";
 
 import Block from "@/src/components/Block/Block";
 
-import Styled_FLATLIST from "@/src/components/Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
+import Styled_FLASHLIST from "@/src/components/Styled_FLATLIST/Styled_FLASHLIST/Styled_FLASHLIST";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
 import Big_MODAL from "@/src/components/Modals/Big_MODAL/Big_MODAL";
@@ -151,7 +151,7 @@ export default function SelectTags_MODAL({
           </View>
         </ScrollView> */}
 
-        <Styled_FLATLIST
+        <Styled_FLASHLIST
           gap={8}
           data={searched_TAGS}
           keyboardShouldPersistTaps="always"

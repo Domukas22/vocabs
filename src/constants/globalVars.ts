@@ -14,7 +14,7 @@ export const maxVocabTranslations = 5;
 export const MAX_DESCRIPTION_LENGTH = 200;
 export const MAX_TRANSLATION_LENGTH = 200;
 
-export const HEADER_MARGIN = 68;
+export const HEADER_MARGIN = 80;
 
 const pricing = {
   offer1: {

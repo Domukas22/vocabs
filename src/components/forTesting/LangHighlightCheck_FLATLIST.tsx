@@ -4,7 +4,7 @@ import MultiSlider from "@ptomasroos/react-native-multi-slider";
 
 import Highlighted_TEXT from "../Highlighted_TEXT/Highlighted_TEXT";
 import { ICON_flag } from "../icons/icons";
-import Styled_FLATLIST from "../Styled_FLATLIST/Styled_FLATLIST/Styled_FLATLIST";
+import Styled_FLASHLIST from "../Styled_FLATLIST/Styled_FLASHLIST/Styled_FLASHLIST";
 import { Styled_TEXT } from "../Styled_TEXT/Styled_TEXT";
 
 import { USE_searchedLangs } from "@/src/features/4_languages/hooks/USE_searchedLangs/USE_searchedLangs";
@@ -34,7 +34,7 @@ export default function LangHighlightCheck_FLATLIST() {
       <Subnav>
         <SearchBar value={search} SET_value={SEARCH_langs} />
       </Subnav>
-      <Styled_FLATLIST
+      <Styled_FLASHLIST
         data={searched_LANGS || []}
         renderItem={({ item, index }) => (
           <HighlightItem

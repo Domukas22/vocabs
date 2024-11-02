@@ -26,6 +26,7 @@ function _MyList_BTN({
   list,
   onPress,
   highlighted,
+  blurAndDisable = false,
 }: {
   diff_1_count: number;
   diff_2_count: number;
@@ -34,6 +35,7 @@ function _MyList_BTN({
   list: List_MODEL;
   onPress: () => void;
   highlighted: boolean;
+  blurAndDisable: boolean;
 }) {
   const { t } = useTranslation();
   const IS_submitted = useMemo(
@@ -46,7 +48,7 @@ function _MyList_BTN({
   );
 
   return (
-    <Transition_BTN {...{ onPress, highlighted }}>
+    <Transition_BTN {...{ onPress, highlighted, blurAndDisable }}>
       <ListBtn_TOP
         name={list?.name}
         description={list?.description}
@@ -54,9 +56,6 @@ function _MyList_BTN({
         IS_submitted={IS_submitted && !IS_accepted}
         {...{ vocab_COUNT }}
       >
-        <Styled_TEXT type="label_small" style={{ color: MyColors.text_red }}>
-          {list?.id}
-        </Styled_TEXT>
         <Styled_TEXT type="list_title">{list?.name}</Styled_TEXT>
 
         {list?.type === "shared" && (

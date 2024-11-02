@@ -68,7 +68,8 @@ function __SingleList_PAGE({
 
   const { z_user, z_vocabDisplay_SETTINGS, z_SET_vocabDisplaySettings } =
     USE_zustand();
-  const { search, debouncedSearch, SET_search } = USE_debounceSearch();
+  const { search, debouncedSearch, IS_debouncing, SET_search } =
+    USE_debounceSearch();
   const { showTitle, handleScroll } = USE_showListHeaderTitle();
   const activeFilter_COUNT = USE_getActiveFilterCount(z_vocabDisplay_SETTINGS);
   const { highlighted_ID, highlight: HIGHLIGHT_vocab } = USE_highlighedId();
@@ -125,7 +126,7 @@ function __SingleList_PAGE({
         OPEN_create={() => TOGGLE_modal("createVocab")}
         {...{ search, SET_search, activeFilter_COUNT }}
       />
-      <Margin_SECTION />
+      {/* <Margin_SECTION /> */}
 
       <MyVocabs_FLATLIST
         {...{ vocabs }}
@@ -134,6 +135,7 @@ function __SingleList_PAGE({
           <VocabsFlatlistHeader_SECTION
             vocabResults_COUNT={totalFilteredVocab_COUNT || 0}
             list_NAME={selected_LIST?.name}
+            IS_searching={IS_debouncing}
             totalVocabs={totalListVocab_COUNT ? totalListVocab_COUNT : 0}
             {...{
               search,
@@ -142,6 +144,7 @@ function __SingleList_PAGE({
             }}
           />
         }
+        IS_searching={IS_debouncing || ARE_vocabsFetching}
         listFooter_EL={
           <BottomAction_SECTION
             {...{

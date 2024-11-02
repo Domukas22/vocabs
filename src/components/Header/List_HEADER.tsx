@@ -85,7 +85,7 @@ export default function List_HEADER({
           <Styled_TEXT
             type="list_title"
             numberOfLines={1}
-            style={{ height: 34 }} // Fixed height for the title
+            style={{ height: 34 }}
           >
             {list_NAME}
           </Styled_TEXT>
@@ -169,6 +169,7 @@ export default function List_HEADER({
 const s = StyleSheet.create({
   all_WRAP: {
     paddingHorizontal: 12,
+    // height: 62,
     minHeight: 62,
     paddingTop: 12,
     paddingBottom: 8,
