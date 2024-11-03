@@ -72,7 +72,10 @@ function __SingleList_PAGE({
   const { showTitle, handleScroll } = USE_showListHeaderTitle();
   const activeFilter_COUNT = USE_getActiveFilterCount(z_vocabDisplay_SETTINGS);
   const { highlighted_ID, highlight: HIGHLIGHT_vocab } = USE_highlighedId();
-  const [delete_ID, SET_deleteId] = useState("");
+
+  const [targetDelete_VOCAB, SET_targetDeleteVocab] = useState<
+    Vocab_MODEL | undefined
+  >();
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
     { name: "displaySettings" },
@@ -165,8 +168,8 @@ function __SingleList_PAGE({
           />
         }
         TOGGLE_createVocabModal={() => TOGGLE_modal("createVocab")}
-        PREPARE_vocabDelete={(id: string) => {
-          SET_deleteId(id);
+        PREPARE_vocabDelete={(vocab: Vocab_MODEL) => {
+          SET_targetDeleteVocab(vocab);
           TOGGLE_modal("delete");
         }}
         {...{
@@ -221,18 +224,15 @@ function __SingleList_PAGE({
       />
 
       <DeleteVocab_MODAL
-        user={z_user}
         IS_open={modal_STATES.delete}
-        is_public={false}
-        vocab_id={delete_ID || ""}
-        list_id={selected_LIST?.id}
+        vocab={targetDelete_VOCAB}
         CLOSE_modal={() => TOGGLE_modal("delete")}
         onSuccess={() => {
           toast.show(t("notifications.vocabDeleted"), {
             type: "green",
             duration: 5000,
           });
-          REMOVE_fromDisplayed(delete_ID);
+          REMOVE_fromDisplayed(targetDelete_VOCAB?.id || "");
           TOGGLE_modal("delete");
         }}
       />

@@ -41,7 +41,7 @@ export default function MyVocabs_FLATLIST({
     vocab?: Vocab_MODEL;
   }) => void;
   TOGGLE_createVocabModal: () => void;
-  PREPARE_vocabDelete?: (id: string) => void;
+  PREPARE_vocabDelete?: (vocab: Vocab_MODEL) => void;
   onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
 }) {
   return (
@@ -57,7 +57,7 @@ export default function MyVocabs_FLATLIST({
         return (
           <SwipeableExample
             rightBtn_ACTION={() => {
-              if (PREPARE_vocabDelete) PREPARE_vocabDelete(item.id);
+              if (PREPARE_vocabDelete) PREPARE_vocabDelete(item);
             }}
           >
             <MyVocab

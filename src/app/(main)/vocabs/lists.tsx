@@ -200,9 +200,8 @@ export default function MyLists_PAGE() {
         }}
       />
       <DeleteList_MODAL
-        user_id={z_user?.id}
         IS_open={modal_STATES.delete}
-        list_id={target_LIST?.id}
+        list={target_LIST}
         CLOSE_modal={() => TOGGLE_modal("delete")}
         onSuccess={() => {
           REMOVE_fromDisplayed(target_LIST?.id || "");

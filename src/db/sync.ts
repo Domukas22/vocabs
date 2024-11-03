@@ -20,11 +20,10 @@ export async function sync(
   isSyncing = true;
 
   try {
-    // TODO: when making updates, create a fucntion PUSH_updates, which simply pushes the created/update/deleted things, without having to pull anything
     await synchronize({
       database: db,
       pullChanges: async ({ lastPulledAt, schemaVersion, migration }) => {
-        const { data, error: pull_ERROR } = await supabase.rpc("pull_2", {
+        const { data, error: pull_ERROR } = await supabase.rpc("pull", {
           schema_version: schemaVersion,
           migration,
           last_pulled_at: lastPulledAt,
@@ -97,6 +96,8 @@ export async function PUSH_changes() {
 
       pushChanges: async ({ changes }) => {
         const { error } = await supabase.rpc("push_all", { changes });
+
+        console.log(changes);
 
         if (error) {
           console.error("🔴 Push error: 🔴", error?.message);

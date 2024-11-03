@@ -51,7 +51,9 @@ export default function AllVocabs_PAGE() {
   const { showTitle, handleScroll } = USE_showListHeaderTitle();
   const activeFilter_COUNT = USE_getActiveFilterCount(z_vocabDisplay_SETTINGS);
   const { highlighted_ID, highlight: HIGHLIGHT_vocab } = USE_highlighedId();
-  const [delete_ID, SET_deleteId] = useState("");
+  const [targetDelete_VOCAB, SET_targetDeleteVocab] = useState<
+    Vocab_MODEL | undefined
+  >();
 
   const totalListVocab_COUNT = USE_totalUserVocabs(z_user);
 
@@ -145,8 +147,8 @@ export default function AllVocabs_PAGE() {
           />
         }
         TOGGLE_createVocabModal={() => TOGGLE_modal("createVocab")}
-        PREPARE_vocabDelete={(id: string) => {
-          SET_deleteId(id);
+        PREPARE_vocabDelete={(vocab: Vocab_MODEL) => {
+          SET_targetDeleteVocab(vocab);
           TOGGLE_modal("delete");
         }}
         {...{
@@ -193,14 +195,14 @@ export default function AllVocabs_PAGE() {
 
       <DeleteVocab_MODAL
         IS_open={modal_STATES.delete}
-        vocab_id={delete_ID || ""}
+        vocab={targetDelete_VOCAB}
         CLOSE_modal={() => TOGGLE_modal("delete")}
         onSuccess={() => {
           toast.show(t("notifications.vocabDeleted"), {
             type: "green",
             duration: 5000,
           });
-          REMOVE_fromDisplayed(delete_ID);
+          REMOVE_fromDisplayed(targetDelete_VOCAB?.id || "");
           TOGGLE_modal("delete");
         }}
       />

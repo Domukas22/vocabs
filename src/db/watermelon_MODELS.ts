@@ -64,7 +64,7 @@ export class User_MODEL extends Model {
 
   @readonly @date("created_at") createdAt!: number;
   @readonly @date("updated_at") updatedAt!: number;
-  @readonly @date("deleted_at") deleted_at!: number;
+  @text("deleted_at") deleted_at!: string;
 
   @lazy totalList_COUNT = this.lists
     .extend(Q.where("deleted_at", Q.eq(null)))
@@ -128,14 +128,23 @@ export class List_MODEL extends Model {
     await this.batch(...updates);
   }
 
-  // @writer async addComment(body, author) {
-  //   const newComment = await this.collections.get('comments').create(comment => {
-  //     comment.post.set(this)
-  //     comment.author.set(author)
-  //     comment.body = body
-  //   })
-  //   return newComment
-  // }
+  @writer async DELETE_list() {
+    const vocabsToSoftDelete = await this.collections
+      .get("vocabs")
+      .query(Q.where("list_id", this.id))
+      .fetch();
+
+    const updates = vocabsToSoftDelete.map((vocab) =>
+      vocab.prepareUpdate((v) => {
+        v.deleted_at = new Date().toISOString();
+      })
+    );
+
+    // Execute all updates in a single batch
+    await this.batch(...updates);
+
+    await this.markAsDeleted();
+  }
 
   @writer async SUBMIT_forPublishing(val: boolean) {
     await this.update((vocab) => {
@@ -145,7 +154,7 @@ export class List_MODEL extends Model {
 
   @readonly @date("created_at") createdAt!: number;
   @readonly @date("updated_at") updatedAt!: number;
-  @readonly @date("deleted_at") deleted_at!: number;
+  @text("deleted_at") deleted_at!: string;
 
   @lazy diff_1 = this.vocabs.extend(Q.where("difficulty", 1)).observeCount();
   @lazy diff_2 = this.vocabs.extend(Q.where("difficulty", 2)).observeCount();
@@ -191,9 +200,20 @@ export class Vocab_MODEL extends Model {
     });
   }
 
+  @writer async DELETE_vocab(type: "soft" | "permanent") {
+    if (type === "soft") {
+      await this.update((vocab) => {
+        vocab.deleted_at = new Date().toISOString();
+      });
+    }
+    if (type === "permanent") {
+      await this.markAsDeleted();
+    }
+  }
+
   @readonly @date("created_at") createdAt!: number;
   @readonly @date("updated_at") updatedAt!: number;
-  @readonly @date("deleted_at") deleted_at!: number;
+  @text("deleted_at") deleted_at!: string;
 }
 // ===================================================================================
 export class Language_MODEL extends Model {
@@ -214,7 +234,7 @@ export class Language_MODEL extends Model {
 
   @readonly @date("created_at") createdAt!: number;
   @readonly @date("updated_at") updatedAt!: number;
-  @readonly @date("deleted_at") deleted_at!: number;
+  @text("deleted_at") deleted_at!: string;
 }
 export class Notifications_MODEL extends Model {
   static table = "notifications";
@@ -239,7 +259,7 @@ export class Notifications_MODEL extends Model {
 
   @readonly @date("created_at") createdAt!: number;
   @readonly @date("updated_at") updatedAt!: number;
-  @readonly @date("deleted_at") deleted_at!: number;
+  @text("deleted_at") deleted_at!: string;
 }
 
 export class Payments_MODEL extends Model {
@@ -257,5 +277,5 @@ export class Payments_MODEL extends Model {
 
   @readonly @date("created_at") createdAt!: number;
   @readonly @date("updated_at") updatedAt!: number;
-  @readonly @date("deleted_at") deleted_at!: number;
+  @text("deleted_at") deleted_at!: string;
 }

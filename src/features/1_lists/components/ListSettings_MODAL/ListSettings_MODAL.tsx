@@ -443,9 +443,8 @@ export default function ListSettings_MODAL({
       </Confirmation_MODAL>
 
       <DeleteList_MODAL
-        user_id={z_user?.id}
         IS_open={modal_STATES.deleteList}
-        list_id={selected_LIST?.id}
+        list={selected_LIST}
         CLOSE_modal={() => TOGGLE_modal("deleteList")}
         onSuccess={(deleted_LIST?: List_MODEL) => {
           if (!deleted_LIST) return;

@@ -26,7 +26,7 @@ import RenameList_MODAL from "@/src/features/1_lists/components/RenameList_MODAL
 
 import React from "react";
 import { useToast } from "react-native-toast-notifications";
-import DeleteList_MODAL from "@/src/features/1_lists/components/DeleteList_MODAL";
+
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 import { FlatList, View } from "react-native";
 
@@ -35,10 +35,12 @@ import Header from "@/src/components/Header/Header";
 import { withObservables } from "@nozbe/watermelondb/react";
 import { Lists_DB, Users_DB, Vocabs_DB } from "@/src/db";
 import { Q } from "@nozbe/watermelondb";
-import Btn, { ShimmerEffect } from "@/src/components/Btn/Btn";
+
 import GET_userId from "@/src/utils/GET_userId";
 import USE_zustand from "@/src/zustand";
 import { checkUnsyncedChanges, PUSH_changes, sync } from "@/src/db/sync";
+import { notEq } from "@nozbe/watermelondb/QueryDescription";
+import Btn from "@/src/components/Btn/Btn";
 
 function _MyLists_PAGE({
   totalUserList_COUNT = 0,
@@ -61,17 +63,24 @@ function _MyLists_PAGE({
 
   const [search, SET_search] = useState("");
 
+  const fn = async () => {
+    // const vocabs = await Vocabs_DB.query(Q.where("deleted_at", notEq(null)));
+    const vocabs = await Vocabs_DB.query();
+    console.log(
+      vocabs?.map((v) => "🔴 " + v.trs?.[0]?.text + "🔴: " + v.deleted_at)
+    );
+  };
+
   return (
     <Page_WRAP>
       <Header title={`My vocabs`} big={true} />
 
-      {/* <View style={{ gap: 8, padding: 12 }}>
-        <Btn
-          text="Push changes"
-          onPress={PUSH_changes}
-          // style={{ width: 200 }}
-        />
-      </View> */}
+      <View style={{ gap: 8, padding: 12 }}>
+        <Btn text="fire" onPress={fn} />
+        <Btn text="Push" onPress={PUSH_changes} />
+        <Btn text="Pull" onPress={() => sync("updates", z_user?.id)} />
+        <Btn text="Sync all" onPress={() => sync("all", z_user?.id)} />
+      </View>
 
       <View style={{ padding: 12, gap: 12 }}>
         <ExplorePage_BTN

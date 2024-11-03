@@ -17,7 +17,7 @@ export default appSchema({
 
         { name: "created_at", type: "number" },
         { name: "updated_at", type: "number" },
-        { name: "deleted_at", type: "number", isOptional: true },
+        { name: "deleted_at", type: "string", isOptional: true },
       ],
     }),
 
@@ -39,7 +39,7 @@ export default appSchema({
 
         { name: "created_at", type: "number" },
         { name: "updated_at", type: "number" },
-        { name: "deleted_at", type: "number", isOptional: true },
+        { name: "deleted_at", type: "string", isOptional: true },
       ],
     }),
 
@@ -68,7 +68,7 @@ export default appSchema({
 
         { name: "created_at", type: "number" },
         { name: "updated_at", type: "number" },
-        { name: "deleted_at", type: "number", isOptional: true },
+        { name: "deleted_at", type: "string", isOptional: true },
       ],
     }),
 
@@ -88,7 +88,7 @@ export default appSchema({
 
         { name: "created_at", type: "number" },
         { name: "updated_at", type: "number" },
-        { name: "deleted_at", type: "number", isOptional: true },
+        { name: "deleted_at", type: "string", isOptional: true },
       ],
     }),
 
@@ -104,7 +104,7 @@ export default appSchema({
 
         { name: "created_at", type: "number" },
         { name: "updated_at", type: "number" },
-        { name: "deleted_at", type: "number", isOptional: true },
+        { name: "deleted_at", type: "string", isOptional: true },
       ],
     }),
 
@@ -119,7 +119,7 @@ export default appSchema({
 
         { name: "created_at", type: "number" },
         { name: "updated_at", type: "number" },
-        { name: "deleted_at", type: "number", isOptional: true },
+        { name: "deleted_at", type: "string", isOptional: true },
       ],
     }),
   ],

@@ -5,24 +5,20 @@ import { ActivityIndicator } from "react-native";
 import { useToast } from "react-native-toast-notifications";
 import USE_deleteVocab from "../../../hooks/USE_deleteVocab";
 import Error_TEXT from "@/src/components/Error_TEXT/Error_TEXT";
-import { User_MODEL } from "@/src/db/watermelon_MODELS";
+import { User_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 import db, { Vocabs_DB } from "@/src/db";
 import USE_collectListLangs from "@/src/features/1_lists/hooks/USE_collectListLangs";
 
 interface DeleteVocabModal_PROPS {
   IS_open: boolean;
-
-  vocab_id: string | undefined;
-
+  vocab: Vocab_MODEL | undefined;
   CLOSE_modal: () => void | undefined;
   onSuccess: () => void | undefined;
 }
 
 export default function DeleteVocab_MODAL({
   IS_open = false,
-
-  vocab_id = undefined,
-
+  vocab = undefined,
   CLOSE_modal = () => {},
   onSuccess = () => {},
 }: DeleteVocabModal_PROPS) {
@@ -47,12 +43,8 @@ export default function DeleteVocab_MODAL({
   };
 
   const del = async () => {
-    let list_id;
-    await db.write(async () => {
-      const vocab = await Vocabs_DB.find(vocab_id || "");
-      list_id = vocab?.list?.id;
-      await vocab.markAsDeleted();
-    });
+    let list_id = vocab?.list?.id;
+    vocab?.DELETE_vocab("soft");
     if (onSuccess) {
       onSuccess();
       collectLangs(list_id);
@@ -93,7 +85,7 @@ export default function DeleteVocab_MODAL({
         />
       }
     >
-      {error && <Error_TEXT>{error}</Error_TEXT>}
+      {error && <Error_TEXT text={error} />}
     </Small_MODAL>
   );
 }
