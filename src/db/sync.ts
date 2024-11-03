@@ -45,6 +45,8 @@ export async function sync(
           // languages: TURN_VocabtrsIntoJson(data.changes.vocabs),
         };
 
+        console.log(updatedChanges?.vocabs?.updated?.[0]);
+
         return {
           changes: updatedChanges,
           timestamp: data.timestamp,
@@ -97,7 +99,7 @@ export async function PUSH_changes() {
       pushChanges: async ({ changes }) => {
         const { error } = await supabase.rpc("push_all", { changes });
 
-        console.log(changes);
+        console.log(changes?.vocabs?.updated);
 
         if (error) {
           console.error("🔴 Push error: 🔴", error?.message);

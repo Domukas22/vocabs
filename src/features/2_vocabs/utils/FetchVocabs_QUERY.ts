@@ -28,6 +28,8 @@ const FetchVocabs_QUERY = ({
 
   const conditions = [];
 
+  conditions.push(Q.where("deleted_at", null));
+
   if (list_id && !fetchAll) {
     conditions.push(Q.where("list_id", list_id));
   } else if (user_id && fetchAll) {

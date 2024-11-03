@@ -137,13 +137,14 @@ export class List_MODEL extends Model {
     const updates = vocabsToSoftDelete.map((vocab) =>
       vocab.prepareUpdate((v) => {
         v.deleted_at = new Date().toISOString();
+        v.list.set(null);
       })
     );
 
     // Execute all updates in a single batch
     await this.batch(...updates);
 
-    await this.markAsDeleted();
+    // await this.markAsDeleted();
   }
 
   @writer async SUBMIT_forPublishing(val: boolean) {
@@ -156,20 +157,18 @@ export class List_MODEL extends Model {
   @readonly @date("updated_at") updatedAt!: number;
   @text("deleted_at") deleted_at!: string;
 
-  @lazy diff_1 = this.vocabs.extend(Q.where("difficulty", 1)).observeCount();
-  @lazy diff_2 = this.vocabs.extend(Q.where("difficulty", 2)).observeCount();
-  @lazy diff_3 = this.vocabs.extend(Q.where("difficulty", 3)).observeCount();
-  @lazy vocab_COUNT = this.vocabs.observeCount();
-}
-// ===================================================================================
-export class ListAccess_MODEL extends Model {
-  static table = "list_access";
-
-  @text("owner_id") owner_id!: string;
-  @text("participant_id") participant_id!: string;
-  @text("list_id") list_id!: string;
-
-  @readonly @date("created_at") createdAt!: number;
+  @lazy diff_1 = this.vocabs
+    .extend(Q.where("difficulty", 1), Q.where("deleted_at", null))
+    .observeCount();
+  @lazy diff_2 = this.vocabs
+    .extend(Q.where("difficulty", 2), Q.where("deleted_at", null))
+    .observeCount();
+  @lazy diff_3 = this.vocabs
+    .extend(Q.where("difficulty", 3), Q.where("deleted_at", null))
+    .observeCount();
+  @lazy vocab_COUNT = this.vocabs
+    .extend(Q.where("deleted_at", null))
+    .observeCount();
 }
 // ===================================================================================
 export class Vocab_MODEL extends Model {
@@ -215,6 +214,17 @@ export class Vocab_MODEL extends Model {
   @readonly @date("updated_at") updatedAt!: number;
   @text("deleted_at") deleted_at!: string;
 }
+// ===================================================================================
+export class ListAccess_MODEL extends Model {
+  static table = "list_access";
+
+  @text("owner_id") owner_id!: string;
+  @text("participant_id") participant_id!: string;
+  @text("list_id") list_id!: string;
+
+  @readonly @date("created_at") createdAt!: number;
+}
+
 // ===================================================================================
 export class Language_MODEL extends Model {
   static table = "languages";
