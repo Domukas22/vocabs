@@ -32,6 +32,7 @@ import {
 } from "./_layout";
 import { User_MODEL } from "../db/watermelon_MODELS";
 import { Q } from "@nozbe/watermelondb";
+import { View } from "react-native";
 
 type LoginData_PROPS = {
   email: string;
@@ -69,6 +70,7 @@ export default function Login_PAGE() {
     control,
     handleSubmit,
     formState: { errors, isSubmitted },
+    setValue,
   } = useForm<LoginData_PROPS>({
     defaultValues: {
       email: "",
@@ -77,6 +79,19 @@ export default function Login_PAGE() {
   });
 
   const onSubmit = (data: LoginData_PROPS) => _login(data);
+
+  // ---------------------------------------------------------------------------------------------------
+
+  const Pupyte = () => {
+    setValue("email", "pupyte@gmail.com");
+    setValue("password", "pupyte");
+  };
+  const Domukas = () => {
+    setValue("email", "domukas@gmail.com");
+    setValue("password", "domukas");
+  };
+
+  // ---------------------------------------------------------------------------------------------------
 
   return (
     <Page_WRAP>
@@ -188,6 +203,10 @@ export default function Login_PAGE() {
               type="action"
               onPress={handleSubmit(onSubmit)}
             />
+            <View style={{ flexDirection: "row", gap: 12 }}>
+              <Btn text="Domukas" onPress={Domukas} />
+              <Btn text="Pupyte" onPress={Pupyte} />
+            </View>
           </Block>
         </ScrollView>
       </KeyboardAvoidingView>

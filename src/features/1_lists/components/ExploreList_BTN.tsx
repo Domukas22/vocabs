@@ -20,8 +20,17 @@ export default function ExploreList_BTN({
   return (
     <Transition_BTN onPress={GO_toList}>
       <ListBtn_TOP>
-        <Styled_TEXT type="list_title">{list?.name}</Styled_TEXT>
-        <Styled_TEXT type="label_small">{list?.description}</Styled_TEXT>
+        <Styled_TEXT type="list_title">
+          {list?.name || "LIST HAS NO NAME"}
+        </Styled_TEXT>
+        {list?.description && (
+          <Styled_TEXT type="label_small">{list?.description}</Styled_TEXT>
+        )}
+        {list?.owner?.username && (
+          <Styled_TEXT type="label_small">
+            Shared by: {list.owner.username}
+          </Styled_TEXT>
+        )}
       </ListBtn_TOP>
 
       <ListBtn_BOTTOM>

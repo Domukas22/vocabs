@@ -2,13 +2,12 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/src/lib/supabase";
 import { z_vocabDisplaySettings_PROPS } from "@/src/zustand";
 import { BUILD_fetchPublicVocabsQuery } from "../features/2_vocabs/utils/BUILD_fetchPublicVocabsQuery";
-import { BUILD_fetchPublicVocabsCount } from "../features/2_vocabs/utils/BUILD_fetchPublicVocabsQuery copy";
+import { BUILD_fetchPublicVocabsCount } from "../features/2_vocabs/utils/BUILD_fetchPublicVocabsCount";
 
 export default function USE_supabaseVocabs({
   search,
   z_vocabDisplay_SETTINGS,
   paginateBy = 10,
-
   fetchByList = false,
   targetList_ID = undefined,
 }: {
@@ -134,7 +133,6 @@ export default function USE_supabaseVocabs({
   return {
     vocabs,
     IS_loadingMore,
-
     fetchVocabs_ERROR,
     ARE_vocabsFetching,
     totalFilteredVocab_COUNT,

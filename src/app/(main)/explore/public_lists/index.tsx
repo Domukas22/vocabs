@@ -23,9 +23,11 @@ import List_HEADER from "@/src/components/Header/List_HEADER";
 import USE_getActiveFilterCount from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/utils/USE_getActiveFilterCount";
 import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
 import { useRouter } from "expo-router";
+import BottomAction_SECTION from "@/src/components/BottomAction_SECTION";
 
 export default function PublicLists_PAGE() {
-  const { search, debouncedSearch, SET_search } = USE_debounceSearch();
+  const { search, debouncedSearch, IS_debouncing, SET_search } =
+    USE_debounceSearch();
   const { z_listDisplay_SETTINGS, z_SET_listDisplaySettings } = USE_zustand();
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
@@ -45,6 +47,7 @@ export default function PublicLists_PAGE() {
     LOAD_more,
     IS_loadingMore,
     HAS_reachedEnd,
+    filteredList_COUNT,
   } = USE_fetchPublicLists({
     search: debouncedSearch,
     z_listDisplay_SETTINGS,
@@ -71,7 +74,7 @@ export default function PublicLists_PAGE() {
         {...{
           lists,
           IS_loadingMore,
-          HAS_reachedEnd,
+          HAS_reachedEnd: lists?.length >= filteredList_COUNT,
           ARE_listsFetching,
           LOAD_more,
         }}
@@ -79,8 +82,23 @@ export default function PublicLists_PAGE() {
         listHeader_EL={
           <ListsFlatlistHeader_SECTION
             list_NAME="⭐ Public lists"
+            IS_searching={IS_debouncing || ARE_listsFetching}
             totalLists={vocab_COUNT}
             {...{ search, z_listDisplay_SETTINGS, z_SET_listDisplaySettings }}
+          />
+        }
+        listFooter_EL={
+          <BottomAction_SECTION
+            {...{
+              search,
+              LOAD_more,
+              IS_loadingMore,
+              activeFilter_COUNT,
+              totalFilteredResults_COUNT: filteredList_COUNT,
+              HAS_reachedEnd: lists?.length >= filteredList_COUNT,
+            }}
+            RESET_search={() => SET_search("")}
+            RESET_filters={() => z_SET_listDisplaySettings({ langFilters: [] })}
           />
         }
       />

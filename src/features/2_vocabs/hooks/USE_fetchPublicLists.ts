@@ -5,7 +5,10 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { z_listDisplaySettings_PROPS } from "@/src/zustand";
-import { BUILD_fetchPublicListsQuery } from "../../1_lists/utils/BUILD_fetchPublicListsQuery";
+import {
+  BUILD_fetchPublicListsCountQuery,
+  BUILD_fetchPublicListsQuery,
+} from "../../1_lists/utils/BUILD_fetchPublicListsQuery";
 import { supabase } from "@/src/lib/supabase";
 
 export default function USE_fetchPublicLists({
@@ -22,6 +25,7 @@ export default function USE_fetchPublicLists({
   const [lists, SET_lists] = useState<any[]>([]);
   const [start, SET_start] = useState(0); // Start index for pagination
   const [end, SET_end] = useState(paginateBy); // End index for pagination
+  const [filteredList_COUNT, SET_filteredListCount] = useState<number>(0);
   const [IS_loadingMore, SET_loadingMore] = useState(false);
   const [HAS_reachedEnd, SET_hasReachedEnd] = useState(false);
 
@@ -48,14 +52,24 @@ export default function USE_fetchPublicLists({
           start,
           end,
         });
+        const countQuery = BUILD_fetchPublicListsCountQuery({
+          search,
+          z_listDisplay_SETTINGS,
+        });
 
         // // Execute the query
         const { data: listData, error: listError } = await query;
+        const { count, error: countError } = await countQuery;
 
         if (listError) {
           console.error(`Error fetching public lists:`, listError);
           SET_error(`🔴 Error fetching public lists. 🔴`);
-          return;
+          // return;
+        }
+        if (countError) {
+          console.error("Error fetching public lists count:", countError);
+          SET_error("🔴 Error fetching public lists count. 🔴");
+          // return;
         }
 
         if (listData && listData.length < paginateBy) {
@@ -63,13 +77,16 @@ export default function USE_fetchPublicLists({
         }
 
         // Format the data to include vocab_COUNT
-        const formattedData = listData.map((list) => ({
+        const formattedData = listData?.map((list) => ({
           ...list,
           vocab_COUNT: list.vocabs?.[0]?.count || 0,
         }));
 
         // Update the list state with fetched data
-        SET_lists((prev) => [...prev, ...formattedData]);
+        SET_lists((prev) =>
+          formattedData ? [...prev, ...formattedData] : prev
+        );
+        SET_filteredListCount(count || 0);
       } catch (error) {
         console.error(`🔴 Unexpected error fetching public lists: 🔴`, error);
         SET_error(`🔴 Unexpected error occurred. 🔴`);
@@ -102,5 +119,6 @@ export default function USE_fetchPublicLists({
     LOAD_more,
     IS_loadingMore,
     HAS_reachedEnd,
+    filteredList_COUNT,
   };
 }

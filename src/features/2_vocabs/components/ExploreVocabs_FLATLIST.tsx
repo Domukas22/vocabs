@@ -14,17 +14,20 @@ export default function ExploreVocabs_FLATLIST({
   listFooter_EL,
   SAVE_vocab,
   onScroll,
-}: {
+}: // IS_searching = false,
+{
   vocabs: Vocab_MODEL[] | undefined;
   listHeader_EL: React.ReactNode;
   listFooter_EL: React.ReactNode;
   SAVE_vocab: (vocab: Vocab_MODEL) => void;
   onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
+  // IS_searching: boolean;
 }) {
   return (
     <Styled_FLASHLIST
       {...{ onScroll }}
       data={vocabs}
+      // extraData={IS_searching}
       renderItem={({ item }) => {
         return (
           <Vocab

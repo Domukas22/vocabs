@@ -44,7 +44,8 @@ export default function PublicListVocabs_PAGE() {
   const { t } = useTranslation();
   const { publicList_id } = useLocalSearchParams();
   const { z_vocabDisplay_SETTINGS, z_SET_vocabDisplaySettings } = USE_zustand();
-  const { search, debouncedSearch, SET_search } = USE_debounceSearch();
+  const { search, debouncedSearch, IS_debouncing, SET_search } =
+    USE_debounceSearch();
 
   const activeFilter_COUNT = USE_getActiveFilterCount(z_vocabDisplay_SETTINGS);
 
@@ -143,8 +144,10 @@ export default function PublicListVocabs_PAGE() {
           SET_targetVocab(vocab);
           TOGGLE_modal("save");
         }}
+        // IS_searching={ARE_vocabsFetching || IS_debouncing}
         listHeader_EL={
           <VocabsFlatlistHeader_SECTION
+            IS_searching={ARE_vocabsFetching || IS_debouncing}
             totalVocabs={list?.vocabs?.[0]?.count}
             list_NAME={list?.name}
             vocabResults_COUNT={totalFilteredVocab_COUNT}

@@ -65,13 +65,13 @@ function _MyLists_PAGE({
     <Page_WRAP>
       <Header title={`My vocabs`} big={true} />
 
-      <View style={{ gap: 8, padding: 12 }}>
+      {/* <View style={{ gap: 8, padding: 12 }}>
         <Btn
           text="Push changes"
           onPress={PUSH_changes}
           // style={{ width: 200 }}
         />
-      </View>
+      </View> */}
 
       <View style={{ padding: 12, gap: 12 }}>
         <ExplorePage_BTN

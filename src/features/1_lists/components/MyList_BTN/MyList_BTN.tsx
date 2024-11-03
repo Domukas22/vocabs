@@ -35,7 +35,7 @@ function _MyList_BTN({
   list: List_MODEL;
   onPress: () => void;
   highlighted: boolean;
-  blurAndDisable: boolean;
+  blurAndDisable?: boolean;
 }) {
   const { t } = useTranslation();
   const IS_submitted = useMemo(

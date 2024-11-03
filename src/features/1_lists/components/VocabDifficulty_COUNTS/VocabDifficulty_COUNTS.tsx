@@ -20,8 +20,6 @@ export default function VocabDifficulty_COUNTS({
       style={{
         flexDirection: "row",
         gap: 4,
-        // marginTop: 4,
-        justifyContent: "flex-end",
       }}
     >
       {diff_3_count > 0 ? (

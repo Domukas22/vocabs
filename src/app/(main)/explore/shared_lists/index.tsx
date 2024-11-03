@@ -24,10 +24,12 @@ import USE_getActiveFilterCount from "@/src/features/2_vocabs/components/Modal/D
 import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
 import { useRouter } from "expo-router";
 import List_HEADER from "@/src/components/Header/List_HEADER";
+import BottomAction_SECTION from "@/src/components/BottomAction_SECTION";
 
 export default function SharedLists_PAGE() {
   const { z_user } = USE_zustand();
-  const { search, debouncedSearch, SET_search } = USE_debounceSearch();
+  const { search, debouncedSearch, IS_debouncing, SET_search } =
+    USE_debounceSearch();
   const { z_listDisplay_SETTINGS, z_SET_listDisplaySettings } = USE_zustand();
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
@@ -46,7 +48,7 @@ export default function SharedLists_PAGE() {
     sharedLists_ERROR,
     LOAD_more,
     IS_loadingMore,
-    HAS_reachedEnd,
+    filteredList_COUNT,
   } = USE_fetchSharedSupabaseLists({
     search: debouncedSearch,
     z_listDisplay_SETTINGS,
@@ -74,16 +76,31 @@ export default function SharedLists_PAGE() {
         type="shared"
         {...{
           IS_loadingMore,
-          HAS_reachedEnd,
+          HAS_reachedEnd: sharedLists?.length >= filteredList_COUNT,
           ARE_listsFetching,
           LOAD_more,
         }}
         onScroll={handleScroll}
         listHeader_EL={
           <ListsFlatlistHeader_SECTION
+            IS_searching={IS_debouncing || ARE_listsFetching}
             list_NAME="🔒 Shared lists"
-            totalLists={vocab_COUNT}
+            totalLists={filteredList_COUNT}
             {...{ search, z_listDisplay_SETTINGS, z_SET_listDisplaySettings }}
+          />
+        }
+        listFooter_EL={
+          <BottomAction_SECTION
+            {...{
+              search,
+              LOAD_more,
+              IS_loadingMore,
+              activeFilter_COUNT,
+              totalFilteredResults_COUNT: filteredList_COUNT,
+              HAS_reachedEnd: sharedLists?.length >= filteredList_COUNT,
+            }}
+            RESET_search={() => SET_search("")}
+            RESET_filters={() => z_SET_listDisplaySettings({ langFilters: [] })}
           />
         }
       />

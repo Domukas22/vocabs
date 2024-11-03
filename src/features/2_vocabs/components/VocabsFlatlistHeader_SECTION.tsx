@@ -36,6 +36,8 @@ export default function VocabsFlatlistHeader_SECTION({
   const difficultyFilters = z_vocabDisplay_SETTINGS.difficultyFilters || [];
   const langFilters = z_vocabDisplay_SETTINGS.langFilters || [];
 
+  console.log(vocabResults_COUNT);
+
   const handleRemoveDifficultyFilter = (diff: number) => {
     z_SET_vocabDisplaySettings({
       difficultyFilters: difficultyFilters.filter((d) => d !== diff),
@@ -50,45 +52,6 @@ export default function VocabsFlatlistHeader_SECTION({
 
   const appliedFiltersCount = difficultyFilters.length + langFilters.length;
 
-  const label = useMemo(
-    () =>
-      IS_searching
-        ? "searching"
-        : search !== ""
-        ? "search_results"
-        : appliedFiltersCount > 0
-        ? "filters_applied"
-        : "default",
-    [IS_searching, search, appliedFiltersCount]
-  );
-  const GET_label = () => {
-    let res;
-    switch (label) {
-      case "searching":
-        res = (
-          <>
-            <ActivityIndicator color="gray" /> Searching...
-          </>
-        );
-        break;
-      case "search_results":
-        res = (
-          <>
-            {vocabResults_COUNT} Search results for
-            <Styled_TEXT type="text_18_medium"> '{search}' </Styled_TEXT>
-          </>
-        );
-        break;
-      case "filters_applied":
-        res = `${vocabResults_COUNT} results, ${appliedFiltersCount} filters applied`;
-        break;
-      default:
-        res = `Browse through ${totalVocabs ? totalVocabs : 0} vocabs`;
-    }
-
-    return res;
-  };
-
   return (
     <View style={styles.headerContainer}>
       <View>
@@ -96,7 +59,7 @@ export default function VocabsFlatlistHeader_SECTION({
 
         <Flashlist_LABEL
           {...{ IS_searching, search, appliedFiltersCount }}
-          totalResult_COUNT={totalVocabs || 0}
+          totalResult_COUNT={vocabResults_COUNT || 0}
           target="vocabs"
         />
       </View>

@@ -19,12 +19,14 @@ export default function ExploreLists_FLATLIST({
   LOAD_more,
   type = "public",
   listHeader_EL,
+  listFooter_EL,
   onScroll,
 }: {
   lists: List_MODEL[] | undefined;
   IS_loadingMore: boolean;
   HAS_reachedEnd: boolean;
   listHeader_EL: React.ReactNode;
+  listFooter_EL: React.ReactNode;
   ARE_listsFetching: boolean;
   LOAD_more: () => void;
   type: "public" | "shared";
@@ -36,6 +38,7 @@ export default function ExploreLists_FLATLIST({
       data={lists}
       {...{ onScroll }}
       ListHeaderComponent={listHeader_EL}
+      ListFooterComponent={listFooter_EL}
       renderItem={({ item }) => {
         return (
           <ExploreList_BTN
@@ -51,16 +54,6 @@ export default function ExploreLists_FLATLIST({
         );
       }}
       keyExtractor={(item) => "PublicVocab" + item.id}
-      ListFooterComponent={
-        <ExploreListsBottom_SECTION
-          {...{
-            IS_loadingMore,
-            HAS_reachedEnd,
-            ARE_listsFetching,
-            LOAD_more,
-          }}
-        />
-      }
     />
   );
 }

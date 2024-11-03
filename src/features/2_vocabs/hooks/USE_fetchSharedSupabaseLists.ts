@@ -1,7 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/src/lib/supabase";
 import { z_listDisplaySettings_PROPS } from "@/src/zustand";
-import { BUILD_fetchSharedListsQuery } from "../../1_lists/utils/BUILD_fetchSharedListsQuery";
+import {
+  BUILD_fetchSharedListsCountQuery,
+  BUILD_fetchSharedListsQuery,
+} from "../../1_lists/utils/BUILD_fetchSharedListsQuery";
+import { BUILD_fetchSharedListsCount } from "../../1_lists/utils/BUILD_fetchSharedListsCount";
 
 export default function USE_fetchSharedSupabaseLists({
   search,
@@ -18,9 +22,9 @@ export default function USE_fetchSharedSupabaseLists({
   const [sharedLists_ERROR, SET_error] = useState<string | null>(null);
   const [sharedLists, SET_sharedLists] = useState<any[]>([]);
   const [start, SET_start] = useState(0); // Start index for pagination
+  const [filteredList_COUNT, SET_filteredListCount] = useState<number>(0);
   const [end, SET_end] = useState(paginateBy); // End index for pagination
   const [IS_loadingMore, SET_loadingMore] = useState(false);
-  const [HAS_reachedEnd, SET_hasReachedEnd] = useState(false);
 
   // Fetch shared lists whenever the search or relevant settings change
   useEffect(() => {
@@ -35,10 +39,8 @@ export default function USE_fetchSharedSupabaseLists({
     SET_start(0); // Reset start index
     SET_end(paginateBy); // Reset end index
     fetchSharedLists({ start: 0, end: paginateBy }); // Fetch initial set of shared lists
-    SET_hasReachedEnd(false);
   }, [search, z_listDisplay_SETTINGS, user_id]);
 
-  // Function to fetch shared lists with pagination
   const fetchSharedLists = useCallback(
     async ({ start, end }: { start: number; end: number }) => {
       SET_listsFetching(true);
@@ -53,8 +55,13 @@ export default function USE_fetchSharedSupabaseLists({
 
         // Check for errors in fetching list_access
         if (accessError) {
-          console.error("Error fetching list access entries:", accessError);
-          SET_error("🔴 Error fetching list access entries. 🔴");
+          console.error(
+            "Error fetching list access entries when fetching shared lists:",
+            accessError
+          );
+          SET_error(
+            "🔴 Error fetching list access entries when fetching shared lists. 🔴"
+          );
           return;
         }
 
@@ -70,29 +77,39 @@ export default function USE_fetchSharedSupabaseLists({
           start,
           end,
         });
+        const countQuery = BUILD_fetchSharedListsCountQuery({
+          search,
+          list_ids,
+          z_listDisplay_SETTINGS,
+        });
 
         // Fetch lists that match the list IDs and apply search filtering
-        const { data: listData, error: listError } = await query;
+        const { data: lists, error: listError, count: _count } = await query;
+        const { count, error: countError } = await countQuery;
 
-        // Check for errors in fetching lists
+        console.log(_count);
+
+        if (countError) {
+          console.error("Error fetching shared lists count:", countError);
+          SET_error("🔴 Error fetching shared lists count. 🔴");
+          return;
+        }
+
         if (listError) {
           console.error("Error fetching shared lists:", listError);
           SET_error("🔴 Error fetching shared lists. 🔴");
           return;
         }
 
-        if (listData && listData.length < paginateBy) {
-          SET_hasReachedEnd(true);
-        }
-
         // Map over the fetched data to extract vocab_COUNT from vocabs
-        const formattedData = listData?.map((list) => ({
+        const formattedData = lists?.map((list) => ({
           ...list,
           vocab_COUNT: list.vocabs[0]?.count || 0,
         }));
 
-        // Update the list state with fetched data
+        // Update the list stat e with fetched data
         SET_sharedLists((prev) => [...prev, ...formattedData]);
+        SET_filteredListCount(count || 0);
       } catch (error) {
         console.error("🔴 Unexpected error fetching shared lists: 🔴", error);
         SET_error("🔴 Unexpected error occurred. 🔴");
@@ -124,6 +141,7 @@ export default function USE_fetchSharedSupabaseLists({
     sharedLists_ERROR,
     LOAD_more,
     IS_loadingMore,
-    HAS_reachedEnd,
+
+    filteredList_COUNT,
   };
 }

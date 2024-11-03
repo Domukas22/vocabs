@@ -30,10 +30,13 @@ import CopyListAndVocabs_MODAL from "@/src/features/1_lists/components/CopyListA
 import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
 import List_HEADER from "@/src/components/Header/List_HEADER";
 import USE_getActiveFilterCount from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/utils/USE_getActiveFilterCount";
+import USE_supabaseVocabs from "@/src/hooks/USE_supabaseVocabs";
+import BottomAction_SECTION from "@/src/components/BottomAction_SECTION";
 
 export default function PublicListVocabs_PAGE() {
   const { z_vocabDisplay_SETTINGS, z_SET_vocabDisplaySettings } = USE_zustand();
-  const { search, debouncedSearch, SET_search } = USE_debounceSearch();
+  const { search, debouncedSearch, IS_debouncing, SET_search } =
+    USE_debounceSearch();
   const { t } = useTranslation();
   const { user } = USE_auth();
   const { sharedList_id } = useLocalSearchParams();
@@ -80,18 +83,32 @@ export default function PublicListVocabs_PAGE() {
     }
   };
 
+  // const {
+  //   vocabs,
+  //   ARE_vocabsFetching,
+  //   fetchVocabs_ERROR,
+  //   LOAD_more,
+  //   IS_loadingMore,
+  //   HAS_reachedEnd,
+  // } = USE_supabaseVocabsOfAList({
+  //   search: debouncedSearch,
+  //   list: sharedList,
+  //   z_vocabDisplay_SETTINGS,
+  //   paginateBy: 3,
+  // });
+
   const {
     vocabs,
     ARE_vocabsFetching,
     fetchVocabs_ERROR,
     LOAD_more,
     IS_loadingMore,
-    HAS_reachedEnd,
-  } = USE_supabaseVocabsOfAList({
+    totalFilteredVocab_COUNT,
+  } = USE_supabaseVocabs({
     search: debouncedSearch,
-    list: sharedList,
     z_vocabDisplay_SETTINGS,
-    paginateBy: 3,
+    paginateBy: 5,
+    targetList_ID: typeof sharedList_id === "string" ? sharedList_id : "",
   });
 
   const activeFilter_COUNT = USE_getActiveFilterCount(z_vocabDisplay_SETTINGS);
@@ -129,18 +146,41 @@ export default function PublicListVocabs_PAGE() {
         {...{
           vocabs,
           IS_loadingMore,
-          HAS_reachedEnd,
+          HAS_reachedEnd: vocabs?.length >= totalFilteredVocab_COUNT,
           ARE_vocabsFetching,
           LOAD_more,
         }}
+        // IS_searching={ARE_vocabsFetching || IS_debouncing}
         SAVE_vocab={(vocab: Vocab_MODEL) => {
           SET_targetVocab(vocab);
           TOGGLE_modal("save");
         }}
         listHeader_EL={
           <VocabsFlatlistHeader_SECTION
+            IS_searching={ARE_vocabsFetching || IS_debouncing}
             totalVocabs={sharedList?.vocabs?.[0]?.count}
+            list_NAME={sharedList?.name}
+            vocabResults_COUNT={totalFilteredVocab_COUNT}
             {...{ search, z_vocabDisplay_SETTINGS, z_SET_vocabDisplaySettings }}
+          />
+        }
+        listFooter_EL={
+          <BottomAction_SECTION
+            {...{
+              search,
+              LOAD_more,
+              IS_loadingMore,
+              activeFilter_COUNT,
+              totalFilteredResults_COUNT: totalFilteredVocab_COUNT,
+              HAS_reachedEnd: vocabs?.length >= totalFilteredVocab_COUNT,
+            }}
+            RESET_search={() => SET_search("")}
+            RESET_filters={() =>
+              z_SET_vocabDisplaySettings({
+                langFilters: [],
+                difficultyFilters: [],
+              })
+            }
           />
         }
       />
