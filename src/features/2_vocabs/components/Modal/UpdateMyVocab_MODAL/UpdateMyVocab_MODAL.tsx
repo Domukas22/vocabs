@@ -45,7 +45,7 @@ import USE_collectListLangs from "@/src/features/1_lists/hooks/USE_collectListLa
 import { Lists_DB } from "@/src/db";
 
 interface UpdateMyVocabModal_PROPS {
-  user: User_MODEL | undefined;
+  user_id: string | undefined;
   IS_open: boolean;
   toUpdate_VOCAB: Vocab_MODEL | undefined;
   TOGGLE_modal: () => void;
@@ -53,15 +53,15 @@ interface UpdateMyVocabModal_PROPS {
 }
 
 export type UpdateMyVocabData_PROPS = {
-  list: List_MODEL | undefined;
-  user: User_MODEL | undefined;
+  list_id: string | undefined;
+  user_id: string | undefined;
   difficulty: 1 | 2 | 3;
   description: string;
   translations: tr_PROPS[];
 };
 
 export default function UpdateMyVocab_MODAL({
-  user,
+  user_id,
   IS_open,
   toUpdate_VOCAB,
   TOGGLE_modal: TOGGLE_vocabModal,
@@ -90,6 +90,8 @@ export default function UpdateMyVocab_MODAL({
   } = USE_collectListLangs();
 
   const collectLangs = async (list_id: string | undefined) => {
+    console.log("HERE: ", list_id);
+
     const updated_LIST = await COLLECT_langs({
       list_id,
     });
@@ -99,18 +101,19 @@ export default function UpdateMyVocab_MODAL({
   };
 
   const update = async (data: UpdateMyVocabData_PROPS) => {
-    const { list, description, difficulty, translations } = data;
+    const { list_id, description, difficulty, translations } = data;
+    console.log("1: ", list_id);
     const result = await UPDATE_vocab({
-      user,
       vocab_id: toUpdate_VOCAB?.id,
-      list,
+      list_id,
       difficulty,
       description,
       translations,
       is_public: false,
       onSuccess: (updated_VOCAB: Vocab_MODEL) => {
         onSuccess(updated_VOCAB);
-        collectLangs(updated_VOCAB?.list?.id);
+        collectLangs(updated_VOCAB?.list_id);
+
         reset();
       },
     });
@@ -133,7 +136,7 @@ export default function UpdateMyVocab_MODAL({
     defaultValues: {
       translations: [],
       description: "",
-      list: undefined,
+      list_id: undefined,
       difficulty: undefined,
     },
     criteriaMode: "all",
@@ -152,14 +155,14 @@ export default function UpdateMyVocab_MODAL({
   useEffect(() => {
     const fn = async () => {
       const _list = await Lists_DB.query(
-        Q.where("id", toUpdate_VOCAB?.list?.id || "")
+        Q.where("id", toUpdate_VOCAB?.list_id || "")
       );
 
       if (IS_open) {
         setValue("translations", toUpdate_VOCAB?.trs || []);
         setValue("description", toUpdate_VOCAB?.description || "");
         setValue("difficulty", toUpdate_VOCAB?.difficulty || 3);
-        setValue("list", _list?.[0] || undefined);
+        setValue("list_id", _list?.[0]?.id || undefined);
       }
     };
     fn();

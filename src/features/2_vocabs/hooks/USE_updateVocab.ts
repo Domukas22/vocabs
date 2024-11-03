@@ -10,9 +10,8 @@ import {
 import { Q } from "@nozbe/watermelondb";
 
 interface VocabUpdate_MODEL {
-  user?: User_MODEL | undefined;
   vocab_id: string | undefined;
-  list?: List_MODEL | undefined;
+  list_id?: string | undefined;
   difficulty?: 1 | 2 | 3;
   description?: string | "";
   translations: tr_PROPS[] | undefined;
@@ -33,7 +32,7 @@ export default function USE_updateVocab() {
 
   const UPDATE_vocab = async ({
     vocab_id,
-    list,
+    list_id,
     difficulty,
     description,
     translations: incodming_TRS,
@@ -54,7 +53,7 @@ export default function USE_updateVocab() {
       };
     }
 
-    if (!list || !list.id) {
+    if (!list_id) {
       SET_error(errorMessage);
       return {
         success: false,
@@ -106,7 +105,7 @@ export default function USE_updateVocab() {
         }
 
         await vocab.update((vocab: Vocab_MODEL) => {
-          vocab.list.set(list);
+          vocab.list_id = list_id;
           vocab.difficulty = difficulty || 3;
           vocab.description = description || "";
           vocab.trs = incodming_TRS || [];

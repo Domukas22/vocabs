@@ -181,7 +181,7 @@ function __SingleList_PAGE({
 
       <CreateMyVocab_MODAL
         IS_open={modal_STATES.createVocab}
-        initial_LIST={selected_LIST}
+        initialList_ID={selected_LIST?.id}
         TOGGLE_modal={() => TOGGLE_modal("createVocab")}
         onSuccess={(new_VOCAB: Vocab_MODEL) => {
           TOGGLE_modal("createVocab");
@@ -195,8 +195,8 @@ function __SingleList_PAGE({
       />
       <UpdateMyVocab_MODAL
         toUpdate_VOCAB={toUpdate_VOCAB}
-        list={selected_LIST}
-        user={z_user}
+        list_id={selected_LIST?.id}
+        user_id={z_user}
         IS_open={modal_STATES.update}
         TOGGLE_modal={() => TOGGLE_modal("update")}
         onSuccess={(updated_VOCAB: Vocab_MODEL) => {

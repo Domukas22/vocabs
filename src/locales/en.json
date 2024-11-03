@@ -76,7 +76,8 @@
     "confirmStop": "Yes, stop",
     "confirmListUnpublish": "Yes, unpublish",
     "all": "All",
-    "confirmListCopy": "Yes, copy"
+    "confirmListCopy": "Yes, copy",
+    "reviveVocab": "Revive vocab"
   },
   "pages": {
     "about": {

@@ -36,8 +36,6 @@ export default function VocabsFlatlistHeader_SECTION({
   const difficultyFilters = z_vocabDisplay_SETTINGS.difficultyFilters || [];
   const langFilters = z_vocabDisplay_SETTINGS.langFilters || [];
 
-  console.log(vocabResults_COUNT);
-
   const handleRemoveDifficultyFilter = (diff: number) => {
     z_SET_vocabDisplaySettings({
       difficultyFilters: difficultyFilters.filter((d) => d !== diff),

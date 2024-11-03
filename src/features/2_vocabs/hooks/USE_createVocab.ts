@@ -8,8 +8,8 @@ import {
 } from "@/src/db/watermelon_MODELS";
 
 interface VocabCreation_MODEL {
-  user: User_MODEL | undefined;
-  list: List_MODEL | undefined;
+  user_id: string | undefined;
+  list_id: string | undefined;
   difficulty?: 1 | 2 | 3;
   description?: string | "";
   translations: tr_PROPS[] | undefined;
@@ -28,8 +28,8 @@ export default function USE_createVocab() {
   );
 
   const CREATE_vocab = async ({
-    user,
-    list,
+    user_id,
+    list_id,
     difficulty,
     description,
     translations,
@@ -41,14 +41,14 @@ export default function USE_createVocab() {
   }> => {
     SET_error(null); // Clear any previous error
 
-    if (!user || !user.id) {
+    if (!user_id) {
       SET_error(errorMessage);
       return {
         success: false,
         msg: "🔴 User is required for creating private vocabs 🔴",
       };
     }
-    if (!list || !list.id) {
+    if (!list_id) {
       SET_error(errorMessage);
       return {
         success: false,
@@ -61,8 +61,8 @@ export default function USE_createVocab() {
 
       const newVocab = await db.write(async () => {
         const vocab = await Vocabs_DB.create((vocab: Vocab_MODEL) => {
-          vocab.user.set(user);
-          vocab.list.set(list);
+          vocab.user_id = user_id;
+          vocab.list_id = list_id;
 
           vocab.difficulty = difficulty || 3;
           vocab.description = description || "";

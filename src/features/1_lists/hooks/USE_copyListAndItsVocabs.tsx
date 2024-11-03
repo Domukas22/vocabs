@@ -9,7 +9,7 @@ import { supabase } from "@/src/lib/supabase";
 
 interface CopyListAndVocabs_PROPS {
   list: List_MODEL | undefined;
-  user: User_MODEL | undefined;
+  user_id: string | undefined;
   onSuccess?: (new_LIST: List_MODEL) => void;
 }
 
@@ -27,7 +27,7 @@ export default function USE_copyListAndItsVocabs() {
 
   const COPY_listAndVocabs = async ({
     list,
-    user,
+    user_id,
     onSuccess,
   }: CopyListAndVocabs_PROPS): Promise<{
     success: boolean;
@@ -47,7 +47,7 @@ export default function USE_copyListAndItsVocabs() {
         };
       }
 
-      if (!user || !user?.id) {
+      if (!user_id) {
         const errorMsg = "You must be logged in to copy a list.";
         SET_copyListError(errorMsg);
         return {
@@ -62,8 +62,8 @@ export default function USE_copyListAndItsVocabs() {
       const new_LIST = await db.write(async () => {
         const copiedList = await Lists_DB.create((newList: List_MODEL) => {
           // Copy relevant fields from the existing list
-          newList.user.set(user);
-          newList.original_creator.set(user);
+          newList.user_id = user_id;
+          newList.original_creator_id = user_id;
 
           newList.name = list.name;
           newList.description = list.description;
@@ -95,8 +95,8 @@ export default function USE_copyListAndItsVocabs() {
             Vocabs_DB.create((newVocab: Vocab_MODEL) => {
               // newVocab.list_id = copiedList.id;
 
-              newVocab.user.set(user);
-              newVocab.list.set(copiedList);
+              newVocab.user_id = user_id;
+              newVocab.list_id = copiedList.id;
               newVocab.difficulty = 3;
               newVocab.description = vocab.description;
               newVocab.trs = vocab.trs;

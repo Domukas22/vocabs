@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { User_MODEL } from "@/src/db/watermelon_MODELS";
 import { Q } from "@nozbe/watermelondb";
+import { Lists_DB } from "@/src/db";
 
 export default function USE_collectMyListLangs(user: User_MODEL | undefined) {
   const [collectedLang_IDS, setCollectedLang_IDS] = useState<string[]>([]);
@@ -9,10 +10,10 @@ export default function USE_collectMyListLangs(user: User_MODEL | undefined) {
     // If no user or lists, exit early
     if (!user) return;
 
-    // Observe user's lists
-    const query = user.lists
-      .extend(Q.where("deleted_at", Q.eq(null)))
-      .observe();
+    const query = Lists_DB.query(
+      Q.where("deleted_at", Q.eq(null)),
+      Q.where("user_id", user?.id || "")
+    ).observe();
 
     // Subscription to track updates
     const subscription = query.subscribe({

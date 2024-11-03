@@ -11,12 +11,14 @@ export default function USE_myVocabs({
   z_vocabDisplay_SETTINGS,
   fetchAll = false,
   paginateBy = 10,
+  fetchDeleted = false,
 }: {
   search: string;
   list_id?: string;
   user_id?: string;
   z_vocabDisplay_SETTINGS: z_vocabDisplaySettings_PROPS | undefined;
   fetchAll?: boolean;
+  fetchDeleted?: boolean;
   paginateBy: number;
 }) {
   const [vocabs, SET_vocabs] = useState<Vocab_MODEL[]>([]);
@@ -95,6 +97,7 @@ export default function USE_myVocabs({
       fetchAll,
       excludeIds: printed,
       amount: paginateBy,
+      fetchDeleted,
     });
     return await queries.fetch();
   };
@@ -107,6 +110,7 @@ export default function USE_myVocabs({
       z_vocabDisplay_SETTINGS,
       fetchAll,
       fetchOnlyForCount: true,
+      fetchDeleted,
     });
 
     const total = await countQuery.fetchCount();

@@ -87,8 +87,6 @@ export default function USE_fetchSharedSupabaseLists({
         const { data: lists, error: listError, count: _count } = await query;
         const { count, error: countError } = await countQuery;
 
-        console.log(_count);
-
         if (countError) {
           console.error("Error fetching shared lists count:", countError);
           SET_error("🔴 Error fetching shared lists count. 🔴");

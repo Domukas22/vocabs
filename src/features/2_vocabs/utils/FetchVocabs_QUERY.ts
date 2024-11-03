@@ -2,6 +2,7 @@ import { Q, Query } from "@nozbe/watermelondb";
 import { Vocabs_DB } from "@/src/db";
 import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 import { z_vocabDisplaySettings_PROPS } from "@/src/zustand";
+import { notEq } from "@nozbe/watermelondb/QueryDescription";
 
 export interface VocabFilter_PROPS {
   search?: string;
@@ -10,6 +11,7 @@ export interface VocabFilter_PROPS {
   z_vocabDisplay_SETTINGS: z_vocabDisplaySettings_PROPS | undefined;
   fetchAll?: boolean;
   fetchOnlyForCount?: boolean;
+  fetchDeleted?: boolean;
   excludeIds?: Set<string>; // New param for IDs to exclude
   amount?: number;
 }
@@ -23,12 +25,20 @@ const FetchVocabs_QUERY = ({
   excludeIds = new Set(),
   amount,
   fetchOnlyForCount = false,
+  fetchDeleted = false,
 }: VocabFilter_PROPS): Query<Vocab_MODEL> => {
   let query = Vocabs_DB?.query();
 
   const conditions = [];
 
-  conditions.push(Q.where("deleted_at", null));
+  if (fetchDeleted && user_id) {
+    conditions.push(
+      Q.where("deleted_at", notEq(null)),
+      Q.where("user_id", user_id)
+    );
+  } else {
+    conditions.push(Q.where("deleted_at", null));
+  }
 
   if (list_id && !fetchAll) {
     conditions.push(Q.where("list_id", list_id));

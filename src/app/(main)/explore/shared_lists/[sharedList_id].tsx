@@ -38,7 +38,7 @@ export default function PublicListVocabs_PAGE() {
   const { search, debouncedSearch, IS_debouncing, SET_search } =
     USE_debounceSearch();
   const { t } = useTranslation();
-  const { user } = USE_auth();
+  const { z_user } = USE_zustand();
   const { sharedList_id } = useLocalSearchParams();
   const [target_VOCAB, SET_targetVocab] = useState<Vocab_MODEL | undefined>();
   const toast = useToast();
@@ -66,9 +66,10 @@ export default function PublicListVocabs_PAGE() {
 
   const copy = async () => {
     if (!sharedList || IS_copyingList) return;
+
     const new_LIST = await COPY_listAndVocabs({
       list: sharedList,
-      user_id: user?.id,
+      user_id: z_user?.id,
       onSuccess: (new_LIST: List_MODEL) => {
         TOGGLE_modal("saveList");
         toast.show(t("notifications.listAndVocabsCopied"), {

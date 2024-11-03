@@ -74,8 +74,8 @@ export default function USE_createList() {
       }
       const new_LIST = await db.write(async () => {
         const newList = await Lists_DB.create((newList: List_MODEL) => {
-          newList.user.set(user);
-          newList.original_creator.set(user);
+          newList.user_id = user.id;
+          newList.original_creator_id = user.id;
 
           newList.name = name || "";
           newList.type = "private";

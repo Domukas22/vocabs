@@ -79,7 +79,8 @@
     "confirmStop": "Ja, aufhören",
     "confirmListUnpublish": "Ja, aufheben",
     "all": "Alle",
-    "confirmListCopy": "Ja, kopieren"
+    "confirmListCopy": "Ja, kopieren",
+    "reviveVocab": "Vokabel wiederherstellen"
   },
   "pages": {
     "about": {

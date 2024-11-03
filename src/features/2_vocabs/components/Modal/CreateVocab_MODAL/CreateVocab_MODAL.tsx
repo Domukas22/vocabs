@@ -43,14 +43,13 @@ import USE_zustand from "@/src/zustand";
 
 interface CreateMyVocabModal_PROPS {
   IS_open: boolean;
-  initial_LIST: List_MODEL | undefined;
+  initialList_ID: string | undefined;
   TOGGLE_modal: () => void;
   onSuccess: (new_VOCAB: Vocab_MODEL) => void;
 }
 
 export type CreateMyVocabData_PROPS = {
-  user: User_MODEL | undefined;
-  list: List_MODEL | undefined;
+  list_id: string | undefined;
   difficulty: 1 | 2 | 3;
   description: string;
   translations: tr_PROPS[];
@@ -59,7 +58,7 @@ export type CreateMyVocabData_PROPS = {
 export default function CreateVocab_MODAL({
   IS_open,
   TOGGLE_modal: TOGGLE_vocabModal,
-  initial_LIST,
+  initialList_ID,
   onSuccess = () => {},
 }: CreateMyVocabModal_PROPS) {
   const { t } = useTranslation();
@@ -92,16 +91,16 @@ export default function CreateVocab_MODAL({
   };
 
   const create = async (data: CreateMyVocabData_PROPS) => {
-    const { list, description, difficulty, translations } = data;
+    const { list_id, description, difficulty, translations } = data;
     const result = await CREATE_vocab({
-      user: z_user,
-      list,
+      user_id: z_user?.id,
+      list_id,
       difficulty,
       description,
       translations,
       onSuccess: (new_VOCAB: Vocab_MODEL) => {
         onSuccess(new_VOCAB);
-        collectLangs(new_VOCAB.list?.id || "");
+        collectLangs(new_VOCAB.list_id || "");
         reset();
       },
     });
@@ -123,11 +122,12 @@ export default function CreateVocab_MODAL({
     watch,
   } = useForm<CreateMyVocabData_PROPS>({
     defaultValues: {
-      translations:
-        GET_defaultTranslations(initial_LIST?.default_lang_ids || "en,de") ||
-        [],
+      // translations:
+      //   GET_defaultTranslations(initial_LIST?.default_lang_ids || "en,de") ||
+      //   [],
+      translations: GET_defaultTranslations("en,de") || [],
       description: "",
-      list: initial_LIST,
+      list_id: initialList_ID,
       difficulty: 3,
     },
     criteriaMode: "all",
@@ -145,10 +145,7 @@ export default function CreateVocab_MODAL({
 
   useEffect(() => {
     if (IS_open)
-      setValue(
-        "translations",
-        GET_defaultTranslations(initial_LIST?.default_lang_ids || "en,de") || []
-      );
+      setValue("translations", GET_defaultTranslations("en,de") || []);
   }, [IS_open]);
 
   const [selected_LANGS, SET_selectedLangs] = useState<Language_MODEL[]>([]);
@@ -272,10 +269,10 @@ export default function CreateVocab_MODAL({
         <SelectMyList_MODAL
           open={modal_STATES.list}
           title="Saved vocab to list"
-          submit_ACTION={(target_LIST: List_MODEL) => {
-            if (target_LIST) {
-              setValue("list", target_LIST);
-              clearErrors("list");
+          submit_ACTION={(list_id: string) => {
+            if (list_id) {
+              setValue("list_id", list_id);
+              clearErrors("list_id");
               TOGGLE_modal("list");
             }
           }}
@@ -283,7 +280,7 @@ export default function CreateVocab_MODAL({
             TOGGLE_modal("list");
           }}
           IS_inAction={IS_creatingVocab}
-          current_LIST={getValues("list")}
+          current_LIST={getValues("list_id")}
         />
       </View>
     </Big_MODAL>

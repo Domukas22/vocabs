@@ -40,11 +40,10 @@ import { List_MODEL } from "@/src/db/watermelon_MODELS";
 interface SelectListModal_PROPS {
   open: boolean;
   title: string;
-  current_LIST?: List_MODEL | undefined;
-  submit_ACTION: (list: List_MODEL) => void;
+  current_LIST?: string | undefined;
+  submit_ACTION: (list_id: string) => void;
   cancel_ACTION: () => void;
   IS_inAction: boolean;
-  lists: List_MODEL[] | undefined;
 }
 
 export default function SelectMyList_MODAL({
@@ -54,14 +53,13 @@ export default function SelectMyList_MODAL({
   submit_ACTION,
   cancel_ACTION,
   IS_inAction,
-  lists,
 }: SelectListModal_PROPS) {
   const { t } = useTranslation();
   const { user } = USE_auth();
   const [SHOW_createListModal, TOGGLE_createListModal] = USE_toggle(false);
 
   const [selectedModal_LIST, SET_selectedModalList] = useState<
-    List_MODEL | undefined
+    string | undefined
   >(current_LIST);
 
   const [search, SET_search] = useState("");
@@ -130,8 +128,8 @@ export default function SelectMyList_MODAL({
         IS_open={SHOW_createListModal}
         currentList_NAMES={[]}
         CLOSE_modal={() => TOGGLE_createListModal()}
-        onSuccess={(newList: List_MODEL) => {
-          SET_selectedModalList(newList);
+        onSuccess={(list_id: string) => {
+          SET_selectedModalList(list_id);
         }}
       />
     </Big_MODAL>

@@ -20,13 +20,12 @@ interface ListController_PROPS {
 
 export default function List_CONTROLLER({
   control,
-
   TOGGLE_listModal,
 }: ListController_PROPS) {
   return (
     <Controller
       control={control}
-      name="list"
+      name="list_id"
       rules={{
         required: {
           value: true,
@@ -41,15 +40,15 @@ export default function List_CONTROLLER({
         <Block>
           <Label>{t("label.chosenList")}</Label>
           <Btn
-            text={value?.name || "Select a list..."}
+            text={value || "Select a list..."}
             iconRight={<ICON_dropdownArrow />}
             onPress={TOGGLE_listModal}
             type="simple"
             style={[{ flex: 1 }, error && { borderColor: MyColors.border_red }]}
             text_STYLES={{
               flex: 1,
-              fontFamily: value?.name ? "Nunito-Regular" : "Nunito-Light",
-              color: value?.name ? MyColors.text_white : MyColors.text_white_06,
+              fontFamily: value ? "Nunito-Regular" : "Nunito-Light",
+              color: value ? MyColors.text_white : MyColors.text_white_06,
             }}
           />
           {isSubmitted && error && (

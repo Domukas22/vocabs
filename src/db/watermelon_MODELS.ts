@@ -15,6 +15,7 @@ import { Associations } from "@nozbe/watermelondb/Model";
 import { tr_PROPS } from "./props";
 import { useToast } from "react-native-toast-notifications";
 import { t } from "i18next";
+import { nullValue } from "@nozbe/watermelondb/RawRecord";
 
 const SANITIZE_langIds = (rawLangIds: string[]) => {
   return Array.isArray(rawLangIds)
@@ -42,17 +43,6 @@ const sanitizeTranslations = (rawTranslations: tr_PROPS[]) => {
 // ===================================================================================
 export class User_MODEL extends Model {
   static table = "users";
-  static associations: Associations = {
-    vocabs: { type: "has_many", foreignKey: "user_id" },
-    lists: { type: "has_many", foreignKey: "user_id" },
-    notifications: { type: "has_many", foreignKey: "user_id" },
-    payments: { type: "has_many", foreignKey: "user_id" },
-  };
-
-  @children("vocabs") vocabs!: Vocab_MODEL[];
-  @children("lists") lists!: List_MODEL[];
-  @children("notifications") notifications!: Notifications_MODEL[];
-  @children("payments") payments!: Payments_MODEL[];
 
   @text("username") username!: string;
   @text("email") email!: string;
@@ -66,44 +56,52 @@ export class User_MODEL extends Model {
   @readonly @date("updated_at") updatedAt!: number;
   @text("deleted_at") deleted_at!: string;
 
-  @lazy totalList_COUNT = this.lists
-    .extend(Q.where("deleted_at", Q.eq(null)))
+  @lazy totalList_COUNT = this.collections
+    .get("lists")
+    .query(Q.where("deleted_at", Q.eq(null)), Q.where("user_id", this.id))
     .observeCount();
-  @lazy totalVocab_COUNT = this.vocabs
-    .extend(Q.where("deleted_at", Q.eq(null)))
+
+  @lazy totalVocab_COUNT = this.collections
+    .get("vocabs")
+    .query(Q.where("deleted_at", Q.eq(null)), Q.where("user_id", this.id))
     .observeCount();
-  @lazy markedVocab_COUNT = this.vocabs
-    .extend(Q.where("is_marked", true), Q.where("deleted_at", Q.eq(null)))
+
+  @lazy markedVocab_COUNT = this.collections
+    .get("vocabs")
+    .query(
+      Q.where("deleted_at", Q.eq(null)),
+      Q.where("user_id", this.id),
+      Q.where("is_marked", true)
+    )
     .observeCount();
-  @lazy deletedVocab_COUNT = this.vocabs
-    .extend(Q.where("deleted_at", Q.notEq(null)))
+
+  @lazy deletedVocab_COUNT = this.collections
+    .get("vocabs")
+    .query(Q.where("deleted_at", Q.notEq(null)))
     .observeCount();
-  @lazy unreadNotification_COUNT = this.notifications
-    .extend(Q.where("is_read", false))
+
+  @lazy unreadNotification_COUNT = this.collections
+    .get("notifications")
+    .query(
+      Q.where("deleted_at", Q.notEq(null)),
+      Q.where("user_id", this.id),
+      Q.where("is_read", false)
+    )
     .observeCount();
 }
 // ===================================================================================
 export class List_MODEL extends Model {
   static table = "lists";
-  static associations: Associations = {
-    vocabs: { type: "has_many", foreignKey: "list_id" },
-    users: { type: "belongs_to", key: "user_id" },
-    original_creators: { type: "belongs_to", key: "user_id" },
-  };
-  @children("vocabs") vocabs!: Vocab_MODEL[];
 
-  /////////////////////////////////////////////////////////////////
-  // Becasue we don't really need to fetch lists by users,
-  // we provide simple text strings instead of WatermelonDB relations
-  @relation("users", "user_id") user!: List_MODEL;
-  @relation("users", "original_creator_id") original_creator!: List_MODEL;
+  @text("user_id") user_id!: string;
 
-  /////////////////////////////////////////////////////////////////
-
+  @text("original_creator_id") original_creator_id!: string;
   @text("name") name!: string;
   @text("description") description!: string;
+
   @field("is_submitted_for_publish") is_submitted_for_publish!: boolean;
   @field("was_accepted_for_publish") was_accepted_for_publish!: boolean;
+
   @text("type") type!: "private" | "public" | "shared" | "draft";
   @field("saved_count") saved_count!: number;
 
@@ -112,6 +110,7 @@ export class List_MODEL extends Model {
 
   @writer async RESET_allVocabsDifficulty() {
     // Get all vocabs where list_id matches this list's ID
+
     const vocabsToUpdate = await this.collections
       .get("vocabs")
       .query(Q.where("list_id", this.id))
@@ -137,14 +136,14 @@ export class List_MODEL extends Model {
     const updates = vocabsToSoftDelete.map((vocab) =>
       vocab.prepareUpdate((v) => {
         v.deleted_at = new Date().toISOString();
-        v.list.set(null);
+        v.list_id = null;
       })
     );
 
     // Execute all updates in a single batch
     await this.batch(...updates);
 
-    // await this.markAsDeleted();
+    await this.markAsDeleted();
   }
 
   @writer async SUBMIT_forPublishing(val: boolean) {
@@ -157,30 +156,45 @@ export class List_MODEL extends Model {
   @readonly @date("updated_at") updatedAt!: number;
   @text("deleted_at") deleted_at!: string;
 
-  @lazy diff_1 = this.vocabs
-    .extend(Q.where("difficulty", 1), Q.where("deleted_at", null))
+  @lazy diff_1 = this.collections
+    .get("vocabs")
+    .query(
+      Q.where("difficulty", 1),
+      Q.where("list_id", this.id),
+      Q.where("deleted_at", Q.eq(null))
+    )
     .observeCount();
-  @lazy diff_2 = this.vocabs
-    .extend(Q.where("difficulty", 2), Q.where("deleted_at", null))
+
+  @lazy diff_2 = this.collections
+    .get("vocabs")
+    .query(
+      Q.where("difficulty", 2),
+      Q.where("list_id", this.id),
+      Q.where("deleted_at", Q.eq(null))
+    )
     .observeCount();
-  @lazy diff_3 = this.vocabs
-    .extend(Q.where("difficulty", 3), Q.where("deleted_at", null))
+
+  @lazy diff_3 = this.collections
+    .get("vocabs")
+    .query(
+      Q.where("difficulty", 3),
+      Q.where("list_id", this.id),
+      Q.where("deleted_at", Q.eq(null))
+    )
     .observeCount();
-  @lazy vocab_COUNT = this.vocabs
-    .extend(Q.where("deleted_at", null))
+
+  @lazy vocab_COUNT = this.collections
+    .get("vocabs")
+    .query(Q.where("list_id", this.id), Q.where("deleted_at", Q.eq(null)))
     .observeCount();
 }
 // ===================================================================================
 export class Vocab_MODEL extends Model {
   static table = "vocabs";
-  static associations: Associations = {
-    lists: { type: "belongs_to", key: "list_id" },
-    users: { type: "belongs_to", key: "user_id" },
-  };
 
-  @relation("lists", "list_id") list!: List_MODEL;
-  @relation("users", "user_id") user!: List_MODEL;
-  // @text("list_id") list_id!: string | undefined;
+  @text("user_id") user_id!: string | null;
+  @text("list_id") list_id!: string | null;
+
   @field("difficulty") difficulty!: 1 | 2 | 3;
   @text("description") description!: string | undefined;
   @json("trs", sanitizeTranslations) trs!: tr_PROPS[] | undefined;
@@ -203,11 +217,24 @@ export class Vocab_MODEL extends Model {
     if (type === "soft") {
       await this.update((vocab) => {
         vocab.deleted_at = new Date().toISOString();
+        vocab.list_id = null;
       });
     }
     if (type === "permanent") {
       await this.markAsDeleted();
     }
+  }
+
+  @writer async REVIVE_vocab(list_id: string) {
+    console.log("FIRE here: ", list_id);
+
+    console.log(this.trs?.[0]?.text);
+
+    await this.update((vocab) => {
+      vocab.deleted_at = nullValue;
+      vocab.list_id = list_id;
+      vocab.description = "Eyoooooooooo";
+    });
   }
 
   @readonly @date("created_at") createdAt!: number;
@@ -249,12 +276,7 @@ export class Language_MODEL extends Model {
 export class Notifications_MODEL extends Model {
   static table = "notifications";
 
-  static associations: Associations = {
-    user: { type: "belongs_to", key: "user_id" },
-  };
-
-  @immutableRelation("users", "user_id") user!: User_MODEL;
-
+  @text("user_id") user_id!: string;
   @text("title") title!: string;
   @text("paragraph") paragraph!: string;
   @text("type") type!:
@@ -275,12 +297,7 @@ export class Notifications_MODEL extends Model {
 export class Payments_MODEL extends Model {
   static table = "payments";
 
-  static associations: Associations = {
-    user: { type: "belongs_to", key: "user_id" },
-  };
-
-  @immutableRelation("users", "user_id") user!: User_MODEL;
-
+  @text("user_id") user_id!: string;
   @text("item") item!: string;
   @text("amount") amount!: number;
   @text("payment_method") payment_method!: string;

@@ -37,7 +37,6 @@ function _ChooseAList_FLATLIST({
 
   return (
     <Styled_FLASHLIST
-      style={{ flex: 1 }}
       gap={8}
       data={lists}
       renderItem={({ item }: { item: List_MODEL }) => (

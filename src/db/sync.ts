@@ -36,16 +36,12 @@ export async function sync(
         } else {
         }
 
-        // console.log("🔴 All cahnges", data.changes);
-
         const updatedChanges = {
           ...data.changes,
           vocabs: TURN_VocabtrsIntoJson(data.changes.vocabs),
           languages: TURN_langExampleHighlights(data.changes.languages),
           // languages: TURN_VocabtrsIntoJson(data.changes.vocabs),
         };
-
-        console.log(updatedChanges?.vocabs?.updated?.[0]);
 
         return {
           changes: updatedChanges,
@@ -97,9 +93,9 @@ export async function PUSH_changes() {
       },
 
       pushChanges: async ({ changes }) => {
-        const { error } = await supabase.rpc("push_all", { changes });
-
-        console.log(changes?.vocabs?.updated);
+        const { error } = await supabase.rpc("push_all", {
+          changes,
+        });
 
         if (error) {
           console.error("🔴 Push error: 🔴", error?.message);
