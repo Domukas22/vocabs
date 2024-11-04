@@ -8,51 +8,76 @@ import { List_MODEL } from "@/src/db/watermelon_MODELS";
 import { useRouter } from "expo-router";
 import ExploreList_BTN from "./ExploreList_BTN";
 import ExploreListsBottom_SECTION from "./ExploreListsBottom_SECTION";
-import { NativeSyntheticEvent, NativeScrollEvent } from "react-native";
+import { NativeSyntheticEvent, NativeScrollEvent, View } from "react-native";
 import { HEADER_MARGIN } from "@/src/constants/globalVars";
+import { FetchedSharedList_PROPS } from "../hooks/USE_sharedLists";
+import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
+import { MyColors } from "@/src/constants/MyColors";
+import Error_SECTION from "@/src/components/Error_SECTION";
+
+import Skeleton_VIEW, {
+  GET_sketelons,
+  Skeleton,
+} from "@/src/components/Skeleton_VIEW";
+import { useMemo } from "react";
 
 export default function ExploreLists_FLATLIST({
-  lists,
-  IS_loadingMore,
-  HAS_reachedEnd,
-  ARE_listsFetching,
-  LOAD_more,
   type = "public",
+  error = { value: false, msg: "" },
+  lists,
   listHeader_EL,
   listFooter_EL,
   onScroll,
+  IS_searching = false,
 }: {
-  lists: List_MODEL[] | undefined;
-  IS_loadingMore: boolean;
-  HAS_reachedEnd: boolean;
+  type: "public" | "shared";
+  error: { value: boolean; msg: string };
+  lists: List_MODEL[] | FetchedSharedList_PROPS[] | undefined;
   listHeader_EL: React.ReactNode;
   listFooter_EL: React.ReactNode;
-  ARE_listsFetching: boolean;
-  LOAD_more: () => void;
-  type: "public" | "shared";
   onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
+  IS_searching: boolean;
 }) {
   const router = useRouter();
+
+  const data = useMemo(() => {
+    if (error.value || IS_searching) return [];
+    return lists;
+  }, [IS_searching, error.value, lists]);
+
+  const Footer = () => {
+    if (error.value)
+      return (
+        <Error_SECTION
+          title="An error has occured  asdasd asasaw da w"
+          paragraph={error.msg}
+        />
+      );
+
+    if (IS_searching) return <Skeleton_VIEW />;
+    return listFooter_EL;
+  };
+
+  const List_BTN = (list: List_MODEL) => (
+    <ExploreList_BTN
+      list={list}
+      GO_toList={() =>
+        router.push(
+          `/(main)/explore/${
+            type === "public" ? "public_lists" : "shared_lists"
+          }/${list?.id}`
+        )
+      }
+    />
+  );
+
   return (
     <Styled_FLASHLIST
-      data={lists}
+      data={data}
       {...{ onScroll }}
       ListHeaderComponent={listHeader_EL}
-      ListFooterComponent={listFooter_EL}
-      renderItem={({ item }) => {
-        return (
-          <ExploreList_BTN
-            list={item}
-            GO_toList={() =>
-              router.push(
-                `/(main)/explore/${
-                  type === "public" ? "public_lists" : "shared_lists"
-                }/${item.id}`
-              )
-            }
-          />
-        );
-      }}
+      ListFooterComponent={<Footer />}
+      renderItem={({ item }) => List_BTN(item)}
       keyExtractor={(item) => "PublicVocab" + item.id}
     />
   );

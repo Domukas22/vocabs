@@ -7,6 +7,10 @@ import ExploreVocabBack_BTNS from "./Vocab/Components/ExploreVocabBack_BTNS/Expl
 import Vocab from "./Vocab/Vocab";
 import { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
 import React from "react";
+import { View } from "react-native";
+import { MyColors } from "@/src/constants/MyColors";
+import Skeleton from "@/src/components/Skeleton";
+import Skeleton_VIEW from "@/src/components/Skeleton_VIEW";
 
 export default function ExploreVocabs_FLATLIST({
   vocabs,
@@ -14,16 +18,18 @@ export default function ExploreVocabs_FLATLIST({
   listFooter_EL,
   SAVE_vocab,
   onScroll,
-}: // IS_searching = false,
-{
+  IS_searching = true,
+}: {
   vocabs: Vocab_MODEL[] | undefined;
   listHeader_EL: React.ReactNode;
   listFooter_EL: React.ReactNode;
   SAVE_vocab: (vocab: Vocab_MODEL) => void;
   onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
-  // IS_searching: boolean;
+  IS_searching: boolean;
 }) {
-  return (
+  console.log("IS not seachign: ", IS_searching);
+
+  return !IS_searching ? (
     <Styled_FLASHLIST
       {...{ onScroll }}
       data={vocabs}
@@ -47,5 +53,7 @@ export default function ExploreVocabs_FLATLIST({
       ListHeaderComponent={listHeader_EL}
       ListFooterComponent={listFooter_EL}
     />
+  ) : (
+    <Skeleton_VIEW />
   );
 }

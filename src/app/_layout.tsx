@@ -73,6 +73,9 @@ function loadFonts() {
   };
 }
 
+// ----------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------
 // Handle user routing based on existence in SecureStore and WatermelonDB
 export async function HANDLE_userRouting(
   router: Router,
@@ -84,7 +87,7 @@ export async function HANDLE_userRouting(
     if (localUser) {
       z_SET_user(localUser);
       await sync("all", userId);
-      router.push("/(main)/explore");
+      router.push("/(main)/explore/shared_lists");
     } else {
       await HANDLE_newUser(userId, z_SET_user, router);
     }

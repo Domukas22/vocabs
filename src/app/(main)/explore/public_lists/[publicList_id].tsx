@@ -145,6 +145,7 @@ export default function PublicListVocabs_PAGE() {
       <ExploreVocabs_FLATLIST
         {...{ vocabs }}
         onScroll={handleScroll}
+        IS_searching={true}
         SAVE_vocab={(vocab: Vocab_MODEL) => {
           SET_targetVocab(vocab);
           TOGGLE_modal("save");

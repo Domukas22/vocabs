@@ -19,6 +19,17 @@ export default function BottomAction_SECTION({
   LOAD_more = async () => {},
   RESET_search = () => {},
   RESET_filters = () => {},
+}: {
+  type: "list" | "vocabs";
+  search: string;
+  IS_debouncing: boolean;
+  IS_loadingMore: boolean;
+  HAS_reachedEnd: boolean;
+  activeFilter_COUNT: number;
+  totalFilteredResults_COUNT: number;
+  LOAD_more: () => Promise<void>;
+  RESET_search: () => void;
+  RESET_filters: () => void;
 }) {
   return (
     <View style={{ gap: 16 }}>

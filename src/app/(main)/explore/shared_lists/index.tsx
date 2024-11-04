@@ -4,7 +4,7 @@
 
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import SharedLists_HEADER from "@/src/features/1_lists/components/SharedLists_HEADER";
 import USE_supabaseSharedLists from "@/src/features/2_vocabs/hooks/USE_supabaseSharedLists";
 import USE_debounceSearch from "@/src/hooks/USE_debounceSearch/USE_debounceSearch";
@@ -25,12 +25,18 @@ import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
 import { useRouter } from "expo-router";
 import List_HEADER from "@/src/components/Header/List_HEADER";
 import BottomAction_SECTION from "@/src/components/BottomAction_SECTION";
+import USE_sharedLists from "@/src/features/1_lists/hooks/USE_sharedLists";
+import USE_pagination from "@/src/hooks/USE_pagination";
 
 export default function SharedLists_PAGE() {
   const { z_user } = USE_zustand();
+  const { z_listDisplay_SETTINGS, z_SET_listDisplaySettings } = USE_zustand();
+  const { showTitle, handleScroll } = USE_showListHeaderTitle();
+  const activeFilter_COUNT = USE_getActiveFilterCount(z_listDisplay_SETTINGS);
+  const router = useRouter();
+
   const { search, debouncedSearch, IS_debouncing, SET_search } =
     USE_debounceSearch();
-  const { z_listDisplay_SETTINGS, z_SET_listDisplaySettings } = USE_zustand();
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
     { name: "displaySettings" },
@@ -40,27 +46,34 @@ export default function SharedLists_PAGE() {
     USE_collectSharedListLangs(z_user?.id);
 
   const {
-    sharedLists,
-    ARE_listsFetching,
-    sharedLists_ERROR,
-    LOAD_more,
+    data,
+    error,
+    IS_fetching,
     IS_loadingMore,
-    filteredList_COUNT,
-  } = USE_supabaseSharedLists({
+    HAS_reachedEnd,
+    unpaginated_COUNT,
+    fetch,
+    RESET_data,
+  } = USE_sharedLists({
     search: debouncedSearch,
-    z_listDisplay_SETTINGS,
     user_id: z_user?.id,
+    z_listDisplay_SETTINGS,
+  });
+
+  const { RESET_pagination, paginate: LOAD_more } = USE_pagination({
     paginateBy: 2,
+    fetch,
   });
 
   const IS_searching = useMemo(
-    () => (ARE_listsFetching || IS_debouncing) && !IS_loadingMore,
-    [ARE_listsFetching, IS_debouncing, IS_loadingMore]
+    () => (IS_fetching || IS_debouncing) && !IS_loadingMore,
+    [IS_fetching, IS_debouncing, IS_loadingMore]
   );
 
-  const { showTitle, handleScroll } = USE_showListHeaderTitle();
-  const activeFilter_COUNT = USE_getActiveFilterCount(z_listDisplay_SETTINGS);
-  const router = useRouter();
+  useEffect(() => {
+    RESET_data();
+    RESET_pagination();
+  }, [debouncedSearch, z_listDisplay_SETTINGS, z_user?.id]);
 
   return (
     <Page_WRAP>
@@ -74,19 +87,18 @@ export default function SharedLists_PAGE() {
       />
 
       <ExploreLists_FLATLIST
-        lists={sharedLists}
         type="shared"
-        {...{
-          IS_loadingMore,
-          HAS_reachedEnd: sharedLists?.length >= filteredList_COUNT,
-          ARE_listsFetching,
-          LOAD_more,
-        }}
+        // error={error && !IS_searching ? error : { value: false, msg: "" }}
+        IS_searching={IS_searching}
+        error={{ value: false, msg: "" }}
+        lists={data}
         onScroll={handleScroll}
         listHeader_EL={
           <ListsFlatlistHeader_SECTION
             list_NAME="🔒 Shared lists"
-            totalLists={filteredList_COUNT}
+            totalLists={unpaginated_COUNT}
+            // HAS_error={error?.value && !IS_searching}
+            HAS_error={false}
             {...{
               search,
               IS_searching,
@@ -97,16 +109,18 @@ export default function SharedLists_PAGE() {
         }
         listFooter_EL={
           <BottomAction_SECTION
+            type="list"
+            totalFilteredResults_COUNT={unpaginated_COUNT}
+            RESET_search={() => SET_search("")}
+            RESET_filters={() => z_SET_listDisplaySettings({ langFilters: [] })}
             {...{
               search,
+              IS_debouncing,
               LOAD_more,
               IS_loadingMore,
               activeFilter_COUNT,
-              totalFilteredResults_COUNT: filteredList_COUNT,
-              HAS_reachedEnd: sharedLists?.length >= filteredList_COUNT,
+              HAS_reachedEnd,
             }}
-            RESET_search={() => SET_search("")}
-            RESET_filters={() => z_SET_listDisplaySettings({ langFilters: [] })}
           />
         }
       />

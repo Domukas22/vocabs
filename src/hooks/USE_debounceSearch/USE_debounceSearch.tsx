@@ -17,7 +17,7 @@ export default function USE_debounceSearch() {
     const handler = setTimeout(() => {
       SET_debouncedSearch(search);
       SET_isDebouncing(false);
-    }, 500); // Adjust the debounce delay (in milliseconds) as needed
+    }, 300);
 
     return () => {
       clearTimeout(handler);

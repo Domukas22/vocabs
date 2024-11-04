@@ -7,6 +7,7 @@ export interface ListFilter_PROPS {
   z_listDisplay_SETTINGS: z_listDisplaySettings_PROPS | undefined;
   start?: number; // New parameter for start index
   end?: number; // New parameter for end index
+  // signal: AbortSignal;
 }
 export interface ListFilterCount_PROPS {
   search?: string;
@@ -14,13 +15,14 @@ export interface ListFilterCount_PROPS {
   z_listDisplay_SETTINGS: z_listDisplaySettings_PROPS | undefined;
 }
 
-export const BUILD_fetchSharedListsQuery = ({
+export default async function FETCH_sharedLists({
   search,
   list_ids,
   z_listDisplay_SETTINGS,
   start = 0, // Default start index
   end = 10, // Default end index (can be overridden)
-}: ListFilter_PROPS) => {
+}: // signal,
+ListFilter_PROPS) {
   // Start with a base query for fetching public lists
 
   let query = supabase.from("lists").select(
@@ -75,5 +77,20 @@ export const BUILD_fetchSharedListsQuery = ({
   // Limit the results based on start and end values
   query = query.range(start, end - 1); // Supabase uses zero-based indexing for range
 
-  return query;
-};
+  // -----------------------------------------------------------
+
+  const { data, error, count } = await query; //.abortSignal(signal);
+
+  if (error) {
+    console.error(`🔴 Error fetching participant list accesses🔴`, error);
+  }
+
+  return {
+    lists: data || [],
+    count: count || 0,
+    error: {
+      value: error ? true : false,
+      msg: error ? "An error as occured while loading shared lists" : "",
+    },
+  };
+}

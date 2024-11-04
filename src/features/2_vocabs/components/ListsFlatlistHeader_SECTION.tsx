@@ -18,6 +18,7 @@ import Flashlist_LABEL from "@/src/components/Flashlist_LABEL";
 
 type ListsFlatlistHeader_SECTIONProps = {
   search: string;
+  HAS_error: boolean;
   IS_searching: boolean;
   totalLists: number | null;
   list_NAME: string | undefined;
@@ -26,6 +27,7 @@ type ListsFlatlistHeader_SECTIONProps = {
 };
 export default function ListsFlatlistHeader_SECTION({
   search,
+  HAS_error = false,
   IS_searching = false,
   list_NAME = "INSERT LIST NAME",
   totalLists = 0,
@@ -46,7 +48,7 @@ export default function ListsFlatlistHeader_SECTION({
     <View style={styles.headerContainer}>
       <Styled_TEXT type="text_22_bold">{list_NAME}</Styled_TEXT>
       <Flashlist_LABEL
-        {...{ IS_searching, search, appliedFiltersCount }}
+        {...{ IS_searching, search, appliedFiltersCount, HAS_error }}
         totalResult_COUNT={totalLists || 0}
         target="lists"
       />

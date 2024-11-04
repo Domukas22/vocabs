@@ -9,11 +9,13 @@ import { Styled_TEXT } from "./Styled_TEXT/Styled_TEXT";
 export default function Flashlist_LABEL({
   IS_searching = false,
   search = "",
+  HAS_error = false,
   appliedFiltersCount = 0,
   totalResult_COUNT = 0,
   target = "vocabs",
 }: {
   IS_searching: boolean;
+  HAS_error: boolean;
   search: string;
   appliedFiltersCount?: number;
   totalResult_COUNT: number;
@@ -21,18 +23,23 @@ export default function Flashlist_LABEL({
 }) {
   const label = useMemo(
     () =>
-      IS_searching
+      HAS_error
+        ? "error"
+        : IS_searching
         ? "searching"
         : search !== ""
         ? "search_results"
         : appliedFiltersCount > 0
         ? "filters_applied"
         : "default",
-    [IS_searching, search, appliedFiltersCount]
+    [HAS_error, IS_searching, search, appliedFiltersCount]
   );
   const GET_label = () => {
     let res;
     switch (label) {
+      case "error":
+        res = "Something went wrong";
+        break;
       case "searching":
         res = (
           <>
