@@ -45,6 +45,7 @@ export default function USE_myLists({
     printed: Set<string>;
     resetTotal?: boolean;
   }) => {
+    if (IS_loadingMore || ARE_listsFetching) return;
     if (!user_id) {
       SET_error("🔴 User ID is required to fetch lists. 🔴");
       SET_lists([]);

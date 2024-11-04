@@ -54,7 +54,7 @@ const USE_zustand = create<ZustandStore>((set) => ({
 
   z_listDisplay_SETTINGS: {
     sorting: "date",
-    sortDirection: "ascending",
+    sortDirection: "descending",
     langFilters: [],
   },
   z_vocabDisplay_SETTINGS: {
@@ -63,7 +63,7 @@ const USE_zustand = create<ZustandStore>((set) => ({
     SHOW_difficulty: true,
     frontTrLang_ID: "en",
     sorting: "difficulty",
-    sortDirection: "ascending",
+    sortDirection: "descending",
     difficultyFilters: [],
     langFilters: [],
   },

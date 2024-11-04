@@ -117,6 +117,11 @@ function __SingleList_PAGE({
     paginateBy: 2,
   });
 
+  const IS_searching = useMemo(
+    () => (ARE_vocabsFetching || IS_debouncing) && !IS_loadingMore,
+    [ARE_vocabsFetching, IS_debouncing, IS_loadingMore]
+  );
+
   return (
     <Page_WRAP>
       <List_HEADER
@@ -130,24 +135,23 @@ function __SingleList_PAGE({
       />
 
       <MyVocabs_FLATLIST
-        {...{ vocabs }}
+        {...{ vocabs, IS_searching }}
         onScroll={handleScroll}
         listHeader_EL={
           <VocabsFlatlistHeader_SECTION
             vocabResults_COUNT={totalFilteredVocab_COUNT || 0}
             list_NAME={selected_LIST?.name}
-            IS_searching={IS_debouncing}
             totalVocabs={
               totalFilteredVocab_COUNT ? totalFilteredVocab_COUNT : 0
             }
             {...{
               search,
+              IS_searching,
               z_vocabDisplay_SETTINGS,
               z_SET_vocabDisplaySettings,
             }}
           />
         }
-        IS_searching={IS_debouncing || ARE_vocabsFetching}
         listFooter_EL={
           <BottomAction_SECTION
             {...{

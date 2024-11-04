@@ -32,9 +32,7 @@ export const BUILD_fetchSharedListsQuery = ({
         owner:users!lists_2_user_id_fkey(username),
         vocabs(count)
       `,
-    {
-      count: "exact",
-    }
+    { count: "exact" }
   );
 
   if (list_ids && list_ids.length > 0) {
@@ -76,47 +74,6 @@ export const BUILD_fetchSharedListsQuery = ({
 
   // Limit the results based on start and end values
   query = query.range(start, end - 1); // Supabase uses zero-based indexing for range
-
-  return query;
-};
-
-// --------------------------------------
-export const BUILD_fetchSharedListsCountQuery = ({
-  search,
-  list_ids,
-  z_listDisplay_SETTINGS,
-}: ListFilterCount_PROPS) => {
-  // Start with a base query for fetching public lists
-
-  let query = supabase
-    .from("lists")
-    .select(`id, type, name, description, collected_lang_ids`, {
-      count: "exact",
-    });
-
-  if (list_ids && list_ids.length > 0) {
-    query = query.in("id", list_ids);
-  }
-
-  // Add filtering for public lists
-  query = query.eq("type", "shared");
-
-  // Apply search filters if present
-  if (search) {
-    query = query.or(`name.ilike.%${search}%,description.ilike.%${search}%`);
-  }
-
-  if (
-    z_listDisplay_SETTINGS?.langFilters &&
-    z_listDisplay_SETTINGS.langFilters.length > 0
-  ) {
-    // Assuming collected_lang_ids is a JSONB array of language strings (e.g., ["en", "de"]).
-    query = query.or(
-      z_listDisplay_SETTINGS.langFilters
-        .map((lang) => `collected_lang_ids.ilike.%${lang}%`)
-        .join(",")
-    );
-  }
 
   return query;
 };

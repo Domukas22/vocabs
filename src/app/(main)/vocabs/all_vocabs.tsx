@@ -10,7 +10,7 @@ import {
 } from "@/src/features/2_vocabs";
 import { useRouter } from "expo-router";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
 import USE_highlighedId from "@/src/hooks/USE_highlighedId/USE_highlighedId";
 
@@ -96,8 +96,13 @@ export default function AllVocabs_PAGE() {
     user_id: z_user?.id,
     z_vocabDisplay_SETTINGS,
     fetchAll: true,
-    paginateBy: 10,
+    paginateBy: 2,
   });
+
+  const IS_searching = useMemo(
+    () => (ARE_vocabsFetching || IS_debouncing) && !IS_loadingMore,
+    [ARE_vocabsFetching, IS_debouncing, IS_loadingMore]
+  );
 
   return (
     <Page_WRAP>
@@ -116,12 +121,12 @@ export default function AllVocabs_PAGE() {
         onScroll={handleScroll}
         listHeader_EL={
           <VocabsFlatlistHeader_SECTION
-            IS_searching={ARE_vocabsFetching || IS_debouncing}
             vocabResults_COUNT={totalFilteredVocab_COUNT || 0}
             list_NAME={"All vocabs"}
             totalVocabs={totalListVocab_COUNT ? totalListVocab_COUNT : 0}
             {...{
               search,
+              IS_searching,
               z_vocabDisplay_SETTINGS,
               z_SET_vocabDisplaySettings,
             }}

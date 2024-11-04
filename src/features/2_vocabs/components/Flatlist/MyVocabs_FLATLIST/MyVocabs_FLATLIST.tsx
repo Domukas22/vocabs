@@ -17,19 +17,19 @@ import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 
 export default function MyVocabs_FLATLIST({
   vocabs,
-  SHOW_bottomBtn,
+
   IS_searching = false,
   highlightedVocab_ID,
   HANDLE_updateModal,
   PREPARE_vocabDelete,
-  TOGGLE_createVocabModal,
+
   listHeader_EL,
   listFooter_EL,
   onScroll,
 }: {
   vocabs: Vocab_MODEL[] | undefined;
-  SHOW_bottomBtn: React.ReactNode;
-  highlightedVocab_ID: string;
+
+  highlightedVocab_ID?: string;
   IS_searching: boolean;
   listHeader_EL: React.ReactNode;
   listFooter_EL: React.ReactNode;
@@ -40,7 +40,7 @@ export default function MyVocabs_FLATLIST({
     clear?: boolean;
     vocab?: Vocab_MODEL;
   }) => void;
-  TOGGLE_createVocabModal: () => void;
+
   PREPARE_vocabDelete?: (vocab: Vocab_MODEL) => void;
   onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
 }) {

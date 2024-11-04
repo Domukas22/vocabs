@@ -4,9 +4,9 @@
 
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
-import React from "react";
+import React, { useMemo } from "react";
 import SharedLists_HEADER from "@/src/features/1_lists/components/SharedLists_HEADER";
-import USE_fetchSharedSupabaseLists from "@/src/features/2_vocabs/hooks/USE_fetchSharedSupabaseLists";
+import USE_supabaseSharedLists from "@/src/features/2_vocabs/hooks/USE_supabaseSharedLists";
 import USE_debounceSearch from "@/src/hooks/USE_debounceSearch/USE_debounceSearch";
 import USE_zustand from "@/src/zustand";
 
@@ -19,7 +19,7 @@ import ExploreLists_FLATLIST from "@/src/features/1_lists/components/ExploreList
 import VocabsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/VocabsFlatlistHeader_SECTION";
 import ListsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/ListsFlatlistHeader_SECTION";
 import USE_totalPublicListCount from "@/src/features/1_lists/hooks/USE_totalPublicListCount";
-import USE_totalSharedListCount from "@/src/features/1_lists/hooks/USE_totalSharedListCount";
+
 import USE_getActiveFilterCount from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/utils/USE_getActiveFilterCount";
 import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
 import { useRouter } from "expo-router";
@@ -39,9 +39,6 @@ export default function SharedLists_PAGE() {
   const { collectedLang_IDS, ARE_langIdsCollecting, collectLangIds_ERROR } =
     USE_collectSharedListLangs(z_user?.id);
 
-  const { vocab_COUNT, IS_totalCountFetching, fetchTotalCount_ERROR } =
-    USE_totalSharedListCount(z_user?.id);
-
   const {
     sharedLists,
     ARE_listsFetching,
@@ -49,12 +46,17 @@ export default function SharedLists_PAGE() {
     LOAD_more,
     IS_loadingMore,
     filteredList_COUNT,
-  } = USE_fetchSharedSupabaseLists({
+  } = USE_supabaseSharedLists({
     search: debouncedSearch,
     z_listDisplay_SETTINGS,
     user_id: z_user?.id,
     paginateBy: 2,
   });
+
+  const IS_searching = useMemo(
+    () => (ARE_listsFetching || IS_debouncing) && !IS_loadingMore,
+    [ARE_listsFetching, IS_debouncing, IS_loadingMore]
+  );
 
   const { showTitle, handleScroll } = USE_showListHeaderTitle();
   const activeFilter_COUNT = USE_getActiveFilterCount(z_listDisplay_SETTINGS);
@@ -83,10 +85,14 @@ export default function SharedLists_PAGE() {
         onScroll={handleScroll}
         listHeader_EL={
           <ListsFlatlistHeader_SECTION
-            IS_searching={IS_debouncing || ARE_listsFetching}
             list_NAME="🔒 Shared lists"
             totalLists={filteredList_COUNT}
-            {...{ search, z_listDisplay_SETTINGS, z_SET_listDisplaySettings }}
+            {...{
+              search,
+              IS_searching,
+              z_listDisplay_SETTINGS,
+              z_SET_listDisplaySettings,
+            }}
           />
         }
         listFooter_EL={

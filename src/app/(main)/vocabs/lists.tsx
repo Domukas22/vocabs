@@ -5,7 +5,7 @@
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
 import { useRouter } from "expo-router";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { List_MODEL } from "@/src/db/watermelon_MODELS";
 import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
@@ -105,6 +105,11 @@ export default function MyLists_PAGE() {
 
   const [printed_LISTS, SET_printedLists] = useState<List_MODEL[]>([]);
 
+  const IS_searching = useMemo(
+    () => (ARE_listsFetching || IS_debouncing) && !IS_loadingMore,
+    [ARE_listsFetching, IS_debouncing, IS_loadingMore]
+  );
+
   useEffect(() => {
     if (!ARE_listsFetching && !IS_loadingMore) {
       SET_printedLists(lists);
@@ -141,9 +146,13 @@ export default function MyLists_PAGE() {
         listHeader_EL={
           <ListsFlatlistHeader_SECTION
             list_NAME="My Lists"
-            IS_searching={IS_debouncing || ARE_listsFetching}
             totalLists={totalFilteredLists_COUNT}
-            {...{ search, z_listDisplay_SETTINGS, z_SET_listDisplaySettings }}
+            {...{
+              search,
+              IS_searching,
+              z_listDisplay_SETTINGS,
+              z_SET_listDisplaySettings,
+            }}
           />
         }
         listFooter_EL={
@@ -176,6 +185,8 @@ export default function MyLists_PAGE() {
         onSuccess={(newList: List_MODEL) => {
           highlight(newList?.id);
           list_REF?.current?.scrollToOffset({ animated: true, offset: 0 });
+          console.log(newList);
+
           ADD_toDisplayed(newList);
           toast.show(t("notifications.listCreated"), {
             type: "green",

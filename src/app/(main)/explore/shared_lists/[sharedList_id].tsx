@@ -84,20 +84,6 @@ export default function PublicListVocabs_PAGE() {
     }
   };
 
-  // const {
-  //   vocabs,
-  //   ARE_vocabsFetching,
-  //   fetchVocabs_ERROR,
-  //   LOAD_more,
-  //   IS_loadingMore,
-  //   HAS_reachedEnd,
-  // } = USE_supabaseVocabsOfAList({
-  //   search: debouncedSearch,
-  //   list: sharedList,
-  //   z_vocabDisplay_SETTINGS,
-  //   paginateBy: 3,
-  // });
-
   const {
     vocabs,
     ARE_vocabsFetching,
@@ -112,6 +98,11 @@ export default function PublicListVocabs_PAGE() {
     targetList_ID: typeof sharedList_id === "string" ? sharedList_id : "",
   });
 
+  const IS_searching = useMemo(
+    () => (ARE_vocabsFetching || IS_debouncing) && !IS_loadingMore,
+    [ARE_vocabsFetching, IS_debouncing, IS_loadingMore]
+  );
+
   const activeFilter_COUNT = USE_getActiveFilterCount(z_vocabDisplay_SETTINGS);
 
   const collectedLang_IDS = useMemo(() => {
@@ -121,24 +112,11 @@ export default function PublicListVocabs_PAGE() {
 
   return (
     <Page_WRAP>
-      {/* <OneSharedList_HEADER
-        list_NAME={sharedList?.name}
-        TOGGLE_saveListModal={() => TOGGLE_modal("saveList")}
-        {...{ ARE_vocabsFetching }}
-      />
-      <ExporeSingleList_SUBNAV
-        TOGGLE_displaySettings={() => TOGGLE_modal("displaySettings")}
-        loading={false}
-        {...{ search, SET_search }}
-      /> */}
-
       <List_HEADER
         SHOW_listName={showTitle}
         list_NAME={sharedList?.name}
         GO_back={() => router.back()}
-        LIKE_list={() => {}}
         OPEN_displaySettings={() => TOGGLE_modal("displaySettings")}
-        OPEN_search={() => {}}
         SAVE_list={() => TOGGLE_modal("saveList")}
         {...{ search, SET_search, activeFilter_COUNT }}
       />
@@ -151,18 +129,21 @@ export default function PublicListVocabs_PAGE() {
           ARE_vocabsFetching,
           LOAD_more,
         }}
-        // IS_searching={ARE_vocabsFetching || IS_debouncing}
         SAVE_vocab={(vocab: Vocab_MODEL) => {
           SET_targetVocab(vocab);
           TOGGLE_modal("save");
         }}
         listHeader_EL={
           <VocabsFlatlistHeader_SECTION
-            IS_searching={ARE_vocabsFetching || IS_debouncing}
             totalVocabs={sharedList?.vocabs?.[0]?.count}
             list_NAME={sharedList?.name}
             vocabResults_COUNT={totalFilteredVocab_COUNT}
-            {...{ search, z_vocabDisplay_SETTINGS, z_SET_vocabDisplaySettings }}
+            {...{
+              search,
+              IS_searching,
+              z_vocabDisplay_SETTINGS,
+              z_SET_vocabDisplaySettings,
+            }}
           />
         }
         listFooter_EL={

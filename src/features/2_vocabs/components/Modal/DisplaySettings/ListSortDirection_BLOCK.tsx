@@ -41,9 +41,9 @@ export default function ListSortDirection_BLOCK({
         <>
           <Btn
             text={t("btn.newToOld")}
-            onPress={() => SET_sortDirection("ascending")}
+            onPress={() => SET_sortDirection("descending")}
             type={
-              z_listDisplay_SETTINGS?.sortDirection === "ascending"
+              z_listDisplay_SETTINGS?.sortDirection === "descending"
                 ? "active"
                 : "simple"
             }
@@ -51,9 +51,9 @@ export default function ListSortDirection_BLOCK({
           />
           <Btn
             text={t("btn.oldToNew")}
-            onPress={() => SET_sortDirection("descending")}
+            onPress={() => SET_sortDirection("ascending")}
             type={
-              z_listDisplay_SETTINGS?.sortDirection === "descending"
+              z_listDisplay_SETTINGS?.sortDirection === "ascending"
                 ? "active"
                 : "simple"
             }

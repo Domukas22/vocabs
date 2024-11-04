@@ -5,13 +5,9 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { z_listDisplaySettings_PROPS } from "@/src/zustand";
-import {
-  BUILD_fetchPublicListsCountQuery,
-  BUILD_fetchPublicListsQuery,
-} from "../../1_lists/utils/BUILD_fetchPublicListsQuery";
-import { supabase } from "@/src/lib/supabase";
+import { BUILD_fetchPublicListsQuery } from "../../1_lists/utils/BUILD_fetchPublicListsQuery";
 
-export default function USE_fetchPublicLists({
+export default function USE_supabasePublicLists({
   search,
   z_listDisplay_SETTINGS,
   paginateBy = 10, // Default pagination size
@@ -52,23 +48,13 @@ export default function USE_fetchPublicLists({
           start,
           end,
         });
-        const countQuery = BUILD_fetchPublicListsCountQuery({
-          search,
-          z_listDisplay_SETTINGS,
-        });
 
         // // Execute the query
-        const { data: listData, error: listError } = await query;
-        const { count, error: countError } = await countQuery;
+        const { data: listData, error: listError, count } = await query;
 
         if (listError) {
           console.error(`Error fetching public lists:`, listError);
           SET_error(`🔴 Error fetching public lists. 🔴`);
-          // return;
-        }
-        if (countError) {
-          console.error("Error fetching public lists count:", countError);
-          SET_error("🔴 Error fetching public lists count. 🔴");
           // return;
         }
 

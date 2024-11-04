@@ -115,7 +115,7 @@ export default function PublicListVocabs_PAGE() {
   } = USE_supabaseVocabs({
     search: debouncedSearch,
     z_vocabDisplay_SETTINGS,
-    paginateBy: 5,
+    paginateBy: 2,
     targetList_ID: typeof publicList_id === "string" ? publicList_id : "",
   });
 
@@ -125,6 +125,11 @@ export default function PublicListVocabs_PAGE() {
   }, [list?.collected_lang_ids]);
 
   const [target_VOCAB, SET_targetVocab] = useState<Vocab_MODEL | undefined>();
+
+  const IS_searching = useMemo(
+    () => (ARE_vocabsFetching || IS_debouncing) && !IS_loadingMore,
+    [ARE_vocabsFetching, IS_debouncing, IS_loadingMore]
+  );
 
   return (
     <Page_WRAP>
@@ -144,14 +149,17 @@ export default function PublicListVocabs_PAGE() {
           SET_targetVocab(vocab);
           TOGGLE_modal("save");
         }}
-        // IS_searching={ARE_vocabsFetching || IS_debouncing}
         listHeader_EL={
           <VocabsFlatlistHeader_SECTION
-            IS_searching={ARE_vocabsFetching || IS_debouncing}
             totalVocabs={list?.vocabs?.[0]?.count}
             list_NAME={list?.name}
             vocabResults_COUNT={totalFilteredVocab_COUNT}
-            {...{ search, z_vocabDisplay_SETTINGS, z_SET_vocabDisplaySettings }}
+            {...{
+              search,
+              IS_searching,
+              z_vocabDisplay_SETTINGS,
+              z_SET_vocabDisplaySettings,
+            }}
           />
         }
         listFooter_EL={

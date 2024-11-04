@@ -48,9 +48,9 @@ export default function VocabSortDirection_BLOCK({
         <>
           <Btn
             text={t("btn.easyToHard")}
-            onPress={() => SET_sortDirection("ascending")}
+            onPress={() => SET_sortDirection("descending")}
             type={
-              z_vocabDisplay_SETTINGS?.sortDirection === "ascending"
+              z_vocabDisplay_SETTINGS?.sortDirection === "descending"
                 ? "active"
                 : "simple"
             }
@@ -58,9 +58,9 @@ export default function VocabSortDirection_BLOCK({
           />
           <Btn
             text={t("btn.hardToEasy")}
-            onPress={() => SET_sortDirection("descending")}
+            onPress={() => SET_sortDirection("ascending")}
             type={
-              z_vocabDisplay_SETTINGS?.sortDirection === "descending"
+              z_vocabDisplay_SETTINGS?.sortDirection === "ascending"
                 ? "active"
                 : "simple"
             }

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/src/lib/supabase";
 import { z_vocabDisplaySettings_PROPS } from "@/src/zustand";
 import { BUILD_fetchPublicVocabsQuery } from "../features/2_vocabs/utils/BUILD_fetchPublicVocabsQuery";
-import { BUILD_fetchPublicVocabsCount } from "../features/2_vocabs/utils/BUILD_fetchPublicVocabsCount";
+import Delay from "../utils/Delay";
 
 export default function USE_supabaseVocabs({
   search,
@@ -32,7 +32,6 @@ export default function USE_supabaseVocabs({
     SET_start(0);
     SET_end(paginateBy);
     fetchVocabs({ start: 0, end: paginateBy });
-    fetchTotalCount();
   }, [
     search,
     z_vocabDisplay_SETTINGS?.langFilters,
@@ -40,28 +39,6 @@ export default function USE_supabaseVocabs({
     z_vocabDisplay_SETTINGS?.sortDirection,
     targetList_ID,
   ]);
-
-  const fetchTotalCount = async () => {
-    if (fetchByList && !targetList_ID) return;
-
-    const list_ids = targetList_ID
-      ? [targetList_ID]
-      : await fetchPublicListIds();
-
-    const { count, error } = await BUILD_fetchPublicVocabsCount({
-      search,
-      list_ids,
-      z_vocabDisplay_SETTINGS,
-    });
-
-    if (error) {
-      console.error("🔴 Error fetching vocab count: 🔴", error);
-      SET_error("🔴 Error fetching vocab count. 🔴");
-      return;
-    }
-
-    SET_totalVocabCount(count || 0);
-  };
 
   const fetchPublicListIds = async () => {
     const { data, error } = await supabase
@@ -83,6 +60,7 @@ export default function USE_supabaseVocabs({
     start: number;
     end: number;
   }) => {
+    if (IS_loadingMore || ARE_vocabsFetching) return;
     SET_vocabsFetching(true);
     SET_error(null);
 
@@ -101,7 +79,8 @@ export default function USE_supabaseVocabs({
         end,
       });
 
-      const { data: vocabData, error: vocabError } = await query;
+      await Delay(2000);
+      const { data: vocabData, error: vocabError, count } = await query;
 
       if (vocabError) {
         console.error("🔴 Error fetching vocabs: 🔴", vocabError);
@@ -110,6 +89,7 @@ export default function USE_supabaseVocabs({
       }
 
       SET_vocabs((prev) => [...prev, ...(vocabData || [])]);
+      SET_totalVocabCount(count || 0);
     } catch (error) {
       console.error("🔴 Unexpected error fetching vocabs: 🔴", error);
       SET_error("🔴 Unexpected error occurred. 🔴");

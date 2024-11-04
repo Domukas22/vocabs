@@ -3,11 +3,11 @@
 //
 
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
-import React from "react";
+import React, { useMemo } from "react";
 import { _DisplaySettings_PROPS } from "@/src/utils/DisplaySettings";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 
-import USE_fetchPublicLists from "@/src/features/2_vocabs/hooks/USE_fetchPublicLists";
+import USE_supabasePublicLists from "@/src/features/2_vocabs/hooks/USE_supabasePublicLists";
 import USE_zustand from "@/src/zustand";
 import ExploreLists_SUBNAV from "@/src/features/1_lists/components/ExploreLists_SUBNAV";
 import USE_debounceSearch from "@/src/hooks/USE_debounceSearch/USE_debounceSearch";
@@ -48,11 +48,16 @@ export default function PublicLists_PAGE() {
     IS_loadingMore,
     HAS_reachedEnd,
     filteredList_COUNT,
-  } = USE_fetchPublicLists({
+  } = USE_supabasePublicLists({
     search: debouncedSearch,
     z_listDisplay_SETTINGS,
-    paginateBy: 2,
+    paginateBy: 1,
   });
+
+  const IS_searching = useMemo(
+    () => (ARE_listsFetching || IS_debouncing) && !IS_loadingMore,
+    [ARE_listsFetching, IS_debouncing, IS_loadingMore]
+  );
 
   const { showTitle, handleScroll } = USE_showListHeaderTitle();
   const activeFilter_COUNT = USE_getActiveFilterCount(z_listDisplay_SETTINGS);
@@ -82,9 +87,13 @@ export default function PublicLists_PAGE() {
         listHeader_EL={
           <ListsFlatlistHeader_SECTION
             list_NAME="⭐ Public lists"
-            IS_searching={IS_debouncing || ARE_listsFetching}
             totalLists={vocab_COUNT}
-            {...{ search, z_listDisplay_SETTINGS, z_SET_listDisplaySettings }}
+            {...{
+              search,
+              IS_searching,
+              z_listDisplay_SETTINGS,
+              z_SET_listDisplaySettings,
+            }}
           />
         }
         listFooter_EL={
