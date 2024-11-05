@@ -45,7 +45,7 @@ import USE_fetchListAccesses from "@/src/features/5_users/hooks/USE_fetchListAcc
 import USE_supabaseUsers from "@/src/features/5_users/hooks/USE_supabaseUsers";
 
 interface ListSettingsModal_PROPS {
-  selected_LIST: List_MODEL;
+  selected_LIST: List_MODEL | undefined;
   open: boolean;
   TOGGLE_open: () => void;
   backToIndex: () => void;

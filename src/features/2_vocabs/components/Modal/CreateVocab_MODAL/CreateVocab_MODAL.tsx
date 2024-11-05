@@ -43,7 +43,7 @@ import USE_zustand from "@/src/zustand";
 
 interface CreateMyVocabModal_PROPS {
   IS_open: boolean;
-  initialList_ID: string | undefined;
+  initialList_ID?: string | undefined;
   TOGGLE_modal: () => void;
   onSuccess: (new_VOCAB: Vocab_MODEL) => void;
 }

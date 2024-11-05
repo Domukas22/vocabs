@@ -16,8 +16,8 @@ export const MAX_TRANSLATION_LENGTH = 200;
 
 export const HEADER_MARGIN = 80;
 
-export const VOCAB_PAGINATION = 2;
-export const LIST_PAGINATION = 2;
+export const VOCAB_PAGINATION = 20;
+export const LIST_PAGINATION = 20;
 
 const pricing = {
   offer1: {

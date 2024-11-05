@@ -45,7 +45,6 @@ import USE_collectListLangs from "@/src/features/1_lists/hooks/USE_collectListLa
 import { Lists_DB } from "@/src/db";
 
 interface UpdateMyVocabModal_PROPS {
-  user_id: string | undefined;
   IS_open: boolean;
   toUpdate_VOCAB: Vocab_MODEL | undefined;
   TOGGLE_modal: () => void;
@@ -61,7 +60,6 @@ export type UpdateMyVocabData_PROPS = {
 };
 
 export default function UpdateMyVocab_MODAL({
-  user_id,
   IS_open,
   toUpdate_VOCAB,
   TOGGLE_modal: TOGGLE_vocabModal,

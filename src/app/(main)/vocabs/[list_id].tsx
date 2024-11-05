@@ -32,7 +32,9 @@ import Btn from "@/src/components/Btn/Btn";
 import { VocabDisplaySettings_MODAL } from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/VocabDisplaySettings_MODAL";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import USE_displaySettings from "@/src/hooks/USE_displaySettings/USE_displaySettings";
-import USE_myVocabs from "@/src/features/1_lists/hooks/USE_myVocabs";
+import USE_myVocabs, {
+  USE_vocabs,
+} from "@/src/features/1_lists/hooks/USE_myVocabs";
 import FetchVocabs_QUERY from "@/src/features/2_vocabs/utils/FetchVocabs_QUERY";
 import USE_zustand from "@/src/zustand";
 
@@ -53,6 +55,7 @@ import {
 import { MyColors } from "@/src/constants/MyColors";
 import { HEADER_MARGIN } from "@/src/constants/globalVars";
 import BottomAction_SECTION from "@/src/components/BottomAction_SECTION";
+import Vocabs_FLATLIST from "@/src/features/2_vocabs/components/Vocabs_FLATLIST";
 
 function __SingleList_PAGE({
   selected_LIST = undefined,
@@ -64,6 +67,7 @@ function __SingleList_PAGE({
   const { t } = useTranslation();
   const toast = useToast();
   const router = useRouter();
+  const { list_id } = useLocalSearchParams();
 
   const { z_user, z_vocabDisplay_SETTINGS, z_SET_vocabDisplaySettings } =
     USE_zustand();
@@ -101,28 +105,23 @@ function __SingleList_PAGE({
   }
 
   const {
-    vocabs,
-    totalFilteredVocab_COUNT,
-    HAS_reachedEnd,
-    ARE_vocabsFetching,
-    fetchVocabs_ERROR,
-    LOAD_more,
+    IS_searching,
+    data: vocabs,
+    error: fetchVocabs_ERROR,
     IS_loadingMore,
+    HAS_reachedEnd,
+    unpaginated_COUNT: totalFilteredVocab_COUNT,
+    LOAD_more,
     ADD_toDisplayed,
     REMOVE_fromDisplayed,
-  } = USE_myVocabs({
+  } = USE_vocabs({
+    type: "byTargetList",
+    targetList_ID: typeof list_id === "string" ? list_id : "",
     search: debouncedSearch,
-    list_id: selected_LIST?.id,
+    user_id: z_user?.id,
+    IS_debouncing,
     z_vocabDisplay_SETTINGS,
-    paginateBy: 2,
   });
-
-  const IS_searching = useMemo(
-    () => (ARE_vocabsFetching || IS_debouncing) && !IS_loadingMore,
-    [ARE_vocabsFetching, IS_debouncing, IS_loadingMore]
-  );
-
-  console.log(vocabs);
 
   return (
     <Page_WRAP>
@@ -136,34 +135,37 @@ function __SingleList_PAGE({
         {...{ search, SET_search, activeFilter_COUNT }}
       />
 
-      <MyVocabs_FLATLIST
-        {...{ vocabs, IS_searching }}
+      <Vocabs_FLATLIST
+        {...{ vocabs, IS_searching, HANDLE_updateModal }}
+        type="normal"
+        highlightedVocab_ID={highlighted_ID}
+        PREPARE_vocabDelete={(vocab: Vocab_MODEL) => {
+          SET_targetDeleteVocab(vocab);
+          TOGGLE_modal("delete");
+        }}
+        error={fetchVocabs_ERROR}
         onScroll={handleScroll}
         listHeader_EL={
           <VocabsFlatlistHeader_SECTION
-            vocabResults_COUNT={totalFilteredVocab_COUNT || 0}
+            search={search}
+            totalVocabs={totalFilteredVocab_COUNT}
+            IS_searching={IS_searching}
             list_NAME={selected_LIST?.name}
-            totalVocabs={
-              totalFilteredVocab_COUNT ? totalFilteredVocab_COUNT : 0
-            }
-            {...{
-              search,
-              IS_searching,
-              z_vocabDisplay_SETTINGS,
-              z_SET_vocabDisplaySettings,
-            }}
+            vocabResults_COUNT={totalFilteredVocab_COUNT}
+            z_vocabDisplay_SETTINGS={z_vocabDisplay_SETTINGS}
+            z_SET_vocabDisplaySettings={z_SET_vocabDisplaySettings}
           />
         }
         listFooter_EL={
           <BottomAction_SECTION
-            {...{
-              search,
-              LOAD_more,
-              IS_loadingMore,
-              activeFilter_COUNT,
-              totalFilteredResults_COUNT: totalFilteredVocab_COUNT,
-              HAS_reachedEnd,
-            }}
+            type="vocabs"
+            search={search}
+            IS_debouncing={IS_debouncing}
+            IS_loadingMore={IS_loadingMore}
+            HAS_reachedEnd={HAS_reachedEnd}
+            activeFilter_COUNT={activeFilter_COUNT}
+            totalFilteredResults_COUNT={totalFilteredVocab_COUNT}
+            LOAD_more={LOAD_more}
             RESET_search={() => SET_search("")}
             RESET_filters={() =>
               z_SET_vocabDisplaySettings({
@@ -173,16 +175,6 @@ function __SingleList_PAGE({
             }
           />
         }
-        TOGGLE_createVocabModal={() => TOGGLE_modal("createVocab")}
-        PREPARE_vocabDelete={(vocab: Vocab_MODEL) => {
-          SET_targetDeleteVocab(vocab);
-          TOGGLE_modal("delete");
-        }}
-        {...{
-          search,
-          highlightedVocab_ID: highlighted_ID || "",
-          HANDLE_updateModal,
-        }}
       />
 
       <CreateMyVocab_MODAL
@@ -201,8 +193,6 @@ function __SingleList_PAGE({
       />
       <UpdateMyVocab_MODAL
         toUpdate_VOCAB={toUpdate_VOCAB}
-        list_id={selected_LIST?.id}
-        user_id={z_user}
         IS_open={modal_STATES.update}
         TOGGLE_modal={() => TOGGLE_modal("update")}
         onSuccess={(updated_VOCAB: Vocab_MODEL) => {
@@ -225,7 +215,6 @@ function __SingleList_PAGE({
         selected_LIST={selected_LIST}
         open={modal_STATES.listSettings}
         TOGGLE_open={() => TOGGLE_modal("listSettings")}
-        user_id={z_user?.id}
         backToIndex={() => router.back()}
       />
 

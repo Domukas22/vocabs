@@ -276,7 +276,8 @@
     "listAndVocabsCopied": "Liste und Vokabeln kopiert",
     "markedVocab": "Vokabel markiert",
     "demarkedVocab": "Vokabel unmarkiert",
-    "difficultyUpdated": "Schwierigkeit bearbeitet"
+    "difficultyUpdated": "Schwierigkeit bearbeitet",
+    "vocabRevived": "Vokabel wiederhergestellt"
   },
   "notification": {
     "atLeast1LangError": "Mindestens 1 Sprache muss ausgewählt sein"

@@ -273,7 +273,8 @@
     "listAndVocabsCopied": "List and vocabs copied",
     "markedVocab": "Vocab marked",
     "demarkedVocab": "Vocab unmarked",
-    "difficultyUpdated": "Difficulty updated"
+    "difficultyUpdated": "Difficulty updated",
+    "vocabRevived": "Vocab revived"
   },
   "notification": {
     "atLeast1LangError": "Atleast 1 language must be selected"

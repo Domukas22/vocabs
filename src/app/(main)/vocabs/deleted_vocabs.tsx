@@ -24,8 +24,6 @@ import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 
 import { VocabDisplaySettings_MODAL } from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/VocabDisplaySettings_MODAL";
 
-import USE_myVocabs from "@/src/features/1_lists/hooks/USE_myVocabs";
-
 import USE_zustand from "@/src/zustand";
 
 import VocabsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/VocabsFlatlistHeader_SECTION";
@@ -40,6 +38,8 @@ import BottomAction_SECTION from "@/src/components/BottomAction_SECTION";
 import { USE_totalUserVocabs } from "@/src/hooks/USE_totalUserVocabs";
 import DeletedVocabs_FLATLIST from "@/src/features/2_vocabs/components/Flatlist/MyVocabs_FLATLIST/DeletedVocabs_FLATLIST";
 import ReviveDeletedVocab_MODAL from "@/src/features/2_vocabs/components/Modal/SavePublicVocabToList_MODAL/ReviveDeletedVocab_MODAL";
+import { USE_vocabs } from "@/src/features/1_lists/hooks/USE_myVocabs";
+import Vocabs_FLATLIST from "@/src/features/2_vocabs/components/Vocabs_FLATLIST";
 
 export default function DeletedVocabs_PAGE() {
   const { t } = useTranslation();
@@ -54,6 +54,10 @@ export default function DeletedVocabs_PAGE() {
   const activeFilter_COUNT = USE_getActiveFilterCount(z_vocabDisplay_SETTINGS);
   const { highlighted_ID, highlight: HIGHLIGHT_vocab } = USE_highlighedId();
   const [targetRevive_VOCAB, SET_targetReviveVocab] = useState<
+    Vocab_MODEL | undefined
+  >();
+
+  const [targetDelete_VOCAB, SET_targetDeleteVocab] = useState<
     Vocab_MODEL | undefined
   >();
 
@@ -84,23 +88,20 @@ export default function DeletedVocabs_PAGE() {
   }
 
   const {
-    vocabs,
-    totalFilteredVocab_COUNT,
-    HAS_reachedEnd,
-    ARE_vocabsFetching,
-    fetchVocabs_ERROR,
-    LOAD_more,
+    IS_searching,
+    data: vocabs,
+    error: fetchVocabs_ERROR,
     IS_loadingMore,
-    ADD_toDisplayed,
+    HAS_reachedEnd,
+    unpaginated_COUNT: totalFilteredVocab_COUNT,
+    LOAD_more,
     REMOVE_fromDisplayed,
-    initialFetch,
-  } = USE_myVocabs({
+  } = USE_vocabs({
+    type: "deletedVocabs",
     search: debouncedSearch,
     user_id: z_user?.id,
+    IS_debouncing,
     z_vocabDisplay_SETTINGS,
-    fetchAll: true,
-    paginateBy: 10,
-    fetchDeleted: true,
   });
 
   return (
@@ -114,38 +115,41 @@ export default function DeletedVocabs_PAGE() {
         {...{ search, SET_search, activeFilter_COUNT }}
       />
 
-      {/* {initialFetch && ( */}
-      <DeletedVocabs_FLATLIST
-        {...{ vocabs }}
-        onScroll={handleScroll}
-        IS_searching={IS_debouncing || ARE_vocabsFetching}
+      <Vocabs_FLATLIST
+        {...{ vocabs, IS_searching, HANDLE_updateModal }}
+        type="delete"
+        highlightedVocab_ID={highlighted_ID}
+        PREPARE_vocabDelete={(vocab: Vocab_MODEL) => {
+          SET_targetDeleteVocab(vocab);
+          TOGGLE_modal("delete");
+        }}
         SELECT_forRevival={(vocab: Vocab_MODEL) => {
           SET_targetReviveVocab(vocab);
           TOGGLE_modal("revive");
         }}
+        error={fetchVocabs_ERROR}
+        onScroll={handleScroll}
         listHeader_EL={
           <VocabsFlatlistHeader_SECTION
-            IS_searching={ARE_vocabsFetching || IS_debouncing}
-            vocabResults_COUNT={totalFilteredVocab_COUNT || 0}
+            search={search}
+            totalVocabs={totalFilteredVocab_COUNT}
+            IS_searching={IS_searching}
             list_NAME="Deleted vocabs"
-            totalVocabs={totalListVocab_COUNT ? totalListVocab_COUNT : 0}
-            {...{
-              search,
-              z_vocabDisplay_SETTINGS,
-              z_SET_vocabDisplaySettings,
-            }}
+            vocabResults_COUNT={totalFilteredVocab_COUNT}
+            z_vocabDisplay_SETTINGS={z_vocabDisplay_SETTINGS}
+            z_SET_vocabDisplaySettings={z_SET_vocabDisplaySettings}
           />
         }
         listFooter_EL={
           <BottomAction_SECTION
-            {...{
-              search,
-              LOAD_more,
-              IS_loadingMore,
-              activeFilter_COUNT,
-              totalFilteredResults_COUNT: totalFilteredVocab_COUNT,
-              HAS_reachedEnd,
-            }}
+            type="vocabs"
+            search={search}
+            IS_debouncing={IS_debouncing}
+            IS_loadingMore={IS_loadingMore}
+            HAS_reachedEnd={HAS_reachedEnd}
+            activeFilter_COUNT={activeFilter_COUNT}
+            totalFilteredResults_COUNT={totalFilteredVocab_COUNT}
+            LOAD_more={LOAD_more}
             RESET_search={() => SET_search("")}
             RESET_filters={() =>
               z_SET_vocabDisplaySettings({
@@ -160,7 +164,15 @@ export default function DeletedVocabs_PAGE() {
       <ReviveDeletedVocab_MODAL
         vocab={targetRevive_VOCAB}
         IS_open={modal_STATES.revive}
-        onSuccess={() => {}}
+        onSuccess={(new_VOCAB: Vocab_MODEL) => {
+          TOGGLE_modal("revive");
+          HIGHLIGHT_vocab(new_VOCAB.id);
+          REMOVE_fromDisplayed(new_VOCAB.id);
+          toast.show(t("notifications.vocabRevived"), {
+            type: "green",
+            duration: 3000,
+          });
+        }}
         TOGGLE_open={() => TOGGLE_modal("revive")}
       />
 

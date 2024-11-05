@@ -87,7 +87,7 @@ export async function HANDLE_userRouting(
     if (localUser) {
       z_SET_user(localUser);
       await sync("all", userId);
-      router.push("/(main)/explore");
+      router.push("/(main)/vocabs");
     } else {
       await HANDLE_newUser(userId, z_SET_user, router);
     }

@@ -26,8 +26,8 @@ import { withObservables } from "@nozbe/watermelondb/react";
 import { useToast } from "react-native-toast-notifications";
 
 interface VocabProps {
-  vocab: Vocab_MODEL;
-  SELECT_forRevival: (vocab: Vocab_MODEL) => void;
+  vocab: Vocab_MODEL | undefined;
+  SELECT_forRevival: (vocab: Vocab_MODEL) => void | undefined;
 }
 
 // TOGGLEvocabModal needs to also pass in th etranslations, so we dont have to pass them async and get a delayed manageVocabModal update
@@ -45,7 +45,7 @@ export default function Deletedvocab({
       open && s.vocab_open,
       open && vocab?.difficulty && s[`difficulty_${vocab?.difficulty}`],
     ],
-    [open, vocab.difficulty]
+    [open, vocab?.difficulty]
   );
   const { t } = useTranslation();
   const toast = useToast();
@@ -67,7 +67,7 @@ export default function Deletedvocab({
       {open && (
         <>
           <VocabBack_TRS trs={trs} difficulty={vocab?.difficulty} />
-          <VocabBottomText_WRAP desc={vocab.description} />
+          <VocabBottomText_WRAP desc={vocab?.description} />
 
           <View style={{ padding: 12, gap: 8 }}>
             <Btn

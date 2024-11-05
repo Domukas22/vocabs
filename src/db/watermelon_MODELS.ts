@@ -228,6 +228,7 @@ export class Vocab_MODEL extends Model {
   @writer async REVIVE_vocab(list_id: string) {
     await this.update((vocab) => {
       vocab.deleted_at = nullValue;
+
       vocab.list_id = list_id;
       vocab.description = "Eyoooooooooo";
     });

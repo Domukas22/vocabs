@@ -79,7 +79,7 @@ export default function ReviveDeletedVocab_MODAL({
         style={{ flex: 1 }}
       >
         <Header
-          title={"Save vocab to list"}
+          title="Revive vocab"
           big={true}
           btnRight={
             <Btn
@@ -109,6 +109,7 @@ export default function ReviveDeletedVocab_MODAL({
                 if (selected_LIST?.id && vocab) {
                   (async () => {
                     await vocab.REVIVE_vocab(selected_LIST.id);
+                    if (onSuccess) onSuccess(vocab);
                   })();
                 }
               }}

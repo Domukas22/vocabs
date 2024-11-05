@@ -1,156 +1,129 @@
-import { useEffect, useMemo, useState } from "react";
-import FetchVocabs_QUERY from "../../2_vocabs/utils/FetchVocabs_QUERY";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import FetchVocabs_QUERY, {
+  FETCH_vocabs,
+} from "../../2_vocabs/utils/FetchVocabs_QUERY";
 import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 import { z_vocabDisplaySettings_PROPS } from "@/src/zustand";
 import Delay from "@/src/utils/Delay";
+import { FlatlistError_PROPS } from "@/src/props";
+import USE_isSearching from "@/src/hooks/USE_isSearching";
+import { VOCAB_PAGINATION } from "@/src/constants/globalVars";
+import USE_pagination from "@/src/hooks/USE_pagination";
 
-export default function USE_myVocabs({
+export function USE_vocabs({
+  type,
   search,
   user_id,
-  list_id,
+  IS_debouncing = false,
+  targetList_ID,
   z_vocabDisplay_SETTINGS,
-  fetchAll = false,
-  paginateBy = 10,
-  fetchDeleted = false,
 }: {
+  type: "byTargetList" | "allVocabs" | "deletedVocabs";
   search: string;
-  list_id?: string;
-  user_id?: string;
-  z_vocabDisplay_SETTINGS: z_vocabDisplaySettings_PROPS | undefined;
-  fetchAll?: boolean;
-  fetchDeleted?: boolean;
-  paginateBy: number;
+  user_id: string | undefined;
+  IS_debouncing: boolean;
+  targetList_ID?: string | undefined;
+  z_vocabDisplay_SETTINGS: z_vocabDisplaySettings_PROPS;
 }) {
-  const [vocabs, SET_vocabs] = useState<Vocab_MODEL[]>([]);
-  const [totalFilteredVocab_COUNT, SET_totalVocabCount] = useState<number>(0);
-  const [ARE_vocabsFetching, SET_vocabsFetching] = useState(false);
-  const [fetchVocabs_ERROR, SET_error] = useState<string | null>(null);
+  const [data, SET_data] = useState<Vocab_MODEL[]>([]);
+  const [unpaginated_COUNT, SET_unpaginatedCount] = useState<number>(0);
+  const [IS_fetching, SET_fetching] = useState(false);
+  const [error, SET_error] = useState<FlatlistError_PROPS>({
+    value: false,
+    msg: "",
+  });
   const [IS_loadingMore, SET_loadingMore] = useState(false);
-  const [printed_IDS, SET_printedIds] = useState(new Set<string>());
-  const [initialFetch, SET_initialFetch] = useState(false);
-
   const HAS_reachedEnd = useMemo(
-    () => vocabs.length >= totalFilteredVocab_COUNT,
-    [vocabs, totalFilteredVocab_COUNT]
+    () => data?.length >= unpaginated_COUNT,
+    [data, unpaginated_COUNT]
+  );
+  const IS_searching = USE_isSearching({
+    IS_fetching,
+    IS_debouncing,
+    IS_loadingMore,
+  });
+  const errroMsg = useMemo(
+    () =>
+      `Some kind of error occurred while loading the vocabs. This error has been recorded and will be reviewed by developers shortly. If the problem persists, please try to re-load the app or contact support. We apologize for the troubles.`,
+    []
+  );
+  const [printed_IDS, SET_printedIds] = useState(new Set<string>());
+
+  const fetch = useCallback(
+    async (start: number) => {
+      start > 0 ? SET_loadingMore(true) : SET_fetching(true);
+      // Clear error at the beginning of a new fetch to avoid flickering
+      SET_error({ value: false, msg: "" });
+
+      try {
+        const { vocabs, count, error } = await FETCH_vocabs({
+          type,
+          start,
+          search,
+          amount: VOCAB_PAGINATION || 20,
+          user_id,
+          excludeIds: printed_IDS,
+          targetList_ID,
+          z_vocabDisplay_SETTINGS,
+        });
+
+        if (error.value) {
+          SET_error(error);
+          // SET_data([]);
+          // SET_unpaginatedCount(0);
+        } else {
+          SET_data((prev) => [...prev, ...vocabs]);
+          SET_unpaginatedCount(count || 0);
+        }
+      } catch (error: any) {
+        console.error("🔴 Error in USE_myVocabs: 🔴", error);
+        SET_error({
+          value: true,
+          msg: errroMsg,
+        });
+      } finally {
+        SET_loadingMore(false);
+        SET_fetching(false);
+      }
+    },
+    [search, z_vocabDisplay_SETTINGS, user_id, targetList_ID]
   );
 
-  useEffect(() => {
-    resetVocabs();
-    fetchVocabs({ printed: new Set<string>(), resetTotal: true });
-  }, [search, list_id, z_vocabDisplay_SETTINGS]);
-
-  const resetVocabs = () => {
-    SET_vocabs([]);
-    SET_printedIds(new Set<string>());
-    SET_totalVocabCount(0);
-  };
-
-  const fetchVocabs = async ({
-    printed = new Set<string>(),
-    resetTotal = false,
-  }: {
-    printed: Set<string>;
-    resetTotal?: boolean;
-  }) => {
-    if (IS_loadingMore || ARE_vocabsFetching) return;
-    // await Delay(3000);
-
-    if (!list_id && !fetchAll) {
-      SET_error("🔴 List ID is required unless fetching all vocabs. 🔴");
-      SET_vocabs([]);
-      return;
-    }
-
-    SET_vocabsFetching(true);
-    SET_error(null);
-
-    try {
-      if (resetTotal) await EDIT_filteredVocabCount();
-      const new_VOCABS = await GET_vocabs(printed);
-
-      new_VOCABS.forEach((vocab) => {
-        SET_printedIds((prev) => new Set(prev).add(vocab.id));
-      });
-
-      SET_vocabs((prev) => [...prev, ...new_VOCABS]);
-    } catch (error) {
-      console.error("🔴 Unexpected error fetching vocabs:", error);
-      SET_error("🔴 Unexpected error occurred. 🔴");
-    } finally {
-      SET_vocabsFetching(false);
-      if (!initialFetch) {
-        SET_initialFetch(true);
-        setTimeout(() => {
-          // this prevents the page from ficking at the beginning
-          // if you remove this, each time you navigate to a page which uses this hook, the flatlist with jumo down very quickly at the beginnig
-          // this has something to do with the flashlist component
-        }, 0);
-      }
-    }
-  };
-
-  const GET_vocabs = async (printed: Set<string>) => {
-    const queries = FetchVocabs_QUERY({
-      search,
-      list_id,
-      user_id,
-      z_vocabDisplay_SETTINGS,
-      fetchAll,
-      excludeIds: printed,
-      amount: paginateBy,
-      fetchDeleted,
-    });
-    return await queries.fetch();
-  };
-
-  const EDIT_filteredVocabCount = async () => {
-    const countQuery = FetchVocabs_QUERY({
-      search,
-      list_id,
-      user_id,
-      z_vocabDisplay_SETTINGS,
-      fetchAll,
-      fetchOnlyForCount: true,
-      fetchDeleted,
-    });
-
-    const total = await countQuery.fetchCount();
-    SET_totalVocabCount(total);
-  };
-
-  const LOAD_more = async () => {
-    if (HAS_reachedEnd) return;
-    SET_loadingMore(true);
-
-    await fetchVocabs({ printed: printed_IDS });
-    SET_loadingMore(false);
-  };
+  const { RESET_pagination, paginate } = USE_pagination({
+    paginateBy: VOCAB_PAGINATION || 20,
+    fetch,
+  });
 
   const ADD_toDisplayed = (vocab: Vocab_MODEL) => {
-    SET_vocabs((prev) => [vocab, ...prev]);
+    SET_data((prev) => [vocab, ...prev]);
     SET_printedIds((prev) => new Set(prev).add(vocab.id));
+    SET_unpaginatedCount((prev) => prev + 1);
   };
 
   const REMOVE_fromDisplayed = (id: string) => {
-    SET_vocabs((prev) => prev.filter((x) => x.id !== id));
+    SET_data((prev) => prev.filter((x) => x.id !== id));
     SET_printedIds((prev) => {
       const newSet = new Set(prev);
       newSet.delete(id);
       return newSet;
     });
-    EDIT_filteredVocabCount();
+    SET_unpaginatedCount((prev) => prev - 1);
   };
 
+  useEffect(() => {
+    SET_data([]);
+    RESET_pagination();
+  }, [search, z_vocabDisplay_SETTINGS, targetList_ID]);
+
   return {
-    vocabs,
-    IS_loadingMore,
+    data,
+    error,
+    IS_searching,
     HAS_reachedEnd,
-    fetchVocabs_ERROR,
-    ARE_vocabsFetching,
-    totalFilteredVocab_COUNT,
-    LOAD_more,
+    IS_loadingMore,
+    unpaginated_COUNT,
+    LOAD_more: paginate,
     ADD_toDisplayed,
     REMOVE_fromDisplayed,
-    initialFetch,
   };
 }
