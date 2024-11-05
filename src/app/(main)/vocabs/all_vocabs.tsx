@@ -24,7 +24,7 @@ import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 
 import { VocabDisplaySettings_MODAL } from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/VocabDisplaySettings_MODAL";
 
-import { USE_vocabs } from "@/src/features/1_lists/hooks/USE_myVocabs";
+import { USE_vocabs } from "@/src/features/1_lists/hooks/USE_vocabs";
 
 import USE_zustand from "@/src/zustand";
 

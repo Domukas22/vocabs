@@ -5,69 +5,46 @@
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
 import {
   CreateMyVocab_MODAL,
-  MyVocabs_HEADER,
-  MyVocabs_SUBNAV,
   MyVocabs_FLATLIST,
   DeleteVocab_MODAL,
 } from "@/src/features/2_vocabs";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 
-import React, { useEffect, useMemo, useState } from "react";
-import ListSettings_MODAL from "@/src/features/1_lists/components/ListSettings_MODAL/ListSettings_MODAL";
-import { USE_auth } from "@/src/context/Auth_CONTEXT";
+import React, { useState } from "react";
+
 import USE_highlighedId from "@/src/hooks/USE_highlighedId/USE_highlighedId";
-import { USE_highlightBoolean } from "@/src/hooks/USE_highlightBoolean/USE_highlightBoolean";
+
 import { useTranslation } from "react-i18next";
 
 import { useToast } from "react-native-toast-notifications";
 
 import UpdateMyVocab_MODAL from "@/src/features/2_vocabs/components/Modal/UpdateMyVocab_MODAL/UpdateMyVocab_MODAL";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
-import { List_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
+import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 
-import { withObservables } from "@nozbe/watermelondb/react";
-import { USE_observeList } from "@/src/features/1_lists/hooks/USE_observeList";
-import { sync } from "@/src/db/sync";
-import Btn from "@/src/components/Btn/Btn";
 import { VocabDisplaySettings_MODAL } from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/VocabDisplaySettings_MODAL";
-import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
-import USE_displaySettings from "@/src/hooks/USE_displaySettings/USE_displaySettings";
-import USE_myVocabs, {
-  USE_vocabs,
-} from "@/src/features/1_lists/hooks/USE_vocabs";
-import FetchVocabs_QUERY from "@/src/features/2_vocabs/utils/FetchVocabs_QUERY";
+
+import { USE_vocabs } from "@/src/features/1_lists/hooks/USE_vocabs";
+
 import USE_zustand from "@/src/zustand";
 
 import VocabsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/VocabsFlatlistHeader_SECTION";
-import { Lists_DB, Vocabs_DB } from "@/src/db";
-import { Q } from "@nozbe/watermelondb";
+
 import USE_debounceSearch from "@/src/hooks/USE_debounceSearch/USE_debounceSearch";
 import List_HEADER from "@/src/components/Header/List_HEADER";
 import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
 import USE_getActiveFilterCount from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/utils/USE_getActiveFilterCount";
-import { notEq } from "@nozbe/watermelondb/QueryDescription";
-import {
-  ActivityIndicator,
-  Keyboard,
-  View,
-  TouchableWithoutFeedback,
-} from "react-native";
-import { MyColors } from "@/src/constants/MyColors";
-import { HEADER_MARGIN } from "@/src/constants/globalVars";
+
 import BottomAction_SECTION from "@/src/components/BottomAction_SECTION";
+
+import { USE_totalUserVocabs } from "@/src/hooks/USE_totalUserVocabs";
+import ExploreVocabs_FLATLIST from "@/src/features/2_vocabs/components/ExploreVocabs_FLATLIST";
 import Vocabs_FLATLIST from "@/src/features/2_vocabs/components/Vocabs_FLATLIST";
 
-function __SingleList_PAGE({
-  selected_LIST = undefined,
-  totalListVocab_COUNT = 0,
-}: {
-  selected_LIST: List_MODEL | undefined;
-  totalListVocab_COUNT: number | undefined;
-}) {
+export default function SavedVocabs_PAGE() {
   const { t } = useTranslation();
   const toast = useToast();
   const router = useRouter();
-  const { list_id } = useLocalSearchParams();
 
   const { z_user, z_vocabDisplay_SETTINGS, z_SET_vocabDisplaySettings } =
     USE_zustand();
@@ -76,10 +53,11 @@ function __SingleList_PAGE({
   const { showTitle, handleScroll } = USE_showListHeaderTitle();
   const activeFilter_COUNT = USE_getActiveFilterCount(z_vocabDisplay_SETTINGS);
   const { highlighted_ID, highlight: HIGHLIGHT_vocab } = USE_highlighedId();
-
   const [targetDelete_VOCAB, SET_targetDeleteVocab] = useState<
     Vocab_MODEL | undefined
   >();
+
+  const totalListVocab_COUNT = USE_totalUserVocabs(z_user);
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
     { name: "displaySettings" },
@@ -115,8 +93,7 @@ function __SingleList_PAGE({
     ADD_toDisplayed,
     REMOVE_fromDisplayed,
   } = USE_vocabs({
-    type: "byTargetList",
-    targetList_ID: typeof list_id === "string" ? list_id : "",
+    type: "marked",
     search: debouncedSearch,
     user_id: z_user?.id,
     IS_debouncing,
@@ -127,10 +104,9 @@ function __SingleList_PAGE({
     <Page_WRAP>
       <List_HEADER
         SHOW_listName={showTitle}
-        list_NAME={selected_LIST?.name}
+        list_NAME="⭐ My saved vocabs"
         GO_back={() => router.back()}
         OPEN_displaySettings={() => TOGGLE_modal("displaySettings")}
-        OPEN_listSettings={() => TOGGLE_modal("listSettings")}
         OPEN_create={() => TOGGLE_modal("createVocab")}
         {...{ search, SET_search, activeFilter_COUNT }}
       />
@@ -150,7 +126,7 @@ function __SingleList_PAGE({
             search={search}
             totalVocabs={totalFilteredVocab_COUNT}
             IS_searching={IS_searching}
-            list_NAME={selected_LIST?.name}
+            list_NAME="⭐ My saved vocabs"
             vocabResults_COUNT={totalFilteredVocab_COUNT}
             z_vocabDisplay_SETTINGS={z_vocabDisplay_SETTINGS}
             z_SET_vocabDisplaySettings={z_SET_vocabDisplaySettings}
@@ -179,7 +155,6 @@ function __SingleList_PAGE({
 
       <CreateMyVocab_MODAL
         IS_open={modal_STATES.createVocab}
-        initialList_ID={selected_LIST?.id}
         TOGGLE_modal={() => TOGGLE_modal("createVocab")}
         onSuccess={(new_VOCAB: Vocab_MODEL) => {
           TOGGLE_modal("createVocab");
@@ -208,14 +183,7 @@ function __SingleList_PAGE({
       <VocabDisplaySettings_MODAL
         open={modal_STATES.displaySettings}
         TOGGLE_open={() => TOGGLE_modal("displaySettings")}
-        collectedLang_IDS={selected_LIST?.collected_lang_ids?.split(",") || []}
-      />
-
-      <ListSettings_MODAL
-        selected_LIST={selected_LIST}
-        open={modal_STATES.listSettings}
-        TOGGLE_open={() => TOGGLE_modal("listSettings")}
-        backToIndex={() => router.back()}
+        collectedLang_IDS={[]}
       />
 
       <DeleteVocab_MODAL
@@ -233,42 +201,4 @@ function __SingleList_PAGE({
       />
     </Page_WRAP>
   );
-}
-
-export default function SingleList_PAGE() {
-  const { list_id } = useLocalSearchParams();
-  // const [list, setList] = useState<List_MODEL | null>(null);
-
-  // Fetch the list asynchronously based on `list_id`
-  // useEffect(() => {
-  //   const fetchList = async () => {
-  //     if (typeof list_id !== "string") {
-  //       return;
-  //     }
-
-  //     const foundList = await Lists_DB.find(list_id);
-  //     setList(foundList);
-  //   };
-
-  //   fetchList();
-  // }, [list_id]);
-
-  // // Observe the selected list
-  // const listObservable = USE_observeList(
-  //   typeof list_id === "string" ? list_id : ""
-  // );
-
-  // Use withObservables to pass the observed list and computed total count to the page
-  const enhance = withObservables(["selected_LIST"], ({ selected_LIST }) => ({
-    // selected_LIST: list ? list : undefined,
-    selected_LIST: Lists_DB.findAndObserve(
-      typeof list_id === "string" ? list_id : ""
-    ),
-    // totalListVocab_COUNT: list?.vocab_COUNT ? list?.vocab_COUNT : undefined,
-  }));
-
-  const EnhancedPage = enhance(__SingleList_PAGE);
-
-  // Render the enhanced page
-  return <EnhancedPage totalListVocab_COUNT={0} />;
 }

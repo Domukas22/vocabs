@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import FetchVocabs_QUERY, {
-  FETCH_vocabs,
-} from "../../2_vocabs/utils/FetchVocabs_QUERY";
+import { FETCH_vocabs } from "../../2_vocabs/utils/FetchVocabs_QUERY";
 import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 import { z_vocabDisplaySettings_PROPS } from "@/src/zustand";
 import Delay from "@/src/utils/Delay";
@@ -18,7 +16,7 @@ export function USE_vocabs({
   targetList_ID,
   z_vocabDisplay_SETTINGS,
 }: {
-  type: "byTargetList" | "allVocabs" | "deletedVocabs";
+  type: "byTargetList" | "allVocabs" | "deletedVocabs" | "marked";
   search: string;
   user_id: string | undefined;
   IS_debouncing: boolean;

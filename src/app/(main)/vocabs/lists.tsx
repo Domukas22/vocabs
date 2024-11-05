@@ -39,7 +39,9 @@ import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
 import USE_getActiveFilterCount from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/utils/USE_getActiveFilterCount";
 import ListDisplaySettings_MODAL from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/ListDisplaySettings_MODAL";
 import ListsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/ListsFlatlistHeader_SECTION";
-import USE_myLists from "@/src/features/1_lists/hooks/USE_myLists";
+import USE_myLists, {
+  USE_lists,
+} from "@/src/features/1_lists/hooks/USE_myLists";
 import USE_debounceSearch from "@/src/hooks/USE_debounceSearch/USE_debounceSearch";
 import USE_collectMyListLangs from "@/src/features/1_lists/hooks/USE_collectMyListLangs";
 import { sync } from "@/src/db/sync";
@@ -83,40 +85,24 @@ export default function MyLists_PAGE() {
     TOGGLE_modal("delete");
   }
   const activeFilter_COUNT = USE_getActiveFilterCount(z_listDisplay_SETTINGS);
+  const collectedLang_IDS = USE_collectMyListLangs(z_user);
 
   const {
-    lists,
+    IS_searching,
+    data: lists,
+    error,
     IS_loadingMore,
     HAS_reachedEnd,
-    fetchLists_ERROR,
-    ARE_listsFetching,
-    totalFilteredLists_COUNT,
+    unpaginated_COUNT,
     LOAD_more,
     ADD_toDisplayed,
     REMOVE_fromDisplayed,
-  } = USE_myLists({
+  } = USE_lists({
     search: debouncedSearch,
     user_id: z_user?.id,
     z_listDisplay_SETTINGS,
-    paginateBy: 10,
+    IS_debouncing,
   });
-
-  const collectedLang_IDS = USE_collectMyListLangs(z_user);
-
-  const [printed_LISTS, SET_printedLists] = useState<List_MODEL[]>([]);
-
-  const IS_searching = useMemo(
-    () => (ARE_listsFetching || IS_debouncing) && !IS_loadingMore,
-    [ARE_listsFetching, IS_debouncing, IS_loadingMore]
-  );
-
-  useEffect(() => {
-    if (!ARE_listsFetching && !IS_loadingMore) {
-      SET_printedLists(lists);
-      return;
-    }
-    SET_printedLists(printed_LISTS);
-  }, [search, IS_debouncing, ARE_listsFetching, IS_loadingMore, lists]);
 
   return (
     <Page_WRAP>
@@ -131,22 +117,13 @@ export default function MyLists_PAGE() {
 
       {/* <Btn text="Existing lists" onPress={() => sync(true)} /> */}
       <MyLists_FLATLIST
-        lists={printed_LISTS}
-        SELECT_list={(id: string) => {
-          router.push(`/(main)/vocabs/${id}`);
-          Keyboard.dismiss();
-        }}
-        SHOW_bottomBtn={search === ""}
-        TOGGLE_createListModal={() => TOGGLE_modal("create")}
-        highlighted_ID={highlighted_ID}
-        _ref={list_REF}
-        PREPARE_listRename={PREPARE_listRename}
-        PREPADE_deleteList={PREPADE_deleteList}
+        {...{ lists, error, IS_searching }}
         onScroll={handleScroll}
         listHeader_EL={
           <ListsFlatlistHeader_SECTION
-            list_NAME="My Lists"
-            totalLists={totalFilteredLists_COUNT}
+            list_NAME="My lists"
+            totalLists={unpaginated_COUNT}
+            HAS_error={error?.value}
             {...{
               search,
               IS_searching,
@@ -157,22 +134,18 @@ export default function MyLists_PAGE() {
         }
         listFooter_EL={
           <BottomAction_SECTION
+            type="list"
+            totalFilteredResults_COUNT={unpaginated_COUNT}
+            RESET_search={() => SET_search("")}
+            RESET_filters={() => z_SET_listDisplaySettings({ langFilters: [] })}
             {...{
               search,
+              IS_debouncing,
               LOAD_more,
               IS_loadingMore,
-
               activeFilter_COUNT,
-              totalFilteredResults_COUNT: totalFilteredLists_COUNT,
               HAS_reachedEnd,
             }}
-            type="lists"
-            RESET_search={() => SET_search("")}
-            RESET_filters={() =>
-              z_SET_listDisplaySettings({
-                langFilters: [],
-              })
-            }
           />
         }
       />

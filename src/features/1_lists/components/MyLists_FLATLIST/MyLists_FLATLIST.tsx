@@ -10,18 +10,22 @@ import Styled_FLASHLIST from "@/src/components/Styled_FLATLIST/Styled_FLASHLIST/
 import { useTranslation } from "react-i18next";
 import SwipeableExample from "@/src/components/SwipeableExample/SwipeableExample";
 
-import React from "react";
+import React, { useMemo } from "react";
 import { FlatList, View } from "react-native";
-import { List_MODEL } from "@/src/db/watermelon_MODELS";
+import { List_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 
 import { HEADER_MARGIN } from "@/src/constants/globalVars";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
+import vocabs from "@/src/app/(main)/vocabs";
+import Error_SECTION from "@/src/components/Error_SECTION";
+import Skeleton_VIEW from "@/src/components/Skeleton_VIEW";
+import Deletedvocab from "@/src/features/2_vocabs/components/Vocab/My_VOCAB/Deleted_VOCAB";
+import MyVocab from "@/src/features/2_vocabs/components/Vocab/My_VOCAB/My_VOCAB";
+import { useRouter } from "expo-router";
 
 interface MyListsFlatlist_PROPS {
-  _ref: React.RefObject<FlatList>;
   lists: List_MODEL[] | undefined;
   SHOW_bottomBtn: boolean;
-  blurAndDisable: boolean;
   highlighted_ID?: string | undefined;
   listHeader_EL: React.ReactNode;
   listFooter_EL: React.ReactNode;
@@ -30,58 +34,46 @@ interface MyListsFlatlist_PROPS {
   PREPADE_deleteList: (list: List_MODEL) => void;
   TOGGLE_createListModal: () => void;
   onScroll: () => {};
+  error: { value: boolean; msg: string };
+  IS_searching: boolean;
 }
 
 export default function MyLists_FLATLIST({
-  _ref,
   lists,
-  SHOW_bottomBtn,
-  highlighted_ID,
-  SELECT_list,
-  PREPARE_listRename,
-  PREPADE_deleteList,
-  TOGGLE_createListModal,
-  onScroll,
+  error,
+  IS_searching,
   listHeader_EL,
   listFooter_EL,
-  blurAndDisable,
+  onScroll,
 }: MyListsFlatlist_PROPS) {
-  const { t } = useTranslation();
+  const router = useRouter();
+  const data = useMemo(() => {
+    if (error?.value || IS_searching) return [];
+    return lists;
+  }, [IS_searching, error?.value, lists]);
+
+  const Footer = () => {
+    if (error?.value) return <Error_SECTION paragraph={error?.msg} />;
+    if (IS_searching) return <Skeleton_VIEW />;
+    return listFooter_EL;
+  };
+
+  const Button = (list: List_MODEL) => (
+    <MyList_BTN
+      {...{ list }}
+      key={list.id}
+      onPress={() => router.push(`/(main)/vocabs/${list.id}`)}
+    />
+  );
 
   return (
     <Styled_FLASHLIST
-      // _ref={_ref}
-      data={lists || []}
-      onScroll={onScroll}
+      {...{ onScroll }}
+      data={data}
+      renderItem={({ item }) => Button(item)}
       keyExtractor={(item) => item?.id}
       ListHeaderComponent={listHeader_EL}
-      ListFooterComponent={listFooter_EL}
-      extraData={blurAndDisable}
-      renderItem={({ item }: { item: List_MODEL }) => (
-        <SwipeableExample
-          leftBtn_ACTION={() => {
-            if (!blurAndDisable) {
-              PREPARE_listRename(item);
-            }
-          }}
-          rightBtn_ACTION={() => {
-            if (!blurAndDisable) PREPADE_deleteList(item);
-          }}
-        >
-          {item instanceof List_MODEL && (
-            <MyList_BTN
-              blurAndDisable={blurAndDisable}
-              list={item}
-              onPress={() => {
-                if (typeof item?.id === "string") {
-                  SELECT_list(item.id);
-                }
-              }}
-              highlighted={highlighted_ID === item?.id}
-            />
-          )}
-        </SwipeableExample>
-      )}
+      ListFooterComponent={<Footer />}
     />
   );
 }

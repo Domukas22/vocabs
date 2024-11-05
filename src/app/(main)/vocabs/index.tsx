@@ -41,17 +41,25 @@ import USE_zustand from "@/src/zustand";
 import { checkUnsyncedChanges, PUSH_changes, sync } from "@/src/db/sync";
 import { notEq } from "@nozbe/watermelondb/QueryDescription";
 import Btn from "@/src/components/Btn/Btn";
+import Block from "@/src/components/Block/Block";
+import Label from "@/src/components/Label/Label";
+import { ICON_arrow } from "@/src/components/icons/icons";
+import { Skeleton } from "@/src/components/Skeleton_VIEW";
+import { ScrollView } from "react-native";
+import { MyList_BTN } from "@/src/features/1_lists/components/MyList_BTN/MyList_BTN";
 
-function _MyLists_PAGE({
+function _Index_PAGE({
   totalUserList_COUNT = 0,
   totalUserVocab_COUNT = 0,
-  markedUserVocab_COUNT = 0,
+  totalSavedVocab_COUNT = 0,
   deletedUserVocab_COUNT = 0,
+  myTopLists = [],
 }: {
   totalUserList_COUNT: number | undefined;
   totalUserVocab_COUNT: number | undefined;
-  markedUserVocab_COUNT: number | undefined;
+  totalSavedVocab_COUNT: number | undefined;
   deletedUserVocab_COUNT: number | undefined;
+  myTopLists: List_MODEL[] | undefined;
 }) {
   const { t } = useTranslation();
   const { SET_selectedList } = USE_selectedList();
@@ -63,35 +71,77 @@ function _MyLists_PAGE({
 
   const [search, SET_search] = useState("");
 
+  // const [lists, SET_lists] = useState<List_MODEL[] | undefined>();
+
+  // useEffect(() => {
+  //   (async () => {
+  //     const result = await Lists_DB.query(
+  //       Q.where("user_id", z_user?.id || ""),
+  //       Q.where("deleted_at", null),
+  //       Q.take(3)
+  //     );
+  //     SET_lists(result || []);
+  //   })();
+  // }, []);
+
   return (
     <Page_WRAP>
-      <Header title={`My vocabs`} big={true} />
+      <ScrollView>
+        <Header title="My lists and vocabs" big={true} />
 
-      {/* <View style={{ gap: 8, padding: 12 }}>
+        {/* <View style={{ gap: 8, padding: 12 }}>
     
         <Btn text="Push" onPress={PUSH_changes} />
         <Btn text="Pull" onPress={() => sync("updates", z_user?.id)} />
         <Btn text="Sync all" onPress={() => sync("all", z_user?.id)} />
       </View> */}
 
-      <View style={{ padding: 12, gap: 12 }}>
-        <ExplorePage_BTN
-          title="My lists"
-          description={`${totalUserList_COUNT} lists`}
-          onPress={() => router.push("/(main)/vocabs/lists")}
-        />
-        <ExplorePage_BTN
-          title="All my vocabs"
-          description={`${totalUserVocab_COUNT} vocabs in total`}
-          onPress={() => router.push("/(main)/vocabs/all_vocabs")}
-        />
+        <Block styles={{ gap: 12 }}>
+          <Label>My recent lists</Label>
+          {myTopLists ? (
+            myTopLists?.map((list) => (
+              <MyList_BTN
+                {...{ list }}
+                key={list.id}
+                onPress={() => router.push(`/(main)/vocabs/${list.id}`)}
+              />
+            ))
+          ) : (
+            <>
+              <Skeleton />
+              <Skeleton />
+              <Skeleton />
+            </>
+          )}
+          <Btn
+            text={`See all ${totalUserList_COUNT} lists`}
+            iconRight={<ICON_arrow direction="right" />}
+            text_STYLES={{ flex: 1 }}
+            onPress={() => router.push("/(main)/vocabs/lists")}
+          />
+        </Block>
 
-        <ExplorePage_BTN
-          title="Deleted vocabs"
-          description={`${deletedUserVocab_COUNT} deleted vocabs`}
-          onPress={() => router.push("/(main)/vocabs/deleted_vocabs")}
-        />
-      </View>
+        <View style={{ padding: 12, gap: 12, paddingBottom: 36 }}>
+          <Label>My vocabs</Label>
+
+          <ExplorePage_BTN
+            title="⭐ Saved vocabs"
+            description={`${totalSavedVocab_COUNT} vocabs saved`}
+            onPress={() => router.push("/(main)/vocabs/marked_vocabs")}
+          />
+          <ExplorePage_BTN
+            title="🅿️ All my vocabs"
+            description={`${totalUserVocab_COUNT} vocabs in total`}
+            onPress={() => router.push("/(main)/vocabs/all_vocabs")}
+          />
+
+          <ExplorePage_BTN
+            title="🗑️ Deleted vocabs"
+            description={`${deletedUserVocab_COUNT} deleted vocabs`}
+            onPress={() => router.push("/(main)/vocabs/deleted_vocabs")}
+          />
+        </View>
+      </ScrollView>
     </Page_WRAP>
   );
 }
@@ -102,10 +152,12 @@ export default function MyLists_PAGE() {
   const enhance = withObservables([], () => ({
     totalUserList_COUNT: z_user?.totalList_COUNT,
     totalUserVocab_COUNT: z_user?.totalVocab_COUNT,
+    totalSavedVocab_COUNT: z_user?.totalSavedVocab_COUNT,
     markedUserVocab_COUNT: z_user?.markedVocab_COUNT,
     deletedUserVocab_COUNT: z_user?.deletedVocab_COUNT,
+    myTopLists: z_user?.myTopLists,
   }));
-  const EnhancedPage = enhance(_MyLists_PAGE);
+  const EnhancedPage = enhance(_Index_PAGE);
 
   // Render the enhanced page
   return <EnhancedPage />;

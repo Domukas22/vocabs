@@ -66,6 +66,15 @@ export class User_MODEL extends Model {
     .query(Q.where("deleted_at", Q.eq(null)), Q.where("user_id", this.id))
     .observeCount();
 
+  @lazy totalSavedVocab_COUNT = this.collections
+    .get("vocabs")
+    .query(
+      Q.where("is_marked", true),
+      Q.where("deleted_at", null),
+      Q.where("user_id", this.id)
+    )
+    .observeCount();
+
   @lazy markedVocab_COUNT = this.collections
     .get("vocabs")
     .query(
@@ -88,6 +97,11 @@ export class User_MODEL extends Model {
       Q.where("is_read", false)
     )
     .observeCount();
+
+  @lazy myTopLists = this.collections
+    .get("lists")
+    .query(Q.where("user_id", this.id), Q.where("deleted_at", null), Q.take(2))
+    .observe();
 }
 // ===================================================================================
 export class List_MODEL extends Model {

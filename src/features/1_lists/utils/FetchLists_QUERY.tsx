@@ -8,28 +8,35 @@ interface ListFilter_PROPS {
   user_id?: string;
   z_listDisplay_SETTINGS: z_listDisplaySettings_PROPS | undefined;
 
-  fetchOnlyForCount?: boolean;
   excludeIds?: Set<string>;
   amount?: number;
 }
 
-const FetchLists_QUERY = ({
+export default async function FETCH_lists({
   search,
   user_id,
   z_listDisplay_SETTINGS,
-
   excludeIds = new Set(),
   amount,
-  fetchOnlyForCount = false,
-}: ListFilter_PROPS): Query<List_MODEL> => {
+}: ListFilter_PROPS) {
   let query = Lists_DB?.query(
     Q.or(Q.where("type", "private"), Q.where("type", "shared"))
   );
   const conditions = [];
+  let count = 0;
 
-  if (user_id) {
-    conditions.push(Q.where("user_id", user_id));
+  if (!user_id) {
+    return {
+      lists: [],
+      count: 0,
+      error: {
+        value: true,
+        msg: "🔴 User ID not defined when fetching vocabs 🔴",
+      },
+    };
   }
+
+  conditions.push(Q.where("user_id", user_id));
 
   if (z_listDisplay_SETTINGS?.langFilters?.length) {
     conditions.push(
@@ -50,10 +57,7 @@ const FetchLists_QUERY = ({
     );
   }
 
-  if (fetchOnlyForCount) {
-    query = query.extend(Q.and(...conditions));
-    return query;
-  }
+  count = (await query.extend(Q.and(...conditions)).fetchCount()) || 0;
 
   switch (z_listDisplay_SETTINGS?.sorting) {
     case "date":
@@ -68,9 +72,14 @@ const FetchLists_QUERY = ({
 
   conditions.push(Q.where("id", Q.notIn([...excludeIds])));
   query = query.extend(Q.take(amount || 10));
-  query = query.extend(Q.and(...conditions));
+  const lists = (await query.extend(Q.and(...conditions))) || [];
 
-  return query;
-};
-
-export default FetchLists_QUERY;
+  return {
+    lists,
+    count,
+    error: {
+      value: false,
+      msg: "",
+    },
+  };
+}

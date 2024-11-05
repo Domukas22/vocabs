@@ -38,7 +38,7 @@ import BottomAction_SECTION from "@/src/components/BottomAction_SECTION";
 import { USE_totalUserVocabs } from "@/src/hooks/USE_totalUserVocabs";
 import DeletedVocabs_FLATLIST from "@/src/features/2_vocabs/components/Flatlist/MyVocabs_FLATLIST/DeletedVocabs_FLATLIST";
 import ReviveDeletedVocab_MODAL from "@/src/features/2_vocabs/components/Modal/SavePublicVocabToList_MODAL/ReviveDeletedVocab_MODAL";
-import { USE_vocabs } from "@/src/features/1_lists/hooks/USE_myVocabs";
+import { USE_vocabs } from "@/src/features/1_lists/hooks/USE_vocabs";
 import Vocabs_FLATLIST from "@/src/features/2_vocabs/components/Vocabs_FLATLIST";
 
 export default function DeletedVocabs_PAGE() {
