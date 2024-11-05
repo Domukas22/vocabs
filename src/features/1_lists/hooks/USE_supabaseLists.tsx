@@ -2,15 +2,12 @@
 //
 //
 
-import { supabase } from "@/src/lib/supabase";
-import Delay from "@/src/utils/Delay";
 import { z_listDisplaySettings_PROPS } from "@/src/zustand";
 import { useState, useCallback, useMemo, useRef } from "react";
-import FETCH_sharedLists from "../utils/FETCH_sharedLists";
+import FETCH_supabaseLists from "../utils/FETCH_supabaseLists";
 import FORMAT_listVocabCount from "../utils/FORMAT_listVocabCount";
 import FETCH_participantListAccesses from "../utils/FETCH_participantListAccess";
 import AGGREGATE_uniqueStrings from "../utils/AGGREGATE_uniqueStrings";
-import { PostgrestError } from "@supabase/supabase-js";
 import { FlatlistError_PROPS } from "@/src/props";
 
 export type FetchedSharedList_PROPS = {
@@ -26,14 +23,16 @@ export type FetchedSharedList_PROPS = {
   }[];
 };
 
-export default function USE_sharedLists({
+export default function USE_supabaseLists({
   search,
   user_id,
   z_listDisplay_SETTINGS,
+  type,
 }: {
   search: string;
   user_id: string | undefined;
   z_listDisplay_SETTINGS: z_listDisplaySettings_PROPS;
+  type: "public" | "shared";
 }) {
   const [data, SET_data] = useState<FetchedSharedList_PROPS[]>([]);
   const [unpaginated_COUNT, SET_unpaginatedCount] = useState<number>(0);
@@ -48,8 +47,6 @@ export default function USE_sharedLists({
     [data, unpaginated_COUNT]
   );
 
-  console.log(search);
-
   // Create a ref to store the current AbortController
   const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -57,42 +54,45 @@ export default function USE_sharedLists({
     async (start: number, end: number) => {
       if (!user_id) return;
 
-      console.log(search);
-
       // Abort the previous fetch if it's still ongoing
-      // if (abortControllerRef.current) {
-      //   abortControllerRef.current.abort();
-      // }
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
 
-      // // Create a new AbortController for this request
-      // const abortController = new AbortController();
-      // abortControllerRef.current = abortController;
+      // Create a new AbortController for this request
+      const abortController = new AbortController();
+      abortControllerRef.current = abortController;
 
       start > 0 ? SET_loadingMore(true) : SET_fetching(true);
       // Clear error at the beginning of a new fetch to avoid flickering
       SET_error({ value: false, msg: "" });
 
-      // await Delay(500);
-
       try {
-        const allowedLists_IDS = await FETCH_participantListAccesses(user_id);
-        const uniqueAllowedList_IDS = AGGREGATE_uniqueStrings(
-          allowedLists_IDS?.map((x) => x.list_id) || []
-        );
+        let list_ids = null;
 
-        const { lists, count, error } = await FETCH_sharedLists({
+        if (type === "shared") {
+          const allowedLists_IDS = await FETCH_participantListAccesses(user_id);
+          const uniqueAllowedList_IDS = AGGREGATE_uniqueStrings(
+            allowedLists_IDS?.map((x) => x.list_id) || []
+          );
+
+          list_ids = uniqueAllowedList_IDS;
+        }
+
+        const { lists, count, error } = await FETCH_supabaseLists({
           search,
-          list_ids: uniqueAllowedList_IDS,
+          list_ids,
           z_listDisplay_SETTINGS,
           start,
           end,
-          // signal: abortController.signal, // Pass the abort signal here
+          type,
+          signal: abortController.signal, // Pass the abort signal here
         });
 
-        // if (abortController.signal.aborted) {
-        //   // Prevent updates if the request was aborted
-        //   return;
-        // }
+        if (abortController.signal.aborted) {
+          // Prevent updates if the request was aborted
+          return;
+        }
 
         const formated_LISTS = FORMAT_listVocabCount(lists) || [];
 
@@ -103,16 +103,11 @@ export default function USE_sharedLists({
           SET_error(error);
         }
       } catch (error: any) {
-        if (error.name === "AbortError") {
-          console.info("Previous fetch aborted due to a new request.");
-          return;
-        } else {
-          console.error("🔴 Error in USE_sharedLists: 🔴", error);
-          SET_error({
-            value: true,
-            msg: `Some kind of error occurred while searching for shared lists. This error has been recorded and will be reviewed by developers shortly. If the problem persists, please try to re-load the app or contact support. We apologize for the troubles.`,
-          });
-        }
+        console.error("🔴 Error in USE_sharedLists: 🔴", error);
+        SET_error({
+          value: true,
+          msg: `Some kind of error occurred while searching for shared lists. This error has been recorded and will be reviewed by developers shortly. If the problem persists, please try to re-load the app or contact support. We apologize for the troubles.`,
+        });
       } finally {
         SET_loadingMore(false);
         SET_fetching(false);

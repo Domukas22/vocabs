@@ -63,24 +63,16 @@ function _MyLists_PAGE({
 
   const [search, SET_search] = useState("");
 
-  const fn = async () => {
-    // const vocabs = await Vocabs_DB.query(Q.where("deleted_at", notEq(null)));
-    const vocabs = await Vocabs_DB.query();
-    console.log(
-      vocabs?.map((v) => "🔴 " + v.trs?.[0]?.text + "🔴: " + v.deleted_at)
-    );
-  };
-
   return (
     <Page_WRAP>
       <Header title={`My vocabs`} big={true} />
 
-      <View style={{ gap: 8, padding: 12 }}>
-        <Btn text="fire" onPress={fn} />
+      {/* <View style={{ gap: 8, padding: 12 }}>
+    
         <Btn text="Push" onPress={PUSH_changes} />
         <Btn text="Pull" onPress={() => sync("updates", z_user?.id)} />
         <Btn text="Sync all" onPress={() => sync("all", z_user?.id)} />
-      </View>
+      </View> */}
 
       <View style={{ padding: 12, gap: 12 }}>
         <ExplorePage_BTN

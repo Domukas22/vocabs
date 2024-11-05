@@ -12,7 +12,7 @@ export default function Error_SECTION({
   paragraph = "If the problem persists, please try to re-load the app or contact support. We apologize for the troubles.",
   children,
 }: {
-  title: string;
+  title?: string;
   paragraph: string;
   children?: React.ReactNode;
 }) {

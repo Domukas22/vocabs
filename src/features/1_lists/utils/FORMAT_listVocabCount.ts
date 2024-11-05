@@ -2,7 +2,7 @@
 //
 //
 
-import { FetchedSharedList_PROPS } from "../hooks/USE_sharedLists";
+import { FetchedSharedList_PROPS } from "../hooks/USE_supabaseLists";
 
 export default function FORMAT_listVocabCount(
   lists: FetchedSharedList_PROPS[]

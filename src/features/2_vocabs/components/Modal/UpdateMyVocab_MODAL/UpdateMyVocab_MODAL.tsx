@@ -90,8 +90,6 @@ export default function UpdateMyVocab_MODAL({
   } = USE_collectListLangs();
 
   const collectLangs = async (list_id: string | undefined) => {
-    console.log("HERE: ", list_id);
-
     const updated_LIST = await COLLECT_langs({
       list_id,
     });
@@ -102,7 +100,7 @@ export default function UpdateMyVocab_MODAL({
 
   const update = async (data: UpdateMyVocabData_PROPS) => {
     const { list_id, description, difficulty, translations } = data;
-    console.log("1: ", list_id);
+
     const result = await UPDATE_vocab({
       vocab_id: toUpdate_VOCAB?.id,
       list_id,

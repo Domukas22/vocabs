@@ -3,30 +3,24 @@
 //
 
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
-import { USE_auth } from "@/src/context/Auth_CONTEXT";
-import React, { useEffect, useMemo } from "react";
-import SharedLists_HEADER from "@/src/features/1_lists/components/SharedLists_HEADER";
-import USE_supabaseSharedLists from "@/src/features/2_vocabs/hooks/USE_supabaseSharedLists";
+import React, { useEffect } from "react";
 import USE_debounceSearch from "@/src/hooks/USE_debounceSearch/USE_debounceSearch";
 import USE_zustand from "@/src/zustand";
 
 import USE_collectSharedListLangs from "@/src/features/2_vocabs/hooks/USE_collectSharedListLangs";
-import ExploreLists_SUBNAV from "@/src/features/1_lists/components/ExploreLists_SUBNAV";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 import ListDisplaySettings_MODAL from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/ListDisplaySettings_MODAL";
-import ExploreListsBottom_SECTION from "@/src/features/1_lists/components/ExploreListsBottom_SECTION";
 import ExploreLists_FLATLIST from "@/src/features/1_lists/components/ExploreLists_FLATLIST";
-import VocabsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/VocabsFlatlistHeader_SECTION";
 import ListsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/ListsFlatlistHeader_SECTION";
-import USE_totalPublicListCount from "@/src/features/1_lists/hooks/USE_totalPublicListCount";
 
 import USE_getActiveFilterCount from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/utils/USE_getActiveFilterCount";
 import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
 import { useRouter } from "expo-router";
 import List_HEADER from "@/src/components/Header/List_HEADER";
 import BottomAction_SECTION from "@/src/components/BottomAction_SECTION";
-import USE_sharedLists from "@/src/features/1_lists/hooks/USE_sharedLists";
+import USE_supabaseLists from "@/src/features/1_lists/hooks/USE_supabaseLists";
 import USE_pagination from "@/src/hooks/USE_pagination";
+import USE_isSearching from "@/src/hooks/USE_isSearching";
 
 export default function SharedLists_PAGE() {
   const { z_user } = USE_zustand();
@@ -54,10 +48,11 @@ export default function SharedLists_PAGE() {
     unpaginated_COUNT,
     fetch,
     RESET_data,
-  } = USE_sharedLists({
+  } = USE_supabaseLists({
     search: debouncedSearch,
     user_id: z_user?.id,
     z_listDisplay_SETTINGS,
+    type: "shared",
   });
 
   const { RESET_pagination, paginate: LOAD_more } = USE_pagination({
@@ -65,10 +60,11 @@ export default function SharedLists_PAGE() {
     fetch,
   });
 
-  const IS_searching = useMemo(
-    () => (IS_fetching || IS_debouncing) && !IS_loadingMore,
-    [IS_fetching, IS_debouncing, IS_loadingMore]
-  );
+  const IS_searching = USE_isSearching({
+    IS_fetching,
+    IS_debouncing,
+    IS_loadingMore,
+  });
 
   useEffect(() => {
     RESET_data();
@@ -88,17 +84,15 @@ export default function SharedLists_PAGE() {
 
       <ExploreLists_FLATLIST
         type="shared"
-        // error={error && !IS_searching ? error : { value: false, msg: "" }}
         IS_searching={IS_searching}
-        error={{ value: false, msg: "" }}
+        error={error}
         lists={data}
         onScroll={handleScroll}
         listHeader_EL={
           <ListsFlatlistHeader_SECTION
             list_NAME="🔒 Shared lists"
             totalLists={unpaginated_COUNT}
-            // HAS_error={error?.value && !IS_searching}
-            HAS_error={false}
+            HAS_error={error?.value}
             {...{
               search,
               IS_searching,

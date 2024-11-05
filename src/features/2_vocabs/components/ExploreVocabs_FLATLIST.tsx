@@ -27,8 +27,6 @@ export default function ExploreVocabs_FLATLIST({
   onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
   IS_searching: boolean;
 }) {
-  console.log("IS not seachign: ", IS_searching);
-
   return !IS_searching ? (
     <Styled_FLASHLIST
       {...{ onScroll }}

@@ -3,32 +3,35 @@
 //
 
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
-import React, { useMemo } from "react";
+import React, { useEffect } from "react";
 import { _DisplaySettings_PROPS } from "@/src/utils/DisplaySettings";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 
-import USE_supabasePublicLists from "@/src/features/2_vocabs/hooks/USE_supabasePublicLists";
 import USE_zustand from "@/src/zustand";
-import ExploreLists_SUBNAV from "@/src/features/1_lists/components/ExploreLists_SUBNAV";
 import USE_debounceSearch from "@/src/hooks/USE_debounceSearch/USE_debounceSearch";
 import ListDisplaySettings_MODAL from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/ListDisplaySettings_MODAL";
 import USE_collectPublicListLangs from "@/src/features/2_vocabs/hooks/USE_collectPublicListLangs";
 
-import ExploreListsBottom_SECTION from "@/src/features/1_lists/components/ExploreListsBottom_SECTION";
-import PublicLists_HEADER from "@/src/features/1_lists/components/PublicLists_HEADER";
 import ExploreLists_FLATLIST from "@/src/features/1_lists/components/ExploreLists_FLATLIST";
 import ListsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/ListsFlatlistHeader_SECTION";
-import USE_totalPublicListCount from "@/src/features/1_lists/hooks/USE_totalPublicListCount";
 import List_HEADER from "@/src/components/Header/List_HEADER";
 import USE_getActiveFilterCount from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/utils/USE_getActiveFilterCount";
 import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
 import { useRouter } from "expo-router";
 import BottomAction_SECTION from "@/src/components/BottomAction_SECTION";
+import USE_supabaseLists from "@/src/features/1_lists/hooks/USE_supabaseLists";
+import USE_pagination from "@/src/hooks/USE_pagination";
+import USE_isSearching from "@/src/hooks/USE_isSearching";
 
 export default function PublicLists_PAGE() {
+  const { z_user } = USE_zustand();
+  const { z_listDisplay_SETTINGS, z_SET_listDisplaySettings } = USE_zustand();
+  const { showTitle, handleScroll } = USE_showListHeaderTitle();
+  const activeFilter_COUNT = USE_getActiveFilterCount(z_listDisplay_SETTINGS);
+  const router = useRouter();
+
   const { search, debouncedSearch, IS_debouncing, SET_search } =
     USE_debounceSearch();
-  const { z_listDisplay_SETTINGS, z_SET_listDisplaySettings } = USE_zustand();
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
     { name: "displaySettings" },
@@ -37,31 +40,37 @@ export default function PublicLists_PAGE() {
   const { collectedLang_IDS, ARE_langIdsCollecting, collectLangIds_ERROR } =
     USE_collectPublicListLangs();
 
-  const { vocab_COUNT, IS_totalCountFetching, fetchTotalCount_ERROR } =
-    USE_totalPublicListCount();
-
   const {
-    lists,
-    ARE_listsFetching,
-    fetchLists_ERROR,
-    LOAD_more,
+    data,
+    error,
+    IS_fetching,
     IS_loadingMore,
     HAS_reachedEnd,
-    filteredList_COUNT,
-  } = USE_supabasePublicLists({
+    unpaginated_COUNT,
+    fetch,
+    RESET_data,
+  } = USE_supabaseLists({
     search: debouncedSearch,
+    user_id: z_user?.id,
     z_listDisplay_SETTINGS,
-    paginateBy: 1,
+    type: "public",
   });
 
-  const IS_searching = useMemo(
-    () => (ARE_listsFetching || IS_debouncing) && !IS_loadingMore,
-    [ARE_listsFetching, IS_debouncing, IS_loadingMore]
-  );
+  const { RESET_pagination, paginate: LOAD_more } = USE_pagination({
+    paginateBy: 2,
+    fetch,
+  });
 
-  const { showTitle, handleScroll } = USE_showListHeaderTitle();
-  const activeFilter_COUNT = USE_getActiveFilterCount(z_listDisplay_SETTINGS);
-  const router = useRouter();
+  const IS_searching = USE_isSearching({
+    IS_fetching,
+    IS_debouncing,
+    IS_loadingMore,
+  });
+
+  useEffect(() => {
+    RESET_data();
+    RESET_pagination();
+  }, [debouncedSearch, z_listDisplay_SETTINGS, z_user?.id]);
 
   return (
     <Page_WRAP>
@@ -75,19 +84,16 @@ export default function PublicLists_PAGE() {
       />
 
       <ExploreLists_FLATLIST
-        type="public"
-        {...{
-          lists,
-          IS_loadingMore,
-          HAS_reachedEnd: lists?.length >= filteredList_COUNT,
-          ARE_listsFetching,
-          LOAD_more,
-        }}
+        type="shared"
+        IS_searching={IS_searching}
+        error={error}
+        lists={data}
         onScroll={handleScroll}
         listHeader_EL={
           <ListsFlatlistHeader_SECTION
             list_NAME="⭐ Public lists"
-            totalLists={vocab_COUNT}
+            totalLists={unpaginated_COUNT}
+            HAS_error={error?.value}
             {...{
               search,
               IS_searching,
@@ -98,16 +104,18 @@ export default function PublicLists_PAGE() {
         }
         listFooter_EL={
           <BottomAction_SECTION
+            type="list"
+            totalFilteredResults_COUNT={unpaginated_COUNT}
+            RESET_search={() => SET_search("")}
+            RESET_filters={() => z_SET_listDisplaySettings({ langFilters: [] })}
             {...{
               search,
+              IS_debouncing,
               LOAD_more,
               IS_loadingMore,
               activeFilter_COUNT,
-              totalFilteredResults_COUNT: filteredList_COUNT,
-              HAS_reachedEnd: lists?.length >= filteredList_COUNT,
+              HAS_reachedEnd,
             }}
-            RESET_search={() => SET_search("")}
-            RESET_filters={() => z_SET_listDisplaySettings({ langFilters: [] })}
           />
         }
       />

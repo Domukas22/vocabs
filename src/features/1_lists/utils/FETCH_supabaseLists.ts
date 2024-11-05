@@ -3,11 +3,12 @@ import { z_listDisplaySettings_PROPS } from "@/src/zustand";
 
 export interface ListFilter_PROPS {
   search?: string;
-  list_ids: string[];
+  list_ids?: string[] | null;
   z_listDisplay_SETTINGS: z_listDisplaySettings_PROPS | undefined;
   start?: number; // New parameter for start index
   end?: number; // New parameter for end index
-  // signal: AbortSignal;
+  signal: AbortSignal;
+  type: "public" | "shared";
 }
 export interface ListFilterCount_PROPS {
   search?: string;
@@ -15,16 +16,15 @@ export interface ListFilterCount_PROPS {
   z_listDisplay_SETTINGS: z_listDisplaySettings_PROPS | undefined;
 }
 
-export default async function FETCH_sharedLists({
+export default async function FETCH_supabaseLists({
   search,
   list_ids,
   z_listDisplay_SETTINGS,
-  start = 0, // Default start index
-  end = 10, // Default end index (can be overridden)
-}: // signal,
-ListFilter_PROPS) {
-  // Start with a base query for fetching public lists
-
+  start = 0,
+  end = 10,
+  signal,
+  type,
+}: ListFilter_PROPS) {
   let query = supabase.from("lists").select(
     `
         id,
@@ -37,14 +37,45 @@ ListFilter_PROPS) {
     { count: "exact" }
   );
 
-  if (list_ids && list_ids.length > 0) {
-    query = query.in("id", list_ids);
+  switch (type) {
+    case "public":
+      query = query.eq("type", "public");
+      break;
+    case "shared":
+      if (!list_ids) {
+        console.error(
+          "🔴 Tried to fetch shared lists, but the allowed list ids are null 🔴"
+        );
+        return {
+          lists: [],
+          count: 0,
+          error: {
+            value: true,
+            msg: "An error as occured while loading the lists",
+          },
+        };
+      }
+
+      if (list_ids.length > 0) {
+        query = query.in("id", list_ids);
+      }
+
+      query = query.eq("type", "shared");
+      break;
+    default:
+      console.error(
+        `🔴 Tried to fetch supabase lists, but the argument 'type' is '${type}' 🔴`
+      );
+      return {
+        lists: [],
+        count: 0,
+        error: {
+          value: true,
+          msg: "An error as occured while loading the lists",
+        },
+      };
   }
 
-  // Add filtering for public lists
-  query = query.eq("type", "shared");
-
-  // Apply search filters if present
   if (search) {
     query = query.or(`name.ilike.%${search}%,description.ilike.%${search}%`);
   }
@@ -61,7 +92,6 @@ ListFilter_PROPS) {
     );
   }
 
-  // Handle sorting based on the provided display settings
   switch (z_listDisplay_SETTINGS?.sorting) {
     case "date":
       query = query.order("created_at", {
@@ -79,15 +109,15 @@ ListFilter_PROPS) {
 
   // -----------------------------------------------------------
 
-  const { data, error, count } = await query; //.abortSignal(signal);
-
-  if (error) {
-    console.error(`🔴 Error fetching participant list accesses🔴`, error);
-  }
+  const { data, error, count } = await query.abortSignal(signal);
 
   return {
     lists: data || [],
     count: count || 0,
+    // error: {
+    //   value: true,
+    //   msg: "An error as occured while loading shared lists",
+    // },
     error: {
       value: error ? true : false,
       msg: error ? "An error as occured while loading shared lists" : "",

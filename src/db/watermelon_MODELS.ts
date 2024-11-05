@@ -226,10 +226,6 @@ export class Vocab_MODEL extends Model {
   }
 
   @writer async REVIVE_vocab(list_id: string) {
-    console.log("FIRE here: ", list_id);
-
-    console.log(this.trs?.[0]?.text);
-
     await this.update((vocab) => {
       vocab.deleted_at = nullValue;
       vocab.list_id = list_id;

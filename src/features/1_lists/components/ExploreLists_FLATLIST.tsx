@@ -10,15 +10,12 @@ import ExploreList_BTN from "./ExploreList_BTN";
 import ExploreListsBottom_SECTION from "./ExploreListsBottom_SECTION";
 import { NativeSyntheticEvent, NativeScrollEvent, View } from "react-native";
 import { HEADER_MARGIN } from "@/src/constants/globalVars";
-import { FetchedSharedList_PROPS } from "../hooks/USE_sharedLists";
+import { FetchedSharedList_PROPS } from "../hooks/USE_supabaseLists";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
 import Error_SECTION from "@/src/components/Error_SECTION";
 
-import Skeleton_VIEW, {
-  GET_sketelons,
-  Skeleton,
-} from "@/src/components/Skeleton_VIEW";
+import Skeleton_VIEW from "@/src/components/Skeleton_VIEW";
 import { useMemo } from "react";
 
 export default function ExploreLists_FLATLIST({
@@ -46,14 +43,7 @@ export default function ExploreLists_FLATLIST({
   }, [IS_searching, error.value, lists]);
 
   const Footer = () => {
-    if (error.value)
-      return (
-        <Error_SECTION
-          title="An error has occured  asdasd asasaw da w"
-          paragraph={error.msg}
-        />
-      );
-
+    if (error.value) return <Error_SECTION paragraph={error.msg} />;
     if (IS_searching) return <Skeleton_VIEW />;
     return listFooter_EL;
   };
