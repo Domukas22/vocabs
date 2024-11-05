@@ -3,12 +3,15 @@
 //
 
 import { z_listDisplaySettings_PROPS } from "@/src/zustand";
-import { useState, useCallback, useMemo, useRef } from "react";
+import { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import FETCH_supabaseLists from "../utils/FETCH_supabaseLists";
 import FORMAT_listVocabCount from "../utils/FORMAT_listVocabCount";
 import FETCH_participantListAccesses from "../utils/FETCH_participantListAccess";
 import AGGREGATE_uniqueStrings from "../utils/AGGREGATE_uniqueStrings";
 import { FlatlistError_PROPS } from "@/src/props";
+import USE_pagination from "@/src/hooks/USE_pagination";
+import { LIST_PAGINATION } from "@/src/constants/globalVars";
+import USE_isSearching from "@/src/hooks/USE_isSearching";
 
 export type FetchedSharedList_PROPS = {
   id: string;
@@ -26,10 +29,12 @@ export type FetchedSharedList_PROPS = {
 export default function USE_supabaseLists({
   search,
   user_id,
+  IS_debouncing,
   z_listDisplay_SETTINGS,
   type,
 }: {
   search: string;
+  IS_debouncing: boolean;
   user_id: string | undefined;
   z_listDisplay_SETTINGS: z_listDisplaySettings_PROPS;
   type: "public" | "shared";
@@ -46,6 +51,11 @@ export default function USE_supabaseLists({
     () => data?.length >= unpaginated_COUNT,
     [data, unpaginated_COUNT]
   );
+  const IS_searching = USE_isSearching({
+    IS_fetching,
+    IS_debouncing,
+    IS_loadingMore,
+  });
 
   // Create a ref to store the current AbortController
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -116,14 +126,23 @@ export default function USE_supabaseLists({
     [user_id, search, z_listDisplay_SETTINGS]
   );
 
+  const { RESET_pagination, paginate } = USE_pagination({
+    paginateBy: LIST_PAGINATION || 20,
+    fetch,
+  });
+
+  useEffect(() => {
+    SET_data([]);
+    RESET_pagination();
+  }, [search, z_listDisplay_SETTINGS, user_id]);
+
   return {
     data,
     error,
-    IS_fetching,
+    IS_searching,
     HAS_reachedEnd,
     IS_loadingMore,
     unpaginated_COUNT,
-    fetch,
-    RESET_data: () => SET_data([]),
+    LOAD_more: paginate,
   };
 }

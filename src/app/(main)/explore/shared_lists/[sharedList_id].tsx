@@ -43,6 +43,7 @@ export default function PublicListVocabs_PAGE() {
   const [target_VOCAB, SET_targetVocab] = useState<Vocab_MODEL | undefined>();
   const toast = useToast();
   const router = useRouter();
+  const activeFilter_COUNT = USE_getActiveFilterCount(z_vocabDisplay_SETTINGS);
 
   const { sharedList, IS_sharedListFetching, sharedList_ERROR } =
     USE_fetchOneSharedList(
@@ -84,31 +85,26 @@ export default function PublicListVocabs_PAGE() {
     }
   };
 
-  const {
-    vocabs,
-    ARE_vocabsFetching,
-    fetchVocabs_ERROR,
-    LOAD_more,
-    IS_loadingMore,
-    totalFilteredVocab_COUNT,
-  } = USE_supabaseVocabs({
-    search: debouncedSearch,
-    z_vocabDisplay_SETTINGS,
-    paginateBy: 5,
-    targetList_ID: typeof sharedList_id === "string" ? sharedList_id : "",
-  });
-
-  const IS_searching = useMemo(
-    () => (ARE_vocabsFetching || IS_debouncing) && !IS_loadingMore,
-    [ARE_vocabsFetching, IS_debouncing, IS_loadingMore]
-  );
-
-  const activeFilter_COUNT = USE_getActiveFilterCount(z_vocabDisplay_SETTINGS);
-
-  const collectedLang_IDS = useMemo(() => {
+  const collectedLangIds = useMemo(() => {
     // infinite loop occurs if not defined
-    return sharedList?.collected_lang_ids || "";
+    return sharedList?.collected_lang_ids?.split(",") || [];
   }, [sharedList?.collected_lang_ids]);
+
+  const {
+    IS_searching,
+    data: vocabs,
+    error: fetchVocabs_ERROR,
+    IS_loadingMore,
+    HAS_reachedEnd,
+    unpaginated_COUNT: totalFilteredVocab_COUNT,
+    LOAD_more,
+  } = USE_supabaseVocabs({
+    type: "byTargetList",
+    targetList_ID: typeof sharedList_id === "string" ? sharedList_id : "",
+    search: debouncedSearch,
+    IS_debouncing,
+    z_vocabDisplay_SETTINGS,
+  });
 
   return (
     <Page_WRAP>
@@ -122,40 +118,34 @@ export default function PublicListVocabs_PAGE() {
       />
 
       <ExploreVocabs_FLATLIST
-        {...{
-          vocabs,
-          IS_loadingMore,
-          HAS_reachedEnd: vocabs?.length >= totalFilteredVocab_COUNT,
-          ARE_vocabsFetching,
-          LOAD_more,
-        }}
+        {...{ vocabs, IS_searching }}
+        error={fetchVocabs_ERROR}
         SAVE_vocab={(vocab: Vocab_MODEL) => {
           SET_targetVocab(vocab);
           TOGGLE_modal("save");
         }}
+        onScroll={handleScroll}
         listHeader_EL={
           <VocabsFlatlistHeader_SECTION
-            totalVocabs={sharedList?.vocabs?.[0]?.count}
+            search={search}
+            totalVocabs={totalFilteredVocab_COUNT}
+            IS_searching={IS_searching}
             list_NAME={sharedList?.name}
             vocabResults_COUNT={totalFilteredVocab_COUNT}
-            {...{
-              search,
-              IS_searching,
-              z_vocabDisplay_SETTINGS,
-              z_SET_vocabDisplaySettings,
-            }}
+            z_vocabDisplay_SETTINGS={z_vocabDisplay_SETTINGS}
+            z_SET_vocabDisplaySettings={z_SET_vocabDisplaySettings}
           />
         }
         listFooter_EL={
           <BottomAction_SECTION
-            {...{
-              search,
-              LOAD_more,
-              IS_loadingMore,
-              activeFilter_COUNT,
-              totalFilteredResults_COUNT: totalFilteredVocab_COUNT,
-              HAS_reachedEnd: vocabs?.length >= totalFilteredVocab_COUNT,
-            }}
+            type="vocabs"
+            search={search}
+            IS_debouncing={IS_debouncing}
+            IS_loadingMore={IS_loadingMore}
+            HAS_reachedEnd={HAS_reachedEnd}
+            activeFilter_COUNT={activeFilter_COUNT}
+            totalFilteredResults_COUNT={totalFilteredVocab_COUNT}
+            LOAD_more={LOAD_more}
             RESET_search={() => SET_search("")}
             RESET_filters={() =>
               z_SET_vocabDisplaySettings({
@@ -185,7 +175,7 @@ export default function PublicListVocabs_PAGE() {
       <VocabDisplaySettings_MODAL
         open={modal_STATES.displaySettings}
         TOGGLE_open={() => TOGGLE_modal("displaySettings")}
-        collectedLang_IDS={collectedLang_IDS}
+        collectedLang_IDS={collectedLangIds}
         HAS_difficulties={false}
       />
       <CopyListAndVocabs_MODAL

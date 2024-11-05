@@ -6,11 +6,11 @@ import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 import ExploreVocabBack_BTNS from "./Vocab/Components/ExploreVocabBack_BTNS/ExploreVocabBack_BTNS";
 import Vocab from "./Vocab/Vocab";
 import { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
-import React from "react";
-import { View } from "react-native";
-import { MyColors } from "@/src/constants/MyColors";
-import Skeleton from "@/src/components/Skeleton";
+import React, { useMemo } from "react";
+
 import Skeleton_VIEW from "@/src/components/Skeleton_VIEW";
+import Error_SECTION from "@/src/components/Error_SECTION";
+import { FetchedSupabaseVocabs_PROPS } from "@/src/hooks/USE_supabaseVocabs";
 
 export default function ExploreVocabs_FLATLIST({
   vocabs,
@@ -18,40 +18,50 @@ export default function ExploreVocabs_FLATLIST({
   listFooter_EL,
   SAVE_vocab,
   onScroll,
+  error,
   IS_searching = true,
 }: {
-  vocabs: Vocab_MODEL[] | undefined;
+  vocabs: FetchedSupabaseVocabs_PROPS[] | undefined;
   listHeader_EL: React.ReactNode;
   listFooter_EL: React.ReactNode;
+  error: { value: boolean; msg: string };
   SAVE_vocab: (vocab: Vocab_MODEL) => void;
   onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
   IS_searching: boolean;
 }) {
-  return !IS_searching ? (
+  const data = useMemo(() => {
+    if (error?.value || IS_searching) return [];
+    return vocabs;
+  }, [IS_searching, error?.value, vocabs]);
+
+  const Footer = () => {
+    if (error?.value) return <Error_SECTION paragraph={error?.msg} />;
+    if (IS_searching) return <Skeleton_VIEW />;
+    return listFooter_EL;
+  };
+
+  const Vocab_BTN = (vocab: Vocab_MODEL) => (
+    <Vocab
+      vocab={vocab}
+      vocabBack_BTNS={(TOGGLE_vocab: () => void) => (
+        <ExploreVocabBack_BTNS
+          {...{ TOGGLE_vocab }}
+          SAVE_vocab={() => SAVE_vocab(vocab)}
+          list={vocab?.list}
+        />
+      )}
+      SHOW_list
+    />
+  );
+
+  return (
     <Styled_FLASHLIST
       {...{ onScroll }}
-      data={vocabs}
-      // extraData={IS_searching}
-      renderItem={({ item }) => {
-        return (
-          <Vocab
-            vocab={item}
-            vocabBack_BTNS={(TOGGLE_vocab: () => void) => (
-              <ExploreVocabBack_BTNS
-                {...{ TOGGLE_vocab }}
-                SAVE_vocab={() => SAVE_vocab(item)}
-                list={item?.list}
-              />
-            )}
-            SHOW_list
-          />
-        );
-      }}
+      data={data}
+      renderItem={({ item }) => Vocab_BTN(item)}
       keyExtractor={(item) => "PublicVocab" + item.id}
       ListHeaderComponent={listHeader_EL}
-      ListFooterComponent={listFooter_EL}
+      ListFooterComponent={<Footer />}
     />
-  ) : (
-    <Skeleton_VIEW />
   );
 }

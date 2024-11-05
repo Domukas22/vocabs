@@ -7,29 +7,30 @@ export interface VocabFilter_PROPS {
   z_vocabDisplay_SETTINGS: z_vocabDisplaySettings_PROPS | undefined;
   start?: number;
   end?: number;
+  signal: AbortSignal;
 }
 
-export const BUILD_fetchPublicVocabsQuery = ({
+export default async function FETCH_supabaseVocabs({
   search,
-  list_ids,
+  list_ids = [],
   z_vocabDisplay_SETTINGS,
   start = 0,
   end = 10,
-}: VocabFilter_PROPS) => {
-  let query = supabase.from("vocabs").select(
-    `
-    *,
+  signal,
+}: VocabFilter_PROPS) {
+  let query = supabase
+    .from("vocabs")
+    .select(
+      `
+    id, difficulty, description, trs, searchable, lang_ids, is_marked, user_id,
     list:lists (
       id,
       name
     )
   `,
-    { count: "exact" }
-  );
-
-  if (list_ids && list_ids.length > 0) {
-    query = query.in("list_id", list_ids);
-  }
+      { count: "exact" }
+    )
+    .in("list_id", list_ids);
 
   if (
     z_vocabDisplay_SETTINGS?.langFilters &&
@@ -56,7 +57,16 @@ export const BUILD_fetchPublicVocabsQuery = ({
       break;
   }
 
-  query = query.range(start, end - 1); // Zero-based range
+  query = query.range(start, end - 1);
 
-  return query;
-};
+  const { data, error, count } = await query.abortSignal(signal);
+
+  return {
+    vocabs: data || [],
+    count: count || 0,
+    error: {
+      value: error ? true : false,
+      msg: error ? "An error as occured while loading the vocabs" : "",
+    },
+  };
+}

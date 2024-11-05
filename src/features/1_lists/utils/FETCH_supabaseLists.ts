@@ -104,8 +104,7 @@ export default async function FETCH_supabaseLists({
       break;
   }
 
-  // Limit the results based on start and end values
-  query = query.range(start, end - 1); // Supabase uses zero-based indexing for range
+  query = query.range(start, end - 1);
 
   // -----------------------------------------------------------
 
@@ -114,10 +113,6 @@ export default async function FETCH_supabaseLists({
   return {
     lists: data || [],
     count: count || 0,
-    // error: {
-    //   value: true,
-    //   msg: "An error as occured while loading shared lists",
-    // },
     error: {
       value: error ? true : false,
       msg: error ? "An error as occured while loading shared lists" : "",

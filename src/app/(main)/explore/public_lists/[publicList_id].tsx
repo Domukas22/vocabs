@@ -36,30 +36,31 @@ import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
 
 import USE_supabaseVocabs from "@/src/hooks/USE_supabaseVocabs";
 import BottomAction_SECTION from "@/src/components/BottomAction_SECTION";
+import USE_isSearching from "@/src/hooks/USE_isSearching";
 
 export default function PublicListVocabs_PAGE() {
   const toast = useToast();
-  const { z_user } = USE_zustand();
   const router = useRouter();
   const { t } = useTranslation();
+  const { z_user } = USE_zustand();
+  const { showTitle, handleScroll } = USE_showListHeaderTitle();
   const { publicList_id } = useLocalSearchParams();
   const { z_vocabDisplay_SETTINGS, z_SET_vocabDisplaySettings } = USE_zustand();
+  const [target_VOCAB, SET_targetVocab] = useState<Vocab_MODEL | undefined>();
+  const activeFilter_COUNT = USE_getActiveFilterCount(z_vocabDisplay_SETTINGS);
+
   const { search, debouncedSearch, IS_debouncing, SET_search } =
     USE_debounceSearch();
 
-  const activeFilter_COUNT = USE_getActiveFilterCount(z_vocabDisplay_SETTINGS);
+  const { list, IS_listFetching, listFetch_ERROR } = USE_fetchOnePublicList(
+    typeof publicList_id === "string" ? publicList_id : ""
+  );
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
     { name: "save" },
     { name: "displaySettings" },
     { name: "saveList" },
   ]);
-
-  const { list, IS_listFetching, listFetch_ERROR } = USE_fetchOnePublicList(
-    typeof publicList_id === "string" ? publicList_id : ""
-  );
-
-  const { showTitle, handleScroll } = USE_showListHeaderTitle();
 
   const {
     COPY_listAndVocabs,
@@ -105,31 +106,27 @@ export default function PublicListVocabs_PAGE() {
       console.error(new_LIST.msg); // Log internal message for debugging.
     }
   };
-  const {
-    vocabs,
-    ARE_vocabsFetching,
-    fetchVocabs_ERROR,
-    LOAD_more,
-    IS_loadingMore,
-    totalFilteredVocab_COUNT,
-  } = USE_supabaseVocabs({
-    search: debouncedSearch,
-    z_vocabDisplay_SETTINGS,
-    paginateBy: 2,
-    targetList_ID: typeof publicList_id === "string" ? publicList_id : "",
-  });
 
   const collectedLangIds = useMemo(() => {
-    // infinite loop   occurs if not defined
+    // infinite loop occurs if not defined
     return list?.collected_lang_ids?.split(",") || [];
   }, [list?.collected_lang_ids]);
 
-  const [target_VOCAB, SET_targetVocab] = useState<Vocab_MODEL | undefined>();
-
-  const IS_searching = useMemo(
-    () => (ARE_vocabsFetching || IS_debouncing) && !IS_loadingMore,
-    [ARE_vocabsFetching, IS_debouncing, IS_loadingMore]
-  );
+  const {
+    IS_searching,
+    data: vocabs,
+    error: fetchVocabs_ERROR,
+    IS_loadingMore,
+    HAS_reachedEnd,
+    unpaginated_COUNT: totalFilteredVocab_COUNT,
+    LOAD_more,
+  } = USE_supabaseVocabs({
+    type: "byTargetList",
+    targetList_ID: typeof publicList_id === "string" ? publicList_id : "",
+    search: debouncedSearch,
+    IS_debouncing,
+    z_vocabDisplay_SETTINGS,
+  });
 
   return (
     <Page_WRAP>
@@ -143,36 +140,34 @@ export default function PublicListVocabs_PAGE() {
       />
 
       <ExploreVocabs_FLATLIST
-        {...{ vocabs }}
-        onScroll={handleScroll}
-        IS_searching={true}
+        {...{ vocabs, IS_searching }}
+        error={fetchVocabs_ERROR}
         SAVE_vocab={(vocab: Vocab_MODEL) => {
           SET_targetVocab(vocab);
           TOGGLE_modal("save");
         }}
+        onScroll={handleScroll}
         listHeader_EL={
           <VocabsFlatlistHeader_SECTION
-            totalVocabs={list?.vocabs?.[0]?.count}
+            search={search}
+            totalVocabs={totalFilteredVocab_COUNT}
+            IS_searching={IS_searching}
             list_NAME={list?.name}
             vocabResults_COUNT={totalFilteredVocab_COUNT}
-            {...{
-              search,
-              IS_searching,
-              z_vocabDisplay_SETTINGS,
-              z_SET_vocabDisplaySettings,
-            }}
+            z_vocabDisplay_SETTINGS={z_vocabDisplay_SETTINGS}
+            z_SET_vocabDisplaySettings={z_SET_vocabDisplaySettings}
           />
         }
         listFooter_EL={
           <BottomAction_SECTION
-            {...{
-              search,
-              LOAD_more,
-              IS_loadingMore,
-              activeFilter_COUNT,
-              totalFilteredResults_COUNT: totalFilteredVocab_COUNT,
-              HAS_reachedEnd: vocabs?.length >= totalFilteredVocab_COUNT,
-            }}
+            type="vocabs"
+            search={search}
+            IS_debouncing={IS_debouncing}
+            IS_loadingMore={IS_loadingMore}
+            HAS_reachedEnd={HAS_reachedEnd}
+            activeFilter_COUNT={activeFilter_COUNT}
+            totalFilteredResults_COUNT={totalFilteredVocab_COUNT}
+            LOAD_more={LOAD_more}
             RESET_search={() => SET_search("")}
             RESET_filters={() =>
               z_SET_vocabDisplaySettings({

@@ -38,12 +38,12 @@ export default function ExploreLists_FLATLIST({
   const router = useRouter();
 
   const data = useMemo(() => {
-    if (error.value || IS_searching) return [];
+    if (error?.value || IS_searching) return [];
     return lists;
-  }, [IS_searching, error.value, lists]);
+  }, [IS_searching, error?.value, lists]);
 
   const Footer = () => {
-    if (error.value) return <Error_SECTION paragraph={error.msg} />;
+    if (error?.value) return <Error_SECTION paragraph={error?.msg} />;
     if (IS_searching) return <Skeleton_VIEW />;
     return listFooter_EL;
   };
@@ -63,12 +63,12 @@ export default function ExploreLists_FLATLIST({
 
   return (
     <Styled_FLASHLIST
-      data={data}
       {...{ onScroll }}
+      data={data}
+      renderItem={({ item }) => List_BTN(item)}
+      keyExtractor={(item) => "PublicList" + item.id}
       ListHeaderComponent={listHeader_EL}
       ListFooterComponent={<Footer />}
-      renderItem={({ item }) => List_BTN(item)}
-      keyExtractor={(item) => "PublicVocab" + item.id}
     />
   );
 }

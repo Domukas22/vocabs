@@ -43,34 +43,18 @@ export default function PublicLists_PAGE() {
   const {
     data,
     error,
-    IS_fetching,
+    IS_searching,
     IS_loadingMore,
     HAS_reachedEnd,
     unpaginated_COUNT,
-    fetch,
-    RESET_data,
+    LOAD_more,
   } = USE_supabaseLists({
     search: debouncedSearch,
     user_id: z_user?.id,
     z_listDisplay_SETTINGS,
     type: "public",
-  });
-
-  const { RESET_pagination, paginate: LOAD_more } = USE_pagination({
-    paginateBy: 2,
-    fetch,
-  });
-
-  const IS_searching = USE_isSearching({
-    IS_fetching,
     IS_debouncing,
-    IS_loadingMore,
   });
-
-  useEffect(() => {
-    RESET_data();
-    RESET_pagination();
-  }, [debouncedSearch, z_listDisplay_SETTINGS, z_user?.id]);
 
   return (
     <Page_WRAP>
@@ -84,7 +68,7 @@ export default function PublicLists_PAGE() {
       />
 
       <ExploreLists_FLATLIST
-        type="shared"
+        type="public"
         IS_searching={IS_searching}
         error={error}
         lists={data}
