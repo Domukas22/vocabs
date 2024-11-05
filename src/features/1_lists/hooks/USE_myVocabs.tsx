@@ -53,7 +53,7 @@ export default function USE_myVocabs({
     resetTotal?: boolean;
   }) => {
     if (IS_loadingMore || ARE_vocabsFetching) return;
-    await Delay(3000);
+    // await Delay(3000);
 
     if (!list_id && !fetchAll) {
       SET_error("🔴 List ID is required unless fetching all vocabs. 🔴");

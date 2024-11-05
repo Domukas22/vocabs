@@ -77,8 +77,8 @@ export default function SavePublicVocabToList_MODAL({
 
   const create = async () => {
     const result = await CREATE_vocab({
-      user: z_user,
-      list: selected_LIST,
+      user_id: z_user?.id,
+      list_id: selected_LIST?.id,
       difficulty: 3,
       description: vocab?.description,
       translations: vocab?.trs || [],
@@ -140,7 +140,7 @@ export default function SavePublicVocabToList_MODAL({
         />
       </KeyboardAvoidingView>
       <CreateList_MODAL
-        user={z_user}
+        user_id={z_user?.id}
         IS_open={modal_STATES.create}
         // currentList_NAMES={z_lists?.map((l) => l.name)}
         CLOSE_modal={() => TOGGLE_modal("create")}

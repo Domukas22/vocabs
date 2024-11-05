@@ -39,6 +39,7 @@ function _ChooseAList_FLATLIST({
     <Styled_FLASHLIST
       gap={8}
       data={lists}
+      extraData={selected_LIST}
       renderItem={({ item }: { item: List_MODEL }) => (
         <Btn
           text={item.name}

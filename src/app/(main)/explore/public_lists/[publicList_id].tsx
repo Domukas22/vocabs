@@ -80,7 +80,7 @@ export default function PublicListVocabs_PAGE() {
     if (!list || IS_copyingList) return;
     const new_LIST = await COPY_listAndVocabs({
       list,
-      user: z_user,
+      user_id: z_user?.id,
       onSuccess: (new_LIST: List_MODEL) => {
         TOGGLE_modal("saveList");
         toast.show(t("notifications.listAndVocabsCopied"), {

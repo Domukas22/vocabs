@@ -122,6 +122,8 @@ function __SingleList_PAGE({
     [ARE_vocabsFetching, IS_debouncing, IS_loadingMore]
   );
 
+  console.log(vocabs);
+
   return (
     <Page_WRAP>
       <List_HEADER
