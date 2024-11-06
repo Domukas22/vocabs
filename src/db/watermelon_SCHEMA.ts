@@ -43,15 +43,18 @@ export default appSchema({
       ],
     }),
 
-    // tableSchema({
-    //   name: "list_access",
-    //   columns: [
-    //     { name: "owner_id", type: "string", isIndexed: true },
-    //     { name: "participant_id", type: "string", isIndexed: true },
-    //     { name: "list_id", type: "string", isIndexed: true },
-    //     { name: "created_at", type: "number" },
-    //   ],
-    // }),
+    tableSchema({
+      name: "list_accesses",
+      columns: [
+        { name: "list_id", type: "string", isIndexed: true },
+        { name: "owner_id", type: "string", isIndexed: true },
+        { name: "participant_id", type: "string", isIndexed: true },
+
+        { name: "created_at", type: "number" },
+        { name: "updated_at", type: "number" },
+        { name: "deleted_at", type: "string", isOptional: true },
+      ],
+    }),
 
     tableSchema({
       name: "vocabs",
@@ -112,6 +115,7 @@ export default appSchema({
       name: "payments",
       columns: [
         { name: "user_id", type: "string", isIndexed: true },
+        { name: "transaction_id", type: "string" },
 
         { name: "item", type: "string" },
         { name: "amount", type: "number" },

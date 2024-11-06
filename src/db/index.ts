@@ -51,6 +51,7 @@ const db = new Database({
     Language_MODEL,
     Notifications_MODEL,
     Payments_MODEL,
+    ListAccess_MODEL,
   ],
 });
 
@@ -58,7 +59,7 @@ export default db;
 
 export const Users_DB = db.get<User_MODEL>("users"),
   Lists_DB = db.get<List_MODEL>("lists"),
-  ListAccess_DB = db.get<ListAccess_MODEL>("list_access"),
+  ListAccess_DB = db.get<ListAccess_MODEL>("list_accesses"),
   Vocabs_DB = db.get<Vocab_MODEL>("vocabs"),
   Languages_DB = db.get<Language_MODEL>("languages"),
   Notifications_DB = db.get<Notifications_MODEL>("notifications"),

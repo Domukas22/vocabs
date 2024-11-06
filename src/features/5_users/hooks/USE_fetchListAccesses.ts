@@ -39,14 +39,14 @@ export default function USE_fetchListAccesses() {
       SET_error(null);
 
       try {
-        // Fetch all list_access entries for the provided user_id and list_id
+        // Fetch all list_accesses entries for the provided user_id and list_id
         const { data: accessData, error: accessError } = await supabase
-          .from("list_access")
+          .from("list_accesses")
           .select("participant_id")
           .eq("owner_id", user_id) // Assuming owner_id is the owner of the list
           .eq("list_id", list_id);
 
-        // Check for errors in fetching list_access
+        // Check for errors in fetching list_accesses
         if (accessError) {
           console.error("Error fetching list access entries:", accessError);
           SET_error("🔴 Error fetching list access entries. 🔴");

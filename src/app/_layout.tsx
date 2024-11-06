@@ -82,60 +82,93 @@ export async function HANDLE_userRouting(
   userId: string | null,
   z_SET_user: z_setUser_PROPS
 ) {
+  const NAVIGATE_toWelcomeScreen = async () => {
+    await SecureStore.setItemAsync("user_id", "");
+    z_SET_user(undefined);
+    router.push("/welcome");
+  };
+
+  const NAVIGATE_tovocabs = async (user: User_MODEL) => {
+    z_SET_user(user);
+    await sync("all", user?.id || "");
+    router.push("/(main)/vocabs");
+  };
+
   if (userId) {
-    const localUser = await FETCH_localUser(userId);
-    if (localUser) {
-      z_SET_user(localUser);
-      await sync("all", userId);
-      router.push("/(main)/vocabs");
-    } else {
-      await HANDLE_newUser(userId, z_SET_user, router);
+    // find the user on WatermelonDB and Supabase
+    const localUser = await FETCH_watermelonUser(userId);
+    const { success, supabaseUser } = await FETCH_supabaseUser(userId);
+
+    // 1. if found on watermelon, but not supabase ==> delete watermelon user + redirect to welcome screen
+    // 2. if found on supabase, but not watermelon ==> create user on watermelon + sync all + redirect to vocabs
+    // 3. if found on both ==> sync all + redirect to vocabs
+    // 4. if not found on any ==> redirect to welcome screen
+
+    // 1.
+    if (localUser && !supabaseUser) {
+      // delete watermelon user + redirect to welcome screen
+      await localUser.SOFT_DELETE_user();
+      await NAVIGATE_toWelcomeScreen();
     }
-  } else {
-    z_SET_user(undefined);
-    router.push("/welcome");
+    // 2.
+    if (!localUser && supabaseUser) {
+      // create user on watermelon + sync all + redirect to vocabs
+      const { success, watermelonUser, msg } = await CREATE_watermelonUser(
+        supabaseUser
+      );
+      if (success && watermelonUser) await NAVIGATE_tovocabs(watermelonUser);
+      else await NAVIGATE_toWelcomeScreen();
+    }
+    // 3.
+    if (localUser && supabaseUser) {
+      await NAVIGATE_tovocabs(localUser);
+    }
+    // 4.
+    if (!localUser && !supabaseUser) {
+      await NAVIGATE_toWelcomeScreen();
+    }
   }
 }
 
-// Fetch user from WatermelonDB
-export async function FETCH_localUser(userId: string) {
-  const users = await Users_DB.query(Q.where("id", userId));
-  return users[0] || undefined;
-}
+// async function HANDLE_newUser(
+//   userId: string,
+//   z_SET_user: z_setUser_PROPS,
+//   router: Router
+// ) {
+//   // before firing this function, we should already
 
-// Handle new user creation or fetching from Supabase
-export async function HANDLE_newUser(
-  userId: string,
-  z_SET_user: z_setUser_PROPS,
-  router: Router
-) {
-  const { success, supabaseUser } = await FETCH_supabaseUser(userId);
-  if (success) {
-    const {
-      success: userCreated,
-      watermelonUser,
-      msg,
-    } = await CREATE_watermelonUser(supabaseUser);
-    if (userCreated) {
-      z_SET_user(watermelonUser);
-      await sync("all", userId);
-      router.push("/(main)/vocabs");
-    } else {
-      console.error(msg);
-      z_SET_user(undefined);
-      router.push("/welcome");
-    }
-  } else {
-    console.error(
-      `🔴 User with ID "${userId}" exists in Supabase authentication but is not in the users table 🔴`
-    );
-    z_SET_user(undefined);
-    router.push("/welcome");
-  }
-}
+//   // can we find the user in supabase?
+//   const { success, supabaseUser } = await FETCH_supabaseUser(userId);
+
+//   if (success) {
+//     // if found
+//     // user found in supabase, but what about locally in WatermelonDB?
+//     const {
+//       success: userCreated,
+//       watermelonUser,
+//       msg,
+//     } = await CREATE_watermelonUser(supabaseUser);
+
+//     if (userCreated) {
+//       z_SET_user(watermelonUser);
+//       await sync("all", userId);
+//       router.push("/(main)/vocabs");
+//     } else {
+//       console.error(msg);
+//       z_SET_user(undefined);
+//       router.push("/welcome");
+//     }
+//   } else {
+//     console.error(
+//       `🔴 User with ID "${userId}" exists in Supabase authentication but is not in the users table 🔴`
+//     );
+//     z_SET_user(undefined);
+//     router.push("/welcome");
+//   }
+// }
 
 // Fetch user from Supabase
-export async function FETCH_supabaseUser(userId: string) {
+async function FETCH_supabaseUser(userId: string) {
   if (!userId) {
     console.error("🔴 User ID not defined when fetching from Supabase 🔴");
     return { msg: "🔴 User ID not defined 🔴", success: false };
@@ -154,8 +187,14 @@ export async function FETCH_supabaseUser(userId: string) {
   return { success: true, supabaseUser: user };
 }
 
+// Fetch user from WatermelonDB
+async function FETCH_watermelonUser(userId: string) {
+  const users = await Users_DB.query(Q.where("id", userId));
+  return users[0] || undefined;
+}
+
 // Create a new user in WatermelonDB
-export async function CREATE_watermelonUser(supabaseUser: User_MODEL) {
+async function CREATE_watermelonUser(supabaseUser: User_MODEL) {
   if (!supabaseUser) {
     console.error(
       "🔴 Supabase user not defined when creating Watermelon user 🔴"

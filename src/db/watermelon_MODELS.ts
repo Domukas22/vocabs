@@ -16,6 +16,7 @@ import { tr_PROPS } from "./props";
 import { useToast } from "react-native-toast-notifications";
 import { t } from "i18next";
 import { nullValue } from "@nozbe/watermelondb/RawRecord";
+import { notEq } from "@nozbe/watermelondb/QueryDescription";
 
 const SANITIZE_langIds = (rawLangIds: string[]) => {
   return Array.isArray(rawLangIds)
@@ -52,8 +53,8 @@ export class User_MODEL extends Model {
   @field("list_submit_attempt_count") list_submit_attempt_count!: number;
   @field("accepted_list_submit_count") accepted_list_submit_count!: number;
 
-  @readonly @date("created_at") createdAt!: number;
-  @readonly @date("updated_at") updatedAt!: number;
+  @readonly @date("created_at") created_at!: number;
+  @readonly @date("updated_at") updated_at!: number;
   @text("deleted_at") deleted_at!: string;
 
   @lazy totalList_COUNT = this.collections
@@ -102,6 +103,61 @@ export class User_MODEL extends Model {
     .get("lists")
     .query(Q.where("user_id", this.id), Q.where("deleted_at", null), Q.take(2))
     .observe();
+
+  @writer async SOFT_DELETE_user() {
+    const softDelete_LISTS = await this.collections
+      .get("lists")
+      .query(Q.where("user_id", this.id))
+      .fetch();
+
+    const softDelete_LISTACCESSES = await this.collections
+      .get("list_accesses")
+      .query(Q.where("owner_id", this.id), Q.where("participant_id", this.id))
+      .fetch();
+
+    const softDelete_VOCABS = await this.collections
+      .get("vocabs")
+      .query(Q.where("user_id", this.id), Q.where("deleted_at", Q.notEq(null)))
+      .fetch();
+
+    const softDelete_NOTIFICATIONS = await this.collections
+      .get("notifications")
+      .query(Q.where("user_id", this.id))
+      .fetch();
+
+    // --------------------------------------------
+
+    const list_UPDATES = softDelete_LISTS.map((list) =>
+      list.prepareUpdate((l) => {
+        l.deleted_at = new Date().toISOString();
+      })
+    );
+    const listAccess_UPDATES = softDelete_LISTACCESSES.map((listAccess) =>
+      listAccess.prepareUpdate((lA) => {
+        lA.deleted_at = new Date().toISOString();
+      })
+    );
+    const vocab_UPDATES = softDelete_VOCABS.map((vocab) =>
+      vocab.prepareUpdate((v) => {
+        v.deleted_at = new Date().toISOString();
+      })
+    );
+    const notification_UPDATES = softDelete_NOTIFICATIONS.map((notification) =>
+      notification.prepareUpdate((n) => {
+        n.deleted_at = new Date().toISOString();
+      })
+    );
+
+    // Execute all updates in a single batch
+    await this.batch(
+      ...list_UPDATES,
+      ...listAccess_UPDATES,
+      ...vocab_UPDATES,
+      ...notification_UPDATES
+    );
+
+    this.deleted_at = new Date().toISOString();
+  }
 }
 // ===================================================================================
 export class List_MODEL extends Model {
@@ -141,23 +197,55 @@ export class List_MODEL extends Model {
     await this.batch(...updates);
   }
 
-  @writer async DELETE_list() {
-    const vocabsToSoftDelete = await this.collections
+  @writer async HARD_DELETE_list() {
+    const notYetDeleted_VOCABS = await this.collections
       .get("vocabs")
-      .query(Q.where("list_id", this.id))
+      .query(Q.where("list_id", this.id), Q.where("deleted_at", null))
       .fetch();
 
-    const updates = vocabsToSoftDelete.map((vocab) =>
+    const alreadyDeleted_VOCABS = await this.collections
+      .get("vocabs")
+      .query(Q.where("list_id", this.id), Q.where("deleted_at", notEq(null)))
+      .fetch();
+
+    const updates_1 = notYetDeleted_VOCABS.map((vocab) =>
       vocab.prepareUpdate((v) => {
         v.deleted_at = new Date().toISOString();
         v.list_id = null;
       })
     );
 
+    const updates_2 = alreadyDeleted_VOCABS.map((vocab) =>
+      vocab.prepareUpdate((v) => {
+        v.list_id = null;
+      })
+    );
+
     // Execute all updates in a single batch
-    await this.batch(...updates);
+    await this.batch(...updates_1, ...updates_2);
 
     await this.markAsDeleted();
+  }
+
+  @writer async SOFT_DELETE_list() {
+    const vocabsToSoftDelete = await this.collections
+      .get("vocabs")
+      .query(Q.where("list_id", this.id), Q.where("deleted_at", null))
+      .fetch();
+
+    const updates = vocabsToSoftDelete.map((vocab) =>
+      vocab.prepareUpdate((v) => {
+        v.deleted_at = new Date().toISOString();
+      })
+    );
+
+    // Prepare update for the list itself
+    const listUpdate = this.prepareUpdate((list) => {
+      list.deleted_at = new Date().toISOString();
+    });
+
+    // Execute all updates in a single batch transaction
+    await this.batch(...updates, listUpdate);
   }
 
   @writer async SUBMIT_forPublishing(val: boolean) {
@@ -166,8 +254,8 @@ export class List_MODEL extends Model {
     });
   }
 
-  @readonly @date("created_at") createdAt!: number;
-  @readonly @date("updated_at") updatedAt!: number;
+  @readonly @date("created_at") created_at!: number;
+  @readonly @date("updated_at") updated_at!: number;
   @text("deleted_at") deleted_at!: string;
 
   @lazy diff_1 = this.collections
@@ -200,6 +288,15 @@ export class List_MODEL extends Model {
   @lazy vocab_COUNT = this.collections
     .get("vocabs")
     .query(Q.where("list_id", this.id), Q.where("deleted_at", Q.eq(null)))
+    .observeCount();
+
+  @lazy participants = this.collections
+    .get("notifications")
+    .query(
+      Q.where("deleted_at", Q.notEq(null)),
+      Q.where("user_id", this.id),
+      Q.where("is_read", false)
+    )
     .observeCount();
 }
 // ===================================================================================
@@ -248,19 +345,21 @@ export class Vocab_MODEL extends Model {
     });
   }
 
-  @readonly @date("created_at") createdAt!: number;
-  @readonly @date("updated_at") updatedAt!: number;
+  @readonly @date("created_at") created_at!: number;
+  @readonly @date("updated_at") updated_at!: number;
   @text("deleted_at") deleted_at!: string;
 }
 // ===================================================================================
 export class ListAccess_MODEL extends Model {
-  static table = "list_access";
+  static table = "list_accesses";
 
   @text("owner_id") owner_id!: string;
   @text("participant_id") participant_id!: string;
   @text("list_id") list_id!: string;
 
-  @readonly @date("created_at") createdAt!: number;
+  @readonly @date("created_at") created_at!: number;
+  @readonly @date("updated_at") updated_at!: number;
+  @text("deleted_at") deleted_at!: string;
 }
 
 // ===================================================================================
@@ -280,8 +379,8 @@ export class Language_MODEL extends Model {
   translation_example_highlights!: string[] | undefined;
   @text("description_example") description_example!: string;
 
-  @readonly @date("created_at") createdAt!: number;
-  @readonly @date("updated_at") updatedAt!: number;
+  @readonly @date("created_at") created_at!: number;
+  @readonly @date("updated_at") updated_at!: number;
   @text("deleted_at") deleted_at!: string;
 }
 export class Notifications_MODEL extends Model {
@@ -300,8 +399,8 @@ export class Notifications_MODEL extends Model {
     | "warning";
   @field("is_read") is_read!: boolean;
 
-  @readonly @date("created_at") createdAt!: number;
-  @readonly @date("updated_at") updatedAt!: number;
+  @readonly @date("created_at") created_at!: number;
+  @readonly @date("updated_at") updated_at!: number;
   @text("deleted_at") deleted_at!: string;
 }
 
@@ -309,11 +408,13 @@ export class Payments_MODEL extends Model {
   static table = "payments";
 
   @text("user_id") user_id!: string;
+  @text("transaction_id") transaction_id!: string;
+
   @text("item") item!: string;
   @text("amount") amount!: number;
   @text("payment_method") payment_method!: string;
 
-  @readonly @date("created_at") createdAt!: number;
-  @readonly @date("updated_at") updatedAt!: number;
+  @readonly @date("created_at") created_at!: number;
+  @readonly @date("updated_at") updated_at!: number;
   @text("deleted_at") deleted_at!: string;
 }

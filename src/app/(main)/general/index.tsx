@@ -54,22 +54,9 @@ function _General_PAGE({
   const { t } = useTranslation();
 
   // const { SET_auth } = USE_auth();
-  const { logout } = USE_auth();
+  const { _lougout } = USE_logout();
 
   const { z_user } = USE_zustand();
-
-  const _lougout = async () => {
-    await sync("all", z_user?.id);
-    const { error } = await logout();
-
-    if (error) {
-      Alert.alert("Logout error", "Error signing out");
-    } else {
-      await SecureStore.setItemAsync("user_id", "");
-      router.push("/welcome");
-      // SET_auth(null);
-    }
-  };
 
   const [IS_logoutModalOpen, TOGGLE_logoutModal] = USE_toggle();
 
@@ -258,4 +245,23 @@ export default function General_PAGE() {
 
   // Render the enhanced page
   return <EnhancedPage />;
+}
+
+export function USE_logout() {
+  const { logout } = USE_auth();
+  const { z_user } = USE_zustand();
+
+  const _lougout = async () => {
+    await sync("all", z_user?.id);
+    const { error } = await logout();
+
+    if (error) {
+      Alert.alert("Logout error", "Error signing out");
+    } else {
+      await SecureStore.setItemAsync("user_id", "");
+      router.push("/welcome");
+    }
+  };
+
+  return { _lougout };
 }

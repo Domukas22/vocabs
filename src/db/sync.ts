@@ -50,7 +50,7 @@ export async function sync(
       },
 
       pushChanges: async ({ changes, lastPulledAt }) => {
-        const { error } = await supabase.rpc("push_all", {
+        const { error } = await supabase.rpc("push", {
           changes,
         });
 
@@ -93,7 +93,7 @@ export async function PUSH_changes() {
       },
 
       pushChanges: async ({ changes }) => {
-        const { error } = await supabase.rpc("push_all", {
+        const { error } = await supabase.rpc("push", {
           changes,
         });
 

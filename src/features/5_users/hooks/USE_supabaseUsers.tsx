@@ -124,6 +124,10 @@ export default function USE_supabaseUsers({
     SET_loadingMore(false);
   };
 
+  // useEffect(() => {
+  //   fetchUsers({ start: 0, end: paginateBy });
+  // }, [selected_IDS]);
+
   return {
     users,
     IS_fetching: ARE_usersFetching,

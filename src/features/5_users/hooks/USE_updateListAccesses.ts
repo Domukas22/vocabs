@@ -21,7 +21,7 @@ export default function USE_updateListAccesses() {
       try {
         // Step 1: Fetch current list accesses for the specific owner and list
         const { data: currentAccessesData, error: fetchError } = await supabase
-          .from("list_access")
+          .from("list_accesses")
           .select("participant_id")
           .eq("owner_id", owner_id)
           .eq("list_id", list_id);
@@ -52,14 +52,14 @@ export default function USE_updateListAccesses() {
         // Step 4: Add new participants
         const addPromises = participantsToAdd.map((participant_id) =>
           supabase
-            .from("list_access")
+            .from("list_accesses")
             .insert([{ owner_id, list_id, participant_id }])
         );
 
         // Step 5: Remove participants who are no longer part of the list
         const removePromises = participantsToRemove.map((participant_id) =>
           supabase
-            .from("list_access")
+            .from("list_accesses")
             .delete()
             .eq("owner_id", owner_id)
             .eq("list_id", list_id)

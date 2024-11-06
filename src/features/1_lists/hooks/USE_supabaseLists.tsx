@@ -6,7 +6,7 @@ import { z_listDisplaySettings_PROPS } from "@/src/zustand";
 import { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import FETCH_supabaseLists from "../utils/FETCH_supabaseLists";
 import FORMAT_listVocabCount from "../utils/FORMAT_listVocabCount";
-import FETCH_participantListAccesses from "../utils/FETCH_participantListAccess";
+import FETCH_listAccesesWhereIAmParticipant from "../utils/FETCH_listAccesesWhereIAmParticipant";
 import AGGREGATE_uniqueStrings from "../utils/AGGREGATE_uniqueStrings";
 import { FlatlistError_PROPS } from "@/src/props";
 import USE_pagination from "@/src/hooks/USE_pagination";
@@ -81,7 +81,8 @@ export default function USE_supabaseLists({
         let list_ids = null;
 
         if (type === "shared") {
-          const allowedLists_IDS = await FETCH_participantListAccesses(user_id);
+          const { list_ids: allowedLists_IDS, error } =
+            await FETCH_listAccesesWhereIAmParticipant(user_id);
           const uniqueAllowedList_IDS = AGGREGATE_uniqueStrings(
             allowedLists_IDS?.map((x) => x.list_id) || []
           );
@@ -113,7 +114,7 @@ export default function USE_supabaseLists({
           SET_error(error);
         }
       } catch (error: any) {
-        console.error("🔴 Error in USE_sharedLists: 🔴", error);
+        console.error("🔴 Error in USE_supabaseLists: 🔴", error);
         SET_error({
           value: true,
           msg: `Some kind of error occurred while searching for shared lists. This error has been recorded and will be reviewed by developers shortly. If the problem persists, please try to re-load the app or contact support. We apologize for the troubles.`,

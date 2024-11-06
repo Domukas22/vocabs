@@ -28,11 +28,11 @@ export default function USE_collectSharedListLangs(
       }
 
       const { data: accessData, error: accessError } = await supabase
-        .from("list_access")
+        .from("list_accesses")
         .select("list_id")
         .eq("participant_id", user_id);
 
-      // Check for errors in fetching list_access
+      // Check for errors in fetching list_accesses
       if (accessError) {
         console.error(
           "🔴 Error fetching list access entries when trying to collect shared list accesses 🔴:",

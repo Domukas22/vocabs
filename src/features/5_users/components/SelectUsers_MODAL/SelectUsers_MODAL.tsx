@@ -19,12 +19,14 @@ interface SelectUsersModal_PROPS {
   open: boolean;
   list_id: string | undefined;
   TOGGLE_open: () => void;
+  onUpdate: () => void;
 }
 
 export default function SelectUsers_MODAL({
   open = false,
   list_id,
   TOGGLE_open,
+  onUpdate = () => {},
 }: SelectUsersModal_PROPS) {
   const { z_user } = USE_zustand();
   const [view, SET_view] = useState<"all" | "selected">("all");
@@ -74,7 +76,7 @@ export default function SelectUsers_MODAL({
 
   const submit = async () => {
     if (z_user?.id && list_id) {
-      UPDATE_listAccesses({
+      await UPDATE_listAccesses({
         owner_id: z_user.id,
         list_id,
         participant_ids: Array.from(selectedUser_IDS),
@@ -83,6 +85,7 @@ export default function SelectUsers_MODAL({
     SET_userSearch("");
     SET_userSelectedSearch("");
     TOGGLE_open();
+    if (onUpdate) onUpdate();
   };
 
   const SELECT_user = (incomingUser_ID: string) => {

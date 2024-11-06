@@ -8,6 +8,7 @@ export interface ShareList_PROPS {
   user_id: string;
   SHOULD_share: boolean;
   onSuccess: (updated_LIST: List_MODEL) => Promise<void>;
+  SYNC: () => Promise<void>;
 }
 
 export default function USE_shareList() {
@@ -27,9 +28,10 @@ export default function USE_shareList() {
     user_id,
     SHOULD_share,
     onSuccess,
+    SYNC = async () => {},
   }: ShareList_PROPS): Promise<{
     success: boolean;
-    updatedList?: List_MODEL | undefined;
+    updated_LIST?: List_MODEL | undefined;
     msg?: string;
   }> => {
     SET_shareListError(null); // Clear previous error
@@ -52,6 +54,7 @@ export default function USE_shareList() {
     }
 
     SET_sharingList(true);
+    await SYNC();
     try {
       const { data: updated_LIST, error } = await supabase
         .from("lists")
@@ -69,7 +72,7 @@ export default function USE_shareList() {
         };
       }
 
-      if (onSuccess) onSuccess(updated_LIST);
+      if (onSuccess) await onSuccess(updated_LIST);
 
       return { success: true, updated_LIST };
     } catch (error: any) {
@@ -87,6 +90,7 @@ export default function USE_shareList() {
         msg: `🔴 Unexpected error occurred during the sharing of the list: ${error.message} 🔴`,
       };
     } finally {
+      await SYNC();
       SET_sharingList(false);
     }
   };

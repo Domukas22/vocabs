@@ -28,12 +28,12 @@ import React from "react";
 import { useToast } from "react-native-toast-notifications";
 
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
-import { FlatList, View } from "react-native";
+import { FlatList, Pressable, View } from "react-native";
 
 import ExplorePage_BTN from "@/src/components/ExplorePage_BTN";
 import Header from "@/src/components/Header/Header";
 import { withObservables } from "@nozbe/watermelondb/react";
-import { Lists_DB, Users_DB, Vocabs_DB } from "@/src/db";
+import db, { Lists_DB, Users_DB, Vocabs_DB } from "@/src/db";
 import { Q } from "@nozbe/watermelondb";
 
 import GET_userId from "@/src/utils/GET_userId";
@@ -47,6 +47,8 @@ import { ICON_arrow } from "@/src/components/icons/icons";
 import { Skeleton } from "@/src/components/Skeleton_VIEW";
 import { ScrollView } from "react-native";
 import { MyList_BTN } from "@/src/features/1_lists/components/MyList_BTN/MyList_BTN";
+import Confirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
+import { USE_logout } from "../general";
 
 function _Index_PAGE({
   totalUserList_COUNT = 0,
@@ -71,6 +73,22 @@ function _Index_PAGE({
 
   const [search, SET_search] = useState("");
 
+  const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
+    { name: "resetDB" },
+  ]);
+
+  const { logout } = USE_logout();
+
+  async function resetDatabase() {
+    TOGGLE_modal("resetDB");
+    await logout();
+    await db.write(async () => {
+      await db.unsafeResetDatabase();
+    });
+
+    console.log("🟢 Database has been reset! 🟢");
+  }
+
   // const [lists, SET_lists] = useState<List_MODEL[] | undefined>();
 
   // useEffect(() => {
@@ -87,7 +105,9 @@ function _Index_PAGE({
   return (
     <Page_WRAP>
       <ScrollView>
-        <Header title="My lists and vocabs" big={true} />
+        <Pressable onLongPress={() => TOGGLE_modal("resetDB")}>
+          <Header title="My lists and vocabs" big={true} />
+        </Pressable>
 
         {/* <View style={{ gap: 8, padding: 12 }}>
     
@@ -142,6 +162,14 @@ function _Index_PAGE({
           />
         </View>
       </ScrollView>
+
+      <Confirmation_MODAL
+        action={resetDatabase}
+        actionBtnText="Yes, reset"
+        open={modal_STATES.resetDB}
+        title="Reset database"
+        toggle={() => TOGGLE_modal("resetDB")}
+      />
     </Page_WRAP>
   );
 }

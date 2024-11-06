@@ -24,6 +24,7 @@ function _MyList_BTN({
   diff_3_count = 0,
   vocab_COUNT = 0,
   list,
+  list_NAME,
   onPress,
   highlighted,
   blurAndDisable = false,
@@ -33,6 +34,7 @@ function _MyList_BTN({
   diff_3_count: number;
   vocab_COUNT: number;
   list: List_MODEL;
+  list_NAME: string | undefined;
   onPress: () => void;
   highlighted: boolean;
   blurAndDisable?: boolean;

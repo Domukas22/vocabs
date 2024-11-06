@@ -20,7 +20,8 @@ export default async function FETCH_lists({
   amount,
 }: ListFilter_PROPS) {
   let query = Lists_DB?.query(
-    Q.or(Q.where("type", "private"), Q.where("type", "shared"))
+    Q.or(Q.where("type", "private"), Q.where("type", "shared")),
+    Q.where("deleted_at", null)
   );
   const conditions = [];
   let count = 0;

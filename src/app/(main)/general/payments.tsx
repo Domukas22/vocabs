@@ -119,7 +119,7 @@ function Payment({ payment }: { payment: Payments_MODEL | undefined }) {
     >
       <Styled_TEXT type="text_18_bold">{payment?.item}</Styled_TEXT>
       <Styled_TEXT type="label">
-        {TRANSFORM_dateObject(payment?.createdAt || 0)}
+        {TRANSFORM_dateObject(payment?.created_at || 0)}
       </Styled_TEXT>
       <Styled_TEXT type="label">
         Payment method: {payment?.payment_method}

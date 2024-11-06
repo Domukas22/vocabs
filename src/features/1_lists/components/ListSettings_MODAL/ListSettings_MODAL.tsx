@@ -43,6 +43,7 @@ import db, { Lists_DB } from "@/src/db";
 import USE_zustand from "@/src/zustand";
 import USE_fetchListAccesses from "@/src/features/5_users/hooks/USE_fetchListAccesses";
 import USE_supabaseUsers from "@/src/features/5_users/hooks/USE_supabaseUsers";
+import USE_listParticipantIds from "@/src/hooks/USE_participantsOfAList";
 
 interface ListSettingsModal_PROPS {
   selected_LIST: List_MODEL | undefined;
@@ -76,57 +77,34 @@ export default function ListSettings_MODAL({
   const { SHARE_list, IS_sharingList } = USE_shareList();
   const { PUBLISH_list, IS_publishingList } = USE_publishList();
 
-  const [selectedUser_IDS, SET_selectedUserIds] = useState<Set<string>>(
-    new Set()
-  );
-
-  const { FETCH_accesses, ARE_accessesFetching, accessesFetch_ERROR } =
-    USE_fetchListAccesses();
-
   const {
-    users: selected_USERS,
-    IS_fetching: ARE_selectedusersFetching,
-    error: fetchSelectedUsers_ERROR,
-    LOAD_more: LOAD_moreSelectedUsers,
-    IS_loadingMore: IS_loadingMoreSelectedUsers,
-    total_COUNT: totalSelectedFilteredUser_COUNT,
-  } = USE_supabaseUsers({
-    search: "",
-    paginateBy: 9999,
-    onlySelected: true,
-    selected_IDS: Array.from(selectedUser_IDS),
-    view: "selected",
+    data: list_PARTICIPANTS,
+    IS_fetching: IS_fetchingParticipants,
+    error: fetchPArticipants_ERROR,
+    fetch: FETCH_listParticipantIds,
+  } = USE_listParticipantIds({
+    list: selected_LIST,
+    owner_id: z_user?.id,
   });
 
-  async function SELECT_usersByListAccess() {
-    const accesses = await FETCH_accesses({
-      user_id: z_user?.id || "",
-      list_id: selected_LIST?.id || "",
-    });
-    if (accesses.success && accesses.data) {
-      SET_selectedUserIds(new Set(accesses.data.map((x) => x.participant_id)));
-    }
-  }
-
   useEffect(() => {
-    if (open) SELECT_usersByListAccess();
+    if (open) {
+      (async () => {
+        await FETCH_listParticipantIds();
+      })();
+    }
   }, [open]);
 
   const share = async (bool: boolean) => {
-    await sync("all", z_user?.id);
     SHARE_list({
       list_id: selected_LIST?.id,
       user_id: z_user?.id,
       SHOULD_share: bool,
-      onSuccess: async () => {
-        await sync("all", z_user?.id);
+      SYNC: async () => await sync("all", z_user?.id),
+      onSuccess: async (updated_LIST: List_MODEL) => {
+        await FETCH_listParticipantIds();
       },
     });
-    // await db.write(async () => {
-    //   await selected_LIST.update((list: List_MODEL) => {
-    //     list.type = bool ? "shared" : "private";
-    //   });
-    // });
   };
   const publish = async (bool: boolean) => {
     await selected_LIST.SUBMIT_forPublishing(bool);
@@ -264,9 +242,9 @@ export default function ListSettings_MODAL({
         {selected_LIST?.type === "shared" && (
           <Block>
             <Styled_TEXT style={{ color: MyColors.text_green }}>
-              This list is shared with {selected_USERS?.length || 0} people
+              This list is shared with {list_PARTICIPANTS?.length || 0} people
             </Styled_TEXT>
-            <SharedWithUsers_BULLETS users={selected_USERS || []} />
+            <SharedWithUsers_BULLETS users={list_PARTICIPANTS || []} />
             <Btn
               text="Edit people list"
               style={{ flex: 1 }}
@@ -409,6 +387,11 @@ export default function ListSettings_MODAL({
         open={modal_STATES.selectUsers}
         TOGGLE_open={() => TOGGLE_modal("selectUsers")}
         list_id={selected_LIST?.id}
+        onUpdate={() => {
+          (async () => {
+            await FETCH_listParticipantIds();
+          })();
+        }}
       />
 
       <Confirmation_MODAL
@@ -446,18 +429,12 @@ export default function ListSettings_MODAL({
         IS_open={modal_STATES.deleteList}
         list={selected_LIST}
         CLOSE_modal={() => TOGGLE_modal("deleteList")}
-        onSuccess={(deleted_LIST?: List_MODEL) => {
-          if (!deleted_LIST) return;
+        onSuccess={() => {
           TOGGLE_modal("deleteList");
-          toast.show(
-            t("notifications.listDeletedPre") +
-              `"${deleted_LIST?.name}"` +
-              t("notifications.listDeletedPost"),
-            {
-              type: "green",
-              duration: 5000,
-            }
-          );
+          toast.show(t("notifications.listDeleted"), {
+            type: "green",
+            duration: 5000,
+          });
           router.back();
         }}
       />

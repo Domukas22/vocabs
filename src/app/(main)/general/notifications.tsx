@@ -158,7 +158,7 @@ function Notification_BTN({
           type="label_small"
           // style={[!notification?.is_read && { color: "white" }]}
         >
-          {TRANSFORM_dateObject(notification?.createdAt || 0)}
+          {TRANSFORM_dateObject(notification?.created_at || 0)}
         </Styled_TEXT>
       </Pressable>
       {open && (

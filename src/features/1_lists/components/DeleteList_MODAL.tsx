@@ -30,7 +30,7 @@ export default function DeleteList_MODAL({
   // const { DELETE_list, IS_deletingList, error, RESET_error } = USE_deleteList();
 
   const del = async () => {
-    await list?.DELETE_list();
+    await list?.SOFT_DELETE_list();
     if (onSuccess) {
       onSuccess();
     }
