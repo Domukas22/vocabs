@@ -80,7 +80,8 @@
     "confirmListUnpublish": "Ja, aufheben",
     "all": "Alle",
     "confirmListCopy": "Ja, kopieren",
-    "reviveVocab": "Vokabel wiederherstellen"
+    "reviveVocab": "Vokabel wiederherstellen",
+    "getMoreVocabs": "Mehr Vokabeln holen"
   },
   "pages": {
     "about": {
@@ -277,7 +278,8 @@
     "markedVocab": "Vokabel markiert",
     "demarkedVocab": "Vokabel unmarkiert",
     "difficultyUpdated": "Schwierigkeit bearbeitet",
-    "vocabRevived": "Vokabel wiederhergestellt"
+    "vocabRevived": "Vokabel wiederhergestellt",
+    "usernameUpdated": "Benutzername erneut"
   },
   "notification": {
     "atLeast1LangError": "Mindestens 1 Sprache muss ausgewählt sein"

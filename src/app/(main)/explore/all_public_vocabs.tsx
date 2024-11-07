@@ -135,7 +135,7 @@ export default function AllPublicVocabs_PAGE() {
         onSuccess={() => {
           TOGGLE_modal("save");
           toast.show(t("notifications.savedVocab"), {
-            type: "green",
+            type: "success",
             duration: 3000,
           });
         }}

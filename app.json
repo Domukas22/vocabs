@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "vocabs-new",
+    "name": "Vocabs",
     "slug": "vocabs-new",
     "version": "1.0.0",
     "jsEngine": "hermes",
     "orientation": "portrait",
-    "icon": "./src/assets/images/icon.png",
+    "icon": "./src/assets/images/app_icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -20,7 +20,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#2d2d2d"
       },
       "package": "com.domukas22.vocabsnew"
     },

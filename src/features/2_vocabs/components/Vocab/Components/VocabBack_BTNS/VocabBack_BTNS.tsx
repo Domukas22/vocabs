@@ -49,7 +49,7 @@ export default function VocabBack_BTNS({
               if (vocab?.is_marked === true) {
                 // only show when marked, dont show when unmarked
                 toast.show(t("notifications.markedVocab"), {
-                  type: "green",
+                  type: "success",
                   duration: 2000,
                 });
               }

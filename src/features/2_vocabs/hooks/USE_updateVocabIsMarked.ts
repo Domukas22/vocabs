@@ -41,7 +41,7 @@ export default function USE_updateVocabIsMarked() {
 
       if (!vocab.is_marked) {
         toast.show(t("notifications.markedVocab"), {
-          type: "green",
+          type: "success",
           duration: 2000,
         });
       }

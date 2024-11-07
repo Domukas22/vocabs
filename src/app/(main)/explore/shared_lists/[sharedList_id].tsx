@@ -70,11 +70,11 @@ export default function PublicListVocabs_PAGE() {
 
     const new_LIST = await COPY_listAndVocabs({
       list: sharedList,
-      user_id: z_user?.id,
+      user: z_user,
       onSuccess: (new_LIST: List_MODEL) => {
         TOGGLE_modal("saveList");
         toast.show(t("notifications.listAndVocabsCopied"), {
-          type: "green",
+          type: "success",
           duration: 5000,
         });
       },
@@ -165,7 +165,7 @@ export default function PublicListVocabs_PAGE() {
         onSuccess={() => {
           TOGGLE_modal("save");
           toast.show(t("notifications.savedVocab"), {
-            type: "green",
+            type: "success",
             duration: 3000,
           });
         }}

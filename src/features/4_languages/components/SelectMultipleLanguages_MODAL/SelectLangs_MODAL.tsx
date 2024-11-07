@@ -26,7 +26,7 @@ interface SelectLanguagesModal_PROPS {
   lang_ids?: string[] | undefined;
   IS_inAction?: boolean;
   TOGGLE_open: () => void;
-  SUBMIT_langIds: (lang_ids: string[]) => void;
+  SUBMIT_langIds: (lang_ids: string[]) => Promise<void>;
 }
 
 export default function SelectLangs_MODAL({
@@ -34,7 +34,7 @@ export default function SelectLangs_MODAL({
   lang_ids = [],
   IS_inAction = false,
   TOGGLE_open,
-  SUBMIT_langIds,
+  SUBMIT_langIds = async () => {},
 }: SelectLanguagesModal_PROPS) {
   const [search, SET_search] = useState("");
 
@@ -48,8 +48,8 @@ export default function SelectLangs_MODAL({
     SET_search("");
   };
 
-  const submit = () => {
-    SUBMIT_langIds(selected_LANGS?.map((l) => l.lang_id) || []);
+  const submit = async () => {
+    await SUBMIT_langIds(selected_LANGS?.map((l) => l.lang_id) || []);
     SET_search("");
     TOGGLE_open();
   };

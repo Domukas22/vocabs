@@ -93,6 +93,12 @@ export function USE_lists({
   };
 
   const REMOVE_fromDisplayed = (id: string) => {
+    if (data?.length === 1 && data?.[0].id === id) {
+      SET_data([]);
+      RESET_pagination();
+      return;
+    }
+
     SET_data((prev) => prev.filter((x) => x.id !== id));
     SET_printedIds((prev) => {
       const newSet = new Set(prev);

@@ -6,10 +6,11 @@ import {
   Vocab_MODEL,
 } from "@/src/db/watermelon_MODELS";
 import { supabase } from "@/src/lib/supabase";
+import { eq, notEq } from "@nozbe/watermelondb/QueryDescription";
 
 interface CopyListAndVocabs_PROPS {
   list: List_MODEL | undefined;
-  user_id: string | undefined;
+  user: User_MODEL | undefined;
   onSuccess?: (new_LIST: List_MODEL) => void;
 }
 
@@ -27,7 +28,7 @@ export default function USE_copyListAndItsVocabs() {
 
   const COPY_listAndVocabs = async ({
     list,
-    user_id,
+    user,
     onSuccess,
   }: CopyListAndVocabs_PROPS): Promise<{
     success: boolean;
@@ -47,12 +48,40 @@ export default function USE_copyListAndItsVocabs() {
         };
       }
 
-      if (!user_id) {
+      if (!user || !user?.id) {
         const errorMsg = "You must be logged in to copy a list.";
         SET_copyListError(errorMsg);
         return {
           success: false,
           msg: `🔴 ${errorMsg} 🔴`,
+        };
+      }
+
+      const { count: vocabCount, error: fetchVocabCountError } = await supabase
+        .from("vocabs")
+        .select("*", { count: "exact", head: true })
+        .eq("list_id", list.id);
+
+      if (vocabCount === null || fetchVocabCountError) {
+        SET_copyListError(errorMessage);
+        return {
+          success: false,
+          msg: `🔴 Faild to fetch total vocab count 🔴`,
+        };
+      }
+      const DOES_thisVocabBreachMaxCount = await user.ARE_vocabsWithinMaxRange(
+        vocabCount
+      );
+
+      if (!DOES_thisVocabBreachMaxCount) {
+        const remaining_VOCABS = await user.GET_remainingVocabCount();
+
+        SET_copyListError(
+          `You only have ${remaining_VOCABS} vocabs left, but this list consists of ${vocabCount} vocabs. Please go to the 'General' tab to learn more.`
+        );
+        return {
+          success: false,
+          msg: `🔴 You only have ${remaining_VOCABS} vocabs left, but this list consists of ${vocabCount} vocabs. Please go to the 'General' tab to learn more. 🔴`,
         };
       }
 
@@ -62,8 +91,8 @@ export default function USE_copyListAndItsVocabs() {
       const new_LIST = await db.write(async () => {
         const copiedList = await Lists_DB.create((newList: List_MODEL) => {
           // Copy relevant fields from the existing list
-          newList.user_id = user_id;
-          newList.original_creator_id = user_id;
+          newList.user_id = user.id;
+          newList.original_creator_id = user.id;
 
           newList.name = list.name;
           newList.description = list.description;
@@ -95,7 +124,7 @@ export default function USE_copyListAndItsVocabs() {
             Vocabs_DB.create((newVocab: Vocab_MODEL) => {
               // newVocab.list_id = copiedList.id;
 
-              newVocab.user_id = user_id;
+              newVocab.user_id = user.id;
               newVocab.list_id = copiedList.id;
               newVocab.difficulty = 3;
               newVocab.description = vocab.description;

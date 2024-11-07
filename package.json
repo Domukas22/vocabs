@@ -59,7 +59,10 @@
     "zustand": "^5.0.0-rc.2",
     "expo-secure-store": "~13.0.2",
     "expo-haptics": "~13.0.1",
-    "@shopify/flash-list": "1.6.4"
+    "@shopify/flash-list": "1.6.4",
+    "expo-auth-session": "~5.5.2",
+    "expo-random": "~14.0.1",
+    "expo-application": "~5.9.1"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",

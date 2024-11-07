@@ -38,6 +38,7 @@ import Description_CONTROLER from "../../Inputs/InputControllers/Description_CON
 import Difficulty_CONTROLLER from "../../Inputs/InputControllers/Difficulty_CONTROLLER";
 import List_CONTROLLER from "../../Inputs/InputControllers/List_CONTROLLER";
 import CreateMyVocab_FOOTER from "../../Footer/CreateMyVocab_FOOTER/CreateMyVocab_FOOTER";
+import USE_zustand from "@/src/zustand";
 
 interface CreatePublicVocabModal_PROPS {
   IS_open: boolean;
@@ -60,7 +61,8 @@ export default function CreatePublicVocab_MODAL(
   } = props;
 
   const { t } = useTranslation();
-  const { user }: { user: User_MODEL } = USE_auth();
+
+  const { z_user } = USE_zustand();
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
     { name: "langs", initialValue: false },
@@ -76,7 +78,7 @@ export default function CreatePublicVocab_MODAL(
   const create = async (data: CreatePublicVocabData_PROPS) => {
     const { description, translations } = data;
     const result = await CREATE_vocab({
-      user,
+      user: z_user,
       difficulty: 3,
       description,
       translations,

@@ -49,7 +49,7 @@ export default function USE_myListActions({
   //       TOGGLE_vocabModal();
   //       HIGHLIGHT_vocab(vocab.id);
   //       toast.show(t("notifications.vocabUpdated"), {
-  //         type: "green",
+  //         type: "success",
   //         duration: 5000,
   //       });
   //     }
@@ -72,7 +72,7 @@ export default function USE_myListActions({
   //       TOGGLE_vocabModal();
   //       HIGHLIGHT_vocab(new_VOCAB.data.id);
   //       toast.show(t("notifications.vocabCreated"), {
-  //         type: "green",
+  //         type: "success",
   //         duration: 5000,
   //       });
   //     }

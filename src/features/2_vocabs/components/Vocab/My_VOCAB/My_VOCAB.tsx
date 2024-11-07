@@ -103,7 +103,7 @@ function _MyVocab({ _vocab, highlighted, HANDLE_updateModal }: VocabProps) {
                     await _vocab.EDIT_difficulty(diff);
                     TOGGLE_difficultyEdits();
                     toast.show(t("notifications.difficultyUpdated"), {
-                      type: "green",
+                      type: "success",
                       duration: 2000,
                     });
                   })();

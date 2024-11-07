@@ -141,7 +141,7 @@ export default function Login_PAGE() {
               )}
               name="email"
             />
-            {errors.email && <Error_TEXT>{errors.email.message}</Error_TEXT>}
+            {errors.email && <Error_TEXT text={errors.email.message} />}
           </Block>
 
           <Block noBorder>

@@ -17,6 +17,8 @@ import {
   ICON_activeCount,
   ICON_checkMark,
   ICON_checkMarkFull,
+  ICON_star,
+  ICON_questionMark,
 } from "@/src/components/icons/icons";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
@@ -43,6 +45,9 @@ import { Notifications_MODEL } from "@/src/db/watermelon_MODELS";
 import { Q } from "@nozbe/watermelondb";
 import * as SecureStore from "expo-secure-store";
 import USE_zustand from "@/src/zustand";
+import CurrentVocabCount_BAR from "@/src/components/CurrentVocabCount_BAR";
+import Notification_BOX from "@/src/components/Notification_BOX/Notification_BOX";
+import { useToast } from "react-native-toast-notifications";
 
 function _General_PAGE({
   notification_COUNT,
@@ -59,81 +64,50 @@ function _General_PAGE({
   const { z_user } = USE_zustand();
 
   const [IS_logoutModalOpen, TOGGLE_logoutModal] = USE_toggle();
-
+  const toast = useToast();
   return (
     <Page_WRAP>
       <Header title={t("page.general.header")} big={true} />
       {/* <Btn text="Sync" style={{ margin: 12 }} onPress={sync} /> */}
 
       <ScrollView>
+        {/* <Btn
+          onPress={async () => {
+            const {
+              data,
+              error: fetchError,
+              count,
+            } = await supabase.from("users").select("id", { count: "exact" });
+            // .eq("list_id", list.id);
+            console.log(count);
+          }}
+        /> */}
         <Block>
-          <View style={{ gap: 16 }}>
-            <View>
-              <Styled_TEXT>
-                {(z_user?.max_vocabs || 200) - (totalUserVocab_COUNT || 0)}{" "}
-                vocabs left until you reach the limit
-              </Styled_TEXT>
-              <Styled_TEXT type="label">{z_user?.email}</Styled_TEXT>
-              <Styled_TEXT type="label">{z_user?.username}</Styled_TEXT>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 12,
-              }}
-            >
-              <Styled_TEXT
-                type="text_18_bold"
-                style={{
-                  color: MyColors.text_primary,
-                }}
-              >
-                {totalUserVocab_COUNT ? totalUserVocab_COUNT : 0}
-              </Styled_TEXT>
-              <View
-                style={{
-                  height: 12,
-                  flex: 1,
-                  borderRadius: 50,
-                  borderWidth: 1,
-                  borderColor: MyColors.border_white_005,
-                  backgroundColor: MyColors.btn_3,
-                  marginTop: 2,
-                }}
-              >
-                <View
-                  style={{
-                    height: "100%",
-                    width: `${
-                      totalUserVocab_COUNT ? totalUserVocab_COUNT : 0
-                    }%`,
-                    borderRadius: 50,
-                    backgroundColor: MyColors.icon_primary,
-                  }}
-                ></View>
-              </View>
-              <Styled_TEXT
-                type="text_18_bold"
-                style={{
-                  color: MyColors.text_white_06,
-                }}
-              >
-                {z_user?.max_vocabs || 200}
-              </Styled_TEXT>
-            </View>
-            <View style={{ flexDirection: "row", gap: 8 }}>
-              <Btn
-                text={t("page.general.btn.learnMore")}
-                onPress={() => router.push("/(main)/general/premium")}
-              />
-              <Btn
-                text={t("page.general.btn.getPremium")}
-                type="action"
-                style={{ flex: 1 }}
-                onPress={() => {}}
-              />
-            </View>
+          <View>
+            <Styled_TEXT type="text_18_semibold">
+              You have{" "}
+              {(z_user?.max_vocabs || 200) - (totalUserVocab_COUNT || 0)} vocabs
+              left
+            </Styled_TEXT>
+            <Styled_TEXT type="label">{z_user?.email}</Styled_TEXT>
+            <Styled_TEXT type="label">{z_user?.username}</Styled_TEXT>
+          </View>
+          <CurrentVocabCount_BAR
+            totalUserVocab_COUNT={totalUserVocab_COUNT || 0}
+            max_vocabs={z_user?.max_vocabs || 0}
+          />
+
+          <View style={{ flexDirection: "row", gap: 8, marginTop: 8 }}>
+            <Btn
+              text={t("btn.getMoreVocabs")}
+              type="action"
+              style={{ flex: 1 }}
+              text_STYLES={{ flex: 1 }}
+              iconRight={<ICON_arrow direction="right" color="black" />}
+              onPress={() => router.push("/(main)/general/getVocabs")}
+            />
+
+            <Btn iconRight={<ICON_questionMark />} onPress={() => {}} />
           </View>
         </Block>
 
@@ -165,20 +139,6 @@ function _General_PAGE({
             text={t("page.general.btn.payments")}
             iconRight={<ICON_arrow direction="right" />}
             onPress={() => router.push("/(main)/general/payments")}
-            text_STYLES={{ flex: 1, marginLeft: 4 }}
-          />
-          <Btn
-            iconLeft={<ICON_premium />}
-            text="Premium"
-            iconRight={<ICON_arrow direction="right" />}
-            onPress={() => router.push("/(main)/general/premium")}
-            text_STYLES={{ flex: 1, marginLeft: 4 }}
-          />
-          <Btn
-            // iconLeft={<ICON_premium />}
-            text="Get vocabs"
-            iconRight={<ICON_arrow direction="right" />}
-            onPress={() => router.push("/(main)/general/getVocabs")}
             text_STYLES={{ flex: 1, marginLeft: 4 }}
           />
 

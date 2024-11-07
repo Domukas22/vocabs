@@ -6,6 +6,7 @@ import {
   immutableRelation,
   json,
   lazy,
+  reader,
   readonly,
   relation,
   text,
@@ -57,6 +58,25 @@ export class User_MODEL extends Model {
   @readonly @date("updated_at") updated_at!: number;
   @text("deleted_at") deleted_at!: string;
 
+  @reader async ARE_vocabsWithinMaxRange(count: number = 0) {
+    const allVocabs = await this.collections
+      .get("vocabs")
+      .query(Q.where("deleted_at", Q.eq(null)), Q.where("user_id", this.id))
+      .fetchCount();
+
+    const remaining_VOCABS = this.max_vocabs - allVocabs;
+    // return remaining_VOCABS >= count;
+    return remaining_VOCABS >= count;
+  }
+  @reader async GET_remainingVocabCount() {
+    const result = await this.collections
+      .get("vocabs")
+      .query(Q.where("deleted_at", Q.eq(null)), Q.where("user_id", this.id))
+      .fetchCount();
+
+    return this.max_vocabs - result;
+  }
+
   @lazy totalList_COUNT = this.collections
     .get("lists")
     .query(Q.where("deleted_at", Q.eq(null)), Q.where("user_id", this.id))
@@ -93,7 +113,7 @@ export class User_MODEL extends Model {
   @lazy unreadNotification_COUNT = this.collections
     .get("notifications")
     .query(
-      Q.where("deleted_at", Q.notEq(null)),
+      Q.where("deleted_at", null),
       Q.where("user_id", this.id),
       Q.where("is_read", false)
     )
@@ -177,6 +197,25 @@ export class List_MODEL extends Model {
 
   @text("collected_lang_ids") collected_lang_ids!: string;
   @text("default_lang_ids") default_lang_ids!: string;
+
+  @writer async DELETE_defaultLangId(incomingLang_ID: string = "") {
+    // Get all vocabs where list_id matches this list's ID
+
+    let new_IDS = new Set(this.default_lang_ids?.split(",") || []);
+
+    new_IDS.delete(incomingLang_ID);
+
+    await this.update((list) => {
+      list.default_lang_ids = Array.from(new_IDS).join(",");
+    });
+  }
+  @writer async UPDATE_defaultLangIds(incomingLang_IDS: string[] = []) {
+    let new_IDS = new Set(incomingLang_IDS || []);
+
+    await this.update((list) => {
+      list.default_lang_ids = Array.from(new_IDS).join(",");
+    });
+  }
 
   @writer async RESET_allVocabsDifficulty() {
     // Get all vocabs where list_id matches this list's ID

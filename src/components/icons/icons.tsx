@@ -146,7 +146,7 @@ export function ICON_arrow({
   ...props
 }: {
   direction?: "left" | "right" | "up" | "down";
-  color?: "gray_light" | "green";
+  color?: "gray_light" | "green" | "black";
 } & ViewProps) {
   const rotate =
     direction === "left"
@@ -158,7 +158,11 @@ export function ICON_arrow({
       : "-90deg";
 
   const fillColor =
-    color === "green" ? MyColors.icon_green : MyColors.icon_gray_light;
+    color === "green"
+      ? MyColors.icon_green
+      : color === "gray_light"
+      ? MyColors.icon_gray_light
+      : "black";
 
   return (
     <View {...props}>

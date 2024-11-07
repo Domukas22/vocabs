@@ -135,6 +135,7 @@ export default function MyLists_PAGE() {
         listFooter_EL={
           <BottomAction_SECTION
             type="list"
+            createBtn_ACTION={() => TOGGLE_modal("create")}
             totalFilteredResults_COUNT={unpaginated_COUNT}
             RESET_search={() => SET_search("")}
             RESET_filters={() => z_SET_listDisplaySettings({ langFilters: [] })}
@@ -162,7 +163,7 @@ export default function MyLists_PAGE() {
 
           ADD_toDisplayed(newList);
           toast.show(t("notifications.listCreated"), {
-            type: "green",
+            type: "success",
             duration: 5000,
           });
         }}
@@ -177,7 +178,7 @@ export default function MyLists_PAGE() {
           if (updated_LIST) {
             highlight(updated_LIST.id);
             toast.show(t("notifications.listRenamed"), {
-              type: "green",
+              type: "success",
               duration: 5000,
             });
           }
@@ -192,7 +193,7 @@ export default function MyLists_PAGE() {
           SET_targetList(undefined);
           TOGGLE_modal("delete");
           toast.show(t("notifications.listDeleted"), {
-            type: "green",
+            type: "success",
             duration: 5000,
           });
         }}

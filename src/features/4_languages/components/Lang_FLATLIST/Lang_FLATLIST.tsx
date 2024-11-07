@@ -39,6 +39,7 @@ export default function Lang_FLATLIST({
           ? all_LANGS.filter((x) => selected_LANGS?.some((l) => l.id === x.id))
           : all_LANGS
       }
+      extraData={selected_LANGS}
       keyboardShouldPersistTaps="always"
       renderItem={({ item }) => {
         const IS_selected = selected_LANGS?.some((l) => l.id === item.id);

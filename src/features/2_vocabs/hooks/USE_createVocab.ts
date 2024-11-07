@@ -8,7 +8,7 @@ import {
 } from "@/src/db/watermelon_MODELS";
 
 interface VocabCreation_MODEL {
-  user_id: string | undefined;
+  user: User_MODEL | undefined;
   list_id: string | undefined;
   difficulty?: 1 | 2 | 3;
   description?: string | "";
@@ -28,7 +28,7 @@ export default function USE_createVocab() {
   );
 
   const CREATE_vocab = async ({
-    user_id,
+    user,
     list_id,
     difficulty,
     description,
@@ -41,7 +41,7 @@ export default function USE_createVocab() {
   }> => {
     SET_error(null); // Clear any previous error
 
-    if (!user_id) {
+    if (!user || !user?.id) {
       SET_error(errorMessage);
       return {
         success: false,
@@ -56,12 +56,24 @@ export default function USE_createVocab() {
       };
     }
 
+    const DOES_thisVocabBreachMaxCount = await user.ARE_vocabsWithinMaxRange(1);
+
+    if (!DOES_thisVocabBreachMaxCount) {
+      SET_error(
+        `You have reached your maximum vocab limit of ${user.max_vocabs}. Please go to the 'General' tab to learn more.`
+      );
+      return {
+        success: false,
+        msg: `🔴 You have reached your maximum vocab limit of ${user.max_vocabs}. Please go to the 'General' tab to learn more. 🔴`,
+      };
+    }
+
     try {
       SET_isCreatingVocab(true);
 
       const newVocab = await db.write(async () => {
         const vocab = await Vocabs_DB.create((vocab: Vocab_MODEL) => {
-          vocab.user_id = user_id;
+          vocab.user_id = user.id;
           vocab.list_id = list_id;
 
           vocab.difficulty = difficulty || 3;

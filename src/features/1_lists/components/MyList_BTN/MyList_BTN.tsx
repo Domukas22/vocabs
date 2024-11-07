@@ -12,7 +12,7 @@ import { useMemo } from "react";
 import VocabDifficulty_COUNTS from "../VocabDifficulty_COUNTS/VocabDifficulty_COUNTS";
 import { List_MODEL } from "@/src/db/watermelon_MODELS";
 import { withObservables } from "@nozbe/watermelondb/react";
-import Transition_BTN from "@/src/components/Transition_BTN/Transition_BTN";
+import Big_BTN from "@/src/components/Transition_BTN/Big_BTN";
 import ListBtn_BOTTOM from "../ListBtn_BOTTOM";
 import VocabCount_LABEL from "../VocabCount_LABEL";
 import ListBtn_TOP from "../ListBtn_TOP";
@@ -24,7 +24,6 @@ function _MyList_BTN({
   diff_3_count = 0,
   vocab_COUNT = 0,
   list,
-  list_NAME,
   onPress,
   highlighted,
   blurAndDisable = false,
@@ -34,7 +33,6 @@ function _MyList_BTN({
   diff_3_count: number;
   vocab_COUNT: number;
   list: List_MODEL;
-  list_NAME: string | undefined;
   onPress: () => void;
   highlighted: boolean;
   blurAndDisable?: boolean;
@@ -50,7 +48,7 @@ function _MyList_BTN({
   );
 
   return (
-    <Transition_BTN {...{ onPress, highlighted, blurAndDisable }}>
+    <Big_BTN {...{ onPress, highlighted, blurAndDisable }}>
       <ListBtn_TOP
         name={list?.name}
         description={list?.description}
@@ -123,11 +121,12 @@ function _MyList_BTN({
           <List_FLAGS lang_ids={list?.collected_lang_ids?.split(",") || []} />
         </ListBtn_BOTTOM>
       )}
-    </Transition_BTN>
+    </Big_BTN>
   );
 }
 
 const enhance = withObservables([], ({ list }: { list: List_MODEL }) => ({
+  list,
   diff_1_count: list?.diff_1,
   diff_2_count: list?.diff_2,
   diff_3_count: list?.diff_3,

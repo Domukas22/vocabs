@@ -77,7 +77,7 @@ export default function SavePublicVocabToList_MODAL({
 
   const create = async () => {
     const result = await CREATE_vocab({
-      user_id: z_user?.id,
+      user: z_user,
       list_id: selected_LIST?.id,
       difficulty: 3,
       description: vocab?.description,

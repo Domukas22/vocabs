@@ -37,7 +37,7 @@ export default function USE_updateDefaultListTRs() {
       }
 
       toast.show(t("notifications.defaultTRsUpdated"), {
-        type: "green",
+        type: "success",
         duration: 5000,
       });
 

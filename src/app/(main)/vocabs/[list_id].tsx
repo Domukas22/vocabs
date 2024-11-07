@@ -12,7 +12,7 @@ import {
 } from "@/src/features/2_vocabs";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import ListSettings_MODAL from "@/src/features/1_lists/components/ListSettings_MODAL/ListSettings_MODAL";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import USE_highlighedId from "@/src/hooks/USE_highlighedId/USE_highlighedId";
@@ -56,6 +56,7 @@ import { MyColors } from "@/src/constants/MyColors";
 import { HEADER_MARGIN } from "@/src/constants/globalVars";
 import BottomAction_SECTION from "@/src/components/BottomAction_SECTION";
 import Vocabs_FLATLIST from "@/src/features/2_vocabs/components/Vocabs_FLATLIST";
+import { FlashList, FlashListProps } from "@shopify/flash-list";
 
 function __SingleList_PAGE({
   selected_LIST = undefined,
@@ -76,6 +77,7 @@ function __SingleList_PAGE({
   const { showTitle, handleScroll } = USE_showListHeaderTitle();
   const activeFilter_COUNT = USE_getActiveFilterCount(z_vocabDisplay_SETTINGS);
   const { highlighted_ID, highlight: HIGHLIGHT_vocab } = USE_highlighedId();
+  const list_REF = useRef<FlashList<any>>(null);
 
   const [targetDelete_VOCAB, SET_targetDeleteVocab] = useState<
     Vocab_MODEL | undefined
@@ -143,6 +145,7 @@ function __SingleList_PAGE({
           SET_targetDeleteVocab(vocab);
           TOGGLE_modal("delete");
         }}
+        _ref={list_REF}
         error={fetchVocabs_ERROR}
         onScroll={handleScroll}
         listHeader_EL={
@@ -159,6 +162,7 @@ function __SingleList_PAGE({
         listFooter_EL={
           <BottomAction_SECTION
             type="vocabs"
+            createBtn_ACTION={() => TOGGLE_modal("create")}
             search={search}
             IS_debouncing={IS_debouncing}
             IS_loadingMore={IS_loadingMore}
@@ -185,8 +189,9 @@ function __SingleList_PAGE({
           TOGGLE_modal("createVocab");
           HIGHLIGHT_vocab(new_VOCAB.id);
           ADD_toDisplayed(new_VOCAB);
+          list_REF?.current?.scrollToOffset({ animated: true, offset: 0 });
           toast.show(t("notifications.vocabCreated"), {
-            type: "green",
+            type: "success",
             duration: 3000,
           });
         }}
@@ -200,7 +205,7 @@ function __SingleList_PAGE({
           HIGHLIGHT_vocab(updated_VOCAB.id);
 
           toast.show(t("notifications.vocabUpdated"), {
-            type: "green",
+            type: "success",
             duration: 3000,
           });
         }}
@@ -224,7 +229,7 @@ function __SingleList_PAGE({
         CLOSE_modal={() => TOGGLE_modal("delete")}
         onSuccess={() => {
           toast.show(t("notifications.vocabDeleted"), {
-            type: "green",
+            type: "success",
             duration: 5000,
           });
           REMOVE_fromDisplayed(targetDelete_VOCAB?.id || "");

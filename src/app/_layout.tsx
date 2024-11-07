@@ -14,15 +14,22 @@ import { Q } from "@nozbe/watermelondb";
 import { Auth_PROVIDER } from "../context/Auth_CONTEXT";
 import USE_zustand, { z_setUser_PROPS } from "../zustand";
 import { User_MODEL } from "../db/watermelon_MODELS";
-import CHECK_ifUserExistsOnSupabase from "../features/5_users/utils/fullSync_FNS/CHECK_ifUserExistsOnSupabase";
+import i18next from "@/src/i18n";
 
 export default function _layout() {
   return (
     <Auth_PROVIDER>
       <ToastProvider
-        renderType={(toast) => (
-          <Notification_BOX type={toast.type} text={toast.message} />
-        )}
+        renderType={{
+          // Define a render function for each toast type
+          success: (toast: any) => (
+            <Notification_BOX type="success" text={toast.message} />
+          ),
+          error: (toast: any) => (
+            <Notification_BOX type="error" text={toast.message} />
+          ),
+          // Add more toast types as needed
+        }}
         style={toastProviderStyles}
         offsetBottom={120}
       >
@@ -90,8 +97,9 @@ export async function HANDLE_userRouting(
 
   const NAVIGATE_tovocabs = async (user: User_MODEL) => {
     z_SET_user(user);
+    i18next.changeLanguage(user?.preferred_lang_id || "en");
     await sync("all", user?.id || "");
-    router.push("/(main)/vocabs");
+    router.push("/(main)/general/contact");
   };
 
   if (userId) {
@@ -129,43 +137,6 @@ export async function HANDLE_userRouting(
     }
   }
 }
-
-// async function HANDLE_newUser(
-//   userId: string,
-//   z_SET_user: z_setUser_PROPS,
-//   router: Router
-// ) {
-//   // before firing this function, we should already
-
-//   // can we find the user in supabase?
-//   const { success, supabaseUser } = await FETCH_supabaseUser(userId);
-
-//   if (success) {
-//     // if found
-//     // user found in supabase, but what about locally in WatermelonDB?
-//     const {
-//       success: userCreated,
-//       watermelonUser,
-//       msg,
-//     } = await CREATE_watermelonUser(supabaseUser);
-
-//     if (userCreated) {
-//       z_SET_user(watermelonUser);
-//       await sync("all", userId);
-//       router.push("/(main)/vocabs");
-//     } else {
-//       console.error(msg);
-//       z_SET_user(undefined);
-//       router.push("/welcome");
-//     }
-//   } else {
-//     console.error(
-//       `🔴 User with ID "${userId}" exists in Supabase authentication but is not in the users table 🔴`
-//     );
-//     z_SET_user(undefined);
-//     router.push("/welcome");
-//   }
-// }
 
 // Fetch user from Supabase
 async function FETCH_supabaseUser(userId: string) {

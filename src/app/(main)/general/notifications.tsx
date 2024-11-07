@@ -30,6 +30,14 @@ import ExploreListsBottom_SECTION from "@/src/features/1_lists/components/Explor
 import { Notifications_MODEL } from "@/src/db/watermelon_MODELS";
 import USE_updateNotification from "@/src/features/6_notifications/hooks/USE_updateNotification";
 import USE_zustand from "@/src/zustand";
+import { withObservables } from "@nozbe/watermelondb/react";
+
+const EnhancedNotification_BTN = withObservables(
+  ["notification"],
+  ({ notification }) => ({
+    notification: notification.observe(),
+  })
+)(Notification_BTN);
 
 export default function Notifications_PAGE() {
   const { t } = useTranslation();
@@ -70,7 +78,7 @@ export default function Notifications_PAGE() {
         data={notifications}
         renderItem={({ item }) => {
           return (
-            <Notification_BTN
+            <EnhancedNotification_BTN
               notification={item}
               TOGGLE_read={() =>
                 EDIT_notificationReadStatus(item.id, !item.is_read)
@@ -160,6 +168,14 @@ function Notification_BTN({
         >
           {TRANSFORM_dateObject(notification?.created_at || 0)}
         </Styled_TEXT>
+        {!open && !notification?.is_read && (
+          <Btn
+            text="Read"
+            type="action"
+            style={{ alignSelf: "flex-end" }}
+            onPress={TOGGLE_read}
+          />
+        )}
       </Pressable>
       {open && (
         <>
@@ -170,7 +186,12 @@ function Notification_BTN({
             <Btn
               text={notification?.is_read ? "Mark as unread" : "Mark as read"}
               style={{ flex: 1 }}
-              onPress={TOGGLE_read}
+              onPress={() => {
+                TOGGLE_read();
+                if (!notification?.is_read) {
+                  SET_open(false);
+                }
+              }}
             />
             <Btn text="Close" onPress={() => SET_open(false)} />
             {/* <Btn iconLeft={<ICON_trash />} onPress={() => {}} /> */}

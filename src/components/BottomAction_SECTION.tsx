@@ -7,6 +7,7 @@ import { MyColors } from "../constants/MyColors";
 import Btn from "./Btn/Btn";
 import { Styled_TEXT } from "./Styled_TEXT/Styled_TEXT";
 import { useMemo } from "react";
+import { ICON_X } from "./icons/icons";
 
 export default function BottomAction_SECTION({
   type = "list",
@@ -16,6 +17,7 @@ export default function BottomAction_SECTION({
   HAS_reachedEnd = false,
   activeFilter_COUNT = 0,
   totalFilteredResults_COUNT = 0,
+  createBtn_ACTION,
   LOAD_more = async () => {},
   RESET_search = () => {},
   RESET_filters = () => {},
@@ -29,19 +31,30 @@ export default function BottomAction_SECTION({
   totalFilteredResults_COUNT: number;
   LOAD_more: () => Promise<void>;
   RESET_search: () => void;
+  createBtn_ACTION?: () => void;
   RESET_filters: () => void;
 }) {
   return (
     <View style={{ gap: 16 }}>
       {HAS_reachedEnd && totalFilteredResults_COUNT > 0 && (
-        <View
-          style={{
-            width: "100%",
-            height: 2,
-            borderColor: MyColors.border_white_005,
-            borderTopWidth: 2,
-          }}
-        />
+        <>
+          <View
+            style={{
+              width: "100%",
+              height: 2,
+              borderColor: MyColors.border_white_005,
+              borderTopWidth: 2,
+            }}
+          />
+          {/* {createBtn_ACTION && (
+            <Btn
+              type="seethrough_primary"
+              iconLeft={<ICON_X big color="primary" />}
+              text={`Create new ${type === "list" ? "list" : "vocab"}`}
+              onPress={createBtn_ACTION}
+            />
+          )} */}
+        </>
       )}
       {totalFilteredResults_COUNT === 0 && (
         <View

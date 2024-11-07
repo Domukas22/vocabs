@@ -161,7 +161,7 @@ export default function SavedVocabs_PAGE() {
           HIGHLIGHT_vocab(new_VOCAB.id);
           ADD_toDisplayed(new_VOCAB);
           toast.show(t("notifications.vocabCreated"), {
-            type: "green",
+            type: "success",
             duration: 3000,
           });
         }}
@@ -175,7 +175,7 @@ export default function SavedVocabs_PAGE() {
           HIGHLIGHT_vocab(updated_VOCAB.id);
 
           toast.show(t("notifications.vocabUpdated"), {
-            type: "green",
+            type: "success",
             duration: 3000,
           });
         }}
@@ -192,7 +192,7 @@ export default function SavedVocabs_PAGE() {
         CLOSE_modal={() => TOGGLE_modal("delete")}
         onSuccess={() => {
           toast.show(t("notifications.vocabDeleted"), {
-            type: "green",
+            type: "success",
             duration: 5000,
           });
           REMOVE_fromDisplayed(targetDelete_VOCAB?.id || "");

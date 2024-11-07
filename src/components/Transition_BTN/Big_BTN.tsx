@@ -11,23 +11,20 @@ type TransitionBtn_PROPS = PressableProps & {
   children: React.ReactNode;
   onPress: () => void;
   highlighted?: boolean;
-  blurAndDisable?: boolean;
   props?: PressableProps;
 };
 
-export default function Transition_BTN({
+export default function Big_BTN({
   children,
   style,
   props,
   highlighted = false,
-  blurAndDisable = false,
   onPress = () => {},
 }: TransitionBtn_PROPS) {
   return (
     <Pressable
       style={({ pressed }) => [
         s.btn,
-        blurAndDisable && { pointerEvents: "none" },
         pressed && s.pressed,
         highlighted && s.highlighted,
         style as object,
@@ -35,8 +32,6 @@ export default function Transition_BTN({
       onPress={onPress}
       {...props}
     >
-      {blurAndDisable && <Btn_BLUR />}
-
       {children && children}
     </Pressable>
   );

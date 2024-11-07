@@ -14,7 +14,7 @@ interface LangModalFooter_PROPS {
   selected_LANGS: Language_MODEL[] | undefined;
   IS_inAction?: boolean | undefined;
   cancel: () => void;
-  submit: () => void;
+  submit: () => Promise<void>;
   SELECT_lang: (l: Language_MODEL) => void;
   SUBMIT_langIds: (lang_ids: string[]) => void;
 }
@@ -23,7 +23,7 @@ export default function LangModal_FOOTER({
   selected_LANGS,
   IS_inAction,
   cancel,
-  submit,
+  submit = async () => {},
   SELECT_lang,
   SUBMIT_langIds,
 }: LangModalFooter_PROPS) {
@@ -48,11 +48,10 @@ export default function LangModal_FOOTER({
         appLang === "en" ? (
           <Btn
             text={
-              !IS_inAction ? `Select ${selected_LANGS?.length} all_LANGS` : ""
+              !IS_inAction ? `Select ${selected_LANGS?.length} languages` : ""
             }
-            onPress={() => {
-              if (!IS_inAction)
-                SUBMIT_langIds(selected_LANGS?.map((l) => l.lang_id) || []);
+            onPress={async () => {
+              await submit();
             }}
             iconRight={IS_inAction ? <ActivityIndicator color="black" /> : null}
             type="action"
@@ -63,8 +62,8 @@ export default function LangModal_FOOTER({
             text={
               !IS_inAction ? `${selected_LANGS?.length} Sprachen wählen` : ""
             }
-            onPress={() => {
-              if (!IS_inAction) submit();
+            onPress={async () => {
+              if (!IS_inAction) await submit();
             }}
             iconRight={IS_inAction ? <ActivityIndicator color="black" /> : null}
             type="action"

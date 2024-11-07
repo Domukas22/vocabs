@@ -4,7 +4,7 @@
 import { View } from "react-native";
 import { ICON_arrow } from "./icons/icons";
 import { Styled_TEXT } from "./Styled_TEXT/Styled_TEXT";
-import Transition_BTN from "./Transition_BTN/Transition_BTN";
+import Big_BTN from "./Transition_BTN/Big_BTN";
 
 //
 export default function ExplorePage_BTN({
@@ -17,7 +17,7 @@ export default function ExplorePage_BTN({
   onPress: () => void;
 }) {
   return (
-    <Transition_BTN onPress={onPress}>
+    <Big_BTN onPress={onPress}>
       <View
         style={{
           paddingTop: 10,
@@ -29,6 +29,6 @@ export default function ExplorePage_BTN({
         <Styled_TEXT type="label_small">{description}</Styled_TEXT>
         <ICON_arrow direction="right" style={{ alignItems: "flex-end" }} />
       </View>
-    </Transition_BTN>
+    </Big_BTN>
   );
 }

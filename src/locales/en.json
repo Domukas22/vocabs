@@ -77,7 +77,8 @@
     "confirmListUnpublish": "Yes, unpublish",
     "all": "All",
     "confirmListCopy": "Yes, copy",
-    "reviveVocab": "Revive vocab"
+    "reviveVocab": "Revive vocab",
+    "getMoreVocabs": "Get more vocabs"
   },
   "pages": {
     "about": {
@@ -274,7 +275,8 @@
     "markedVocab": "Vocab marked",
     "demarkedVocab": "Vocab unmarked",
     "difficultyUpdated": "Difficulty updated",
-    "vocabRevived": "Vocab revived"
+    "vocabRevived": "Vocab revived",
+    "usernameUpdated": "Username updated"
   },
   "notification": {
     "atLeast1LangError": "Atleast 1 language must be selected"

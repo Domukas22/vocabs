@@ -14,6 +14,7 @@ import { FetchedSupabaseVocabs_PROPS } from "@/src/hooks/USE_supabaseVocabs";
 import SwipeableExample from "@/src/components/SwipeableExample/SwipeableExample";
 import MyVocab from "./Vocab/My_VOCAB/My_VOCAB";
 import Deletedvocab from "./Vocab/My_VOCAB/Deleted_VOCAB";
+import { FlashList } from "@shopify/flash-list";
 
 export default function Vocabs_FLATLIST({
   vocabs,
@@ -27,6 +28,7 @@ export default function Vocabs_FLATLIST({
   HANDLE_updateModal,
   IS_searching = true,
   SELECT_forRevival = (vocab: Vocab_MODEL) => {},
+  _ref,
 }: {
   type: "normal" | "delete";
   vocabs: Vocab_MODEL[] | undefined;
@@ -45,6 +47,7 @@ export default function Vocabs_FLATLIST({
     vocab?: Vocab_MODEL;
   }) => void;
   highlightedVocab_ID: string | undefined;
+  _ref?: React.RefObject<FlashList<any>>;
 }) {
   const data = useMemo(() => {
     if (error?.value || IS_searching) return [];
@@ -78,6 +81,7 @@ export default function Vocabs_FLATLIST({
     <Styled_FLASHLIST
       {...{ onScroll }}
       data={data}
+      _ref={_ref}
       renderItem={({ item }) => Vocab_BTN(item)}
       keyExtractor={(item) => "Vocab" + item.id}
       extraData={highlightedVocab_ID}

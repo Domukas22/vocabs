@@ -93,7 +93,7 @@ export default function CreateVocab_MODAL({
   const create = async (data: CreateMyVocabData_PROPS) => {
     const { list_id, description, difficulty, translations } = data;
     const result = await CREATE_vocab({
-      user_id: z_user?.id,
+      user: z_user,
       list_id,
       difficulty,
       description,

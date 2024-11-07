@@ -51,7 +51,7 @@ export default function USE_updateVocabDifficulty() {
       });
 
       toast.show(t("notifications.vocabDifficultyUpdated"), {
-        type: "green",
+        type: "success",
         duration: 5000,
       });
 

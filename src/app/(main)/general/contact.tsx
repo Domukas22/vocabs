@@ -20,11 +20,31 @@ import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
 import Label from "@/src/components/Label/Label";
 import { useTranslation } from "react-i18next";
 
+type ContactMessage_PROPS = {
+  message: string;
+  name: string;
+  email: string;
+};
+
 export default function Contact_PAGE() {
   const { t } = useTranslation();
   const [message, SET_message] = useState("");
   const [name, SET_name] = useState("");
   const [email, SET_email] = useState("");
+
+  const [loading, SET_loading] = useState(false);
+  const [internal_ERROR, SET_internalError] = useState("");
+  const [sent, SET_sent] = useState(false);
+
+  const SEND_message = async (data: ContactMessage_PROPS) => {
+    const { message, name, email } = data;
+
+    console.log("Name: ", name);
+    console.log("Email: ", email);
+    console.log("Message: ", message);
+    console.log("------------------------------------");
+    // Next up: open login page (for comparison) and start building the form
+  };
 
   return (
     <Page_WRAP>

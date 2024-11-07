@@ -122,6 +122,9 @@ function Payment({ payment }: { payment: Payments_MODEL | undefined }) {
         {TRANSFORM_dateObject(payment?.created_at || 0)}
       </Styled_TEXT>
       <Styled_TEXT type="label">
+        Transaction id: {payment?.transaction_id}
+      </Styled_TEXT>
+      <Styled_TEXT type="label">
         Payment method: {payment?.payment_method}
       </Styled_TEXT>
       <Styled_TEXT type="label">Payment amount: €{payment?.amount}</Styled_TEXT>

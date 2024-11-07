@@ -169,7 +169,7 @@ export default function DeletedVocabs_PAGE() {
           HIGHLIGHT_vocab(new_VOCAB.id);
           REMOVE_fromDisplayed(new_VOCAB.id);
           toast.show(t("notifications.vocabRevived"), {
-            type: "green",
+            type: "success",
             duration: 3000,
           });
         }}

@@ -2,7 +2,7 @@
 //
 //
 
-import Transition_BTN from "@/src/components/Transition_BTN/Transition_BTN";
+import Big_BTN from "@/src/components/Transition_BTN/Big_BTN";
 import { List_MODEL } from "@/src/db/watermelon_MODELS";
 import ListBtn_TOP from "./ListBtn_TOP";
 import List_FLAGS from "./List_FLAGS";
@@ -18,7 +18,7 @@ export default function ExploreList_BTN({
   GO_toList: () => void;
 }) {
   return (
-    <Transition_BTN onPress={GO_toList}>
+    <Big_BTN onPress={GO_toList}>
       <ListBtn_TOP>
         <Styled_TEXT type="list_title">
           {list?.name || "LIST HAS NO NAME"}
@@ -37,6 +37,6 @@ export default function ExploreList_BTN({
         <VocabCount_LABEL vocab_COUNT={list?.vocab_COUNT} />
         <List_FLAGS lang_ids={list?.collected_lang_ids?.split(",") || []} />
       </ListBtn_BOTTOM>
-    </Transition_BTN>
+    </Big_BTN>
   );
 }

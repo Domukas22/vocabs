@@ -184,13 +184,8 @@ export default function ListSettings_MODAL({
           label={t("label.defaultVocabLangs")}
           default_lang_ids={selected_LIST?.default_lang_ids}
           toggle={() => TOGGLE_modal("selectLangs")}
-          REMOVE_lang={(targetLang_ID) => {
-            if (!selected_LIST?.default_lang_ids) return;
-            UPDATE_langs(
-              selected_LIST?.default_lang_ids?.filter(
-                (lang_id) => lang_id !== targetLang_ID
-              )
-            );
+          REMOVE_lang={async (targetLang_ID: string) => {
+            await selected_LIST?.DELETE_defaultLangId(targetLang_ID);
           }}
           error={updateDefaultLangs_ERROR}
         />
@@ -205,7 +200,7 @@ export default function ListSettings_MODAL({
               (async () => {
                 await selected_LIST.RESET_allVocabsDifficulty();
                 toast.show("Difficulties reset", {
-                  type: "green",
+                  type: "success",
                   duration: 5000,
                 });
               })();
@@ -358,9 +353,9 @@ export default function ListSettings_MODAL({
       <SelectLangs_MODAL
         open={modal_STATES.selectLangs}
         TOGGLE_open={() => TOGGLE_modal("selectLangs")}
-        lang_ids={selected_LIST?.default_lang_ids}
-        SUBMIT_langIds={(lang_ids: string[]) => {
-          UPDATE_langs(lang_ids);
+        lang_ids={selected_LIST?.default_lang_ids?.split(",") || []}
+        SUBMIT_langIds={async (lang_ids: string[]) => {
+          await selected_LIST?.UPDATE_defaultLangIds(lang_ids);
         }}
         IS_inAction={IS_updatingDefaultLangs}
       />
@@ -432,7 +427,7 @@ export default function ListSettings_MODAL({
         onSuccess={() => {
           TOGGLE_modal("deleteList");
           toast.show(t("notifications.listDeleted"), {
-            type: "green",
+            type: "success",
             duration: 5000,
           });
           router.back();

@@ -19,23 +19,26 @@ export const HEADER_MARGIN = 80;
 export const VOCAB_PAGINATION = 20;
 export const LIST_PAGINATION = 20;
 
-const pricing = {
-  offer1: {
+export const VOCAB_PRICING = {
+  1: {
     amount: 500,
+    descritpion: "5 words daily for 100 days",
     price: 4.99,
-    discount: "0%",
-    priceProVocab: "1 cent pro vocab",
+    discount: 0,
+    priceProVocab: 0.01,
   },
-  offer2: {
+  2: {
     amount: 1000,
+    descritpion: "10 words daily for 100 days",
     price: 7.99,
-    discount: "15%",
-    priceProVocab: "0.7 cents pro vocab",
+    discount: 15,
+    priceProVocab: 0.007,
   },
-  offer3: {
+  3: {
     amount: 2000,
+    descritpion: "20 words daily for 100 days",
     price: 9.99,
-    discount: "30%",
-    priceProVocab: "0.35 cents pro vocab",
+    discount: 30,
+    priceProVocab: 0.0035,
   },
 };
