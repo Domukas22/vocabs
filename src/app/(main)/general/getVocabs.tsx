@@ -7,7 +7,7 @@ import Header from "@/src/components/Header/Header";
 
 import { ICON_3dots, ICON_arrow } from "@/src/components/icons/icons";
 
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { Image, Pressable, ScrollView, StyleSheet, View } from "react-native";
 
 import { Link, router } from "expo-router";
@@ -28,6 +28,8 @@ import { Q } from "@nozbe/watermelondb";
 import USE_zustand from "@/src/zustand";
 import CurrentVocabCount_BAR from "@/src/components/CurrentVocabCount_BAR";
 import { VOCAB_PRICING } from "@/src/constants/globalVars";
+import { PUSH_changes } from "@/src/db/sync";
+import { supabase } from "@/src/lib/supabase";
 
 function __GetVocabs_PAGE({
   totalUserVocab_COUNT = 0,
@@ -184,4 +186,86 @@ function Pricing_BTN({ offer = 1 }: { offer: 1 | 2 | 3 }) {
       </Styled_TEXT>
     </Big_BTN>
   );
+}
+
+export async function USE_buyVocabs() {
+  const [loading, SET_loading] = useState(false);
+  const [error, SET_error] = useState<string | null>(null);
+  const RESET_error = useCallback(() => SET_error(null), []);
+
+  const errorMessage = useMemo(
+    () =>
+      "Some kind of error happened when trying to buy vocabs. This is an issue on our side. Please try to reload the app and see if the problem persists. The issue has been recorded and will be reviewed by developers. We apologize for the trouble.",
+    []
+  );
+
+  const BUY_vocabs = async ({
+    user_id,
+    offer,
+  }: {
+    user_id: string | undefined;
+    offer: 1 | 2 | 3;
+  }) => {
+    if (!user_id) {
+      SET_error(errorMessage);
+      return {
+        success: false,
+        msg: "🔴 User is required when buying vocabs 🔴",
+      };
+    }
+    if (offer !== 1 && offer !== 2 && offer !== 3) {
+      SET_error(errorMessage);
+      return {
+        success: false,
+        msg: "🔴 When buying vocabs, the offer must be 1 | 2 | 3. It was none of the values 🔴",
+      };
+    }
+
+    try {
+      await PUSH_changes();
+      SET_loading(false);
+
+      // TODO ==> finish payments
+
+      // fetch supabase user
+
+      // increase his max vocabs
+      // create a notification
+      //create a payment
+
+      const { data: user, error: fetchUser_ERROR } = await supabase
+        .from("users")
+        .select("*")
+        .eq("id", user_id)
+        .single();
+
+      if (fetchUser_ERROR) {
+        SET_error(errorMessage);
+        return {
+          success: false,
+          msg: "🔴 User not found on supabase when trying to buy vocabs 🔴",
+        };
+      }
+
+      const { error } = await supabase
+        .from("users")
+        .select("*")
+        .eq("id", user_id)
+        .single();
+    } catch (error: any) {
+      if (error.message === "Failed to fetch") {
+        SET_error(
+          "It looks like there's an issue with your internet connection. Please check your connection and try again."
+        );
+      } else {
+        SET_error(errorMessage);
+      }
+      return {
+        success: false,
+        msg: `🔴 Unexpected error occurred during vocab creation 🔴: ${error.message}`,
+      };
+    } finally {
+      SET_loading(false);
+    }
+  };
 }

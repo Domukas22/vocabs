@@ -99,7 +99,7 @@ export async function HANDLE_userRouting(
     z_SET_user(user);
     i18next.changeLanguage(user?.preferred_lang_id || "en");
     await sync("all", user?.id || "");
-    router.push("/(main)/general/contact");
+    router.push("/(main)/vocabs");
   };
 
   if (userId) {
