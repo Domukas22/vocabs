@@ -97,6 +97,8 @@ export async function PUSH_changes() {
           changes,
         });
 
+        console.log(changes.notifications.updated);
+
         if (error) {
           console.error("🔴 Push error: 🔴", error?.message);
         }

@@ -37,7 +37,8 @@ export default function USE_fetchNotifications(user_id: string | undefined) {
       // Build the query to fetch notifications for the given user_id
       const query = Notifications_DB.query(
         Q.where("user_id", user_id),
-        Q.where("deleted_at", null)
+        Q.where("deleted_at", null),
+        Q.sortBy("created_at", Q.desc)
       );
 
       const fetchedNotifications = await query.fetch();

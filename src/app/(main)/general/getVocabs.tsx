@@ -28,7 +28,7 @@ import { Q } from "@nozbe/watermelondb";
 import USE_zustand from "@/src/zustand";
 import CurrentVocabCount_BAR from "@/src/components/CurrentVocabCount_BAR";
 import { VOCAB_PRICING } from "@/src/constants/globalVars";
-import { PUSH_changes } from "@/src/db/sync";
+import { PUSH_changes, sync } from "@/src/db/sync";
 import { supabase } from "@/src/lib/supabase";
 
 function __GetVocabs_PAGE({
@@ -38,6 +38,12 @@ function __GetVocabs_PAGE({
 }) {
   const { t } = useTranslation();
   const { z_user } = USE_zustand();
+
+  const { BUY_vocabs, loading, error, RESET_error } = USE_buyVocabs();
+
+  const buy = async (offer: 1 | 2 | 3) => {
+    await BUY_vocabs({ user_id: z_user?.id, offer, onSuccess: () => {} });
+  };
 
   return (
     <Page_WRAP>
@@ -62,7 +68,7 @@ function __GetVocabs_PAGE({
         }
       />
       <ScrollView>
-        <Block>
+        <Block styles={{ paddingBottom: 8 }}>
           <Styled_TEXT type="label">
             You have {(z_user?.max_vocabs || 200) - (totalUserVocab_COUNT || 0)}{" "}
             vocabs left
@@ -78,15 +84,16 @@ function __GetVocabs_PAGE({
           style={{
             paddingHorizontal: 12,
             paddingVertical: 16,
-            gap: 12,
+            gap: 16,
             borderBottomWidth: 1,
             borderBottomColor: MyColors.border_white_005,
           }}
         >
           {/* <Styled_TEXT type="label">Get yourself some vocabs!</Styled_TEXT> */}
-          <Pricing_BTN offer={1} />
-          <Pricing_BTN offer={2} />
-          <Pricing_BTN offer={3} />
+
+          <Pricing_BTN offer={1} onPress={() => buy(1)} />
+          <Pricing_BTN offer={2} onPress={() => buy(2)} />
+          <Pricing_BTN offer={3} onPress={() => buy(3)} />
         </View>
 
         <View
@@ -156,39 +163,100 @@ export default function GetVocabs_PAGE() {
   return <EnhancedPage />;
 }
 
-function Pricing_BTN({ offer = 1 }: { offer: 1 | 2 | 3 }) {
+function Pricing_BTN({
+  offer = 1,
+  onPress,
+}: {
+  offer: 1 | 2 | 3;
+  onPress: () => void;
+}) {
   const pricing = VOCAB_PRICING[offer];
 
   return (
-    <Big_BTN
-      onPress={() => {}}
-      style={{ paddingVertical: 12, paddingHorizontal: 16 }}
-    >
-      <Styled_TEXT type="text_20_bold">
-        Get {pricing.amount} Vocabs for{" "}
-        <Styled_TEXT
-          type="text_20_bold"
-          style={{ color: MyColors.text_primary }}
-          // style={{ textDecorationLine: "underline" }}
-        >
-          €{pricing.price}
-        </Styled_TEXT>
-      </Styled_TEXT>
-      <Styled_TEXT type="label">{pricing.descritpion}</Styled_TEXT>
-      <Styled_TEXT
-        type="label"
-        style={[
-          { fontFamily: "Nunito-Semibold" },
-          pricing.discount > 0 && { color: MyColors.text_green },
-        ]}
+    <Big_BTN onPress={onPress}>
+      <View
+        style={{
+          paddingTop: 10,
+          paddingBottom: 8,
+          paddingHorizontal: 12,
+          borderBottomWidth: 1,
+          borderBottomColor: MyColors.border_white_005,
+        }}
       >
-        {pricing.discount}% discount
-      </Styled_TEXT>
+        <Styled_TEXT type="text_20_bold">
+          Get {pricing.amount} Vocabs for{" "}
+          <Styled_TEXT
+            type="text_20_bold"
+            style={{ color: MyColors.text_primary }}
+            // style={{ textDecorationLine: "underline" }}
+          >
+            €{pricing.price}
+          </Styled_TEXT>
+        </Styled_TEXT>
+        <Styled_TEXT
+          type="label"
+          style={[
+            { fontFamily: "Nunito-Semibold" },
+            pricing.discount > 0 && { color: MyColors.text_green },
+          ]}
+        >
+          {pricing.discount}% discount
+        </Styled_TEXT>
+      </View>
+
+      <View
+        style={{
+          paddingHorizontal: 12,
+          paddingVertical: 16,
+          gap: 6,
+          borderRadius: 50,
+        }}
+      >
+        {pricing.points.map((p, index) => (
+          <View key={index} style={{ flexDirection: "row" }}>
+            <View style={{ width: 20 }}>
+              <View
+                style={{
+                  width: 8,
+                  height: 1,
+                  backgroundColor: MyColors.text_white_06,
+                  marginTop: 13,
+                }}
+              />
+            </View>
+            <Styled_TEXT type="label">{p}</Styled_TEXT>
+          </View>
+        ))}
+      </View>
+      {/* <View
+        style={{
+          paddingHorizontal: 12,
+          paddingBottom: 10,
+        }}
+      >
+        <Styled_TEXT type="label">
+          Example: 5 vocabs a day for 100 days
+        </Styled_TEXT>
+      </View> */}
+      {/* <View
+        style={{
+          paddingHorizontal: 12,
+          paddingBottom: 10,
+        }}
+      >
+         <Btn
+          type="action"
+          text={`Get ${pricing.amount} vocabs`}
+          text_STYLES={{ flex: 1 }}
+          iconRight={<ICON_arrow direction="right" color="black" />}
+        /> 
+   
+      </View>*/}
     </Big_BTN>
   );
 }
 
-export async function USE_buyVocabs() {
+export function USE_buyVocabs() {
   const [loading, SET_loading] = useState(false);
   const [error, SET_error] = useState<string | null>(null);
   const RESET_error = useCallback(() => SET_error(null), []);
@@ -247,11 +315,74 @@ export async function USE_buyVocabs() {
         };
       }
 
-      const { error } = await supabase
+      const offerBundle = VOCAB_PRICING[offer];
+
+      // update max vocabs
+      const { error: updateMaxVocabs_ERROR } = await supabase
         .from("users")
-        .select("*")
-        .eq("id", user_id)
-        .single();
+        .update({ max_vocabs: user.max_vocabs + offerBundle.amount })
+        .eq("id", user_id);
+
+      if (updateMaxVocabs_ERROR) {
+        SET_error(errorMessage);
+        console.error(
+          `🔴Error updating user max_vocabs when trying to buy vocabs: 🔴`,
+          updateMaxVocabs_ERROR
+        );
+        return {
+          success: false,
+          msg: "🔴 Error updating user max_vocabs when trying to buy vocabs 🔴",
+        };
+      }
+
+      // create notification
+      const { data: notification, error: createNotification_ERROR } =
+        await supabase.from("notifications").insert({
+          user_id: user.id,
+          title: `You bought ${offerBundle.amount} vocabs`,
+          paragraph: `Your vocab limit has been increased by ${offerBundle.amount}. You can view your payment details in the 'General' tab under 'Payments'.`,
+          type: "vocabsAdded",
+          is_read: false,
+        });
+
+      console.log(createNotification_ERROR);
+
+      if (createNotification_ERROR) {
+        SET_error(errorMessage);
+        console.error(
+          `🔴 Error creating notification when trying to buy vocabs: 🔴`,
+          createNotification_ERROR
+        );
+        return {
+          success: false,
+          msg: "🔴 Error creating notification when trying to buy vocabs 🔴",
+        };
+      }
+
+      // create payment
+      const { error: createPayment_ERROR } = await supabase
+        .from("payments")
+        .insert({
+          user_id: user.id,
+          item: `${offerBundle.amount} vocabs`,
+          payment_method: "xxxxx",
+          amount: offerBundle.price,
+          transaction_id: "xxxxxx",
+        });
+
+      if (createPayment_ERROR) {
+        SET_error(errorMessage);
+        console.error(
+          `🔴 Error creating payment when trying to buy vocabs: 🔴`,
+          createPayment_ERROR
+        );
+        return {
+          success: false,
+          msg: "🔴 Error creating payment when trying to buy vocabs 🔴",
+        };
+      }
+
+      // create a notification
     } catch (error: any) {
       if (error.message === "Failed to fetch") {
         SET_error(
@@ -265,7 +396,10 @@ export async function USE_buyVocabs() {
         msg: `🔴 Unexpected error occurred during vocab creation 🔴: ${error.message}`,
       };
     } finally {
+      await sync("updates", user_id || "");
       SET_loading(false);
     }
   };
+
+  return { BUY_vocabs, loading, error, RESET_error };
 }

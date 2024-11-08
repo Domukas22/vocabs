@@ -324,6 +324,15 @@ export class List_MODEL extends Model {
     )
     .observeCount();
 
+  @lazy markedVocab_COUNT = this.collections
+    .get("vocabs")
+    .query(
+      Q.where("is_marked", true),
+      Q.where("list_id", this.id),
+      Q.where("deleted_at", Q.eq(null))
+    )
+    .observeCount();
+
   @lazy vocab_COUNT = this.collections
     .get("vocabs")
     .query(Q.where("list_id", this.id), Q.where("deleted_at", Q.eq(null)))

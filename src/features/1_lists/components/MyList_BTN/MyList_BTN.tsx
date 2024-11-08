@@ -23,6 +23,7 @@ function _MyList_BTN({
   diff_2_count = 0,
   diff_3_count = 0,
   vocab_COUNT = 0,
+  markedVocab_COUNT = 0,
   list,
   onPress,
   highlighted,
@@ -31,6 +32,7 @@ function _MyList_BTN({
   diff_1_count: number;
   diff_2_count: number;
   diff_3_count: number;
+  markedVocab_COUNT: number;
   vocab_COUNT: number;
   list: List_MODEL;
   onPress: () => void;
@@ -115,7 +117,7 @@ function _MyList_BTN({
       {vocab_COUNT > 0 && (
         <ListBtn_BOTTOM>
           <VocabDifficulty_COUNTS
-            {...{ diff_1_count, diff_2_count, diff_3_count }}
+            {...{ diff_1_count, diff_2_count, diff_3_count, markedVocab_COUNT }}
           />
 
           <List_FLAGS lang_ids={list?.collected_lang_ids?.split(",") || []} />
@@ -131,6 +133,7 @@ const enhance = withObservables([], ({ list }: { list: List_MODEL }) => ({
   diff_2_count: list?.diff_2,
   diff_3_count: list?.diff_3,
   vocab_COUNT: list?.vocab_COUNT,
+  markedVocab_COUNT: list?.markedVocab_COUNT,
 }));
 
 export const MyList_BTN = enhance(_MyList_BTN);

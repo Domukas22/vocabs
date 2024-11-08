@@ -8,21 +8,22 @@ import { Styled_TEXT } from "./Styled_TEXT/Styled_TEXT";
 
 export default function CurrentVocabCount_BAR({
   totalUserVocab_COUNT = 0,
-  max_vocabs = 0,
+  max_vocabs = 1, // Default to 1 to avoid division by zero
   color = "primary",
 }: {
   totalUserVocab_COUNT: number;
   max_vocabs: number;
   color?: "primary" | "white";
 }) {
+  // Calculate the proportional width percentage based on current and max vocab counts
+  const widthPercentage = (totalUserVocab_COUNT / max_vocabs) * 100;
+
   return (
     <View
       style={{
         flexDirection: "row",
         alignItems: "center",
         gap: 12,
-        // borderWidth: 1,
-        // borderColor: "yellow",
       }}
     >
       <Styled_TEXT
@@ -47,7 +48,7 @@ export default function CurrentVocabCount_BAR({
         <View
           style={{
             height: "100%",
-            width: `${totalUserVocab_COUNT}%`,
+            width: `${Math.min(widthPercentage, 100)}%`, // Limit to 100%
             borderRadius: 50,
             backgroundColor:
               color === "primary" ? MyColors.icon_primary : "white",

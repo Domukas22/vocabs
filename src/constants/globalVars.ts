@@ -22,22 +22,37 @@ export const LIST_PAGINATION = 20;
 export const VOCAB_PRICING = {
   1: {
     amount: 500,
-    descritpion: "5 words daily for 100 days",
+    // descritpion: "5 words everyday for a 100 days",
+    points: [
+      "5 words daily for 100 days",
+      "For casual learners that like to learn new words once in a while",
+    ],
+
     price: 4.99,
+    noDiscount_PRICE: 4.99,
     discount: 0,
     priceProVocab: 0.01,
   },
   2: {
     amount: 1000,
-    descritpion: "10 words daily for 100 days",
+    points: [
+      "10 words daily for 100 days",
+      "For casual learners that like to learn new words once in a while",
+    ],
+
     price: 7.99,
+    noDiscount_PRICE: 10,
     discount: 15,
     priceProVocab: 0.007,
   },
   3: {
     amount: 2000,
-    descritpion: "20 words daily for 100 days",
+    points: [
+      "20 words daily for 100 days",
+      "For casual learners that like to learn new words once in a while",
+    ],
     price: 9.99,
+    noDiscount_PRICE: 20,
     discount: 30,
     priceProVocab: 0.0035,
   },

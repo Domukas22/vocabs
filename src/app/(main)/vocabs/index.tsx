@@ -49,6 +49,7 @@ import { ScrollView } from "react-native";
 import { MyList_BTN } from "@/src/features/1_lists/components/MyList_BTN/MyList_BTN";
 import Confirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
 import { USE_logout } from "../general";
+import { supabase } from "@/src/lib/supabase";
 
 function _Index_PAGE({
   totalUserList_COUNT = 0,
@@ -102,6 +103,24 @@ function _Index_PAGE({
   //   })();
   // }, []);
 
+  const test = async () => {
+    const { data, error } = await supabase
+      .from("notifications")
+      .insert([
+        {
+          user_id: z_user?.id,
+          title: `You bought ${99999} vocabs`,
+          paragraph: `Your vocab limit has been increased by ${99999}. You can view your payment details in the 'General' tab under 'Payments'.`,
+          type: "vocabsAdded",
+          is_read: false,
+        },
+      ])
+      .select();
+
+    console.log("ERROR: ", error);
+    console.log("DATA: ", data);
+  };
+
   return (
     <Page_WRAP>
       <ScrollView>
@@ -109,12 +128,13 @@ function _Index_PAGE({
           <Header title="My lists and vocabs" big={true} />
         </Pressable>
 
-        {/* <View style={{ gap: 8, padding: 12 }}>
-    
-        <Btn text="Push" onPress={PUSH_changes} />
+        <View style={{ gap: 8, padding: 12 }}>
+          <Btn text="Create noti" onPress={async () => await test()} />
+          {/* <Btn text="Push" onPress={PUSH_changes} />
+          
         <Btn text="Pull" onPress={() => sync("updates", z_user?.id)} />
-        <Btn text="Sync all" onPress={() => sync("all", z_user?.id)} />
-      </View> */}
+        <Btn text="Sync all" onPress={() => sync("all", z_user?.id)} /> */}
+        </View>
 
         <Block styles={{ gap: 12 }}>
           <Label>My recent lists</Label>

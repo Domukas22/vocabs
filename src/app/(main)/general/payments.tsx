@@ -33,6 +33,7 @@ import {
 } from "@/src/db/watermelon_MODELS";
 import USE_fetchPayments from "@/src/features/7_payments/hooks/USE_fetchPayments";
 import USE_zustand from "@/src/zustand";
+import Expandable_BTN from "@/src/components/Expandable_BTN";
 
 export default function Payments_PAGE() {
   const { t } = useTranslation();
@@ -64,7 +65,27 @@ export default function Payments_PAGE() {
       <Styled_FLASHLIST
         data={payments}
         renderItem={({ item }) => {
-          return <Payment payment={item} />;
+          return (
+            <Expandable_BTN
+              title={item.item}
+              subtitle={TRANSFORM_dateObject(item.created_at || 0)}
+              children={
+                <>
+                  <Styled_TEXT type="label">
+                    Transaction id: {item?.transaction_id}
+                  </Styled_TEXT>
+                  <Styled_TEXT type="label">
+                    Payment method: {item?.payment_method}
+                  </Styled_TEXT>
+                  <Styled_TEXT type="label">
+                    Payment amount: €{item?.amount}
+                  </Styled_TEXT>
+                </>
+              }
+            />
+          );
+
+          // <Payment payment={item} />;
         }}
         keyExtractor={(item) => "PublicVocab" + item.id}
       />
