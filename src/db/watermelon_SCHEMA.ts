@@ -128,5 +128,21 @@ export default appSchema({
         { name: "deleted_at", type: "string", isOptional: true },
       ],
     }),
+
+    tableSchema({
+      name: "contact_messages",
+      columns: [
+        { name: "user_id", type: "string", isIndexed: true },
+
+        { name: "name", type: "string" },
+        { name: "email", type: "string" },
+        { name: "message", type: "string" },
+        { name: "message_type", type: "string" },
+
+        { name: "created_at", type: "number" },
+        { name: "updated_at", type: "number" },
+        { name: "deleted_at", type: "string", isOptional: true },
+      ],
+    }),
   ],
 });

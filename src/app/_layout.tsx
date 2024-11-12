@@ -102,7 +102,7 @@ export async function HANDLE_userRouting(
     i18next.changeLanguage(user?.preferred_lang_id || "en");
     await sync("all", user);
     await REFRESH_zustandUser({ user_id: user?.id, z_SET_user });
-    router.push("/(main)/general");
+    router.push("/(main)/general/contact");
   };
 
   if (userId) {

@@ -184,7 +184,9 @@
     "username": "Username",
     "email": "Email",
     "sortLists": "Sort lists",
-    "emptyList": "Empty list"
+    "emptyList": "Empty list",
+    "contactMessageType": "What would you like to talk about?",
+    "emailInput": "Which E-Mail adress would you like us to send a reply to?"
   },
   "modal": {
     "displaySettings": {

@@ -32,7 +32,7 @@ export default function Block({
           borderColor: MyColors.border_white_005,
         },
         row && { flexDirection: "row" },
-        noBorder && { borderBottomWidth: 0, paddingBottom: 8 },
+        noBorder && { borderBottomWidth: 0, paddingBottom: 12 },
         styles,
       ]}
     >
