@@ -20,6 +20,7 @@ import USE_zustand from "@/src/zustand";
 import USE_editUsername from "../hooks/USE_editUsername";
 import { sync } from "@/src/db/sync";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
+import USE_sync from "../hooks/USE_sync";
 
 interface modalProps {
   IS_open: boolean;
@@ -63,6 +64,8 @@ export default function EditUsername_MODAL({
 
   const { EDIT_username, loading, error, RESET_error } = USE_editUsername();
 
+  const { SYNC } = USE_sync();
+
   const SUBMIT = async (data: props) => {
     const { username } = data;
     const result = await EDIT_username({
@@ -74,7 +77,7 @@ export default function EditUsername_MODAL({
     if (!result?.success) {
       console.error(result?.msg); // Log internal message for debugging.
     } else if (result.user) {
-      await sync("all", z_user?.id);
+      await SYNC("all");
       z_SET_user(z_user);
       HANLDE_toggle();
       if (onSuccess) onSuccess();

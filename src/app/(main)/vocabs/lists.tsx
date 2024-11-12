@@ -159,7 +159,6 @@ export default function MyLists_PAGE() {
         onSuccess={(newList: List_MODEL) => {
           highlight(newList?.id);
           list_REF?.current?.scrollToOffset({ animated: true, offset: 0 });
-          console.log(newList);
 
           ADD_toDisplayed(newList);
           toast.show(t("notifications.listCreated"), {

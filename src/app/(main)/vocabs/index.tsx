@@ -116,9 +116,6 @@ function _Index_PAGE({
         },
       ])
       .select();
-
-    console.log("ERROR: ", error);
-    console.log("DATA: ", data);
   };
 
   return (

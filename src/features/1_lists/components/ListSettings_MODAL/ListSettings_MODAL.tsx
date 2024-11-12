@@ -44,6 +44,7 @@ import USE_zustand from "@/src/zustand";
 import USE_fetchListAccesses from "@/src/features/5_users/hooks/USE_fetchListAccesses";
 import USE_supabaseUsers from "@/src/features/5_users/hooks/USE_supabaseUsers";
 import USE_listParticipantIds from "@/src/hooks/USE_participantsOfAList";
+import USE_sync from "@/src/features/5_users/hooks/USE_sync";
 
 interface ListSettingsModal_PROPS {
   selected_LIST: List_MODEL | undefined;
@@ -95,19 +96,22 @@ export default function ListSettings_MODAL({
     }
   }, [open]);
 
+  const { SYNC } = USE_sync();
+
   const share = async (bool: boolean) => {
     SHARE_list({
       list_id: selected_LIST?.id,
       user_id: z_user?.id,
       SHOULD_share: bool,
-      SYNC: async () => await sync("all", z_user?.id),
+
+      SYNC: async () => await SYNC("all"),
       onSuccess: async (updated_LIST: List_MODEL) => {
         await FETCH_listParticipantIds();
       },
     });
   };
   const publish = async (bool: boolean) => {
-    await selected_LIST.SUBMIT_forPublishing(bool);
+    await selected_LIST?.SUBMIT_forPublishing(bool);
     await PUSH_changes();
     // await sync("all", z_user?.id);
     // await PUBLISH_list({

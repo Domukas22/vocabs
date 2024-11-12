@@ -9,6 +9,7 @@ export default appSchema({
         { name: "username", type: "string", isIndexed: true },
         { name: "email", type: "string" },
         { name: "max_vocabs", type: "number" },
+        { name: "has_rewarded_friend_for_invite", type: "boolean" },
 
         { name: "preferred_lang_id", type: "string" },
 
@@ -18,6 +19,7 @@ export default appSchema({
         { name: "created_at", type: "number" },
         { name: "updated_at", type: "number" },
         { name: "deleted_at", type: "string", isOptional: true },
+        { name: "last_pulled_at", type: "string" },
       ],
     }),
 

@@ -49,7 +49,10 @@ export class User_MODEL extends Model {
   @text("username") username!: string;
   @text("email") email!: string;
   @field("max_vocabs") max_vocabs!: number;
+
   @text("preferred_lang_id") preferred_lang_id!: string;
+  @field("has_rewarded_friend_for_invite")
+  has_rewarded_friend_for_invite!: boolean;
 
   @field("list_submit_attempt_count") list_submit_attempt_count!: number;
   @field("accepted_list_submit_count") accepted_list_submit_count!: number;
@@ -57,6 +60,7 @@ export class User_MODEL extends Model {
   @readonly @date("created_at") created_at!: number;
   @readonly @date("updated_at") updated_at!: number;
   @text("deleted_at") deleted_at!: string;
+  @text("last_pulled_at") last_pulled_at!: string;
 
   @reader async ARE_vocabsWithinMaxRange(count: number = 0) {
     const allVocabs = await this.collections
@@ -75,6 +79,21 @@ export class User_MODEL extends Model {
       .fetchCount();
 
     return this.max_vocabs - result;
+  }
+  @writer async UPDATE_lastPulledAt() {
+    const user = await this.update((list) => {
+      list.last_pulled_at = new Date().toISOString();
+    });
+
+    return user;
+  }
+  @reader async HAS_userMadeAPurchase() {
+    const result = await this.collections
+      .get("payments")
+      .query(Q.where("deleted_at", Q.eq(null)), Q.where("user_id", this.id))
+      .fetchCount();
+
+    return result > 0;
   }
 
   @lazy totalList_COUNT = this.collections

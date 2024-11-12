@@ -15,6 +15,7 @@ import { Auth_PROVIDER } from "../context/Auth_CONTEXT";
 import USE_zustand, { z_setUser_PROPS } from "../zustand";
 import { User_MODEL } from "../db/watermelon_MODELS";
 import i18next from "@/src/i18n";
+import REFRESH_zustandUser from "../features/5_users/utils/REFRESH_zustandUser";
 
 export default function _layout() {
   return (
@@ -96,21 +97,23 @@ export async function HANDLE_userRouting(
   };
 
   const NAVIGATE_tovocabs = async (user: User_MODEL) => {
-    z_SET_user(user);
+    // z_SET_user(user);
+
     i18next.changeLanguage(user?.preferred_lang_id || "en");
-    await sync("all", user?.id || "");
+    await sync("all", user);
+    await REFRESH_zustandUser({ user_id: user?.id, z_SET_user });
     router.push("/(main)/general");
   };
 
   if (userId) {
     // find the user on WatermelonDB and Supabase
+
     const localUser = await FETCH_watermelonUser(userId);
     const { success, supabaseUser } = await FETCH_supabaseUser(userId);
 
     // 1. if found on watermelon, but not supabase ==> delete watermelon user + redirect to welcome screen
     // 2. if found on supabase, but not watermelon ==> create user on watermelon + sync all + redirect to vocabs
     // 3. if found on both ==> sync all + redirect to vocabs
-    // 4. if not found on any ==> redirect to welcome screen
 
     // 1.
     if (localUser && !supabaseUser) {
@@ -124,17 +127,20 @@ export async function HANDLE_userRouting(
       const { success, watermelonUser, msg } = await CREATE_watermelonUser(
         supabaseUser
       );
-      if (success && watermelonUser) await NAVIGATE_tovocabs(watermelonUser);
-      else await NAVIGATE_toWelcomeScreen();
+      if (success && watermelonUser) {
+        await NAVIGATE_tovocabs(watermelonUser);
+      } else await NAVIGATE_toWelcomeScreen();
     }
     // 3.
     if (localUser && supabaseUser) {
       await NAVIGATE_tovocabs(localUser);
     }
-    // 4.
+
     if (!localUser && !supabaseUser) {
       await NAVIGATE_toWelcomeScreen();
     }
+  } else {
+    await NAVIGATE_toWelcomeScreen();
   }
 }
 
@@ -161,7 +167,9 @@ async function FETCH_supabaseUser(userId: string) {
 // Fetch user from WatermelonDB
 async function FETCH_watermelonUser(userId: string) {
   const users = await Users_DB.query(Q.where("id", userId));
-  return users[0] || undefined;
+  console.log(users);
+
+  return users?.[0] || undefined;
 }
 
 // Create a new user in WatermelonDB

@@ -34,7 +34,8 @@ export default function USE_fetchPayments(user_id: string | undefined) {
       // Build the query to fetch payments for the given user_id
       const query = Payments_DB.query(
         Q.where("user_id", user_id),
-        Q.where("deleted_at", null)
+        Q.where("deleted_at", null),
+        Q.sortBy("created_at", Q.desc)
       );
 
       const fetchedPayments = await query.fetch();

@@ -112,18 +112,22 @@ export function TRANSFORM_dateObject(_date: number) {
   // Convert the timestamp to a Date object
   const date = new Date(_date);
 
-  // Get the day, month name, and year
+  // Get the day, month name, and year for the given date
   const day = date.getDate();
   const monthName = months[date.getMonth()];
   const year = date.getFullYear();
 
-  // Calculate the difference in days from today
+  // Get today's date for precise comparison
   const today = new Date();
-  const differenceInTime = today.getTime() - date.getTime();
-  const daysAgo = Math.floor(differenceInTime / (1000 * 3600 * 24));
+  const isToday =
+    today.getDate() === day &&
+    today.getMonth() === date.getMonth() &&
+    today.getFullYear() === year;
 
-  // Return the formatted date with the days ago part
-  return `${day}. ${monthName}, ${year} (${daysAgo} days ago)`;
+  // Return formatted date, with "(today)" if the date is today
+  return isToday
+    ? `${day}. ${monthName}, ${year} (today)`
+    : `${day}. ${monthName}, ${year}`;
 }
 
 function Payment({ payment }: { payment: Payments_MODEL | undefined }) {

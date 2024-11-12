@@ -19,6 +19,7 @@ import {
   ICON_checkMarkFull,
   ICON_star,
   ICON_questionMark,
+  ICON_inviteFriend,
 } from "@/src/components/icons/icons";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
@@ -39,7 +40,7 @@ import FETCH_vocabs, {
 import { withObservables } from "@nozbe/watermelondb/react";
 import { sync } from "@/src/db/sync";
 import USE_fetchNotifications from "@/src/features/6_notifications/hooks/USE_fetchNotifications";
-import { Notifications_DB, Payments_DB, Vocabs_DB } from "@/src/db";
+import db, { Notifications_DB, Payments_DB, Vocabs_DB } from "@/src/db";
 import USE_fetchPayments from "@/src/features/7_payments/hooks/USE_fetchPayments";
 import { Notifications_MODEL } from "@/src/db/watermelon_MODELS";
 import { Q } from "@nozbe/watermelondb";
@@ -48,6 +49,8 @@ import USE_zustand from "@/src/zustand";
 import CurrentVocabCount_BAR from "@/src/components/CurrentVocabCount_BAR";
 import Notification_BOX from "@/src/components/Notification_BOX/Notification_BOX";
 import { useToast } from "react-native-toast-notifications";
+import REFRESH_zustandUser from "@/src/features/5_users/utils/REFRESH_zustandUser";
+import USE_sync from "@/src/features/5_users/hooks/USE_sync";
 
 function _General_PAGE({
   notification_COUNT,
@@ -61,14 +64,25 @@ function _General_PAGE({
   // const { SET_auth } = USE_auth();
   const { _lougout } = USE_logout();
 
-  const { z_user } = USE_zustand();
+  const { z_user, z_SET_user } = USE_zustand();
 
   const [IS_logoutModalOpen, TOGGLE_logoutModal] = USE_toggle();
   const toast = useToast();
+
+  const { SYNC } = USE_sync();
+
   return (
     <Page_WRAP>
       <Header title={t("page.general.header")} big={true} />
-      {/* <Btn text="Sync" style={{ margin: 12 }} onPress={sync} /> */}
+      <Btn
+        text="Sync"
+        style={{ margin: 12 }}
+        onPress={async () => {
+          await SYNC("all");
+
+          await REFRESH_zustandUser({ user_id: z_user?.id, z_SET_user });
+        }}
+      />
 
       <ScrollView>
         {/* <Btn
@@ -149,6 +163,14 @@ function _General_PAGE({
             onPress={() => router.push("/(main)/general/contact")}
             text_STYLES={{ flex: 1, marginLeft: 4 }}
           />
+
+          <Btn
+            iconLeft={<ICON_inviteFriend />}
+            text={t("btn.inviteFriends")}
+            iconRight={<ICON_arrow direction="right" />}
+            onPress={() => router.push("/(main)/general/inviteFriends")}
+            text_STYLES={{ flex: 1, marginLeft: 4 }}
+          />
           <Btn
             iconLeft={<ICON_about />}
             text={t("page.general.btn.about")}
@@ -210,9 +232,10 @@ export default function General_PAGE() {
 export function USE_logout() {
   const { logout } = USE_auth();
   const { z_user } = USE_zustand();
+  const { SYNC } = USE_sync();
 
   const _lougout = async () => {
-    await sync("all", z_user?.id);
+    await SYNC("all");
     const { error } = await logout();
 
     if (error) {

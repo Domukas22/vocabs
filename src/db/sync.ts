@@ -1,7 +1,12 @@
 import { synchronize } from "@nozbe/watermelondb/sync";
 import db from "./index";
 import { supabase } from "../lib/supabase";
-import { Language_MODEL, List_MODEL, Vocab_MODEL } from "./watermelon_MODELS";
+import {
+  Language_MODEL,
+  List_MODEL,
+  User_MODEL,
+  Vocab_MODEL,
+} from "./watermelon_MODELS";
 import { json } from "@nozbe/watermelondb/decorators";
 import languages from "../constants/languages";
 import { hasUnsyncedChanges } from "@nozbe/watermelondb/sync";
@@ -11,7 +16,7 @@ let isSyncing = false; // Flag to indicate if a sync is already in progress
 
 export async function sync(
   pull_type: "updates" | "all" = "all",
-  user_id: string | undefined = undefined
+  user: User_MODEL | undefined
 ) {
   // Check if a sync is already in progress
   if (isSyncing) return;
@@ -26,8 +31,10 @@ export async function sync(
         const { data, error: pull_ERROR } = await supabase.rpc("pull", {
           schema_version: schemaVersion,
           migration,
-          last_pulled_at: lastPulledAt,
-          userid: user_id,
+          last_pulled_at: user?.last_pulled_at
+            ? new Date(user.last_pulled_at).getTime()
+            : Date.now(),
+          userid: user?.id,
           pull_type,
         });
 
@@ -96,8 +103,6 @@ export async function PUSH_changes() {
         const { error } = await supabase.rpc("push", {
           changes,
         });
-
-        console.log(changes.notifications.updated);
 
         if (error) {
           console.error("🔴 Push error: 🔴", error?.message);

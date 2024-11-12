@@ -272,6 +272,25 @@ export function ICON_error({ ...props }: {} & ViewProps) {
     </View>
   );
 }
+export function ICON_inviteFriend({ ...props }: {} & ViewProps) {
+  return (
+    <View {...props}>
+      <Svg
+        width={sizing.big}
+        height={sizing.big}
+        viewBox="0 0 128 105"
+        fill="none"
+      >
+        <Path
+          fill-rule="evenodd"
+          clip-rule="evenodd"
+          d="M103.273 45.2083V29.1667H112V45.2083H128V53.9583H112V70H103.273V53.9583H87.2727V45.2083H103.273ZM39.7498 54.5417C35.4676 49.455 32 39.9583 32 33.3083V23.3333C32 17.1449 34.4519 11.21 38.8164 6.83417C43.1809 2.45833 49.1004 0 55.2727 0C61.445 0 67.3646 2.45833 71.729 6.83417C76.0935 11.21 78.5455 17.1449 78.5455 23.3333V33.3083C78.5455 39.9583 75.0545 49.4842 70.7956 54.5533L68.6953 57.05C65.2625 61.1275 66.3331 66.3133 71.1331 68.6583L104.064 84.77C107.642 86.52 110.545 91.1458 110.545 95.1708V99.1783C110.542 100.724 109.927 102.206 108.835 103.298C107.743 104.389 106.264 105.002 104.721 105H5.81818C4.27712 105 2.799 104.387 1.70821 103.296C0.617428 102.204 0.00308213 100.723 0 99.1783V95.1708C0 91.175 2.89746 86.52 6.48146 84.7642L39.4124 68.6525C44.1891 66.3192 45.3004 61.1392 41.856 57.0442L39.7498 54.5417Z"
+          fill={MyColors.icon_gray_light}
+        />
+      </Svg>
+    </View>
+  );
+}
 export function ICON_letterT({ ...props }: {} & ViewProps) {
   return (
     <View {...props}>
@@ -808,7 +827,7 @@ const s = StyleSheet.create({
 
   toast: {},
 });
-function _ICON_general({
+export function ICON_general({
   color = "grey",
   notification_COUNT = 0,
 }: {
@@ -835,23 +854,4 @@ function _ICON_general({
       )}
     </View>
   );
-}
-
-export function ICON_general({
-  color = "grey",
-}: {
-  color?: "grey" | "primary";
-}) {
-  const { user } = USE_auth();
-
-  const enhance = withObservables([], () => ({
-    notification_COUNT: Notifications_DB.query(
-      Q.where("user_id", user?.id || ""),
-      Q.where("is_read", false)
-    ).observeCount(),
-  }));
-  const EnhancedPage = enhance(_ICON_general);
-
-  // Render the enhanced page
-  return <EnhancedPage {...{ color }} />;
 }

@@ -22,7 +22,7 @@ export default function BottomAction_SECTION({
   RESET_search = () => {},
   RESET_filters = () => {},
 }: {
-  type: "list" | "vocabs";
+  type: "list" | "vocabs" | "users";
   search: string;
   IS_debouncing: boolean;
   IS_loadingMore: boolean;
@@ -32,7 +32,7 @@ export default function BottomAction_SECTION({
   LOAD_more: () => Promise<void>;
   RESET_search: () => void;
   createBtn_ACTION?: () => void;
-  RESET_filters: () => void;
+  RESET_filters?: () => void;
 }) {
   return (
     <View style={{ gap: 16 }}>
@@ -69,7 +69,11 @@ export default function BottomAction_SECTION({
           }}
         >
           <Styled_TEXT type="label">
-            {type === "vocabs" ? "No vocabs found" : "No lists found"}
+            {type === "vocabs"
+              ? "No vocabs found"
+              : type === "list"
+              ? "No lists found"
+              : "No users found"}
           </Styled_TEXT>
         </View>
       )}
