@@ -78,7 +78,7 @@ function _Index_PAGE({
     { name: "resetDB" },
   ]);
 
-  const { logout } = USE_logout();
+  const logout = USE_logout();
 
   async function resetDatabase() {
     TOGGLE_modal("resetDB");

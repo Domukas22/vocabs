@@ -75,7 +75,7 @@ export default function USE_supabaseUsers_2({
           return;
         }
 
-        console.log(error);
+        if (error) console.error(error);
 
         SET_data((prev) => [...prev, ...users]);
         SET_unpaginatedCount(count || 0);

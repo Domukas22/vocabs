@@ -126,7 +126,7 @@ export class User_MODEL extends Model {
 
   @lazy deletedVocab_COUNT = this.collections
     .get("vocabs")
-    .query(Q.where("deleted_at", Q.notEq(null)))
+    .query(Q.where("deleted_at", Q.notEq(null)), Q.where("user_id", this.id))
     .observeCount();
 
   @lazy unreadNotification_COUNT = this.collections
@@ -144,58 +144,82 @@ export class User_MODEL extends Model {
     .observe();
 
   @writer async SOFT_DELETE_user() {
-    const softDelete_LISTS = await this.collections
-      .get("lists")
-      .query(Q.where("user_id", this.id))
-      .fetch();
-
-    const softDelete_LISTACCESSES = await this.collections
+    const listAccesses = await this.collections
       .get("list_accesses")
       .query(Q.where("owner_id", this.id), Q.where("participant_id", this.id))
       .fetch();
 
-    const softDelete_VOCABS = await this.collections
-      .get("vocabs")
-      .query(Q.where("user_id", this.id), Q.where("deleted_at", Q.notEq(null)))
+    const listAccess_UPDATES = listAccesses.map((x) =>
+      x.prepareUpdate((lA) => lA.markAsDeleted())
+    );
+
+    const user_UPDATE = this.prepareUpdate((user) => {
+      user.deleted_at = new Date().toISOString();
+    });
+
+    // Execute all updates in a single batch
+    await this.batch(...listAccess_UPDATES, user_UPDATE);
+  }
+
+  @writer async HARD_DELETE_user() {
+    // the hard delete only happens on WatermelonDB
+    // since we are using destroyPermanently() instead of markAsDeleted, the changes will not be synced
+    // if we want to recover profile, we need to fetch everything from Supabase again
+
+    const lists = await this.collections
+      .get("lists")
+      .query(Q.where("user_id", this.id))
       .fetch();
 
-    const softDelete_NOTIFICATIONS = await this.collections
+    const listAccesses = await this.collections
+      .get("list_accesses")
+      .query(
+        Q.or(Q.where("owner_id", this.id), Q.where("participant_id", this.id))
+      )
+      .fetch();
+
+    const vocabs = await this.collections
+      .get("vocabs")
+      .query(Q.where("user_id", this.id))
+      .fetch();
+
+    const notifications = await this.collections
       .get("notifications")
       .query(Q.where("user_id", this.id))
       .fetch();
 
-    // --------------------------------------------
+    const payments = await this.collections
+      .get("payments")
+      .query(Q.where("user_id", this.id))
+      .fetch();
 
-    const list_UPDATES = softDelete_LISTS.map((list) =>
-      list.prepareUpdate((l) => {
-        l.deleted_at = new Date().toISOString();
-      })
-    );
-    const listAccess_UPDATES = softDelete_LISTACCESSES.map((listAccess) =>
-      listAccess.prepareUpdate((lA) => {
-        lA.deleted_at = new Date().toISOString();
-      })
-    );
-    const vocab_UPDATES = softDelete_VOCABS.map((vocab) =>
-      vocab.prepareUpdate((v) => {
-        v.deleted_at = new Date().toISOString();
-      })
-    );
-    const notification_UPDATES = softDelete_NOTIFICATIONS.map((notification) =>
-      notification.prepareUpdate((n) => {
-        n.deleted_at = new Date().toISOString();
-      })
-    );
+    const contactMessages = await this.collections
+      .get("contact_messages")
+      .query(Q.where("user_id", this.id))
+      .fetch();
 
-    // Execute all updates in a single batch
-    await this.batch(
-      ...list_UPDATES,
-      ...listAccess_UPDATES,
-      ...vocab_UPDATES,
-      ...notification_UPDATES
-    );
+    // Execute hard delete for each type of related record
+    for (const list of lists) {
+      await list.destroyPermanently();
+    }
+    for (const listAccess of listAccesses) {
+      await listAccess.destroyPermanently();
+    }
+    for (const vocab of vocabs) {
+      await vocab.destroyPermanently();
+    }
+    for (const notification of notifications) {
+      await notification.destroyPermanently();
+    }
+    for (const payment of payments) {
+      await payment.destroyPermanently();
+    }
+    for (const contactMessage of contactMessages) {
+      await contactMessage.destroyPermanently();
+    }
 
-    this.deleted_at = new Date().toISOString();
+    // Finally, delete the user record itself
+    await this.destroyPermanently();
   }
 }
 // ===================================================================================

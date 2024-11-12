@@ -17,7 +17,5 @@ export default async function FETCH_listParticipants({
     .eq("list_id", list_id)
     .eq("owner_id", owner_id);
 
-  console.log(data);
-
   return { participants: data?.map((x) => x.user) || [], error };
 }

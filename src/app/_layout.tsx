@@ -84,6 +84,86 @@ function loadFonts() {
 // ----------------------------------------------------------------------------------------------------------------
 // ----------------------------------------------------------------------------------------------------------------
 // ----------------------------------------------------------------------------------------------------------------
+
+export async function GET_watermelonAndSupabaseUser(userId: string | null) {
+  if (!userId) return { watermelon_USER: undefined, supabase_USER: undefined };
+  const watermelon_USER = await FETCH_watermelonUser(userId);
+  const { supabase_USER } = await FETCH_supabaseUser(userId);
+
+  return { watermelon_USER, supabase_USER };
+}
+
+export async function HANDLE_initialRouting({
+  watermelon_USER,
+  supabase_USER,
+  NAVIGATE_toVocabs,
+  NAVIGATE_toWelcomeScreen,
+}: {
+  watermelon_USER: User_MODEL | undefined;
+  supabase_USER: any;
+  NAVIGATE_toVocabs: () => Promise<void>;
+  NAVIGATE_toWelcomeScreen: () => Promise<void>;
+}) {
+  //
+  //
+  // 3. if found on both ==> sync all + redirect to vocabs
+
+  // 1. if found on watermelon, but not supabase ==> delete watermelon user + redirect to welcome screen
+  if (watermelon_USER && !supabase_USER) {
+    // delete watermelon user + redirect to welcome screen
+    await watermelon_USER.SOFT_DELETE_user();
+    await NAVIGATE_toWelcomeScreen();
+  }
+  // 2. if found on supabase, but not watermelon ==> create user on watermelon + sync all + redirect to vocabs
+  if (!watermelon_USER && supabase_USER) {
+    // check if supabase user is deleted
+    // if yes, let user recover it.
+    // if no, continue
+
+    // create user on watermelon + sync all + redirect to vocabs
+    const { success, watermelonUser, msg } = await CREATE_watermelonUser(
+      supabase_USER
+    );
+    if (success && watermelonUser) {
+      await NAVIGATE_toVocabs();
+    } else await NAVIGATE_toWelcomeScreen();
+  }
+  // 3.
+  if (watermelon_USER && supabase_USER) {
+    // check if supabase user is deleted
+    // if yes, let user recover it.
+    // if no, continue
+    await NAVIGATE_toVocabs();
+  }
+
+  if (!watermelon_USER && !supabase_USER) {
+    await NAVIGATE_toWelcomeScreen();
+  }
+}
+
+export function USE_navigate() {
+  const { z_SET_user } = USE_zustand();
+  const router = useRouter();
+
+  const NAVIGATE_toVocabs = async (user: User_MODEL | undefined) => {
+    if (!user) return;
+
+    await SecureStore.setItemAsync("user_id", user?.id);
+    await sync("all", user);
+    await REFRESH_zustandUser({ user_id: user?.id, z_SET_user });
+    i18next.changeLanguage(user?.preferred_lang_id || "en");
+    router.push("/(main)/vocabs");
+  };
+
+  const NAVIGATE_toWelcomeScreen = async () => {
+    await SecureStore.setItemAsync("user_id", "");
+    z_SET_user(undefined);
+    router.push("/welcome");
+  };
+
+  return { NAVIGATE_toVocabs, NAVIGATE_toWelcomeScreen };
+}
+
 // Handle user routing based on existence in SecureStore and WatermelonDB
 export async function HANDLE_userRouting(
   router: Router,
@@ -102,41 +182,48 @@ export async function HANDLE_userRouting(
     i18next.changeLanguage(user?.preferred_lang_id || "en");
     await sync("all", user);
     await REFRESH_zustandUser({ user_id: user?.id, z_SET_user });
-    router.push("/(main)/general/contact");
+    router.push("/(main)/vocabs");
   };
 
   if (userId) {
     // find the user on WatermelonDB and Supabase
 
     const localUser = await FETCH_watermelonUser(userId);
-    const { success, supabaseUser } = await FETCH_supabaseUser(userId);
+    const { supabase_USER } = await FETCH_supabaseUser(userId);
 
     // 1. if found on watermelon, but not supabase ==> delete watermelon user + redirect to welcome screen
     // 2. if found on supabase, but not watermelon ==> create user on watermelon + sync all + redirect to vocabs
     // 3. if found on both ==> sync all + redirect to vocabs
 
     // 1.
-    if (localUser && !supabaseUser) {
+    if (localUser && !supabase_USER) {
       // delete watermelon user + redirect to welcome screen
       await localUser.SOFT_DELETE_user();
       await NAVIGATE_toWelcomeScreen();
     }
     // 2.
-    if (!localUser && supabaseUser) {
+    if (!localUser && supabase_USER) {
+      // check if supabase user is deleted
+      // if yes, let user recover it.
+      // if no, continue
+
       // create user on watermelon + sync all + redirect to vocabs
       const { success, watermelonUser, msg } = await CREATE_watermelonUser(
-        supabaseUser
+        supabase_USER
       );
       if (success && watermelonUser) {
         await NAVIGATE_tovocabs(watermelonUser);
       } else await NAVIGATE_toWelcomeScreen();
     }
     // 3.
-    if (localUser && supabaseUser) {
+    if (localUser && supabase_USER) {
+      // check if supabase user is deleted
+      // if yes, let user recover it.
+      // if no, continue
       await NAVIGATE_tovocabs(localUser);
     }
 
-    if (!localUser && !supabaseUser) {
+    if (!localUser && !supabase_USER) {
       await NAVIGATE_toWelcomeScreen();
     }
   } else {
@@ -161,20 +248,19 @@ async function FETCH_supabaseUser(userId: string) {
     return { msg: "🔴 Error fetching user from Supabase 🔴", success: false };
   }
 
-  return { success: true, supabaseUser: user };
+  return { success: true, supabase_USER: user };
 }
 
 // Fetch user from WatermelonDB
 async function FETCH_watermelonUser(userId: string) {
   const users = await Users_DB.query(Q.where("id", userId));
-  console.log(users);
 
   return users?.[0] || undefined;
 }
 
 // Create a new user in WatermelonDB
-async function CREATE_watermelonUser(supabaseUser: User_MODEL) {
-  if (!supabaseUser) {
+async function CREATE_watermelonUser(supabase_USER: User_MODEL) {
+  if (!supabase_USER) {
     console.error(
       "🔴 Supabase user not defined when creating Watermelon user 🔴"
     );
@@ -184,12 +270,12 @@ async function CREATE_watermelonUser(supabaseUser: User_MODEL) {
   let watermelonUser;
   await db.write(async () => {
     watermelonUser = await Users_DB.create((user) => {
-      user._raw.id = supabaseUser.id;
-      user.username = supabaseUser.username;
-      user.email = supabaseUser.email;
-      user.max_vocabs = supabaseUser.max_vocabs;
-      user.list_submit_attempt_count = supabaseUser.list_submit_attempt_count;
-      user.preferred_lang_id = supabaseUser.preferred_lang_id;
+      user._raw.id = supabase_USER.id;
+      user.username = supabase_USER.username;
+      user.email = supabase_USER.email;
+      user.max_vocabs = supabase_USER.max_vocabs;
+      user.list_submit_attempt_count = supabase_USER.list_submit_attempt_count;
+      user.preferred_lang_id = supabase_USER.preferred_lang_id;
     });
   });
 

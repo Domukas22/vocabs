@@ -91,7 +91,7 @@ export default function Register_PAGE() {
   const onSubmit = (data: RegisterData_PROPS) => _register(data);
   // const onSubmit = (data: RegisterData_PROPS) => {};
   return (
-    <Page_WRAP>
+    <Page_WRAP bottomEdge>
       <KeyboardAvoidingView
         style={{ flex: 1, marginBottom: 20 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}

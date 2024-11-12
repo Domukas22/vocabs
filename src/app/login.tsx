@@ -9,7 +9,7 @@ import Page_WRAP from "../components/Page_WRAP/Page_WRAP";
 import { MyColors } from "../constants/MyColors";
 import Block from "../components/Block/Block";
 import StyledText_INPUT from "../components/StyledText_INPUT/StyledText_INPUT";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Label from "../components/Label/Label";
 import Btn from "../components/Btn/Btn";
 import { Link, useRouter } from "expo-router";
@@ -27,12 +27,17 @@ import db, { Users_DB } from "../db";
 import USE_zustand from "../zustand";
 import {
   FETCH_userFromSupabase,
+  GET_watermelonAndSupabaseUser,
+  HANDLE_initialRouting,
   HANDLE_userRouting,
   HANDLE_watermelonUser,
+  USE_navigate,
 } from "./_layout";
 import { User_MODEL } from "../db/watermelon_MODELS";
 import { Q } from "@nozbe/watermelondb";
 import { View } from "react-native";
+import Confirmation_MODAL from "../components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
+import USE_modalToggles from "../hooks/USE_modalToggles";
 
 type LoginData_PROPS = {
   email: string;
@@ -44,8 +49,50 @@ export default function Login_PAGE() {
   const [internal_ERROR, SET_internalError] = useState("");
   const { t } = useTranslation();
   const router = useRouter(); // Initialize router
-  const { login } = USE_auth();
+  const { login, logout } = USE_auth();
   const { z_SET_user } = USE_zustand();
+  const { NAVIGATE_toVocabs, NAVIGATE_toWelcomeScreen } = USE_navigate();
+
+  const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
+    { name: "recoverDeletedAccount", initialValue: false },
+  ]);
+
+  const [targetUser_ID, SET_targetUserId] = useState<string | undefined>();
+
+  const CANCEL_profileRevival = async () => {
+    const { error } = await logout();
+    TOGGLE_modal("recoverDeletedAccount");
+  };
+
+  const REVIVE_profile = async () => {
+    if (!targetUser_ID) return;
+
+    const { error: userError } = await supabase
+      .from("users")
+      .update({ deleted_at: null })
+      .eq("id", targetUser_ID);
+
+    if (userError) console.error(userError);
+
+    const { watermelon_USER, supabase_USER } =
+      await GET_watermelonAndSupabaseUser(targetUser_ID);
+
+    await HANDLE_initialRouting({
+      watermelon_USER,
+      supabase_USER,
+      NAVIGATE_toVocabs: async () => await NAVIGATE_toVocabs(watermelon_USER),
+      NAVIGATE_toWelcomeScreen,
+    });
+
+    router.push("/(main)/vocabs");
+  };
+
+  useEffect(() => {
+    (async () => {
+      const users = await Users_DB.query();
+      console.log(users.map((u) => u.username));
+    })();
+  }, []);
 
   const _login = async (data: LoginData_PROPS) => {
     const { email, password } = data;
@@ -58,9 +105,24 @@ export default function Login_PAGE() {
     if (error) {
       SET_internalError(error.message);
     } else if (typeof userData?.id === "string") {
+      SET_targetUserId(userData.id);
       // sucessfully logged in --> save user id to local storage
-      await SecureStore.setItemAsync("user_id", userData?.id);
-      await HANDLE_userRouting(router, userData?.id, z_SET_user);
+      // await SecureStore.setItemAsync("user_id", userData?.id);
+      // ------
+      const { watermelon_USER, supabase_USER } =
+        await GET_watermelonAndSupabaseUser(userData?.id);
+
+      if (supabase_USER && supabase_USER?.deleted_at !== null) {
+        TOGGLE_modal("recoverDeletedAccount");
+        return;
+      }
+
+      await HANDLE_initialRouting({
+        watermelon_USER,
+        supabase_USER,
+        NAVIGATE_toVocabs: async () => await NAVIGATE_toVocabs(watermelon_USER),
+        NAVIGATE_toWelcomeScreen,
+      });
 
       router.push("/(main)/vocabs");
     }
@@ -90,11 +152,15 @@ export default function Login_PAGE() {
     setValue("email", "domukas@gmail.com");
     setValue("password", "domukas");
   };
+  const Deleted_2 = () => {
+    setValue("email", "deleted_2@gmail.com");
+    setValue("password", "deleted_2");
+  };
 
   // ---------------------------------------------------------------------------------------------------
 
   return (
-    <Page_WRAP>
+    <Page_WRAP bottomEdge>
       <KeyboardAvoidingView
         style={{ flex: 1, marginBottom: 20 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -206,11 +272,27 @@ export default function Login_PAGE() {
             <View style={{ flexDirection: "row", gap: 12 }}>
               <Btn text="Domukas" onPress={Domukas} />
               <Btn text="Pupyte" onPress={Pupyte} />
+              <Btn text="Deleted_2" onPress={Deleted_2} />
             </View>
           </Block>
         </ScrollView>
       </KeyboardAvoidingView>
       <LoginRegister_SWITCH page="login" />
+      <Confirmation_MODAL
+        action={async () => await REVIVE_profile()}
+        actionBtnText="Yes, recover"
+        open={modal_STATES.recoverDeletedAccount}
+        title="Recover account?"
+        toggle={async () => await CANCEL_profileRevival()}
+      >
+        <Styled_TEXT type="label">
+          The account you are trying to log in to was deleted XXX days ago and
+          will be deleted permanently in XXX days if it's not recovered.
+        </Styled_TEXT>
+        <Styled_TEXT type="label">
+          Do you wish to recover this account?
+        </Styled_TEXT>
+      </Confirmation_MODAL>
     </Page_WRAP>
   );
 }

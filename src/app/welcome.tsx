@@ -9,9 +9,17 @@ import { Styled_TEXT } from "../components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "../constants/MyColors";
 import Btn from "../components/Btn/Btn";
 import { useRouter } from "expo-router";
+import { useEffect } from "react";
+import { PUSH_changes } from "../db/sync";
 
 export default function Welcome_PAGE() {
   const router = useRouter();
+
+  useEffect(() => {
+    (async () => {
+      await PUSH_changes();
+    })();
+  }, []);
 
   return (
     <Page_WRAP>

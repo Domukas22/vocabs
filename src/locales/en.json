@@ -18,7 +18,8 @@
     "getVocabs": "Get vocabs",
     "copyListAndVocabs": "Copy this list and it's vocabs?",
     "notifications": "Notifications",
-    "payments": "Payments"
+    "payments": "Payments",
+    "deleteProfile": "Delete profile?"
   },
   "blockLabels": {
     "uiLang": "App language"
@@ -79,7 +80,8 @@
     "confirmListCopy": "Yes, copy",
     "reviveVocab": "Revive vocab",
     "getMoreVocabs": "Get more vocabs",
-    "inviteFriends": "Invite friends"
+    "inviteFriends": "Invite friends",
+    "confirmProfileDeletion": "Yes, delete"
   },
   "pages": {
     "about": {
