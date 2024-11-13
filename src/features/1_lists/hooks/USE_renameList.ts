@@ -9,10 +9,16 @@ export interface RenameList_PROPS {
 }
 
 const defaultError_MSG =
-  "An error occurred when renaming the list. Please reload the app and try again. If the problem persists, it has been recorded and will be reviewed. We apologize for the inconvenience.";
+  "Something went wrong when renaming the list. Please reload the app and try again. This problem has been recorded and will be reviewed by developers as soon as possible. If the problem persists, please contact support. We apologize for the inconvenience.";
 
 export default function USE_renameList() {
-  const { HAS_error, userError_MSG, CREATE_error, RESET_error } = USE_error();
+  const {
+    HAS_error,
+    userError_MSG,
+    HAS_internalError,
+    CREATE_error,
+    RESET_error,
+  } = USE_error();
   const [loading, SET_loading] = useState(false);
 
   const HANDLE_validationErrors = (message: string, internalMsg?: string) => {
@@ -30,7 +36,6 @@ export default function USE_renameList() {
     userError_MSG?: string;
   }> => {
     RESET_error();
-    SET_loading(true);
 
     // Validation checks
     if (!list?.id)
@@ -47,6 +52,11 @@ export default function USE_renameList() {
       return HANDLE_validationErrors("Please provide a new name for the list.");
 
     try {
+      SET_loading(true);
+
+      if (new_NAME === list?.name) {
+        return { success: true, updated_LIST: list };
+      }
       // Check for duplicate list name
       const IS_listNameTaken = await user.DOES_userHaveListWithThisName(
         new_NAME
@@ -69,7 +79,7 @@ export default function USE_renameList() {
       return { success: true, updated_LIST };
     } catch (error: any) {
       // Handle network errors and unexpected errors
-      const networkErrorMsg =
+      const networkErrorMsg = // this isnt really necessary when we are working with local functions. Use this only with online functions
         "It looks like there's an issue with your internet connection. Please check and try again.";
       const errorMessage =
         error.message === "Failed to fetch"
@@ -95,6 +105,7 @@ export default function USE_renameList() {
     loading,
     HAS_error,
     userError_MSG,
+    HAS_internalError,
     RESET_error,
   };
 }

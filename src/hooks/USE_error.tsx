@@ -11,6 +11,7 @@ interface CreateError_PROPS {
 export default function USE_error() {
   const [HAS_error, SET_hasError] = useState(false);
   const [userError_MSG, SET_userMsg] = useState("");
+  const [HAS_internalError, SET_hasInternalError] = useState(false);
 
   const CREATE_error = useCallback(
     ({ userError_MSG, internalError_MSG }: CreateError_PROPS) => {
@@ -18,6 +19,7 @@ export default function USE_error() {
       SET_userMsg(userError_MSG);
 
       if (internalError_MSG) {
+        SET_hasInternalError(true);
         console.error(internalError_MSG);
         // Integrate Sentry here for logging
         // Sentry.captureException(new Error(internalError_MSG));
@@ -27,10 +29,16 @@ export default function USE_error() {
   );
 
   const RESET_error = useCallback(() => {
+    SET_hasInternalError(false);
     SET_hasError(false);
     SET_userMsg("");
   }, []);
 
-  // HAS_error and userError_MSG are not needed for the forms, but are needed for anything tha ts not a form
-  return { HAS_error, userError_MSG, CREATE_error, RESET_error };
+  return {
+    HAS_error,
+    HAS_internalError,
+    userError_MSG,
+    CREATE_error,
+    RESET_error,
+  };
 }

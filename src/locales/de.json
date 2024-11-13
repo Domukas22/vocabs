@@ -290,7 +290,7 @@
   },
   "error": {
     "provideAListName": "Bitte einen Listenname eingeben",
-    "listNameTaken": "Du hast beireits eine Listen namens ",
+    "listNameTaken": "Du hast bereits eine Liste mit dieser Name",
     "noListSelected": "Keine Liste ausgewählt"
   },
   "undertext": {
