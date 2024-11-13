@@ -19,6 +19,12 @@ import { t } from "i18next";
 import { nullValue } from "@nozbe/watermelondb/RawRecord";
 import { notEq } from "@nozbe/watermelondb/QueryDescription";
 
+export interface ListCreation_PROPS {
+  user_id: string;
+  name: string;
+  description: string;
+}
+
 const SANITIZE_langIds = (rawLangIds: string[]) => {
   return Array.isArray(rawLangIds)
     ? rawLangIds
@@ -62,24 +68,6 @@ export class User_MODEL extends Model {
   @text("deleted_at") deleted_at!: string;
   @text("last_pulled_at") last_pulled_at!: string;
 
-  @reader async ARE_vocabsWithinMaxRange(count: number = 0) {
-    const allVocabs = await this.collections
-      .get("vocabs")
-      .query(Q.where("deleted_at", Q.eq(null)), Q.where("user_id", this.id))
-      .fetchCount();
-
-    const remaining_VOCABS = this.max_vocabs - allVocabs;
-    // return remaining_VOCABS >= count;
-    return remaining_VOCABS >= count;
-  }
-  @reader async GET_remainingVocabCount() {
-    const result = await this.collections
-      .get("vocabs")
-      .query(Q.where("deleted_at", Q.eq(null)), Q.where("user_id", this.id))
-      .fetchCount();
-
-    return this.max_vocabs - result;
-  }
   @writer async UPDATE_lastPulledAt() {
     const user = await this.update((list) => {
       list.last_pulled_at = new Date().toISOString();
@@ -87,62 +75,6 @@ export class User_MODEL extends Model {
 
     return user;
   }
-  @reader async HAS_userMadeAPurchase() {
-    const result = await this.collections
-      .get("payments")
-      .query(Q.where("deleted_at", Q.eq(null)), Q.where("user_id", this.id))
-      .fetchCount();
-
-    return result > 0;
-  }
-
-  @lazy totalList_COUNT = this.collections
-    .get("lists")
-    .query(Q.where("deleted_at", Q.eq(null)), Q.where("user_id", this.id))
-    .observeCount();
-
-  @lazy totalVocab_COUNT = this.collections
-    .get("vocabs")
-    .query(Q.where("deleted_at", Q.eq(null)), Q.where("user_id", this.id))
-    .observeCount();
-
-  @lazy totalSavedVocab_COUNT = this.collections
-    .get("vocabs")
-    .query(
-      Q.where("is_marked", true),
-      Q.where("deleted_at", null),
-      Q.where("user_id", this.id)
-    )
-    .observeCount();
-
-  @lazy markedVocab_COUNT = this.collections
-    .get("vocabs")
-    .query(
-      Q.where("deleted_at", Q.eq(null)),
-      Q.where("user_id", this.id),
-      Q.where("is_marked", true)
-    )
-    .observeCount();
-
-  @lazy deletedVocab_COUNT = this.collections
-    .get("vocabs")
-    .query(Q.where("deleted_at", Q.notEq(null)), Q.where("user_id", this.id))
-    .observeCount();
-
-  @lazy unreadNotification_COUNT = this.collections
-    .get("notifications")
-    .query(
-      Q.where("deleted_at", null),
-      Q.where("user_id", this.id),
-      Q.where("is_read", false)
-    )
-    .observeCount();
-
-  @lazy myTopLists = this.collections
-    .get("lists")
-    .query(Q.where("user_id", this.id), Q.where("deleted_at", null), Q.take(2))
-    .observe();
-
   @writer async SOFT_DELETE_user() {
     const listAccesses = await this.collections
       .get("list_accesses")
@@ -160,7 +92,6 @@ export class User_MODEL extends Model {
     // Execute all updates in a single batch
     await this.batch(...listAccess_UPDATES, user_UPDATE);
   }
-
   @writer async HARD_DELETE_user() {
     // the hard delete only happens on WatermelonDB
     // since we are using destroyPermanently() instead of markAsDeleted, the changes will not be synced
@@ -221,6 +152,98 @@ export class User_MODEL extends Model {
     // Finally, delete the user record itself
     await this.destroyPermanently();
   }
+  @writer async UPDATE_preferredLangId(lang_id: "en" | "de") {
+    const user = await this.update((user) => {
+      user.preferred_lang_id = lang_id;
+    });
+    return user;
+  }
+
+  @reader async ARE_vocabsWithinMaxRange(count: number = 0) {
+    const allVocabs = await this.collections
+      .get("vocabs")
+      .query(Q.where("deleted_at", Q.eq(null)), Q.where("user_id", this.id))
+      .fetchCount();
+
+    const remaining_VOCABS = this.max_vocabs - allVocabs;
+    // return remaining_VOCABS >= count;
+    return remaining_VOCABS >= count;
+  }
+  @reader async GET_remainingVocabCount() {
+    const result = await this.collections
+      .get("vocabs")
+      .query(Q.where("deleted_at", Q.eq(null)), Q.where("user_id", this.id))
+      .fetchCount();
+
+    return this.max_vocabs - result;
+  }
+  @reader async HAS_userMadeAPurchase() {
+    const result = await this.collections
+      .get("payments")
+      .query(Q.where("deleted_at", Q.eq(null)), Q.where("user_id", this.id))
+      .fetchCount();
+
+    return result > 0;
+  }
+  @reader async DOES_userHaveListWithThisName(name: string) {
+    const result = await this.collections
+      .get("lists")
+      .query(
+        Q.where("user_id", this.id),
+        Q.where("name", name),
+        Q.where("deleted_at", null)
+      )
+      .fetchCount();
+
+    return result > 0;
+  }
+
+  @lazy totalList_COUNT = this.collections
+    .get("lists")
+    .query(Q.where("deleted_at", Q.eq(null)), Q.where("user_id", this.id))
+    .observeCount();
+
+  @lazy totalVocab_COUNT = this.collections
+    .get("vocabs")
+    .query(Q.where("deleted_at", Q.eq(null)), Q.where("user_id", this.id))
+    .observeCount();
+
+  @lazy totalSavedVocab_COUNT = this.collections
+    .get("vocabs")
+    .query(
+      Q.where("is_marked", true),
+      Q.where("deleted_at", null),
+      Q.where("user_id", this.id)
+    )
+    .observeCount();
+
+  @lazy markedVocab_COUNT = this.collections
+    .get("vocabs")
+    .query(
+      Q.where("deleted_at", Q.eq(null)),
+      Q.where("user_id", this.id),
+      Q.where("is_marked", true)
+    )
+    .observeCount();
+
+  @lazy deletedVocab_COUNT = this.collections
+    .get("vocabs")
+    .query(Q.where("deleted_at", Q.notEq(null)), Q.where("user_id", this.id))
+    .observeCount();
+
+  @lazy unreadNotification_COUNT = this.collections
+    .get("notifications")
+    .query(
+      Q.where("deleted_at", null),
+      Q.where("user_id", this.id),
+      Q.where("is_read", false)
+    )
+    .observeCount();
+
+  @lazy myTopLists = this.collections
+    .get("lists")
+    .query(Q.where("user_id", this.id), Q.where("deleted_at", null), Q.take(2))
+    .observe();
 }
 // ===================================================================================
 export class List_MODEL extends Model {
@@ -241,6 +264,16 @@ export class List_MODEL extends Model {
   @text("collected_lang_ids") collected_lang_ids!: string;
   @text("default_lang_ids") default_lang_ids!: string;
 
+  @readonly @date("created_at") created_at!: number;
+  @readonly @date("updated_at") updated_at!: number;
+  @text("deleted_at") deleted_at!: string;
+
+  @writer async rename(name: string) {
+    const list = await this.update((l) => {
+      l.name = name;
+    });
+    return list;
+  }
   @writer async DELETE_defaultLangId(incomingLang_ID: string = "") {
     // Get all vocabs where list_id matches this list's ID
 
@@ -259,7 +292,6 @@ export class List_MODEL extends Model {
       list.default_lang_ids = Array.from(new_IDS).join(",");
     });
   }
-
   @writer async RESET_allVocabsDifficulty() {
     // Get all vocabs where list_id matches this list's ID
 
@@ -278,7 +310,6 @@ export class List_MODEL extends Model {
     // Execute all updates in a single batch
     await this.batch(...updates);
   }
-
   @writer async HARD_DELETE_list() {
     const notYetDeleted_VOCABS = await this.collections
       .get("vocabs")
@@ -308,7 +339,6 @@ export class List_MODEL extends Model {
 
     await this.markAsDeleted();
   }
-
   @writer async SOFT_DELETE_list() {
     const vocabsToSoftDelete = await this.collections
       .get("vocabs")
@@ -329,16 +359,11 @@ export class List_MODEL extends Model {
     // Execute all updates in a single batch transaction
     await this.batch(...updates, listUpdate);
   }
-
   @writer async SUBMIT_forPublishing(val: boolean) {
     await this.update((vocab) => {
       vocab.is_submitted_for_publish = val;
     });
   }
-
-  @readonly @date("created_at") created_at!: number;
-  @readonly @date("updated_at") updated_at!: number;
-  @text("deleted_at") deleted_at!: string;
 
   @lazy diff_1 = this.collections
     .get("vocabs")

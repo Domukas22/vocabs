@@ -78,27 +78,8 @@ export default function EditUsername_MODAL({
       console.error(result?.msg); // Log internal message for debugging.
     } else if (result.user) {
       await SYNC("all");
-      z_SET_user(z_user);
       HANLDE_toggle();
       if (onSuccess) onSuccess();
-
-      // const newVocab = await db.write(async () => {
-      //   const vocab = await Vocabs_DB.create((vocab: Vocab_MODEL) => {
-      //     vocab.user_id = user_id;
-      //     vocab.list_id = list_id;
-
-      //     vocab.difficulty = difficulty || 3;
-      //     vocab.description = description || "";
-
-      //     vocab.trs = translations;
-      //     vocab.lang_ids = translations?.map((t) => t.lang_id).join(",");
-      //     vocab.searchable = translations?.map((t) => t.text).join(",");
-
-      //     vocab.is_marked = false;
-      //   });
-
-      //   return vocab;
-      // });
     }
   };
 

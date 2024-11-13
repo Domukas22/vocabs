@@ -46,19 +46,13 @@ export default function Settings_PAGE() {
   const toast = useToast();
 
   const changeLanguage = async (lang: "en" | "de") => {
-    const user = await Users_DB.query(Q.where("id", z_user?.id || ""));
-
-    if (user?.[0]) {
-      const updatedVocab = await db.write(async () => {
-        const updatedUSer = await user[0].update((u: User_MODEL) => {
-          u.preferred_lang_id = lang;
-        });
-        if (updatedUSer) {
-          z_SET_user(updatedUSer);
-          PUSH_changes();
-          i18next.changeLanguage(lang);
-        }
-      });
+    if (z_user) {
+      const updated_USER = await z_user.UPDATE_preferredLangId(lang);
+      if (updated_USER) {
+        z_SET_user(updated_USER);
+        PUSH_changes();
+        i18next.changeLanguage(lang);
+      }
     }
   };
   const appLang = useMemo(() => i18next.language, [i18next.language]);

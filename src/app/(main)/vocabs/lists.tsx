@@ -168,7 +168,7 @@ export default function MyLists_PAGE() {
         }}
       />
       <RenameList_MODAL
-        list_id={target_LIST?.id}
+        list={target_LIST}
         user_id={z_user?.id}
         current_NAME={target_LIST?.name}
         IS_open={modal_STATES.rename}

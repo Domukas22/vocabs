@@ -365,7 +365,7 @@ export default function ListSettings_MODAL({
       />
 
       <RenameList_MODAL
-        list_id={selected_LIST?.id}
+        list={selected_LIST}
         user_id={z_user?.id}
         current_NAME={selected_LIST?.name}
         IS_open={modal_STATES.renameList}

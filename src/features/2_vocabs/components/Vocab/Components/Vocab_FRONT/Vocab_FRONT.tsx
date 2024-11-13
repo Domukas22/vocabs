@@ -84,6 +84,9 @@ export default function Vocab_FRONT({
                 targetLang?.[`lang_in_${appLang || "en"}`]}
             </Label>
           )}
+          {description && (
+            <Styled_TEXT type="label_small">{description}</Styled_TEXT>
+          )}
         </View>
 
         {(SHOW_flags || SHOW_difficulty || IS_marked) && (

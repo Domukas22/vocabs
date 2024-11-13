@@ -1,106 +1,100 @@
-import { useState, useCallback, useMemo } from "react";
-import db, { Lists_DB } from "@/src/db";
-import { List_MODEL } from "@/src/db/watermelon_MODELS";
+import { useState } from "react";
+import { List_MODEL, User_MODEL } from "@/src/db/watermelon_MODELS";
+import USE_error from "@/src/hooks/USE_error";
 
 export interface RenameList_PROPS {
-  list_id: string | undefined;
-  newName: string | undefined;
-  user_id: string | undefined;
-  currentList_NAMES: string[];
-  onSuccess?: (updated_LIST: List_MODEL) => void;
-  cleanup?: () => void;
+  list: List_MODEL | undefined;
+  user: User_MODEL | undefined;
+  new_NAME: string | undefined;
 }
 
+const defaultError_MSG =
+  "An error occurred when renaming the list. Please reload the app and try again. If the problem persists, it has been recorded and will be reviewed. We apologize for the inconvenience.";
+
 export default function USE_renameList() {
-  const [IS_renamingList, SET_renamingList] = useState(false);
-  const [renameList_ERROR, SET_renameListError] = useState<string | null>(null);
+  const { HAS_error, userError_MSG, CREATE_error, RESET_error } = USE_error();
+  const [loading, SET_loading] = useState(false);
 
-  const RESET_error = useCallback(() => SET_renameListError(null), []);
-
-  const errorMessage = useMemo(
-    () =>
-      "Some kind of error happened when trying to rename the list. This is an issue on our side. Please try to re-load the app and see if the problem persists. The issue has been recorded and will be reviewed by developers as soon as possible. We are sorry for the trouble.",
-    []
-  );
+  const HANDLE_validationErrors = (message: string, internalMsg?: string) => {
+    CREATE_error({ userError_MSG: message, internalError_MSG: internalMsg });
+    return { success: false, userError_MSG: message };
+  };
 
   const RENAME_list = async ({
-    newName,
-    user_id,
-    list_id,
-    currentList_NAMES,
-    onSuccess,
-    cleanup,
+    new_NAME,
+    list,
+    user,
   }: RenameList_PROPS): Promise<{
     success: boolean;
-    updated_LIST?: List_MODEL | undefined;
-    msg?: string;
+    updated_LIST?: List_MODEL;
+    userError_MSG?: string;
   }> => {
-    SET_renameListError(null); // Clear previous error
+    RESET_error();
+    SET_loading(true);
 
     // Validation checks
-    if (!list_id) {
-      SET_renameListError(errorMessage);
-      return {
-        success: false,
-        msg: "🔴 List ID not provided for renaming 🔴",
-      };
-    }
+    if (!list?.id)
+      return HANDLE_validationErrors(
+        defaultError_MSG,
+        "🔴 List object undefined when renaming list 🔴"
+      );
+    if (!user?.id)
+      return HANDLE_validationErrors(
+        defaultError_MSG,
+        "🔴 User object undefined when renaming list 🔴"
+      );
+    if (!new_NAME)
+      return HANDLE_validationErrors("Please provide a new name for the list.");
 
-    if (!newName) {
-      SET_renameListError("You must provide a new list name.");
-      return {
-        success: false,
-        msg: "🔴 New list name not provided 🔴",
-      };
-    }
-
-    if (currentList_NAMES?.some((listName) => listName === newName)) {
-      SET_renameListError("You already have a list with that name.");
-      return {
-        success: false,
-        msg: "🔴 New list name already exists 🔴",
-      };
-    }
-
-    if (!user_id) {
-      SET_renameListError(errorMessage);
-      return {
-        success: false,
-        msg: "🔴 User ID not provided for renaming 🔴",
-      };
-    }
-
-    SET_renamingList(true);
     try {
-      const updated_LIST = await db.write(async () => {
-        const list = await Lists_DB.find(list_id);
-        return await list.update((list: List_MODEL) => {
-          list.name = newName;
-        });
-      });
+      // Check for duplicate list name
+      const IS_listNameTaken = await user.DOES_userHaveListWithThisName(
+        new_NAME
+      );
+      if (IS_listNameTaken) {
+        return HANDLE_validationErrors(
+          "You already have a list with this name."
+        );
+      }
 
-      if (onSuccess && updated_LIST) onSuccess(updated_LIST);
-      if (cleanup) cleanup();
+      // Proceed with renaming
+      const updated_LIST = await list.rename(new_NAME);
+      if (!updated_LIST) {
+        return HANDLE_validationErrors(
+          defaultError_MSG,
+          "🔴 Rename function returned an undefined list object. 🔴"
+        );
+      }
 
       return { success: true, updated_LIST };
     } catch (error: any) {
-      // Handle network or connection errors differently
-      if (error.message === "Failed to fetch") {
-        SET_renameListError(
-          "It looks like there's an issue with your internet connection. Please check your connection and try again."
-        );
-      } else {
-        SET_renameListError(errorMessage);
-      }
+      // Handle network errors and unexpected errors
+      const networkErrorMsg =
+        "It looks like there's an issue with your internet connection. Please check and try again.";
+      const errorMessage =
+        error.message === "Failed to fetch"
+          ? networkErrorMsg
+          : defaultError_MSG;
+      const internalMessage =
+        error.message !== "Failed to fetch"
+          ? `🔴 Unexpected renaming error: 🔴 ${error.message}`
+          : undefined;
 
-      return {
-        success: false,
-        msg: `🔴 Unexpected error occurred during renaming of the list: ${error.message} 🔴`,
-      };
+      CREATE_error({
+        userError_MSG: errorMessage,
+        internalError_MSG: internalMessage,
+      });
+      return { success: false, userError_MSG: errorMessage };
     } finally {
-      SET_renamingList(false);
+      SET_loading(false);
     }
   };
 
-  return { RENAME_list, IS_renamingList, renameList_ERROR, RESET_error };
+  return {
+    RENAME_list,
+    loading,
+    HAS_error,
+    userError_MSG,
+    RESET_error,
+  };
 }

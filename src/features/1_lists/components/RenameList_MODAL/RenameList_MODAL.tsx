@@ -18,11 +18,10 @@ import { List_MODEL } from "@/src/db/watermelon_MODELS";
 import Error_TEXT from "@/src/components/Error_TEXT/Error_TEXT";
 import VALIDATE_newListName from "../../utils/IS_listNameTaken";
 import IS_listNameTaken from "../../utils/IS_listNameTaken";
+import USE_zustand from "@/src/zustand";
 
 interface LogoutConfirmationModal_PROPS {
-  list_id: string | undefined;
-  user_id: string | undefined;
-  current_NAME: string | undefined;
+  list: List_MODEL | undefined;
   IS_open: boolean;
   CLOSE_modal: () => void;
   onSuccess?: (updated_LIST?: List_MODEL) => void;
@@ -33,10 +32,8 @@ type NewListName_PROPS = {
 };
 
 export default function RenameList_MODAL({
-  list_id,
-  user_id,
+  list,
   IS_open = false,
-  current_NAME = "INSERT NEW NAME",
   CLOSE_modal = () => {},
   onSuccess = () => {},
 }: LogoutConfirmationModal_PROPS) {
@@ -44,11 +41,9 @@ export default function RenameList_MODAL({
   const toast = useToast();
   const inputREF = useRef<TextInput>(null);
   const [isFocused, setIsFocused] = useState(false);
+  const { z_user } = USE_zustand();
 
-  const { RENAME_list, IS_renamingList, renameList_ERROR, RESET_error } =
-    USE_renameList();
-
-  const currentList_NAMES = [];
+  const { RENAME_list, loading, RESET_error } = USE_renameList();
 
   const {
     control,
@@ -56,34 +51,42 @@ export default function RenameList_MODAL({
     formState: { errors, isSubmitted },
     reset,
     setValue,
+    setError,
   } = useForm({
     defaultValues: {
-      name: current_NAME,
+      name: list?.name || "",
     },
   });
 
   useEffect(() => {
     if (IS_open) {
       inputREF.current?.focus();
-      setValue("name", current_NAME || "");
+      setValue("name", list?.name || "");
     }
   }, [IS_open]);
 
   const rename = async (data: NewListName_PROPS) => {
+    if (!list) return;
     const { name } = data;
-    const newList = await RENAME_list({
-      newName: name,
-      user_id,
-      list_id,
-      currentList_NAMES,
-      onSuccess,
-      cleanup: () => {
-        HANLDE_toggle();
-      },
+
+    const { success, userError_MSG } = await RENAME_list({
+      new_NAME: name,
+      list,
+      user: z_user,
     });
 
-    if (!newList.success) {
-      console.error(newList.msg); // Log internal message for debugging.
+    if (success) {
+      if (onSuccess) onSuccess();
+      HANLDE_toggle();
+    } else {
+      setError(
+        "name",
+        {
+          type: "manual",
+          message: userError_MSG || "Failed to rename the list",
+        },
+        { shouldFocus: true }
+      );
     }
   };
 
@@ -105,10 +108,8 @@ export default function RenameList_MODAL({
       }
       btnRight={
         <Btn
-          text={!IS_renamingList ? t("btn.confirmListRename") : ""}
-          iconRight={
-            IS_renamingList ? <ActivityIndicator color="black" /> : null
-          }
+          text={!loading ? t("btn.confirmListRename") : ""}
+          iconRight={loading ? <ActivityIndicator color="black" /> : null}
           onPress={handleSubmit(onSubmit)}
           type="action"
           style={{ flex: 1 }}
@@ -124,14 +125,11 @@ export default function RenameList_MODAL({
             message: t("error.provideAListName"),
           },
           validate: {
-            uniqueName: (value) => {
-              const IS_nameTaken = IS_listNameTaken({
-                lists: [],
-                name: value,
-                list_id,
-              });
-
-              return IS_nameTaken ? t("error.listNameTaken") : true;
+            uniqueName: async (value) => {
+              const IS_listNameTaken =
+                await z_user?.DOES_userHaveListWithThisName(value);
+              return IS_listNameTaken ? t("error.listNameTaken") : true;
+              // return true;
             },
           },
         }}
@@ -150,7 +148,6 @@ export default function RenameList_MODAL({
         name="name"
       />
       {errors.name && <Error_TEXT text={errors.name.message} />}
-      {renameList_ERROR && <Error_TEXT text={renameList_ERROR} />}
     </Small_MODAL>
   );
 }
