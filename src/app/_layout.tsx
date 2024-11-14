@@ -156,7 +156,7 @@ export function USE_navigate() {
     if (!user) return;
 
     await SecureStore.setItemAsync("user_id", user?.id);
-    await sync_2("updates", user);
+    await sync_2();
     i18next.changeLanguage(user?.preferred_lang_id || "en");
     router.push("/(main)/vocabs");
   };

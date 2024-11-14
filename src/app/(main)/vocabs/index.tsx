@@ -3,52 +3,22 @@
 //
 
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
-import { SplashScreen, useRouter } from "expo-router";
-import { USE_auth } from "@/src/context/Auth_CONTEXT";
-import { useEffect, useRef, useState } from "react";
+import { useRouter } from "expo-router";
 
-import { List_MODEL } from "@/src/db/watermelon_MODELS";
-import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
-
-import {
-  CreateList_MODAL,
-  List_SKELETONS,
-  EmptyFlatList_BOTTM,
-  MyLists_FLATLIST,
-  MyLists_HEADER,
-  MyLists_SUBNAV,
-} from "@/src/features/1_lists";
-
-import { useTranslation } from "react-i18next";
-import { USE_searchedLists } from "@/src/features/1_lists/hooks/USE_searchedLists/USE_searchedLists";
-import USE_highlighedId from "@/src/hooks/USE_highlighedId/USE_highlighedId";
-import RenameList_MODAL from "@/src/features/1_lists/components/RenameList_MODAL/RenameList_MODAL";
-
-import React from "react";
-import { useToast } from "react-native-toast-notifications";
+import { List_MODEL, User_MODEL } from "@/src/db/watermelon_MODELS";
+import React, { useEffect, useState } from "react";
 
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
-import { FlatList, Pressable, View } from "react-native";
+import { Pressable, View } from "react-native";
 
 import ExplorePage_BTN from "@/src/components/ExplorePage_BTN";
 import Header from "@/src/components/Header/Header";
 import { withObservables } from "@nozbe/watermelondb/react";
-import db, {
-  ContactMessages_DB,
-  Lists_DB,
-  Users_DB,
-  Vocabs_DB,
-} from "@/src/db";
+import db from "@/src/db";
 import { Q } from "@nozbe/watermelondb";
 
-import GET_userId from "@/src/utils/GET_userId";
 import USE_zustand from "@/src/zustand";
-import {
-  checkUnsyncedChanges,
-  PUSH_changes,
-  sync,
-  USE_sync_2,
-} from "@/src/db/sync";
+import { USE_sync_2 } from "@/src/db/sync";
 import { notEq } from "@nozbe/watermelondb/QueryDescription";
 import Btn from "@/src/components/Btn/Btn";
 import Block from "@/src/components/Block/Block";
@@ -59,7 +29,6 @@ import { ScrollView } from "react-native";
 import { MyList_BTN } from "@/src/features/1_lists/components/MyList_BTN/MyList_BTN";
 import Confirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
 import { USE_logout } from "../general";
-import { supabase } from "@/src/lib/supabase";
 
 function _Index_PAGE({
   totalUserList_COUNT = 0,
@@ -74,15 +43,8 @@ function _Index_PAGE({
   deletedUserVocab_COUNT: number | undefined;
   myTopLists: List_MODEL[] | undefined;
 }) {
-  const { t } = useTranslation();
-  const { SET_selectedList } = USE_selectedList();
   const { z_user } = USE_zustand();
-
   const router = useRouter();
-  const list_REF = useRef<FlatList<any>>(null);
-  const toast = useToast();
-
-  const [search, SET_search] = useState("");
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
     { name: "resetDB" },
@@ -100,45 +62,7 @@ function _Index_PAGE({
     console.log("🟢 Database has been reset! 🟢");
   }
 
-  // const [lists, SET_lists] = useState<List_MODEL[] | undefined>();
-
-  // useEffect(() => {
-  //   (async () => {
-  //     const result = await Lists_DB.query(
-  //       Q.where("user_id", z_user?.id || ""),
-  //       Q.where("deleted_at", null),
-  //       Q.take(3)
-  //     );
-  //     SET_lists(result || []);
-  //   })();
-  // }, []);
-
-  const test = async () => {
-    const { data, error } = await supabase
-      .from("notifications")
-      .insert([
-        {
-          user_id: z_user?.id,
-          title: `You bought ${99999} vocabs`,
-          paragraph: `Your vocab limit has been increased by ${99999}. You can view your payment details in the 'General' tab under 'Payments'.`,
-          type: "vocabsAdded",
-          is_read: false,
-        },
-      ])
-      .select();
-  };
-
   const { sync: sync_2 } = USE_sync_2();
-
-  useEffect(() => {
-    (async () => {
-      const ccontactMessages = await ContactMessages_DB.query();
-
-      // await db.write(async () => {
-      //   ccontactMessages.forEach(async (x) => await x.destroyPermanently());
-      // });
-    })();
-  }, []);
 
   return (
     <Page_WRAP>
@@ -148,14 +72,8 @@ function _Index_PAGE({
         </Pressable>
 
         <View style={{ gap: 8, padding: 12 }}>
-          <Btn
-            text="Sync all"
-            onPress={async () => await sync_2("all", z_user)}
-          />
-          <Btn
-            text="Sync updates"
-            onPress={async () => await sync_2("updates", z_user)}
-          />
+          <Btn text="Sync all" onPress={async () => await sync_2()} />
+          <Btn text="Sync updates" onPress={async () => await sync_2()} />
         </View>
 
         <Block styles={{ gap: 12 }}>
@@ -216,7 +134,7 @@ function _Index_PAGE({
   );
 }
 
-export default function MyLists_PAGE() {
+export default function Index_PAGE() {
   const { z_user } = USE_zustand();
 
   const enhance = withObservables([], () => ({
@@ -232,3 +150,39 @@ export default function MyLists_PAGE() {
   // Render the enhanced page
   return <EnhancedPage />;
 }
+
+export const USE_userObservables = (user: User_MODEL | undefined) => {
+  const [observables, setObservables] = useState({
+    totalUserList_COUNT: undefined as number | undefined,
+    totalUserVocab_COUNT: undefined as number | undefined,
+    totalSavedVocab_COUNT: undefined as number | undefined,
+    deletedUserVocab_COUNT: undefined as number | undefined,
+    myTopLists: undefined as List_MODEL[] | undefined,
+  });
+
+  useEffect(() => {
+    if (!user) return;
+
+    const subscriptions = [
+      user.totalList_COUNT.subscribe((count) =>
+        setObservables((obs) => ({ ...obs, totalUserList_COUNT: count }))
+      ),
+      user.totalVocab_COUNT.subscribe((count) =>
+        setObservables((obs) => ({ ...obs, totalUserVocab_COUNT: count }))
+      ),
+      user.totalSavedVocab_COUNT.subscribe((count) =>
+        setObservables((obs) => ({ ...obs, totalSavedVocab_COUNT: count }))
+      ),
+      user.deletedVocab_COUNT.subscribe((count) =>
+        setObservables((obs) => ({ ...obs, deletedUserVocab_COUNT: count }))
+      ),
+      // user.myTopLists.observe().subscribe((lists) =>
+      //   setObservables((obs) => ({ ...obs, myTopLists: lists }))
+      // ),
+    ];
+
+    return () => subscriptions.forEach((sub) => sub.unsubscribe());
+  }, [user]);
+
+  return observables;
+};

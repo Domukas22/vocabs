@@ -58,22 +58,22 @@ export default function MyLists_FLATLIST({
     return listFooter_EL;
   };
 
-  const Button = (list: List_MODEL) => (
-    <MyList_BTN
-      {...{ list }}
-      key={list.id}
-      onPress={() => router.push(`/(main)/vocabs/${list.id}`)}
-    />
-  );
+  const Button = (list: List_MODEL) =>
+    list !== undefined ? (
+      <MyList_BTN
+        {...{ list }}
+        key={list.id}
+        onPress={() => router.push(`/(main)/vocabs/${list.id}`)}
+      />
+    ) : null;
 
-  return (
-    <Styled_FLASHLIST
-      {...{ onScroll }}
-      data={data}
-      renderItem={({ item }) => Button(item)}
-      keyExtractor={(item) => item?.id}
-      ListHeaderComponent={listHeader_EL}
-      ListFooterComponent={<Footer />}
-    />
-  );
+  return null;
+  // <Styled_FLASHLIST
+  //   {...{ onScroll }}
+  //   data={data}
+  //   renderItem={({ item }) => Button(item)}
+  //   keyExtractor={(item) => item?.id}
+  //   ListHeaderComponent={listHeader_EL}
+  //   ListFooterComponent={<Footer />}
+  // />
 }

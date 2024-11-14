@@ -39,12 +39,9 @@ import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
 import USE_getActiveFilterCount from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/utils/USE_getActiveFilterCount";
 import ListDisplaySettings_MODAL from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/ListDisplaySettings_MODAL";
 import ListsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/ListsFlatlistHeader_SECTION";
-import USE_myLists, {
-  USE_lists,
-} from "@/src/features/1_lists/hooks/USE_myLists";
+import { USE_lists } from "@/src/features/1_lists/hooks/USE_myLists";
 import USE_debounceSearch from "@/src/hooks/USE_debounceSearch/USE_debounceSearch";
 import USE_collectMyListLangs from "@/src/features/1_lists/hooks/USE_collectMyListLangs";
-import { sync } from "@/src/db/sync";
 
 import BottomAction_SECTION from "@/src/components/BottomAction_SECTION";
 import { Q } from "@nozbe/watermelondb";

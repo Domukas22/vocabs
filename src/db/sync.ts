@@ -52,7 +52,7 @@ export function USE_sync_2() {
     RESET_error,
   } = USE_error();
 
-  const sync = async ({ PULL_EVERYTHING = false }) => {
+  const sync = async (PULL_EVERYTHING = false) => {
     if (IS_syncing) return;
     RESET_error();
 
@@ -73,7 +73,7 @@ export function USE_sync_2() {
             ? z_user.last_pulled_at
             : NEW_timestampWithTimeZone();
 
-          const { data: changes, error } = await supabase.rpc("pull_boss", {
+          const { data: changes, error } = await supabase.rpc("pull", {
             userid: z_user?.id,
             _last_pulled_at: targetPull_DATE,
           });
@@ -90,6 +90,13 @@ export function USE_sync_2() {
           const updated_USER = await z_user.UPDATE_lastPulledAt();
           if (updated_USER) {
             z_SET_user(updated_USER);
+          } else {
+            // set internal sentry error
+            CREATE_error({
+              userError_MSG: defaultError_MSG,
+              internalError_MSG: `🔴 Failed to update users last_pulled_at when syncing with USE_sync_2 🔴`,
+            });
+            throw new Error(); // stops watermelon from clearing the "changes" object
           }
 
           const updatedChanges = ADJUST_pullChangesData(changes);
