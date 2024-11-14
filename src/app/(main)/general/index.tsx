@@ -38,7 +38,7 @@ import FETCH_vocabs, {
   VocabFilter_PROPS,
 } from "@/src/features/2_vocabs/utils/FETCH_vocabs";
 import { withObservables } from "@nozbe/watermelondb/react";
-import { PUSH_changes, sync } from "@/src/db/sync";
+import { PUSH_changes, sync, USE_sync_2 } from "@/src/db/sync";
 import USE_fetchNotifications from "@/src/features/6_notifications/hooks/USE_fetchNotifications";
 import db, { Notifications_DB, Payments_DB, Vocabs_DB } from "@/src/db";
 import USE_fetchPayments from "@/src/features/7_payments/hooks/USE_fetchPayments";
@@ -72,7 +72,8 @@ function _General_PAGE({
 
   const DELETE_p = async () => {
     if (!z_user) return;
-    await SYNC("all");
+    await sync_2("all", z_user);
+
     await SOFT_DELETE_userOnSupabase(z_user);
     await z_user.HARD_DELETE_user();
     await logout();
@@ -87,6 +88,7 @@ function _General_PAGE({
   const toast = useToast();
 
   const { SYNC } = USE_sync();
+  const { sync: sync_2 } = USE_sync_2();
 
   return (
     <Page_WRAP>
@@ -95,24 +97,11 @@ function _General_PAGE({
         text="Sync"
         style={{ margin: 12 }}
         onPress={async () => {
-          await SYNC("all");
-
-          await REFRESH_zustandUser({ user_id: z_user?.id, z_SET_user });
+          await sync_2("all", z_user);
         }}
       />
 
       <ScrollView>
-        {/* <Btn
-          onPress={async () => {
-            const {
-              data,
-              error: fetchError,
-              count,
-            } = await supabase.from("users").select("id", { count: "exact" });
-            // .eq("list_id", list.id);
-            console.log(count);
-          }}
-        /> */}
         <Block>
           <View>
             <Styled_TEXT type="text_18_semibold">
@@ -259,7 +248,6 @@ export function USE_logout() {
   const { SYNC } = USE_sync();
 
   const _lougout = async () => {
-    // await SYNC("all");
     const { error } = await logout();
 
     if (error) {

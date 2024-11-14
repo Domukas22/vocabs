@@ -34,11 +34,17 @@ export default function USE_error() {
     SET_userMsg("");
   }, []);
 
+  const HANDLE_validationErrors = (message: string, internalMsg?: string) => {
+    CREATE_error({ userError_MSG: message, internalError_MSG: internalMsg });
+    return { success: false, userError_MSG: message };
+  };
+
   return {
     HAS_error,
     HAS_internalError,
     userError_MSG,
     CREATE_error,
     RESET_error,
+    HANDLE_validationErrors,
   };
 }

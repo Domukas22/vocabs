@@ -103,11 +103,6 @@ export default function ListSettings_MODAL({
       list_id: selected_LIST?.id,
       user_id: z_user?.id,
       SHOULD_share: bool,
-
-      SYNC: async () => await SYNC("all"),
-      onSuccess: async (updated_LIST: List_MODEL) => {
-        await FETCH_listParticipantIds();
-      },
     });
   };
   const publish = async (bool: boolean) => {
@@ -202,7 +197,7 @@ export default function ListSettings_MODAL({
             text="Reset all vocabs"
             onPress={() => {
               (async () => {
-                await selected_LIST.RESET_allVocabsDifficulty();
+                await selected_LIST?.RESET_allVocabsDifficulty();
                 toast.show("Difficulties reset", {
                   type: "success",
                   duration: 5000,

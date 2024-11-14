@@ -37,6 +37,7 @@ import Error_TEXT from "@/src/components/Error_TEXT/Error_TEXT";
 import { supabase } from "@/src/lib/supabase";
 import USE_zustand from "@/src/zustand";
 import USE_sync from "@/src/features/5_users/hooks/USE_sync";
+import { USE_sync_2 } from "@/src/db/sync";
 
 type ContactMessage_PROPS = {
   message_type: "bug" | "feedback" | "idea" | "hello" | "other";
@@ -76,6 +77,7 @@ export default function Contact_PAGE() {
     USE_sendContactMessage();
 
   const { SYNC } = USE_sync();
+  const { sync: sync_2 } = USE_sync_2();
 
   const SEND_message = async (data: ContactMessage_PROPS) => {
     const { message, name, email, message_type } = data;
@@ -92,7 +94,7 @@ export default function Contact_PAGE() {
       return console.error(error);
     }
 
-    await SYNC("all");
+    await sync_2("all", z_user);
 
     SET_message(message);
     SET_messageType(message_type);

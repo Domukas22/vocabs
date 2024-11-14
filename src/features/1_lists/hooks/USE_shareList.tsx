@@ -2,60 +2,66 @@ import { useState, useCallback, useMemo } from "react";
 import { supabase } from "@/src/lib/supabase";
 import { List_MODEL } from "@/src/db/watermelon_MODELS";
 import db, { Lists_DB } from "@/src/db";
+import USE_error from "@/src/hooks/USE_error";
+import USE_sync from "../../5_users/hooks/USE_sync";
 
 export interface ShareList_PROPS {
-  list_id: string;
-  user_id: string;
+  list_id: string | undefined;
+  user_id: string | undefined;
   SHOULD_share: boolean;
-  onSuccess: (updated_LIST: List_MODEL) => Promise<void>;
-  SYNC: () => Promise<void>;
 }
 
+const defaultError_MSG =
+  "Something went wrong when trying to share the list. Please reload the app and try again. This problem has been recorded and will be reviewed by developers as soon as possible. If the problem persists, please contact support. We apologize for the inconvenience.";
+
 export default function USE_shareList() {
-  const [IS_sharingList, SET_sharingList] = useState(false);
-  const [shareList_ERROR, SET_shareListError] = useState<string | null>(null);
+  const {
+    HAS_error,
+    userError_MSG,
+    HAS_internalError,
+    CREATE_error,
+    RESET_error,
+  } = USE_error();
+  const [loading, SET_loading] = useState(false);
 
-  const RESET_shareListerror = useCallback(() => SET_shareListError(null), []);
+  const HANDLE_validationErrors = (message: string, internalMsg?: string) => {
+    CREATE_error({ userError_MSG: message, internalError_MSG: internalMsg });
+    return { success: false, userError_MSG: message };
+  };
 
-  const errorMessage = useMemo(
-    () =>
-      "Some kind of error happened when trying to share the list. This is an issue on our side. Please try to re-load the app and see if the problem persists. The issue has been recorded and will be reviewed by developers as soon as possible. We are sorry for the trouble.",
-    []
-  );
+  const { SYNC } = USE_sync();
 
   const SHARE_list = async ({
     list_id,
     user_id,
     SHOULD_share,
-    onSuccess,
-    SYNC = async () => {},
   }: ShareList_PROPS): Promise<{
     success: boolean;
     updated_LIST?: List_MODEL | undefined;
-    msg?: string;
+    userError_MSG?: string;
   }> => {
-    SET_shareListError(null); // Clear previous error
+    RESET_error();
 
-    // Validation checks
-    if (!user_id) {
-      SET_shareListError(errorMessage);
-      return {
-        success: false,
-        msg: "🔴 User ID not provided for list share 🔴",
-      };
-    }
+    if (!user_id)
+      return HANDLE_validationErrors(
+        defaultError_MSG,
+        "🔴 User id undefined when sharing list list 🔴"
+      );
+    if (!list_id)
+      return HANDLE_validationErrors(
+        defaultError_MSG,
+        "🔴 List id undefined when sharing list list 🔴"
+      );
 
-    if (!list_id) {
-      SET_shareListError("List ID is required for sharing a list.");
-      return {
-        success: false,
-        msg: "🔴 List ID missing 🔴",
-      };
-    }
-
-    SET_sharingList(true);
-    await SYNC();
     try {
+      SET_loading(true);
+      const { success: sync_SUCCESS } = await SYNC();
+
+      if (!sync_SUCCESS)
+        return HANDLE_validationErrors(
+          defaultError_MSG,
+          "🔴 Something went wrong with  🔴"
+        );
       const { data: updated_LIST, error } = await supabase
         .from("lists")
         .update({ type: SHOULD_share ? "shared" : "private" })
@@ -64,36 +70,41 @@ export default function USE_shareList() {
         .select("*")
         .single();
 
-      if (error) {
-        SET_shareListError(errorMessage);
-        return {
-          success: false,
-          msg: "🔴 Error sharing list 🔴: " + error.message,
-        };
-      }
-
-      if (onSuccess) await onSuccess(updated_LIST);
+      if (error)
+        return HANDLE_validationErrors(
+          defaultError_MSG,
+          `🔴 Something went wrong when sharing list 🔴: ${error?.message}`
+        );
 
       return { success: true, updated_LIST };
     } catch (error: any) {
       // Handle network or connection errors differently
-      if (error.message === "Failed to fetch") {
-        SET_shareListError(
-          "It looks like there's an issue with your internet connection. Please check your connection and try again."
-        );
-      } else {
-        SET_shareListError(errorMessage);
-      }
+      const networkErrorMsg = // this isnt really necessary when we are working with local functions. Use this only with online functions
+        "It looks like there's an issue with your internet connection. Please check and try again.";
+      const errorMessage =
+        error?.message === "Failed to fetch"
+          ? networkErrorMsg
+          : defaultError_MSG;
+      const internalMessage =
+        error?.message !== "Failed to fetch"
+          ? `🔴 Unexpected sharing list: 🔴 ${error?.message}`
+          : undefined;
 
-      return {
-        success: false,
-        msg: `🔴 Unexpected error occurred during the sharing of the list: ${error.message} 🔴`,
-      };
+      CREATE_error({
+        userError_MSG: errorMessage,
+        internalError_MSG: internalMessage,
+      });
+      return { success: false, userError_MSG: errorMessage };
     } finally {
-      await SYNC();
-      SET_sharingList(false);
+      SET_loading(false);
     }
   };
 
-  return { SHARE_list, IS_sharingList, shareList_ERROR, RESET_shareListerror };
+  return {
+    SHARE_list,
+    IS_sharingList: loading,
+    HAS_error,
+    userError_MSG,
+    HAS_internalError,
+  };
 }

@@ -33,12 +33,22 @@ import { FlatList, Pressable, View } from "react-native";
 import ExplorePage_BTN from "@/src/components/ExplorePage_BTN";
 import Header from "@/src/components/Header/Header";
 import { withObservables } from "@nozbe/watermelondb/react";
-import db, { Lists_DB, Users_DB, Vocabs_DB } from "@/src/db";
+import db, {
+  ContactMessages_DB,
+  Lists_DB,
+  Users_DB,
+  Vocabs_DB,
+} from "@/src/db";
 import { Q } from "@nozbe/watermelondb";
 
 import GET_userId from "@/src/utils/GET_userId";
 import USE_zustand from "@/src/zustand";
-import { checkUnsyncedChanges, PUSH_changes, sync } from "@/src/db/sync";
+import {
+  checkUnsyncedChanges,
+  PUSH_changes,
+  sync,
+  USE_sync_2,
+} from "@/src/db/sync";
 import { notEq } from "@nozbe/watermelondb/QueryDescription";
 import Btn from "@/src/components/Btn/Btn";
 import Block from "@/src/components/Block/Block";
@@ -118,6 +128,18 @@ function _Index_PAGE({
       .select();
   };
 
+  const { sync: sync_2 } = USE_sync_2();
+
+  useEffect(() => {
+    (async () => {
+      const ccontactMessages = await ContactMessages_DB.query();
+
+      // await db.write(async () => {
+      //   ccontactMessages.forEach(async (x) => await x.destroyPermanently());
+      // });
+    })();
+  }, []);
+
   return (
     <Page_WRAP>
       <ScrollView>
@@ -126,11 +148,14 @@ function _Index_PAGE({
         </Pressable>
 
         <View style={{ gap: 8, padding: 12 }}>
-          <Btn text="Create noti" onPress={async () => await test()} />
-          {/* <Btn text="Push" onPress={PUSH_changes} />
-          
-        <Btn text="Pull" onPress={() => sync("updates", z_user?.id)} />
-        <Btn text="Sync all" onPress={() => sync("all", z_user?.id)} /> */}
+          <Btn
+            text="Sync all"
+            onPress={async () => await sync_2("all", z_user)}
+          />
+          <Btn
+            text="Sync updates"
+            onPress={async () => await sync_2("updates", z_user)}
+          />
         </View>
 
         <Block styles={{ gap: 12 }}>

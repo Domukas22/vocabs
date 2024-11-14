@@ -77,6 +77,11 @@ export default function Deletedvocab({
               }}
               text={t("btn.reviveVocab")}
             />
+            <Btn
+              type="delete"
+              onPress={async () => await vocab?.DELETE_vocab("permanent")}
+              text={t("btn.deletePermanently")}
+            />
             <Btn type="simple" onPress={TOGGLE_open} text={t("btn.close")} />
           </View>
         </>

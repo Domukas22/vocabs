@@ -87,13 +87,6 @@ export default function Login_PAGE() {
     router.push("/(main)/vocabs");
   };
 
-  useEffect(() => {
-    (async () => {
-      const users = await Users_DB.query();
-      console.log(users.map((u) => u.username));
-    })();
-  }, []);
-
   const _login = async (data: LoginData_PROPS) => {
     const { email, password } = data;
     if (!email || !password) return;

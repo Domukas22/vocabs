@@ -18,13 +18,9 @@ export default function USE_renameList() {
     HAS_internalError,
     CREATE_error,
     RESET_error,
+    HANDLE_validationErrors,
   } = USE_error();
   const [loading, SET_loading] = useState(false);
-
-  const HANDLE_validationErrors = (message: string, internalMsg?: string) => {
-    CREATE_error({ userError_MSG: message, internalError_MSG: internalMsg });
-    return { success: false, userError_MSG: message };
-  };
 
   const RENAME_list = async ({
     new_NAME,
@@ -82,12 +78,12 @@ export default function USE_renameList() {
       const networkErrorMsg = // this isnt really necessary when we are working with local functions. Use this only with online functions
         "It looks like there's an issue with your internet connection. Please check and try again.";
       const errorMessage =
-        error.message === "Failed to fetch"
+        error?.message === "Failed to fetch"
           ? networkErrorMsg
           : defaultError_MSG;
       const internalMessage =
-        error.message !== "Failed to fetch"
-          ? `🔴 Unexpected renaming error: 🔴 ${error.message}`
+        error?.message !== "Failed to fetch"
+          ? `🔴 Unexpected renaming error: 🔴 ${error?.message}`
           : undefined;
 
       CREATE_error({

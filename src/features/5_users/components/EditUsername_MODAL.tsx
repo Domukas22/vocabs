@@ -18,7 +18,7 @@ import Error_TEXT from "@/src/components/Error_TEXT/Error_TEXT";
 
 import USE_zustand from "@/src/zustand";
 import USE_editUsername from "../hooks/USE_editUsername";
-import { sync } from "@/src/db/sync";
+import { sync, USE_sync_2 } from "@/src/db/sync";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 import USE_sync from "../hooks/USE_sync";
 
@@ -65,6 +65,7 @@ export default function EditUsername_MODAL({
   const { EDIT_username, loading, error, RESET_error } = USE_editUsername();
 
   const { SYNC } = USE_sync();
+  const { sync: sync_2 } = USE_sync_2();
 
   const SUBMIT = async (data: props) => {
     const { username } = data;
@@ -77,7 +78,8 @@ export default function EditUsername_MODAL({
     if (!result?.success) {
       console.error(result?.msg); // Log internal message for debugging.
     } else if (result.user) {
-      await SYNC("all");
+      await sync_2("all", z_user);
+
       HANLDE_toggle();
       if (onSuccess) onSuccess();
     }

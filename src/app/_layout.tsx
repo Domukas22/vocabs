@@ -8,7 +8,7 @@ import { supabase } from "../lib/supabase";
 
 import "@/src/i18n";
 import Notification_BOX from "../components/Notification_BOX/Notification_BOX";
-import { sync } from "../db/sync";
+import { sync, USE_sync_2 } from "../db/sync";
 import db, { Languages_DB, Users_DB } from "../db";
 import { Q } from "@nozbe/watermelondb";
 import { Auth_PROVIDER } from "../context/Auth_CONTEXT";
@@ -50,13 +50,19 @@ function MainLayout() {
   const router = useRouter();
   const { z_SET_user } = USE_zustand();
   const [fontsLoaded] = useFonts(loadFonts());
+  const { sync: sync_2 } = USE_sync_2();
+  const { NAVIGATE_toVocabs, NAVIGATE_toWelcomeScreen } = USE_navigate();
 
   useEffect(() => {
     const initializeApp = async () => {
       await SplashScreen.hideAsync();
       if (fontsLoaded) {
         const userId = await SecureStore.getItemAsync("user_id");
-        await HANDLE_userRouting(router, userId, z_SET_user);
+        await HANDLE_userRouting({
+          userId,
+          NAVIGATE_toVocabs,
+          NAVIGATE_toWelcomeScreen,
+        });
       }
     };
 
@@ -144,13 +150,13 @@ export async function HANDLE_initialRouting({
 export function USE_navigate() {
   const { z_SET_user } = USE_zustand();
   const router = useRouter();
+  const { sync: sync_2, HAS_syncError } = USE_sync_2();
 
   const NAVIGATE_toVocabs = async (user: User_MODEL | undefined) => {
     if (!user) return;
 
     await SecureStore.setItemAsync("user_id", user?.id);
-    await sync("all", user);
-    await REFRESH_zustandUser({ user_id: user?.id, z_SET_user });
+    await sync_2("updates", user);
     i18next.changeLanguage(user?.preferred_lang_id || "en");
     router.push("/(main)/vocabs");
   };
@@ -165,25 +171,32 @@ export function USE_navigate() {
 }
 
 // Handle user routing based on existence in SecureStore and WatermelonDB
-export async function HANDLE_userRouting(
-  router: Router,
-  userId: string | null,
-  z_SET_user: z_setUser_PROPS
-) {
-  const NAVIGATE_toWelcomeScreen = async () => {
-    await SecureStore.setItemAsync("user_id", "");
-    z_SET_user(undefined);
-    router.push("/welcome");
-  };
+export async function HANDLE_userRouting({
+  userId,
+  NAVIGATE_toVocabs,
+  NAVIGATE_toWelcomeScreen,
+}: {
+  userId: string | null;
+  NAVIGATE_toVocabs: (user: User_MODEL | undefined) => Promise<void>;
+  NAVIGATE_toWelcomeScreen: () => Promise<void>;
+}) {
+  // const NAVIGATE_toWelcomeScreen = async () => {
+  //   await SecureStore.setItemAsync("user_id", "");
+  //   z_SET_user(undefined);
+  //   router.push("/welcome");
+  // };
 
-  const NAVIGATE_tovocabs = async (user: User_MODEL) => {
-    // z_SET_user(user);
+  // const NAVIGATE_tovocabs = async (user: User_MODEL) => {
+  //   // z_SET_user(user);
 
-    i18next.changeLanguage(user?.preferred_lang_id || "en");
-    await sync("all", user);
-    await REFRESH_zustandUser({ user_id: user?.id, z_SET_user });
-    router.push("/(main)/vocabs");
-  };
+  //   i18next.changeLanguage(user?.preferred_lang_id || "en");
+  //   await sync("updates", user);
+  //   const updated_USER = await user.UPDATE_lastPulledAt();
+  //   if (updated_USER) {
+  //     z_SET_user(updated_USER);
+  //   }
+  //   router.push("/(main)/vocabs");
+  // };
 
   if (userId) {
     // find the user on WatermelonDB and Supabase
@@ -212,7 +225,7 @@ export async function HANDLE_userRouting(
         supabase_USER
       );
       if (success && watermelonUser) {
-        await NAVIGATE_tovocabs(watermelonUser);
+        await NAVIGATE_toVocabs(watermelonUser);
       } else await NAVIGATE_toWelcomeScreen();
     }
     // 3.
@@ -220,7 +233,7 @@ export async function HANDLE_userRouting(
       // check if supabase user is deleted
       // if yes, let user recover it.
       // if no, continue
-      await NAVIGATE_tovocabs(localUser);
+      await NAVIGATE_toVocabs(localUser);
     }
 
     if (!localUser && !supabase_USER) {

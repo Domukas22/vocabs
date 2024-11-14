@@ -27,15 +27,13 @@ import { List_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 
 import { withObservables } from "@nozbe/watermelondb/react";
 import { USE_observeList } from "@/src/features/1_lists/hooks/USE_observeList";
-import { sync } from "@/src/db/sync";
+import { PUSH_changes, sync, USE_sync_2 } from "@/src/db/sync";
 import Btn from "@/src/components/Btn/Btn";
 import { VocabDisplaySettings_MODAL } from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/VocabDisplaySettings_MODAL";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import USE_displaySettings from "@/src/hooks/USE_displaySettings/USE_displaySettings";
-import USE_myVocabs, {
-  USE_vocabs,
-} from "@/src/features/1_lists/hooks/USE_vocabs";
-import FetchVocabs_QUERY from "@/src/features/2_vocabs/utils/FetchVocabs_QUERY";
+import { USE_vocabs } from "@/src/features/1_lists/hooks/USE_vocabs";
+
 import USE_zustand from "@/src/zustand";
 
 import VocabsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/VocabsFlatlistHeader_SECTION";
@@ -125,6 +123,8 @@ function __SingleList_PAGE({
     z_vocabDisplay_SETTINGS,
   });
 
+  const { sync: sync_2 } = USE_sync_2();
+
   return (
     <Page_WRAP>
       <List_HEADER
@@ -137,6 +137,11 @@ function __SingleList_PAGE({
         {...{ search, SET_search, activeFilter_COUNT }}
       />
 
+      <Btn text="Sync all" onPress={async () => await sync_2("all", z_user)} />
+      <Btn
+        text="Sync updates"
+        onPress={async () => await sync_2("updates", z_user)}
+      />
       <Vocabs_FLATLIST
         {...{ vocabs, IS_searching, HANDLE_updateModal }}
         type="normal"

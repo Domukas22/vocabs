@@ -18,6 +18,7 @@ import { useToast } from "react-native-toast-notifications";
 import { t } from "i18next";
 import { nullValue } from "@nozbe/watermelondb/RawRecord";
 import { notEq } from "@nozbe/watermelondb/QueryDescription";
+import NEW_timestampWithTimeZone from "../utils/NEW_timestampWithTimeZone";
 
 export interface ListCreation_PROPS {
   user_id: string;
@@ -70,7 +71,7 @@ export class User_MODEL extends Model {
 
   @writer async UPDATE_lastPulledAt() {
     const user = await this.update((list) => {
-      list.last_pulled_at = new Date().toISOString();
+      list.last_pulled_at = NEW_timestampWithTimeZone();
     });
 
     return user;
@@ -274,6 +275,7 @@ export class List_MODEL extends Model {
     });
     return list;
   }
+
   @writer async DELETE_defaultLangId(incomingLang_ID: string = "") {
     // Get all vocabs where list_id matches this list's ID
 

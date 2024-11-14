@@ -81,7 +81,8 @@
     "reviveVocab": "Revive vocab",
     "getMoreVocabs": "Get more vocabs",
     "inviteFriends": "Invite friends",
-    "confirmProfileDeletion": "Yes, delete"
+    "confirmProfileDeletion": "Yes, delete",
+    "deletePermanently": "Delete forever"
   },
   "pages": {
     "about": {

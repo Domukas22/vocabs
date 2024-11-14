@@ -9,7 +9,7 @@ import { ICON_arrow, ICON_3dots, ICON_X } from "@/src/components/icons/icons";
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
-import { sync } from "@/src/db/sync";
+import { sync, USE_sync_2 } from "@/src/db/sync";
 import { FetchedUsers_PROPS } from "@/src/features/1_lists/hooks/USE_supabaseUsers_2";
 import { FetchUsers_PROPS } from "@/src/features/1_lists/utils/FETCH_supabaseUsers_2";
 import SelectASingleUser_MODAL from "@/src/features/5_users/components/SelectUsers_MODAL/SelectASingleUser_MODAL";
@@ -51,12 +51,14 @@ export default function InviteFriends_PAGE() {
   } = USE_awardFriendForInvitation();
   const { SYNC } = USE_sync();
 
+  const { sync: sync_2 } = USE_sync_2();
+
   const SEND_award = async () => {
     if (!selected_FRIEND || !selected_FRIEND?.id || !z_user?.id) return;
 
-    await SYNC("all");
+    await sync_2("all", z_user);
     const { msg, success } = await AWARD_friend(z_user?.id, selected_FRIEND.id);
-    await SYNC("all");
+    await sync_2("all", z_user);
 
     // z_SET_user(updatedUSer);
 
