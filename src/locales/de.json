@@ -280,7 +280,9 @@
     "demarkedVocab": "Vokabel unmarkiert",
     "difficultyUpdated": "Schwierigkeit bearbeitet",
     "vocabRevived": "Vokabel wiederhergestellt",
-    "usernameUpdated": "Benutzername erneut"
+    "usernameUpdated": "Benutzername erneut",
+    "profileDeleted": "Ihr Profil wurde gelöscht. \nWenn Sie sich nicht innerhalb von 30 Tagen anmelden und es wiederherstellen, ist es für immer verloren.",
+    "profileReviced": "Ihr Profil wurde wiederbelebt!"
   },
   "notification": {
     "atLeast1LangError": "Mindestens 1 Sprache muss ausgewählt sein"

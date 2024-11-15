@@ -32,6 +32,9 @@ export default function _layout() {
           error: (toast: any) => (
             <Notification_BOX type="error" text={toast.message} />
           ),
+          warning: (toast: any) => (
+            <Notification_BOX type="warning" text={toast.message} />
+          ),
           // Add more toast types as needed
         }}
         style={toastProviderStyles}

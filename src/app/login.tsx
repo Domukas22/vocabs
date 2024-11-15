@@ -33,7 +33,7 @@ import Confirmation_MODAL from "../components/Modals/Small_MODAL/Variations/Conf
 import USE_modalToggles from "../hooks/USE_modalToggles";
 import NAVIGATE_user from "../db/utils/NAVIGATE_user";
 import { USE_sync } from "../db/USE_sync";
-
+import { useToast } from "react-native-toast-notifications";
 type LoginData_PROPS = {
   email: string;
   password: string;
@@ -46,7 +46,7 @@ export default function Login_PAGE() {
   const router = useRouter(); // Initialize router
   const { login, logout } = USE_auth();
   const { z_SET_user } = USE_zustand();
-
+  const toast = useToast();
   const { sync } = USE_sync();
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
@@ -71,9 +71,26 @@ export default function Login_PAGE() {
     const { error: userError } = await supabase
       .from("users")
       .update({ deleted_at: null })
-      .eq("id", targetUser_ID);
+      .eq("id", targetUser_ID)
+      .single();
 
-    if (userError) console.error(userError);
+    if (userError) return console.error(userError);
+
+    await SecureStore.setItemAsync("user_id", targetUser_ID);
+
+    toast.show(t("notifications.profileReviced"), {
+      type: "success",
+      duration: 10000,
+    });
+
+    await NAVIGATE_user({
+      navigateToWelcomeSreenOnError: false,
+      z_SET_user,
+      SET_error,
+      router,
+      SHOW_recoveryModal: () => TOGGLE_modal("recoverDeletedAccount"),
+      sync,
+    });
 
     // const { watermelon_USER, supabase_USER } =
     //   await GET_watermelonAndSupabaseUser(targetUser_ID);
@@ -105,13 +122,14 @@ export default function Login_PAGE() {
     if (error) {
       SET_internalError(error.message);
     } else if (typeof userData?.id === "string") {
+      SET_targetUserId(userData.id);
       await SecureStore.setItemAsync("user_id", userData?.id);
       await NAVIGATE_user({
         navigateToWelcomeSreenOnError: true,
         z_SET_user,
         SET_error,
         router,
-
+        SHOW_recoveryModal: () => TOGGLE_modal("recoverDeletedAccount"),
         sync,
       });
     }
@@ -150,7 +168,7 @@ export default function Login_PAGE() {
     (async () => {
       const s = await Users_DB.query();
       console.log(
-        "usernames: ",
+        "Saved users in WatermelonDB: ",
         s?.map((y) => y.username)
       );
     })();

@@ -78,7 +78,7 @@ export default function Register_PAGE() {
       // account on supabase has been created, now insert user_id into local storage
       await SecureStore.setItemAsync("user_id", userData?.user?.id);
       await NAVIGATE_user({
-        navigateToWelcomeSreenOnError: true,
+        navigateToWelcomeSreenOnError: false,
         z_SET_user,
         SET_error,
         router,

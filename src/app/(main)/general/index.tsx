@@ -53,14 +53,13 @@ import REFRESH_zustandUser from "@/src/features/5_users/utils/REFRESH_zustandUse
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 import NAVIGATE_user from "@/src/db/utils/NAVIGATE_user";
 
-function _General_PAGE({
-  notification_COUNT,
-  totalUserVocab_COUNT,
-}: {
-  notification_COUNT: number | undefined;
-  totalUserVocab_COUNT: number | undefined;
-}) {
+export default function General_PAGE() {
   const { t } = useTranslation();
+  const { z_user, z_SET_user } = USE_zustand();
+  const { sync } = USE_sync();
+
+  const { notification_COUNT, totalUserVocab_COUNT } =
+    USE_userObservables(z_user);
 
   // const { SET_auth } = USE_auth();
 
@@ -85,9 +84,6 @@ function _General_PAGE({
     });
   };
 
-  const { z_user, z_SET_user } = USE_zustand();
-  const { sync } = USE_sync();
-
   const [error, SET_error] = useState({
     value: false,
     user_MSG: "",
@@ -104,6 +100,11 @@ function _General_PAGE({
     await SOFT_DELETE_userOnSupabase(z_user);
     await z_user.HARD_DELETE_user();
     const { error } = await logout();
+
+    toast.show(t("notifications.profileDeleted"), {
+      type: "warning",
+      duration: 20000,
+    });
 
     if (error) {
       Alert.alert("Logout error", "Error signing out");
@@ -264,23 +265,6 @@ function _General_PAGE({
   );
 }
 
-export default function General_PAGE() {
-  const { z_user } = USE_zustand();
-
-  const enhance = withObservables([], () => ({
-    notification_COUNT: z_user?.unreadNotification_COUNT
-      ? z_user?.unreadNotification_COUNT
-      : undefined,
-    totalUserVocab_COUNT: z_user?.totalVocab_COUNT
-      ? z_user?.totalVocab_COUNT
-      : undefined,
-  }));
-  const EnhancedPage = enhance(_General_PAGE);
-
-  // Render the enhanced page
-  return <EnhancedPage />;
-}
-
 async function SOFT_DELETE_userOnSupabase(user: User_MODEL | undefined) {
   if (!user) return;
 
@@ -308,3 +292,27 @@ async function SOFT_DELETE_userOnSupabase(user: User_MODEL | undefined) {
   if (listAccessError) console.error(listAccessError);
   if (userError) console.error(userError);
 }
+
+const USE_userObservables = (user: User_MODEL | undefined) => {
+  const [observables, setObservables] = useState({
+    notification_COUNT: undefined as number | undefined,
+    totalUserVocab_COUNT: undefined as number | undefined,
+  });
+
+  useEffect(() => {
+    if (!user) return;
+
+    const subscriptions = [
+      user.unreadNotification_COUNT.subscribe((count) =>
+        setObservables((obs) => ({ ...obs, notification_COUNT: count }))
+      ),
+      user.totalVocab_COUNT.subscribe((count) =>
+        setObservables((obs) => ({ ...obs, totalUserVocab_COUNT: count }))
+      ),
+    ];
+
+    return () => subscriptions.forEach((sub) => sub.unsubscribe());
+  }, [user]);
+
+  return observables;
+};

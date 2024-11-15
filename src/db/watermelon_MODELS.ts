@@ -64,8 +64,8 @@ export class User_MODEL extends Model {
   @field("list_submit_attempt_count") list_submit_attempt_count!: number;
   @field("accepted_list_submit_count") accepted_list_submit_count!: number;
 
-  @readonly @date("created_at") created_at!: number;
-  @readonly @date("updated_at") updated_at!: number;
+  @readonly @date("created_at") createdAt!: number;
+  @readonly @date("updated_at") updatedAt!: number;
   @text("deleted_at") deleted_at!: string;
   @text("last_pulled_at") last_pulled_at!: string;
 
@@ -265,8 +265,8 @@ export class List_MODEL extends Model {
   @text("collected_lang_ids") collected_lang_ids!: string;
   @text("default_lang_ids") default_lang_ids!: string;
 
-  @readonly @date("created_at") created_at!: number;
-  @readonly @date("updated_at") updated_at!: number;
+  @readonly @date("created_at") createdAt!: number;
+  @readonly @date("updated_at") updatedAt!: number;
   @text("deleted_at") deleted_at!: string;
 
   @writer async rename(name: string) {
@@ -431,6 +431,10 @@ export class Vocab_MODEL extends Model {
   @text("searchable") searchable!: string | undefined;
   @field("is_marked") is_marked!: boolean | undefined;
 
+  @readonly @date("created_at") createdAt!: number;
+  @readonly @date("updated_at") updatedAt!: number;
+  @text("deleted_at") deleted_at!: string;
+
   @writer async TOGGLE_marked() {
     await this.update((vocab) => {
       vocab.is_marked = !this.is_marked;
@@ -462,10 +466,6 @@ export class Vocab_MODEL extends Model {
       vocab.description = "Eyoooooooooo";
     });
   }
-
-  @readonly @date("created_at") created_at!: number;
-  @readonly @date("updated_at") updated_at!: number;
-  @text("deleted_at") deleted_at!: string;
 }
 // ===================================================================================
 export class ListAccess_MODEL extends Model {
@@ -475,8 +475,8 @@ export class ListAccess_MODEL extends Model {
   @text("participant_id") participant_id!: string;
   @text("list_id") list_id!: string;
 
-  @readonly @date("created_at") created_at!: number;
-  @readonly @date("updated_at") updated_at!: number;
+  @readonly @date("created_at") createdAt!: number;
+  @readonly @date("updated_at") updatedAt!: number;
   @text("deleted_at") deleted_at!: string;
 }
 
@@ -497,8 +497,8 @@ export class Language_MODEL extends Model {
   translation_example_highlights!: string[] | undefined;
   @text("description_example") description_example!: string;
 
-  @readonly @date("created_at") created_at!: number;
-  @readonly @date("updated_at") updated_at!: number;
+  @readonly @date("created_at") createdAt!: number;
+  @readonly @date("updated_at") updatedAt!: number;
   @text("deleted_at") deleted_at!: string;
 }
 export class Notifications_MODEL extends Model {
@@ -517,8 +517,8 @@ export class Notifications_MODEL extends Model {
     | "warning";
   @field("is_read") is_read!: boolean;
 
-  @readonly @date("created_at") created_at!: number;
-  @readonly @date("updated_at") updated_at!: number;
+  @readonly @date("created_at") createdAt!: number;
+  @readonly @date("updated_at") updatedAt!: number;
   @text("deleted_at") deleted_at!: string;
 }
 
@@ -532,8 +532,8 @@ export class Payments_MODEL extends Model {
   @text("amount") amount!: number;
   @text("payment_method") payment_method!: string;
 
-  @readonly @date("created_at") created_at!: number;
-  @readonly @date("updated_at") updated_at!: number;
+  @readonly @date("created_at") createdAt!: number;
+  @readonly @date("updated_at") updatedAt!: number;
   @text("deleted_at") deleted_at!: string;
 }
 
@@ -547,7 +547,7 @@ export class ContactMessages_MODEL extends Model {
   @text("message") message!: string;
   @text("message_type") message_type!: string;
 
-  @readonly @date("created_at") created_at!: number;
-  @readonly @date("updated_at") updated_at!: number;
+  @readonly @date("created_at") createdAt!: number;
+  @readonly @date("updated_at") updatedAt!: number;
   @text("deleted_at") deleted_at!: string;
 }

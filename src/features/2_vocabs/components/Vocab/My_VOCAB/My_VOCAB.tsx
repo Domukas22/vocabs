@@ -68,7 +68,8 @@ function _MyVocab({ _vocab, highlighted, HANDLE_updateModal }: VocabProps) {
 
   return (
     <View style={styles}>
-      {/* <Styled_TEXT>{_vocab?.is_marked ? "MARKED" : "not marked"}</Styled_TEXT> */}
+      <Styled_TEXT>{`${_vocab?.created_at}`}</Styled_TEXT>
+
       {!open && (
         <Vocab_FRONT
           trs={trs || []}

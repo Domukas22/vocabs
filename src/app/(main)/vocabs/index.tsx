@@ -14,7 +14,7 @@ import { Alert, Pressable, View } from "react-native";
 import ExplorePage_BTN from "@/src/components/ExplorePage_BTN";
 import Header from "@/src/components/Header/Header";
 import { withObservables } from "@nozbe/watermelondb/react";
-import db from "@/src/db";
+import db, { Vocabs_DB } from "@/src/db";
 import { Q } from "@nozbe/watermelondb";
 
 import USE_zustand from "@/src/zustand";
@@ -33,24 +33,23 @@ import { supabase } from "@/src/lib/supabase";
 import FETCH_mySupabaseProfile from "@/src/features/5_users/utils/FETCH_mySupabaseProfile";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 
-// export default function Index_PAGE() {
-function _Index_PAGE({
-  totalUserList_COUNT,
-  totalUserVocab_COUNT,
-  totalSavedVocab_COUNT,
-  deletedUserVocab_COUNT,
-  myTopLists,
-}: {}) {
+export default function Index_PAGE({}: // function _Index_PAGE({
+// totalUserList_COUNT,
+// totalUserVocab_COUNT,
+// totalSavedVocab_COUNT,
+// deletedUserVocab_COUNT,
+// myTopLists,
+{}) {
   const { z_user, z_SET_user } = USE_zustand();
   const router = useRouter();
 
-  // const {
-  //   totalUserList_COUNT,
-  //   totalUserVocab_COUNT,
-  //   totalSavedVocab_COUNT,
-  //   deletedUserVocab_COUNT,
-  //   myTopLists,
-  // } = USE_userObservables(z_user);
+  const {
+    totalUserList_COUNT,
+    totalUserVocab_COUNT,
+    totalSavedVocab_COUNT,
+    deletedUserVocab_COUNT,
+    myTopLists,
+  } = USE_userObservables(z_user);
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
     { name: "resetDB" },
@@ -70,41 +69,37 @@ function _Index_PAGE({
     console.log("🟢 Database has been reset! 🟢");
   }
 
+  useEffect(() => {
+    if (!z_user || !z_user?.id) {
+      (async () => {
+        await logout();
+        await SecureStore.setItemAsync("user_id", "");
+        router.push("/welcome");
+      })();
+    }
+  }, [z_user]);
+  const { sync } = USE_sync();
   const fn = async () => {
-    // await logout();
-    // await SecureStore.setItemAsync("user_id", "");
     // z_SET_user(undefined);
-    // router.push("/welcome");
 
-    z_SET_user(undefined);
+    const watermelonVocabs = await Vocabs_DB.query(
+      Q.where("user_id", z_user?.id || "")
+    );
+    const { data: supabaseVocabs, error: err2 } = await supabase
+      .from("vocabs")
+      .select("*")
+      .eq("user_id", z_user?.id || "");
 
     // const { data, error: err2 } = await supabase.from("lists").select("*");
     // if (err2) return console.error(err2);
     // console.log(data);
-
-    // const { supabase_USER, success, msg, error_REASON } =
-    //   await FETCH_mySupabaseProfile(z_user?.id);
-
-    // if (!success) {
-    //   console.error("error_REASON:", error_REASON);
-    //   console.error("msg: ", msg);
-    // }
-    // console.log(supabase_USER);
-
-    // console.log(z_user?.id);
-
-    // const { data: user, error } = await supabase
-    //   .from("users")
-    //   .select("*")
-    //   .eq("id", z_user?.id)
-    //   .single();
-
-    // console.log(user);
-
-    // if (error) console.error(error);
   };
 
-  const { sync: sync_2 } = USE_sync();
+  const fn2 = async () => {
+    // z_SET_user(undefined);
+
+    await sync({ user: z_user, PULL_EVERYTHING: true });
+  };
 
   return (
     <Page_WRAP>
@@ -115,6 +110,7 @@ function _Index_PAGE({
 
         <View style={{ gap: 8, padding: 12 }}>
           <Btn text="fn" onPress={async () => await fn()} />
+          <Btn text="fn2" onPress={async () => await fn2()} />
         </View>
 
         <Block styles={{ gap: 12 }}>
@@ -175,23 +171,6 @@ function _Index_PAGE({
   );
 }
 
-export default function Index_PAGE() {
-  const { z_user } = USE_zustand();
-
-  const enhance = withObservables([], () => ({
-    totalUserList_COUNT: z_user?.totalList_COUNT,
-    totalUserVocab_COUNT: z_user?.totalVocab_COUNT,
-    totalSavedVocab_COUNT: z_user?.totalSavedVocab_COUNT,
-    markedUserVocab_COUNT: z_user?.markedVocab_COUNT,
-    deletedUserVocab_COUNT: z_user?.deletedVocab_COUNT,
-    myTopLists: z_user?.myTopLists,
-  }));
-  const EnhancedPage = enhance(_Index_PAGE);
-
-  // Render the enhanced page
-  return <EnhancedPage />;
-}
-
 export const USE_userObservables = (user: User_MODEL | undefined) => {
   const [observables, setObservables] = useState({
     totalUserList_COUNT: undefined as number | undefined,
@@ -217,9 +196,9 @@ export const USE_userObservables = (user: User_MODEL | undefined) => {
       user.deletedVocab_COUNT.subscribe((count) =>
         setObservables((obs) => ({ ...obs, deletedUserVocab_COUNT: count }))
       ),
-      // user.myTopLists.observe().subscribe((lists) =>
-      //   setObservables((obs) => ({ ...obs, myTopLists: lists }))
-      // ),
+      user.myTopLists.subscribe((lists) =>
+        setObservables((obs) => ({ ...obs, myTopLists: lists }))
+      ),
     ];
 
     return () => subscriptions.forEach((sub) => sub.unsubscribe());

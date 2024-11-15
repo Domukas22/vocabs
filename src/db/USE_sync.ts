@@ -76,7 +76,7 @@ export function USE_sync() {
         database: db,
         pullChanges: async ({ lastPulledAt, schemaVersion, migration }) => {
           const targetPull_DATE = PULL_EVERYTHING
-            ? new Date(new Date().setFullYear(new Date().getFullYear() - 1))
+            ? new Date(new Date().setFullYear(new Date().getFullYear() - 100))
             : user?.last_pulled_at
             ? user.last_pulled_at
             : NEW_timestampWithTimeZone();
@@ -120,6 +120,14 @@ export function USE_sync() {
             changes,
           });
 
+          console.log(
+            "🔴🔴🔴 pushed created vocabs:",
+            changes?.vocabs?.created
+          );
+          console.log(
+            "🔴🔴🔴 pushed updated vocabs:",
+            changes?.vocabs?.updated
+          );
           if (error) {
             CREATE_error({
               userError_MSG: defaultError_MSG,

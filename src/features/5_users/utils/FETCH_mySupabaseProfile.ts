@@ -34,9 +34,6 @@ export default async function FETCH_mySupabaseProfile(
       .eq("id", userId)
       .single();
 
-    console.log(userId);
-    console.log(user);
-
     // If there's an error in the response from Supabase
     if (error) {
       // Check if the error is due to a network failure

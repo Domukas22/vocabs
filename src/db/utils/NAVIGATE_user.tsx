@@ -22,11 +22,13 @@ export default async function NAVIGATE_user({
   z_SET_user,
   router,
   sync,
+  SHOW_recoveryModal,
 }: {
   navigateToWelcomeSreenOnError?: boolean;
   SET_error?: React.Dispatch<
     React.SetStateAction<{ value: boolean; user_MSG: string }>
   >;
+  SHOW_recoveryModal?: () => void;
   z_SET_user: z_setUser_PROPS;
   router: Router;
   sync: ({
@@ -52,11 +54,9 @@ export default async function NAVIGATE_user({
 
   // previously logged in, so try to find the watermelon user object
   const watermelon_USER = await FETCH_watermelonUser(user_id);
-  console.log(0);
+
   // user not found locally, try to fetch from supabase
   if (!watermelon_USER) {
-    console.log(1);
-
     const { supabase_USER, success, msg, error_REASON } =
       await FETCH_mySupabaseProfile(user_id);
 
@@ -84,6 +84,13 @@ export default async function NAVIGATE_user({
 
       if (SET_error) {
         SET_error({ value: true, user_MSG: "This profile does not exist" });
+      }
+      return;
+    }
+
+    if (supabase_USER.deleted_at !== null) {
+      if (SHOW_recoveryModal) {
+        SHOW_recoveryModal();
       }
       return;
     }
@@ -124,7 +131,6 @@ export default async function NAVIGATE_user({
     await FETCH_mySupabaseProfile(user_id);
 
   if (!success) {
-    console.log(2);
     if (error_REASON === "user_internet") {
       // the user is offline, let him continue using the app offline
       router.push("/(main)/vocabs");
@@ -138,16 +144,20 @@ export default async function NAVIGATE_user({
 
   // user was not found on supabase, this means it doesnt exist on the supabase users table
   if (!supabase_USER) {
-    console.log(3);
     await watermelon_USER.SOFT_DELETE_user();
     await NAVIGATE_toWelcomeScreen();
     return;
   }
 
-  console.log(4);
+  if (supabase_USER.deleted_at !== null) {
+    if (SHOW_recoveryModal) {
+      SHOW_recoveryModal();
+    }
+    return;
+  }
 
   // user was found on supabase, lets sync the user profile
-  await sync({ user: watermelon_USER });
-  console.log(5);
+  await sync({ user: watermelon_USER, PULL_EVERYTHING: true });
+
   router.push("/(main)/vocabs");
 }

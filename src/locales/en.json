@@ -282,7 +282,9 @@
     "demarkedVocab": "Vocab unmarked",
     "difficultyUpdated": "Difficulty updated",
     "vocabRevived": "Vocab revived",
-    "usernameUpdated": "Username updated"
+    "usernameUpdated": "Username updated",
+    "profileDeleted": "Your profile has been deleted. If you don't log in and recover it in 30 days, it will be gone forever.",
+    "profileReviced": "Your profile has been revived!"
   },
   "notification": {
     "atLeast1LangError": "Atleast 1 language must be selected"
