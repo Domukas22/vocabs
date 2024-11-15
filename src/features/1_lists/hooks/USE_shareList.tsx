@@ -3,7 +3,7 @@ import { supabase } from "@/src/lib/supabase";
 import { List_MODEL } from "@/src/db/watermelon_MODELS";
 import db, { Lists_DB } from "@/src/db";
 import USE_error from "@/src/hooks/USE_error";
-import USE_sync from "../../5_users/hooks/USE_sync";
+import { USE_sync } from "@/src/db/USE_sync";
 
 export interface ShareList_PROPS {
   list_id: string | undefined;
@@ -29,7 +29,7 @@ export default function USE_shareList() {
     return { success: false, userError_MSG: message };
   };
 
-  const { SYNC } = USE_sync();
+  const { sync, HAS_syncError } = USE_sync();
 
   const SHARE_list = async ({
     list_id,
@@ -55,9 +55,9 @@ export default function USE_shareList() {
 
     try {
       SET_loading(true);
-      const { success: sync_SUCCESS } = await SYNC();
+      await sync();
 
-      if (!sync_SUCCESS)
+      if (HAS_syncError)
         return HANDLE_validationErrors(
           defaultError_MSG,
           "🔴 Something went wrong with  🔴"

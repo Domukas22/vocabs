@@ -18,9 +18,8 @@ import Error_TEXT from "@/src/components/Error_TEXT/Error_TEXT";
 
 import USE_zustand from "@/src/zustand";
 import USE_editUsername from "../hooks/USE_editUsername";
-import { sync, USE_sync_2 } from "@/src/db/sync";
+import { USE_sync } from "@/src/db/USE_sync";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
-import USE_sync from "../hooks/USE_sync";
 
 interface modalProps {
   IS_open: boolean;
@@ -64,8 +63,7 @@ export default function EditUsername_MODAL({
 
   const { EDIT_username, loading, error, RESET_error } = USE_editUsername();
 
-  const { SYNC } = USE_sync();
-  const { sync: sync_2 } = USE_sync_2();
+  const { sync: sync_2 } = USE_sync();
 
   const SUBMIT = async (data: props) => {
     const { username } = data;

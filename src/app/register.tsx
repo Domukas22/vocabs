@@ -37,9 +37,11 @@ import db, { Users_DB } from "../db";
 import { User_MODEL } from "../db/watermelon_MODELS";
 import * as SecureStore from "expo-secure-store";
 import { USE_auth } from "../context/Auth_CONTEXT";
-import { HANDLE_userRouting, HANDLE_watermelonUser } from "./_layout";
+
 import USE_zustand from "../zustand";
-import { sync } from "../db/sync";
+
+import NAVIGATE_user from "../db/utils/NAVIGATE_user";
+import { USE_sync } from "../db/USE_sync";
 
 type RegisterData_PROPS = {
   username: string;
@@ -54,6 +56,12 @@ export default function Register_PAGE() {
   const { t } = useTranslation();
   const router = useRouter();
   const { z_SET_user } = USE_zustand();
+  const { sync } = USE_sync();
+
+  const [error, SET_error] = useState({
+    value: false,
+    user_MSG: "",
+  });
 
   const _register = async (data: RegisterData_PROPS) => {
     const { username, email, password } = data;
@@ -69,12 +77,14 @@ export default function Register_PAGE() {
     } else if (!error && userData && typeof userData?.user?.id === "string") {
       // account on supabase has been created, now insert user_id into local storage
       await SecureStore.setItemAsync("user_id", userData?.user?.id);
-      await HANDLE_userRouting(router, userData?.user?.id, z_SET_user);
-
-      router.push("/(main)/vocabs");
+      await NAVIGATE_user({
+        navigateToWelcomeSreenOnError: true,
+        z_SET_user,
+        SET_error,
+        router,
+        sync,
+      });
     }
-
-    // router.push("/(main)/vocabs"); // Navigate to main route on success
   };
 
   const {
@@ -210,6 +220,9 @@ export default function Register_PAGE() {
           {/* --------------------------------------------------------------------------------------------------- */}
           {internal_ERROR && (
             <Notification_BOX text={internal_ERROR} type="error" />
+          )}
+          {error.value && (
+            <Notification_BOX text={error.user_MSG} type="error" />
           )}
           <Block styles={{ marginTop: 8, marginBottom: 100 }}>
             <Btn

@@ -25,19 +25,14 @@ import { USE_auth } from "../context/Auth_CONTEXT";
 import * as SecureStore from "expo-secure-store";
 import db, { Users_DB } from "../db";
 import USE_zustand from "../zustand";
-import {
-  FETCH_userFromSupabase,
-  GET_watermelonAndSupabaseUser,
-  HANDLE_initialRouting,
-  HANDLE_userRouting,
-  HANDLE_watermelonUser,
-  USE_navigate,
-} from "./_layout";
+
 import { User_MODEL } from "../db/watermelon_MODELS";
 import { Q } from "@nozbe/watermelondb";
 import { View } from "react-native";
 import Confirmation_MODAL from "../components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
 import USE_modalToggles from "../hooks/USE_modalToggles";
+import NAVIGATE_user from "../db/utils/NAVIGATE_user";
+import { USE_sync } from "../db/USE_sync";
 
 type LoginData_PROPS = {
   email: string;
@@ -51,11 +46,17 @@ export default function Login_PAGE() {
   const router = useRouter(); // Initialize router
   const { login, logout } = USE_auth();
   const { z_SET_user } = USE_zustand();
-  const { NAVIGATE_toVocabs, NAVIGATE_toWelcomeScreen } = USE_navigate();
+
+  const { sync } = USE_sync();
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
     { name: "recoverDeletedAccount", initialValue: false },
   ]);
+
+  const [error, SET_error] = useState({
+    value: false,
+    user_MSG: "",
+  });
 
   const [targetUser_ID, SET_targetUserId] = useState<string | undefined>();
 
@@ -74,22 +75,28 @@ export default function Login_PAGE() {
 
     if (userError) console.error(userError);
 
-    const { watermelon_USER, supabase_USER } =
-      await GET_watermelonAndSupabaseUser(targetUser_ID);
+    // const { watermelon_USER, supabase_USER } =
+    //   await GET_watermelonAndSupabaseUser(targetUser_ID);
 
-    await HANDLE_initialRouting({
-      watermelon_USER,
-      supabase_USER,
-      NAVIGATE_toVocabs: async () => await NAVIGATE_toVocabs(watermelon_USER),
-      NAVIGATE_toWelcomeScreen,
-    });
-
-    router.push("/(main)/vocabs");
+    // if (watermelon_USER) {
+    //   z_SET_user(watermelon_USER);
+    //   await HANDLE_initialRouting({
+    //     watermelon_USER,
+    //     supabase_USER,
+    //     NAVIGATE_toVocabs,
+    //     NAVIGATE_toWelcomeScreen,
+    //   });
+    //   router.push("/(main)/vocabs");
+    // }
   };
 
   const _login = async (data: LoginData_PROPS) => {
     const { email, password } = data;
     if (!email || !password) return;
+    SET_error({
+      value: false,
+      user_MSG: "",
+    });
 
     SET_loading(true);
     const { userData, error } = await login(email, password);
@@ -98,26 +105,15 @@ export default function Login_PAGE() {
     if (error) {
       SET_internalError(error.message);
     } else if (typeof userData?.id === "string") {
-      SET_targetUserId(userData.id);
-      // sucessfully logged in --> save user id to local storage
-      // await SecureStore.setItemAsync("user_id", userData?.id);
-      // ------
-      const { watermelon_USER, supabase_USER } =
-        await GET_watermelonAndSupabaseUser(userData?.id);
+      await SecureStore.setItemAsync("user_id", userData?.id);
+      await NAVIGATE_user({
+        navigateToWelcomeSreenOnError: true,
+        z_SET_user,
+        SET_error,
+        router,
 
-      if (supabase_USER && supabase_USER?.deleted_at !== null) {
-        TOGGLE_modal("recoverDeletedAccount");
-        return;
-      }
-
-      await HANDLE_initialRouting({
-        watermelon_USER,
-        supabase_USER,
-        NAVIGATE_toVocabs: async () => await NAVIGATE_toVocabs(watermelon_USER),
-        NAVIGATE_toWelcomeScreen,
+        sync,
       });
-
-      router.push("/(main)/vocabs");
     }
   };
 
@@ -149,6 +145,16 @@ export default function Login_PAGE() {
     setValue("email", "deleted_2@gmail.com");
     setValue("password", "deleted_2");
   };
+
+  useEffect(() => {
+    (async () => {
+      const s = await Users_DB.query();
+      console.log(
+        "usernames: ",
+        s?.map((y) => y.username)
+      );
+    })();
+  }, []);
 
   // ---------------------------------------------------------------------------------------------------
 
@@ -235,9 +241,7 @@ export default function Login_PAGE() {
               )}
               name="password"
             />
-            {errors.password && (
-              <Error_TEXT>{errors.password.message}</Error_TEXT>
-            )}
+            {errors.password && <Error_TEXT text={errors.password.message} />}
             <Link href={"/login"} style={{ display: "flex", marginTop: 8 }}>
               <Styled_TEXT
                 type="text_18_regular"
@@ -254,6 +258,9 @@ export default function Login_PAGE() {
 
           {internal_ERROR && (
             <Notification_BOX text={internal_ERROR} type="error" />
+          )}
+          {error.value && (
+            <Notification_BOX text={error.user_MSG} type="error" />
           )}
           <Block styles={{ marginTop: 8, marginBottom: 100 }}>
             <Btn

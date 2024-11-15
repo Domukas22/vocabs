@@ -9,7 +9,7 @@ import { List_MODEL, User_MODEL } from "@/src/db/watermelon_MODELS";
 import React, { useEffect, useState } from "react";
 
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
-import { Pressable, View } from "react-native";
+import { Alert, Pressable, View } from "react-native";
 
 import ExplorePage_BTN from "@/src/components/ExplorePage_BTN";
 import Header from "@/src/components/Header/Header";
@@ -18,7 +18,7 @@ import db from "@/src/db";
 import { Q } from "@nozbe/watermelondb";
 
 import USE_zustand from "@/src/zustand";
-import { USE_sync_2 } from "@/src/db/sync";
+import { USE_sync } from "@/src/db/USE_sync";
 import { notEq } from "@nozbe/watermelondb/QueryDescription";
 import Btn from "@/src/components/Btn/Btn";
 import Block from "@/src/components/Block/Block";
@@ -28,33 +28,41 @@ import { Skeleton } from "@/src/components/Skeleton_VIEW";
 import { ScrollView } from "react-native";
 import { MyList_BTN } from "@/src/features/1_lists/components/MyList_BTN/MyList_BTN";
 import Confirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
-import { USE_logout } from "../general";
+import * as SecureStore from "expo-secure-store";
+import { supabase } from "@/src/lib/supabase";
+import FETCH_mySupabaseProfile from "@/src/features/5_users/utils/FETCH_mySupabaseProfile";
+import { USE_auth } from "@/src/context/Auth_CONTEXT";
 
+// export default function Index_PAGE() {
 function _Index_PAGE({
-  totalUserList_COUNT = 0,
-  totalUserVocab_COUNT = 0,
-  totalSavedVocab_COUNT = 0,
-  deletedUserVocab_COUNT = 0,
-  myTopLists = [],
-}: {
-  totalUserList_COUNT: number | undefined;
-  totalUserVocab_COUNT: number | undefined;
-  totalSavedVocab_COUNT: number | undefined;
-  deletedUserVocab_COUNT: number | undefined;
-  myTopLists: List_MODEL[] | undefined;
-}) {
-  const { z_user } = USE_zustand();
+  totalUserList_COUNT,
+  totalUserVocab_COUNT,
+  totalSavedVocab_COUNT,
+  deletedUserVocab_COUNT,
+  myTopLists,
+}: {}) {
+  const { z_user, z_SET_user } = USE_zustand();
   const router = useRouter();
+
+  // const {
+  //   totalUserList_COUNT,
+  //   totalUserVocab_COUNT,
+  //   totalSavedVocab_COUNT,
+  //   deletedUserVocab_COUNT,
+  //   myTopLists,
+  // } = USE_userObservables(z_user);
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
     { name: "resetDB" },
   ]);
-
-  const logout = USE_logout();
+  const { logout } = USE_auth();
 
   async function resetDatabase() {
     TOGGLE_modal("resetDB");
-    await logout();
+    const { error } = await logout();
+    if (error) {
+      Alert.alert("Logout error", "Error signing out");
+    }
     await db.write(async () => {
       await db.unsafeResetDatabase();
     });
@@ -62,7 +70,41 @@ function _Index_PAGE({
     console.log("🟢 Database has been reset! 🟢");
   }
 
-  const { sync: sync_2 } = USE_sync_2();
+  const fn = async () => {
+    // await logout();
+    // await SecureStore.setItemAsync("user_id", "");
+    // z_SET_user(undefined);
+    // router.push("/welcome");
+
+    z_SET_user(undefined);
+
+    // const { data, error: err2 } = await supabase.from("lists").select("*");
+    // if (err2) return console.error(err2);
+    // console.log(data);
+
+    // const { supabase_USER, success, msg, error_REASON } =
+    //   await FETCH_mySupabaseProfile(z_user?.id);
+
+    // if (!success) {
+    //   console.error("error_REASON:", error_REASON);
+    //   console.error("msg: ", msg);
+    // }
+    // console.log(supabase_USER);
+
+    // console.log(z_user?.id);
+
+    // const { data: user, error } = await supabase
+    //   .from("users")
+    //   .select("*")
+    //   .eq("id", z_user?.id)
+    //   .single();
+
+    // console.log(user);
+
+    // if (error) console.error(error);
+  };
+
+  const { sync: sync_2 } = USE_sync();
 
   return (
     <Page_WRAP>
@@ -72,8 +114,7 @@ function _Index_PAGE({
         </Pressable>
 
         <View style={{ gap: 8, padding: 12 }}>
-          <Btn text="Sync all" onPress={async () => await sync_2()} />
-          <Btn text="Sync updates" onPress={async () => await sync_2()} />
+          <Btn text="fn" onPress={async () => await fn()} />
         </View>
 
         <Block styles={{ gap: 12 }}>

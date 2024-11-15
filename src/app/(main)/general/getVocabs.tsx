@@ -41,10 +41,10 @@ import { Q } from "@nozbe/watermelondb";
 import USE_zustand from "@/src/zustand";
 import CurrentVocabCount_BAR from "@/src/components/CurrentVocabCount_BAR";
 import { VOCAB_PRICING } from "@/src/constants/globalVars";
-import { PUSH_changes, sync, USE_sync_2 } from "@/src/db/sync";
+import { PUSH_changes, USE_sync } from "@/src/db/USE_sync";
 import { supabase } from "@/src/lib/supabase";
 import Pricing_BTN from "@/src/components/Pricing_BTN";
-import USE_sync from "@/src/features/5_users/hooks/USE_sync";
+
 import Delay from "@/src/utils/Delay";
 import USE_observeUserVocabCount from "@/src/features/5_users/hooks/USE_observeUserVocabCount";
 
@@ -61,10 +61,9 @@ export default function GetVocabs_PAGE() {
     vocab_COUNT: 0,
   });
 
-  const { sync: sync_2 } = USE_sync_2();
+  const { sync: sync_2 } = USE_sync();
 
   const { BUY_vocabs, error, RESET_error } = USE_buyVocabs();
-  const { SYNC } = USE_sync();
 
   const buy = async (offer: 1 | 2 | 3) => {
     if (!z_user?.id) return;

@@ -27,7 +27,7 @@ import { List_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 
 import { withObservables } from "@nozbe/watermelondb/react";
 import { USE_observeList } from "@/src/features/1_lists/hooks/USE_observeList";
-import { PUSH_changes, sync, USE_sync_2 } from "@/src/db/sync";
+import { PUSH_changes, sync, USE_sync } from "@/src/db/USE_sync";
 import Btn from "@/src/components/Btn/Btn";
 import { VocabDisplaySettings_MODAL } from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/VocabDisplaySettings_MODAL";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
@@ -123,7 +123,7 @@ function __SingleList_PAGE({
     z_vocabDisplay_SETTINGS,
   });
 
-  const { sync: sync_2 } = USE_sync_2();
+  const { sync: sync_2 } = USE_sync();
 
   return (
     <Page_WRAP>

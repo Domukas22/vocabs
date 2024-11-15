@@ -38,7 +38,7 @@ import { USE_highlightBoolean } from "@/src/hooks/USE_highlightBoolean/USE_highl
 import { MyColors } from "@/src/constants/MyColors";
 import db, { Users_DB } from "@/src/db";
 import { Q } from "@nozbe/watermelondb";
-import { PUSH_changes } from "@/src/db/sync";
+import { PUSH_changes } from "@/src/db/USE_sync";
 
 export default function Settings_PAGE() {
   const { z_user, z_SET_user } = USE_zustand();

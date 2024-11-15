@@ -38,7 +38,7 @@ import FETCH_vocabs, {
   VocabFilter_PROPS,
 } from "@/src/features/2_vocabs/utils/FETCH_vocabs";
 import { withObservables } from "@nozbe/watermelondb/react";
-import { PUSH_changes, sync, USE_sync_2 } from "@/src/db/sync";
+import { PUSH_changes, USE_sync } from "@/src/db/USE_sync";
 import USE_fetchNotifications from "@/src/features/6_notifications/hooks/USE_fetchNotifications";
 import db, { Notifications_DB, Payments_DB, Vocabs_DB } from "@/src/db";
 import USE_fetchPayments from "@/src/features/7_payments/hooks/USE_fetchPayments";
@@ -50,9 +50,8 @@ import CurrentVocabCount_BAR from "@/src/components/CurrentVocabCount_BAR";
 import Notification_BOX from "@/src/components/Notification_BOX/Notification_BOX";
 import { useToast } from "react-native-toast-notifications";
 import REFRESH_zustandUser from "@/src/features/5_users/utils/REFRESH_zustandUser";
-import USE_sync from "@/src/features/5_users/hooks/USE_sync";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
-import { USE_navigate } from "../../_layout";
+import NAVIGATE_user from "@/src/db/utils/NAVIGATE_user";
 
 function _General_PAGE({
   notification_COUNT,
@@ -64,20 +63,59 @@ function _General_PAGE({
   const { t } = useTranslation();
 
   // const { SET_auth } = USE_auth();
-  const logout = USE_logout();
+
+  const { logout } = USE_auth();
+
+  const _logout = async () => {
+    if (z_user) {
+      await sync({ user: z_user });
+    }
+    const { error } = await logout();
+    if (error) {
+      Alert.alert("Logout error", "Error signing out");
+    }
+
+    await SecureStore.setItemAsync("user_id", "");
+    await NAVIGATE_user({
+      navigateToWelcomeSreenOnError: true,
+      z_SET_user,
+      SET_error,
+      router,
+      sync,
+    });
+  };
 
   const { z_user, z_SET_user } = USE_zustand();
+  const { sync } = USE_sync();
 
-  const { NAVIGATE_toWelcomeScreen } = USE_navigate();
+  const [error, SET_error] = useState({
+    value: false,
+    user_MSG: "",
+  });
+
+  useEffect(() => {
+    if (error.value) console.error(error.user_MSG);
+  }, [error]);
 
   const DELETE_p = async () => {
     if (!z_user) return;
-    await sync_2("all", z_user);
+    await sync({ user: z_user });
 
     await SOFT_DELETE_userOnSupabase(z_user);
     await z_user.HARD_DELETE_user();
+    const { error } = await logout();
+
+    if (error) {
+      Alert.alert("Logout error", "Error signing out");
+    }
     await logout();
-    await NAVIGATE_toWelcomeScreen();
+    await NAVIGATE_user({
+      navigateToWelcomeSreenOnError: true,
+      z_SET_user,
+      SET_error,
+      router,
+      sync,
+    });
   };
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
@@ -87,8 +125,7 @@ function _General_PAGE({
 
   const toast = useToast();
 
-  const { SYNC } = USE_sync();
-  const { sync: sync_2 } = USE_sync_2();
+  const { sync: sync_2 } = USE_sync();
 
   return (
     <Page_WRAP>
@@ -211,7 +248,9 @@ function _General_PAGE({
         open={modal_STATES.logout}
         toggle={() => TOGGLE_modal("logout")}
         title={t("modal.logoutConfirmation.header")}
-        action={logout}
+        action={() => {
+          (async () => await _logout())();
+        }}
         actionBtnText={t("btn.confirmLogout")}
       />
       <Confirmation_MODAL
@@ -240,25 +279,6 @@ export default function General_PAGE() {
 
   // Render the enhanced page
   return <EnhancedPage />;
-}
-
-export function USE_logout() {
-  const { logout } = USE_auth();
-  const { z_user } = USE_zustand();
-  const { SYNC } = USE_sync();
-
-  const _lougout = async () => {
-    const { error } = await logout();
-
-    if (error) {
-      Alert.alert("Logout error", "Error signing out");
-    } else {
-      await SecureStore.setItemAsync("user_id", "");
-      router.push("/welcome");
-    }
-  };
-
-  return _lougout;
 }
 
 async function SOFT_DELETE_userOnSupabase(user: User_MODEL | undefined) {

@@ -31,7 +31,7 @@ import { Notifications_MODEL } from "@/src/db/watermelon_MODELS";
 import USE_updateNotification from "@/src/features/6_notifications/hooks/USE_updateNotification";
 import USE_zustand from "@/src/zustand";
 import { withObservables } from "@nozbe/watermelondb/react";
-import { PUSH_changes } from "@/src/db/sync";
+import { PUSH_changes } from "@/src/db/USE_sync";
 
 const EnhancedNotification_BTN = withObservables(
   ["notification"],

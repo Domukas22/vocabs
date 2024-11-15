@@ -5,18 +5,21 @@ import { useState, useCallback } from "react";
 
 interface CreateError_PROPS {
   userError_MSG: string;
-  internalError_MSG?: string;
+  reason: string;
+  internalError_MSG?: string | null;
 }
 
 export default function USE_error() {
   const [HAS_error, SET_hasError] = useState(false);
-  const [userError_MSG, SET_userMsg] = useState("");
+  const [userError_MSG, SET_userMsg] = useState<string>();
+  const [error_REASON, SET_errorReason] = useState<string>();
   const [HAS_internalError, SET_hasInternalError] = useState(false);
 
   const CREATE_error = useCallback(
-    ({ userError_MSG, internalError_MSG }: CreateError_PROPS) => {
+    ({ userError_MSG, internalError_MSG, reason }: CreateError_PROPS) => {
       SET_hasError(true);
       SET_userMsg(userError_MSG);
+      SET_errorReason(reason);
 
       if (internalError_MSG) {
         SET_hasInternalError(true);
@@ -34,17 +37,12 @@ export default function USE_error() {
     SET_userMsg("");
   }, []);
 
-  const HANDLE_validationErrors = (message: string, internalMsg?: string) => {
-    CREATE_error({ userError_MSG: message, internalError_MSG: internalMsg });
-    return { success: false, userError_MSG: message };
-  };
-
   return {
     HAS_error,
-    HAS_internalError,
     userError_MSG,
+    error_REASON,
+    HAS_internalError,
     CREATE_error,
     RESET_error,
-    HANDLE_validationErrors,
   };
 }

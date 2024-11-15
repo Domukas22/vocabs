@@ -40,9 +40,9 @@ const emptyChanges_OBJ = {
   languages: { updated: [], created: [], deleted: [] },
 };
 
-export function USE_sync_2() {
+export function USE_sync() {
   const [IS_syncing, SET_syncing] = useState(false);
-  const { z_user, z_SET_user } = USE_zustand();
+  const { z_SET_user } = USE_zustand();
 
   const {
     HAS_error,
@@ -52,15 +52,21 @@ export function USE_sync_2() {
     RESET_error,
   } = USE_error();
 
-  const sync = async (PULL_EVERYTHING = false) => {
+  const sync = async ({
+    user,
+    PULL_EVERYTHING = false,
+  }: {
+    user: User_MODEL | undefined;
+    PULL_EVERYTHING?: boolean;
+  }) => {
     if (IS_syncing) return;
     RESET_error();
 
-    if (!z_user || !z_user?.id)
+    if (!user || !user?.id)
       return CREATE_error({
         userError_MSG: defaultError_MSG,
         internalError_MSG:
-          "🔴 User object undefined when syncing with USE_sync_2 🔴",
+          "🔴 User object undefined when syncing with USE_sync 🔴",
       });
 
     try {
@@ -69,12 +75,14 @@ export function USE_sync_2() {
       await synchronize({
         database: db,
         pullChanges: async ({ lastPulledAt, schemaVersion, migration }) => {
-          const targetPull_DATE = z_user?.last_pulled_at
-            ? z_user.last_pulled_at
+          const targetPull_DATE = PULL_EVERYTHING
+            ? new Date(new Date().setFullYear(new Date().getFullYear() - 1))
+            : user?.last_pulled_at
+            ? user.last_pulled_at
             : NEW_timestampWithTimeZone();
 
           const { data: changes, error } = await supabase.rpc("pull", {
-            userid: z_user?.id,
+            userid: user?.id,
             _last_pulled_at: targetPull_DATE,
           });
 
@@ -82,19 +90,19 @@ export function USE_sync_2() {
             // set internal sentry error
             CREATE_error({
               userError_MSG: defaultError_MSG,
-              internalError_MSG: `🔴 Something went wrong with supabase 'pull' function when syncing with USE_sync_2 🔴: ${error.message}`,
+              internalError_MSG: `🔴 Something went wrong with supabase 'pull' function when syncing with USE_sync 🔴: ${error.message}`,
             });
             throw new Error(); // stops watermelon from clearing the "changes" object
           }
 
-          const updated_USER = await z_user.UPDATE_lastPulledAt();
+          const updated_USER = await user.UPDATE_lastPulledAt();
           if (updated_USER) {
             z_SET_user(updated_USER);
           } else {
             // set internal sentry error
             CREATE_error({
               userError_MSG: defaultError_MSG,
-              internalError_MSG: `🔴 Failed to update users last_pulled_at when syncing with USE_sync_2 🔴`,
+              internalError_MSG: `🔴 Failed to update users last_pulled_at when syncing with USE_sync 🔴`,
             });
             throw new Error(); // stops watermelon from clearing the "changes" object
           }
@@ -115,7 +123,7 @@ export function USE_sync_2() {
           if (error) {
             CREATE_error({
               userError_MSG: defaultError_MSG,
-              internalError_MSG: `🔴 Something went wrong with supabase 'push' function when syncing with USE_sync_2 🔴: ${error.message}`,
+              internalError_MSG: `🔴 Something went wrong with supabase 'push' function when syncing with USE_sync 🔴: ${error.message}`,
             });
             throw new Error(); // stops watermelon from clearing the "changes" object
           }
@@ -132,7 +140,7 @@ export function USE_sync_2() {
           : defaultError_MSG;
       const internalMessage =
         error?.message !== "Failed to fetch"
-          ? `🔴 Unexpected error when syncing with USE_sync_2: 🔴 ${error?.message}`
+          ? `🔴 Unexpected error when syncing with USE_sync: 🔴 ${error?.message}`
           : undefined;
 
       CREATE_error({

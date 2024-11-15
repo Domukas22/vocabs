@@ -9,11 +9,11 @@ import { ICON_arrow, ICON_3dots, ICON_X } from "@/src/components/icons/icons";
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
-import { sync, USE_sync_2 } from "@/src/db/sync";
+import { USE_sync } from "@/src/db/USE_sync";
 import { FetchedUsers_PROPS } from "@/src/features/1_lists/hooks/USE_supabaseUsers_2";
 import { FetchUsers_PROPS } from "@/src/features/1_lists/utils/FETCH_supabaseUsers_2";
 import SelectASingleUser_MODAL from "@/src/features/5_users/components/SelectUsers_MODAL/SelectASingleUser_MODAL";
-import USE_sync from "@/src/features/5_users/hooks/USE_sync";
+
 import REFRESH_zustandUser from "@/src/features/5_users/utils/REFRESH_zustandUser";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 import { supabase } from "@/src/lib/supabase";
@@ -49,9 +49,8 @@ export default function InviteFriends_PAGE() {
     error: awardFriend_ERROR,
     RESET_error,
   } = USE_awardFriendForInvitation();
-  const { SYNC } = USE_sync();
 
-  const { sync: sync_2 } = USE_sync_2();
+  const { sync: sync_2 } = USE_sync();
 
   const SEND_award = async () => {
     if (!selected_FRIEND || !selected_FRIEND?.id || !z_user?.id) return;

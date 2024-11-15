@@ -36,7 +36,7 @@ import Label from "@/src/components/Label/Label";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 import USE_shareList from "../../hooks/USE_shareList";
 import USE_publishList from "../../hooks/USE_publishList";
-import { PUSH_changes, sync } from "@/src/db/sync";
+import { PUSH_changes } from "@/src/db/USE_sync";
 import SelectUsers_MODAL from "@/src/features/5_users/components/SelectUsers_MODAL/SelectUsers_MODAL";
 import { supabase } from "@/src/lib/supabase";
 import db, { Lists_DB } from "@/src/db";
@@ -44,7 +44,6 @@ import USE_zustand from "@/src/zustand";
 import USE_fetchListAccesses from "@/src/features/5_users/hooks/USE_fetchListAccesses";
 import USE_supabaseUsers from "@/src/features/5_users/hooks/USE_supabaseUsers";
 import USE_listParticipantIds from "@/src/hooks/USE_participantsOfAList";
-import USE_sync from "@/src/features/5_users/hooks/USE_sync";
 
 interface ListSettingsModal_PROPS {
   selected_LIST: List_MODEL | undefined;
@@ -95,8 +94,6 @@ export default function ListSettings_MODAL({
       })();
     }
   }, [open]);
-
-  const { SYNC } = USE_sync();
 
   const share = async (bool: boolean) => {
     SHARE_list({
