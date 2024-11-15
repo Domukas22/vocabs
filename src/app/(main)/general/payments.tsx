@@ -68,7 +68,7 @@ export default function Payments_PAGE() {
           return (
             <Expandable_BTN
               title={item.item}
-              subtitle={TRANSFORM_dateObject(item.created_at || 0)}
+              subtitle={TRANSFORM_dateObject(item.createdAt || 0)}
               children={
                 <>
                   <Styled_TEXT type="label">
@@ -144,7 +144,7 @@ function Payment({ payment }: { payment: Payments_MODEL | undefined }) {
     >
       <Styled_TEXT type="text_18_bold">{payment?.item}</Styled_TEXT>
       <Styled_TEXT type="label">
-        {TRANSFORM_dateObject(payment?.created_at || 0)}
+        {TRANSFORM_dateObject(payment?.createdAt || 0)}
       </Styled_TEXT>
       <Styled_TEXT type="label">
         Transaction id: {payment?.transaction_id}

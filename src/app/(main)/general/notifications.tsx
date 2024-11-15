@@ -143,6 +143,7 @@ function Notification_BTN({
         open && !notification?.is_read && s.btnActive_OPEN,
       ]}
     >
+      {/* <Styled_TEXT>{`${notification?.createdAt}`}</Styled_TEXT> */}
       <Pressable
         style={({ pressed }) => [
           s.btn_TOP,
@@ -167,7 +168,7 @@ function Notification_BTN({
           type="label_small"
           // style={[!notification?.is_read && { color: "white" }]}
         >
-          {TRANSFORM_dateObject(notification?.created_at || 0)}
+          {TRANSFORM_dateObject(notification?.createdAt || 0)}
         </Styled_TEXT>
         {!open && !notification?.is_read && (
           <Btn

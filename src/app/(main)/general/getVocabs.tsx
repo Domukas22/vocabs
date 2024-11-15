@@ -61,7 +61,7 @@ export default function GetVocabs_PAGE() {
     vocab_COUNT: 0,
   });
 
-  const { sync: sync_2 } = USE_sync();
+  const { sync } = USE_sync();
 
   const { BUY_vocabs, error, RESET_error } = USE_buyVocabs();
 
@@ -71,7 +71,7 @@ export default function GetVocabs_PAGE() {
     SET_loading(true);
     await PUSH_changes();
     await BUY_vocabs({ user_id: z_user?.id, offer });
-    await sync_2("all", z_user);
+    await sync({ user: z_user, PULL_EVERYTHING: true });
 
     if (!error) {
       SET_purchase({
@@ -297,6 +297,8 @@ export function USE_buyVocabs() {
           paragraph: `Your vocab limit has been increased by ${offerBundle.amount}. You can view your payment details in the 'General' tab under 'Payments'.`,
           type: "vocabsAdded",
           is_read: false,
+          // created_at: new Date().toDateString(),
+          // updated_at: new Date().toDateString(),
         });
 
       if (createNotification_ERROR) {
@@ -320,6 +322,8 @@ export function USE_buyVocabs() {
           payment_method: "xxxxx",
           amount: offerBundle.price,
           transaction_id: "xxxxxx",
+          // created_at: new Date().toDateString(),
+          // updated_at: new Date().toDateString(),
         });
 
       if (createPayment_ERROR) {

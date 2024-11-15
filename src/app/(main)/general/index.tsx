@@ -135,7 +135,7 @@ export default function General_PAGE() {
         text="Sync"
         style={{ margin: 12 }}
         onPress={async () => {
-          await sync_2("all", z_user);
+          await sync_2({ user: z_user });
         }}
       />
 

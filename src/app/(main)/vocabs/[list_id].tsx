@@ -136,12 +136,12 @@ function __SingleList_PAGE({
         OPEN_create={() => TOGGLE_modal("createVocab")}
         {...{ search, SET_search, activeFilter_COUNT }}
       />
-
+      {/* 
       <Btn text="Sync all" onPress={async () => await sync_2("all", z_user)} />
       <Btn
         text="Sync updates"
         onPress={async () => await sync_2("updates", z_user)}
-      />
+      /> */}
       <Vocabs_FLATLIST
         {...{ vocabs, IS_searching, HANDLE_updateModal }}
         type="normal"

@@ -18,6 +18,7 @@ import USE_zustand from "../zustand";
 import { useRouter } from "expo-router";
 import TURN_VocabtrsIntoJson from "./utils/TURN_VocabtrsIntoJson";
 import TURN_langExampleHighlightsIntoJson from "./utils/TURN_langExampleHighlightsIntoJson";
+import CONVERT_EpochToTimestampWithTimeZone from "../utils/CONVERT_EpochToTimestampWithTimeZone";
 
 const defaultError_MSG =
   "Something went wrong when trying to synchronize data. Please reload the app and try again. This problem has been recorded and will be reviewed by developers as soon as possible. If the problem persists, please contact support. We apologize for the inconvenience.";
@@ -85,6 +86,13 @@ export function USE_sync() {
             userid: user?.id,
             _last_pulled_at: targetPull_DATE,
           });
+
+          console.log(
+            "Pulled notis: ",
+            changes.notifications.updated?.map((x) =>
+              CONVERT_EpochToTimestampWithTimeZone(x.created_at)
+            )
+          );
 
           if (error) {
             // set internal sentry error
