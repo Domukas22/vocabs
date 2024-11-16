@@ -32,6 +32,7 @@ import * as SecureStore from "expo-secure-store";
 import { supabase } from "@/src/lib/supabase";
 import FETCH_mySupabaseProfile from "@/src/features/5_users/utils/FETCH_mySupabaseProfile";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
+import SEND_internalError from "@/src/utils/SEND_internalError";
 
 export default function Index_PAGE({}: // function _Index_PAGE({
 // totalUserList_COUNT,
@@ -62,6 +63,8 @@ export default function Index_PAGE({}: // function _Index_PAGE({
     if (error) {
       Alert.alert("Logout error", "Error signing out");
     }
+    await SecureStore.setItemAsync("user_id", "");
+    router.push("/welcome");
     await db.write(async () => {
       await db.unsafeResetDatabase();
     });
@@ -81,18 +84,15 @@ export default function Index_PAGE({}: // function _Index_PAGE({
   const { sync } = USE_sync();
   const fn = async () => {
     // z_SET_user(undefined);
-
-    const watermelonVocabs = await Vocabs_DB.query(
-      Q.where("user_id", z_user?.id || "")
-    );
-    const { data: supabaseVocabs, error: err2 } = await supabase
-      .from("vocabs")
-      .select("*")
-      .eq("user_id", z_user?.id || "");
-
-    // const { data, error: err2 } = await supabase.from("lists").select("*");
-    // if (err2) return console.error(err2);
-    // console.log(data);
+    await SEND_internalError({
+      user_id: z_user?.id,
+      message: "Test message",
+      function_NAME: "Index_Page",
+      // details: JSON.stringify({
+      //   user_id: z_user?.id,
+      //   username: z_user?.username,
+      // }),
+    });
   };
 
   const fn2 = async () => {
@@ -109,8 +109,8 @@ export default function Index_PAGE({}: // function _Index_PAGE({
         </Pressable>
 
         <View style={{ gap: 8, padding: 12 }}>
-          <Btn text="fn" onPress={async () => await fn()} />
-          <Btn text="fn2" onPress={async () => await fn2()} />
+          <Btn text="create error" onPress={async () => await fn()} />
+          <Btn text="sync" onPress={async () => await fn2()} />
         </View>
 
         <Block styles={{ gap: 12 }}>

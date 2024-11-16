@@ -15,6 +15,8 @@ import Small_MODAL from "@/src/components/Modals/Small_MODAL/Small_MODAL";
 import USE_zustand from "@/src/zustand";
 import USE_renameList from "../../hooks/USE_renameList";
 import StyledText_INPUT from "@/src/components/StyledText_INPUT/StyledText_INPUT";
+import { Error_PROPS } from "@/src/props";
+import RENAME_list from "../../hooks/USE_renameList";
 
 interface LogoutConfirmationModal_PROPS {
   list: List_MODEL | undefined;
@@ -35,10 +37,11 @@ export default function RenameList_MODAL({
   const [isFocused, setIsFocused] = useState(false);
   const [invalidAttempts, setInvalidAttempts] = useState(0);
 
-  const { RENAME_list, loading, RESET_error, HAS_internalError } =
-    USE_renameList();
+  const input_NAMES = ["name"] as const;
 
-  const HIDE_actionBtn = useMemo(() => HAS_internalError, [HAS_internalError]);
+  const [error, SET_error] = useState<Error_PROPS>();
+  const HIDE_actionBtn = useMemo(() => error?.type === "internal", [error]);
+  const { RENAME_list, IS_renaming } = USE_renameList();
 
   const {
     control,
@@ -54,9 +57,10 @@ export default function RenameList_MODAL({
 
   const rename = async (data: { name: string }) => {
     if (!list) return;
+    SET_error(undefined);
 
     const { name } = data;
-    const { success, userError_MSG } = await RENAME_list({
+    const { success, error } = await RENAME_list({
       new_NAME: name,
       list,
       user: z_user,
@@ -67,16 +71,29 @@ export default function RenameList_MODAL({
       if (onSuccess) onSuccess();
     } else {
       Keyboard.dismiss();
-      setError(
-        "name",
-        {
-          type: "manual",
-          message: userError_MSG || "Failed to rename the list",
-        },
-        { shouldFocus: true }
-      );
+      SET_error(error);
+      CREATE_manualFormErrorFromDbResponse(error?.formInput_ERRORS);
     }
   };
+
+  function CREATE_manualFormErrorFromDbResponse(
+    formInput_ERRORS:
+      | { input_NAME: (typeof input_NAMES)[number]; msg: string }[]
+      | undefined
+  ) {
+    if (formInput_ERRORS?.length) {
+      formInput_ERRORS.forEach((err) => {
+        setError(
+          err.input_NAME,
+          {
+            type: "manual",
+            message: err.msg,
+          },
+          { shouldFocus: true }
+        );
+      });
+    }
+  }
 
   useEffect(() => {
     if (IS_open) {
@@ -84,7 +101,6 @@ export default function RenameList_MODAL({
     }
     reset({ name: list?.name || "" });
     setInvalidAttempts(0);
-    RESET_error();
   }, [IS_open]);
 
   return (
@@ -103,8 +119,8 @@ export default function RenameList_MODAL({
       btnRight={
         !HIDE_actionBtn && (
           <Btn
-            text={!loading ? t("btn.confirmListRename") : ""}
-            iconRight={loading ? <ActivityIndicator color="black" /> : null}
+            text={!IS_renaming ? t("btn.confirmListRename") : ""}
+            iconRight={IS_renaming ? <ActivityIndicator color="black" /> : null}
             onPress={handleSubmit(rename)}
             type="action"
             style={{ flex: 1 }}
@@ -150,12 +166,13 @@ export default function RenameList_MODAL({
             isSubmitted={isSubmitted && invalidAttempts > 0}
             SET_value={(val) => {
               onChange(val);
-              RESET_error();
+              SET_error(undefined);
             }}
           />
         )}
       />
       {errors.name && <Error_TEXT text={errors.name.message} />}
+      {error && <Error_TEXT text={error.msg} />}
     </Small_MODAL>
   );
 }

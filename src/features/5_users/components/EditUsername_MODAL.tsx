@@ -19,7 +19,6 @@ import Error_TEXT from "@/src/components/Error_TEXT/Error_TEXT";
 import USE_zustand from "@/src/zustand";
 import USE_editUsername from "../hooks/USE_editUsername";
 import { USE_sync } from "@/src/db/USE_sync";
-import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 
 interface modalProps {
   IS_open: boolean;
@@ -76,7 +75,7 @@ export default function EditUsername_MODAL({
     if (!result?.success) {
       console.error(result?.msg); // Log internal message for debugging.
     } else if (result.user) {
-      await sync_2("all", z_user);
+      await sync_2({ user: z_user });
 
       HANLDE_toggle();
       if (onSuccess) onSuccess();

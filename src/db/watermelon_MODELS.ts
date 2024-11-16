@@ -191,7 +191,7 @@ export class User_MODEL extends Model {
       .get("lists")
       .query(
         Q.where("user_id", this.id),
-        Q.where("name", name),
+        Q.where("name", name.trim()),
         Q.where("deleted_at", null)
       )
       .fetchCount();
@@ -550,4 +550,17 @@ export class ContactMessages_MODEL extends Model {
   @readonly @date("created_at") createdAt!: number;
   @readonly @date("updated_at") updatedAt!: number;
   @text("deleted_at") deleted_at!: string;
+}
+
+const sanitizeJSON = (json: JSON) => json;
+
+export class Error_MODEL extends Model {
+  static table = "errors";
+
+  @text("user_id") user_id!: string;
+
+  @text("message") message!: string;
+  @text("function") function!: string;
+  @json("details", sanitizeJSON) details!: string | undefined;
+  @readonly @date("created_at") createdAt!: number;
 }

@@ -89,9 +89,6 @@ export default function USE_createVocab() {
         return vocab;
       });
 
-      console.log("newVocab: ", newVocab);
-      console.log(newVocab._getRaw("created_at"));
-
       // Success handling
       if (onSuccess) {
         onSuccess(newVocab);

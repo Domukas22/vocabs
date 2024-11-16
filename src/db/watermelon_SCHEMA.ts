@@ -144,5 +144,17 @@ export default appSchema({
         { name: "deleted_at", type: "string", isOptional: true },
       ],
     }),
+    tableSchema({
+      name: "errors",
+      columns: [
+        { name: "user_id", type: "string", isIndexed: true },
+
+        { name: "message", type: "string" },
+        { name: "function", type: "string" },
+        { name: "details", type: "string" },
+
+        { name: "created_at", type: "number" },
+      ],
+    }),
   ],
 });

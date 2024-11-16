@@ -19,6 +19,7 @@ import { useRouter } from "expo-router";
 import TURN_VocabtrsIntoJson from "./utils/TURN_VocabtrsIntoJson";
 import TURN_langExampleHighlightsIntoJson from "./utils/TURN_langExampleHighlightsIntoJson";
 import CONVERT_EpochToTimestampWithTimeZone from "../utils/CONVERT_EpochToTimestampWithTimeZone";
+import SEND_internalError from "../utils/SEND_internalError";
 
 const defaultError_MSG =
   "Something went wrong when trying to synchronize data. Please reload the app and try again. This problem has been recorded and will be reviewed by developers as soon as possible. If the problem persists, please contact support. We apologize for the inconvenience.";
@@ -87,13 +88,6 @@ export function USE_sync() {
             _last_pulled_at: targetPull_DATE,
           });
 
-          console.log(
-            "Pulled notis: ",
-            changes.notifications.updated?.map((x) =>
-              CONVERT_EpochToTimestampWithTimeZone(x.created_at)
-            )
-          );
-
           if (error) {
             // set internal sentry error
             CREATE_error({
@@ -128,18 +122,12 @@ export function USE_sync() {
             changes,
           });
 
-          console.log(
-            "🔴🔴🔴 pushed created vocabs:",
-            changes?.vocabs?.created
-          );
-          console.log(
-            "🔴🔴🔴 pushed updated vocabs:",
-            changes?.vocabs?.updated
-          );
           if (error) {
-            CREATE_error({
-              userError_MSG: defaultError_MSG,
-              internalError_MSG: `🔴 Something went wrong with supabase 'push' function when syncing with USE_sync 🔴: ${error.message}`,
+            SEND_internalError({
+              user_id: user.id,
+              message: "🔴 PUSH sync failed 🔴",
+              function_NAME: "USE_sync --> pushChanges",
+              details: { error },
             });
             throw new Error(); // stops watermelon from clearing the "changes" object
           }

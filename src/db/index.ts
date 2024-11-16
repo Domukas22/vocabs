@@ -20,6 +20,7 @@ import {
   Notifications_MODEL,
   Payments_MODEL,
   ContactMessages_MODEL,
+  Error_MODEL,
 } from "./watermelon_MODELS";
 
 // First, create the adapter to the underlying database:
@@ -54,6 +55,7 @@ const db = new Database({
     Payments_MODEL,
     ListAccess_MODEL,
     ContactMessages_MODEL,
+    Error_MODEL,
   ],
 });
 
@@ -66,4 +68,5 @@ export const Users_DB = db.get<User_MODEL>("users"),
   Languages_DB = db.get<Language_MODEL>("languages"),
   Notifications_DB = db.get<Notifications_MODEL>("notifications"),
   Payments_DB = db.get<Payments_MODEL>("payments"),
-  ContactMessages_DB = db.get<ContactMessages_MODEL>("contact_messages");
+  ContactMessages_DB = db.get<ContactMessages_MODEL>("contact_messages"),
+  Errors_DB = db.get<Error_MODEL>("errors");
