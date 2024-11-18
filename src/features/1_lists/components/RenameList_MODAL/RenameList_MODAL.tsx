@@ -17,6 +17,7 @@ import USE_renameList from "../../hooks/USE_renameList";
 import StyledText_INPUT from "@/src/components/StyledText_INPUT/StyledText_INPUT";
 import { Error_PROPS } from "@/src/props";
 import RENAME_list from "../../hooks/USE_renameList";
+import { CREATE_manualFormErrorFromDbResponse } from "@/src/utils/CREATE_manualFormErrorFromDbResponse";
 
 interface LogoutConfirmationModal_PROPS {
   list: List_MODEL | undefined;
@@ -31,14 +32,12 @@ export default function RenameList_MODAL({
   CLOSE_modal = () => {},
   onSuccess = () => {},
 }: LogoutConfirmationModal_PROPS) {
+  const _ref = useRef<TextInput>(null);
   const { t } = useTranslation();
   const { z_user } = USE_zustand();
-  const _ref = useRef<TextInput>(null);
   const [isFocused, setIsFocused] = useState(false);
+
   const [invalidAttempts, setInvalidAttempts] = useState(0);
-
-  const input_NAMES = ["name"] as const;
-
   const [error, SET_error] = useState<Error_PROPS>();
   const HIDE_actionBtn = useMemo(() => error?.type === "internal", [error]);
   const { RENAME_list, IS_renaming } = USE_renameList();
@@ -72,28 +71,12 @@ export default function RenameList_MODAL({
     } else {
       Keyboard.dismiss();
       SET_error(error);
-      CREATE_manualFormErrorFromDbResponse(error?.formInput_ERRORS);
-    }
-  };
-
-  function CREATE_manualFormErrorFromDbResponse(
-    formInput_ERRORS:
-      | { input_NAME: (typeof input_NAMES)[number]; msg: string }[]
-      | undefined
-  ) {
-    if (formInput_ERRORS?.length) {
-      formInput_ERRORS.forEach((err) => {
-        setError(
-          err.input_NAME,
-          {
-            type: "manual",
-            message: err.msg,
-          },
-          { shouldFocus: true }
-        );
+      CREATE_manualFormErrorFromDbResponse({
+        formInput_ERRORS: error?.formInput_ERRORS,
+        setError,
       });
     }
-  }
+  };
 
   useEffect(() => {
     if (IS_open) {

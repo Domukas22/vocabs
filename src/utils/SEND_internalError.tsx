@@ -13,21 +13,25 @@ export default async function SEND_internalError(data: {
 }) {
   const { user_id, message, function_NAME, details } = data;
   console.log("------------------------------------------------");
-  console.log(data.message);
-  console.log(data.function_NAME);
-  console.log(data.details);
-  console.log("------------------------------------------------");
+  console.error(data.message);
+  console.log("fucntion: ", data.function_NAME);
+  if (data.details) {
+    console.log("defailts: ", data.details);
+  }
+
   // Integrate Sentry here for logging
   // Sentry.captureException(new Error(internalError_MSG));
 
-  if (!user_id) return;
-
-  await db.write(async () => {
-    await Errors_DB.create((error: Error_MODEL) => {
-      error.user_id = user_id;
+  const err = await db.write(async () => {
+    return await Errors_DB.create((error: Error_MODEL) => {
+      error.user_id = user_id || "";
       error.message = message;
       error.function = function_NAME;
       error.details = JSON.stringify(details);
     });
   });
+
+  if (err) console.log("🟢 Error created 🟢");
+  else console.log("🔴  Error creation failed 🔴 ");
+  console.log("------------------------------------------------");
 }
