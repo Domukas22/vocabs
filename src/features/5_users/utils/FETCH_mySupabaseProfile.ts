@@ -19,7 +19,8 @@ export default async function FETCH_mySupabaseProfile(
     if (!userId) {
       SEND_internalError({
         message: "🔴 User ID not defined when fetching from Supabase 🔴",
-        place: "FETCH_mySupabaseProfile",
+        function_NAME: "FETCH_mySupabaseProfile",
+        user_id: "",
       });
 
       return {
@@ -52,7 +53,8 @@ export default async function FETCH_mySupabaseProfile(
       // Handle Supabase-related errors
       SEND_internalError({
         message: `🔴 Error fetching user from Supabase 🔴: ${error.message}`,
-        place: "FETCH_mySupabaseProfile",
+        function_NAME: "FETCH_mySupabaseProfile",
+        user_id: userId,
       });
       return {
         success: false,
@@ -81,7 +83,8 @@ export default async function FETCH_mySupabaseProfile(
       message: `🔴 Error fetching user from Supabase 🔴: ${
         err instanceof Error ? err.message : ""
       }`,
-      place: "FETCH_mySupabaseProfile",
+      function_NAME: "FETCH_mySupabaseProfile",
+      user_id: userId || "",
     });
     return {
       success: false,

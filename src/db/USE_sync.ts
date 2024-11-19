@@ -20,6 +20,9 @@ import TURN_VocabtrsIntoJson from "./utils/TURN_VocabtrsIntoJson";
 import TURN_langExampleHighlightsIntoJson from "./utils/TURN_langExampleHighlightsIntoJson";
 import CONVERT_EpochToTimestampWithTimeZone from "../utils/CONVERT_EpochToTimestampWithTimeZone";
 import SEND_internalError from "../utils/SEND_internalError";
+import { Error_PROPS } from "../props";
+import { CREATE_defaultErrorMsg } from "../constants/globalVars";
+import CHECK_ifNetworkFailure from "../utils/CHECK_ifNetworkFailure";
 
 const defaultError_MSG =
   "Something went wrong when trying to synchronize data. Please reload the app and try again. This problem has been recorded and will be reviewed by developers as soon as possible. If the problem persists, please contact support. We apologize for the inconvenience.";
@@ -42,71 +45,98 @@ const emptyChanges_OBJ = {
   languages: { updated: [], created: [], deleted: [] },
 };
 
+interface Sync_PROPS {
+  user: User_MODEL | undefined;
+  PULL_EVERYTHING?: boolean;
+}
+
+const internal_ERROR = {
+  msg: CREATE_defaultErrorMsg("trying to syncronize this list for publishing"),
+  type: "internal",
+};
+const networkFailure_RESPONSE = {
+  msg: "There seems to be an issue with your internet connection.",
+  type: "user",
+};
+
+const GET_targetDate = ({
+  PULL_EVERYTHING = false,
+  user,
+}: {
+  PULL_EVERYTHING: boolean;
+  user: User_MODEL | undefined;
+}) =>
+  PULL_EVERYTHING
+    ? new Date(new Date().setFullYear(new Date().getFullYear() - 100))
+    : user?.last_pulled_at
+    ? user.last_pulled_at
+    : NEW_timestampWithTimeZone();
+
 export function USE_sync() {
   const [IS_syncing, SET_syncing] = useState(false);
   const { z_SET_user } = USE_zustand();
+  const [success, SET_success] = useState(false);
+  const [error, SET_error] = useState<Error_PROPS>();
 
-  const {
-    HAS_error,
-    userError_MSG,
-    HAS_internalError,
-    CREATE_error,
-    RESET_error,
-  } = USE_error();
-
-  const sync = async ({
-    user,
-    PULL_EVERYTHING = false,
-  }: {
-    user: User_MODEL | undefined;
-    PULL_EVERYTHING?: boolean;
-  }) => {
+  const sync = async (data: Sync_PROPS) => {
     if (IS_syncing) return;
-    RESET_error();
 
-    if (!user || !user?.id)
-      return CREATE_error({
-        userError_MSG: defaultError_MSG,
-        internalError_MSG:
-          "🔴 User object undefined when syncing with USE_sync 🔴",
-      });
+    const { user, PULL_EVERYTHING = false } = data;
 
     try {
       SET_syncing(true);
+      SET_success(false);
+      SET_error(undefined);
+
+      if (!user || !user?.id) {
+        SEND_internalError({
+          message: `User object undefined when trying to sync`,
+          function_NAME: "USE_sync --> sync",
+        });
+        SET_error(internal_ERROR);
+        return;
+      }
 
       await synchronize({
         database: db,
         pullChanges: async ({ lastPulledAt, schemaVersion, migration }) => {
-          const targetPull_DATE = PULL_EVERYTHING
-            ? new Date(new Date().setFullYear(new Date().getFullYear() - 100))
-            : user?.last_pulled_at
-            ? user.last_pulled_at
-            : NEW_timestampWithTimeZone();
-
           const { data: changes, error } = await supabase.rpc("pull", {
             userid: user?.id,
-            _last_pulled_at: targetPull_DATE,
+            _last_pulled_at: GET_targetDate({ PULL_EVERYTHING, user }),
           });
 
           if (error) {
-            // set internal sentry error
-            CREATE_error({
-              userError_MSG: defaultError_MSG,
-              internalError_MSG: `🔴 Something went wrong with supabase 'pull' function when syncing with USE_sync 🔴: ${error.message}`,
+            const IS_networkFailure = CHECK_ifNetworkFailure(error);
+            if (IS_networkFailure) {
+              SET_error(networkFailure_RESPONSE);
+              throw new Error();
+            }
+
+            SEND_internalError({
+              message: `Supabase pull sync failed`,
+              function_NAME:
+                "USE_sync --> pullChanges --> supabase.rpc('pull'...",
+              details: error,
             });
-            throw new Error(); // stops watermelon from clearing the "changes" object
+            SET_error(internal_ERROR);
+            throw new Error(
+              `🔴 Supabase pull sync failed 🔴: ${error.message}`
+            );
           }
 
           const updated_USER = await user.UPDATE_lastPulledAt();
           if (updated_USER) {
             z_SET_user(updated_USER);
           } else {
-            // set internal sentry error
-            CREATE_error({
-              userError_MSG: defaultError_MSG,
-              internalError_MSG: `🔴 Failed to update users last_pulled_at when syncing with USE_sync 🔴`,
+            SEND_internalError({
+              message: `updated_USER from WatermelonDB returned undefined when trying to updated last_pulled_at while syncing`,
+              function_NAME:
+                "USE_sync --> pullChanges --> user.UPDATE_lastPulledAt()",
             });
-            throw new Error(); // stops watermelon from clearing the "changes" object
+            SET_error(internal_ERROR);
+            throw new Error(
+              `🔴 Failed to update users last_pulled_at when syncing with USE_sync 🔴`
+            );
           }
 
           const updatedChanges = ADJUST_pullChangesData(changes);
@@ -123,34 +153,44 @@ export function USE_sync() {
           });
 
           if (error) {
+            const IS_networkFailure = CHECK_ifNetworkFailure(error);
+            if (IS_networkFailure) {
+              SET_error(networkFailure_RESPONSE);
+              throw new Error(
+                `🔴 There seems to be a problem with your internet connection`
+              );
+            }
+
             SEND_internalError({
-              user_id: user.id,
-              message: "🔴 PUSH sync failed 🔴",
-              function_NAME: "USE_sync --> pushChanges",
-              details: { error },
+              message: `Supabase push sync failed`,
+              function_NAME:
+                "USE_sync --> pushChanges --> supabase.rpc('push'...",
+              details: error,
             });
-            throw new Error(); // stops watermelon from clearing the "changes" object
+            SET_error(internal_ERROR);
+            throw new Error(
+              `🔴 Supabase push sync failed 🔴: ${error.message}`
+            );
           }
         },
         migrationsEnabledAtVersion: 1,
         sendCreatedAsUpdated: true,
       });
-    } catch (error: any) {
-      const networkErrorMsg = // this isnt really necessary when we are working with local functions. Use this only with online functions
-        "It looks like there's an issue with your internet connection. Please check and try again.";
-      const errorMessage =
-        error?.message === "Failed to fetch"
-          ? networkErrorMsg
-          : defaultError_MSG;
-      const internalMessage =
-        error?.message !== "Failed to fetch"
-          ? `🔴 Unexpected error when syncing with USE_sync: 🔴 ${error?.message}`
-          : undefined;
 
-      CREATE_error({
-        userError_MSG: errorMessage,
-        internalError_MSG: internalMessage,
+      SET_success(true);
+    } catch (err: any) {
+      const IS_networkFailure = CHECK_ifNetworkFailure(err);
+      if (IS_networkFailure) {
+        SET_error(networkFailure_RESPONSE);
+        return;
+      }
+
+      SEND_internalError({
+        message: `Sync failed`,
+        function_NAME: "USE_sync --> sync",
+        details: err,
       });
+      SET_error(internal_ERROR);
     } finally {
       SET_syncing(false);
     }
@@ -158,10 +198,9 @@ export function USE_sync() {
 
   return {
     sync,
-    HAS_syncError: HAS_error,
-    userSyncError_MSG: userError_MSG,
-    HAS_internalSyncError: HAS_internalError,
-    RESET_syncError: RESET_error,
+    IS_syncing,
+    sync_SUCCESS: success,
+    sync_ERROR: error,
   };
 }
 // --------------------------------------------------------------------------------------------------

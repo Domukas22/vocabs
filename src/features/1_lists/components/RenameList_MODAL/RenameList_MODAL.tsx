@@ -38,15 +38,16 @@ export default function RenameList_MODAL({
   const [isFocused, setIsFocused] = useState(false);
 
   const [invalidAttempts, setInvalidAttempts] = useState(0);
-  const [error, SET_error] = useState<Error_PROPS>();
+  const { RENAME_list, loading, error, RESET_error } = USE_renameList();
+
   const HIDE_actionBtn = useMemo(() => error?.type === "internal", [error]);
-  const { RENAME_list, IS_renaming } = USE_renameList();
 
   const {
     control,
     formState: { errors, isSubmitted },
     reset,
     setError,
+
     handleSubmit,
   } = useForm({
     defaultValues: {
@@ -55,11 +56,9 @@ export default function RenameList_MODAL({
   });
 
   const rename = async (data: { name: string }) => {
-    if (!list) return;
-    SET_error(undefined);
-
     const { name } = data;
-    const { success, error } = await RENAME_list({
+
+    const { success } = await RENAME_list({
       new_NAME: name,
       list,
       user: z_user,
@@ -70,11 +69,12 @@ export default function RenameList_MODAL({
       if (onSuccess) onSuccess();
     } else {
       Keyboard.dismiss();
-      SET_error(error);
-      CREATE_manualFormErrorFromDbResponse({
-        formInput_ERRORS: error?.formInput_ERRORS,
-        setError,
-      });
+      if (error?.formInput_ERRORS) {
+        CREATE_manualFormErrorFromDbResponse({
+          formInput_ERRORS: error?.formInput_ERRORS,
+          setError,
+        });
+      }
     }
   };
 
@@ -102,8 +102,8 @@ export default function RenameList_MODAL({
       btnRight={
         !HIDE_actionBtn && (
           <Btn
-            text={!IS_renaming ? t("btn.confirmListRename") : ""}
-            iconRight={IS_renaming ? <ActivityIndicator color="black" /> : null}
+            text={!loading ? t("btn.confirmListRename") : ""}
+            iconRight={loading ? <ActivityIndicator color="black" /> : null}
             onPress={handleSubmit(rename)}
             type="action"
             style={{ flex: 1 }}
@@ -122,6 +122,7 @@ export default function RenameList_MODAL({
           },
           validate: {
             uniqueName: async (value) => {
+              return true;
               const IS_theSameName = value === list?.name;
               if (IS_theSameName) return true;
 
@@ -149,13 +150,13 @@ export default function RenameList_MODAL({
             isSubmitted={isSubmitted && invalidAttempts > 0}
             SET_value={(val) => {
               onChange(val);
-              SET_error(undefined);
+              RESET_error();
             }}
           />
         )}
       />
       {errors.name && <Error_TEXT text={errors.name.message} />}
-      {error && <Error_TEXT text={error.msg} />}
+      {error && <Error_TEXT text={error.message} />}
     </Small_MODAL>
   );
 }

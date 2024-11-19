@@ -19,6 +19,11 @@ export const HEADER_MARGIN = 80;
 export const VOCAB_PAGINATION = 20;
 export const LIST_PAGINATION = 20;
 
+export const CREATE_defaultErrorMsg = (process?: string) =>
+  `Something went wrong${
+    process ? " when " + process + "." : "."
+  } Please reload the app and try again. This problem has been recorded and will be reviewed by developers as soon as possible. If the problem persists, please contact support. We apologize for the inconvenience.`;
+
 export const VOCAB_PRICING = {
   1: {
     amount: 500,

@@ -83,15 +83,9 @@ export default function Index_PAGE({}: // function _Index_PAGE({
   }, [z_user]);
   const { sync } = USE_sync();
   const fn = async () => {
-    // z_SET_user(undefined);
     await SEND_internalError({
-      user_id: z_user?.id,
-      message: "Test message",
+      message: "Test error",
       function_NAME: "Index_Page",
-      // details: JSON.stringify({
-      //   user_id: z_user?.id,
-      //   username: z_user?.username,
-      // }),
     });
   };
 

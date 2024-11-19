@@ -7,6 +7,7 @@ import Small_MODAL from "../../Small_MODAL";
 import Btn from "../../../../Btn/Btn";
 import { ActivityIndicator } from "react-native";
 import React from "react";
+import { Error_PROPS } from "@/src/props";
 
 interface LogoutConfirmationModal_PROPS {
   open: boolean;

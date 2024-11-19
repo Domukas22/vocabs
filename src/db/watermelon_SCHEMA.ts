@@ -147,7 +147,7 @@ export default appSchema({
     tableSchema({
       name: "errors",
       columns: [
-        { name: "user_id", type: "string", isIndexed: true },
+        // user id is not included here, becasue we populate it automatically on supabase
 
         { name: "message", type: "string" },
         { name: "function", type: "string" },

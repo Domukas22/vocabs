@@ -12,6 +12,8 @@ import { List_MODEL } from "@/src/db/watermelon_MODELS";
 import { useToast } from "react-native-toast-notifications";
 import db, { Lists_DB, Vocabs_DB } from "@/src/db";
 import { Q } from "@nozbe/watermelondb";
+import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
+import { MyColors } from "@/src/constants/MyColors";
 
 interface DeleteListModal_PROPS {
   IS_open: boolean;
@@ -66,7 +68,9 @@ export default function DeleteList_MODAL({
         />
       }
     >
-      {/* {error && <Error_TEXT text={error} />} */}
+      <Styled_TEXT style={{ color: MyColors.text_red }}>
+        All vocabs of this list will be deleted as well
+      </Styled_TEXT>
     </Small_MODAL>
   );
 }

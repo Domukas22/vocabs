@@ -19,6 +19,9 @@ import { t } from "i18next";
 import { nullValue } from "@nozbe/watermelondb/RawRecord";
 import { notEq } from "@nozbe/watermelondb/QueryDescription";
 import NEW_timestampWithTimeZone from "../utils/NEW_timestampWithTimeZone";
+import SEND_internalError from "../utils/SEND_internalError";
+import { CREATE_defaultErrorMsg } from "../constants/globalVars";
+import { useState } from "react";
 
 export interface ListCreation_PROPS {
   user_id: string;
@@ -198,6 +201,40 @@ export class User_MODEL extends Model {
 
     return result > 0;
   }
+  @reader async FETCH_listNamesSubmittedForPublishing({
+    excluded_ID,
+  }: {
+    excluded_ID: string;
+  }) {
+    const result = await this.collections
+      .get("lists")
+      .query(
+        Q.where("user_id", this.id),
+        Q.where("is_submitted_for_publish", true),
+        Q.where("id", notEq(excluded_ID)),
+        Q.where("deleted_at", null)
+      )
+      .fetch();
+
+    return result.map((list) => list.name);
+  }
+  @reader async FETCH_sharedListNames({
+    excluded_ID,
+  }: {
+    excluded_ID: string;
+  }) {
+    const result = await this.collections
+      .get("lists")
+      .query(
+        Q.where("user_id", this.id),
+        Q.where("type", "shared"),
+        Q.where("id", notEq(excluded_ID)),
+        Q.where("deleted_at", null)
+      )
+      .fetch();
+
+    return result.map((list) => list.name);
+  }
 
   @lazy totalList_COUNT = this.collections
     .get("lists")
@@ -360,11 +397,6 @@ export class List_MODEL extends Model {
 
     // Execute all updates in a single batch transaction
     await this.batch(...updates, listUpdate);
-  }
-  @writer async SUBMIT_forPublishing(val: boolean) {
-    await this.update((vocab) => {
-      vocab.is_submitted_for_publish = val;
-    });
   }
 
   @lazy diff_1 = this.collections
@@ -557,7 +589,7 @@ const sanitizeJSON = (json: JSON) => json;
 export class Error_MODEL extends Model {
   static table = "errors";
 
-  @text("user_id") user_id!: string;
+  // user id is not included here, becasue we populate it automatically on supabase
 
   @text("message") message!: string;
   @text("function") function!: string;

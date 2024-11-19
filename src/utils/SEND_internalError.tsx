@@ -5,15 +5,17 @@
 import db, { Errors_DB } from "../db";
 import { Error_MODEL } from "../db/watermelon_MODELS";
 
+const GET_readableDateNow = () =>
+  new Date().toLocaleDateString("en-US", { day: "numeric", month: "long" });
+
 export default async function SEND_internalError(data: {
-  user_id: string | undefined;
   message: string;
   function_NAME: string;
   details?: Object;
 }) {
-  const { user_id, message, function_NAME, details } = data;
+  const { message, function_NAME, details } = data;
   console.log("------------------------------------------------");
-  console.error(data.message);
+  console.error("🔴 " + data.message + " 🔴");
   console.log("fucntion: ", data.function_NAME);
   if (data.details) {
     console.log("defailts: ", data.details);
@@ -24,8 +26,7 @@ export default async function SEND_internalError(data: {
 
   const err = await db.write(async () => {
     return await Errors_DB.create((error: Error_MODEL) => {
-      error.user_id = user_id || "";
-      error.message = message;
+      error.message = `${GET_readableDateNow()}: ${message}`;
       error.function = function_NAME;
       error.details = JSON.stringify(details);
     });

@@ -6,7 +6,7 @@ import { UseFormSetError, FieldValues, Path } from "react-hook-form";
 
 type InputError<TFieldSchema extends FieldValues> = {
   input_NAME: Path<TFieldSchema>;
-  msg: string;
+  message: string;
 };
 
 export function CREATE_manualFormErrorFromDbResponse<
@@ -23,7 +23,7 @@ export function CREATE_manualFormErrorFromDbResponse<
   formInput_ERRORS.forEach((err) => {
     setError(err.input_NAME, {
       type: "manual",
-      message: err.msg,
+      message: err.message,
     });
   });
 }

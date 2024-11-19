@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { FlatlistError_PROPS } from "../props";
 import FETCH_listParticipants from "../features/1_lists/utils/FETCH_listParticipants";
 import { List_MODEL } from "../db/watermelon_MODELS";
@@ -18,16 +18,20 @@ export type FetchedSupabaseVocabs_PROPS = {
   }[];
 };
 
-export default function USE_listParticipantIds({
+export default function USE_listParticipants({
   list,
   owner_id,
+  dependencies = [],
 }: {
   list: List_MODEL | undefined;
   owner_id: string | undefined;
+  dependencies: any[];
 }) {
-  const [data, SET_data] = useState<string[]>([]);
-  const [IS_fetching, SET_fetching] = useState(false);
-  const [error, SET_error] = useState<FlatlistError_PROPS>({
+  const [participants, SET_participants] = useState<
+    { id: string; username: string }[]
+  >([]);
+  const [IS_fetchingParticipants, SET_fetching] = useState(false);
+  const [fetchParticipants_ERROR, SET_error] = useState<FlatlistError_PROPS>({
     value: false,
     msg: "",
   });
@@ -38,11 +42,13 @@ export default function USE_listParticipantIds({
   );
 
   const fetch = useCallback(async () => {
+    console.log("FIRE");
+
     SET_fetching(false);
     SET_error({ value: false, msg: "" });
 
     if (list?.type !== "shared") {
-      SET_data([]);
+      SET_participants([]);
       return;
     }
 
@@ -83,7 +89,7 @@ export default function USE_listParticipantIds({
           msg: errroMsg,
         });
       } else {
-        SET_data(participants || []);
+        SET_participants(participants || []);
       }
     } catch (error: any) {
       console.error("🔴 Error in USE_participantsOfAList: 🔴", error);
@@ -96,10 +102,14 @@ export default function USE_listParticipantIds({
     }
   }, []);
 
+  useEffect(() => {
+    (async () => await fetch())();
+  }, dependencies);
+
   return {
-    data,
-    error,
-    IS_fetching,
-    fetch,
+    participants,
+    fetchParticipants_ERROR,
+    IS_fetchingParticipants,
+    FETCH_participants: fetch,
   };
 }

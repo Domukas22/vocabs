@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { List_MODEL, User_MODEL } from "@/src/db/watermelon_MODELS";
-import USE_error from "@/src/hooks/USE_error";
-import { Error_PROPS } from "@/src/props";
+import { App_ERROR, Error_PROPS } from "@/src/props";
 import SEND_internalError from "@/src/utils/SEND_internalError";
+import { CREATE_defaultErrorMsg } from "@/src/constants/globalVars";
 
 export interface RenameList_PROPS {
   list: List_MODEL | undefined;
@@ -10,145 +10,124 @@ export interface RenameList_PROPS {
   new_NAME: string | undefined;
 }
 
-const defaultError_MSG =
-  "Something went wrong when renaming the list. Please reload the app and try again. This problem has been recorded and will be reviewed by developers as soon as possible. If the problem persists, please contact support. We apologize for the inconvenience.";
+const input_NAMES = ["name"] as const;
+type InputName = (typeof input_NAMES)[number];
+const GET_inputName = (name: InputName) => name;
+
+type RenameListError_PROPS = Error_PROPS & {
+  formInput_ERRORS?: {
+    input_NAME: InputName;
+    message: string;
+  }[];
+};
+
+/////////
+
+// 🔴 TODO ==> CREATE_manualFormErrorFromDbResponse on RenameList_MODAL doesn't work 🔴
+
+/////////
 
 export default function USE_renameList() {
-  const [IS_renaming, SET_renaming] = useState(false);
+  const [loading, SET_loading] = useState(false);
+  const [error, SET_error] = useState<RenameListError_PROPS | null>(null);
 
-  const input_NAMES = ["name"] as const;
-  // const input_NAMES = [...imported] as const;
+  const RESET_error = useCallback(() => SET_error(null), []);
 
-  async function RENAME_list({
-    new_NAME,
-    list,
-    user,
-  }: RenameList_PROPS): Promise<{
-    success: boolean;
-    error?: Error_PROPS & {
-      formInput_ERRORS?: {
-        input_NAME: (typeof input_NAMES)[number];
-        msg: string;
-      }[];
-    };
-  }> {
-    const function_NAME = "RENAME_list";
+  async function RENAME_list(data: RenameList_PROPS) {
+    const { new_NAME, list, user } = data;
 
-    if (!list || !list?.id) {
-      await SEND_internalError({
-        message: "🔴 List object undefined when renaming list 🔴",
-        function_NAME,
-        user_id: user?.id,
-      });
+    try {
+      if (new_NAME === list?.name) return { success: true };
 
-      return {
-        success: false,
-        error: {
-          msg: defaultError_MSG,
+      SET_error(null);
+      SET_loading(true);
+
+      if (!list || !list?.id) {
+        throw new App_ERROR({
+          message: "List object undefined when renaming list",
           type: "internal",
-        },
-      };
-    }
+        });
+      }
 
-    if (!user || !user?.id) {
-      await SEND_internalError({
-        message: "🔴 User object undefined when renaming list 🔴",
-        function_NAME,
-        user_id: user?.id,
-      });
-
-      return {
-        success: false,
-        error: {
-          msg: defaultError_MSG,
+      if (!user || !user?.id) {
+        throw new App_ERROR({
+          message: "User object undefined when renaming list",
           type: "internal",
-        },
-      };
-    }
+        });
+      }
 
-    if (!new_NAME) {
-      return {
-        success: false,
-        error: {
-          msg: "Please correct the errors above",
+      if (!new_NAME) {
+        throw new App_ERROR({
+          message: "Please correct the errors above",
           type: "user",
           formInput_ERRORS: [
             {
-              input_NAME: "name",
-              msg: "Please provide a new name for the list",
+              input_NAME: GET_inputName("name"),
+              message: "Please provide a new name for the list",
             },
           ],
-        },
-      };
-    }
-
-    try {
-      // in case it recevie sthe same name it already has
-      if (new_NAME === list?.name) {
-        return { success: true };
+        });
       }
 
-      SET_renaming(true);
-
-      // Check for duplicate list name
       const IS_listNameTaken = await user.DOES_userHaveListWithThisName(
         new_NAME
       );
-
       if (IS_listNameTaken) {
-        return {
-          success: false,
-          error: {
-            msg: "Please correct the errors above",
-            type: "user",
-            formInput_ERRORS: [
-              {
-                input_NAME: "name",
-                msg: "You already have a list with this name",
-              },
-            ],
-          },
-        };
+        throw new App_ERROR({
+          message: "Please correct the errors above",
+          type: "user",
+          formInput_ERRORS: [
+            {
+              input_NAME: GET_inputName("name"),
+              message: "You already have a list with this name",
+            },
+          ],
+        });
       }
 
-      // Proceed with renaming
-      const updated_LIST = await list.rename(new_NAME);
-      if (!updated_LIST) {
-        await SEND_internalError({
-          message: "🔴 updated_LIST object undefined when renaming list 🔴",
-          function_NAME,
-          user_id: user?.id,
+      const renamed_LIST = await list.rename(new_NAME);
+      if (!renamed_LIST) {
+        throw new App_ERROR({
+          message:
+            "renamed_LIST object returned undefined from WatermelonDB when renaming list",
+          type: "internal",
         });
-
-        return {
-          success: false,
-          error: {
-            msg: defaultError_MSG,
-            type: "internal",
-          },
-        };
       }
 
       return { success: true };
+      // -------------------------------------------------
     } catch (error: any) {
-      await SEND_internalError({
-        message: "🔴 Renaming list on WatermelonDB failed 🔴",
-        function_NAME,
-        details: error,
-        user_id: user?.id,
+      const IS_appError = error instanceof App_ERROR;
+
+      const userError_MESSAGE =
+        IS_appError && error?.type === "internal"
+          ? CREATE_defaultErrorMsg("trying to rename the list")
+          : IS_appError && error?.type === "user"
+          ? error.message
+          : IS_appError && error?.type === "user_internet"
+          ? "There seems to be a problem with your internet connection"
+          : CREATE_defaultErrorMsg();
+
+      // handle internal errors
+      if (!IS_appError || (IS_appError && error?.type === "internal")) {
+        await SEND_internalError({
+          message: error.message,
+          function_NAME: "RENAME_list",
+          details: error,
+        });
+      }
+
+      // handle user errors
+      SET_error({
+        message: userError_MESSAGE,
+        type: IS_appError ? error.type : "internal",
       });
 
-      return {
-        success: false,
-        error: {
-          msg: defaultError_MSG,
-          type: "internal",
-        },
-      };
+      return { success: false };
     } finally {
-      SET_renaming(false);
+      SET_loading(false);
     }
   }
 
-  return { RENAME_list, IS_renaming };
+  return { RENAME_list, loading, error, RESET_error };
 }

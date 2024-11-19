@@ -36,14 +36,21 @@ import Label from "@/src/components/Label/Label";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 import USE_shareList from "../../hooks/USE_shareList";
 import USE_publishList from "../../hooks/USE_publishList";
-import { PUSH_changes } from "@/src/db/USE_sync";
+import { PUSH_changes, USE_sync } from "@/src/db/USE_sync";
 import SelectUsers_MODAL from "@/src/features/5_users/components/SelectUsers_MODAL/SelectUsers_MODAL";
 import { supabase } from "@/src/lib/supabase";
 import db, { Lists_DB } from "@/src/db";
 import USE_zustand from "@/src/zustand";
 import USE_fetchListAccesses from "@/src/features/5_users/hooks/USE_fetchListAccesses";
 import USE_supabaseUsers from "@/src/features/5_users/hooks/USE_supabaseUsers";
-import USE_listParticipantIds from "@/src/hooks/USE_participantsOfAList";
+import USE_listParticipants from "@/src/hooks/USE_participantsOfAList";
+import { Error_PROPS } from "@/src/props";
+import { CREATE_defaultErrorMsg } from "@/src/constants/globalVars";
+import SEND_internalError from "@/src/utils/SEND_internalError";
+import USE_publishMySupabaseList from "@/src/features/1_lists/hooks/USE_publishMySupabaseList";
+import Error_TEXT from "@/src/components/Error_TEXT/Error_TEXT";
+import USE_observeList from "@/src/features/5_users/hooks/USE_observeList";
+import { USE_highlightBoolean } from "@/src/hooks/USE_highlightBoolean/USE_highlightBoolean";
 
 interface ListSettingsModal_PROPS {
   selected_LIST: List_MODEL | undefined;
@@ -60,8 +67,11 @@ export default function ListSettings_MODAL({
 }: ListSettingsModal_PROPS) {
   const { t } = useTranslation();
   const { z_user } = USE_zustand();
+  const { sync } = USE_sync();
   const toast = useToast();
   const router = useRouter();
+
+  const list = USE_observeList(selected_LIST?.id);
 
   const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
     { name: "deleteList" },
@@ -74,72 +84,43 @@ export default function ListSettings_MODAL({
     { name: "selectUsers" },
   ]);
 
-  const { SHARE_list, IS_sharingList } = USE_shareList();
-  const { PUBLISH_list, IS_publishingList } = USE_publishList();
+  const { PUBLISH_list, IS_publishing, listPublish_ERROR } =
+    USE_publishMySupabaseList();
+  const publish = async (val: boolean) => {
+    await PUBLISH_list({
+      list,
+      user: z_user,
+      val,
+      sync: async () => await sync({ user: z_user, PULL_EVERYTHING: true }),
+    });
+  };
+
+  const { SHARE_list, IS_sharing, listSharing_SUCCESS, listSharing_ERROR } =
+    USE_shareList();
+  const share = async (val: boolean) => {
+    await SHARE_list({
+      list,
+      user: z_user,
+      val,
+      sync: async () => await sync({ user: z_user, PULL_EVERYTHING: true }),
+    });
+  };
 
   const {
-    data: list_PARTICIPANTS,
-    IS_fetching: IS_fetchingParticipants,
-    error: fetchPArticipants_ERROR,
-    fetch: FETCH_listParticipantIds,
-  } = USE_listParticipantIds({
+    participants,
+    IS_fetchingParticipants,
+    fetchParticipants_ERROR,
+    FETCH_participants,
+  } = USE_listParticipants({
     list: selected_LIST,
     owner_id: z_user?.id,
+    dependencies: [open, list?.type],
   });
 
-  useEffect(() => {
-    if (open) {
-      (async () => {
-        await FETCH_listParticipantIds();
-      })();
-    }
-  }, [open]);
-
-  const share = async (bool: boolean) => {
-    SHARE_list({
-      list_id: selected_LIST?.id,
-      user_id: z_user?.id,
-      SHOULD_share: bool,
-    });
-  };
-  const publish = async (bool: boolean) => {
-    await selected_LIST?.SUBMIT_forPublishing(bool);
-    await PUSH_changes();
-    // await sync("all", z_user?.id);
-    // await PUBLISH_list({
-    //   list_id: selected_LIST?.id,
-    //   user_id: z_user?.id,
-    //   isSubmittedForPublish: bool,
-    //   onSuccess: async (updated_LIST) => {},
-    // });
-  };
-
-  const [IS_listNameHighlighted, SET_isListNameHighlighted] = useState(false);
-  const HIGHLIGHT_modalListName = () => {
-    if (!IS_listNameHighlighted) {
-      SET_isListNameHighlighted(true);
-      setTimeout(() => {
-        SET_isListNameHighlighted(false);
-      }, 3000);
-    }
-  };
-
   const {
-    UPDATE_defaultLangs,
-    IS_updatingDefaultLangs,
-    updateDefaultLangs_ERROR,
-    RESET_error,
-  } = USE_updateListDefaultLangs();
-
-  const UPDATE_langs = (newLang_IDS: string[]) => {
-    if (!newLang_IDS) return;
-
-    UPDATE_defaultLangs({
-      user_id: z_user?.id || "",
-      list_id: selected_LIST?.id,
-      newLang_IDS,
-    });
-  };
+    highlight: HIGHLIGHT_listName,
+    isHighlighted: IS_listNameHighlighted,
+  } = USE_highlightBoolean(3000);
 
   return (
     <Big_MODAL open={open}>
@@ -183,7 +164,7 @@ export default function ListSettings_MODAL({
           REMOVE_lang={async (targetLang_ID: string) => {
             await selected_LIST?.DELETE_defaultLangId(targetLang_ID);
           }}
-          error={updateDefaultLangs_ERROR}
+          // error={}
         />
 
         <Block>
@@ -205,122 +186,29 @@ export default function ListSettings_MODAL({
         </Block>
         {/* -------------------------------------------------------------------------------------------------- */}
 
-        {selected_LIST?.type === "private" && (
-          <Block>
-            <Label>Share your list with chosen people</Label>
-            <View style={{ flexDirection: "row", gap: 8 }}>
-              <Btn
-                text={!IS_sharingList ? "Share list" : ""}
-                iconRight={
-                  IS_sharingList ? <ActivityIndicator color="white" /> : null
-                }
-                style={{ flex: 1 }}
-                text_STYLES={{
-                  textAlign: "left",
-                  flex: 1,
-                }}
-                stayPressed={IS_sharingList}
-                onPress={() => share(true)}
-              />
-              <Btn
-                iconLeft={<ICON_questionMark />}
-                onPress={() => TOGGLE_modal("listSharingInfo")}
-              />
-            </View>
-          </Block>
-        )}
+        <ListSharing_BLOCK
+          {...{
+            list,
+            share,
+            IS_sharing,
+            listSharing_ERROR,
+            participants,
+          }}
+          TOGGLE_infoModal={() => TOGGLE_modal("listSharinggInfo")}
+          TOGGLE_cancelModal={() => TOGGLE_modal("listSharingCancel")}
+          TOGGLE_selectUsersModal={() => TOGGLE_modal("selectUsers")}
+        />
 
-        {selected_LIST?.type === "shared" && (
-          <Block>
-            <Styled_TEXT style={{ color: MyColors.text_green }}>
-              This list is shared with {list_PARTICIPANTS?.length || 0} people
-            </Styled_TEXT>
-            <SharedWithUsers_BULLETS users={list_PARTICIPANTS || []} />
-            <Btn
-              text="Edit people list"
-              style={{ flex: 1 }}
-              iconRight={<ICON_arrow direction="right" />}
-              text_STYLES={{
-                textAlign: "left",
-                flex: 1,
-              }}
-              onPress={() => TOGGLE_modal("selectUsers")}
-            />
-            <Btn
-              text={!IS_sharingList ? "Unshare this list" : ""}
-              iconRight={
-                IS_sharingList ? (
-                  <ActivityIndicator color={MyColors.icon_red} />
-                ) : null
-              }
-              type="delete"
-              stayPressed={IS_sharingList}
-              text_STYLES={{ flex: 1 }}
-              onPress={() => TOGGLE_modal("listSharingCancel")}
-            />
-          </Block>
-        )}
-
-        {/* -------------------------------------------------------------------------------------------------- */}
-
-        {!selected_LIST?.is_submitted_for_publish &&
-          !selected_LIST?.was_accepted_for_publish && (
-            <Block>
-              <Label>Publish your list and get free vocabs</Label>
-              <View style={{ flexDirection: "row", gap: 8 }}>
-                <Btn
-                  text={!IS_publishingList ? "Submit for publish" : ""}
-                  iconRight={
-                    IS_publishingList ? (
-                      <ActivityIndicator color="white" />
-                    ) : null
-                  }
-                  style={{ flex: 1 }}
-                  stayPressed={IS_publishingList}
-                  text_STYLES={{
-                    textAlign: "left",
-                    flex: 1,
-                  }}
-                  onPress={() => publish(true)}
-                />
-                <Btn
-                  iconLeft={<ICON_questionMark />}
-                  onPress={() => TOGGLE_modal("listPublishingInfo")}
-                />
-              </View>
-            </Block>
-          )}
-        {selected_LIST?.is_submitted_for_publish &&
-          !selected_LIST?.was_accepted_for_publish && (
-            <Block>
-              <Styled_TEXT style={{ color: MyColors.text_yellow }}>
-                This list is being reviewed for publishing, which shouldn't take
-                longer than a few days. You'll be notified as soon as the list
-                is accepted or rejected.
-              </Styled_TEXT>
-              <Btn
-                text={!IS_publishingList ? "I changed my mind - unpublish" : ""}
-                iconRight={
-                  IS_publishingList ? (
-                    <ActivityIndicator color={MyColors.icon_red} />
-                  ) : null
-                }
-                type="delete"
-                text_STYLES={{ flex: 1 }}
-                stayPressed={IS_publishingList}
-                onPress={() => TOGGLE_modal("listPublishingCancel")}
-              />
-            </Block>
-          )}
-        {!selected_LIST?.is_submitted_for_publish &&
-          selected_LIST?.was_accepted_for_publish && (
-            <Block>
-              <Styled_TEXT style={{ color: MyColors.text_green }}>
-                Great Work! You have received 57 vocabs for publishing this
-                list.
-              </Styled_TEXT>
-            </Block>
-          )}
+        <ListPublishing_BLOCK
+          {...{
+            list,
+            publish,
+            IS_publishing,
+            listPublish_ERROR,
+          }}
+          TOGGLE_infoModal={() => TOGGLE_modal("listPublishingInfo")}
+          TOGGLE_cancelPublishModal={() => TOGGLE_modal("listPublishingCancel")}
+        />
         {/* -------------------------------------------------------------------------------------------------- */}
 
         <Dropdown_BLOCK
@@ -353,7 +241,6 @@ export default function ListSettings_MODAL({
         SUBMIT_langIds={async (lang_ids: string[]) => {
           await selected_LIST?.UPDATE_defaultLangIds(lang_ids);
         }}
-        IS_inAction={IS_updatingDefaultLangs}
       />
 
       <RenameList_MODAL
@@ -362,7 +249,7 @@ export default function ListSettings_MODAL({
         current_NAME={selected_LIST?.name}
         IS_open={modal_STATES.renameList}
         CLOSE_modal={() => TOGGLE_modal("renameList")}
-        onSuccess={HIGHLIGHT_modalListName}
+        onSuccess={HIGHLIGHT_listName}
       />
 
       <HowDoesSharingListWork_MODAL
@@ -379,9 +266,7 @@ export default function ListSettings_MODAL({
         TOGGLE_open={() => TOGGLE_modal("selectUsers")}
         list_id={selected_LIST?.id}
         onUpdate={() => {
-          (async () => {
-            await FETCH_listParticipantIds();
-          })();
+          (async () => await FETCH_participants())();
         }}
       />
 
@@ -404,10 +289,11 @@ export default function ListSettings_MODAL({
         open={modal_STATES.listPublishingCancel}
         toggle={() => TOGGLE_modal("listPublishingCancel")}
         title={t("header.cancelListPublishing")}
-        action={() => {
-          publish(false);
+        action={async () => {
           TOGGLE_modal("listPublishingCancel");
+          await publish(false);
         }}
+        IS_inAction={IS_publishing}
         actionBtnText={t("btn.confirmListUnpublish")}
       >
         <Styled_TEXT style={{ color: MyColors.text_red }}>
@@ -483,7 +369,7 @@ function HowDoesPublishingListWork_MODAL({
 export function SharedWithUsers_BULLETS({
   users = [],
 }: {
-  users: User_MODEL[];
+  users: { id: string; username: string }[];
 }) {
   const maxPrint = 10;
 
@@ -517,4 +403,166 @@ export function SharedWithUsers_BULLETS({
       ))}
     </View>
   ) : null;
+}
+
+export function ListSharing_BLOCK({
+  list,
+  IS_sharing,
+  listSharing_ERROR,
+  share,
+  TOGGLE_infoModal,
+  TOGGLE_cancelModal,
+  TOGGLE_selectUsersModal,
+  participants,
+}: {
+  list: List_MODEL | undefined;
+  IS_sharing: boolean;
+  listSharing_ERROR: Error_PROPS | undefined;
+  share: (val: boolean) => Promise<void>;
+  TOGGLE_infoModal: () => void;
+  TOGGLE_cancelModal: () => void;
+  TOGGLE_selectUsersModal: () => void;
+  participants: { id: string; username: string }[] | undefined;
+}) {
+  return (
+    <Block>
+      {list?.type !== "shared" && (
+        <>
+          <Label>Share your list with others</Label>
+          <View style={{ flexDirection: "row", gap: 8 }}>
+            <Btn
+              text={!IS_sharing ? "Share list" : ""}
+              iconRight={
+                IS_sharing ? <ActivityIndicator color="white" /> : null
+              }
+              style={{ flex: 1 }}
+              text_STYLES={{
+                textAlign: "left",
+                flex: 1,
+              }}
+              stayPressed={IS_sharing}
+              onPress={() => share(true)}
+            />
+            <Btn iconLeft={<ICON_questionMark />} onPress={TOGGLE_infoModal} />
+          </View>
+        </>
+      )}
+      {list?.type === "shared" && (
+        <>
+          <Styled_TEXT style={{ color: MyColors.text_green }}>
+            This list is shared with {participants?.length || 0} people
+          </Styled_TEXT>
+          <SharedWithUsers_BULLETS users={participants || []} />
+          <Btn
+            text="Edit people list"
+            style={{ flex: 1 }}
+            iconRight={<ICON_arrow direction="right" />}
+            text_STYLES={{
+              textAlign: "left",
+              flex: 1,
+            }}
+            onPress={TOGGLE_selectUsersModal}
+          />
+          <Btn
+            text={!IS_sharing ? "Unshare this list" : ""}
+            iconRight={
+              IS_sharing ? (
+                <ActivityIndicator color={MyColors.icon_red} />
+              ) : null
+            }
+            type="delete"
+            stayPressed={IS_sharing}
+            text_STYLES={{ flex: 1 }}
+            onPress={TOGGLE_cancelModal}
+          />
+        </>
+      )}
+
+      {listSharing_ERROR && <Error_TEXT text={listSharing_ERROR.message} />}
+    </Block>
+  );
+}
+export function ListPublishing_BLOCK({
+  list,
+  IS_publishing,
+  listPublish_ERROR,
+  publish,
+  TOGGLE_infoModal,
+  TOGGLE_cancelPublishModal,
+}: {
+  list: List_MODEL | undefined;
+  IS_publishing: boolean;
+  listPublish_ERROR: Error_PROPS | undefined;
+  publish: (val: boolean) => Promise<void>;
+  TOGGLE_infoModal: () => void;
+  TOGGLE_cancelPublishModal: () => void;
+}) {
+  const list_STATUS = useMemo(
+    () =>
+      list?.is_submitted_for_publish && !list?.was_accepted_for_publish
+        ? "submitted"
+        : list?.was_accepted_for_publish
+        ? "accepted"
+        : "not_submitted_or_accepted",
+    [list?.is_submitted_for_publish, list?.was_accepted_for_publish]
+  );
+
+  return (
+    <Block>
+      {list_STATUS === "not_submitted_or_accepted" && (
+        <>
+          <Label>Publish your list and get free vocabs</Label>
+          <View style={{ flexDirection: "row", gap: 8 }}>
+            <Btn
+              text={!IS_publishing ? "Submit for publish" : ""}
+              iconRight={
+                IS_publishing ? <ActivityIndicator color="white" /> : null
+              }
+              style={{ flex: 1 }}
+              stayPressed={IS_publishing}
+              text_STYLES={{
+                textAlign: "left",
+                flex: 1,
+              }}
+              onPress={() => publish(true)}
+            />
+
+            <Btn iconLeft={<ICON_questionMark />} onPress={TOGGLE_infoModal} />
+          </View>
+        </>
+      )}
+      {list_STATUS === "submitted" && (
+        <>
+          <Styled_TEXT style={{ color: MyColors.text_yellow }}>
+            This list is being reviewed for publishing, which shouldn't take
+            longer than a few days. You'll be notified as soon as the list is
+            accepted or rejected.
+          </Styled_TEXT>
+          <View style={{ flexDirection: "row", gap: 8 }}>
+            <Btn
+              text={!IS_publishing ? "Unpublish list" : ""}
+              iconRight={
+                IS_publishing ? (
+                  <ActivityIndicator color={MyColors.icon_red} />
+                ) : null
+              }
+              type="delete"
+              style={{ flex: 1 }}
+              stayPressed={IS_publishing}
+              onPress={TOGGLE_cancelPublishModal}
+            />
+            <Btn iconLeft={<ICON_questionMark />} onPress={TOGGLE_infoModal} />
+          </View>
+        </>
+      )}
+      {list_STATUS === "accepted" && (
+        <>
+          <Styled_TEXT style={{ color: MyColors.text_green }}>
+            Great Work! You have received 57 vocabs for publishing this list.
+          </Styled_TEXT>
+        </>
+      )}
+      {listPublish_ERROR && <Error_TEXT text={listPublish_ERROR.message} />}
+    </Block>
+  );
 }
