@@ -42,8 +42,6 @@ export default function USE_listParticipants({
   );
 
   const fetch = useCallback(async () => {
-    console.log("FIRE");
-
     SET_fetching(false);
     SET_error({ value: false, msg: "" });
 

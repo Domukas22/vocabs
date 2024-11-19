@@ -58,10 +58,10 @@ export default function RenameList_MODAL({
   const rename = async (data: { name: string }) => {
     const { name } = data;
 
-    const { success } = await RENAME_list({
+    const { success, formInput_ERRORS } = await RENAME_list({
       new_NAME: name,
       list,
-      user: z_user,
+      // user: z_user,
     });
 
     if (success) {
@@ -69,9 +69,13 @@ export default function RenameList_MODAL({
       if (onSuccess) onSuccess();
     } else {
       Keyboard.dismiss();
-      if (error?.formInput_ERRORS) {
+
+      if (formInput_ERRORS) {
+        console.log("CREATE Manual error");
+        console.log(formInput_ERRORS);
+
         CREATE_manualFormErrorFromDbResponse({
-          formInput_ERRORS: error?.formInput_ERRORS,
+          formInput_ERRORS,
           setError,
         });
       }
@@ -122,7 +126,6 @@ export default function RenameList_MODAL({
           },
           validate: {
             uniqueName: async (value) => {
-              return true;
               const IS_theSameName = value === list?.name;
               if (IS_theSameName) return true;
 

@@ -49,12 +49,12 @@ export default function USE_renameList() {
         });
       }
 
-      if (!user || !user?.id) {
-        throw new App_ERROR({
-          message: "User object undefined when renaming list",
-          type: "internal",
-        });
-      }
+      // if (!user || !user?.id) {
+      //   throw new App_ERROR({
+      //     message: "User object undefined when renaming list",
+      //     type: "internal",
+      //   });
+      // }
 
       if (!new_NAME) {
         throw new App_ERROR({
@@ -121,9 +121,15 @@ export default function USE_renameList() {
       SET_error({
         message: userError_MESSAGE,
         type: IS_appError ? error.type : "internal",
+        formInput_ERRORS: IS_appError ? error?.formInput_ERRORS : undefined,
       });
 
-      return { success: false };
+      return {
+        success: false,
+        message: userError_MESSAGE,
+        type: IS_appError ? error.type : "internal",
+        formInput_ERRORS: IS_appError ? error?.formInput_ERRORS : undefined,
+      };
     } finally {
       SET_loading(false);
     }
