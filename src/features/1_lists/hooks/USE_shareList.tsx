@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo } from "react";
 import { supabase } from "@/src/lib/supabase";
 import { List_MODEL, User_MODEL } from "@/src/db/watermelon_MODELS";
 
-import { CREATE_defaultErrorMsg } from "@/src/constants/globalVars";
+import { CREATE_internalErrorMsg } from "@/src/constants/globalVars";
 import SEND_internalError from "@/src/utils/SEND_internalError";
 import { Error_PROPS } from "@/src/props";
 import CHECK_ifNetworkFailure from "@/src/utils/CHECK_ifNetworkFailure";
@@ -15,7 +15,7 @@ export interface ShareList_PROPS {
 }
 
 const internal_ERROR = {
-  msg: CREATE_defaultErrorMsg("trying to share this list"),
+  msg: CREATE_internalErrorMsg("trying to share this list"),
   type: "internal",
 };
 const networkFailure_RESPONSE = {

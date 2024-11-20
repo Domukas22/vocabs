@@ -13,16 +13,15 @@ export function CREATE_manualFormErrorFromDbResponse<
   TFieldSchema extends FieldValues
 >({
   formInput_ERRORS,
-  setError,
+  SET_formError,
 }: {
   formInput_ERRORS: InputError<TFieldSchema>[] | undefined;
-  setError: UseFormSetError<TFieldSchema>;
+  SET_formError: UseFormSetError<TFieldSchema>;
 }) {
   if (!formInput_ERRORS?.length) return;
 
   formInput_ERRORS.forEach((err) => {
-    // console.log(err.input_NAME);
-    setError(err.input_NAME, {
+    SET_formError(err.input_NAME, {
       type: "manual",
       message: err.message,
     });

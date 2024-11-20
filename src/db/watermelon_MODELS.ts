@@ -20,7 +20,7 @@ import { nullValue } from "@nozbe/watermelondb/RawRecord";
 import { notEq } from "@nozbe/watermelondb/QueryDescription";
 import NEW_timestampWithTimeZone from "../utils/NEW_timestampWithTimeZone";
 import SEND_internalError from "../utils/SEND_internalError";
-import { CREATE_defaultErrorMsg } from "../constants/globalVars";
+import { CREATE_internalErrorMsg } from "../constants/globalVars";
 import { useState } from "react";
 
 export interface ListCreation_PROPS {

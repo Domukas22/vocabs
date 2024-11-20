@@ -45,7 +45,7 @@ import USE_fetchListAccesses from "@/src/features/5_users/hooks/USE_fetchListAcc
 import USE_supabaseUsers from "@/src/features/5_users/hooks/USE_supabaseUsers";
 import USE_listParticipants from "@/src/hooks/USE_participantsOfAList";
 import { Error_PROPS } from "@/src/props";
-import { CREATE_defaultErrorMsg } from "@/src/constants/globalVars";
+import { CREATE_internalErrorMsg } from "@/src/constants/globalVars";
 import SEND_internalError from "@/src/utils/SEND_internalError";
 import USE_publishMySupabaseList from "@/src/features/1_lists/hooks/USE_publishMySupabaseList";
 import Error_TEXT from "@/src/components/Error_TEXT/Error_TEXT";
@@ -249,7 +249,10 @@ export default function ListSettings_MODAL({
         current_NAME={selected_LIST?.name}
         IS_open={modal_STATES.renameList}
         CLOSE_modal={() => TOGGLE_modal("renameList")}
-        onSuccess={HIGHLIGHT_listName}
+        onSuccess={() => {
+          HIGHLIGHT_listName();
+          TOGGLE_modal("renameList");
+        }}
       />
 
       <HowDoesSharingListWork_MODAL

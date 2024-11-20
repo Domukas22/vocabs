@@ -21,7 +21,7 @@ import TURN_langExampleHighlightsIntoJson from "./utils/TURN_langExampleHighligh
 import CONVERT_EpochToTimestampWithTimeZone from "../utils/CONVERT_EpochToTimestampWithTimeZone";
 import SEND_internalError from "../utils/SEND_internalError";
 import { Error_PROPS } from "../props";
-import { CREATE_defaultErrorMsg } from "../constants/globalVars";
+import { CREATE_internalErrorMsg } from "../constants/globalVars";
 import CHECK_ifNetworkFailure from "../utils/CHECK_ifNetworkFailure";
 
 const defaultError_MSG =
@@ -51,7 +51,7 @@ interface Sync_PROPS {
 }
 
 const internal_ERROR = {
-  msg: CREATE_defaultErrorMsg("trying to syncronize this list for publishing"),
+  msg: CREATE_internalErrorMsg("trying to syncronize this list for publishing"),
   type: "internal",
 };
 const networkFailure_RESPONSE = {

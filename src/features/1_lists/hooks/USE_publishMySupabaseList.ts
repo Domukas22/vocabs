@@ -1,4 +1,4 @@
-import { CREATE_defaultErrorMsg } from "@/src/constants/globalVars";
+import { CREATE_internalErrorMsg } from "@/src/constants/globalVars";
 import { List_MODEL, User_MODEL } from "@/src/db/watermelon_MODELS";
 import { supabase } from "@/src/lib/supabase";
 import { Error_PROPS } from "@/src/props";
@@ -14,7 +14,7 @@ interface PublishMySupabaseList_PROPS {
 }
 
 const internal_ERROR = {
-  msg: CREATE_defaultErrorMsg("trying to submit this list for publishing"),
+  msg: CREATE_internalErrorMsg("trying to submit this list for publishing"),
   type: "internal",
 };
 const networkFailure_RESPONSE = {
