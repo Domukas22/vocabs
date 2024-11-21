@@ -3,7 +3,7 @@
 //
 
 import USE_deleteList from "./USE_deleteList";
-import USE_renameList from "./RENAME_list";
+import USE_renameList from "../utils/RENAME_list/RENAME_list";
 import USE_updateDefaultListTRs from "./USE_updateDefaultListTRs";
 
 interface PrivateListAction_PROPS {

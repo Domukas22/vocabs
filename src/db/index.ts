@@ -4,7 +4,8 @@
 
 import { Database } from "@nozbe/watermelondb";
 import SQLiteAdapter from "@nozbe/watermelondb/adapters/sqlite";
-import { v4 as uuidv4 } from "uuid";
+// import { v4 as uuidv4 } from "uuid";
+const { v4: uuidv4 } = require("uuid");
 import { setGenerator } from "@nozbe/watermelondb/utils/common/randomId";
 
 import schema from "./watermelon_SCHEMA";

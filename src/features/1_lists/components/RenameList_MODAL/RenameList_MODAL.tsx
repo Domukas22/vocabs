@@ -17,10 +17,10 @@ import {
   RenameList_ARGS,
   RenameList_ERROR,
   RenameList_RESPONSE,
-} from "../../hooks/RENAME_list";
+} from "../../utils/RENAME_list/RENAME_list";
 import StyledText_INPUT from "@/src/components/StyledText_INPUT/StyledText_INPUT";
 import { Error_PROPS } from "@/src/props";
-import RENAME_list from "../../hooks/RENAME_list";
+import RENAME_list from "../../utils/RENAME_list/RENAME_list";
 import { CREATE_manualFormErrorFromDbResponse } from "@/src/utils/CREATE_manualFormErrorFromDbResponse";
 import USE_async from "@/src/hooks/USE_async";
 import { USE_renameList } from "../../hooks/USE_renameList";
@@ -58,7 +58,7 @@ export default function RenameList_MODAL({
 
   const { loading, error, execute, RESET_backendErrors } = USE_renameList({
     SET_formError,
-    onSuccess: () => onSuccess(),
+    onSuccess,
   });
 
   useEffect(() => {
@@ -105,25 +105,27 @@ export default function RenameList_MODAL({
       <Controller
         name="name"
         control={control}
-        rules={{
-          required: {
-            value: true,
-            message: t("error.provideAListName"),
-          },
-          validate: {
-            uniqueName: async (value) => {
-              const IS_theSameName = value === list?.name;
-              if (IS_theSameName) return true;
-              const IS_listNameTaken =
-                await z_user?.DOES_userHaveListWithThisName(value);
-              if (IS_listNameTaken) {
-                setInvalidAttempts((p) => p + 1);
-                return t("error.listNameTaken");
-              }
-              return true;
-            },
-          },
-        }}
+        rules={
+          {
+            // required: {
+            //   value: true,
+            //   message: t("error.provideAListName"),
+            // },
+            // validate: {
+            //   uniqueName: async (value) => {
+            //     const IS_theSameName = value === list?.name;
+            //     if (IS_theSameName) return true;
+            //     const IS_listNameTaken =
+            //       await z_user?.DOES_userHaveListWithThisName(value);
+            //     if (IS_listNameTaken) {
+            //       setInvalidAttempts((p) => p + 1);
+            //       return t("error.listNameTaken");
+            //     }
+            //     return true;
+            //   },
+            // },
+          }
+        }
         render={({ field: { onChange, value }, fieldState: { error } }) => (
           <StyledText_INPUT
             {...{

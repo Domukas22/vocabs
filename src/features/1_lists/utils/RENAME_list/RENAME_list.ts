@@ -3,13 +3,7 @@
 //
 
 import { List_MODEL, User_MODEL } from "@/src/db/watermelon_MODELS";
-import { supabase } from "@/src/lib/supabase";
-import {
-  CREATE_error,
-  CreateError_PROPS,
-  Error_TYPES,
-  FormInputError_PROPS,
-} from "@/src/props";
+import { CREATE_error, Error_TYPES, FormInputError_PROPS } from "@/src/props";
 
 import GET_errroInfo from "@/src/utils/GET_errroInfo";
 import SEND_internalError from "@/src/utils/SEND_internalError";
