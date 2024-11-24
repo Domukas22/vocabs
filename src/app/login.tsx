@@ -26,13 +26,12 @@ import * as SecureStore from "expo-secure-store";
 import db, { Users_DB } from "../db";
 import USE_zustand from "../zustand";
 
-import { User_MODEL } from "../db/watermelon_MODELS";
 import { Q } from "@nozbe/watermelondb";
 import { View } from "react-native";
 import Confirmation_MODAL from "../components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
 import USE_modalToggles from "../hooks/USE_modalToggles";
-import NAVIGATE_user from "../db/utils/NAVIGATE_user";
-import { USE_sync } from "../db/USE_sync";
+import NAVIGATE_user from "../utils/NAVIGATE_user";
+import { USE_sync } from "../hooks/USE_sync/USE_sync";
 import { useToast } from "react-native-toast-notifications";
 type LoginData_PROPS = {
   email: string;

@@ -10,7 +10,7 @@ import { MyColors } from "../constants/MyColors";
 import Btn from "../components/Btn/Btn";
 import { useRouter } from "expo-router";
 import { useEffect } from "react";
-import { PUSH_changes } from "../db/USE_sync";
+import { PUSH_changes } from "../hooks/USE_sync/USE_sync";
 
 export default function Welcome_PAGE() {
   const router = useRouter();

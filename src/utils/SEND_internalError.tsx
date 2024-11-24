@@ -3,32 +3,38 @@
 //
 
 import db, { Errors_DB } from "../db";
-import { Error_MODEL } from "../db/watermelon_MODELS";
+import Error_MODEL from "../db/models/Error_MODEL";
+import { Error_PROPS } from "../props";
 
 const GET_readableDateNow = () =>
   new Date().toLocaleDateString("en-US", { day: "numeric", month: "long" });
 
-export default async function SEND_internalError(data: {
-  message: string;
+export default async function HANDLE_internalError({
+  error,
+  function_NAME,
+}: {
+  error: Error_PROPS;
   function_NAME: string;
-  details?: Object;
 }) {
-  const { message, function_NAME, details } = data;
+  if (error.error_TYPE !== "internal" && error.error_TYPE !== "unknown") return;
+
   console.log("------------------------------------------------");
-  console.error("🔴 " + data.message + " 🔴");
-  console.log("fucntion: ", data.function_NAME);
-  if (data.details) {
-    console.log("defailts: ", data.details);
+  console.error("🔴 " + error.internal_MSG + " 🔴");
+  console.log("fucntion: ", error.function_NAME);
+  if (error.error_DETAILS) {
+    console.log("defailts: ", error.error_DETAILS);
   }
 
   // Integrate Sentry here for logging
   // Sentry.captureException(new Error(internalError_MSG));
 
   const err = await db.write(async () => {
-    return await Errors_DB.create((error: Error_MODEL) => {
-      error.message = `${GET_readableDateNow()}: ${message}`;
-      error.function = function_NAME;
-      error.details = JSON.stringify(details);
+    return await Errors_DB.create((waterMelon_ERR: Error_MODEL) => {
+      waterMelon_ERR.message = `${GET_readableDateNow()}: ${
+        error.internal_MSG
+      }`;
+      waterMelon_ERR.function = error.function_NAME;
+      waterMelon_ERR.details = JSON.stringify(error.error_DETAILS);
     });
   });
 

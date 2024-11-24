@@ -5,26 +5,22 @@
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { useMemo, useState } from "react";
-import { List_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
+import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
+import List_MODEL from "@/src/db/models/List_MODEL";
 
 import { useTranslation } from "react-i18next";
 import React from "react";
 import { useToast } from "react-native-toast-notifications";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 
-import USE_supabaseVocabsOfAList from "@/src/features/2_vocabs/hooks/USE_supabaseVocabsOfAList";
 import SavePublicVocabToList_MODAL from "@/src/features/2_vocabs/components/Modal/SavePublicVocabToList_MODAL/SavePublicVocabToList_MODAL";
 import USE_fetchOneSharedList from "@/src/features/2_vocabs/hooks/USE_fetchOneSharedList";
 import USE_zustand from "@/src/zustand";
 import USE_debounceSearch from "@/src/hooks/USE_debounceSearch/USE_debounceSearch";
-import OneSharedList_HEADER from "@/src/features/1_lists/components/OneSharedList_HEADER";
-
 import { VocabDisplaySettings_MODAL } from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/VocabDisplaySettings_MODAL";
-import ExporeSingleList_SUBNAV from "@/src/components/ExporeSingleList_SUBNAV";
+
 import ExploreVocabs_FLATLIST from "@/src/features/2_vocabs/components/ExploreVocabs_FLATLIST";
-import ExploreVocabsFlatlistBottom_SECTION from "@/src/features/2_vocabs/components/ExploreVocabsFlatlistBottom_SECTION";
 import VocabsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/VocabsFlatlistHeader_SECTION";
-import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import USE_copyListAndItsVocabs from "@/src/features/1_lists/hooks/USE_copyListAndItsVocabs";
 import CopyListAndVocabs_MODAL from "@/src/features/1_lists/components/CopyListAndVocabs_MODAL";
 import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";

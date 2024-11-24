@@ -5,14 +5,12 @@ import Block from "@/src/components/Block/Block";
 import Btn from "@/src/components/Btn/Btn";
 import { ICON_flag, ICON_checkMark } from "@/src/components/icons/icons";
 import Label from "@/src/components/Label/Label";
-import { Language_MODEL } from "@/src/db/watermelon_MODELS";
-import FETCH_langs from "@/src/features/4_languages/hooks/FETCH_langs";
-import USE_zustand, {
+import Language_MODEL from "@/src/db/models/Language_MODEL";
+import {
   z_vocabDisplaySettings_PROPS,
   z_setVocabDisplaySettings_PROPS,
 } from "@/src/zustand";
-import i18next, { t } from "i18next";
-import { useState, useEffect, useMemo } from "react";
+import { t } from "i18next";
 import { ScrollView, View } from "react-native";
 import { DisplaySettingsModalView_PROPS } from "../DisplaySettings_MODAL/VocabDisplaySettings_MODAL";
 

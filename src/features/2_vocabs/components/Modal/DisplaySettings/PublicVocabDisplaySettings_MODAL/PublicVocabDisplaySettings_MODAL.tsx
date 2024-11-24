@@ -2,12 +2,11 @@
 //
 //
 
-import React, { useState } from "react";
+import React from "react";
 import { ScrollView } from "react-native";
-import { DisplaySettings_PROPS } from "@/src/db/props";
 import VocabDisplaySettings_SUBNAV from "../components/VocabDisplaySettings_SUBNAV/VocabDisplaySettings_SUBNAV";
 
-import { Language_MODEL } from "@/src/db/watermelon_MODELS";
+import Language_MODEL from "@/src/db/models/Language_MODEL";
 
 import Footer from "@/src/components/Footer/Footer";
 import Btn from "@/src/components/Btn/Btn";

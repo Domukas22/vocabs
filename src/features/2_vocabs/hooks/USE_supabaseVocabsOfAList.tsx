@@ -1,9 +1,6 @@
 import { useState, useEffect } from "react";
-import {
-  BUILD_fetchVocabsOfPublicListQuery,
-  VocabFilter_PROPS,
-} from "../utils/BUILD_fetchVocabsOfPublicListQuery";
-import { List_MODEL } from "@/src/db/watermelon_MODELS";
+import { BUILD_fetchVocabsOfPublicListQuery } from "../utils/BUILD_fetchVocabsOfPublicListQuery";
+import List_MODEL from "@/src/db/models/List_MODEL";
 import { z_vocabDisplaySettings_PROPS } from "@/src/zustand";
 
 export default function USE_supabaseVocabsOfAList({

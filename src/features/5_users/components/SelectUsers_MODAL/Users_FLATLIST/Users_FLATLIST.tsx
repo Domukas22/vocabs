@@ -5,7 +5,7 @@
 import Btn from "@/src/components/Btn/Btn";
 import { ICON_X } from "@/src/components/icons/icons";
 import Styled_FLASHLIST from "@/src/components/Styled_FLATLIST/Styled_FLASHLIST/Styled_FLASHLIST";
-import { User_MODEL } from "@/src/db/watermelon_MODELS";
+import User_MODEL from "@/src/db/models/User_MODEL";
 import React from "react";
 
 interface UsersFlatlist_PROPS {

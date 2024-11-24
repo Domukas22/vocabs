@@ -10,7 +10,7 @@ import Header from "@/src/components/Header/Header";
 import Footer from "@/src/components/Footer/Footer";
 import Label from "@/src/components/Label/Label";
 import { tr_PROPS } from "@/src/db/props";
-import { Language_MODEL } from "@/src/db/watermelon_MODELS";
+import Language_MODEL from "@/src/db/models/Language_MODEL";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
 import Big_MODAL from "@/src/components/Modals/Big_MODAL/Big_MODAL";

@@ -1,6 +1,6 @@
-import { Q, Query } from "@nozbe/watermelondb";
+import { Q } from "@nozbe/watermelondb";
 import { Lists_DB } from "@/src/db";
-import { List_MODEL } from "@/src/db/watermelon_MODELS";
+
 import { z_listDisplaySettings_PROPS } from "@/src/zustand";
 
 interface ListFilter_PROPS {

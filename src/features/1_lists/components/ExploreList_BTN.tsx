@@ -3,7 +3,7 @@
 //
 
 import Big_BTN from "@/src/components/Transition_BTN/Big_BTN";
-import { List_MODEL } from "@/src/db/watermelon_MODELS";
+import List_MODEL from "@/src/db/models/List_MODEL";
 import ListBtn_TOP from "./ListBtn_TOP";
 import List_FLAGS from "./List_FLAGS";
 import ListBtn_BOTTOM from "./ListBtn_BOTTOM";

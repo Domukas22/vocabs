@@ -4,15 +4,14 @@
 import { useEffect, useRef } from "react";
 import { ActivityIndicator } from "react-native";
 import Btn from "@/src/components/Btn/Btn";
-import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import StyledText_INPUT from "@/src/components/StyledText_INPUT/StyledText_INPUT";
 import Small_MODAL from "@/src/components/Modals/Small_MODAL/Small_MODAL";
 import { useTranslation } from "react-i18next";
 import USE_updateList from "../hooks/USE_updateList";
 import Error_TEXT from "@/src/components/Error_TEXT/Error_TEXT";
-import { List_MODEL, User_MODEL } from "@/src/db/watermelon_MODELS";
+import List_MODEL from "@/src/db/models/List_MODEL";
+import User_MODEL from "@/src/db/models/User_MODEL";
 import { Controller, useForm } from "react-hook-form";
-import USE_collectListLangs from "../hooks/USE_collectListLangs";
 
 interface UpdateListModal_PROPS {
   user: User_MODEL;

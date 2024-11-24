@@ -11,18 +11,16 @@ import { setGenerator } from "@nozbe/watermelondb/utils/common/randomId";
 import schema from "./watermelon_SCHEMA";
 import migrations from "./migrations";
 import "react-native-get-random-values";
+import User_MODEL from "@/src/db/models/User_MODEL";
+import List_MODEL from "@/src/db/models/List_MODEL";
+import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
+import ListAccess_MODEL from "@/src/db/models/ListAccess_MODEL";
+import Notifications_MODEL from "@/src/db/models/Notifications_MODEL";
+import Payments_MODEL from "@/src/db/models/Payments_MODEL";
+import ContactMessages_MODEL from "@/src/db/models/ContactMessages_MODEL";
+import Error_MODEL from "@/src/db/models/Error_MODEL";
 
-import {
-  User_MODEL,
-  List_MODEL,
-  ListAccess_MODEL,
-  Vocab_MODEL,
-  Language_MODEL,
-  Notifications_MODEL,
-  Payments_MODEL,
-  ContactMessages_MODEL,
-  Error_MODEL,
-} from "./watermelon_MODELS";
+import Language_MODEL from "./models/Language_MODEL";
 
 // First, create the adapter to the underlying database:
 const adapter = new SQLiteAdapter({

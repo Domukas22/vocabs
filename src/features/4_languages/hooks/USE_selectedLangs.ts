@@ -2,8 +2,8 @@
 //
 //
 
-import { Language_MODEL } from "@/src/db/watermelon_MODELS";
-import React, { useState, useEffect } from "react";
+import Language_MODEL from "@/src/db/models/Language_MODEL";
+import { useState, useEffect } from "react";
 import FETCH_langs from "./FETCH_langs";
 
 export default function USE_selectedLangs({

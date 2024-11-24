@@ -1,11 +1,8 @@
 import db, { Users_DB, Vocabs_DB } from "@/src/db";
 import { useCallback, useMemo, useState } from "react";
-import { tr_PROPS } from "@/src/db/props";
-import {
-  Vocab_MODEL,
-  List_MODEL,
-  User_MODEL,
-} from "@/src/db/watermelon_MODELS";
+import { tr_PROPS } from "@/src/props";
+import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
+import User_MODEL from "@/src/db/models/User_MODEL";
 
 interface VocabCreation_MODEL {
   user: User_MODEL | undefined;

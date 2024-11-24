@@ -32,13 +32,13 @@ import Error_TEXT from "@/src/components/Error_TEXT/Error_TEXT";
 import Label from "@/src/components/Label/Label";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 import EditUsername_MODAL from "@/src/features/5_users/components/EditUsername_MODAL";
-import { User_MODEL } from "@/src/db/watermelon_MODELS";
+
 import { useToast } from "react-native-toast-notifications";
 import { USE_highlightBoolean } from "@/src/hooks/USE_highlightBoolean/USE_highlightBoolean";
 import { MyColors } from "@/src/constants/MyColors";
 import db, { Users_DB } from "@/src/db";
 import { Q } from "@nozbe/watermelondb";
-import { PUSH_changes } from "@/src/db/USE_sync";
+import { PUSH_changes } from "@/src/hooks/USE_sync/USE_sync";
 
 export default function Settings_PAGE() {
   const { z_user, z_SET_user } = USE_zustand();

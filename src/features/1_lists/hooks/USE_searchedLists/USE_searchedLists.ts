@@ -3,7 +3,7 @@
 //
 
 import { useEffect, useState, useCallback } from "react";
-import { List_MODEL } from "@/src/db/watermelon_MODELS";
+import List_MODEL from "@/src/db/models/List_MODEL";
 
 export function USE_searchedLists(lists: List_MODEL[]) {
   const [searched_LISTS, setSearched_LISTS] = useState<List_MODEL[]>(lists);

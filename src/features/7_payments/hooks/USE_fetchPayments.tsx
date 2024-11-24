@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Q } from "@nozbe/watermelondb";
 
-import { Payments_MODEL } from "@/src/db/watermelon_MODELS"; // Assuming a Payments_MODEL exists
+import Payments_MODEL from "@/src/db/models/Payments_MODEL";
 import { Payments_DB } from "@/src/db"; // Adjust the import based on your DB instance location
 
 export default function USE_fetchPayments(user_id: string | undefined) {

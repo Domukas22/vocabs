@@ -2,15 +2,19 @@
 //
 //
 import { useState, useCallback } from "react";
-import RENAME_list, {
-  RenameList_ARGS,
-  RenameList_ERROR,
-} from "../utils/RENAME_list/RENAME_list";
+import RENAME_list, { renameList_ERRS } from "../utils/RENAME_list/RENAME_list";
 import { UseFormSetError } from "react-hook-form";
 import { Keyboard } from "react-native";
 import { CREATE_manualFormErrorFromDbResponse } from "@/src/utils/CREATE_manualFormErrorFromDbResponse";
-import SEND_internalError from "@/src/utils/SEND_internalError";
+import HANDLE_internalError from "@/src/utils/SEND_internalError";
 import GET_errroInfo from "@/src/utils/GET_errroInfo";
+import HANDLE_userError from "@/src/utils/HANDLE_userError/HANDLE_userError";
+import { Error_PROPS } from "@/src/props";
+import {
+  RenameList_ARGS,
+  RenameList_RESPONSE,
+  RenameListError_PROPS,
+} from "../utils/RENAME_list/types";
 
 type UseRenameList_PROPS = {
   SET_formError: UseFormSetError<{
@@ -25,7 +29,7 @@ export function USE_renameList({
   onSuccess = () => {},
 }: UseRenameList_PROPS) {
   const [loading, SET_loading] = useState(false);
-  const [error, SET_error] = useState<RenameList_ERROR | undefined>(undefined);
+  const [error, SET_error] = useState<Error_PROPS | undefined>(undefined);
 
   const RESET_backendErrors = useCallback(() => {
     SET_error(undefined);
@@ -36,13 +40,13 @@ export function USE_renameList({
   }, [onSuccess]);
 
   const memoizedOnError = useCallback(
-    (error?: RenameList_ERROR) => {
-      SET_error(error);
-      if (error?.type !== "form_input") {
+    (e?: RenameListError_PROPS) => {
+      SET_error(e);
+      if (error?.error_TYPE !== "form_input") {
         Keyboard.dismiss();
       } else {
         CREATE_manualFormErrorFromDbResponse({
-          formInput_ERRORS: error?.formInput_ERRORS,
+          formInput_ERRORS: e?.falsyForm_INPUTS,
           SET_formError,
         });
       }
@@ -58,7 +62,7 @@ export function USE_renameList({
       SET_error(undefined); // Reset errors before making the request
 
       try {
-        const { success, error } = await RENAME_list({
+        const { data, error: e } = await RENAME_list({
           list,
           user,
           new_NAME,
@@ -66,32 +70,24 @@ export function USE_renameList({
 
         if (success) {
           memoizedOnSuccess();
-        } else if (error) {
-          memoizedOnError(error);
+        } else if (e) {
+          memoizedOnError(e);
         }
-      } catch (err: any) {
-        // Catch unexpected errors and handle them
-        const { error_TYPE, userError_MESSAGE } = GET_errroInfo({
-          error,
-          process: "trying to rename the list",
+      } catch (e: any) {
+        const _error = HANDLE_userError({
+          error: e,
+          internalErrorUser_MSG: renameList_ERRS.user.defaultInternal_MSG,
         });
 
+        memoizedOnError(_error); // Handle the error appropriately
+
         // track internal error
-        if (error_TYPE === "internal") {
-          await SEND_internalError({
-            message: err.message,
+        if (_error?.error_TYPE === "internal") {
+          await HANDLE_internalError({
+            error: _error,
             function_NAME: "USE_renameList --> execute --> RENAME_list",
-            details: err,
           });
         }
-
-        const user_ERROR: RenameList_ERROR = {
-          message: userError_MESSAGE,
-          type: error_TYPE,
-          formInput_ERRORS: error?.formInput_ERRORS,
-        };
-
-        memoizedOnError(user_ERROR); // Handle the error appropriately
       } finally {
         SET_loading(false); // Ensure loading state is reset in both success and failure cases
       }

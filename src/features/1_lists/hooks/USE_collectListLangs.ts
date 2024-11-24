@@ -1,8 +1,9 @@
 import { useState, useCallback } from "react";
 import db, { Lists_DB, Vocabs_DB } from "@/src/db";
-import { List_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
+import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 import { Q } from "@nozbe/watermelondb";
 import { tr_PROPS } from "@/src/db/props";
+import List_MODEL from "@/src/db/models/List_MODEL";
 
 export interface CollectListLangs_PROPS {
   list_id: string | undefined; // ID of the list to collect language IDs from

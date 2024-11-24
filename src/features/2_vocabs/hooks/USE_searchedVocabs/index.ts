@@ -2,8 +2,8 @@
 //
 //
 
-import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
-import React, { useEffect, useState, useCallback } from "react";
+import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
+import { useEffect, useState } from "react";
 export default function USE_searchedVocabs({
   vocabs,
   search,

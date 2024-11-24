@@ -4,21 +4,14 @@
 
 import Btn from "@/src/components/Btn/Btn";
 import { ICON_checkMark, ICON_X } from "@/src/components/icons/icons";
-import { MyList_BTN } from "@/src/features/1_lists/components/MyList_BTN/MyList_BTN";
 import Styled_FLASHLIST from "@/src/components/Styled_FLATLIST/Styled_FLASHLIST/Styled_FLASHLIST";
 
 import { useTranslation } from "react-i18next";
-import SwipeableExample from "@/src/components/SwipeableExample/SwipeableExample";
-import Label from "@/src/components/Label/Label";
 import React from "react";
-import { FlatList, View } from "react-native";
-import { List_MODEL } from "@/src/db/watermelon_MODELS";
-import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
+import List_MODEL from "@/src/db/models/List_MODEL";
 import { withObservables } from "@nozbe/watermelondb/react";
 import { Lists_DB } from "@/src/db";
-import { USER_ID } from "@/src/constants/globalVars";
 import { Q } from "@nozbe/watermelondb";
-import { take } from "@nozbe/watermelondb/QueryDescription";
 
 interface MyListsFlatlist_PROPS {
   lists: List_MODEL[];

@@ -31,12 +31,9 @@ import Description_CONTROLER from "../../Inputs/InputControllers/Description_CON
 import Difficulty_CONTROLLER from "../../Inputs/InputControllers/Difficulty_CONTROLLER";
 import List_CONTROLLER from "../../Inputs/InputControllers/List_CONTROLLER";
 import CreateMyVocab_FOOTER from "../../Footer/CreateMyVocab_FOOTER/CreateMyVocab_FOOTER";
-import {
-  List_MODEL,
-  User_MODEL,
-  Vocab_MODEL,
-  Language_MODEL,
-} from "@/src/db/watermelon_MODELS";
+import Language_MODEL from "@/src/db/models/Language_MODEL";
+import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
+
 import FETCH_langs from "@/src/features/4_languages/hooks/FETCH_langs";
 import USE_collectListLangs from "@/src/features/1_lists/hooks/USE_collectListLangs";
 import USE_zustand from "@/src/zustand";

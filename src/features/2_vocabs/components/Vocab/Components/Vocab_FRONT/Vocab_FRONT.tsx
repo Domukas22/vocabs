@@ -4,7 +4,6 @@
 
 import Highlighted_TEXT from "@/src/components/Highlighted_TEXT/Highlighted_TEXT";
 import {
-  ICON_bookmark,
   ICON_bookmark_2,
   ICON_difficultyDot,
   ICON_flag,
@@ -14,12 +13,12 @@ import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
 
 import { tr_PROPS } from "@/src/db/props";
-import { Language_MODEL } from "@/src/db/watermelon_MODELS";
+import Language_MODEL from "@/src/db/models/Language_MODEL";
 
 import USE_zustand from "@/src/zustand";
 import i18next, { t } from "i18next";
 import { useMemo } from "react";
-import { Image, Pressable, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 
 interface VocabFront_PROPS {
   trs: tr_PROPS[] | undefined;

@@ -1,8 +1,7 @@
-import { Q, Query } from "@nozbe/watermelondb";
+import { Q } from "@nozbe/watermelondb";
 import { Vocabs_DB } from "@/src/db";
-import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
 import { z_vocabDisplaySettings_PROPS } from "@/src/zustand";
-import { eq, notEq } from "@nozbe/watermelondb/QueryDescription";
+import { notEq } from "@nozbe/watermelondb/QueryDescription";
 
 export interface VocabFilter_PROPS {
   type: "byTargetList" | "allVocabs" | "deletedVocabs" | "marked";

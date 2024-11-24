@@ -4,7 +4,6 @@
 
 import { Q } from "@nozbe/watermelondb";
 import { Vocabs_DB } from "@/src/db";
-import { List_MODEL } from "@/src/db/watermelon_MODELS";
 
 export interface VocabFilter_PROPS {
   search?: string;

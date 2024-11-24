@@ -5,26 +5,15 @@
 import { z_listDisplaySettings_PROPS } from "@/src/zustand";
 import { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import FETCH_supabaseLists from "../utils/FETCH_supabaseLists";
-import FORMAT_listVocabCount from "../utils/FORMAT_listVocabCount";
-import FETCH_listAccesesWhereIAmParticipant from "../utils/FETCH_listAccesesWhereIAmParticipant";
+import FORMAT_listVocabCount from "../utils/FORMAT_listVocabCount/FORMAT_listVocabCount";
+import FETCH_listIdsSharedWithMe from "../../8_listAccesses/utils/FETCH_listIdsSharedWithMe/FETCH_listIdsSharedWithMe";
 import AGGREGATE_uniqueStrings from "../utils/AGGREGATE_uniqueStrings";
 import { FlatlistError_PROPS } from "@/src/props";
 import USE_pagination from "@/src/hooks/USE_pagination";
 import { LIST_PAGINATION } from "@/src/constants/globalVars";
 import USE_isSearching from "@/src/hooks/USE_isSearching";
-
-export type FetchedSharedList_PROPS = {
-  id: string;
-  name: string;
-  description: string;
-  collected_lang_ids: string;
-  owner: {
-    username: string;
-  }[];
-  vocabs: {
-    count: number;
-  }[];
-};
+import { FetchedSharedList_PROPS } from "../utils/props";
+import { uniq } from "lodash";
 
 export default function USE_supabaseLists({
   search,
@@ -82,8 +71,12 @@ export default function USE_supabaseLists({
 
         if (type === "shared") {
           const { list_ids: allowedLists_IDS, error } =
-            await FETCH_listAccesesWhereIAmParticipant(user_id);
-          const uniqueAllowedList_IDS = AGGREGATE_uniqueStrings(
+            await FETCH_listIdsSharedWithMe(user_id);
+
+          // const uniqueAllowedList_IDS = AGGREGATE_uniqueStrings(
+          //   allowedLists_IDS?.map((x) => x.list_id) || []
+          // );
+          const uniqueAllowedList_IDS = uniq(
             allowedLists_IDS?.map((x) => x.list_id) || []
           );
 

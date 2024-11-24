@@ -2,18 +2,14 @@
 //
 //
 
-import Btn from "@/src/components/Btn/Btn";
-import { ICON_X } from "@/src/components/icons/icons";
 import Styled_FLASHLIST from "@/src/components/Styled_FLATLIST/Styled_FLASHLIST/Styled_FLASHLIST";
 
-import { useTranslation } from "react-i18next";
 import MyVocab from "../../Vocab/My_VOCAB/My_VOCAB";
-import React, { useEffect, useMemo, useState } from "react";
+import React from "react";
 import SwipeableExample from "@/src/components/SwipeableExample/SwipeableExample";
 
-import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
-import { NativeScrollEvent, NativeSyntheticEvent, View } from "react-native";
-import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
+import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
+import { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
 
 export default function MyVocabs_FLATLIST({
   vocabs,

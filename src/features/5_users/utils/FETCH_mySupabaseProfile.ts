@@ -1,6 +1,6 @@
-import { User_MODEL } from "@/src/db/watermelon_MODELS";
+import User_MODEL from "@/src/db/models/User_MODEL";
 import { supabase } from "@/src/lib/supabase";
-import SEND_internalError from "@/src/utils/SEND_internalError";
+import HANDLE_internalError from "@/src/utils/SEND_internalError";
 
 interface Response {
   success: boolean;
@@ -17,7 +17,7 @@ export default async function FETCH_mySupabaseProfile(
 ): Promise<Response> {
   try {
     if (!userId) {
-      SEND_internalError({
+      HANDLE_internalError({
         message: "🔴 User ID not defined when fetching from Supabase 🔴",
         function_NAME: "FETCH_mySupabaseProfile",
         user_id: "",
@@ -51,7 +51,7 @@ export default async function FETCH_mySupabaseProfile(
       }
 
       // Handle Supabase-related errors
-      SEND_internalError({
+      HANDLE_internalError({
         message: `🔴 Error fetching user from Supabase 🔴: ${error.message}`,
         function_NAME: "FETCH_mySupabaseProfile",
         user_id: userId,
@@ -79,7 +79,7 @@ export default async function FETCH_mySupabaseProfile(
     }
 
     // Handle any other unexpected errors
-    SEND_internalError({
+    HANDLE_internalError({
       message: `🔴 Error fetching user from Supabase 🔴: ${
         err instanceof Error ? err.message : ""
       }`,

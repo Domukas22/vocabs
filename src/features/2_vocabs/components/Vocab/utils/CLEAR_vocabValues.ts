@@ -5,7 +5,8 @@
 import GET_langs from "@/src/features/4_languages/utils/GET_langs";
 import GET_defaultTranslations from "@/src/features/2_vocabs/utils/GET_defaultTranslations";
 import { PrivateVocabSet_PROPS } from "../../../hooks/USE_myVocabValues";
-import { Language_MODEL, List_MODEL } from "@/src/db/watermelon_MODELS";
+import Language_MODEL from "@/src/db/models/Language_MODEL";
+import List_MODEL from "@/src/db/models/List_MODEL";
 
 export default function CLEAR_vocabValues({
   languages,

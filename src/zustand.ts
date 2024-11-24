@@ -4,7 +4,7 @@
 
 // zustand_store.js
 import { create } from "zustand";
-import { Vocab_MODEL, List_MODEL, User_MODEL } from "./db/watermelon_MODELS";
+import User_MODEL from "./db/models/User_MODEL";
 
 export type z_listDisplaySettings_PROPS = {
   sorting: "date";

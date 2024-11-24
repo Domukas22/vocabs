@@ -5,14 +5,10 @@
 import Btn from "@/src/components/Btn/Btn";
 import Header from "@/src/components/Header/Header";
 
-import {
-  ICON_3dots,
-  ICON_arrow,
-  ICON_trash,
-} from "@/src/components/icons/icons";
+import { ICON_3dots, ICON_arrow } from "@/src/components/icons/icons";
 
 import React, { useState } from "react";
-import { Image, Pressable, ScrollView, StyleSheet } from "react-native";
+import { Pressable, StyleSheet } from "react-native";
 
 import { router } from "expo-router";
 
@@ -22,16 +18,11 @@ import { MyColors } from "@/src/constants/MyColors";
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
 import { useTranslation } from "react-i18next";
 import USE_fetchNotifications from "@/src/features/6_notifications/hooks/USE_fetchNotifications";
-import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import Styled_FLASHLIST from "@/src/components/Styled_FLATLIST/Styled_FLASHLIST/Styled_FLASHLIST";
-import { HEADER_MARGIN } from "@/src/constants/globalVars";
-import ExploreList_BTN from "@/src/features/1_lists/components/ExploreList_BTN";
-import ExploreListsBottom_SECTION from "@/src/features/1_lists/components/ExploreListsBottom_SECTION";
-import { Notifications_MODEL } from "@/src/db/watermelon_MODELS";
+import Notifications_MODEL from "@/src/db/models/Notifications_MODEL";
 import USE_updateNotification from "@/src/features/6_notifications/hooks/USE_updateNotification";
 import USE_zustand from "@/src/zustand";
 import { withObservables } from "@nozbe/watermelondb/react";
-import { PUSH_changes } from "@/src/db/USE_sync";
 
 const EnhancedNotification_BTN = withObservables(
   ["notification"],

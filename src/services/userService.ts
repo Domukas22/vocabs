@@ -3,9 +3,6 @@
 //
 
 import { supabase } from "../lib/supabase";
-import { User_MODEL } from "../db/watermelon_MODELS";
-import db, { Users_DB } from "../db";
-import { Q } from "@nozbe/watermelondb";
 
 export const FETCH_userData = async (userId: string) => {
   try {

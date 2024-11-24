@@ -10,21 +10,15 @@ import { View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { tr_PROPS } from "@/src/db/props";
 
-import {
-  Vocab_MODEL,
-  Language_MODEL,
-  List_MODEL,
-  User_MODEL,
-} from "@/src/db/watermelon_MODELS";
+import Language_MODEL from "@/src/db/models/Language_MODEL";
+import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 
 import TrHighlights_MODAL from "../TrHighlights_MODAL";
 import SelectLangs_MODAL from "@/src/features/4_languages/components/SelectMultipleLanguages_MODAL/SelectLangs_MODAL";
 import { useTranslation } from "react-i18next";
-import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 
 import Big_MODAL from "@/src/components/Modals/Big_MODAL/Big_MODAL";
-import SelectMyList_MODAL from "@/src/features/1_lists/components/SelectMyList_MODAL/SelectMyList_MODAL";
 import USE_createVocab from "../../../hooks/USE_createVocab";
 
 import GET_defaultTranslations from "@/src/features/2_vocabs/utils/GET_defaultTranslations";
@@ -35,8 +29,6 @@ import HANLDE_selectedHighlights from "../../../utils/HANDLE_selectedTrs";
 import ChosenLangs_CONTROLLER from "../../Inputs/InputControllers/ChosenLangs_CONTROLLER";
 import TrInput_CONTROLLERS from "../../Inputs/InputControllers/TrInput_CONTROLLER";
 import Description_CONTROLER from "../../Inputs/InputControllers/Description_CONTROLER";
-import Difficulty_CONTROLLER from "../../Inputs/InputControllers/Difficulty_CONTROLLER";
-import List_CONTROLLER from "../../Inputs/InputControllers/List_CONTROLLER";
 import CreateMyVocab_FOOTER from "../../Footer/CreateMyVocab_FOOTER/CreateMyVocab_FOOTER";
 import USE_zustand from "@/src/zustand";
 

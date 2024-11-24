@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useToast } from "react-native-toast-notifications";
 import db, { Vocabs_DB } from "@/src/db";
-import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
+import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 
 export interface privateVocabDifficultyEdit_PROPS {
   loading: boolean;

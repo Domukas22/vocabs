@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { FlatlistError_PROPS } from "../props";
-import FETCH_listParticipants from "../features/1_lists/utils/FETCH_listParticipants";
-import { List_MODEL } from "../db/watermelon_MODELS";
+import FETCH_listParticipants from "../features/8_listAccesses/utils/FETCH_listParticipants/FETCH_listParticipants";
+import List_MODEL from "@/src/db/models/List_MODEL";
 
 export type FetchedSupabaseVocabs_PROPS = {
   id: any;
@@ -72,7 +72,7 @@ export default function USE_listParticipants({
     }
 
     try {
-      const { participants, error } = await FETCH_listParticipants({
+      const { data: participants, error } = await FETCH_listParticipants({
         list_id: list?.id,
         owner_id,
       });

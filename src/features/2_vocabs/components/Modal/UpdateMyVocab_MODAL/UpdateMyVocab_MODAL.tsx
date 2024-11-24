@@ -4,7 +4,7 @@
 
 import Btn from "@/src/components/Btn/Btn";
 import Header from "@/src/components/Header/Header";
-import { ICON_arrow, ICON_X } from "@/src/components/icons/icons";
+import { ICON_X } from "@/src/components/icons/icons";
 import React, { useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -12,7 +12,6 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import TrHighlights_MODAL from "../TrHighlights_MODAL";
 import SelectLangs_MODAL from "@/src/features/4_languages/components/SelectMultipleLanguages_MODAL/SelectLangs_MODAL";
 import { useTranslation } from "react-i18next";
-import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 
 import Big_MODAL from "@/src/components/Modals/Big_MODAL/Big_MODAL";
@@ -26,18 +25,14 @@ import TrInput_CONTROLLERS from "../../Inputs/InputControllers/TrInput_CONTROLLE
 import Description_CONTROLER from "../../Inputs/InputControllers/Description_CONTROLER";
 import Difficulty_CONTROLLER from "../../Inputs/InputControllers/Difficulty_CONTROLLER";
 import List_CONTROLLER from "../../Inputs/InputControllers/List_CONTROLLER";
-import CreateMyVocab_FOOTER from "../../Footer/CreateMyVocab_FOOTER/CreateMyVocab_FOOTER";
 import USE_updateVocab from "../../../hooks/USE_updateVocab";
 import UpdateMyVocab_FOOTER from "../../Footer/UpdateMyVocab_FOOTER/UpdateMyVocab_FOOTER";
 import { useToast } from "react-native-toast-notifications";
+import List_MODEL from "@/src/db/models/List_MODEL";
+import Language_MODEL from "@/src/db/models/Language_MODEL";
+import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 
-import {
-  Language_MODEL,
-  List_MODEL,
-  User_MODEL,
-  Vocab_MODEL,
-} from "@/src/db/watermelon_MODELS";
-import { tr_PROPS } from "@/src/db/props";
+import { tr_PROPS } from "@/src/props";
 
 import { Q } from "@nozbe/watermelondb";
 import FETCH_langs from "@/src/features/4_languages/hooks/FETCH_langs";

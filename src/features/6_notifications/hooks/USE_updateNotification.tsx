@@ -1,6 +1,6 @@
 import db, { Notifications_DB } from "@/src/db";
 import { useCallback, useMemo, useState } from "react";
-import { Notifications_MODEL } from "@/src/db/watermelon_MODELS";
+import Notifications_MODEL from "@/src/db/models/Notifications_MODEL";
 
 interface NotificationUpdateStatus_MODEL {
   value: boolean;

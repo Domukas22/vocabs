@@ -34,14 +34,14 @@ import { useTranslation } from "react-i18next";
 import Error_TEXT from "../components/Error_TEXT/Error_TEXT";
 import LoginRegister_SWITCH from "../features/0_authentication/components/LoginRegister_SWTICH";
 import db, { Users_DB } from "../db";
-import { User_MODEL } from "../db/watermelon_MODELS";
+
 import * as SecureStore from "expo-secure-store";
 import { USE_auth } from "../context/Auth_CONTEXT";
 
 import USE_zustand from "../zustand";
 
-import NAVIGATE_user from "../db/utils/NAVIGATE_user";
-import { USE_sync } from "../db/USE_sync";
+import NAVIGATE_user from "../utils/NAVIGATE_user";
+import { USE_sync } from "../hooks/USE_sync/USE_sync";
 
 type RegisterData_PROPS = {
   username: string;

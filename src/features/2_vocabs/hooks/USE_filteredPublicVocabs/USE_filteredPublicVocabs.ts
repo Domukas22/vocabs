@@ -1,4 +1,4 @@
-import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
+import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 import { useState, useEffect } from "react";
 
 export default function USE_filteredPublicVocabs({

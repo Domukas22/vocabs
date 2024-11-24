@@ -1,22 +1,15 @@
 import Block from "@/src/components/Block/Block";
 import Btn from "@/src/components/Btn/Btn";
-import {
-  ICON_X,
-  ICON_difficultyDot,
-  ICON_flag,
-} from "@/src/components/icons/icons";
+import { ICON_X, ICON_flag } from "@/src/components/icons/icons";
 import Label from "@/src/components/Label/Label";
-import { UpdateDisplaySettings_PROPS } from "@/src/hooks/USE_displaySettings/USE_displaySettings";
-import { _DisplaySettings_PROPS } from "@/src/utils/DisplaySettings";
 import { t } from "i18next";
 import { DisplaySettingsModalView_PROPS } from "../DisplaySettings_MODAL/VocabDisplaySettings_MODAL";
-import GET_handledDifficulties from "../DisplaySettings_MODAL/utils/GET_handledDifficulties";
 import {
   z_vocabDisplaySettings_PROPS,
   z_setVocabDisplaySettings_PROPS,
 } from "@/src/zustand";
 import { useCallback } from "react";
-import { Language_MODEL } from "@/src/db/watermelon_MODELS";
+import Language_MODEL from "@/src/db/models/Language_MODEL";
 import { View } from "react-native";
 
 export default function VocabLangFilters_BLOCK({

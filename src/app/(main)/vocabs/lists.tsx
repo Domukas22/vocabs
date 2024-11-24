@@ -4,23 +4,14 @@
 
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
 import { useRouter } from "expo-router";
-import { USE_auth } from "@/src/context/Auth_CONTEXT";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
-import { List_MODEL } from "@/src/db/watermelon_MODELS";
+import List_MODEL from "@/src/db/models/List_MODEL";
 import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
 
-import {
-  CreateList_MODAL,
-  List_SKELETONS,
-  EmptyFlatList_BOTTM,
-  MyLists_FLATLIST,
-  MyLists_HEADER,
-  MyLists_SUBNAV,
-} from "@/src/features/1_lists";
+import { CreateList_MODAL, MyLists_FLATLIST } from "@/src/features/1_lists";
 
 import { useTranslation } from "react-i18next";
-import { USE_searchedLists } from "@/src/features/1_lists/hooks/USE_searchedLists/USE_searchedLists";
 import USE_highlighedId from "@/src/hooks/USE_highlighedId/USE_highlighedId";
 import RenameList_MODAL from "@/src/features/1_lists/components/RenameList_MODAL/RenameList_MODAL";
 
@@ -28,11 +19,7 @@ import React from "react";
 import { useToast } from "react-native-toast-notifications";
 import DeleteList_MODAL from "@/src/features/1_lists/components/DeleteList_MODAL";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
-import { FlatList, Keyboard } from "react-native";
-import { Lists_DB, Users_DB } from "@/src/db";
-import GET_userId from "@/src/utils/GET_userId";
-import Btn from "@/src/components/Btn/Btn";
-import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
+import { FlatList } from "react-native";
 import USE_zustand from "@/src/zustand";
 import List_HEADER from "@/src/components/Header/List_HEADER";
 import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
@@ -44,7 +31,6 @@ import USE_debounceSearch from "@/src/hooks/USE_debounceSearch/USE_debounceSearc
 import USE_collectMyListLangs from "@/src/features/1_lists/hooks/USE_collectMyListLangs";
 
 import BottomAction_SECTION from "@/src/components/BottomAction_SECTION";
-import { Q } from "@nozbe/watermelondb";
 
 export default function MyLists_PAGE() {
   const { z_user } = USE_zustand();

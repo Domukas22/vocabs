@@ -2,11 +2,9 @@ import { useTranslation } from "react-i18next";
 import Small_MODAL from "@/src/components/Modals/Small_MODAL/Small_MODAL";
 import Btn from "@/src/components/Btn/Btn";
 import { ActivityIndicator } from "react-native";
-import { useToast } from "react-native-toast-notifications";
 import USE_deleteVocab from "../../../hooks/USE_deleteVocab";
 import Error_TEXT from "@/src/components/Error_TEXT/Error_TEXT";
-import { User_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
-import db, { Vocabs_DB } from "@/src/db";
+import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 import USE_collectListLangs from "@/src/features/1_lists/hooks/USE_collectListLangs";
 
 interface DeleteVocabModal_PROPS {

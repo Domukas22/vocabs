@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { User_MODEL } from "@/src/db/watermelon_MODELS";
+import User_MODEL from "@/src/db/models/User_MODEL";
 import { Q } from "@nozbe/watermelondb";
 import { Lists_DB } from "@/src/db";
 

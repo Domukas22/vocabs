@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo } from "react";
 import db, { Lists_DB } from "@/src/db";
-import { List_MODEL } from "@/src/db/watermelon_MODELS";
+import List_MODEL from "@/src/db/models/List_MODEL";
 
 export interface RenameList_PROPS {
   user_id: string | undefined;

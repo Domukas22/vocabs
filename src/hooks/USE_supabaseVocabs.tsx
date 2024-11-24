@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { supabase } from "@/src/lib/supabase";
 import { z_vocabDisplaySettings_PROPS } from "@/src/zustand";
 import FETCH_supabaseVocabs from "../features/2_vocabs/utils/FETCH_supabaseVocabs";
-import { FetchedSharedList_PROPS } from "../features/1_lists/hooks/USE_supabaseLists";
 import { FlatlistError_PROPS } from "../props";
 import USE_pagination from "./USE_pagination";
 import { VOCAB_PAGINATION } from "../constants/globalVars";

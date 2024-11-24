@@ -3,14 +3,11 @@
 
 import Btn from "@/src/components/Btn/Btn";
 import {
-  ICON_bookmark,
   ICON_bookmark_2,
   ICON_difficultyDot,
 } from "@/src/components/icons/icons";
-import db, { Vocabs_DB } from "@/src/db";
 
-import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
-import { Q } from "@nozbe/watermelondb";
+import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 import { useToast } from "react-native-toast-notifications";

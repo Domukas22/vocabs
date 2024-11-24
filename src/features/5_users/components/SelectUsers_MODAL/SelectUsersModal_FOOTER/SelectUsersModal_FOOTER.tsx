@@ -7,9 +7,7 @@ import Footer from "@/src/components/Footer/Footer";
 import i18next, { t } from "i18next";
 import { ActivityIndicator } from "react-native";
 
-import { User_MODEL } from "@/src/db/watermelon_MODELS";
 import { useMemo } from "react";
-import { map } from "@nozbe/watermelondb/utils/rx";
 
 interface SelectUsersModalFooter_PROPS {
   selected_COUNT: number;

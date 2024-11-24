@@ -37,7 +37,7 @@ import Error_TEXT from "@/src/components/Error_TEXT/Error_TEXT";
 import { supabase } from "@/src/lib/supabase";
 import USE_zustand from "@/src/zustand";
 
-import { USE_sync } from "@/src/db/USE_sync";
+import { USE_sync } from "@/src/hooks/USE_sync/USE_sync";
 
 type ContactMessage_PROPS = {
   message_type: "bug" | "feedback" | "idea" | "hello" | "other";

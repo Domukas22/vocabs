@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { DisplaySettings_PROPS } from "@/src/db/props";
-import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
+import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 
 export default function USE_filteredVocabs({
   vocabs,

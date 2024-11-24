@@ -5,13 +5,13 @@
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useMemo, useState } from "react";
-import { List_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
+import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
+import List_MODEL from "@/src/db/models/List_MODEL";
 import { useTranslation } from "react-i18next";
 import React from "react";
 import { useToast } from "react-native-toast-notifications";
 
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
-import USE_supabaseVocabsOfAList from "@/src/features/2_vocabs/hooks/USE_supabaseVocabsOfAList";
 import SavePublicVocabToList_MODAL from "@/src/features/2_vocabs/components/Modal/SavePublicVocabToList_MODAL/SavePublicVocabToList_MODAL";
 import USE_fetchOnePublicList from "@/src/features/2_vocabs/hooks/USE_fetchOnePublicList";
 
@@ -23,20 +23,15 @@ import ExploreVocabs_FLATLIST from "@/src/features/2_vocabs/components/ExploreVo
 
 import VocabsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/VocabsFlatlistHeader_SECTION";
 import USE_copyListAndItsVocabs from "@/src/features/1_lists/hooks/USE_copyListAndItsVocabs";
-import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import CopyListAndVocabs_MODAL from "@/src/features/1_lists/components/CopyListAndVocabs_MODAL";
 import List_HEADER from "@/src/components/Header/List_HEADER";
 import USE_getActiveFilterCount from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/utils/USE_getActiveFilterCount";
 
-import { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
 import USE_incrementListSavedCount from "@/src/features/1_lists/hooks/USE_incrementListSavedCount";
-import Btn from "@/src/components/Btn/Btn";
-import { supabase } from "@/src/lib/supabase";
 import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
 
 import USE_supabaseVocabs from "@/src/hooks/USE_supabaseVocabs";
 import BottomAction_SECTION from "@/src/components/BottomAction_SECTION";
-import USE_isSearching from "@/src/hooks/USE_isSearching";
 
 export default function PublicListVocabs_PAGE() {
   const toast = useToast();

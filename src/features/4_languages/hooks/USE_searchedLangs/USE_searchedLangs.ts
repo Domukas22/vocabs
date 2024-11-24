@@ -2,7 +2,7 @@
 //
 //
 
-import { Language_MODEL } from "@/src/db/watermelon_MODELS";
+import Language_MODEL from "@/src/db/models/Language_MODEL";
 import { useEffect, useState, useCallback } from "react";
 
 export function USE_searchedLangs(langs: Language_MODEL[] | undefined) {

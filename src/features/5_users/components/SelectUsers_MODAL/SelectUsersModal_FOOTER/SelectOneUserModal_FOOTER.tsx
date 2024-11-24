@@ -5,11 +5,8 @@
 import Btn from "@/src/components/Btn/Btn";
 import Footer from "@/src/components/Footer/Footer";
 import i18next, { t } from "i18next";
-import { ActivityIndicator } from "react-native";
 
-import { User_MODEL } from "@/src/db/watermelon_MODELS";
 import { useMemo } from "react";
-import { map } from "@nozbe/watermelondb/utils/rx";
 import { FetchedUsers_PROPS } from "@/src/features/1_lists/hooks/USE_supabaseUsers_2";
 
 interface SelectUsersModalFooter_PROPS {

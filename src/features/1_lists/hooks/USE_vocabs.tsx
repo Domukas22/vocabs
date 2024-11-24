@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { FETCH_vocabs } from "../../2_vocabs/utils/FetchVocabs_QUERY";
-import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
+import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 import { z_vocabDisplaySettings_PROPS } from "@/src/zustand";
 import Delay from "@/src/utils/Delay";
 import { FlatlistError_PROPS } from "@/src/props";

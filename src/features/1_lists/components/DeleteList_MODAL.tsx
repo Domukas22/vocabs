@@ -4,14 +4,8 @@
 import { useTranslation } from "react-i18next";
 import Small_MODAL from "@/src/components/Modals/Small_MODAL/Small_MODAL";
 import Btn from "@/src/components/Btn/Btn";
-import { ActivityIndicator } from "react-native";
-import Error_TEXT from "@/src/components/Error_TEXT/Error_TEXT";
-import USE_deleteList from "../hooks/USE_deleteList";
-import { List_MODEL } from "@/src/db/watermelon_MODELS";
+import List_MODEL from "@/src/db/models/List_MODEL";
 
-import { useToast } from "react-native-toast-notifications";
-import db, { Lists_DB, Vocabs_DB } from "@/src/db";
-import { Q } from "@nozbe/watermelondb";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
 

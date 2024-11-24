@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { Q } from "@nozbe/watermelondb";
 import { Languages_DB } from "@/src/db"; // Adjust the import based on your project structure
-import { Language_MODEL } from "@/src/db/watermelon_MODELS";
+import Language_MODEL from "@/src/db/models/Language_MODEL";
 
 interface USE_langs_PROPS {
   lang_ids?: string[];

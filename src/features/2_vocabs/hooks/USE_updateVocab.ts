@@ -1,11 +1,7 @@
 import db, { Vocabs_DB } from "@/src/db";
 import { useCallback, useMemo, useState } from "react";
 import { tr_PROPS } from "@/src/db/props";
-import {
-  Vocab_MODEL,
-  User_MODEL,
-  List_MODEL,
-} from "@/src/db/watermelon_MODELS";
+import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 
 import { Q } from "@nozbe/watermelondb";
 

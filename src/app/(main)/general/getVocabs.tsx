@@ -7,45 +7,23 @@ import Header from "@/src/components/Header/Header";
 
 import { ICON_3dots, ICON_arrow } from "@/src/components/icons/icons";
 
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import {
-  ActivityIndicator,
-  Image,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  View,
-} from "react-native";
+import React, { useCallback, useMemo, useState } from "react";
+import { ActivityIndicator, ScrollView, View } from "react-native";
 
-import { Link, router, useRouter } from "expo-router";
+import { router, useRouter } from "expo-router";
 
 import Block from "@/src/components/Block/Block";
-import StyledText_INPUT from "@/src/components/StyledText_INPUT/StyledText_INPUT";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
-import Label from "@/src/components/Label/Label";
 import { useTranslation } from "react-i18next";
-import Big_BTN from "@/src/components/Transition_BTN/Big_BTN";
-import { USE_auth } from "@/src/context/Auth_CONTEXT";
-import { Vocabs_DB } from "@/src/db";
-import { withObservables } from "@nozbe/watermelondb/react";
-import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
-import { Q } from "@nozbe/watermelondb";
 import USE_zustand from "@/src/zustand";
 import CurrentVocabCount_BAR from "@/src/components/CurrentVocabCount_BAR";
 import { VOCAB_PRICING } from "@/src/constants/globalVars";
-import { PUSH_changes, USE_sync } from "@/src/db/USE_sync";
+import { PUSH_changes, USE_sync } from "@/src/hooks/USE_sync/USE_sync";
 import { supabase } from "@/src/lib/supabase";
 import Pricing_BTN from "@/src/components/Pricing_BTN";
 
-import Delay from "@/src/utils/Delay";
 import USE_observeUserVocabCount from "@/src/features/5_users/hooks/USE_observeUserVocabCount";
 
 export default function GetVocabs_PAGE() {

@@ -3,7 +3,7 @@
 //
 
 import { tr_PROPS } from "@/src/db/props";
-import { Language_MODEL } from "@/src/db/watermelon_MODELS";
+import Language_MODEL from "@/src/db/models/Language_MODEL";
 import Block from "@/src/components/Block/Block";
 import { ICON_flag } from "@/src/components/icons/icons";
 import Btn from "@/src/components/Btn/Btn";

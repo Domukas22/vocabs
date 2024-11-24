@@ -2,17 +2,12 @@
 //
 //
 
-import Flatlist_HEADER from "@/src/components/Flatlist_HEADER";
 import Styled_FLASHLIST from "@/src/components/Styled_FLATLIST/Styled_FLASHLIST/Styled_FLASHLIST";
-import { List_MODEL } from "@/src/db/watermelon_MODELS";
+import List_MODEL from "@/src/db/models/List_MODEL";
 import { useRouter } from "expo-router";
 import ExploreList_BTN from "./ExploreList_BTN";
-import ExploreListsBottom_SECTION from "./ExploreListsBottom_SECTION";
-import { NativeSyntheticEvent, NativeScrollEvent, View } from "react-native";
-import { HEADER_MARGIN } from "@/src/constants/globalVars";
-import { FetchedSharedList_PROPS } from "../hooks/USE_supabaseLists";
-import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
-import { MyColors } from "@/src/constants/MyColors";
+import { NativeSyntheticEvent, NativeScrollEvent } from "react-native";
+import { FetchedSharedList_PROPS } from "../utils/props";
 import Error_SECTION from "@/src/components/Error_SECTION";
 
 import Skeleton_VIEW from "@/src/components/Skeleton_VIEW";

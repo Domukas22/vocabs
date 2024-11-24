@@ -4,7 +4,7 @@
 //
 
 import { MyColors } from "@/src/constants/MyColors";
-import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
+import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 import { StyleSheet, View } from "react-native";
 import Vocab_FRONT from "./Components/Vocab_FRONT/Vocab_FRONT";

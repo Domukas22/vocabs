@@ -7,15 +7,13 @@ import Label from "@/src/components/Label/Label";
 import Settings_TOGGLE from "@/src/components/Settings_TOGGLE/Settings_TOGGLE";
 import { MyColors } from "@/src/constants/MyColors";
 
-import Vocab_DUMMY from "@/src/features/2_vocabs/components/Vocab/Components/Vocab_DUMMY";
 import i18next, { t } from "i18next";
 import { ScrollView, View } from "react-native";
 
 import Btn from "@/src/components/Btn/Btn";
 import { ICON_checkMark, ICON_flag } from "@/src/components/icons/icons";
 import { useMemo } from "react";
-import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
-import { Language_MODEL } from "@/src/db/watermelon_MODELS";
+import Language_MODEL from "@/src/db/models/Language_MODEL";
 import { _DisplaySettings_PROPS } from "@/src/utils/DisplaySettings";
 
 export default function PublicVocabPreview_BLOCKS({

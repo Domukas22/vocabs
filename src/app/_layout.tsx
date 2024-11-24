@@ -8,17 +8,17 @@ import { supabase } from "../lib/supabase";
 
 import "@/src/i18n";
 import Notification_BOX from "../components/Notification_BOX/Notification_BOX";
-import { USE_sync } from "../db/USE_sync";
+import { USE_sync } from "../hooks/USE_sync/USE_sync";
 import db, { Languages_DB, Users_DB } from "../db";
 import { Q } from "@nozbe/watermelondb";
 import { Auth_PROVIDER } from "../context/Auth_CONTEXT";
 import USE_zustand, { z_setUser_PROPS } from "../zustand";
-import { User_MODEL } from "../db/watermelon_MODELS";
+
 import i18next from "@/src/i18n";
 import REFRESH_zustandUser from "../features/5_users/utils/REFRESH_zustandUser";
-import USE_handleUserNavigation from "../db/utils/NAVIGATE_user";
-import SEND_internalError from "../utils/SEND_internalError";
-import NAVIGATE_user from "../db/utils/NAVIGATE_user";
+import USE_handleUserNavigation from "../utils/NAVIGATE_user";
+import HANDLE_internalError from "../utils/SEND_internalError";
+import NAVIGATE_user from "../utils/NAVIGATE_user";
 
 export default function _layout() {
   return (

@@ -2,7 +2,8 @@
 //
 
 import { tr_PROPS } from "@/src/db/props";
-import { Language_MODEL, List_MODEL } from "@/src/db/watermelon_MODELS";
+import Language_MODEL from "@/src/db/models/Language_MODEL";
+import List_MODEL from "@/src/db/models/List_MODEL";
 import { useState } from "react";
 
 export interface PrivateVocabState_PROPS {

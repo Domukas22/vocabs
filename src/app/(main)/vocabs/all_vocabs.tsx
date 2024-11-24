@@ -5,40 +5,29 @@
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
 import {
   CreateMyVocab_MODAL,
-  MyVocabs_FLATLIST,
   DeleteVocab_MODAL,
 } from "@/src/features/2_vocabs";
 import { useRouter } from "expo-router";
-
 import React, { useState } from "react";
-
 import USE_highlighedId from "@/src/hooks/USE_highlighedId/USE_highlighedId";
-
 import { useTranslation } from "react-i18next";
-
 import { useToast } from "react-native-toast-notifications";
 
 import UpdateMyVocab_MODAL from "@/src/features/2_vocabs/components/Modal/UpdateMyVocab_MODAL/UpdateMyVocab_MODAL";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
-import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
+import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 
 import { VocabDisplaySettings_MODAL } from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/VocabDisplaySettings_MODAL";
-
 import { USE_vocabs } from "@/src/features/1_lists/hooks/USE_vocabs";
-
 import USE_zustand from "@/src/zustand";
-
 import VocabsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/VocabsFlatlistHeader_SECTION";
 
 import USE_debounceSearch from "@/src/hooks/USE_debounceSearch/USE_debounceSearch";
 import List_HEADER from "@/src/components/Header/List_HEADER";
 import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
 import USE_getActiveFilterCount from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/utils/USE_getActiveFilterCount";
-
 import BottomAction_SECTION from "@/src/components/BottomAction_SECTION";
-
 import { USE_totalUserVocabs } from "@/src/hooks/USE_totalUserVocabs";
-import ExploreVocabs_FLATLIST from "@/src/features/2_vocabs/components/ExploreVocabs_FLATLIST";
 import Vocabs_FLATLIST from "@/src/features/2_vocabs/components/Vocabs_FLATLIST";
 
 export default function AllVocabs_PAGE() {

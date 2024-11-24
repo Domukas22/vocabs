@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { Q } from "@nozbe/watermelondb";
 
-import { Notifications_MODEL } from "@/src/db/watermelon_MODELS";
+import Notifications_MODEL from "@/src/db/models/Notifications_MODEL";
+
 import { Notifications_DB } from "@/src/db"; // Adjust import based on your DB instance location
 
 export default function USE_fetchNotifications(user_id: string | undefined) {

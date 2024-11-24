@@ -1,12 +1,9 @@
 import { useState, useCallback, useMemo } from "react";
 import db, { Lists_DB, Vocabs_DB } from "@/src/db";
-import {
-  List_MODEL,
-  User_MODEL,
-  Vocab_MODEL,
-} from "@/src/db/watermelon_MODELS";
+import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
+import List_MODEL from "@/src/db/models/List_MODEL";
+import User_MODEL from "@/src/db/models/User_MODEL";
 import { supabase } from "@/src/lib/supabase";
-import { eq, notEq } from "@nozbe/watermelondb/QueryDescription";
 
 interface CopyListAndVocabs_PROPS {
   list: List_MODEL | undefined;

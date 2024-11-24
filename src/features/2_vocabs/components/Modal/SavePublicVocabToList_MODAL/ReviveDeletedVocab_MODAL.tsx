@@ -2,35 +2,20 @@
 //
 //
 
-import SelectMyList_MODAL, {
-  MyLists_FLATLIST,
-} from "@/src/features/1_lists/components/SelectMyList_MODAL/SelectMyList_MODAL";
-import USE_createVocab from "../../../hooks/USE_createVocab";
 import { useState } from "react";
-import { tr_PROPS } from "@/src/db/props";
-
-import { CreateMyVocabData_PROPS } from "../CreateVocab_MODAL/CreateVocab_MODAL";
-import { List_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
+import List_MODEL from "@/src/db/models/List_MODEL";
+import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 import Btn from "@/src/components/Btn/Btn";
 import Footer from "@/src/components/Footer/Footer";
 import { ICON_X } from "@/src/components/icons/icons";
 import Big_MODAL from "@/src/components/Modals/Big_MODAL/Big_MODAL";
-import Subnav from "@/src/components/Subnav/Subnav";
 import { CreateList_MODAL } from "@/src/features/1_lists";
-import SEARCH_lists from "@/src/features/1_lists/utils/SEARCH_lists";
 import { t } from "i18next";
-import {
-  KeyboardAvoidingView,
-  Platform,
-  ActivityIndicator,
-} from "react-native";
-import { SearchBar } from "react-native-screens";
+import { KeyboardAvoidingView, Platform } from "react-native";
 import Header from "@/src/components/Header/Header";
 import { ChooseAList_FLATLIST } from "@/src/features/1_lists/components/ChooseAList_FLATLIST/ChooseAList_FLATLIST";
-import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 import USE_collectListLangs from "@/src/features/1_lists/hooks/USE_collectListLangs";
-import USE_incrementListSavedCount from "@/src/features/1_lists/hooks/USE_incrementListSavedCount";
 import USE_zustand from "@/src/zustand";
 
 interface SavePublicVocabToListModal_PROPS {

@@ -1,9 +1,9 @@
 import Btn from "@/src/components/Btn/Btn";
 import { ICON_flag, ICON_X } from "@/src/components/icons/icons";
 import Styled_FLASHLIST from "@/src/components/Styled_FLATLIST/Styled_FLASHLIST/Styled_FLASHLIST";
-import { Language_MODEL } from "@/src/db/watermelon_MODELS";
+import Language_MODEL from "@/src/db/models/Language_MODEL";
 import React, { useEffect, useMemo, useState } from "react";
-import { FlatList, View } from "react-native";
+import { View } from "react-native";
 import FETCH_langs from "../../hooks/FETCH_langs";
 import i18next from "i18next";
 

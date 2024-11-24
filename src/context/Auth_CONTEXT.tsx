@@ -1,6 +1,6 @@
 import { createContext, useState, ReactNode, useContext } from "react";
 import { supabase } from "../lib/supabase";
-import { User_MODEL } from "../db/watermelon_MODELS";
+import User_MODEL from "@/src/db/models/User_MODEL";
 
 // Define the shape of the Auth context
 interface AuthContextType {

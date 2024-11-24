@@ -16,37 +16,28 @@ import SelectLangs_MODAL from "@/src/features/4_languages/components/SelectMulti
 import Confirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, ScrollView, View } from "react-native";
 
 import RenameList_MODAL from "../RenameList_MODAL/RenameList_MODAL";
 import Footer from "@/src/components/Footer/Footer";
 import Dropdown_BLOCK from "@/src/components/Dropdown_BLOCK/Dropdown_BLOCK";
-import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import DeleteList_MODAL from "../DeleteList_MODAL";
 
 import { useToast } from "react-native-toast-notifications";
 import { useRouter } from "expo-router";
 
 import { MyColors } from "@/src/constants/MyColors";
-import { List_MODEL, User_MODEL } from "@/src/db/watermelon_MODELS";
-import USE_updateListDefaultLangs from "../../hooks/USE_updateListDefaultLangs";
+import List_MODEL from "@/src/db/models/List_MODEL";
 import Label from "@/src/components/Label/Label";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 import USE_shareList from "../../hooks/USE_shareList";
-import USE_publishList from "../../hooks/USE_publishList";
-import { PUSH_changes, USE_sync } from "@/src/db/USE_sync";
+import { USE_sync } from "@/src/hooks/USE_sync/USE_sync";
 import SelectUsers_MODAL from "@/src/features/5_users/components/SelectUsers_MODAL/SelectUsers_MODAL";
-import { supabase } from "@/src/lib/supabase";
-import db, { Lists_DB } from "@/src/db";
 import USE_zustand from "@/src/zustand";
-import USE_fetchListAccesses from "@/src/features/5_users/hooks/USE_fetchListAccesses";
-import USE_supabaseUsers from "@/src/features/5_users/hooks/USE_supabaseUsers";
 import USE_listParticipants from "@/src/hooks/USE_participantsOfAList";
 import { Error_PROPS } from "@/src/props";
-import { CREATE_internalErrorMsg } from "@/src/constants/globalVars";
-import SEND_internalError from "@/src/utils/SEND_internalError";
 import USE_publishMySupabaseList from "@/src/features/1_lists/hooks/USE_publishMySupabaseList";
 import Error_TEXT from "@/src/components/Error_TEXT/Error_TEXT";
 import USE_observeList from "@/src/features/5_users/hooks/USE_observeList";

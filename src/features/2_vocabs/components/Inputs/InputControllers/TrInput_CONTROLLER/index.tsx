@@ -5,11 +5,9 @@
 import { MAX_TRANSLATION_LENGTH } from "@/src/constants/globalVars";
 import TrInput_BLOCK from "../../InputBlocks/TrInput_BLOCK";
 import { Control, Controller } from "react-hook-form";
-import { CreateMyVocabData_PROPS } from "../../../Modal/CreateVocab_MODAL/CreateVocab_MODAL";
 import { tr_PROPS } from "@/src/db/props";
 import { CreatePublicVocabData_PROPS } from "../../../Modal/CreatePublicVocab_MODAL/CreatePublicVocab_MODAL";
-import USE_selectedLangs from "@/src/features/4_languages/hooks/USE_selectedLangs";
-import { Language_MODEL } from "@/src/db/watermelon_MODELS";
+import Language_MODEL from "@/src/db/models/Language_MODEL";
 
 interface TrInputController_PROPS {
   trs: tr_PROPS[] | undefined;

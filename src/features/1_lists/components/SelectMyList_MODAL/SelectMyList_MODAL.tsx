@@ -8,35 +8,29 @@ import Header from "@/src/components/Header/Header";
 import { ICON_checkMark, ICON_X } from "@/src/components/icons/icons";
 
 import SearchBar from "@/src/components/SearchBar/SearchBar";
-import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import Subnav from "@/src/components/Subnav/Subnav";
 
-import { MyColors } from "@/src/constants/MyColors";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
   KeyboardAvoidingView,
-  Modal,
   Platform,
-  SafeAreaView,
-  View,
 } from "react-native";
 
 import { useTranslation } from "react-i18next";
 import CreateList_MODAL from "@/src/features/1_lists/components/CreateList_MODAL/CreateList_MODAL";
 
-import SEARCH_lists from "@/src/features/1_lists/utils/SEARCH_lists";
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 import { EmptyFlatList_BOTTM } from "@/src/features/1_lists";
-import { USE_searchedLists } from "../../hooks/USE_searchedLists/USE_searchedLists";
 import Big_MODAL from "@/src/components/Modals/Big_MODAL/Big_MODAL";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import { Lists_DB } from "@/src/db";
 import { Q } from "@nozbe/watermelondb";
 import { withObservables } from "@nozbe/watermelondb/react";
 import { t } from "i18next";
-import { List_MODEL } from "@/src/db/watermelon_MODELS";
+import List_MODEL from "@/src/db/models/List_MODEL";
+
 interface SelectListModal_PROPS {
   open: boolean;
   title: string;

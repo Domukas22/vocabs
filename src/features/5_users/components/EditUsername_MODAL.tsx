@@ -13,12 +13,12 @@ import StyledText_INPUT from "@/src/components/StyledText_INPUT/StyledText_INPUT
 
 import { useToast } from "react-native-toast-notifications";
 import { Controller, useForm } from "react-hook-form";
-import { List_MODEL, User_MODEL } from "@/src/db/watermelon_MODELS";
+
 import Error_TEXT from "@/src/components/Error_TEXT/Error_TEXT";
 
 import USE_zustand from "@/src/zustand";
 import USE_editUsername from "../hooks/USE_editUsername";
-import { USE_sync } from "@/src/db/USE_sync";
+import { USE_sync } from "@/src/hooks/USE_sync/USE_sync";
 
 interface modalProps {
   IS_open: boolean;

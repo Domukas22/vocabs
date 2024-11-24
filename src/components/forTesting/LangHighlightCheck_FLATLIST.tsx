@@ -10,7 +10,7 @@ import { Styled_TEXT } from "../Styled_TEXT/Styled_TEXT";
 import { USE_searchedLangs } from "@/src/features/4_languages/hooks/USE_searchedLangs/USE_searchedLangs";
 import Subnav from "../Subnav/Subnav";
 import SearchBar from "../SearchBar/SearchBar";
-import { Language_MODEL } from "@/src/db/watermelon_MODELS";
+import Language_MODEL from "@/src/db/models/Language_MODEL";
 
 export default function LangHighlightCheck_FLATLIST() {
   const languages: Language_MODEL[] = [];

@@ -1,9 +1,10 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState } from "react";
 import { supabase } from "@/src/lib/supabase";
-import { List_MODEL, User_MODEL } from "@/src/db/watermelon_MODELS";
+import List_MODEL from "@/src/db/models/List_MODEL";
+import User_MODEL from "@/src/db/models/User_MODEL";
 
 import { CREATE_internalErrorMsg } from "@/src/constants/globalVars";
-import SEND_internalError from "@/src/utils/SEND_internalError";
+import HANDLE_internalError from "@/src/utils/SEND_internalError";
 import { Error_PROPS } from "@/src/props";
 import CHECK_ifNetworkFailure from "@/src/utils/CHECK_ifNetworkFailure";
 
@@ -23,7 +24,7 @@ const networkFailure_RESPONSE = {
   type: "user",
 };
 async function SEND_error(message: string, details?: Object) {
-  await SEND_internalError({
+  await HANDLE_internalError({
     message,
     function_NAME: "USE_shareList --> SHARE_list",
     details,

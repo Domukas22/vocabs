@@ -9,49 +9,33 @@ import Block from "@/src/components/Block/Block";
 import {
   ICON_settings,
   ICON_arrow,
-  ICON_premium,
   ICON_privacyPolicy,
   ICON_contact,
   ICON_about,
   ICON_notificationBell,
   ICON_activeCount,
-  ICON_checkMark,
   ICON_checkMarkFull,
-  ICON_star,
   ICON_questionMark,
   ICON_inviteFriend,
 } from "@/src/components/icons/icons";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
-import { MyColors } from "@/src/constants/MyColors";
 import { router } from "expo-router";
-import { Alert, ScrollView, Text, View } from "react-native";
+import { Alert, ScrollView, View } from "react-native";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import { supabase } from "@/src/lib/supabase";
 import { useTranslation } from "react-i18next";
-import { USE_toggle } from "@/src/hooks/USE_toggle";
 import Confirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
 import Dropdown_BLOCK from "@/src/components/Dropdown_BLOCK/Dropdown_BLOCK";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
-import { vocabLimit } from "@/src/constants/globalVars";
-import FETCH_vocabs, {
-  VocabFilter_PROPS,
-} from "@/src/features/2_vocabs/utils/FETCH_vocabs";
-import { withObservables } from "@nozbe/watermelondb/react";
-import { PUSH_changes, USE_sync } from "@/src/db/USE_sync";
-import USE_fetchNotifications from "@/src/features/6_notifications/hooks/USE_fetchNotifications";
-import db, { Notifications_DB, Payments_DB, Vocabs_DB } from "@/src/db";
-import USE_fetchPayments from "@/src/features/7_payments/hooks/USE_fetchPayments";
-import { Notifications_MODEL, User_MODEL } from "@/src/db/watermelon_MODELS";
-import { Q } from "@nozbe/watermelondb";
+import { USE_sync } from "@/src/hooks/USE_sync/USE_sync";
+import User_MODEL from "@/src/db/models/User_MODEL";
 import * as SecureStore from "expo-secure-store";
 import USE_zustand from "@/src/zustand";
 import CurrentVocabCount_BAR from "@/src/components/CurrentVocabCount_BAR";
-import Notification_BOX from "@/src/components/Notification_BOX/Notification_BOX";
 import { useToast } from "react-native-toast-notifications";
-import REFRESH_zustandUser from "@/src/features/5_users/utils/REFRESH_zustandUser";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
-import NAVIGATE_user from "@/src/db/utils/NAVIGATE_user";
+import NAVIGATE_user from "@/src/utils/NAVIGATE_user";
 
 export default function General_PAGE() {
   const { t } = useTranslation();

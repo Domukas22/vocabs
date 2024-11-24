@@ -6,6 +6,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { z_listDisplaySettings_PROPS } from "@/src/zustand";
 import { BUILD_fetchPublicListsQuery } from "../../1_lists/utils/BUILD_fetchPublicListsQuery";
+import { FetchedSharedList_PROPS } from "../../1_lists/utils/props";
 
 export default function USE_supabasePublicLists({
   search,

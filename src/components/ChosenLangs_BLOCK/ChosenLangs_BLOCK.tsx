@@ -6,14 +6,14 @@ import Block from "@/src/components/Block/Block";
 import Btn from "@/src/components/Btn/Btn";
 import { ICON_flag, ICON_X } from "@/src/components/icons/icons";
 import Label from "@/src/components/Label/Label";
-import { Language_MODEL } from "@/src/db/watermelon_MODELS";
+import Language_MODEL from "@/src/db/models/Language_MODEL";
+
 import { View } from "react-native";
 
 import { useTranslation } from "react-i18next";
 import { useEffect, useMemo, useState } from "react";
 import i18next from "i18next";
 import { Styled_TEXT } from "../Styled_TEXT/Styled_TEXT";
-import { FieldError } from "react-hook-form";
 import FETCH_langs from "@/src/features/4_languages/hooks/FETCH_langs";
 
 interface ChosenLangsInputs_PROPS {

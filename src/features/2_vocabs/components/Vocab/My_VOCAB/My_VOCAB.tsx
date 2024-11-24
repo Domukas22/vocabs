@@ -4,24 +4,20 @@
 
 import { MyColors } from "@/src/constants/MyColors";
 import { StyleSheet, View } from "react-native";
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 
 import { USE_toggle } from "@/src/hooks/USE_toggle";
 import { tr_PROPS } from "@/src/db/props";
 import Vocab_FRONT from "../Components/Vocab_FRONT/Vocab_FRONT";
 
-import USE_updateVocabDifficulty from "../../../hooks/USE_updateVocabDifficulty";
 import { VocabBack_TRS } from "../Components/VocabBack_TRS/VocabBack_TRS";
 import VocabBottomText_WRAP from "../Components/VocabBottomText_WRAP/VocabBottomText_WRAP";
-import { USE_selectedList } from "@/src/context/SelectedList_CONTEXT";
 import VocabBack_BTNS from "../Components/VocabBack_BTNS/VocabBack_BTNS";
 import VocabBackDifficultyEdit_BTNS from "../Components/VocabBackDifficultyEdit_BTNS/VocabBackDifficultyEdit_BTNS";
 
-import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
+import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 import Btn from "@/src/components/Btn/Btn";
 import { useTranslation } from "react-i18next";
-import USE_updateVocabIsMarked from "../../../hooks/USE_updateVocabIsMarked";
-import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 import { withObservables } from "@nozbe/watermelondb/react";
 import { useToast } from "react-native-toast-notifications";
 

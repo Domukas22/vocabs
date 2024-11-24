@@ -9,13 +9,10 @@ import USE_createList from "../../hooks/USE_createList";
 import Error_TEXT from "@/src/components/Error_TEXT/Error_TEXT";
 import { Controller, useForm } from "react-hook-form";
 import { TextInput } from "react-native";
-import IS_listNameTaken from "../../utils/IS_listNameTaken";
 
-import { List_MODEL, User_MODEL } from "@/src/db/watermelon_MODELS";
-import db, { Lists_DB, Users_DB } from "@/src/db";
-import { USER_ID } from "@/src/constants/globalVars";
-import USE_collectListLangs from "../../hooks/USE_collectListLangs";
-import { USE_auth } from "@/src/context/Auth_CONTEXT";
+import List_MODEL from "@/src/db/models/List_MODEL";
+
+import USE_zustand from "@/src/zustand";
 
 interface CreateListModal_PROPS {
   user_id: string | undefined;
@@ -38,6 +35,7 @@ export default function CreateList_MODAL({
 }: CreateListModal_PROPS) {
   const inputREF = useRef<TextInput>(null);
   const [isFocused, setIsFocused] = useState(false);
+  const { z_user } = USE_zustand();
 
   const { t } = useTranslation();
   const {
@@ -123,11 +121,8 @@ export default function CreateList_MODAL({
           },
           validate: {
             uniqueName: (value) => {
-              const IS_nameTaken = IS_listNameTaken({
-                lists: [],
-                name: value,
-                list_id: "new",
-              });
+              // const IS_nameTaken = await IS_listNameTaken(z_user, value);
+              const IS_nameTaken = false;
 
               return IS_nameTaken ? t("error.listNameTaken") : true;
             },

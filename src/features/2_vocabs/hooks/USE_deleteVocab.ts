@@ -2,7 +2,7 @@
 //
 //
 
-import { User_MODEL } from "@/src/db/watermelon_MODELS";
+import User_MODEL from "@/src/db/models/User_MODEL";
 import { supabase } from "@/src/lib/supabase";
 import { useCallback, useMemo, useState } from "react";
 

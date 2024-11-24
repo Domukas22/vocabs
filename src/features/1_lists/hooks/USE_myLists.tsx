@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import FetchLists_QUERY from "../utils/FetchLists_QUERY";
-import { List_MODEL } from "@/src/db/watermelon_MODELS";
+import List_MODEL from "@/src/db/models/List_MODEL";
 import { z_listDisplaySettings_PROPS } from "@/src/zustand";
-import Delay from "@/src/utils/Delay";
 import { FlatlistError_PROPS } from "@/src/props";
 import USE_isSearching from "@/src/hooks/USE_isSearching";
 import { LIST_PAGINATION } from "@/src/constants/globalVars";

@@ -3,9 +3,8 @@
 //
 
 import Btn from "@/src/components/Btn/Btn";
-import { ICON_checkMark, ICON_X } from "@/src/components/icons/icons";
+import { ICON_checkMark } from "@/src/components/icons/icons";
 import Styled_FLASHLIST from "@/src/components/Styled_FLATLIST/Styled_FLASHLIST/Styled_FLASHLIST";
-import { User_MODEL } from "@/src/db/watermelon_MODELS";
 import { FetchedUsers_PROPS } from "@/src/features/1_lists/hooks/USE_supabaseUsers_2";
 import React from "react";
 

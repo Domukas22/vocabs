@@ -3,7 +3,6 @@
 //
 
 import { tr_PROPS } from "@/src/db/props";
-import { Language_MODEL } from "@/src/db/watermelon_MODELS";
 
 export default function HANLDE_selectedLangs({
   newLang_IDS,

@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
 import { Languages_DB } from "@/src/db"; // Adjust the import based on your project structure
 import { Q } from "@nozbe/watermelondb";
-import { Language_MODEL } from "@/src/db/watermelon_MODELS";
+import Language_MODEL from "@/src/db/models/Language_MODEL";
 
 export default async function FETCH_langs({
   lang_ids,

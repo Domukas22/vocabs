@@ -1,8 +1,7 @@
 import { useState, useCallback, useMemo } from "react";
 import { supabase } from "@/src/lib/supabase";
-import { useToast } from "react-native-toast-notifications";
-import { useTranslation } from "react-i18next";
-import { List_MODEL } from "@/src/db/watermelon_MODELS"; // Assuming List_MODEL is used in the app
+
+import List_MODEL from "@/src/db/models/List_MODEL";
 
 export interface PrivateListFilter_PROPS {
   user_id: string;

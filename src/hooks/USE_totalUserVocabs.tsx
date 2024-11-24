@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { User_MODEL } from "../db/watermelon_MODELS";
+import User_MODEL from "@/src/db/models/User_MODEL";
 
 export const USE_totalUserVocabs = (user: User_MODEL | undefined) => {
   const [totalVocabs, setTotalVocabs] = useState<number | null>(null);

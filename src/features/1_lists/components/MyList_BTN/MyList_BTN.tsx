@@ -3,18 +3,16 @@
 //
 //
 
-import { View } from "react-native";
 import { Styled_TEXT } from "../../../../components/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
 import { useTranslation } from "react-i18next";
 import { useMemo } from "react";
 
 import VocabDifficulty_COUNTS from "../VocabDifficulty_COUNTS/VocabDifficulty_COUNTS";
-import { List_MODEL } from "@/src/db/watermelon_MODELS";
+import List_MODEL from "@/src/db/models/List_MODEL";
 import { withObservables } from "@nozbe/watermelondb/react";
 import Big_BTN from "@/src/components/Transition_BTN/Big_BTN";
 import ListBtn_BOTTOM from "../ListBtn_BOTTOM";
-import VocabCount_LABEL from "../VocabCount_LABEL";
 import ListBtn_TOP from "../ListBtn_TOP";
 import List_FLAGS from "../List_FLAGS";
 

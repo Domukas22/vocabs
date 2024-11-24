@@ -5,7 +5,7 @@
 import Btn from "@/src/components/Btn/Btn";
 import Header from "@/src/components/Header/Header";
 import { ICON_X } from "@/src/components/icons/icons";
-import { List_MODEL } from "@/src/db/watermelon_MODELS";
+import List_MODEL from "@/src/db/models/List_MODEL";
 import { useTranslation } from "react-i18next";
 
 export default function MyLists_HEADER({

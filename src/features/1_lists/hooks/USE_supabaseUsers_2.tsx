@@ -5,14 +5,14 @@
 import { z_listDisplaySettings_PROPS } from "@/src/zustand";
 import { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import FETCH_supabaseLists from "../utils/FETCH_supabaseLists";
-import FORMAT_listVocabCount from "../utils/FORMAT_listVocabCount";
-import FETCH_listAccesesWhereIAmParticipant from "../utils/FETCH_listAccesesWhereIAmParticipant";
+import FORMAT_listVocabCount from "../utils/FORMAT_listVocabCount/FORMAT_listVocabCount";
+import FETCH_listIdsSharedWithMe from "../../8_listAccesses/utils/FETCH_listIdsSharedWithMe/FETCH_listIdsSharedWithMe";
 import AGGREGATE_uniqueStrings from "../utils/AGGREGATE_uniqueStrings";
 import { FlatlistError_PROPS } from "@/src/props";
 import USE_pagination from "@/src/hooks/USE_pagination";
 import { LIST_PAGINATION } from "@/src/constants/globalVars";
 import USE_isSearching from "@/src/hooks/USE_isSearching";
-import FETCH_supabaseUsers_2 from "../utils/FETCH_supabaseUsers_2";
+import FETCH_supabaseUsers from "../../5_users/utils/FETCH_supabaseUsers";
 
 export interface FetchedUsers_PROPS {
   id: string;
@@ -63,7 +63,7 @@ export default function USE_supabaseUsers_2({
       SET_error({ value: false, msg: "" });
 
       try {
-        const { users, count, error } = await FETCH_supabaseUsers_2({
+        const { users, count, error } = await FETCH_supabaseUsers({
           search,
           start,
           end,

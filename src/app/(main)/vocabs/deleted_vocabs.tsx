@@ -3,11 +3,6 @@
 //
 
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
-import {
-  CreateMyVocab_MODAL,
-  MyVocabs_FLATLIST,
-  DeleteVocab_MODAL,
-} from "@/src/features/2_vocabs";
 import { useRouter } from "expo-router";
 
 import React, { useState } from "react";
@@ -18,9 +13,8 @@ import { useTranslation } from "react-i18next";
 
 import { useToast } from "react-native-toast-notifications";
 
-import UpdateMyVocab_MODAL from "@/src/features/2_vocabs/components/Modal/UpdateMyVocab_MODAL/UpdateMyVocab_MODAL";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
-import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
+import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 
 import { VocabDisplaySettings_MODAL } from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/VocabDisplaySettings_MODAL";
 
@@ -36,7 +30,6 @@ import USE_getActiveFilterCount from "@/src/features/2_vocabs/components/Modal/D
 import BottomAction_SECTION from "@/src/components/BottomAction_SECTION";
 
 import { USE_totalUserVocabs } from "@/src/hooks/USE_totalUserVocabs";
-import DeletedVocabs_FLATLIST from "@/src/features/2_vocabs/components/Flatlist/MyVocabs_FLATLIST/DeletedVocabs_FLATLIST";
 import ReviveDeletedVocab_MODAL from "@/src/features/2_vocabs/components/Modal/SavePublicVocabToList_MODAL/ReviveDeletedVocab_MODAL";
 import { USE_vocabs } from "@/src/features/1_lists/hooks/USE_vocabs";
 import Vocabs_FLATLIST from "@/src/features/2_vocabs/components/Vocabs_FLATLIST";

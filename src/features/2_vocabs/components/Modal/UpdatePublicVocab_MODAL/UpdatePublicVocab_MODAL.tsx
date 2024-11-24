@@ -17,10 +17,7 @@ import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 
 import Big_MODAL from "@/src/components/Modals/Big_MODAL/Big_MODAL";
-import SelectMyList_MODAL from "@/src/features/1_lists/components/SelectMyList_MODAL/SelectMyList_MODAL";
-import USE_createVocab from "../../../hooks/USE_createVocab";
 
-import GET_defaultTranslations from "@/src/features/2_vocabs/utils/GET_defaultTranslations";
 import { useForm } from "react-hook-form";
 import HANLDE_selectedLangs from "../../../utils/HANLDE_selectedLangs";
 import HANLDE_selectedHighlights from "../../../utils/HANDLE_selectedTrs";
@@ -28,16 +25,12 @@ import HANLDE_selectedHighlights from "../../../utils/HANDLE_selectedTrs";
 import ChosenLangs_CONTROLLER from "../../Inputs/InputControllers/ChosenLangs_CONTROLLER";
 import TrInput_CONTROLLERS from "../../Inputs/InputControllers/TrInput_CONTROLLER";
 import Description_CONTROLER from "../../Inputs/InputControllers/Description_CONTROLER";
-import Difficulty_CONTROLLER from "../../Inputs/InputControllers/Difficulty_CONTROLLER";
-import List_CONTROLLER from "../../Inputs/InputControllers/List_CONTROLLER";
-import CreateMyVocab_FOOTER from "../../Footer/CreateMyVocab_FOOTER/CreateMyVocab_FOOTER";
 import USE_updateVocab from "../../../hooks/USE_updateVocab";
 import UpdateMyVocab_FOOTER from "../../Footer/UpdateMyVocab_FOOTER/UpdateMyVocab_FOOTER";
-import {
-  Language_MODEL,
-  User_MODEL,
-  Vocab_MODEL,
-} from "@/src/db/watermelon_MODELS";
+import Language_MODEL from "@/src/db/models/Language_MODEL";
+import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
+
+import User_MODEL from "@/src/db/models/User_MODEL";
 
 interface UpdatePublicVocabModal_PROPS {
   IS_open: boolean;

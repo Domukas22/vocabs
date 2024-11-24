@@ -2,15 +2,12 @@
 //
 //
 import Styled_FLASHLIST from "@/src/components/Styled_FLATLIST/Styled_FLASHLIST/Styled_FLASHLIST";
-import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
-import ExploreVocabBack_BTNS from "./Vocab/Components/ExploreVocabBack_BTNS/ExploreVocabBack_BTNS";
-import Vocab from "./Vocab/Vocab";
+import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 import { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
 import React, { useMemo } from "react";
 
 import Skeleton_VIEW from "@/src/components/Skeleton_VIEW";
 import Error_SECTION from "@/src/components/Error_SECTION";
-import { FetchedSupabaseVocabs_PROPS } from "@/src/hooks/USE_supabaseVocabs";
 import SwipeableExample from "@/src/components/SwipeableExample/SwipeableExample";
 import MyVocab from "./Vocab/My_VOCAB/My_VOCAB";
 import Deletedvocab from "./Vocab/My_VOCAB/Deleted_VOCAB";

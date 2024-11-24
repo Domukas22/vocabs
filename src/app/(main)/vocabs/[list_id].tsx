@@ -5,56 +5,38 @@
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
 import {
   CreateMyVocab_MODAL,
-  MyVocabs_HEADER,
-  MyVocabs_SUBNAV,
-  MyVocabs_FLATLIST,
   DeleteVocab_MODAL,
 } from "@/src/features/2_vocabs";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import ListSettings_MODAL from "@/src/features/1_lists/components/ListSettings_MODAL/ListSettings_MODAL";
-import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import USE_highlighedId from "@/src/hooks/USE_highlighedId/USE_highlighedId";
-import { USE_highlightBoolean } from "@/src/hooks/USE_highlightBoolean/USE_highlightBoolean";
 import { useTranslation } from "react-i18next";
 
 import { useToast } from "react-native-toast-notifications";
 
 import UpdateMyVocab_MODAL from "@/src/features/2_vocabs/components/Modal/UpdateMyVocab_MODAL/UpdateMyVocab_MODAL";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
-import { List_MODEL, Vocab_MODEL } from "@/src/db/watermelon_MODELS";
+import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
+import List_MODEL from "@/src/db/models/List_MODEL";
 
 import { withObservables } from "@nozbe/watermelondb/react";
-import { USE_observeList } from "@/src/features/1_lists/hooks/USE_observeList";
-import { PUSH_changes, sync, USE_sync } from "@/src/db/USE_sync";
-import Btn from "@/src/components/Btn/Btn";
+import { USE_sync } from "@/src/hooks/USE_sync/USE_sync";
 import { VocabDisplaySettings_MODAL } from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/VocabDisplaySettings_MODAL";
-import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
-import USE_displaySettings from "@/src/hooks/USE_displaySettings/USE_displaySettings";
 import { USE_vocabs } from "@/src/features/1_lists/hooks/USE_vocabs";
 
 import USE_zustand from "@/src/zustand";
 
 import VocabsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/VocabsFlatlistHeader_SECTION";
-import { Lists_DB, Vocabs_DB } from "@/src/db";
-import { Q } from "@nozbe/watermelondb";
+import { Lists_DB } from "@/src/db";
 import USE_debounceSearch from "@/src/hooks/USE_debounceSearch/USE_debounceSearch";
 import List_HEADER from "@/src/components/Header/List_HEADER";
 import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
 import USE_getActiveFilterCount from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/utils/USE_getActiveFilterCount";
-import { notEq } from "@nozbe/watermelondb/QueryDescription";
-import {
-  ActivityIndicator,
-  Keyboard,
-  View,
-  TouchableWithoutFeedback,
-} from "react-native";
-import { MyColors } from "@/src/constants/MyColors";
-import { HEADER_MARGIN } from "@/src/constants/globalVars";
 import BottomAction_SECTION from "@/src/components/BottomAction_SECTION";
 import Vocabs_FLATLIST from "@/src/features/2_vocabs/components/Vocabs_FLATLIST";
-import { FlashList, FlashListProps } from "@shopify/flash-list";
+import { FlashList } from "@shopify/flash-list";
 
 function __SingleList_PAGE({
   selected_LIST = undefined,

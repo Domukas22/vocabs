@@ -7,7 +7,7 @@ import Footer from "@/src/components/Footer/Footer";
 import i18next, { t } from "i18next";
 import { ActivityIndicator } from "react-native";
 import SelectedLang_SCROLLER from "../../SelectedLang_SCROLLER/SelectedLang_SCROLLER";
-import { Language_MODEL } from "@/src/db/watermelon_MODELS";
+import Language_MODEL from "@/src/db/models/Language_MODEL";
 import { useMemo } from "react";
 
 interface LangModalFooter_PROPS {

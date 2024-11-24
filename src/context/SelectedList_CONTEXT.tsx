@@ -3,7 +3,7 @@
 //
 
 import React, { createContext, useState, useContext } from "react";
-import { List_MODEL } from "../db/watermelon_MODELS";
+import List_MODEL from "@/src/db/models/List_MODEL";
 
 interface ListContextType {
   selected_LIST: List_MODEL;

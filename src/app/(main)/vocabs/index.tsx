@@ -5,7 +5,8 @@
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
 import { useRouter } from "expo-router";
 
-import { List_MODEL, User_MODEL } from "@/src/db/watermelon_MODELS";
+import List_MODEL from "@/src/db/models/List_MODEL";
+import User_MODEL from "@/src/db/models/User_MODEL";
 import React, { useEffect, useState } from "react";
 
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
@@ -13,13 +14,10 @@ import { Alert, Pressable, View } from "react-native";
 
 import ExplorePage_BTN from "@/src/components/ExplorePage_BTN";
 import Header from "@/src/components/Header/Header";
-import { withObservables } from "@nozbe/watermelondb/react";
-import db, { Vocabs_DB } from "@/src/db";
-import { Q } from "@nozbe/watermelondb";
+import db from "@/src/db";
 
 import USE_zustand from "@/src/zustand";
-import { USE_sync } from "@/src/db/USE_sync";
-import { notEq } from "@nozbe/watermelondb/QueryDescription";
+import { USE_sync } from "@/src/hooks/USE_sync/USE_sync";
 import Btn from "@/src/components/Btn/Btn";
 import Block from "@/src/components/Block/Block";
 import Label from "@/src/components/Label/Label";
@@ -29,10 +27,8 @@ import { ScrollView } from "react-native";
 import { MyList_BTN } from "@/src/features/1_lists/components/MyList_BTN/MyList_BTN";
 import Confirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
 import * as SecureStore from "expo-secure-store";
-import { supabase } from "@/src/lib/supabase";
-import FETCH_mySupabaseProfile from "@/src/features/5_users/utils/FETCH_mySupabaseProfile";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
-import SEND_internalError from "@/src/utils/SEND_internalError";
+import HANDLE_internalError from "@/src/utils/SEND_internalError";
 
 export default function Index_PAGE({}: // function _Index_PAGE({
 // totalUserList_COUNT,
@@ -83,7 +79,7 @@ export default function Index_PAGE({}: // function _Index_PAGE({
   }, [z_user]);
   const { sync } = USE_sync();
   const fn = async () => {
-    await SEND_internalError({
+    await HANDLE_internalError({
       message: "Test error",
       function_NAME: "Index_Page",
     });

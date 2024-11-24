@@ -12,7 +12,7 @@ import USE_supabaseUsers from "../../hooks/USE_supabaseUsers";
 import BottomAction_SECTION from "@/src/components/BottomAction_SECTION";
 import USE_debounceSearch from "@/src/hooks/USE_debounceSearch/USE_debounceSearch";
 import Btn from "@/src/components/Btn/Btn";
-import { User_MODEL } from "@/src/db/watermelon_MODELS";
+import User_MODEL from "@/src/db/models/User_MODEL";
 import Flashlist_LABEL from "@/src/components/Flashlist_LABEL";
 
 interface SelectUsersModal_PROPS {

@@ -5,7 +5,7 @@
 import Btn from "@/src/components/Btn/Btn";
 import { ICON_flag, ICON_X } from "@/src/components/icons/icons";
 import TinyButton_SCROLLER from "@/src/components/TinyButton_SCROLLER/TinyButton_SCROLLER";
-import { Language_MODEL } from "@/src/db/watermelon_MODELS";
+import Language_MODEL from "@/src/db/models/Language_MODEL";
 
 export default function SelectedLang_SCROLLER({
   selected_LANGS,

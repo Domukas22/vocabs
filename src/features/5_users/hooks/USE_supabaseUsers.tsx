@@ -3,7 +3,7 @@
 //
 import { useState, useEffect } from "react";
 import { supabase } from "@/src/lib/supabase";
-import { User_MODEL } from "@/src/db/watermelon_MODELS";
+import User_MODEL from "@/src/db/models/User_MODEL";
 
 export default function USE_supabaseUsers({
   search = "",

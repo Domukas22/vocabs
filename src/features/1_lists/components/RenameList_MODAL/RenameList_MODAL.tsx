@@ -2,34 +2,34 @@
 //
 //
 
-import { List_MODEL } from "@/src/db/watermelon_MODELS";
+import List_MODEL from "@/src/db/models/List_MODEL";
 import { useTranslation } from "react-i18next";
 import { Controller, useForm } from "react-hook-form";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ActivityIndicator, Keyboard, TextInput } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { ActivityIndicator, TextInput } from "react-native";
 
 import Btn from "@/src/components/Btn/Btn";
 import Label from "@/src/components/Label/Label";
 import Error_TEXT from "@/src/components/Error_TEXT/Error_TEXT";
 import Small_MODAL from "@/src/components/Modals/Small_MODAL/Small_MODAL";
 import USE_zustand from "@/src/zustand";
+
+import StyledText_INPUT from "@/src/components/StyledText_INPUT/StyledText_INPUT";
+import RENAME_list, {
+  renameList_ERRS,
+} from "../../utils/RENAME_list/RENAME_list";
+import USE_async from "@/src/hooks/USE_async/USE_async";
 import {
   RenameList_ARGS,
-  RenameList_ERROR,
-  RenameList_RESPONSE,
-} from "../../utils/RENAME_list/RENAME_list";
-import StyledText_INPUT from "@/src/components/StyledText_INPUT/StyledText_INPUT";
-import { Error_PROPS } from "@/src/props";
-import RENAME_list from "../../utils/RENAME_list/RENAME_list";
-import { CREATE_manualFormErrorFromDbResponse } from "@/src/utils/CREATE_manualFormErrorFromDbResponse";
-import USE_async from "@/src/hooks/USE_async";
-import { USE_renameList } from "../../hooks/USE_renameList";
+  RenameList_DATA,
+  RenameListError_PROPS,
+} from "../../utils/RENAME_list/types";
 
 interface LogoutConfirmationModal_PROPS {
   list: List_MODEL | undefined;
   IS_open: boolean;
   CLOSE_modal: () => void;
-  onSuccess?: (updated_LIST?: List_MODEL) => void;
+  onSuccess?: () => void;
 }
 
 export default function RenameList_MODAL({
@@ -48,7 +48,7 @@ export default function RenameList_MODAL({
     control,
     formState: { errors, isSubmitted },
     reset: RESET_form,
-    setError: SET_formError,
+    setError,
     handleSubmit,
   } = useForm({
     defaultValues: {
@@ -56,9 +56,16 @@ export default function RenameList_MODAL({
     },
   });
 
-  const { loading, error, execute, RESET_backendErrors } = USE_renameList({
-    SET_formError,
+  const {
+    loading,
+    error,
+    execute,
+    RESET_errors: RESET_backendErrors,
+  } = USE_async<RenameList_ARGS, RenameList_DATA, RenameListError_PROPS>({
+    fn_NAME: "RENAME_list",
+    fn: RENAME_list,
     onSuccess,
+    defaultErr_MSG: renameList_ERRS.user.defaultInternal_MSG,
   });
 
   useEffect(() => {
@@ -70,6 +77,16 @@ export default function RenameList_MODAL({
 
     setInvalidAttempts(0);
   }, [IS_open]);
+
+  useEffect(() => {
+    // console.log(error);
+    error?.falsyForm_INPUTS?.forEach((err) => {
+      setError(err.input_NAME, {
+        type: "manual",
+        message: err.message,
+      });
+    });
+  }, [error]);
 
   const rename = async (data: { name: string }) => {
     const { name } = data;
@@ -86,11 +103,11 @@ export default function RenameList_MODAL({
           text={t("btn.cancel")}
           onPress={CLOSE_modal}
           type="simple"
-          style={error?.type === "internal" && { flex: 1 }}
+          style={error?.error_TYPE === "internal" && { flex: 1 }}
         />
       }
       btnRight={
-        error?.type !== "internal" && (
+        error?.error_TYPE !== "internal" && (
           <Btn
             text={!loading ? t("btn.confirmListRename") : ""}
             iconRight={loading ? <ActivityIndicator color="black" /> : null}
@@ -144,8 +161,8 @@ export default function RenameList_MODAL({
         )}
       />
       {errors.name && <Error_TEXT text={errors.name.message} />}
-      {error && error?.type !== "form_input" && (
-        <Error_TEXT text={error.message} />
+      {error && error?.error_TYPE !== "form_input" && (
+        <Error_TEXT text={error.user_MSG} />
       )}
     </Small_MODAL>
   );

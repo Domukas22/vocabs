@@ -3,14 +3,13 @@
 //
 
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
-import { PublicVocabs_HEADER } from "@/src/features/2_vocabs";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useToast } from "react-native-toast-notifications";
 
 import SavePublicVocabToList_MODAL from "@/src/features/2_vocabs/components/Modal/SavePublicVocabToList_MODAL/SavePublicVocabToList_MODAL";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
-import { Vocab_MODEL } from "@/src/db/watermelon_MODELS";
+import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 
 import USE_collectPublicListLangs from "@/src/features/2_vocabs/hooks/USE_collectPublicListLangs";
 import USE_zustand from "@/src/zustand";
@@ -18,24 +17,14 @@ import USE_debounceSearch from "@/src/hooks/USE_debounceSearch/USE_debounceSearc
 import USE_supabaseVocabs from "@/src/hooks/USE_supabaseVocabs";
 import { VocabDisplaySettings_MODAL } from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/VocabDisplaySettings_MODAL";
 
-import ExploreVocabsFlatlistBottom_SECTION from "@/src/features/2_vocabs/components/ExploreVocabsFlatlistBottom_SECTION";
 import ExploreVocabs_FLATLIST from "@/src/features/2_vocabs/components/ExploreVocabs_FLATLIST";
-import ExporeSingleList_SUBNAV from "@/src/components/ExporeSingleList_SUBNAV";
-import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
-import { MyColors } from "@/src/constants/MyColors";
-import { View } from "react-native";
 import VocabsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/VocabsFlatlistHeader_SECTION";
-import USE_fetchTotalPublicVocabCount from "@/src/features/2_vocabs/hooks/USE_fetchTotalPublicVocabCount";
 import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
 import USE_getActiveFilterCount from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/utils/USE_getActiveFilterCount";
 import List_HEADER from "@/src/components/Header/List_HEADER";
 import { useRouter } from "expo-router";
 
 import BottomAction_SECTION from "@/src/components/BottomAction_SECTION";
-import USE_pagination from "@/src/hooks/USE_pagination";
-import USE_isSearching from "@/src/hooks/USE_isSearching";
-import FETCH_publicLists from "@/src/features/1_lists/utils/FETCH_publicLists";
-import { VOCAB_PAGINATION } from "@/src/constants/globalVars";
 
 export default function AllPublicVocabs_PAGE() {
   const { t } = useTranslation();
