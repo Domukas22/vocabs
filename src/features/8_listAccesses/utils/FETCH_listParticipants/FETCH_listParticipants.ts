@@ -14,7 +14,7 @@ import CHECK_ifNetworkFailure from "@/src/utils/CHECK_ifNetworkFailure";
 import { PostgrestError } from "@supabase/supabase-js";
 import HANDLE_userError from "@/src/utils/HANDLE_userError/HANDLE_userError";
 
-export const errs = {
+export const fetchListParticipants_ERRS = {
   internal: {
     noListId: "list_id undefined when fetching list participants",
     noOwnerId: "owner_id undefined when fetching list participants",
@@ -59,7 +59,8 @@ export default async function FETCH_listParticipants({
       error: HANDLE_userError({
         function_NAME: "FETCH_listParticipants",
         error,
-        internalErrorUser_MSG: errs.user.defaultInternal_MSG,
+        internalErrorUser_MSG:
+          fetchListParticipants_ERRS.user.defaultInternal_MSG,
       }),
     };
   }
@@ -71,8 +72,8 @@ function VALIDATE_supabaseData(data: ListParticipants_DATA) {
     if (!data[0]?.id || !data[0]?.username)
       throw GENERATE_error({
         error_TYPE: "internal",
-        user_MSG: errs.user.defaultInternal_MSG,
-        internal_MSG: errs.internal.invalidDataReturned,
+        user_MSG: fetchListParticipants_ERRS.user.defaultInternal_MSG,
+        internal_MSG: fetchListParticipants_ERRS.internal.invalidDataReturned,
       });
   }
 }
@@ -83,15 +84,15 @@ function VALIDATE_args(
   if (!list_id) {
     throw GENERATE_error({
       error_TYPE: "internal",
-      user_MSG: errs.user.defaultInternal_MSG,
-      internal_MSG: errs.internal.noListId,
+      user_MSG: fetchListParticipants_ERRS.user.defaultInternal_MSG,
+      internal_MSG: fetchListParticipants_ERRS.internal.noListId,
     });
   }
   if (!owner_id) {
     throw GENERATE_error({
       error_TYPE: "internal",
-      user_MSG: errs.user.defaultInternal_MSG,
-      internal_MSG: errs.internal.noOwnerId,
+      user_MSG: fetchListParticipants_ERRS.user.defaultInternal_MSG,
+      internal_MSG: fetchListParticipants_ERRS.internal.noOwnerId,
     });
   }
 }
@@ -103,13 +104,13 @@ function VALIDATE_supabaseFetch(error: PostgrestError | null) {
     if (IS_networkFailure) {
       throw GENERATE_error({
         error_TYPE: "user_network",
-        user_MSG: errs.user.networkFailure,
+        user_MSG: fetchListParticipants_ERRS.user.networkFailure,
       });
     } else {
       throw GENERATE_error({
         error_TYPE: "internal",
-        user_MSG: errs.user.defaultInternal_MSG,
-        internal_MSG: errs.internal.failedSupabaseFetch,
+        user_MSG: fetchListParticipants_ERRS.user.defaultInternal_MSG,
+        internal_MSG: fetchListParticipants_ERRS.internal.failedSupabaseFetch,
         error_DETAILS: error,
       });
     }

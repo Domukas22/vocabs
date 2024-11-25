@@ -4,7 +4,7 @@
 
 import { z_listDisplaySettings_PROPS } from "@/src/zustand";
 import { useState, useCallback, useMemo, useRef, useEffect } from "react";
-import FETCH_supabaseLists from "../utils/FETCH_supabaseLists";
+import FETCH_supabaseLists from "../utils/FETCH_supabaseLists/FETCH_supabaseLists";
 import FORMAT_listVocabCount from "../utils/FORMAT_listVocabCount/FORMAT_listVocabCount";
 import FETCH_listIdsSharedWithMe from "../../8_listAccesses/utils/FETCH_listIdsSharedWithMe/FETCH_listIdsSharedWithMe";
 import AGGREGATE_uniqueStrings from "../utils/AGGREGATE_uniqueStrings";
@@ -55,6 +55,8 @@ export default function USE_supabaseLists({
 
       // Abort the previous fetch if it's still ongoing
       if (abortControllerRef.current) {
+        console.log("ABORT");
+
         abortControllerRef.current.abort();
       }
 
@@ -83,7 +85,7 @@ export default function USE_supabaseLists({
           list_ids = uniqueAllowedList_IDS;
         }
 
-        const { lists, count, error } = await FETCH_supabaseLists({
+        const { data, error } = await FETCH_supabaseLists({
           search,
           list_ids,
           z_listDisplay_SETTINGS,
@@ -97,6 +99,8 @@ export default function USE_supabaseLists({
           // Prevent updates if the request was aborted
           return;
         }
+
+        const { lists, count } = data;
 
         const formated_LISTS = FORMAT_listVocabCount(lists) || [];
 

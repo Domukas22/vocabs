@@ -22,3 +22,6 @@ export type ListParticipants_RESPONSE = {
   data: ListParticipants_DATA;
   error?: ListParticipantsError_PROPS;
 };
+
+// 🔴🔴 TODO 🔴🔴
+// ----> create  a try/catch block inside "FETCH_supabaseLists"

@@ -1,7 +1,9 @@
 import { supabase } from "@/src/lib/supabase";
 import { PostgrestError } from "@supabase/supabase-js";
 import CHECK_ifNetworkFailure from "@/src/utils/CHECK_ifNetworkFailure";
-import FETCH_listParticipants, { errs } from "./FETCH_listParticipants";
+import FETCH_listParticipants, {
+  fetchListParticipants_ERRS,
+} from "./FETCH_listParticipants";
 
 // Mock external dependencies
 jest.mock("@/src/lib/supabase", () => ({
@@ -28,8 +30,8 @@ describe("FETCH_listParticipants", () => {
       data: [],
       error: expect.objectContaining({
         error_TYPE: "internal",
-        user_MSG: errs.user.defaultInternal_MSG,
-        internal_MSG: errs.internal.noListId,
+        user_MSG: fetchListParticipants_ERRS.user.defaultInternal_MSG,
+        internal_MSG: fetchListParticipants_ERRS.internal.noListId,
       }),
     });
   });
@@ -41,8 +43,8 @@ describe("FETCH_listParticipants", () => {
       data: [],
       error: expect.objectContaining({
         error_TYPE: "internal",
-        user_MSG: errs.user.defaultInternal_MSG,
-        internal_MSG: errs.internal.noOwnerId,
+        user_MSG: fetchListParticipants_ERRS.user.defaultInternal_MSG,
+        internal_MSG: fetchListParticipants_ERRS.internal.noOwnerId,
       }),
     });
   });
@@ -94,7 +96,7 @@ describe("FETCH_listParticipants", () => {
       data: [],
       error: expect.objectContaining({
         error_TYPE: "user_network",
-        user_MSG: errs.user.networkFailure,
+        user_MSG: fetchListParticipants_ERRS.user.networkFailure,
       }),
     });
   });
@@ -125,8 +127,8 @@ describe("FETCH_listParticipants", () => {
       data: [],
       error: expect.objectContaining({
         error_TYPE: "internal",
-        user_MSG: errs.user.defaultInternal_MSG,
-        internal_MSG: errs.internal.failedSupabaseFetch,
+        user_MSG: fetchListParticipants_ERRS.user.defaultInternal_MSG,
+        internal_MSG: fetchListParticipants_ERRS.internal.failedSupabaseFetch,
         error_DETAILS: mockError,
       }),
     });
@@ -139,8 +141,8 @@ describe("FETCH_listParticipants", () => {
       data: [],
       error: expect.objectContaining({
         error_TYPE: "internal",
-        user_MSG: errs.user.defaultInternal_MSG,
-        internal_MSG: errs.internal.noListId,
+        user_MSG: fetchListParticipants_ERRS.user.defaultInternal_MSG,
+        internal_MSG: fetchListParticipants_ERRS.internal.noListId,
       }),
     });
   });
@@ -152,8 +154,8 @@ describe("FETCH_listParticipants", () => {
       data: [],
       error: expect.objectContaining({
         error_TYPE: "internal",
-        user_MSG: errs.user.defaultInternal_MSG,
-        internal_MSG: errs.internal.noOwnerId,
+        user_MSG: fetchListParticipants_ERRS.user.defaultInternal_MSG,
+        internal_MSG: fetchListParticipants_ERRS.internal.noOwnerId,
       }),
     });
   });
@@ -198,8 +200,8 @@ describe("FETCH_listParticipants", () => {
       data: [],
       error: expect.objectContaining({
         error_TYPE: "internal",
-        user_MSG: errs.user.defaultInternal_MSG,
-        internal_MSG: errs.internal.failedSupabaseFetch,
+        user_MSG: fetchListParticipants_ERRS.user.defaultInternal_MSG,
+        internal_MSG: fetchListParticipants_ERRS.internal.failedSupabaseFetch,
         error_DETAILS: mockError,
       }),
     });
@@ -222,8 +224,8 @@ describe("FETCH_listParticipants", () => {
       data: [],
       error: expect.objectContaining({
         error_TYPE: "internal",
-        user_MSG: errs.user.defaultInternal_MSG,
-        internal_MSG: errs.internal.invalidDataReturned,
+        user_MSG: fetchListParticipants_ERRS.user.defaultInternal_MSG,
+        internal_MSG: fetchListParticipants_ERRS.internal.invalidDataReturned,
       }),
     });
   });

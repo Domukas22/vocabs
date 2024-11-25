@@ -9,5 +9,3 @@ export { default as MyLists_FLATLIST } from "./components/MyLists_FLATLIST/MyLis
 
 export { default as MyLists_HEADER } from "./components/MyLists_HEADER/MyLists_HEADER";
 export { default as MyLists_SUBNAV } from "./components/MyLists_SUBNAV/MyLists_SUBNAV";
-
-export { default as FETCH_myLists } from "./utils/FETCH_myLists";

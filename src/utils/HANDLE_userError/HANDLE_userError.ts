@@ -3,6 +3,7 @@
 //
 
 import { Error_PROPS } from "@/src/props";
+import CHECK_ifNetworkFailure from "../CHECK_ifNetworkFailure";
 
 export default function HANDLE_userError<
   validInput_NAMES extends string = string
@@ -15,11 +16,16 @@ export default function HANDLE_userError<
   function_NAME: string;
   internalErrorUser_MSG: string;
 }): Error_PROPS<validInput_NAMES> {
-  const type = error.error_TYPE || "unknown";
+  const IS_networkFailure = CHECK_ifNetworkFailure(error);
+  const type = IS_networkFailure
+    ? "user_network"
+    : error.error_TYPE || "unknown";
   const details = type === "unkown" ? error : error.error_DETAILS;
 
   return {
-    user_MSG: error.user_MSG || internalErrorUser_MSG,
+    user_MSG: IS_networkFailure
+      ? "There seems to an issue with your internet connection"
+      : error.user_MSG || internalErrorUser_MSG,
     internal_MSG: error.internal_MSG || error.message,
     error_TYPE: type,
     error_DETAILS: details,

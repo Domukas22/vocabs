@@ -26,9 +26,9 @@ export default function ExploreList_BTN({
         {list?.description && (
           <Styled_TEXT type="label_small">{list?.description}</Styled_TEXT>
         )}
-        {list?.owner?.username && (
+        {list?.username && (
           <Styled_TEXT type="label_small">
-            Shared by: {list.owner.username}
+            Shared by: {list.username}
           </Styled_TEXT>
         )}
       </ListBtn_TOP>

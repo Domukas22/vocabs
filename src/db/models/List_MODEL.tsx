@@ -2,6 +2,7 @@
 //
 //
 
+import { List_TYPES } from "@/src/props";
 import { Model, Q } from "@nozbe/watermelondb";
 
 import { notEq } from "@nozbe/watermelondb/QueryDescription";
@@ -26,7 +27,7 @@ export default class List_MODEL extends Model {
   @field("is_submitted_for_publish") is_submitted_for_publish!: boolean;
   @field("was_accepted_for_publish") was_accepted_for_publish!: boolean;
 
-  @text("type") type!: "private" | "public" | "shared" | "draft";
+  @text("type") type!: List_TYPES;
   @field("saved_count") saved_count!: number;
 
   @text("collected_lang_ids") collected_lang_ids!: string;

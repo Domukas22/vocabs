@@ -4,7 +4,7 @@
 
 import { z_listDisplaySettings_PROPS } from "@/src/zustand";
 import { useState, useCallback, useMemo, useRef, useEffect } from "react";
-import FETCH_supabaseLists from "../utils/FETCH_supabaseLists";
+import FETCH_supabaseLists from "../utils/FETCH_supabaseLists/FETCH_supabaseLists";
 import FORMAT_listVocabCount from "../utils/FORMAT_listVocabCount/FORMAT_listVocabCount";
 import FETCH_listIdsSharedWithMe from "../../8_listAccesses/utils/FETCH_listIdsSharedWithMe/FETCH_listIdsSharedWithMe";
 import AGGREGATE_uniqueStrings from "../utils/AGGREGATE_uniqueStrings";

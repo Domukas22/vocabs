@@ -16,7 +16,7 @@ import SelectLangs_MODAL from "@/src/features/4_languages/components/SelectMulti
 import Confirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
 import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
 
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, ScrollView, View } from "react-native";
 
@@ -42,6 +42,15 @@ import USE_publishMySupabaseList from "@/src/features/1_lists/hooks/USE_publishM
 import Error_TEXT from "@/src/components/Error_TEXT/Error_TEXT";
 import USE_observeList from "@/src/features/5_users/hooks/USE_observeList";
 import { USE_highlightBoolean } from "@/src/hooks/USE_highlightBoolean/USE_highlightBoolean";
+import USE_async from "@/src/hooks/USE_async/USE_async";
+import FETCH_listParticipants, {
+  fetchListParticipants_ERRS,
+} from "@/src/features/8_listAccesses/utils/FETCH_listParticipants/FETCH_listParticipants";
+import {
+  ListParticipants_ARGS,
+  ListParticipants_DATA,
+  ListParticipantsError_PROPS,
+} from "@/src/features/8_listAccesses/utils/FETCH_listParticipants/props";
 
 interface ListSettingsModal_PROPS {
   selected_LIST: List_MODEL | undefined;
@@ -98,14 +107,26 @@ export default function ListSettings_MODAL({
   };
 
   const {
-    participants,
-    IS_fetchingParticipants,
-    fetchParticipants_ERROR,
-    FETCH_participants,
-  } = USE_listParticipants({
-    list: selected_LIST,
-    owner_id: z_user?.id,
-    dependencies: [open, list?.type],
+    data: participants,
+    loading,
+    error,
+    execute: FETCH_participants,
+    RESET_errors: RESET_backendErrors,
+  } = USE_async<
+    ListParticipants_ARGS,
+    ListParticipants_DATA,
+    ListParticipantsError_PROPS
+  >({
+    args: {
+      list_id: list?.id,
+      owner_id: z_user?.id,
+    },
+    fn_NAME: "FETCH_listParticipants",
+    dependencies: [open, list?.type, list?.id],
+    defaultErr_MSG: fetchListParticipants_ERRS.user.defaultInternal_MSG,
+    SHOULD_fetchOnLoad: true,
+    SHOULD_returnNothing: list?.type !== "shared",
+    fn: FETCH_listParticipants,
   });
 
   const {
@@ -115,6 +136,7 @@ export default function ListSettings_MODAL({
 
   return (
     <Big_MODAL open={open}>
+      <Btn text="Fn" onPress={FETCH_participants} />
       <Header
         title={t("header.listSettings")}
         big={true}
@@ -183,7 +205,7 @@ export default function ListSettings_MODAL({
             share,
             IS_sharing,
             listSharing_ERROR,
-            participants,
+            participants: participants,
           }}
           TOGGLE_infoModal={() => TOGGLE_modal("listSharinggInfo")}
           TOGGLE_cancelModal={() => TOGGLE_modal("listSharingCancel")}
@@ -260,7 +282,11 @@ export default function ListSettings_MODAL({
         TOGGLE_open={() => TOGGLE_modal("selectUsers")}
         list_id={selected_LIST?.id}
         onUpdate={() => {
-          (async () => await FETCH_participants())();
+          (async () =>
+            await FETCH_participants({
+              list_id: list?.id,
+              owner_id: z_user?.id,
+            }))();
         }}
       />
 
@@ -416,7 +442,7 @@ export function ListSharing_BLOCK({
   TOGGLE_infoModal: () => void;
   TOGGLE_cancelModal: () => void;
   TOGGLE_selectUsersModal: () => void;
-  participants: { id: string; username: string }[] | undefined;
+  participants: ListParticipants_DATA;
 }) {
   return (
     <Block>

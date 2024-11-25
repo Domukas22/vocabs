@@ -1,27 +1,15 @@
-//
-//
-//
-import { renderHook, act } from "@testing-library/react";
-
+// import { renderHook, act, waitFor } from "@testing-library/react";
 import USE_async from "./USE_async";
 import HANDLE_internalError from "../../utils/SEND_internalError";
 import HANDLE_keyboardDismiss from "../../utils/HANDLE_keyboardDismiss/HANDLE_keyboardDismiss";
 import HANDLE_userError from "../../utils/HANDLE_userError/HANDLE_userError";
-import { waitFor } from "@testing-library/react-native";
+import { renderHook, act, waitFor } from "@testing-library/react-native";
 
 jest.mock("../../utils/SEND_internalError", () => jest.fn());
 jest.mock("../../utils/HANDLE_keyboardDismiss/HANDLE_keyboardDismiss", () =>
   jest.fn()
 );
 jest.mock("../../utils/HANDLE_userError/HANDLE_userError", () => jest.fn());
-
-// 1. Should initialize with correct default states
-// 2. Should set loading state when execute is called
-// 3. Should call `fn` and set data on success
-// 4. Should handle API error response and set error state
-// 5. Should handle unexpected error and call `HANDLE_userError`
-// 6. Should call `HANDLE_keyboardDismiss` and `HANDLE_internalError` on error
-// 7. Should reset errors when `RESET_errors` is called
 
 describe("USE_async", () => {
   beforeEach(() => {
@@ -46,6 +34,7 @@ describe("USE_async", () => {
 
   it("2. Should set loading state when execute is called", async () => {
     const mockFn = jest.fn().mockResolvedValue({ data: "mockData" });
+
     const { result } = renderHook(() =>
       USE_async({
         fn: mockFn,
@@ -54,18 +43,17 @@ describe("USE_async", () => {
       })
     );
 
-    // Call execute
     act(() => {
       result.current.execute({});
     });
 
-    // Ensure loading state is true immediately after execution starts
+    // Immediately after calling execute, loading should be true
     expect(result.current.loading).toBe(true);
 
     // Wait for the loading state to become false after promise resolves
     await waitFor(() => expect(result.current.loading).toBe(false));
 
-    // Assert that the mock function was called and data is set correctly
+    // Ensure that the mock function was called and data is set correctly
     expect(mockFn).toHaveBeenCalled();
     expect(result.current.data).toBe("mockData");
     expect(result.current.error).toBeUndefined();
@@ -205,5 +193,30 @@ describe("USE_async", () => {
     });
 
     expect(result.current.error).toBeUndefined();
+  });
+
+  it("8. Should return nothing if `SHOULD_returnNothing` is true", async () => {
+    const mockFn = jest.fn().mockResolvedValue({ data: "mockData" });
+    const { result } = renderHook(() =>
+      USE_async({
+        fn: mockFn,
+        defaultErr_MSG: "Default Error Message",
+        fn_NAME: "Test Function",
+        SHOULD_returnNothing: true,
+      })
+    );
+
+    // Call execute
+    act(() => {
+      result.current.execute({});
+    });
+
+    // Check that loading, data, and error are cleared
+    expect(result.current.loading).toBe(false);
+    expect(result.current.data).toBeUndefined();
+    expect(result.current.error).toBeUndefined();
+
+    // Ensure the function wasn't called since it returns nothing
+    expect(mockFn).not.toHaveBeenCalled();
   });
 });

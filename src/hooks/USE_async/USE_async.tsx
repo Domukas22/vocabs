@@ -13,17 +13,23 @@ export default function USE_async<
   responseData_TYPE,
   responseError_TYPE extends Error_PROPS
 >({
+  args,
   fn_NAME,
   dependencies = [],
   defaultErr_MSG,
+  SHOULD_fetchOnLoad = false,
+  SHOULD_returnNothing = false,
   fn,
   onSuccess = () => {},
   handleInternalError = HANDLE_internalError, // Allow override
   handleKeyboardDismiss = HANDLE_keyboardDismiss, // Allow override
 }: {
+  args?: args_TYPE;
   fn_NAME: string;
   dependencies?: any[];
   defaultErr_MSG: string;
+  SHOULD_fetchOnLoad?: boolean;
+  SHOULD_returnNothing?: boolean;
   fn: (
     args: args_TYPE
   ) => Promise<{ data: responseData_TYPE; error?: responseError_TYPE }>;
@@ -39,15 +45,26 @@ export default function USE_async<
 
   const execute = useCallback(
     async (args: args_TYPE) => {
+      if (SHOULD_returnNothing) {
+        if (loading) SET_loading(false);
+        if (data) SET_data(undefined);
+        if (error) SET_error(undefined);
+        return;
+      }
+
       SET_loading(true);
       SET_error(undefined);
       SET_data(undefined);
+
+      console.log("FIRE");
+      console.log(args);
 
       try {
         const { data, error } = await fn(args);
         if (error) {
           SET_error(error);
         } else {
+          console.log("executed data --> ", data);
           SET_data(data);
           onSuccess(data);
         }
@@ -65,6 +82,14 @@ export default function USE_async<
     },
     [fn, ...dependencies]
   );
+
+  useEffect(() => {
+    if (SHOULD_fetchOnLoad) {
+      if (args) {
+        execute(args);
+      }
+    }
+  }, [SHOULD_fetchOnLoad, execute, ...dependencies]);
 
   useEffect(() => {
     if (!error) return;

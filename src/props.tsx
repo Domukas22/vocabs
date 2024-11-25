@@ -14,6 +14,8 @@ export interface tr_PROPS {
   highlights: number[];
 }
 
+export type List_TYPES = "private" | "public" | "shared" | "draft";
+
 export type Error_TYPES =
   | "general"
   | "form_input"
