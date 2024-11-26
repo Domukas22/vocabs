@@ -12,7 +12,7 @@ interface ListFilter_PROPS {
   amount?: number;
 }
 
-export default async function FETCH_lists({
+export default async function FETCH_watermelonLists({
   search,
   user_id,
   z_listDisplay_SETTINGS,

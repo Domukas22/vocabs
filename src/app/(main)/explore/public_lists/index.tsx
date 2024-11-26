@@ -3,7 +3,7 @@
 //
 
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { _DisplaySettings_PROPS } from "@/src/utils/DisplaySettings";
 import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 
@@ -43,7 +43,7 @@ export default function PublicLists_PAGE() {
   const {
     data,
     error,
-    IS_searching,
+    IS_loading,
     IS_loadingMore,
     HAS_reachedEnd,
     unpaginated_COUNT,
@@ -53,9 +53,21 @@ export default function PublicLists_PAGE() {
     user_id: z_user?.id,
     z_listDisplay_SETTINGS,
     type: "public",
-    IS_debouncing,
   });
 
+  // const IS_searching = USE_isSearching({
+  //   IS_fetching: IS_loading,
+  //   IS_debouncing,
+  //   IS_loadingMore: IS_loadingMore,
+  // });
+
+  const IS_searching = useMemo(
+    () => (IS_loading || IS_debouncing) && !IS_loadingMore,
+    [IS_loading, IS_loadingMore, IS_debouncing]
+  );
+
+  // console.log("IS_searching", (IS_loading || IS_debouncing) && !IS_loadingMore);
+  // console.log("IS_loadingMore", IS_loadingMore);
   return (
     <Page_WRAP>
       <List_HEADER

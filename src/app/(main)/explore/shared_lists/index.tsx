@@ -3,7 +3,7 @@
 //
 
 import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import USE_debounceSearch from "@/src/hooks/USE_debounceSearch/USE_debounceSearch";
 import USE_zustand from "@/src/zustand";
 
@@ -40,11 +40,10 @@ export default function SharedLists_PAGE() {
     USE_collectSharedListLangs(z_user?.id);
 
   const {
-    data,
+    lists,
     error,
-    IS_searching,
+    IS_loading,
     IS_loadingMore,
-    HAS_reachedEnd,
     unpaginated_COUNT,
     LOAD_more,
   } = USE_supabaseLists({
@@ -52,7 +51,6 @@ export default function SharedLists_PAGE() {
     user_id: z_user?.id,
     z_listDisplay_SETTINGS,
     type: "shared",
-    IS_debouncing,
   });
 
   return (
@@ -67,19 +65,19 @@ export default function SharedLists_PAGE() {
       />
 
       <ExploreLists_FLATLIST
+        {...{ lists }}
         type="shared"
-        IS_searching={IS_searching}
+        IS_searching={IS_loading || IS_debouncing}
         error={error}
-        lists={data}
         onScroll={handleScroll}
         listHeader_EL={
           <ListsFlatlistHeader_SECTION
             list_NAME="🔒 Shared lists"
             totalLists={unpaginated_COUNT}
             HAS_error={error?.value}
+            IS_searching={IS_loading || IS_debouncing}
             {...{
               search,
-              IS_searching,
               z_listDisplay_SETTINGS,
               z_SET_listDisplaySettings,
             }}
@@ -91,13 +89,13 @@ export default function SharedLists_PAGE() {
             totalFilteredResults_COUNT={unpaginated_COUNT}
             RESET_search={() => SET_search("")}
             RESET_filters={() => z_SET_listDisplaySettings({ langFilters: [] })}
+            HAS_reachedEnd={lists?.length >= unpaginated_COUNT}
             {...{
               search,
               IS_debouncing,
               LOAD_more,
               IS_loadingMore,
               activeFilter_COUNT,
-              HAS_reachedEnd,
             }}
           />
         }

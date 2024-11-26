@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import List_MODEL from "@/src/db/models/List_MODEL";
 import { z_listDisplaySettings_PROPS } from "@/src/zustand";
-import { FlatlistError_PROPS } from "@/src/props";
+
 import USE_isSearching from "@/src/hooks/USE_isSearching";
 import { LIST_PAGINATION } from "@/src/constants/globalVars";
 import USE_pagination from "@/src/hooks/USE_pagination";
-import FETCH_lists from "../utils/FetchLists_QUERY";
+import FETCH_watermelonLists from "../utils/FETCH_watermelonLists";
 
 export function USE_lists({
   search,
@@ -49,7 +49,7 @@ export function USE_lists({
       SET_error({ value: false, msg: "" });
 
       try {
-        const { lists, count, error } = await FETCH_lists({
+        const { lists, count, error } = await FETCH_watermelonLists({
           search,
           user_id,
           amount: LIST_PAGINATION || 20,

@@ -106,7 +106,7 @@ export default async function NAVIGATE_user({
     if (watermelon_SUCCESS) {
       z_SET_user(watermelon_USER);
       await sync({ user: watermelon_USER, PULL_EVERYTHING: true });
-      router.push("/(main)/vocabs");
+      router.push("/(main)/explore");
       return;
     } else {
       if (navigateToWelcomeSreenOnError) {
@@ -133,12 +133,12 @@ export default async function NAVIGATE_user({
   if (!success) {
     if (error_REASON === "user_internet") {
       // the user is offline, let him continue using the app offline
-      router.push("/(main)/vocabs");
+      router.push("/(main)/explore");
       return;
     }
     // not sure what to do here
 
-    router?.push("/(main)/vocabs");
+    router?.push("/(main)/explore");
     return;
   }
 
@@ -159,5 +159,5 @@ export default async function NAVIGATE_user({
   // user was found on supabase, lets sync the user profile
   await sync({ user: watermelon_USER, PULL_EVERYTHING: true });
 
-  router.push("/(main)/vocabs");
+  router.push("/(main)/explore");
 }
