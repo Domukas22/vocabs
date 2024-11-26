@@ -7,5 +7,11 @@ export default function APPLY_supabasePagination(
   start: number,
   end: number
 ) {
-  return end - 1 <= start ? query.range(0, 0) : query.range(start, end - 1);
+  if (!query) return;
+
+  const validNumbers = typeof end === "number" && typeof start === "number";
+
+  return validNumbers && end - 1 <= start
+    ? query.range(0, 0)
+    : query.range(start, end - 1);
 }

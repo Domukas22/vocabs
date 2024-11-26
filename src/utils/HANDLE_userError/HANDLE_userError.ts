@@ -20,7 +20,7 @@ export default function HANDLE_userError<
   const type = IS_networkFailure
     ? "user_network"
     : error.error_TYPE || "unknown";
-  const details = type === "unkown" ? error : error.error_DETAILS;
+  const details = type === "unknown" ? error : error.error_DETAILS;
 
   return {
     user_MSG: IS_networkFailure

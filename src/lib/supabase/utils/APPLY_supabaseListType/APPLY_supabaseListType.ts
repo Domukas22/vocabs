@@ -2,11 +2,13 @@
 //
 //
 
+import { Error_PROPS } from "@/src/props";
+
 export default function APPLY_supabaseListType(
   query: any,
   type: string,
   list_ids: string[] | undefined | null
-) {
+): { query?: any; error?: Error_PROPS } {
   if (type !== "shared" && type !== "public")
     return query.eq("type", "typeUndefined");
 

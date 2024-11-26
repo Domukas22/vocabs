@@ -12,7 +12,7 @@ import {
   ListParticipants_RESPONSE,
   fetchSupabaseLists_ERRS,
 } from "./types";
-import EXTEND_supabaseListquery from "./utils/EXTEND_supabaseListquery";
+import BUILD_supabaseListQuery from "../BUILD_supabaseListQuery/BUILD_supabaseListQuery";
 
 export default async function FETCH_supabaseLists({
   search,
@@ -24,26 +24,7 @@ export default async function FETCH_supabaseLists({
   type,
 }: FetchSupabaseLists_ARGS): Promise<ListParticipants_RESPONSE> {
   try {
-    if (type !== "shared" && type !== "public")
-      throw GENERATE_internalError("not_public_and_not_shared");
-
-    if (type === "shared" && !list_ids)
-      throw GENERATE_internalError("shared_but_listIds_undefined");
-
-    const initial_QUERY = supabase.from("lists").select(
-      `
-          id,
-          name,
-          description,
-          collected_lang_ids,
-          ...users!lists_2_user_id_fkey(username),
-          vocabs(count)
-        `,
-      { count: "exact" }
-    );
-
-    const query = EXTEND_supabaseListquery({
-      query: initial_QUERY,
+    const { query, error: extendQuery_ERROR } = BUILD_supabaseListQuery({
       list_ids,
       type,
       search,
@@ -51,10 +32,9 @@ export default async function FETCH_supabaseLists({
       start,
       end,
     });
+    if (extendQuery_ERROR) throw extendQuery_ERROR;
 
-    // const { data, error, count } = await query.abortSignal(signal);
-    const { data, error, count } = await query;
-
+    const { data, error, count } = await query.abortSignal(signal);
     if (error) throw GENERATE_internalError("failed_supabase_fetch", error);
 
     return {
@@ -79,30 +59,22 @@ export default async function FETCH_supabaseLists({
 }
 
 function GENERATE_internalError(
-  type:
-    | "not_public_and_not_shared"
-    | "shared_but_listIds_undefined"
-    | "failed_supabase_fetch",
+  type: "failed_supabase_fetch" | "failed_to_extend_query",
+
   details: any = undefined
 ) {
   let internal_MSG = "";
   let error_DETAILS = details;
 
   switch (type) {
-    case "not_public_and_not_shared":
-      internal_MSG = fetchSupabaseLists_ERRS.internal.inproperListType;
-      break;
-    case "shared_but_listIds_undefined":
-      internal_MSG = fetchSupabaseLists_ERRS.internal.listIdsUndefined;
+    case "failed_to_extend_query":
+      internal_MSG = fetchSupabaseLists_ERRS.internal.failedtoExtendQuery;
       break;
     case "failed_supabase_fetch":
       internal_MSG = fetchSupabaseLists_ERRS.internal.failedSupabaseFetch;
       break;
-    default:
-      internal_MSG = "Something went wrong when fethcing supabase lists";
   }
 
-  // });
   return {
     error_TYPE: "internal",
     user_MSG: fetchSupabaseLists_ERRS.user.defaultInternal_MSG,

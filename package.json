@@ -10,7 +10,7 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "clearJestCache": "jest --clearCache",
-    "testFile": "jest --watch --coverage=false --testPathPattern=src/features/1_lists/utils/FETCH_supabaseLists",
+    "testFile": "jest --watch --coverage=false --testPathPattern=src/features/1_lists/utils/FETCH_supabaseLists/FETCH_supabaseLists.test.ts",
     "test": "jest --watch --coverage=false --changedSince=origin/main",
     "testDebug": "jest -o --watch --coverage=false",
     "testFinal": "jest",

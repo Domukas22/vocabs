@@ -7,6 +7,8 @@ export const fetchSupabaseLists_ERRS = {
     listIdsUndefined: "list_ids undefined when fetching supabase lists",
     inproperListType:
       "The provided 'list.type' when fetching supabase lists was neither 'shared' nor 'public'",
+    failedtoExtendQuery:
+      "EXTEND_supabaseListQuery returned an invalid query when fetching supabase lists ",
     failedSupabaseFetch: "Failed to fetch supabase lists",
   },
   user: {

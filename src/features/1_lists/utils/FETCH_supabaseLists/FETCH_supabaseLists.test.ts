@@ -1,202 +1,235 @@
+import { z_listDisplaySettings_PROPS } from "@/src/zustand";
 import FETCH_supabaseLists from "./FETCH_supabaseLists";
-import { FetchSupabaseLists_ARGS } from "./types";
-import { supabase } from "@/src/lib/supabase";
-import CHECK_ifNetworkFailure from "@/src/utils/CHECK_ifNetworkFailure";
+import { fetchSupabaseLists_ERRS } from "./types";
+import { PostgrestError } from "@supabase/supabase-js";
 
-// Mock necessary modules
+// Mock dependencies
 jest.mock("@/src/lib/supabase", () => ({
   supabase: {
     from: jest.fn().mockReturnValue({
-      select: jest.fn(),
+      select: jest.fn().mockReturnThis(),
+      abortSignal: jest.fn().mockReturnThis(),
     }),
   },
 }));
-
-jest.mock("@/src/utils/CHECK_ifNetworkFailure", () => jest.fn());
+jest.mock("../BUILD_supabaseListQuery/BUILD_supabaseListQuery", () =>
+  jest.fn().mockReturnThis()
+);
 
 describe("FETCH_supabaseLists", () => {
-  const mockSelect = jest.fn();
-  const mockRange = jest.fn();
-  const mockAbortSignal = jest.fn();
+  const MOCK_SIGNAL = new AbortController().signal;
+  const MOCK_Z_LIST_DISPLAY_SETTINGS = {
+    sorting: "date",
+    sortDirection: "ascending",
+    langFilters: ["en", "de"],
+  } as z_listDisplaySettings_PROPS;
 
   beforeEach(() => {
     jest.clearAllMocks();
-    (supabase.from as jest.Mock).mockReturnValue({
-      select: mockSelect.mockReturnValue({
-        range: mockRange,
-        abortSignal: mockAbortSignal,
-      }),
-    });
   });
 
-  const testArgs: FetchSupabaseLists_ARGS = {
-    search: "test search",
-    list_ids: ["1", "2"],
-    z_listDisplay_SETTINGS: {
-      langFilters: [],
-      sorting: "date",
-      sortDirection: "ascending",
-    },
-    start: 0,
-    end: 10,
-    type: "shared",
-  };
-
-  it("returns correct data with valid args", async () => {
-    mockRange.mockResolvedValueOnce({
-      data: [
-        {
-          id: 1,
-          name: "List 1",
-          description: "Desc 1",
-          collected_lang_ids: [],
-          username: "user1",
-          vocabs: [{ count: 3 }],
-        },
-      ],
-      count: 1,
+  it("1. Should throw an error if 'type' is not 'public' or 'shared'", async () => {
+    // Call the function with the invalid type
+    const result = await FETCH_supabaseLists({
+      type: "somethingInvalid" as "public", // the "as public" is to avoid typescript error
+      list_ids: ["list1"],
+      search: "test",
+      z_listDisplay_SETTINGS: MOCK_Z_LIST_DISPLAY_SETTINGS,
+      start: 0,
+      end: 10,
+      signal: MOCK_SIGNAL,
     });
 
-    const result = await FETCH_supabaseLists(testArgs);
-
-    expect(result).toEqual({
-      data: {
-        lists: [
-          {
-            id: 1,
-            name: "List 1",
-            description: "Desc 1",
-            collected_lang_ids: [],
-            username: "user1",
-            vocabs: [{ count: 3 }],
-          },
-        ],
-        count: 1,
-      },
-    });
-  });
-
-  it("returns empty data if no lists are found", async () => {
-    mockRange.mockResolvedValueOnce({
-      data: [],
-      count: 0,
-    });
-
-    const result = await FETCH_supabaseLists(testArgs);
-
+    // Check if the validation error is thrown correctly
     expect(result).toEqual({
       data: {
         lists: [],
         count: 0,
       },
+      error: expect.objectContaining({
+        error_TYPE: "internal",
+        user_MSG: fetchSupabaseLists_ERRS.user.defaultInternal_MSG,
+        internal_MSG: fetchSupabaseLists_ERRS.internal.inproperListType,
+      }),
     });
   });
 
-  it("throws an error if type is invalid", async () => {
-    const invalidArgs = { ...testArgs, type: "invalid" };
-    await expect(FETCH_supabaseLists(invalidArgs)).resolves.toEqual({
-      data: { lists: [], count: 0 },
-      error: {
+  it("2. Should throw an error if 'type' is 'shared' and 'list_ids' is not provided", async () => {
+    const sharedType = "shared"; // Valid type, but no list_ids
+
+    // Call the function with the 'shared' type and no list_ids
+    const result = await FETCH_supabaseLists({
+      type: sharedType,
+      list_ids: undefined,
+      search: "test",
+      z_listDisplay_SETTINGS: MOCK_Z_LIST_DISPLAY_SETTINGS,
+      start: 0,
+      end: 10,
+      signal: MOCK_SIGNAL,
+    });
+
+    // Check if the validation error is thrown correctly for missing list_ids
+    expect(result).toEqual({
+      data: {
+        lists: [],
+        count: 0,
+      },
+      error: expect.objectContaining({
         error_TYPE: "internal",
-        function_NAME: "FETCH_supabaseLists",
-        user_MSG: "An internal error occurred. Please try again later.",
-        internal_MSG: "Invalid list type provided.",
+        user_MSG: fetchSupabaseLists_ERRS.user.defaultInternal_MSG,
+        internal_MSG: fetchSupabaseLists_ERRS.internal.listIdsUndefined,
+      }),
+    });
+  });
+
+  it("3. Should call EXTEND_supabaseListQuery with the correct arguments", async () => {
+    const mockExtendSupabaseListquery = require("../BUILD_supabaseListQuery/BUILD_supabaseListQuery");
+
+    const list_ids = ["list1"];
+    const type = "public";
+    const search = "test";
+
+    await FETCH_supabaseLists({
+      type,
+      list_ids,
+      search,
+      z_listDisplay_SETTINGS: MOCK_Z_LIST_DISPLAY_SETTINGS,
+      start: 0,
+      end: 10,
+      signal: MOCK_SIGNAL,
+    });
+
+    expect(mockExtendSupabaseListquery).toHaveBeenCalledWith({
+      query: expect.anything(), // The query object can be any, we just care about the call
+      list_ids,
+      type,
+      search,
+      z_listDisplay_SETTINGS: MOCK_Z_LIST_DISPLAY_SETTINGS,
+      start: 0,
+      end: 10,
+    });
+  });
+
+  it("4. Should handle Supabase error properly", async () => {
+    const mockError: PostgrestError = {
+      code: "multi-error",
+      message: "Multiple issues occurred",
+      details: "Error1; Error2; Error3",
+      hint: "Check your query",
+    };
+
+    const mockExtendSupabaseListquery = require("../BUILD_supabaseListQuery/BUILD_supabaseListQuery");
+
+    mockExtendSupabaseListquery.mockReturnValueOnce({
+      abortSignal: jest.fn().mockResolvedValue({
+        error: mockError,
+      }),
+    });
+
+    const result = await FETCH_supabaseLists({
+      type: "shared",
+      list_ids: ["list1"],
+      search: "test",
+      z_listDisplay_SETTINGS: MOCK_Z_LIST_DISPLAY_SETTINGS,
+      start: 0,
+      end: 10,
+      signal: MOCK_SIGNAL,
+    });
+
+    // Check if the error response matches the expected structure
+    expect(result).toEqual({
+      data: {
+        lists: [],
+        count: 0,
+      },
+      error: expect.objectContaining({
+        error_TYPE: "internal",
+        user_MSG: fetchSupabaseLists_ERRS.user.defaultInternal_MSG,
+        internal_MSG: fetchSupabaseLists_ERRS.internal.failedSupabaseFetch,
+      }),
+    });
+  });
+
+  it("5. Should return data and count when Supabase query is successful", async () => {
+    const mockData = [
+      { id: "list1", name: "Test List", description: "Test description" },
+    ];
+    const mockCount = 1;
+
+    const mockExtendSupabaseListquery = require("../BUILD_supabaseListQuery/BUILD_supabaseListQuery");
+    mockExtendSupabaseListquery.mockReturnValueOnce({
+      abortSignal: jest.fn().mockResolvedValue({
+        data: mockData,
+        count: mockCount,
+        error: null,
+      }),
+    });
+
+    const result = await FETCH_supabaseLists({
+      type: "public",
+      list_ids: ["list1"],
+      search: "test",
+      z_listDisplay_SETTINGS: MOCK_Z_LIST_DISPLAY_SETTINGS,
+      start: 0,
+      end: 10,
+      signal: MOCK_SIGNAL,
+    });
+
+    expect(result).toEqual({
+      data: {
+        lists: mockData,
+        count: mockCount,
       },
     });
   });
 
-  it("throws an error if list_ids are missing for shared type", async () => {
-    const invalidArgs = { ...testArgs, type: "shared", list_ids: null };
-    await expect(FETCH_supabaseLists(invalidArgs)).resolves.toEqual({
-      data: { lists: [], count: 0 },
-      error: {
-        error_TYPE: "internal",
-        function_NAME: "FETCH_supabaseLists",
-        user_MSG: "An internal error occurred. Please try again later.",
-        internal_MSG: "List IDs are required for shared type.",
+  it("6. Should handle abort signal correctly", async () => {
+    const mockError: PostgrestError = {
+      code: "abort-error",
+      message: "Query aborted",
+      details: "Request was canceled",
+      hint: "Abort signal was triggered",
+    };
+
+    // Create a mock AbortController
+    const abortController = new AbortController();
+
+    // Mock the behavior of supabase query with abortSignal handling
+    const mockExtendSupabaseListquery = require("../BUILD_supabaseListQuery/BUILD_supabaseListQuery");
+
+    // Mock the abortSignal function to simulate the query being aborted
+    mockExtendSupabaseListquery.mockReturnValueOnce({
+      abortSignal: jest.fn().mockImplementation(() => {
+        // Simulate that the operation is aborted
+        abortController.abort(); // Abort the request immediately
+        return Promise.reject(mockError); // Return an error to simulate the abort scenario
+      }),
+    });
+
+    // Set the abort signal to be passed to the function
+    const resultPromise = FETCH_supabaseLists({
+      type: "public",
+      list_ids: ["list1"],
+      search: "test",
+      z_listDisplay_SETTINGS: MOCK_Z_LIST_DISPLAY_SETTINGS,
+      start: 0,
+      end: 10,
+      signal: abortController.signal, // Pass the signal here
+    });
+
+    // Trigger the abort before the query resolves
+    abortController.abort();
+
+    // Await the result and check if the correct error handling occurred
+    await expect(resultPromise).resolves.toEqual({
+      data: {
+        lists: [],
+        count: 0,
       },
+      error: expect.objectContaining({
+        error_TYPE: "unknown",
+        internal_MSG: "Query aborted",
+      }),
     });
   });
-
-  //   it("handles Supabase network failure", async () => {
-  //     mockRange.mockRejectedValueOnce(new Error("Network error"));
-  //     (CHECK_ifNetworkFailure as jest.Mock).mockReturnValueOnce(true);
-
-  //     const result = await FETCH_supabaseLists(testArgs);
-
-  //     expect(result).toEqual({
-  //       data: { lists: [], count: 0 },
-  //       error: {
-  //         error_TYPE: "user_network",
-  //         function_NAME: "FETCH_supabaseLists",
-  //         user_MSG: "Network error occurred. Please check your connection.",
-  //       },
-  //     });
 });
-
-// -------------------------------
-
-// jest.mock(
-//     "@/src/lib/supabase/utils/APPLY_supabasePagination/APPLY_supabasePagination",
-//     () => ({
-//       __esModule: true, // if using ES modules
-
-//       default: jest.fn().mockImplementation((query, start, end) => {
-//         // Mock the range behavior of the query object
-//         query.range = jest.fn().mockReturnValue(query); // Mock the query.range method
-//         return end - 1 <= start ? query.range(0, 0) : query.range(start, end - 1);
-//       }),
-//     })
-//   );
-
-// -------------------------------
-
-//   it("should throw an error when the 'type' is invalid", async () => {
-//     const invalidArgs = { ...validArgs, type: "invalidType" };
-
-//     await expect(FETCH_supabaseLists(invalidArgs)).rejects.toThrowError(
-//       fetchSupabaseLists_ERRS.internal.inproperListType
-//     );
-//   });
-
-//   it("should throw an error when 'list_ids' are required but not provided", async () => {
-//     const invalidArgs = { ...validArgs, list_ids: null, type: "shared" };
-
-//     await expect(FETCH_supabaseLists(invalidArgs)).rejects.toThrowError(
-//       fetchSupabaseLists_ERRS.internal.listIdsUndefined
-//     );
-//   });
-
-//   it("should handle network failure error correctly", async () => {
-//     const errorResponse = { message: "Network error" };
-//     CHECK_ifNetworkFailure.mockReturnValue(true);
-
-//     supabase.from().select.mockResolvedValueOnce({ error: errorResponse });
-
-//     await expect(FETCH_supabaseLists(validArgs)).rejects.toThrowError(
-//       fetchSupabaseLists_ERRS.user.networkFailure
-//     );
-//   });
-
-//   it("should handle other errors correctly", async () => {
-//     const errorResponse = { message: "Supabase fetch error" };
-//     supabase.from().select.mockResolvedValueOnce({ error: errorResponse });
-
-//     await expect(FETCH_supabaseLists(validArgs)).rejects.toThrowError(
-//       fetchSupabaseLists_ERRS.internal.failedSupabaseFetch
-//     );
-//   });
-
-//   it("should apply pagination correctly", async () => {
-//     const mockData = { data: [{ id: 1, name: "List 1" }], count: 1 };
-//     supabase.from().select.mockResolvedValueOnce(mockData);
-
-//     const result = await FETCH_supabaseLists({
-//       ...validArgs,
-//       start: 0,
-//       end: 5,
-//     });
-
-//     expect(result.data.lists.length).toBeGreaterThan(0);
-//     expect(result.data.count).toBe(1);
-//   });

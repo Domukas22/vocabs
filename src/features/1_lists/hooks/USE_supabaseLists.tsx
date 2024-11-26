@@ -55,8 +55,6 @@ export default function USE_supabaseLists({
 
       // Abort the previous fetch if it's still ongoing
       if (abortControllerRef.current) {
-        console.log("ABORT");
-
         abortControllerRef.current.abort();
       }
 

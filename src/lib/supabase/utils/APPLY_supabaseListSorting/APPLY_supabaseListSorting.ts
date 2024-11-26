@@ -12,6 +12,7 @@ export default function APPLY_supabaseListSorting(
   >["sorting"] /* here, make sure it only refferences the "sorting" prop*/,
   sortDirection: "ascending" | "descending" = "descending"
 ) {
+  if (!query) return;
   const sortColumn = sorting === "date" ? "created_at" : "created_at";
   return query.order(sortColumn, { ascending: sortDirection === "ascending" });
 }
