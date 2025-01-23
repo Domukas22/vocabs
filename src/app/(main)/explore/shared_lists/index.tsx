@@ -2,39 +2,36 @@
 //
 //
 
-import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
-import React, { useEffect, useMemo } from "react";
-import USE_debounceSearch from "@/src/hooks/USE_debounceSearch/USE_debounceSearch";
-import USE_zustand from "@/src/zustand";
-
-import USE_collectSharedListLangs from "@/src/features/2_vocabs/hooks/USE_collectSharedListLangs";
-import USE_modalToggles from "@/src/hooks/USE_modalToggles";
-import ListDisplaySettings_MODAL from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/ListDisplaySettings_MODAL";
-import ExploreLists_FLATLIST from "@/src/features/1_lists/components/ExploreLists_FLATLIST";
-import ListsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/ListsFlatlistHeader_SECTION";
-
-import USE_getActiveFilterCount from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/utils/USE_getActiveFilterCount";
-import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
+import BottomAction_BLOCK from "@/src/components/1_grouped/blocks/BottomAction_BLOCK";
+import List_HEADER from "@/src/components/1_grouped/headers/listPage/List_HEADER";
+import Page_WRAP from "@/src/components/1_grouped/Page_WRAP/Page_WRAP";
+import {
+  ExploreLists_FLATLIST,
+  ListDisplaySettings_MODAL,
+  ListsFlatlist_HEADER,
+} from "@/src/features/lists/components";
+import {
+  USE_collectSharedListLangs,
+  USE_supabaseLists,
+} from "@/src/features/lists/functions";
+import { USE_getActiveFilterCount } from "@/src/hooks";
+import { USE_showListHeaderTitle, USE_debounceSearch } from "@/src/hooks";
+import { USE_modalToggles } from "@/src/hooks/index";
+import { USE_zustand } from "@/src/hooks";
 import { useRouter } from "expo-router";
-import List_HEADER from "@/src/components/Header/List_HEADER";
-import BottomAction_SECTION from "@/src/components/BottomAction_SECTION";
-import USE_supabaseLists from "@/src/features/1_lists/hooks/USE_supabaseLists";
-import USE_pagination from "@/src/hooks/USE_pagination";
-import USE_isSearching from "@/src/hooks/USE_isSearching";
+import React, { useEffect, useMemo } from "react";
 
 export default function SharedLists_PAGE() {
   const { z_user } = USE_zustand();
   const { z_listDisplay_SETTINGS, z_SET_listDisplaySettings } = USE_zustand();
   const { showTitle, handleScroll } = USE_showListHeaderTitle();
-  const activeFilter_COUNT = USE_getActiveFilterCount(z_listDisplay_SETTINGS);
+  const { activeFilter_COUNT } = USE_getActiveFilterCount("lists");
   const router = useRouter();
 
   const { search, debouncedSearch, IS_debouncing, SET_search } =
     USE_debounceSearch();
 
-  const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
-    { name: "displaySettings" },
-  ]);
+  const { modals } = USE_modalToggles(["displaySettings"]);
 
   const { collectedLang_IDS, ARE_langIdsCollecting, collectLangIds_ERROR } =
     USE_collectSharedListLangs(z_user?.id);
@@ -54,12 +51,12 @@ export default function SharedLists_PAGE() {
   });
 
   return (
-    <Page_WRAP>
+    <>
       <List_HEADER
         SHOW_listName={showTitle}
         list_NAME="🔒 Shared lists"
         GO_back={() => router.back()}
-        OPEN_displaySettings={() => TOGGLE_modal("displaySettings")}
+        OPEN_displaySettings={() => modals.displaySettings.set(false)}
         IS_searchBig={true}
         {...{ search, SET_search, activeFilter_COUNT }}
       />
@@ -71,7 +68,7 @@ export default function SharedLists_PAGE() {
         error={error}
         onScroll={handleScroll}
         listHeader_EL={
-          <ListsFlatlistHeader_SECTION
+          <ListsFlatlist_HEADER
             list_NAME="🔒 Shared lists"
             totalLists={unpaginated_COUNT}
             HAS_error={error?.value}
@@ -84,7 +81,7 @@ export default function SharedLists_PAGE() {
           />
         }
         listFooter_EL={
-          <BottomAction_SECTION
+          <BottomAction_BLOCK
             type="list"
             totalFilteredResults_COUNT={unpaginated_COUNT}
             RESET_search={() => SET_search("")}
@@ -103,10 +100,10 @@ export default function SharedLists_PAGE() {
       {/* ------------------------------------------------ MODALS ------------------------------------------------ */}
 
       <ListDisplaySettings_MODAL
-        open={modal_STATES.displaySettings}
-        TOGGLE_open={() => TOGGLE_modal("displaySettings")}
+        open={modals.displaySettings.IS_open}
+        TOGGLE_open={() => modals.displaySettings.set(false)}
         collectedLang_IDS={collectedLang_IDS}
       />
-    </Page_WRAP>
+    </>
   );
 }

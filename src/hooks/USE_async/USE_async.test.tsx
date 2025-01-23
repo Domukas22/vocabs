@@ -1,11 +1,17 @@
 // import { renderHook, act, waitFor } from "@testing-library/react";
-import USE_async from "./USE_async";
-import HANDLE_internalError from "../../utils/SEND_internalError";
-import HANDLE_keyboardDismiss from "../../utils/HANDLE_keyboardDismiss/HANDLE_keyboardDismiss";
-import HANDLE_userError from "../../utils/HANDLE_userError/HANDLE_userError";
-import { renderHook, act, waitFor } from "@testing-library/react-native";
+//
+//
+//
 
-jest.mock("../../utils/SEND_internalError", () => jest.fn());
+import {
+  HANDLE_userError,
+  HANDLE_keyboardDismiss,
+  SEND_internalError,
+} from "@/src/utils";
+import { renderHook, act, waitFor } from "@testing-library/react-native";
+import { USE_async } from "./USE_async";
+
+jest.mock("@/src/utils/SEND_internalError", () => jest.fn());
 jest.mock("../../utils/HANDLE_keyboardDismiss/HANDLE_keyboardDismiss", () =>
   jest.fn()
 );
@@ -162,7 +168,7 @@ describe("USE_async", () => {
     });
 
     expect(HANDLE_keyboardDismiss).toHaveBeenCalledWith("api_error");
-    expect(HANDLE_internalError).toHaveBeenCalledWith({
+    expect(SEND_internalError).toHaveBeenCalledWith({
       error: { error_TYPE: "api_error", user_MSG: "Mock API Error" },
       function_NAME: "Test Function",
     });

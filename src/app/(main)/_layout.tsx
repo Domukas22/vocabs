@@ -6,19 +6,21 @@ import {
   ICON_general,
   ICON_search,
   ICON_vocabs,
-} from "@/src/components/icons/icons";
+} from "@/src/components/1_grouped/icons/icons";
 
 import { MyColors } from "@/src/constants/MyColors";
-import USE_observeUserUnreadNotificationCount from "@/src/features/5_users/hooks/USE_observeUserUnreadNotificationCount";
-import USE_zustand from "@/src/zustand";
+import { USE_observeMyUnreadNotificationCount } from "@/src/features/notifications/functions";
+import { USE_zustand } from "@/src/hooks";
 import { Tabs } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 
+const tabBar_HEIGHT = 70;
+
 export default function TabLayout() {
   const { t } = useTranslation();
   const { z_user } = USE_zustand();
-  const unreadNotifications_COUnt = USE_observeUserUnreadNotificationCount(
+  const unreadNotifications_COUnt = USE_observeMyUnreadNotificationCount(
     z_user?.id
   );
 
@@ -27,15 +29,13 @@ export default function TabLayout() {
       screenOptions={{
         headerShown: false,
         tabBarItemStyle: {
-          paddingBottom: 16,
+          height: tabBar_HEIGHT,
           paddingTop: 8,
-          height: 80,
+          paddingBottom: 4,
         },
-        tabBarStyle: {
-          borderTopWidth: 1,
-          height: 100,
-          minHeight: 100,
 
+        tabBarStyle: {
+          height: tabBar_HEIGHT,
           backgroundColor: MyColors.fill_bg,
           borderTopColor: MyColors.border_white_005,
           alignItems: "flex-start",
@@ -44,7 +44,7 @@ export default function TabLayout() {
         },
         tabBarActiveTintColor: MyColors.text_primary,
         tabBarLabelStyle: {
-          fontSize: 15, // Adjust font size
+          fontSize: 16,
           fontFamily: "Nunito-Bold",
         },
       }}

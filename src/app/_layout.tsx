@@ -1,83 +1,72 @@
-import * as SplashScreen from "expo-splash-screen";
+//
+//
+//
+
 import { useFonts } from "expo-font";
-import { ExpoRouter, Router, Slot, useRouter } from "expo-router";
-import { useEffect } from "react";
+import { Slot } from "expo-router";
+import React, { useEffect } from "react";
 import { ToastProvider } from "react-native-toast-notifications";
-import * as SecureStore from "expo-secure-store";
-import { supabase } from "../lib/supabase";
 
 import "@/src/i18n";
-import Notification_BOX from "../components/Notification_BOX/Notification_BOX";
-import { USE_sync } from "../hooks/USE_sync/USE_sync";
-import db, { Languages_DB, Users_DB } from "../db";
-import { Q } from "@nozbe/watermelondb";
+import Notification_BLOCK from "../components/1_grouped/blocks/Notification_BLOCK/Notification_BLOCK";
 import { Auth_PROVIDER } from "../context/Auth_CONTEXT";
-import USE_zustand, { z_setUser_PROPS } from "../zustand";
 
-import i18next from "@/src/i18n";
-import REFRESH_zustandUser from "../features/5_users/utils/REFRESH_zustandUser";
-import USE_handleUserNavigation from "../utils/NAVIGATE_user";
-import HANDLE_internalError from "../utils/SEND_internalError";
-import NAVIGATE_user from "../utils/NAVIGATE_user";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { PortalProvider } from "@gorhom/portal";
+import { USE_navigateUser } from "../utils/NAVIGATE_user/NAVIGATE_user";
+import Toast_CONTEXT from "../context/Toast_CONTEXT";
+import Page_WRAP from "../components/1_grouped/Page_WRAP/Page_WRAP";
+import { USE_zustand } from "@/src/hooks";
 
 export default function _layout() {
   return (
     <Auth_PROVIDER>
-      <ToastProvider
-        renderType={{
-          // Define a render function for each toast type
-          success: (toast: any) => (
-            <Notification_BOX type="success" text={toast.message} />
-          ),
-          error: (toast: any) => (
-            <Notification_BOX type="error" text={toast.message} />
-          ),
-          warning: (toast: any) => (
-            <Notification_BOX type="warning" text={toast.message} />
-          ),
-          // Add more toast types as needed
-        }}
-        style={toastProviderStyles}
-        offsetBottom={120}
-      >
-        <MainLayout />
-      </ToastProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <PortalProvider>
+          <Toast_CONTEXT>
+            <Content />
+          </Toast_CONTEXT>
+        </PortalProvider>
+      </GestureHandlerRootView>
     </Auth_PROVIDER>
   );
 }
 
-// Styles for ToastProvider
-const toastProviderStyles = {
-  zIndex: 9999,
-  elevation: 9999,
-};
-
-function MainLayout() {
-  const router = useRouter();
+function Content() {
   const [fontsLoaded] = useFonts(loadFonts());
-  const { sync } = USE_sync();
-  const { z_SET_user } = USE_zustand();
+  const { navigate } = USE_navigateUser({
+    navigateToWelcomeSreenOnError: true,
+  });
+  const { z_user } = USE_zustand();
+
+  // in case something happens to the zustand user obj, re-navigate
+  useEffect(() => {
+    if ((!z_user || !z_user?.id) && fontsLoaded) {
+      (async () => {
+        await navigate();
+      })();
+    }
+  }, [z_user]);
 
   useEffect(() => {
     const initializeApp = async () => {
-      await SplashScreen.hideAsync();
       if (fontsLoaded) {
-        await NAVIGATE_user({
-          navigateToWelcomeSreenOnError: true,
-          router,
-          z_SET_user,
-          sync,
-        });
+        await navigate();
       }
     };
 
     initializeApp();
   }, [fontsLoaded]);
 
-  if (!fontsLoaded) return null;
-
-  return <Slot />;
+  return (
+    <Page_WRAP>
+      <Slot />
+    </Page_WRAP>
+  );
 }
+// Slot is usually used in the upper most _layout file
+// -- Depending on the current route, the contents of that route will be inserted into this slot
+// -- Some of the routes might contain a Stack, which is like a folder of files that you can navigate with the Tabs component
 
 // Load font files
 function loadFonts() {

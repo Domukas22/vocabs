@@ -31,6 +31,12 @@ const sanitizeTranslations = (rawTranslations: tr_PROPS[]) => {
 };
 
 export default class Vocab_MODEL extends Model {
+  translations(
+    translations: any,
+    languages: import("./Language_MODEL").default[]
+  ): import("react").SetStateAction<import("./Language_MODEL").default[]> {
+    throw new Error("Method not implemented.");
+  }
   static table = "vocabs";
 
   @text("user_id") user_id!: string | null;
@@ -46,6 +52,7 @@ export default class Vocab_MODEL extends Model {
   @readonly @date("created_at") createdAt!: number;
   @readonly @date("updated_at") updatedAt!: number;
   @text("deleted_at") deleted_at!: string;
+  image: SetStateAction<string>;
 
   @writer async TOGGLE_marked() {
     await this.update((vocab) => {

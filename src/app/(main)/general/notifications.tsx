@@ -2,10 +2,10 @@
 //
 //
 
-import Btn from "@/src/components/Btn/Btn";
-import Header from "@/src/components/Header/Header";
+import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
+import Header from "@/src/components/1_grouped/headers/regular/Header";
 
-import { ICON_3dots, ICON_arrow } from "@/src/components/icons/icons";
+import { ICON_3dots, ICON_arrow } from "@/src/components/1_grouped/icons/icons";
 
 import React, { useState } from "react";
 import { Pressable, StyleSheet } from "react-native";
@@ -13,16 +13,19 @@ import { Pressable, StyleSheet } from "react-native";
 import { router } from "expo-router";
 
 import { View } from "react-native";
-import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
+import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
-import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
+import Page_WRAP from "@/src/components/1_grouped/Page_WRAP/Page_WRAP";
 import { useTranslation } from "react-i18next";
-import USE_fetchNotifications from "@/src/features/6_notifications/hooks/USE_fetchNotifications";
-import Styled_FLASHLIST from "@/src/components/Styled_FLATLIST/Styled_FLASHLIST/Styled_FLASHLIST";
+import Styled_FLASHLIST from "@/src/components/3_other/Styled_FLASHLIST/Styled_FLASHLIST";
 import Notifications_MODEL from "@/src/db/models/Notifications_MODEL";
-import USE_updateNotification from "@/src/features/6_notifications/hooks/USE_updateNotification";
-import USE_zustand from "@/src/zustand";
+
+import { USE_zustand } from "@/src/hooks";
 import { withObservables } from "@nozbe/watermelondb/react";
+import {
+  USE_fetchNotifications,
+  USE_updateNotification,
+} from "@/src/features/notifications/functions";
 
 const EnhancedNotification_BTN = withObservables(
   ["notification"],
@@ -46,7 +49,7 @@ export default function Notifications_PAGE() {
   // const {value, target} = IS_notificationUpdating
 
   return (
-    <Page_WRAP>
+    <>
       <Header
         title={t("header.notifications")}
         btnLeft={
@@ -80,7 +83,7 @@ export default function Notifications_PAGE() {
         }}
         keyExtractor={(item) => "PublicVocab" + item.id}
       />
-    </Page_WRAP>
+    </>
   );
 }
 

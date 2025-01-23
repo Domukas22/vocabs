@@ -2,42 +2,33 @@
 //
 //
 
-import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
-import {
-  CreateMyVocab_MODAL,
-  DeleteVocab_MODAL,
-} from "@/src/features/2_vocabs";
-import { useRouter } from "expo-router";
-
-import React, { useState } from "react";
-
-import USE_highlighedId from "@/src/hooks/USE_highlighedId/USE_highlighedId";
-
-import { useTranslation } from "react-i18next";
-
-import { useToast } from "react-native-toast-notifications";
-
-import UpdateMyVocab_MODAL from "@/src/features/2_vocabs/components/Modal/UpdateMyVocab_MODAL/UpdateMyVocab_MODAL";
-import USE_modalToggles from "@/src/hooks/USE_modalToggles";
+import BottomAction_BLOCK from "@/src/components/1_grouped/blocks/BottomAction_BLOCK";
+import List_HEADER from "@/src/components/1_grouped/headers/listPage/List_HEADER";
 import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
-
-import { VocabDisplaySettings_MODAL } from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/VocabDisplaySettings_MODAL";
-
-import { USE_vocabs } from "@/src/features/1_lists/hooks/USE_vocabs";
-
-import USE_zustand from "@/src/zustand";
-
-import VocabsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/VocabsFlatlistHeader_SECTION";
-
-import USE_debounceSearch from "@/src/hooks/USE_debounceSearch/USE_debounceSearch";
-import List_HEADER from "@/src/components/Header/List_HEADER";
-import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
-import USE_getActiveFilterCount from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/utils/USE_getActiveFilterCount";
-
-import BottomAction_SECTION from "@/src/components/BottomAction_SECTION";
-
-import { USE_totalUserVocabs } from "@/src/hooks/USE_totalUserVocabs";
-import Vocabs_FLATLIST from "@/src/features/2_vocabs/components/Vocabs_FLATLIST";
+import {
+  MyVocabs_FLATLIST,
+  VocabsFlatlistHeader_SECTION,
+  UpdateMyVocab_MODAL,
+  VocabDisplaySettings_MODAL,
+  DeleteVocab_MODAL,
+} from "@/src/features/vocabs/components";
+import { CreateMyVocab_MODAL } from "@/src/features/vocabs/components/1_myVocabs/modals/CreateMyVocab_MODAL/CreateMyVocab_MODAL";
+import { USE_getActiveFilterCount } from "@/src/hooks";
+import {
+  USE_myTotalVocabCount,
+  USE_vocabs,
+} from "@/src/features/vocabs/functions";
+import {
+  USE_debounceSearch,
+  USE_showListHeaderTitle,
+  USE_highlighedId,
+} from "@/src/hooks";
+import { USE_zustand } from "@/src/hooks";
+import { useRouter } from "expo-router";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useToast } from "react-native-toast-notifications";
+import { USE_modalToggles } from "@/src/hooks/index";
 
 export default function SavedVocabs_PAGE() {
   const { t } = useTranslation();
@@ -49,20 +40,18 @@ export default function SavedVocabs_PAGE() {
   const { search, debouncedSearch, IS_debouncing, SET_search } =
     USE_debounceSearch();
   const { showTitle, handleScroll } = USE_showListHeaderTitle();
-  const activeFilter_COUNT = USE_getActiveFilterCount(z_vocabDisplay_SETTINGS);
+  const { activeFilter_COUNT } = USE_getActiveFilterCount("vocabs");
   const { highlighted_ID, highlight: HIGHLIGHT_vocab } = USE_highlighedId();
   const [targetDelete_VOCAB, SET_targetDeleteVocab] = useState<
     Vocab_MODEL | undefined
   >();
 
-  const totalListVocab_COUNT = USE_totalUserVocabs(z_user);
+  const totalListVocab_COUNT = USE_myTotalVocabCount(z_user);
 
-  const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
-    { name: "displaySettings" },
-    { name: "listSettings" },
-    { name: "createVocab" },
-    { name: "delete" },
-    { name: "update" },
+  const { modals } = USE_modalToggles([
+    "updateVocab",
+    "deleteVocab",
+    "displaySettings",
   ]);
 
   const [toUpdate_VOCAB, SET_toUpdateVocab] = useState<
@@ -77,7 +66,7 @@ export default function SavedVocabs_PAGE() {
     vocab?: Vocab_MODEL;
   }) {
     SET_toUpdateVocab(!clear && vocab ? vocab : undefined);
-    TOGGLE_modal("update");
+    modals.updateVocab.toggle();
   }
 
   const {
@@ -99,23 +88,22 @@ export default function SavedVocabs_PAGE() {
   });
 
   return (
-    <Page_WRAP>
+    <>
       <List_HEADER
         SHOW_listName={showTitle}
         list_NAME="⭐ My saved vocabs"
         GO_back={() => router.back()}
-        OPEN_displaySettings={() => TOGGLE_modal("displaySettings")}
-        OPEN_create={() => TOGGLE_modal("createVocab")}
+        OPEN_displaySettings={() => modals.displaySettings.set(true)}
         {...{ search, SET_search, activeFilter_COUNT }}
       />
 
-      <Vocabs_FLATLIST
+      <MyVocabs_FLATLIST
         {...{ vocabs, IS_searching, HANDLE_updateModal }}
         type="normal"
         highlightedVocab_ID={highlighted_ID}
         PREPARE_vocabDelete={(vocab: Vocab_MODEL) => {
           SET_targetDeleteVocab(vocab);
-          TOGGLE_modal("delete");
+          modals.deleteVocab.set(true);
         }}
         error={fetchVocabs_ERROR}
         onScroll={handleScroll}
@@ -131,7 +119,7 @@ export default function SavedVocabs_PAGE() {
           />
         }
         listFooter_EL={
-          <BottomAction_SECTION
+          <BottomAction_BLOCK
             type="vocabs"
             search={search}
             IS_debouncing={IS_debouncing}
@@ -151,25 +139,12 @@ export default function SavedVocabs_PAGE() {
         }
       />
 
-      <CreateMyVocab_MODAL
-        IS_open={modal_STATES.createVocab}
-        TOGGLE_modal={() => TOGGLE_modal("createVocab")}
-        onSuccess={(new_VOCAB: Vocab_MODEL) => {
-          TOGGLE_modal("createVocab");
-          HIGHLIGHT_vocab(new_VOCAB.id);
-          ADD_toDisplayed(new_VOCAB);
-          toast.show(t("notifications.vocabCreated"), {
-            type: "success",
-            duration: 3000,
-          });
-        }}
-      />
       <UpdateMyVocab_MODAL
         toUpdate_VOCAB={toUpdate_VOCAB}
-        IS_open={modal_STATES.update}
-        TOGGLE_modal={() => TOGGLE_modal("update")}
+        IS_open={modals.updateVocab.IS_open}
+        TOGGLE_modal={() => modals.updateVocab.set(false)}
         onSuccess={(updated_VOCAB: Vocab_MODEL) => {
-          TOGGLE_modal("update");
+          modals.updateVocab.set(false);
           HIGHLIGHT_vocab(updated_VOCAB.id);
 
           toast.show(t("notifications.vocabUpdated"), {
@@ -179,24 +154,24 @@ export default function SavedVocabs_PAGE() {
         }}
       />
       <VocabDisplaySettings_MODAL
-        open={modal_STATES.displaySettings}
-        TOGGLE_open={() => TOGGLE_modal("displaySettings")}
+        open={modals.displaySettings.IS_open}
+        TOGGLE_open={() => modals.displaySettings.set(false)}
         collectedLang_IDS={[]}
       />
 
       <DeleteVocab_MODAL
-        IS_open={modal_STATES.delete}
+        IS_open={modals.deleteVocab.IS_open}
         vocab={targetDelete_VOCAB}
-        CLOSE_modal={() => TOGGLE_modal("delete")}
+        CLOSE_modal={() => modals.deleteVocab.set(false)}
         onSuccess={() => {
           toast.show(t("notifications.vocabDeleted"), {
             type: "success",
             duration: 5000,
           });
           REMOVE_fromDisplayed(targetDelete_VOCAB?.id || "");
-          TOGGLE_modal("delete");
+          modals.deleteVocab.set(false);
         }}
       />
-    </Page_WRAP>
+    </>
   );
 }

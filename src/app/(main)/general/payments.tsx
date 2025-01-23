@@ -2,10 +2,10 @@
 //
 //
 
-import Btn from "@/src/components/Btn/Btn";
-import Header from "@/src/components/Header/Header";
+import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
+import Header from "@/src/components/1_grouped/headers/regular/Header";
 
-import { ICON_3dots, ICON_arrow } from "@/src/components/icons/icons";
+import { ICON_3dots, ICON_arrow } from "@/src/components/1_grouped/icons/icons";
 
 import React from "react";
 import { StyleSheet } from "react-native";
@@ -13,15 +13,15 @@ import { StyleSheet } from "react-native";
 import { router } from "expo-router";
 
 import { View } from "react-native";
-import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
+import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
-import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
+import Page_WRAP from "@/src/components/1_grouped/Page_WRAP/Page_WRAP";
 import { useTranslation } from "react-i18next";
-import Styled_FLASHLIST from "@/src/components/Styled_FLATLIST/Styled_FLASHLIST/Styled_FLASHLIST";
+import Styled_FLASHLIST from "@/src/components/3_other/Styled_FLASHLIST/Styled_FLASHLIST";
 import Payments_MODEL from "@/src/db/models/Payments_MODEL";
-import USE_fetchPayments from "@/src/features/7_payments/hooks/USE_fetchPayments";
-import USE_zustand from "@/src/zustand";
-import Expandable_BTN from "@/src/components/Expandable_BTN";
+import { USE_fetchPayments } from "@/src/features/payments/functions";
+import { USE_zustand } from "@/src/hooks";
+import Expandable_BTN from "@/src/components/1_grouped/buttons/Expandable_BTN/Expandable_BTN";
 
 export default function Payments_PAGE() {
   const { t } = useTranslation();
@@ -30,7 +30,7 @@ export default function Payments_PAGE() {
     USE_fetchPayments(z_user?.id);
 
   return (
-    <Page_WRAP>
+    <>
       <Header
         title={t("header.payments")}
         btnLeft={
@@ -77,7 +77,7 @@ export default function Payments_PAGE() {
         }}
         keyExtractor={(item) => "PublicVocab" + item.id}
       />
-    </Page_WRAP>
+    </>
   );
 }
 

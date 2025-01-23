@@ -2,28 +2,23 @@ import { synchronize } from "@nozbe/watermelondb/sync";
 import db from "../../db/index";
 import { supabase } from "../../lib/supabase";
 import User_MODEL from "@/src/db/models/User_MODEL";
-import { hasUnsyncedChanges } from "@nozbe/watermelondb/sync";
 import { useState } from "react";
-import NEW_timestampWithTimeZone from "../../utils/NEW_timestampWithTimeZone";
-import USE_zustand from "../../zustand";
-import TURN_VocabtrsIntoJson from "./utils/TURN_VocabtrsIntoJson";
-import TURN_langExampleHighlightsIntoJson from "./utils/TURN_langExampleHighlightsIntoJson";
-import HANDLE_internalError from "../../utils/SEND_internalError";
+import { USE_zustand } from "@/src/hooks";
+
 import { Error_PROPS } from "../../props";
 import { CREATE_internalErrorMsg } from "../../constants/globalVars";
-import CHECK_ifNetworkFailure from "../../utils/CHECK_ifNetworkFailure";
 import ADJUST_pullChangesData from "./utils/ADJUST_pullChangesData";
+import {
+  NEW_timestampWithTimeZone,
+  SEND_internalError,
+  CHECK_ifNetworkFailure,
+} from "@/src/utils";
+import { GET_targetDate } from "./utils/GET_targetDate";
 
 const defaultError_MSG =
   "Something went wrong when trying to synchronize data. Please reload the app and try again. This problem has been recorded and will be reviewed by developers as soon as possible. If the problem persists, please contact support. We apologize for the inconvenience.";
 
-// Using built-in SyncLogger
 let isSyncing = false; // Flag to indicate if a sync is already in progress
-
-interface Pull_PROPS {
-  user: User_MODEL | undefined;
-  pull_type: "all" | "updates";
-}
 
 const emptyChanges_OBJ = {
   lists: { updated: [], created: [], deleted: [] },
@@ -49,19 +44,6 @@ const networkFailure_RESPONSE = {
   type: "user",
 };
 
-const GET_targetDate = ({
-  PULL_EVERYTHING = false,
-  user,
-}: {
-  PULL_EVERYTHING: boolean;
-  user: User_MODEL | undefined;
-}) =>
-  PULL_EVERYTHING
-    ? new Date(new Date().setFullYear(new Date().getFullYear() - 100))
-    : user?.last_pulled_at
-    ? user.last_pulled_at
-    : NEW_timestampWithTimeZone();
-
 export function USE_sync() {
   const [IS_syncing, SET_syncing] = useState(false);
   const { z_SET_user } = USE_zustand();
@@ -79,7 +61,7 @@ export function USE_sync() {
       SET_error(undefined);
 
       if (!user || !user?.id) {
-        HANDLE_internalError({
+        SEND_internalError({
           message: `User object undefined when trying to sync`,
           function_NAME: "USE_sync --> sync",
         });
@@ -90,39 +72,47 @@ export function USE_sync() {
       await synchronize({
         database: db,
         pullChanges: async ({ lastPulledAt, schemaVersion, migration }) => {
+          // fetch updates from supabase
+          // if 'PULL_EVERYTHING' is true, fetch everything
           const { data: changes, error } = await supabase.rpc("pull", {
             userid: user?.id,
             _last_pulled_at: GET_targetDate({ PULL_EVERYTHING, user }),
           });
 
+          // in case supabase fetch returns error
           if (error) {
+            // is the supabase error a network failure?
             const IS_networkFailure = CHECK_ifNetworkFailure(error);
             if (IS_networkFailure) {
               SET_error(networkFailure_RESPONSE);
               throw new Error();
             }
 
-            HANDLE_internalError({
+            // if not a network failure
+            SEND_internalError({
               message: `Supabase pull sync failed`,
               function_NAME:
                 "USE_sync --> pullChanges --> supabase.rpc('pull'...",
               details: error,
             });
+
             SET_error(internal_ERROR);
             throw new Error(
               `🔴 Supabase pull sync failed 🔴: ${error.message}`
             );
           }
 
-          const updated_USER = await user.UPDATE_lastPulledAt();
+          const updated_USER = await user?.UPDATE_lastPulledAt();
+
           if (updated_USER) {
             z_SET_user(updated_USER);
           } else {
-            HANDLE_internalError({
+            SEND_internalError({
               message: `updated_USER from WatermelonDB returned undefined when trying to updated last_pulled_at while syncing`,
               function_NAME:
                 "USE_sync --> pullChanges --> user.UPDATE_lastPulledAt()",
             });
+            console.log("error3");
             SET_error(internal_ERROR);
             throw new Error(
               `🔴 Failed to update users last_pulled_at when syncing with USE_sync 🔴`
@@ -151,7 +141,7 @@ export function USE_sync() {
               );
             }
 
-            HANDLE_internalError({
+            SEND_internalError({
               message: `Supabase push sync failed`,
               function_NAME:
                 "USE_sync --> pushChanges --> supabase.rpc('push'...",
@@ -175,7 +165,7 @@ export function USE_sync() {
         return;
       }
 
-      HANDLE_internalError({
+      SEND_internalError({
         message: `Sync failed`,
         function_NAME: "USE_sync --> sync",
         details: err,

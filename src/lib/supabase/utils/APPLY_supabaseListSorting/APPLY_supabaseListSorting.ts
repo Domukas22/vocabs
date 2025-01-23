@@ -2,7 +2,7 @@
 //
 //
 
-import { z_listDisplaySettings_PROPS } from "@/src/zustand";
+import { z_listDisplaySettings_PROPS } from "@/src/hooks/USE_zustand/USE_zustand";
 
 export default function APPLY_supabaseListSorting(
   query: any,

@@ -2,10 +2,10 @@
 //
 //
 
-import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
-import Header from "@/src/components/Header/Header";
-import Btn from "@/src/components/Btn/Btn";
-import Block from "@/src/components/Block/Block";
+import Page_WRAP from "@/src/components/1_grouped/Page_WRAP/Page_WRAP";
+import Header from "@/src/components/1_grouped/headers/regular/Header";
+import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
+import Block from "@/src/components/1_grouped/blocks/Block/Block";
 import {
   ICON_settings,
   ICON_arrow,
@@ -17,30 +17,34 @@ import {
   ICON_checkMarkFull,
   ICON_questionMark,
   ICON_inviteFriend,
-} from "@/src/components/icons/icons";
-import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
+} from "@/src/components/1_grouped/icons/icons";
+import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import { router } from "expo-router";
 import { Alert, ScrollView, View } from "react-native";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
 import { supabase } from "@/src/lib/supabase";
 import { useTranslation } from "react-i18next";
-import Confirmation_MODAL from "@/src/components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
-import Dropdown_BLOCK from "@/src/components/Dropdown_BLOCK/Dropdown_BLOCK";
+import Confirmation_MODAL from "@/src/components/1_grouped/modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
+import Dropdown_BLOCK from "@/src/components/1_grouped/blocks/Dropdown_BLOCK/Dropdown_BLOCK";
 import { useEffect, useState } from "react";
 
 import { USE_sync } from "@/src/hooks/USE_sync/USE_sync";
 import User_MODEL from "@/src/db/models/User_MODEL";
 import * as SecureStore from "expo-secure-store";
-import USE_zustand from "@/src/zustand";
-import CurrentVocabCount_BAR from "@/src/components/CurrentVocabCount_BAR";
+import { USE_zustand } from "@/src/hooks";
+import CurrentVocabCount_BAR from "@/src/components/2_byPage/general/CurrentVocabCount_BAR";
 import { useToast } from "react-native-toast-notifications";
-import USE_modalToggles from "@/src/hooks/USE_modalToggles";
-import NAVIGATE_user from "@/src/utils/NAVIGATE_user";
+import { NAVIGATE_user } from "@/src/utils";
+import { USE_navigateUser } from "@/src/utils/NAVIGATE_user/NAVIGATE_user";
+import { USE_modalToggles } from "@/src/hooks/index";
 
 export default function General_PAGE() {
   const { t } = useTranslation();
   const { z_user, z_SET_user } = USE_zustand();
   const { sync } = USE_sync();
+  const { navigate } = USE_navigateUser({
+    navigateToWelcomeSreenOnError: true,
+  });
 
   const { notification_COUNT, totalUserVocab_COUNT } =
     USE_userObservables(z_user);
@@ -59,13 +63,14 @@ export default function General_PAGE() {
     }
 
     await SecureStore.setItemAsync("user_id", "");
-    await NAVIGATE_user({
-      navigateToWelcomeSreenOnError: true,
-      z_SET_user,
-      SET_error,
-      router,
-      sync,
-    });
+    // await NAVIGATE_user({
+    //   navigateToWelcomeSreenOnError: true,
+    //   z_SET_user,
+    //   SET_error,
+    //   router,
+    //   sync,
+    // });
+    await navigate();
   };
 
   const [error, SET_error] = useState({
@@ -94,32 +99,36 @@ export default function General_PAGE() {
       Alert.alert("Logout error", "Error signing out");
     }
     await logout();
-    await NAVIGATE_user({
-      navigateToWelcomeSreenOnError: true,
-      z_SET_user,
-      SET_error,
-      router,
-      sync,
-    });
+    await navigate();
+    // await NAVIGATE_user({
+    //   navigateToWelcomeSreenOnError: true,
+    //   z_SET_user,
+    //   SET_error,
+    //   router,
+    //   sync,
+    // });
   };
 
-  const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
-    { name: "logout" },
-    { name: "deleteAccount" },
-  ]);
+  const { modals } = USE_modalToggles(["logout", "deleteAccount"]);
 
   const toast = useToast();
 
-  const { sync: sync_2 } = USE_sync();
+  const { sync: sync_2, sync_SUCCESS, IS_syncing } = USE_sync();
+
+  useEffect(() => {
+    console.log("--------------------------------");
+    console.log("sync_SUCCESS", sync_SUCCESS);
+    console.log("IS_syncing", IS_syncing);
+  }, [sync_SUCCESS, IS_syncing]);
 
   return (
-    <Page_WRAP>
+    <>
       <Header title={t("page.general.header")} big={true} />
       <Btn
         text="Sync"
         style={{ margin: 12 }}
         onPress={async () => {
-          await sync_2({ user: z_user });
+          await sync_2({ user: z_user, PULL_EVERYTHING: true });
         }}
       />
 
@@ -218,20 +227,20 @@ export default function General_PAGE() {
           <Btn
             text={t("page.general.btn.logout")}
             type="delete"
-            onPress={() => TOGGLE_modal("logout")}
+            onPress={() => modals.logout.set(true)}
           />
           <Btn
             text={t("btn.deleteProfile")}
             type="delete"
-            onPress={() => TOGGLE_modal("deleteAccount")}
+            onPress={() => modals.deleteAccount.set(true)}
           />
         </Dropdown_BLOCK>
       </ScrollView>
 
       {/* ----- LOGOUT confirmation ----- */}
       <Confirmation_MODAL
-        open={modal_STATES.logout}
-        toggle={() => TOGGLE_modal("logout")}
+        open={modals.logout.IS_open}
+        toggle={() => modals.logout.set(false)}
         title={t("modal.logoutConfirmation.header")}
         action={() => {
           (async () => await _logout())();
@@ -239,13 +248,13 @@ export default function General_PAGE() {
         actionBtnText={t("btn.confirmLogout")}
       />
       <Confirmation_MODAL
-        open={modal_STATES.deleteAccount}
-        toggle={() => TOGGLE_modal("deleteAccount")}
+        open={modals.deleteAccount.IS_open}
+        toggle={() => modals.deleteAccount.set(false)}
         title={t("header.deleteProfile")}
         action={async () => await DELETE_p()}
         actionBtnText={t("btn.confirmProfileDeletion")}
       />
-    </Page_WRAP>
+    </>
   );
 }
 

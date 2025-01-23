@@ -2,14 +2,14 @@
 //
 //
 
-import Btn from "@/src/components/Btn/Btn";
-import Header from "@/src/components/Header/Header";
+import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
+import Header from "@/src/components/1_grouped/headers/regular/Header";
 
 import {
   ICON_3dots,
   ICON_arrow,
   ICON_checkMark,
-} from "@/src/components/icons/icons";
+} from "@/src/components/1_grouped/icons/icons";
 
 import React, { useCallback, useMemo, useState } from "react";
 
@@ -24,18 +24,18 @@ import {
 
 import { Link, router, useRouter } from "expo-router";
 
-import Block from "@/src/components/Block/Block";
-import StyledText_INPUT from "@/src/components/StyledText_INPUT/StyledText_INPUT";
-import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
+import Block from "@/src/components/1_grouped/blocks/Block/Block";
+import StyledText_INPUT from "@/src/components/1_grouped/inputs/StyledText_INPUT/StyledText_INPUT";
+import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
-import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
-import Label from "@/src/components/Label/Label";
+import Page_WRAP from "@/src/components/1_grouped/Page_WRAP/Page_WRAP";
+import Label from "@/src/components/1_grouped/texts/labels/Label/Label";
 import { useTranslation } from "react-i18next";
 import { Controller, useForm } from "react-hook-form";
 
-import Error_TEXT from "@/src/components/Error_TEXT/Error_TEXT";
+import Error_TEXT from "@/src/components/1_grouped/texts/Error_TEXT/Error_TEXT";
 import { supabase } from "@/src/lib/supabase";
-import USE_zustand from "@/src/zustand";
+import { USE_zustand } from "@/src/hooks";
 
 import { USE_sync } from "@/src/hooks/USE_sync/USE_sync";
 
@@ -134,7 +134,7 @@ export default function Contact_PAGE() {
   const onSubmit = (data: ContactMessage_PROPS) => SEND_message(data);
 
   return (
-    <Page_WRAP>
+    <>
       <Header
         title={t("pages.contact.header")}
         btnLeft={
@@ -482,7 +482,7 @@ export default function Contact_PAGE() {
           )}
         </ScrollView>
       </KeyboardAvoidingView>
-    </Page_WRAP>
+    </>
   );
 }
 

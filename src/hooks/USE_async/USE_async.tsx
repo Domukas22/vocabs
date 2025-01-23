@@ -3,12 +3,13 @@
 //
 import { useState, useCallback, useEffect } from "react";
 import { Error_PROPS } from "../../props";
+import {
+  SEND_internalError,
+  HANDLE_keyboardDismiss,
+  HANDLE_userError,
+} from "@/src/utils";
 
-import HANDLE_internalError from "../../utils/SEND_internalError";
-import HANDLE_keyboardDismiss from "../../utils/HANDLE_keyboardDismiss/HANDLE_keyboardDismiss";
-import HANDLE_userError from "../../utils/HANDLE_userError/HANDLE_userError";
-
-export default function USE_async<
+export function USE_async<
   args_TYPE,
   responseData_TYPE,
   responseError_TYPE extends Error_PROPS
@@ -21,7 +22,7 @@ export default function USE_async<
   SHOULD_returnNothing = false,
   fn,
   onSuccess = () => {},
-  handleInternalError = HANDLE_internalError, // Allow override
+  handleInternalError = SEND_internalError, // Allow override
   handleKeyboardDismiss = HANDLE_keyboardDismiss, // Allow override
 }: {
   args?: args_TYPE;
@@ -34,7 +35,7 @@ export default function USE_async<
     args: args_TYPE
   ) => Promise<{ data: responseData_TYPE; error?: responseError_TYPE }>;
   onSuccess?: (data: responseData_TYPE) => void;
-  handleInternalError?: typeof HANDLE_internalError; // For testing
+  handleInternalError?: typeof SEND_internalError; // For testing
   handleKeyboardDismiss?: typeof HANDLE_keyboardDismiss; // For testing
 }) {
   const [loading, SET_loading] = useState(false);
@@ -42,6 +43,8 @@ export default function USE_async<
   const [data, SET_data] = useState<responseData_TYPE>();
 
   const RESET_errors = useCallback(() => SET_error(undefined), []);
+
+  console.log(loading);
 
   const execute = useCallback(
     async (args: args_TYPE) => {

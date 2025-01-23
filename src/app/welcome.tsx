@@ -4,10 +4,10 @@
 //
 
 import { View } from "react-native";
-import Page_WRAP from "../components/Page_WRAP/Page_WRAP";
-import { Styled_TEXT } from "../components/Styled_TEXT/Styled_TEXT";
+import Page_WRAP from "../components/1_grouped/Page_WRAP/Page_WRAP";
+import { Styled_TEXT } from "../components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "../constants/MyColors";
-import Btn from "../components/Btn/Btn";
+import Btn from "../components/1_grouped/buttons/Btn/Btn";
 import { useRouter } from "expo-router";
 import { useEffect } from "react";
 import { PUSH_changes } from "../hooks/USE_sync/USE_sync";
@@ -22,7 +22,7 @@ export default function Welcome_PAGE() {
   }, []);
 
   return (
-    <Page_WRAP>
+    <>
       <View
         style={{
           alignItems: "center",
@@ -49,6 +49,6 @@ export default function Welcome_PAGE() {
         />
         <Btn text="Log in" onPress={() => router.push("/login")} />
       </View>
-    </Page_WRAP>
+    </>
   );
 }

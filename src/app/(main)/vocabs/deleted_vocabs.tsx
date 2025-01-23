@@ -2,37 +2,32 @@
 //
 //
 
-import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
-import { useRouter } from "expo-router";
-
-import React, { useState } from "react";
-
-import USE_highlighedId from "@/src/hooks/USE_highlighedId/USE_highlighedId";
-
-import { useTranslation } from "react-i18next";
-
-import { useToast } from "react-native-toast-notifications";
-
-import USE_modalToggles from "@/src/hooks/USE_modalToggles";
+import BottomAction_BLOCK from "@/src/components/1_grouped/blocks/BottomAction_BLOCK";
+import List_HEADER from "@/src/components/1_grouped/headers/listPage/List_HEADER";
 import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
-
-import { VocabDisplaySettings_MODAL } from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/VocabDisplaySettings_MODAL";
-
-import USE_zustand from "@/src/zustand";
-
-import VocabsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/VocabsFlatlistHeader_SECTION";
-
-import USE_debounceSearch from "@/src/hooks/USE_debounceSearch/USE_debounceSearch";
-import List_HEADER from "@/src/components/Header/List_HEADER";
-import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
-import USE_getActiveFilterCount from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/utils/USE_getActiveFilterCount";
-
-import BottomAction_SECTION from "@/src/components/BottomAction_SECTION";
-
-import { USE_totalUserVocabs } from "@/src/hooks/USE_totalUserVocabs";
-import ReviveDeletedVocab_MODAL from "@/src/features/2_vocabs/components/Modal/SavePublicVocabToList_MODAL/ReviveDeletedVocab_MODAL";
-import { USE_vocabs } from "@/src/features/1_lists/hooks/USE_vocabs";
-import Vocabs_FLATLIST from "@/src/features/2_vocabs/components/Vocabs_FLATLIST";
+import {
+  MyVocabs_FLATLIST,
+  VocabsFlatlistHeader_SECTION,
+  ReviveDeletedVocab_MODAL,
+  VocabDisplaySettings_MODAL,
+} from "@/src/features/vocabs/components";
+import { USE_getActiveFilterCount } from "@/src/hooks";
+import {
+  USE_myTotalVocabCount,
+  USE_vocabs,
+} from "@/src/features/vocabs/functions";
+import {
+  USE_debounceSearch,
+  USE_showListHeaderTitle,
+  USE_highlighedId,
+} from "@/src/hooks";
+import { USE_zustand } from "@/src/hooks";
+import { useRouter } from "expo-router";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useToast } from "react-native-toast-notifications";
+import { USE_modalToggles } from "@/src/hooks/index";
+import { Portal } from "@gorhom/portal";
 
 export default function DeletedVocabs_PAGE() {
   const { t } = useTranslation();
@@ -44,7 +39,7 @@ export default function DeletedVocabs_PAGE() {
   const { search, debouncedSearch, IS_debouncing, SET_search } =
     USE_debounceSearch();
   const { showTitle, handleScroll } = USE_showListHeaderTitle();
-  const activeFilter_COUNT = USE_getActiveFilterCount(z_vocabDisplay_SETTINGS);
+  const { activeFilter_COUNT } = USE_getActiveFilterCount("vocabs");
   const { highlighted_ID, highlight: HIGHLIGHT_vocab } = USE_highlighedId();
   const [targetRevive_VOCAB, SET_targetReviveVocab] = useState<
     Vocab_MODEL | undefined
@@ -54,31 +49,17 @@ export default function DeletedVocabs_PAGE() {
     Vocab_MODEL | undefined
   >();
 
-  const totalListVocab_COUNT = USE_totalUserVocabs(z_user);
+  const totalListVocab_COUNT = USE_myTotalVocabCount(z_user);
 
-  const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
-    { name: "displaySettings" },
-    { name: "listSettings" },
-    { name: "createVocab" },
-    { name: "delete" },
-    { name: "update" },
-    { name: "revive" },
+  const { modals } = USE_modalToggles([
+    "reviveVocab",
+    "deleteVocab",
+    "displaySettings",
   ]);
 
   const [toUpdate_VOCAB, SET_toUpdateVocab] = useState<
     Vocab_MODEL | undefined
   >();
-
-  function HANDLE_updateModal({
-    clear = false,
-    vocab,
-  }: {
-    clear?: boolean;
-    vocab?: Vocab_MODEL;
-  }) {
-    SET_toUpdateVocab(!clear && vocab ? vocab : undefined);
-    TOGGLE_modal("update");
-  }
 
   const {
     IS_searching,
@@ -98,27 +79,27 @@ export default function DeletedVocabs_PAGE() {
   });
 
   return (
-    <Page_WRAP>
+    <>
       <List_HEADER
         SHOW_listName={showTitle}
         list_NAME="Deleted vocabs"
         GO_back={() => router.back()}
-        OPEN_displaySettings={() => TOGGLE_modal("displaySettings")}
-        OPEN_create={() => TOGGLE_modal("createVocab")}
+        OPEN_displaySettings={() => modals.displaySettings.set(true)}
         {...{ search, SET_search, activeFilter_COUNT }}
       />
 
-      <Vocabs_FLATLIST
-        {...{ vocabs, IS_searching, HANDLE_updateModal }}
+      <MyVocabs_FLATLIST
+        {...{ vocabs, IS_searching }}
         type="delete"
+        HANDLE_updateModal={() => {}}
         highlightedVocab_ID={highlighted_ID}
         PREPARE_vocabDelete={(vocab: Vocab_MODEL) => {
           SET_targetDeleteVocab(vocab);
-          TOGGLE_modal("delete");
+          modals.deleteVocab.set(true);
         }}
         SELECT_forRevival={(vocab: Vocab_MODEL) => {
           SET_targetReviveVocab(vocab);
-          TOGGLE_modal("revive");
+          modals.reviveVocab.set(true);
         }}
         error={fetchVocabs_ERROR}
         onScroll={handleScroll}
@@ -134,7 +115,7 @@ export default function DeletedVocabs_PAGE() {
           />
         }
         listFooter_EL={
-          <BottomAction_SECTION
+          <BottomAction_BLOCK
             type="vocabs"
             search={search}
             IS_debouncing={IS_debouncing}
@@ -154,26 +135,29 @@ export default function DeletedVocabs_PAGE() {
         }
       />
 
-      <ReviveDeletedVocab_MODAL
-        vocab={targetRevive_VOCAB}
-        IS_open={modal_STATES.revive}
-        onSuccess={(new_VOCAB: Vocab_MODEL) => {
-          TOGGLE_modal("revive");
-          HIGHLIGHT_vocab(new_VOCAB.id);
-          REMOVE_fromDisplayed(new_VOCAB.id);
-          toast.show(t("notifications.vocabRevived"), {
-            type: "success",
-            duration: 3000,
-          });
-        }}
-        TOGGLE_open={() => TOGGLE_modal("revive")}
-      />
+      <Portal>
+        <ReviveDeletedVocab_MODAL
+          vocab={targetRevive_VOCAB}
+          IS_open={modals.reviveVocab.IS_open}
+          onSuccess={(new_VOCAB: Vocab_MODEL) => {
+            modals.reviveVocab.set(false);
 
-      <VocabDisplaySettings_MODAL
-        open={modal_STATES.displaySettings}
-        TOGGLE_open={() => TOGGLE_modal("displaySettings")}
-        collectedLang_IDS={[]}
-      />
-    </Page_WRAP>
+            HIGHLIGHT_vocab(new_VOCAB.id);
+            REMOVE_fromDisplayed(new_VOCAB.id);
+            toast.show(t("notifications.vocabRevived"), {
+              type: "success",
+              duration: 3000,
+            });
+          }}
+          TOGGLE_open={() => modals.reviveVocab.set(false)}
+        />
+
+        <VocabDisplaySettings_MODAL
+          open={modals.displaySettings.IS_open}
+          TOGGLE_open={() => modals.displaySettings.set(false)}
+          collectedLang_IDS={[]}
+        />
+      </Portal>
+    </>
   );
 }

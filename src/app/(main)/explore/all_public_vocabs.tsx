@@ -2,30 +2,27 @@
 //
 //
 
-import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useToast } from "react-native-toast-notifications";
 
-import SavePublicVocabToList_MODAL from "@/src/features/2_vocabs/components/Modal/SavePublicVocabToList_MODAL/SavePublicVocabToList_MODAL";
-import USE_modalToggles from "@/src/hooks/USE_modalToggles";
-import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
-
-import USE_collectPublicListLangs from "@/src/features/2_vocabs/hooks/USE_collectPublicListLangs";
-import USE_zustand from "@/src/zustand";
-import USE_debounceSearch from "@/src/hooks/USE_debounceSearch/USE_debounceSearch";
-import USE_supabaseVocabs from "@/src/hooks/USE_supabaseVocabs";
-import { VocabDisplaySettings_MODAL } from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/VocabDisplaySettings_MODAL";
-
-import ExploreVocabs_FLATLIST from "@/src/features/2_vocabs/components/ExploreVocabs_FLATLIST";
-import VocabsFlatlistHeader_SECTION from "@/src/features/2_vocabs/components/VocabsFlatlistHeader_SECTION";
-import USE_showListHeaderTitle from "@/src/hooks/USE_showListHeaderTitle";
-import USE_getActiveFilterCount from "@/src/features/2_vocabs/components/Modal/DisplaySettings/DisplaySettings_MODAL/utils/USE_getActiveFilterCount";
-import List_HEADER from "@/src/components/Header/List_HEADER";
+import List_HEADER from "@/src/components/1_grouped/headers/listPage/List_HEADER";
 import { useRouter } from "expo-router";
 
-import BottomAction_SECTION from "@/src/components/BottomAction_SECTION";
-
+import BottomAction_BLOCK from "@/src/components/1_grouped/blocks/BottomAction_BLOCK";
+import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
+import { USE_collectPublicListLangs } from "@/src/features/lists/functions";
+import {
+  ExploreVocabs_FLATLIST,
+  VocabsFlatlistHeader_SECTION,
+  VocabDisplaySettings_MODAL,
+  SavePublicVocabToList_MODAL,
+} from "@/src/features/vocabs/components";
+import { USE_getActiveFilterCount } from "@/src/hooks";
+import { USE_supabaseVocabs } from "@/src/features/vocabs/functions";
+import { USE_debounceSearch, USE_showListHeaderTitle } from "@/src/hooks";
+import { USE_zustand } from "@/src/hooks";
+import { USE_modalToggles } from "@/src/hooks/index";
 export default function AllPublicVocabs_PAGE() {
   const { t } = useTranslation();
   const toast = useToast();
@@ -35,15 +32,12 @@ export default function AllPublicVocabs_PAGE() {
   const { collectedLang_IDS, ARE_langIdsCollecting, collectLangIds_ERROR } =
     USE_collectPublicListLangs();
   const { showTitle, handleScroll } = USE_showListHeaderTitle();
-  const activeFilter_COUNT = USE_getActiveFilterCount(z_vocabDisplay_SETTINGS);
+  const { activeFilter_COUNT } = USE_getActiveFilterCount("vocabs");
   const router = useRouter();
 
   const [target_VOCAB, SET_targetVocab] = useState<Vocab_MODEL | undefined>();
 
-  const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
-    { name: "displaySettings" },
-    { name: "save" },
-  ]);
+  const { modals } = USE_modalToggles(["saveList", "displaySettings"]);
 
   const {
     IS_searching,
@@ -61,12 +55,12 @@ export default function AllPublicVocabs_PAGE() {
   });
 
   return (
-    <Page_WRAP>
+    <>
       <List_HEADER
         SHOW_listName={showTitle}
         list_NAME="🔤 All public vocabs"
         GO_back={() => router.back()}
-        OPEN_displaySettings={() => TOGGLE_modal("displaySettings")}
+        OPEN_displaySettings={() => modals.displaySettings.set(true)}
         IS_searchBig={true}
         {...{ search, SET_search, activeFilter_COUNT }}
       />
@@ -76,7 +70,7 @@ export default function AllPublicVocabs_PAGE() {
         error={fetchVocabs_ERROR}
         SAVE_vocab={(vocab: Vocab_MODEL) => {
           SET_targetVocab(vocab);
-          TOGGLE_modal("save");
+          modals.saveList.set(true);
         }}
         onScroll={handleScroll}
         listHeader_EL={
@@ -91,7 +85,7 @@ export default function AllPublicVocabs_PAGE() {
           />
         }
         listFooter_EL={
-          <BottomAction_SECTION
+          <BottomAction_BLOCK
             type="vocabs"
             search={search}
             IS_debouncing={IS_debouncing}
@@ -112,24 +106,24 @@ export default function AllPublicVocabs_PAGE() {
       />
       {/* ------------------------- MODALS ------------------------- */}
       <VocabDisplaySettings_MODAL
-        open={modal_STATES.displaySettings}
-        TOGGLE_open={() => TOGGLE_modal("displaySettings")}
+        open={modals.displaySettings.IS_open}
+        TOGGLE_open={() => modals.displaySettings.toggle()}
         collectedLang_IDS={collectedLang_IDS}
         HAS_difficulties={false}
       />
 
       <SavePublicVocabToList_MODAL
         vocab={target_VOCAB}
-        IS_open={modal_STATES.save}
+        IS_open={modals.saveList.IS_open}
         onSuccess={() => {
-          TOGGLE_modal("save");
+          modals.saveList.set(false);
           toast.show(t("notifications.savedVocab"), {
             type: "success",
             duration: 3000,
           });
         }}
-        TOGGLE_open={() => TOGGLE_modal("save")}
+        TOGGLE_open={() => modals.saveList.set(false)}
       />
-    </Page_WRAP>
+    </>
   );
 }

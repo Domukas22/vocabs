@@ -3,11 +3,9 @@
 //
 
 import { Error_PROPS } from "@/src/props";
-import CHECK_ifNetworkFailure from "../CHECK_ifNetworkFailure";
+import { CHECK_ifNetworkFailure } from "../CHECK_ifNetworkFailure/CHECK_ifNetworkFailure";
 
-export default function HANDLE_userError<
-  validInput_NAMES extends string = string
->({
+export function HANDLE_userError<validInput_NAMES extends string = string>({
   error,
   function_NAME,
   internalErrorUser_MSG,

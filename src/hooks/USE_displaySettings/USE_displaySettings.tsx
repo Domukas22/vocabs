@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import {
   GET_displaySettings,
   SET_localStorageDisplaySettings,
-} from "@/src/utils/DisplaySettings"; // Adjust the import path
-import { _DisplaySettings_PROPS } from "@/src/utils/DisplaySettings";
+} from "@/src/utils/DisplaySettings/DisplaySettings"; // Adjust the import path
+import { _DisplaySettings_PROPS } from "@/src/utils/DisplaySettings/DisplaySettings";
 
 export type UpdateDisplaySettings_PROPS = (
   updates: Partial<_DisplaySettings_PROPS>
@@ -15,7 +15,7 @@ type UseDisplaySettingsResult = {
   UPDATE_displaySettings: UpdateDisplaySettings_PROPS;
 };
 
-const USE_displaySettings = (): UseDisplaySettingsResult => {
+export const USE_displaySettings = (): UseDisplaySettingsResult => {
   const [display_SETTINGS, SET_displaySettings] = useState<
     _DisplaySettings_PROPS | undefined
   >(undefined);
@@ -41,5 +41,3 @@ const USE_displaySettings = (): UseDisplaySettingsResult => {
 
   return { display_SETTINGS, UPDATE_displaySettings };
 };
-
-export default USE_displaySettings;

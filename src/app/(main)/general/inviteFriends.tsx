@@ -2,26 +2,23 @@
 //
 //
 
-import Block from "@/src/components/Block/Block";
-import Btn from "@/src/components/Btn/Btn";
-import Header from "@/src/components/Header/Header";
-import { ICON_arrow, ICON_3dots, ICON_X } from "@/src/components/icons/icons";
-import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
-import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
+import Block from "@/src/components/1_grouped/blocks/Block/Block";
+import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
+import Header from "@/src/components/1_grouped/headers/regular/Header";
+import { ICON_arrow, ICON_3dots } from "@/src/components/1_grouped/icons/icons";
+import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
 import { USE_sync } from "@/src/hooks/USE_sync/USE_sync";
-import { FetchedUsers_PROPS } from "@/src/features/1_lists/hooks/USE_supabaseUsers_2";
-import { FetchUsers_PROPS } from "@/src/features/5_users/utils/FETCH_supabaseUsers";
-import SelectASingleUser_MODAL from "@/src/features/5_users/components/SelectUsers_MODAL/SelectASingleUser_MODAL";
+import { FetchedUsers_PROPS } from "@/src/features/users/functions/fetch/hooks/USE_supabaseUsers/USE_supabaseUsers_2";
 
-import REFRESH_zustandUser from "@/src/features/5_users/utils/REFRESH_zustandUser";
-import USE_modalToggles from "@/src/hooks/USE_modalToggles";
 import { supabase } from "@/src/lib/supabase";
-import USE_zustand from "@/src/zustand";
+import { USE_zustand } from "@/src/hooks";
 import { useRouter } from "expo-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, ScrollView, View } from "react-native";
-import { stringify } from "uuid";
+import { SelectASingleUser_MODAL } from "@/src/features/users/components";
+import { REFRESH_zustandUser } from "@/src/features/users/functions";
+import { USE_modalToggles } from "@/src/hooks/index";
 
 export default function InviteFriends_PAGE() {
   const router = useRouter();
@@ -39,10 +36,7 @@ export default function InviteFriends_PAGE() {
     | undefined
   >();
 
-  const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
-    { name: "selectUser" },
-  ]);
-
+  const { modals } = USE_modalToggles(["selectUser"]);
   const {
     AWARD_friend,
     loading: IS_awardingFriend,
@@ -77,7 +71,7 @@ export default function InviteFriends_PAGE() {
   }, []);
 
   return (
-    <Page_WRAP>
+    <>
       <Header
         title="Invite friends"
         btnLeft={
@@ -185,16 +179,16 @@ export default function InviteFriends_PAGE() {
       </ScrollView>
 
       <SelectASingleUser_MODAL
-        open={modal_STATES.selectUser}
-        TOGGLE_open={() => TOGGLE_modal("selectUser")}
+        open={modals.selectUser.IS_open}
+        TOGGLE_open={() => modals.selectUser.set(false)}
         submit={(user: FetchedUsers_PROPS) => {
           if (user) {
             SET_selectedFriend(user);
-            TOGGLE_modal("selectUser");
+            modals.selectUser.set(false);
           }
         }}
       />
-    </Page_WRAP>
+    </>
   );
 }
 

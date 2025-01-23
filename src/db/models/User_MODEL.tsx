@@ -2,7 +2,7 @@
 //
 //
 
-import NEW_timestampWithTimeZone from "@/src/utils/NEW_timestampWithTimeZone";
+import { NEW_timestampWithTimeZone } from "@/src/utils/timestamps/NEW_timestampWithTimeZone/NEW_timestampWithTimeZone";
 import { Model, Q } from "@nozbe/watermelondb";
 import { notEq } from "@nozbe/watermelondb/QueryDescription";
 import {
@@ -35,11 +35,16 @@ export default class User_MODEL extends Model {
   @text("last_pulled_at") last_pulled_at!: string;
 
   @writer async UPDATE_lastPulledAt() {
-    const user = await this.update((list) => {
-      list.last_pulled_at = NEW_timestampWithTimeZone();
-    });
+    try {
+      const user = await this.update((user) => {
+        user.last_pulled_at = NEW_timestampWithTimeZone();
+      });
 
-    return user;
+      return user;
+    } catch (error) {
+      console.error("Error during update operation:", error);
+      throw error;
+    }
   }
   @writer async SOFT_DELETE_user() {
     const listAccesses = await this.collections
@@ -124,6 +129,18 @@ export default class User_MODEL extends Model {
     });
     return user;
   }
+  // @writer async UPDATE_totalUniqueListLangs() {
+  //   try {
+  //     const user = await this.update((user) => {
+  //       user.last_pulled_at = NEW_timestampWithTimeZone();
+  //     });
+
+  //     return user;
+  //   } catch (error) {
+  //     console.error("Error during update operation:", error);
+  //     throw error;
+  //   }
+  // }
 
   @reader async ARE_vocabsWithinMaxRange(count: number = 0) {
     const allVocabs = await this.collections
@@ -244,6 +261,6 @@ export default class User_MODEL extends Model {
 
   @lazy myTopLists = this.collections
     .get("lists")
-    .query(Q.where("user_id", this.id), Q.where("deleted_at", null), Q.take(2))
+    .query(Q.where("user_id", this.id), Q.where("deleted_at", null), Q.take(3))
     .observe();
 }

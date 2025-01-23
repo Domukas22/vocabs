@@ -4,35 +4,33 @@ import {
   Platform,
   ScrollView,
 } from "react-native";
-import { Styled_TEXT } from "../components/Styled_TEXT/Styled_TEXT";
-import Page_WRAP from "../components/Page_WRAP/Page_WRAP";
+import { Styled_TEXT } from "../components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "../constants/MyColors";
-import Block from "../components/Block/Block";
-import StyledText_INPUT from "../components/StyledText_INPUT/StyledText_INPUT";
+import Block from "../components/1_grouped/blocks/Block/Block";
+import StyledText_INPUT from "../components/1_grouped/inputs/StyledText_INPUT/StyledText_INPUT";
 import { useEffect, useState } from "react";
-import Label from "../components/Label/Label";
-import Btn from "../components/Btn/Btn";
+import Label from "../components/1_grouped/texts/labels/Label/Label";
+import Btn from "../components/1_grouped/buttons/Btn/Btn";
 import { Link, useRouter } from "expo-router";
 import { supabase } from "../lib/supabase";
 import { Image } from "react-native";
 import { useTranslation } from "react-i18next";
 import { Controller, useForm } from "react-hook-form";
-import AuthenticationHeader from "../features/0_authentication/components/AuthenticationHeader";
-import Error_TEXT from "../components/Error_TEXT/Error_TEXT";
-import Notification_BOX from "../components/Notification_BOX/Notification_BOX";
-import LoginRegister_SWITCH from "../features/0_authentication/components/LoginRegister_SWTICH";
+import AuthenticationHeader from "../components/2_byPage/authentication/AuthenticationHeader";
+import Error_TEXT from "../components/1_grouped/texts/Error_TEXT/Error_TEXT";
+import Notification_BLOCK from "../components/1_grouped/blocks/Notification_BLOCK/Notification_BLOCK";
+import LoginRegister_SWITCH from "../components/2_byPage/authentication/LoginRegister_SWTICH";
 import { USE_auth } from "../context/Auth_CONTEXT";
 import * as SecureStore from "expo-secure-store";
-import db, { Users_DB } from "../db";
-import USE_zustand from "../zustand";
+import { Users_DB } from "../db";
+import { USE_zustand } from "@/src/hooks";
 
-import { Q } from "@nozbe/watermelondb";
 import { View } from "react-native";
-import Confirmation_MODAL from "../components/Modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
-import USE_modalToggles from "../hooks/USE_modalToggles";
-import NAVIGATE_user from "../utils/NAVIGATE_user";
+import Confirmation_MODAL from "../components/1_grouped/modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
 import { USE_sync } from "../hooks/USE_sync/USE_sync";
 import { useToast } from "react-native-toast-notifications";
+import { USE_navigateUser } from "../utils/NAVIGATE_user/NAVIGATE_user";
+import { USE_modalToggles } from "@/src/hooks/index";
 type LoginData_PROPS = {
   email: string;
   password: string;
@@ -48,9 +46,12 @@ export default function Login_PAGE() {
   const toast = useToast();
   const { sync } = USE_sync();
 
-  const { modal_STATES, TOGGLE_modal } = USE_modalToggles([
-    { name: "recoverDeletedAccount", initialValue: false },
-  ]);
+  const { modals } = USE_modalToggles(["recoverDeletedAccount"]);
+
+  const { navigate } = USE_navigateUser({
+    navigateToWelcomeSreenOnError: false,
+    SHOW_recoveryModal: () => modals.recoverDeletedAccount.set(true),
+  });
 
   const [error, SET_error] = useState({
     value: false,
@@ -61,7 +62,7 @@ export default function Login_PAGE() {
 
   const CANCEL_profileRevival = async () => {
     const { error } = await logout();
-    TOGGLE_modal("recoverDeletedAccount");
+    modals.recoverDeletedAccount.set(false);
   };
 
   const REVIVE_profile = async () => {
@@ -82,14 +83,21 @@ export default function Login_PAGE() {
       duration: 10000,
     });
 
-    await NAVIGATE_user({
+    const { navigate } = USE_navigateUser({
       navigateToWelcomeSreenOnError: false,
-      z_SET_user,
-      SET_error,
-      router,
-      SHOW_recoveryModal: () => TOGGLE_modal("recoverDeletedAccount"),
-      sync,
+      SHOW_recoveryModal: () => modals.recoverDeletedAccount.set(true),
     });
+
+    await navigate();
+    await navigate();
+    // await NAVIGATE_user({
+    //   navigateToWelcomeSreenOnError: false,
+    //   z_SET_user,
+    //   SET_error,
+    //   router,
+    //   SHOW_recoveryModal: () => TOGGLE_modal("recoverDeletedAccount"),
+    //   sync,
+    // });
 
     // const { watermelon_USER, supabase_USER } =
     //   await GET_watermelonAndSupabaseUser(targetUser_ID);
@@ -123,14 +131,15 @@ export default function Login_PAGE() {
     } else if (typeof userData?.id === "string") {
       SET_targetUserId(userData.id);
       await SecureStore.setItemAsync("user_id", userData?.id);
-      await NAVIGATE_user({
-        navigateToWelcomeSreenOnError: true,
-        z_SET_user,
-        SET_error,
-        router,
-        SHOW_recoveryModal: () => TOGGLE_modal("recoverDeletedAccount"),
-        sync,
-      });
+      await navigate();
+      // await NAVIGATE_user({
+      //   navigateToWelcomeSreenOnError: true,
+      //   z_SET_user,
+      //   SET_error,
+      //   router,
+      //   SHOW_recoveryModal: () => TOGGLE_modal("recoverDeletedAccount"),
+      //   sync,
+      // });
     }
   };
 
@@ -176,7 +185,7 @@ export default function Login_PAGE() {
   // ---------------------------------------------------------------------------------------------------
 
   return (
-    <Page_WRAP bottomEdge>
+    <>
       <KeyboardAvoidingView
         style={{ flex: 1, marginBottom: 20 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -274,10 +283,10 @@ export default function Login_PAGE() {
           </Block>
 
           {internal_ERROR && (
-            <Notification_BOX text={internal_ERROR} type="error" />
+            <Notification_BLOCK text={internal_ERROR} type="error" />
           )}
           {error.value && (
-            <Notification_BOX text={error.user_MSG} type="error" />
+            <Notification_BLOCK text={error.user_MSG} type="error" />
           )}
           <Block styles={{ marginTop: 8, marginBottom: 100 }}>
             <Btn
@@ -298,7 +307,7 @@ export default function Login_PAGE() {
       <Confirmation_MODAL
         action={async () => await REVIVE_profile()}
         actionBtnText="Yes, recover"
-        open={modal_STATES.recoverDeletedAccount}
+        open={modals.recoverDeletedAccount.IS_open}
         title="Recover account?"
         toggle={async () => await CANCEL_profileRevival()}
       >
@@ -310,6 +319,6 @@ export default function Login_PAGE() {
           Do you wish to recover this account?
         </Styled_TEXT>
       </Confirmation_MODAL>
-    </Page_WRAP>
+    </>
   );
 }

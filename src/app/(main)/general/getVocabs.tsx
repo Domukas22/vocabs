@@ -2,29 +2,29 @@
 //
 //
 
-import Btn from "@/src/components/Btn/Btn";
-import Header from "@/src/components/Header/Header";
+import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
+import Header from "@/src/components/1_grouped/headers/regular/Header";
 
-import { ICON_3dots, ICON_arrow } from "@/src/components/icons/icons";
+import { ICON_3dots, ICON_arrow } from "@/src/components/1_grouped/icons/icons";
 
 import React, { useCallback, useMemo, useState } from "react";
 import { ActivityIndicator, ScrollView, View } from "react-native";
 
 import { router, useRouter } from "expo-router";
 
-import Block from "@/src/components/Block/Block";
-import { Styled_TEXT } from "@/src/components/Styled_TEXT/Styled_TEXT";
+import Block from "@/src/components/1_grouped/blocks/Block/Block";
+import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
-import Page_WRAP from "@/src/components/Page_WRAP/Page_WRAP";
+import Page_WRAP from "@/src/components/1_grouped/Page_WRAP/Page_WRAP";
 import { useTranslation } from "react-i18next";
-import USE_zustand from "@/src/zustand";
-import CurrentVocabCount_BAR from "@/src/components/CurrentVocabCount_BAR";
+import { USE_zustand } from "@/src/hooks";
+import CurrentVocabCount_BAR from "@/src/components/2_byPage/general/CurrentVocabCount_BAR";
 import { VOCAB_PRICING } from "@/src/constants/globalVars";
 import { PUSH_changes, USE_sync } from "@/src/hooks/USE_sync/USE_sync";
 import { supabase } from "@/src/lib/supabase";
-import Pricing_BTN from "@/src/components/Pricing_BTN";
+import Pricing_BTN from "@/src/components/1_grouped/buttons/Pricing_BTN/Pricing_BTN";
 
-import USE_observeUserVocabCount from "@/src/features/5_users/hooks/USE_observeUserVocabCount";
+import { USE_observeMyTotalVocabCount } from "@/src/features/vocabs/functions";
 
 export default function GetVocabs_PAGE() {
   const { t } = useTranslation();
@@ -32,7 +32,7 @@ export default function GetVocabs_PAGE() {
   const [loading, SET_loading] = useState(false);
   const [IS_referringAFriend, SET_referringAFriend] = useState(false);
 
-  const totalUserVocab_COUNT = USE_observeUserVocabCount(z_user?.id);
+  const totalUserVocab_COUNT = USE_observeMyTotalVocabCount(z_user?.id);
 
   const [purchase, SET_purchase] = useState({
     completed: false,
@@ -61,7 +61,7 @@ export default function GetVocabs_PAGE() {
   };
 
   return (
-    <Page_WRAP>
+    <>
       <Header
         title={t("header.getVocabs")}
         btnLeft={
@@ -195,7 +195,7 @@ export default function GetVocabs_PAGE() {
           )}
         </ScrollView>
       )}
-    </Page_WRAP>
+    </>
   );
 }
 

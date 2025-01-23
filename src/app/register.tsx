@@ -4,44 +4,34 @@
 
 import {
   ActivityIndicator,
-  Alert,
   Image,
-  Keyboard,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  TouchableWithoutFeedback,
-  View,
 } from "react-native";
-import { Styled_TEXT } from "../components/Styled_TEXT/Styled_TEXT";
-import Page_WRAP from "../components/Page_WRAP/Page_WRAP";
-import { MyColors } from "../constants/MyColors";
-import Block from "../components/Block/Block";
-import StyledText_INPUT from "../components/StyledText_INPUT/StyledText_INPUT";
+import Page_WRAP from "../components/1_grouped/Page_WRAP/Page_WRAP";
+import Block from "../components/1_grouped/blocks/Block/Block";
+import StyledText_INPUT from "../components/1_grouped/inputs/StyledText_INPUT/StyledText_INPUT";
 import { useState } from "react";
-import Label from "../components/Label/Label";
-import Btn from "../components/Btn/Btn";
+import Label from "../components/1_grouped/texts/labels/Label/Label";
+import Btn from "../components/1_grouped/buttons/Btn/Btn";
 import { useRouter } from "expo-router";
-import { supabase } from "../lib/supabase";
 
 import { useForm, Controller } from "react-hook-form";
-import { ICON_arrow } from "../components/icons/icons";
-import { useToast } from "react-native-toast-notifications";
-import Notification_BOX from "../components/Notification_BOX/Notification_BOX";
-import AuthenticationHeader from "../features/0_authentication/components/AuthenticationHeader";
-import { t } from "i18next";
+import Notification_BLOCK from "../components/1_grouped/blocks/Notification_BLOCK/Notification_BLOCK";
+import AuthenticationHeader from "../components/2_byPage/authentication/AuthenticationHeader";
 import { useTranslation } from "react-i18next";
-import Error_TEXT from "../components/Error_TEXT/Error_TEXT";
-import LoginRegister_SWITCH from "../features/0_authentication/components/LoginRegister_SWTICH";
-import db, { Users_DB } from "../db";
+import Error_TEXT from "../components/1_grouped/texts/Error_TEXT/Error_TEXT";
+import LoginRegister_SWITCH from "../components/2_byPage/authentication/LoginRegister_SWTICH";
 
 import * as SecureStore from "expo-secure-store";
 import { USE_auth } from "../context/Auth_CONTEXT";
 
-import USE_zustand from "../zustand";
+import { USE_zustand } from "@/src/hooks";
 
-import NAVIGATE_user from "../utils/NAVIGATE_user";
+import { NAVIGATE_user } from "../utils";
 import { USE_sync } from "../hooks/USE_sync/USE_sync";
+import { USE_navigateUser } from "../utils/NAVIGATE_user/NAVIGATE_user";
 
 type RegisterData_PROPS = {
   username: string;
@@ -57,6 +47,9 @@ export default function Register_PAGE() {
   const router = useRouter();
   const { z_SET_user } = USE_zustand();
   const { sync } = USE_sync();
+  const { navigate } = USE_navigateUser({
+    navigateToWelcomeSreenOnError: false,
+  });
 
   const [error, SET_error] = useState({
     value: false,
@@ -77,13 +70,14 @@ export default function Register_PAGE() {
     } else if (!error && userData && typeof userData?.user?.id === "string") {
       // account on supabase has been created, now insert user_id into local storage
       await SecureStore.setItemAsync("user_id", userData?.user?.id);
-      await NAVIGATE_user({
-        navigateToWelcomeSreenOnError: false,
-        z_SET_user,
-        SET_error,
-        router,
-        sync,
-      });
+      await navigate();
+      // await NAVIGATE_user({
+      //   navigateToWelcomeSreenOnError: false,
+      //   z_SET_user,
+      //   SET_error,
+      //   router,
+      //   sync,
+      // });
     }
   };
 
@@ -101,7 +95,7 @@ export default function Register_PAGE() {
   const onSubmit = (data: RegisterData_PROPS) => _register(data);
   // const onSubmit = (data: RegisterData_PROPS) => {};
   return (
-    <Page_WRAP bottomEdge>
+    <>
       <KeyboardAvoidingView
         style={{ flex: 1, marginBottom: 20 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -219,10 +213,10 @@ export default function Register_PAGE() {
 
           {/* --------------------------------------------------------------------------------------------------- */}
           {internal_ERROR && (
-            <Notification_BOX text={internal_ERROR} type="error" />
+            <Notification_BLOCK text={internal_ERROR} type="error" />
           )}
           {error.value && (
-            <Notification_BOX text={error.user_MSG} type="error" />
+            <Notification_BLOCK text={error.user_MSG} type="error" />
           )}
           <Block styles={{ marginTop: 8, marginBottom: 100 }}>
             <Btn
@@ -235,6 +229,6 @@ export default function Register_PAGE() {
         </ScrollView>
       </KeyboardAvoidingView>
       <LoginRegister_SWITCH page="register" />
-    </Page_WRAP>
+    </>
   );
 }
