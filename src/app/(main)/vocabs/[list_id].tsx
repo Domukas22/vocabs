@@ -48,14 +48,6 @@ export default function SingleList_PAGE() {
   const router = useRouter();
   const { list_id } = useLocalSearchParams();
 
-  useEffect(() => {
-    console.log(list_id);
-    console.log(
-      "list_id: ",
-      (new Date().getSeconds() + new Date().getMilliseconds() / 1000).toFixed(2)
-    );
-  }, [list_id]);
-
   const selected_LIST = USE_observeMyTargetList(
     typeof list_id === "string" ? list_id : ""
   );
@@ -92,31 +84,6 @@ export default function SingleList_PAGE() {
     [SET_toUpdateVocab]
   );
 
-  useEffect(() => {
-    console.log(
-      "page1: ",
-      (new Date().getSeconds() + new Date().getMilliseconds() / 1000).toFixed(2)
-    );
-  }, []);
-
-  const {
-    IS_searching,
-    data: vocabs,
-    error: fetchVocabs_ERROR,
-    IS_loadingMore,
-    HAS_reachedEnd,
-    unpaginated_COUNT: totalFilteredVocab_COUNT,
-    LOAD_more,
-    ADD_toDisplayed,
-    REMOVE_fromDisplayed,
-  } = USE_vocabs({
-    type: "byTargetList",
-    targetList_ID: typeof list_id === "string" ? list_id : "",
-
-    search: debouncedSearch,
-    IS_debouncing,
-  });
-
   return (
     <>
       <List_HEADER
@@ -131,41 +98,18 @@ export default function SingleList_PAGE() {
       />
 
       <MyVocabs_FLATLIST
-        {...{ vocabs, IS_searching, HANDLE_updateModal }}
-        type="normal"
+        {...{ search, debouncedSearch, IS_debouncing, HANDLE_updateModal }}
+        fetch_TYPE="byTargetList"
         highlightedVocab_ID={highlighted_ID}
         PREPARE_vocabDelete={(vocab: Vocab_MODEL) => {
           SET_targetDeleteVocab(vocab);
           modals.deleteVocab.set(true);
         }}
         _ref={list_REF}
-        error={fetchVocabs_ERROR}
         onScroll={handleScroll}
-        listHeader_EL={
-          <VocabsFlatlistHeader_SECTION
-            search={search}
-            totalVocabs={totalFilteredVocab_COUNT}
-            IS_searching={IS_searching}
-            list_NAME={selected_LIST?.name}
-            vocabResults_COUNT={totalFilteredVocab_COUNT}
-          />
-        }
-        listFooter_EL={
-          <BottomAction_BLOCK
-            type="vocabs"
-            createBtn_ACTION={() => modals.createVocab.set(true)}
-            {...{
-              search,
-              IS_debouncing,
-              IS_loadingMore,
-              HAS_reachedEnd,
-              LOAD_more,
-            }}
-            totalFilteredResults_COUNT={totalFilteredVocab_COUNT}
-            LOAD_more={LOAD_more}
-            RESET_search={() => SET_search("")}
-          />
-        }
+        RESET_search={() => SET_search("")}
+        list={selected_LIST}
+        OPEN_createVocabModal={() => modals.createVocab.set(true)}
       />
 
       <Portal>
@@ -177,7 +121,7 @@ export default function SingleList_PAGE() {
             modals.createVocab.set(false);
 
             HIGHLIGHT_vocab(new_VOCAB.id);
-            ADD_toDisplayed(new_VOCAB);
+            // 🟢🟢 ADD_toDisplayed(new_VOCAB);
             list_REF?.current?.scrollToOffset({ animated: true, offset: 0 });
             toast.show(t("notifications.vocabCreated"), {
               type: "success",
@@ -222,7 +166,7 @@ export default function SingleList_PAGE() {
               type: "success",
               duration: 5000,
             });
-            REMOVE_fromDisplayed(targetDelete_VOCAB?.id || "");
+            // 🟢🟢REMOVE_fromDisplayed(targetDelete_VOCAB?.id || "");
             modals.deleteVocab.set(false);
           }}
         />

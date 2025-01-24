@@ -122,8 +122,6 @@ function USE_pagination_NEW({
   const [IS_loading, SET_isLoading] = useState(false);
   const [IS_loadingMore, SET_isLoadingMore] = useState(false);
 
-  console.log("IS_loadingMore", IS_loadingMore);
-
   const FETCH_more = async () => {
     try {
       start + paginateBy >= paginateBy
@@ -135,7 +133,7 @@ function USE_pagination_NEW({
       SET_end(newEnd);
       await fetch(newStart, newEnd);
     } catch (error: any) {
-      console.log("Error in USE_pagination_NEW 'paginate' function");
+      console.error("Error in USE_pagination_NEW 'paginate' function");
     } finally {
       SET_isLoading(false);
       SET_isLoadingMore(false);
@@ -149,7 +147,7 @@ function USE_pagination_NEW({
       SET_end(paginateBy);
       await fetch(0, paginateBy);
     } catch (error: any) {
-      console.log("Error in USE_pagination_NEW 'RESET_pagination' function");
+      console.error("Error in USE_pagination_NEW 'RESET_pagination' function");
     } finally {
       SET_isLoading(false);
     }

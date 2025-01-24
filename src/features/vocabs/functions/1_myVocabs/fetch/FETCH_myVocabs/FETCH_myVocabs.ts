@@ -28,11 +28,6 @@ export async function FETCH_myVocabs({
   targetList_ID,
   z_vocabDisplay_SETTINGS,
 }: VocabFilter_PROPS) {
-  console.log(
-    "f1: ",
-    (new Date().getSeconds() + new Date().getMilliseconds() / 1000).toFixed(2)
-  );
-
   let query = Vocabs_DB?.query();
 
   const conditions = [];
@@ -63,7 +58,7 @@ export async function FETCH_myVocabs({
           count: 0,
           error: {
             value: true,
-            msg: "🔴 Tried fetching vocabs by target list, by targetList_ID was undefined 🔴",
+            msg: "🔴 Tried fetching vocabs by target list, but targetList_ID was undefined 🔴",
           },
         };
       }
@@ -146,15 +141,7 @@ export async function FETCH_myVocabs({
   conditions.push(Q.where("id", Q.notIn([...excludeIds])));
   query = query.extend(Q.skip(start || 0), Q.take(amount || 10));
 
-  console.log(
-    "f2: ",
-    (new Date().getSeconds() + new Date().getMilliseconds() / 1000).toFixed(2)
-  );
   const vocabs = (await query.extend(Q.and(...conditions))) || [];
-  console.log(
-    "f3: ",
-    (new Date().getSeconds() + new Date().getMilliseconds() / 1000).toFixed(2)
-  );
 
   return {
     vocabs,

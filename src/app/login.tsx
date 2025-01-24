@@ -175,7 +175,7 @@ export default function Login_PAGE() {
   useEffect(() => {
     (async () => {
       const s = await Users_DB.query();
-      console.log(
+      console.warn(
         "Saved users in WatermelonDB: ",
         s?.map((y) => y.username)
       );

@@ -61,8 +61,6 @@ export default function PublicLists_PAGE() {
     [IS_loading, IS_loadingMore, IS_debouncing]
   );
 
-  // console.log("IS_searching", (IS_loading || IS_debouncing) && !IS_loadingMore);
-  // console.log("IS_loadingMore", IS_loadingMore);
   return (
     <>
       <List_HEADER

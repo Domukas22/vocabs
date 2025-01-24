@@ -80,14 +80,6 @@ function GET_handledLangs({
   langFilters: string[];
   incoming_LANG: string;
 }) {
-  console.log("Current: ", langFilters);
-  console.log("Incoming: ", incoming_LANG);
-  console.log(
-    "New: ",
-    langFilters.some((d) => d === incoming_LANG)
-      ? langFilters.filter((d) => d !== incoming_LANG)
-      : [...langFilters, incoming_LANG]
-  );
   if (langFilters) {
     return langFilters.some((d) => d === incoming_LANG)
       ? langFilters.filter((d) => d !== incoming_LANG)

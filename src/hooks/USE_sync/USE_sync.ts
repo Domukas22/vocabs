@@ -112,7 +112,7 @@ export function USE_sync() {
               function_NAME:
                 "USE_sync --> pullChanges --> user.UPDATE_lastPulledAt()",
             });
-            console.log("error3");
+
             SET_error(internal_ERROR);
             throw new Error(
               `🔴 Failed to update users last_pulled_at when syncing with USE_sync 🔴`

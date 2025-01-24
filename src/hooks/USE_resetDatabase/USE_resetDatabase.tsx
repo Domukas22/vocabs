@@ -23,7 +23,7 @@ export function USE_resetDatabase() {
       await db.unsafeResetDatabase();
     });
 
-    console.log("🟢 Database has been reset! 🟢");
+    console.warn("🟢 Database has been reset! 🟢");
   };
 
   return { RESET_database };

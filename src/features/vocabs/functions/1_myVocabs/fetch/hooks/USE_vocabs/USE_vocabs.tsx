@@ -8,13 +8,21 @@ import {
 import { VOCAB_PAGINATION } from "@/src/constants/globalVars";
 import { USE_isSearching, USE_pagination } from "@/src/hooks";
 
+export type USE_vocabs_FETCH_TYPES =
+  | "byTargetList"
+  | "allVocabs"
+  | "deletedVocabs"
+  | "marked";
+
+let c = 0;
+
 export function USE_vocabs({
   type,
   search,
   IS_debouncing = false,
   targetList_ID,
 }: {
-  type: "byTargetList" | "allVocabs" | "deletedVocabs" | "marked";
+  type: USE_vocabs_FETCH_TYPES;
   search: string;
 
   IS_debouncing: boolean;
@@ -47,17 +55,18 @@ export function USE_vocabs({
 
   const fetch = useCallback(
     async (start: number) => {
-      console.log(
-        "c1: ",
-        (new Date().getSeconds() + new Date().getMilliseconds() / 1000).toFixed(
-          2
-        )
-      );
-      start > 0 ? SET_loadingMore(true) : SET_fetching(true);
-      // Clear error at the beginning of a new fetch to avoid flickering
-      SET_error({ value: false, msg: "" });
+      // if (type === "byTargetList" && !targetList_ID) return;
 
       try {
+        start > 0 ? SET_loadingMore(true) : SET_fetching(true);
+
+        // Clear error at the beginning of a new fetch to avoid flickering
+        SET_error({ value: false, msg: "" });
+
+        c += 1;
+        console.log("count: ", c);
+        console.log("list id: ", targetList_ID);
+
         const { vocabs, count, error } = await FETCH_myVocabs({
           type,
           start,
@@ -71,8 +80,9 @@ export function USE_vocabs({
 
         if (error.value) {
           SET_error(error);
-          // SET_data([]);
-          // SET_unpaginatedCount(0);
+          c += 1;
+          console.log("count: ", c);
+          console.log("err: ", error);
         } else {
           SET_data((prev) => [...prev, ...vocabs]);
           SET_unpaginatedCount(count || 0);
@@ -86,13 +96,6 @@ export function USE_vocabs({
       } finally {
         SET_loadingMore(false);
         SET_fetching(false);
-        console.log(
-          "c2: ",
-          (
-            new Date().getSeconds() +
-            new Date().getMilliseconds() / 1000
-          ).toFixed(2)
-        );
       }
     },
     [search, z_vocabDisplay_SETTINGS, z_user?.id, targetList_ID]
@@ -141,4 +144,70 @@ export function USE_vocabs({
     ADD_toDisplayed,
     REMOVE_fromDisplayed,
   };
+}
+
+//////////////
+//
+//
+
+import { useReducer } from "react";
+
+const initialState = {
+  data: [],
+  unpaginated_COUNT: 0,
+  error: { value: false, msg: "" },
+  IS_fetching: false,
+  IS_loadingMore: false,
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "FETCH_START":
+      return { ...state, IS_fetching: true, error: { value: false, msg: "" } };
+    case "FETCH_SUCCESS":
+      return {
+        ...state,
+        data: [...state.data, ...action.payload.data],
+        unpaginated_COUNT: action.payload.count,
+        IS_fetching: false,
+        IS_loadingMore: false,
+      };
+    case "FETCH_ERROR":
+      return {
+        ...state,
+        IS_fetching: false,
+        IS_loadingMore: false,
+        error: action.payload,
+      };
+    case "RESET_DATA":
+      return { ...state, data: [], unpaginated_COUNT: 0 };
+    default:
+      return state;
+  }
+}
+
+export async function fetchVocabsHelper({
+  type,
+  search,
+  start,
+  targetList_ID,
+  excludeIds,
+  z_user,
+  z_vocabDisplay_SETTINGS,
+}) {
+  try {
+    const { vocabs, count, error } = await FETCH_myVocabs({
+      type,
+      start,
+      search,
+      targetList_ID,
+      excludeIds,
+      z_user: z_user?.id,
+      z_vocabDisplay_SETTINGS,
+    });
+    if (error.value) throw error;
+    return { vocabs, count };
+  } catch (err) {
+    return { error: { value: true, msg: err.msg || "Error fetching vocabs" } };
+  }
 }

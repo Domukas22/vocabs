@@ -115,12 +115,6 @@ export default function General_PAGE() {
 
   const { sync: sync_2, sync_SUCCESS, IS_syncing } = USE_sync();
 
-  useEffect(() => {
-    console.log("--------------------------------");
-    console.log("sync_SUCCESS", sync_SUCCESS);
-    console.log("IS_syncing", IS_syncing);
-  }, [sync_SUCCESS, IS_syncing]);
-
   return (
     <>
       <Header title={t("page.general.header")} big={true} />

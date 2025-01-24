@@ -12,11 +12,11 @@ const GET_readableDateNow = () =>
 export async function SEND_internalError(error: Error_PROPS) {
   if (error.error_TYPE !== "internal" && error.error_TYPE !== "unknown") return;
 
-  console.log("------------------------------------------------");
+  console.warn("------------------------------------------------");
   console.error("🔴 " + error.internal_MSG + " 🔴");
-  console.log("fucntion: ", error.function_NAME);
+  console.warn("function: ", error.function_NAME);
   if (error.error_DETAILS) {
-    console.log("defailts: ", error.error_DETAILS);
+    console.warn("defailts: ", error.error_DETAILS);
   }
 
   // Integrate Sentry here for logging
@@ -32,7 +32,7 @@ export async function SEND_internalError(error: Error_PROPS) {
     });
   });
 
-  if (err) console.log("🟢 Error created 🟢");
-  else console.log("🔴  Error creation failed 🔴 ");
-  console.log("------------------------------------------------");
+  if (err) console.warm("🟢 Error created 🟢");
+  else console.error("🔴  Error creation failed 🔴 ");
+  console.warm("------------------------------------------------");
 }

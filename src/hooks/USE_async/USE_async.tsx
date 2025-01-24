@@ -44,8 +44,6 @@ export function USE_async<
 
   const RESET_errors = useCallback(() => SET_error(undefined), []);
 
-  console.log(loading);
-
   const execute = useCallback(
     async (args: args_TYPE) => {
       if (SHOULD_returnNothing) {
@@ -59,15 +57,11 @@ export function USE_async<
       SET_error(undefined);
       SET_data(undefined);
 
-      console.log("FIRE");
-      console.log(args);
-
       try {
         const { data, error } = await fn(args);
         if (error) {
           SET_error(error);
         } else {
-          console.log("executed data --> ", data);
           SET_data(data);
           onSuccess(data);
         }

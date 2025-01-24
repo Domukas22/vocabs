@@ -79,7 +79,6 @@ export function RenameList_MODAL({
   }, [IS_open]);
 
   useEffect(() => {
-    // console.log(error);
     error?.falsyForm_INPUTS?.forEach((err) => {
       setError(err.input_NAME, {
         type: "manual",
