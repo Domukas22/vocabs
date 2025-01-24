@@ -6,7 +6,7 @@ import { Error_PROPS } from "../../props";
 import {
   SEND_internalError,
   HANDLE_keyboardDismiss,
-  HANDLE_userError,
+  HANDLE_userErrorInsideFinalCatchBlock,
 } from "@/src/utils";
 
 export function USE_async<
@@ -66,7 +66,7 @@ export function USE_async<
           onSuccess(data);
         }
       } catch (err: any) {
-        const _err = HANDLE_userError({
+        const _err = HANDLE_userErrorInsideFinalCatchBlock({
           error: err,
           internalErrorUser_MSG: defaultErr_MSG,
           function_NAME: `USE_async --> ${fn_NAME}`,

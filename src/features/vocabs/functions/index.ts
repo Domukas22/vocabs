@@ -22,7 +22,7 @@ export { FETCH_myVocabs } from "./1_myVocabs/fetch/FETCH_myVocabs/FETCH_myVocabs
 // fetch hooks
 export { USE_myTotalVocabCount } from "./1_myVocabs/fetch/hooks/USE_myTotalVocabCount/USE_myTotalVocabCount";
 export { USE_observeMyTotalVocabCount } from "./1_myVocabs/fetch/hooks/USE_observeMyTotalVocabCount/USE_observeMyTotalVocabCount";
-export { USE_vocabs } from "./1_myVocabs/fetch/hooks/USE_vocabs/USE_vocabs";
+export { USE_myVocabs as USE_vocabs } from "./1_myVocabs/fetch/hooks/USE_myVocabs/USE_myVocabs";
 
 // update hooks
 export { USE_updateVocab } from "./1_myVocabs/update/hooks/USE_updateVocab/USE_updateVocab";

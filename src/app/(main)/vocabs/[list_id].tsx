@@ -13,7 +13,7 @@ import List_MODEL from "@/src/db/models/List_MODEL";
 
 import { withObservables } from "@nozbe/watermelondb/react";
 import { USE_sync } from "@/src/hooks/USE_sync/USE_sync";
-import { USE_vocabs } from "@/src/features/vocabs/functions/1_myVocabs/fetch/hooks/USE_vocabs/USE_vocabs";
+import { USE_myVocabs } from "@/src/features/vocabs/functions/1_myVocabs/fetch/hooks/USE_myVocabs/USE_myVocabs";
 
 import { USE_zustand } from "@/src/hooks";
 

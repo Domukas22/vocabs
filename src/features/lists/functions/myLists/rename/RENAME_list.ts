@@ -3,7 +3,7 @@
 //
 
 import { CREATE_internalErrorMsg } from "@/src/constants/globalVars";
-import { HANDLE_userError } from "@/src/utils";
+import { HANDLE_userErrorInsideFinalCatchBlock } from "@/src/utils";
 import {
   FalsyFormInputArray_PROPS,
   RenameList_ARGS,
@@ -56,7 +56,7 @@ export async function RENAME_list(
   } catch (error: any) {
     return {
       data: false,
-      error: HANDLE_userError({
+      error: HANDLE_userErrorInsideFinalCatchBlock({
         function_NAME: "RENAME_list",
         error,
         internalErrorUser_MSG: renameList_ERRS.user.defaultInternal_MSG,

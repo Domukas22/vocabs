@@ -2,153 +2,74 @@
 //
 //
 
-import { Q } from "@nozbe/watermelondb";
 import { Vocabs_DB } from "@/src/db";
-import { z_vocabDisplaySettings_PROPS } from "@/src/hooks/USE_zustand/USE_zustand";
-import { notEq } from "@nozbe/watermelondb/QueryDescription";
+import {
+  FETCH_myVocabs_ARG_TYPES,
+  FETCH_myVocabs_ERROR_PROPS,
+  FETCH_myVocabs_ERRORS,
+  FETCH_myVocabs_RESPONSE_TYPE,
+  internalErrMsg_TYPES,
+} from "./types";
 
-export interface VocabFilter_PROPS {
-  type: "byTargetList" | "allVocabs" | "deletedVocabs" | "marked";
-  start: number;
-  search: string;
-  amount?: number;
-  user_id: string | undefined;
-  excludeIds?: Set<string>;
-  targetList_ID?: string | undefined;
-  z_vocabDisplay_SETTINGS: z_vocabDisplaySettings_PROPS | undefined;
+import { HANDLE_userErrorInsideFinalCatchBlock } from "@/src/utils";
+import {
+  GET_fetchMyVocabConditions,
+  VALIDATE_args,
+  VALIDATE_watermelonFetch,
+} from "./helpers";
+
+/////////////////////////////////////////////////////////////////////////////////
+
+export const function_NAME = "FETCH_myVocabs";
+export const err = FETCH_myVocabs_ERRORS;
+
+function THROW_err(type: internalErrMsg_TYPES): FETCH_myVocabs_ERROR_PROPS {
+  return {
+    error_TYPE: "internal",
+    internal_MSG: err.internal[type],
+    user_MSG: err.user.defaultInternal_MSG,
+    function_NAME,
+  };
 }
 
-export async function FETCH_myVocabs({
-  type,
-  start,
-  search,
-  amount,
-  user_id,
-  excludeIds = new Set(),
-  targetList_ID,
-  z_vocabDisplay_SETTINGS,
-}: VocabFilter_PROPS) {
-  let query = Vocabs_DB?.query();
+/////////////////////////////////////////////////////////////////////////////////
 
-  const conditions = [];
-  let count = 0;
+export async function FETCH_myVocabs(
+  args: FETCH_myVocabs_ARG_TYPES
+): Promise<FETCH_myVocabs_RESPONSE_TYPE> {
+  try {
+    VALIDATE_args({ args, THROW_err });
 
-  if (!user_id) {
+    const query = Vocabs_DB?.query();
+
+    // get conditions for filter / sorting / pagination
+    const { filter_CONDITIONS, sorting_CONDITIONS, pagination_CONDITIONS } =
+      GET_fetchMyVocabConditions(args);
+
+    // fetch total result count before pagination
+    const totalCount =
+      (await query.extend(filter_CONDITIONS).fetchCount()) || 0;
+
+    // fetch the final vocabs
+    const vocabs = await query
+      .extend(filter_CONDITIONS, sorting_CONDITIONS, pagination_CONDITIONS)
+      .fetch();
+
+    VALIDATE_watermelonFetch({ totalCount, vocabs, THROW_err });
+
     return {
-      vocabs: [],
-      count: 0,
-      error: {
-        value: true,
-        msg: "🔴 User ID not defined when fetching vocabs 🔴",
+      data: {
+        vocabs,
+        totalCount,
       },
     };
+  } catch (error: any) {
+    return {
+      error: HANDLE_userErrorInsideFinalCatchBlock({
+        error,
+        function_NAME,
+        internalErrorUser_MSG: err.user.defaultInternal_MSG,
+      }),
+    };
   }
-
-  conditions.push(Q.where("user_id", user_id));
-
-  switch (type) {
-    case "allVocabs":
-      conditions.push(Q.where("deleted_at", null));
-      break;
-    // --------------------------------------------
-    case "byTargetList":
-      if (!targetList_ID) {
-        return {
-          vocabs: [],
-          count: 0,
-          error: {
-            value: true,
-            msg: "🔴 Tried fetching vocabs by target list, but targetList_ID was undefined 🔴",
-          },
-        };
-      }
-      conditions.push(
-        Q.where("deleted_at", null),
-        Q.where("list_id", targetList_ID)
-      );
-      break;
-    // --------------------------------------------
-    case "deletedVocabs":
-      conditions.push(Q.where("deleted_at", notEq(null)));
-      break;
-    case "marked":
-      conditions.push(Q.where("deleted_at", null), Q.where("is_marked", true));
-      break;
-    default:
-      return {
-        vocabs: [],
-        count: 0,
-        error: {
-          value: true,
-          msg: "🔴 Vocab fetch type not defined when fetching vocabs 🔴",
-        },
-      };
-  }
-
-  if (
-    z_vocabDisplay_SETTINGS?.difficultyFilters &&
-    z_vocabDisplay_SETTINGS.difficultyFilters.length > 0
-  ) {
-    conditions.push(
-      Q.where("difficulty", Q.oneOf(z_vocabDisplay_SETTINGS.difficultyFilters))
-    );
-  }
-
-  if (
-    z_vocabDisplay_SETTINGS?.langFilters &&
-    z_vocabDisplay_SETTINGS.langFilters.length > 0
-  ) {
-    conditions.push(
-      Q.or(
-        z_vocabDisplay_SETTINGS.langFilters.map((lang) =>
-          Q.where("lang_ids", Q.like(`%${Q.sanitizeLikeString(lang)}%`))
-        )
-      )
-    );
-  }
-
-  if (search) {
-    conditions.push(
-      Q.or([
-        Q.where("description", Q.like(`%${Q.sanitizeLikeString(search)}%`)),
-        Q.where("searchable", Q.like(`%${Q.sanitizeLikeString(search)}%`)),
-      ])
-    );
-  }
-
-  count = (await query.extend(Q.and(...conditions)).fetchCount()) || 0;
-
-  // Apply sorting based on user settings
-  switch (z_vocabDisplay_SETTINGS?.sorting) {
-    case "difficulty":
-      query = query.extend(
-        Q.sortBy(
-          "difficulty",
-          z_vocabDisplay_SETTINGS.sortDirection === "ascending" ? Q.asc : Q.desc
-        )
-      );
-      break;
-    case "date":
-      query = query.extend(
-        Q.sortBy(
-          "created_at",
-          z_vocabDisplay_SETTINGS.sortDirection === "ascending" ? Q.asc : Q.desc
-        )
-      );
-      break;
-  }
-
-  conditions.push(Q.where("id", Q.notIn([...excludeIds])));
-  query = query.extend(Q.skip(start || 0), Q.take(amount || 10));
-
-  const vocabs = (await query.extend(Q.and(...conditions))) || [];
-
-  return {
-    vocabs,
-    count,
-    error: {
-      value: false,
-      msg: "",
-    },
-  };
 }

@@ -9,6 +9,7 @@ import {
   ICON_displaySettings,
   ICON_download,
   ICON_search,
+  ICON_settings,
   ICON_X,
 } from "@/src/components/1_grouped/icons/icons";
 import SearchBar from "@/src/components/1_grouped/inputs/SearchBar/SearchBar";
@@ -112,6 +113,13 @@ export default function List_HEADER({
                 style={{ flex: IS_searchBig ? 0 : 1 }}
               />
             )}
+            {OPEN_listSettings && (
+              <Btn
+                onPress={OPEN_listSettings}
+                iconLeft={<ICON_settings />}
+                style={{ flex: IS_searchBig ? 0 : 1 }}
+              />
+            )}
             {search !== undefined && SET_search && IS_searchBig && (
               <SearchBar
                 _ref={search_REF}
@@ -136,13 +144,6 @@ export default function List_HEADER({
               />
             )}
 
-            {OPEN_listSettings && (
-              <Btn
-                onPress={OPEN_listSettings}
-                iconLeft={<ICON_3dots />}
-                style={{ flex: IS_searchBig ? 0 : 1 }}
-              />
-            )}
             {OPEN_create && (
               <Btn
                 type="simple_primary_text"

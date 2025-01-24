@@ -15,7 +15,7 @@ export { GET_errorMessage } from "./errors/GET_errorMessage/GET_errorMessage";
 export { GET_errorType } from "./errors/GET_errorType/GET_errorType";
 
 export { HANDLE_keyboardDismiss } from "./HANDLE_keyboardDismiss/HANDLE_keyboardDismiss";
-export { HANDLE_userError } from "./HANDLE_userError/HANDLE_userError";
+export { HANDLE_userErrorInsideFinalCatchBlock } from "./HANDLE_userErrorInsideFinalCatchBlock/HANDLE_userErrorInsideFinalCatchBlock";
 export { USE_navigateUser as NAVIGATE_user } from "./NAVIGATE_user/NAVIGATE_user";
 export { SEND_internalError } from "./SEND_internalError/SEND_internalError";
 

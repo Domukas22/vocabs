@@ -15,7 +15,7 @@ import { FlashList } from "@shopify/flash-list";
 import { VocabsFlatlistHeader_SECTION } from "../VocabsFlatlistHeader_SECTION/VocabsFlatlistHeader_SECTION";
 import BottomAction_BLOCK from "@/src/components/1_grouped/blocks/BottomAction_BLOCK";
 import { USE_vocabs } from "@/src/features/vocabs/functions";
-import { USE_vocabs_FETCH_TYPES } from "@/src/features/vocabs/functions/1_myVocabs/fetch/hooks/USE_vocabs/USE_vocabs";
+import { USE_vocabs_FETCH_TYPES } from "@/src/features/vocabs/functions/1_myVocabs/fetch/hooks/USE_myVocabs/USE_myVocabs";
 import List_MODEL from "@/src/db/models/List_MODEL";
 import { MyColors } from "@/src/constants/MyColors";
 
@@ -80,6 +80,8 @@ export function MyVocabs_FLATLIST({
     return vocabs;
   }, [IS_searching, fetchVocabs_ERROR, vocabs]);
 
+  console.log(fetchVocabs_ERROR);
+
   const Footer = () => {
     if (error?.value) {
       return <Error_BLOCK paragraph={error?.msg} />;
@@ -125,7 +127,7 @@ export function MyVocabs_FLATLIST({
   return (
     <Styled_FLASHLIST
       {...{ onScroll }}
-      data={data}
+      data={vocabs || []}
       _ref={_ref}
       renderItem={({ item }) => Vocab_BTN(item)}
       keyExtractor={(item) => "Vocab" + item.id}

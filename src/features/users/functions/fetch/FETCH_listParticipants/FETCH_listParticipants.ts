@@ -12,7 +12,7 @@ import {
 import { CREATE_internalErrorMsg } from "@/src/constants/globalVars";
 import { CHECK_ifNetworkFailure } from "@/src/utils";
 import { PostgrestError } from "@supabase/supabase-js";
-import { HANDLE_userError } from "@/src/utils";
+import { HANDLE_userErrorInsideFinalCatchBlock } from "@/src/utils";
 
 export const fetchListParticipants_ERRS = {
   internal: {
@@ -56,7 +56,7 @@ export async function FETCH_listParticipants({
   } catch (error: any) {
     return {
       data: [],
-      error: HANDLE_userError({
+      error: HANDLE_userErrorInsideFinalCatchBlock({
         function_NAME: "FETCH_listParticipants",
         error,
         internalErrorUser_MSG:

@@ -2,7 +2,7 @@
 //
 //
 
-import { HANDLE_userError } from "@/src/utils";
+import { HANDLE_userErrorInsideFinalCatchBlock } from "@/src/utils";
 import { supabase } from "@/src/lib/supabase";
 import {
   FetchSupabaseLists_ARGS,
@@ -48,7 +48,7 @@ export async function FETCH_supabaseLists(
         lists: [],
         count: 0,
       },
-      error: HANDLE_userError({
+      error: HANDLE_userErrorInsideFinalCatchBlock({
         error,
         function_NAME: "FETCH_supabaseLists",
         internalErrorUser_MSG:

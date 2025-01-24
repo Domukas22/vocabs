@@ -16,7 +16,7 @@ export type USE_vocabs_FETCH_TYPES =
 
 let c = 0;
 
-export function USE_vocabs({
+export function USE_myVocabs({
   type,
   search,
   IS_debouncing = false,
@@ -63,11 +63,7 @@ export function USE_vocabs({
         // Clear error at the beginning of a new fetch to avoid flickering
         SET_error({ value: false, msg: "" });
 
-        c += 1;
-        console.log("count: ", c);
-        console.log("list id: ", targetList_ID);
-
-        const { vocabs, count, error } = await FETCH_myVocabs({
+        const { data, error } = await FETCH_myVocabs({
           type,
           start,
           search,
@@ -78,14 +74,11 @@ export function USE_vocabs({
           z_vocabDisplay_SETTINGS,
         });
 
-        if (error.value) {
+        if (error || !data) {
           SET_error(error);
-          c += 1;
-          console.log("count: ", c);
-          console.log("err: ", error);
         } else {
-          SET_data((prev) => [...prev, ...vocabs]);
-          SET_unpaginatedCount(count || 0);
+          SET_data((prev) => [...prev, ...data.vocabs]);
+          SET_unpaginatedCount(data.totalCount);
         }
       } catch (error: any) {
         console.error("🔴 Error in USE_myVocabs: 🔴", error);
@@ -183,31 +176,5 @@ function reducer(state, action) {
       return { ...state, data: [], unpaginated_COUNT: 0 };
     default:
       return state;
-  }
-}
-
-export async function fetchVocabsHelper({
-  type,
-  search,
-  start,
-  targetList_ID,
-  excludeIds,
-  z_user,
-  z_vocabDisplay_SETTINGS,
-}) {
-  try {
-    const { vocabs, count, error } = await FETCH_myVocabs({
-      type,
-      start,
-      search,
-      targetList_ID,
-      excludeIds,
-      z_user: z_user?.id,
-      z_vocabDisplay_SETTINGS,
-    });
-    if (error.value) throw error;
-    return { vocabs, count };
-  } catch (err) {
-    return { error: { value: true, msg: err.msg || "Error fetching vocabs" } };
   }
 }

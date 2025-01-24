@@ -4,7 +4,7 @@
 //
 
 import {
-  HANDLE_userError,
+  HANDLE_userErrorInsideFinalCatchBlock,
   HANDLE_keyboardDismiss,
   SEND_internalError,
 } from "@/src/utils";
@@ -15,7 +15,10 @@ jest.mock("@/src/utils/SEND_internalError", () => jest.fn());
 jest.mock("../../utils/HANDLE_keyboardDismiss/HANDLE_keyboardDismiss", () =>
   jest.fn()
 );
-jest.mock("../../utils/HANDLE_userError/HANDLE_userError", () => jest.fn());
+jest.mock(
+  "../../utils/HANDLE_userErrorInsideFinalCatchBlock/HANDLE_userErrorInsideFinalCatchBlock",
+  () => jest.fn()
+);
 
 describe("USE_async", () => {
   beforeEach(() => {
@@ -115,10 +118,10 @@ describe("USE_async", () => {
     expect(result.current.loading).toBe(false);
   });
 
-  it("5. Should handle unexpected error and call `HANDLE_userError`", async () => {
+  it("5. Should handle unexpected error and call `HANDLE_userErrorInsideFinalCatchBlock`", async () => {
     const mockError = new Error("Unexpected Error");
     const mockFn = jest.fn().mockRejectedValue(mockError);
-    (HANDLE_userError as jest.Mock).mockReturnValue({
+    (HANDLE_userErrorInsideFinalCatchBlock as jest.Mock).mockReturnValue({
       error_TYPE: "internal_error",
       user_MSG: "Handled Error Message",
     });
@@ -136,7 +139,7 @@ describe("USE_async", () => {
     });
 
     expect(mockFn).toHaveBeenCalled();
-    expect(HANDLE_userError).toHaveBeenCalledWith({
+    expect(HANDLE_userErrorInsideFinalCatchBlock).toHaveBeenCalledWith({
       error: mockError,
       internalErrorUser_MSG: "Default Error Message",
       function_NAME: "USE_async --> Test Function",

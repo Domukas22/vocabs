@@ -5,7 +5,9 @@
 import { Error_PROPS } from "@/src/props";
 import { CHECK_ifNetworkFailure } from "../CHECK_ifNetworkFailure/CHECK_ifNetworkFailure";
 
-export function HANDLE_userError<validInput_NAMES extends string = string>({
+export function HANDLE_userErrorInsideFinalCatchBlock<
+  validInput_NAMES extends string = string
+>({
   error,
   function_NAME,
   internalErrorUser_MSG,
@@ -15,9 +17,11 @@ export function HANDLE_userError<validInput_NAMES extends string = string>({
   internalErrorUser_MSG: string;
 }): Error_PROPS<validInput_NAMES> {
   const IS_networkFailure = CHECK_ifNetworkFailure(error);
+
   const type = IS_networkFailure
     ? "user_network"
     : error.error_TYPE || "unknown";
+
   const details = type === "unknown" ? error : error.error_DETAILS;
 
   return {

@@ -11,7 +11,7 @@ import {
 } from "./props";
 import CHECK_ifNetworkFailure from "@/src/utils/CHECK_ifNetworkFailure/CHECK_ifNetworkFailure";
 import { PostgrestError } from "@supabase/supabase-js";
-import HANDLE_userError from "@/src/utils/HANDLE_userError/HANDLE_userError";
+import HANDLE_userErrorInsideFinalCatchBlock from "@/src/utils/HANDLE_userErrorInsideFinalCatchBlock/HANDLE_userErrorInsideFinalCatchBlock";
 
 export const errs = {
   internal: {
@@ -51,7 +51,7 @@ export async function FETCH_listIdsSharedWithMe(
   } catch (error: any) {
     return {
       data: [],
-      error: HANDLE_userError({
+      error: HANDLE_userErrorInsideFinalCatchBlock({
         function_NAME: "FETCH_listIdsSharedWithMe",
         error,
         internalErrorUser_MSG: errs.user.defaultInternal_MSG,
