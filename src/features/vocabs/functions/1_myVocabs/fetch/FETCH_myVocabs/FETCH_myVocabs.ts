@@ -52,7 +52,7 @@ export async function FETCH_myVocabs(
 
     // fetch the final vocabs
     const vocabs = await query
-      .extend(filter_CONDITIONS, sorting_CONDITIONS, pagination_CONDITIONS)
+      .extend(filter_CONDITIONS, sorting_CONDITIONS, ...pagination_CONDITIONS)
       .fetch();
 
     VALIDATE_watermelonFetch({ totalCount, vocabs, THROW_err });

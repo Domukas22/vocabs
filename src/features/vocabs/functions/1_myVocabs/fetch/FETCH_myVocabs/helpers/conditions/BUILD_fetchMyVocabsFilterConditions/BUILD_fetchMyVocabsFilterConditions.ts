@@ -5,7 +5,6 @@
 import { Q } from "@nozbe/watermelondb";
 import { notEq } from "@nozbe/watermelondb/QueryDescription";
 import { FETCH_myVocabs_ARG_TYPES } from "../../../types";
-import GENERATE_internalError from "../../validation/GENERATE_internalError/GENERATE_internalError";
 import { z_vocabDisplaySettings_PROPS } from "@/src/hooks/USE_zustand/USE_zustand";
 
 export default function BUILD_fetchMyVocabsFilterConditions(
@@ -20,8 +19,14 @@ export default function BUILD_fetchMyVocabsFilterConditions(
     z_vocabDisplay_SETTINGS: settings = {} as z_vocabDisplaySettings_PROPS,
   } = args;
 
-  const conditions = [Q.where("user_id", user_id)];
+  const { difficultyFilters = [], langFilters = [] } = settings;
 
+  const conditions = [];
+
+  // filter by user
+  conditions.push(Q.where("user_id", user_id));
+
+  // filter by type
   switch (type) {
     case "allVocabs":
       conditions.push(Q.where("deleted_at", null));
@@ -42,29 +47,38 @@ export default function BUILD_fetchMyVocabsFilterConditions(
       conditions.push(Q.where("deleted_at", null));
   }
 
-  if (settings.difficultyFilters?.length > 0) {
-    conditions.push(Q.where("difficulty", Q.oneOf(settings.difficultyFilters)));
+  // add difficulty filters
+  if (difficultyFilters?.length > 0) {
+    conditions.push(Q.where("difficulty", Q.oneOf(difficultyFilters)));
   }
 
-  if (settings.langFilters?.length > 0) {
+  // add language filters
+  if (langFilters?.length > 0) {
     conditions.push(
       Q.or(
-        settings.langFilters.map((lang) =>
+        langFilters.map((lang) =>
           Q.where("lang_ids", Q.like(`%${Q.sanitizeLikeString(lang)}%`))
         )
       )
     );
   }
 
+  // filter by search
   if (search) {
+    const sanitized_SEARCH = Q.like(`%${Q.sanitizeLikeString(search)}%`);
+
     conditions.push(
       Q.or([
-        Q.where("description", Q.like(`%${Q.sanitizeLikeString(search)}%`)),
-        Q.where("searchable", Q.like(`%${Q.sanitizeLikeString(search)}%`)),
+        Q.where("description", sanitized_SEARCH),
+        Q.where("searchable", sanitized_SEARCH),
       ])
     );
   }
 
-  conditions.push(Q.where("id", Q.notIn([...excludeIds])));
+  // exclude certain ids
+  if (excludeIds.size > 0) {
+    conditions.push(Q.where("id", Q.notIn([...excludeIds])));
+  }
+
   return Q.and(...conditions);
 }

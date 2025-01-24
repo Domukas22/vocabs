@@ -10,7 +10,7 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "clearJestCache": "jest --clearCache",
-    "testFile": "jest --watch --coverage=false --testPathPattern=src/features/vocabs/functions/1_myVocabs/fetch/FETCH_myVocabs/helpers/validation/VALIDATE_watermelonFetch/VALIDATE_watermelonFetch.test.ts",
+    "testFile": "jest --watch --coverage=false --testPathPattern=src/features/vocabs/functions/1_myVocabs/fetch/FETCH_myVocabs/FETCH_myVocabs.test.ts",
     "test": "jest --watch --coverage=false --changedSince=origin/main",
     "testDebug": "jest -o --watch --coverage=false",
     "testFinal": "jest",

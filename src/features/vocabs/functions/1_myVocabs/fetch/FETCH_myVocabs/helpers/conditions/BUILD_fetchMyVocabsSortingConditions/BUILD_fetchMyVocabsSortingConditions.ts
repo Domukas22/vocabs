@@ -9,11 +9,11 @@ export default function BUILD_fetchMyVocabsSortingConditions(
   args: FETCH_myVocabs_ARG_TYPES
 ) {
   const sort_DIRECTION =
-    args?.z_vocabDisplay_SETTINGS.sortDirection === "ascending"
+    args?.z_vocabDisplay_SETTINGS?.sortDirection === "ascending"
       ? Q.asc
       : Q.desc;
 
-  switch (args?.z_vocabDisplay_SETTINGS.sorting) {
+  switch (args?.z_vocabDisplay_SETTINGS?.sorting) {
     case "difficulty":
       return Q.sortBy("difficulty", sort_DIRECTION);
     case "date":

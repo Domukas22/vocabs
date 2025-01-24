@@ -2,10 +2,6 @@
 //
 //
 
-//
-//
-//
-
 import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 import { internalErrMsg_TYPES } from "../../../types";
 

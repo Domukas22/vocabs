@@ -3,8 +3,6 @@
 //
 
 import { VALIDATE_watermelonFetch } from "./VALIDATE_watermelonFetch"; // Adjust path if needed
-import { internalErrMsg_TYPES } from "../../../types";
-import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 
 // Mock function to simulate THROW_err
 const mockThrowErr = jest.fn();

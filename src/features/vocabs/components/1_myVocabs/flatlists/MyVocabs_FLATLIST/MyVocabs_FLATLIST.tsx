@@ -80,7 +80,7 @@ export function MyVocabs_FLATLIST({
     return vocabs;
   }, [IS_searching, fetchVocabs_ERROR, vocabs]);
 
-  console.log(fetchVocabs_ERROR);
+  // console.log(fetchVocabs_ERROR);
 
   const Footer = () => {
     if (error?.value) {
