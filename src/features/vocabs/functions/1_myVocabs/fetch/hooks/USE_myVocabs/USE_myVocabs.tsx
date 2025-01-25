@@ -6,7 +6,12 @@ import {
   z_vocabDisplaySettings_PROPS,
 } from "@/src/hooks/USE_zustand/USE_zustand";
 import { VOCAB_PAGINATION } from "@/src/constants/globalVars";
-import { USE_isSearching, USE_pagination } from "@/src/hooks";
+import {
+  USE_abortController,
+  USE_isSearching,
+  USE_pagination,
+} from "@/src/hooks";
+import { Delay } from "@/src/utils";
 
 export type USE_vocabs_FETCH_TYPES =
   | "byTargetList"
@@ -53,12 +58,18 @@ export function USE_myVocabs({
   );
   const [printed_IDS, SET_printedIds] = useState(new Set<string>());
 
+  const { startNewRequest } = USE_abortController();
+
   const fetch = useCallback(
     async (start: number) => {
-      // if (type === "byTargetList" && !targetList_ID) return;
+      console.log("🟢 Fetching... 🟢");
+
+      const abortController = startNewRequest();
 
       try {
         start > 0 ? SET_loadingMore(true) : SET_fetching(true);
+
+        await Delay(5000);
 
         // Clear error at the beginning of a new fetch to avoid flickering
         SET_error({ value: false, msg: "" });
@@ -74,6 +85,11 @@ export function USE_myVocabs({
           z_vocabDisplay_SETTINGS,
         });
 
+        if (abortController.signal.aborted) {
+          console.warn("🟡 Fetch vocabs request aborted 🟡");
+          return;
+        }
+
         if (error || !data) {
           SET_error(error);
         } else {
@@ -81,14 +97,19 @@ export function USE_myVocabs({
           SET_unpaginatedCount(data.totalCount);
         }
       } catch (error: any) {
-        console.error("🔴 Error in USE_myVocabs: 🔴", error);
-        SET_error({
-          value: true,
-          msg: errroMsg,
-        });
+        if (!abortController.signal.aborted) {
+          console.error("🔴 Error in USE_myVocabs: 🔴", error);
+          SET_error({
+            value: true,
+            msg: errroMsg,
+          });
+        }
       } finally {
-        SET_loadingMore(false);
-        SET_fetching(false);
+        if (!abortController.signal.aborted) {
+          SET_loadingMore(false);
+          SET_fetching(false);
+          console.log("🟢 Done 🟢");
+        }
       }
     },
     [search, z_vocabDisplay_SETTINGS, z_user?.id, targetList_ID]
@@ -142,39 +163,3 @@ export function USE_myVocabs({
 //////////////
 //
 //
-
-import { useReducer } from "react";
-
-const initialState = {
-  data: [],
-  unpaginated_COUNT: 0,
-  error: { value: false, msg: "" },
-  IS_fetching: false,
-  IS_loadingMore: false,
-};
-
-function reducer(state, action) {
-  switch (action.type) {
-    case "FETCH_START":
-      return { ...state, IS_fetching: true, error: { value: false, msg: "" } };
-    case "FETCH_SUCCESS":
-      return {
-        ...state,
-        data: [...state.data, ...action.payload.data],
-        unpaginated_COUNT: action.payload.count,
-        IS_fetching: false,
-        IS_loadingMore: false,
-      };
-    case "FETCH_ERROR":
-      return {
-        ...state,
-        IS_fetching: false,
-        IS_loadingMore: false,
-        error: action.payload,
-      };
-    case "RESET_DATA":
-      return { ...state, data: [], unpaginated_COUNT: 0 };
-    default:
-      return state;
-  }
-}

@@ -4,6 +4,7 @@ eas build --profile development --platform ios
 
 🔴
 🟢
+🟡
 
 # ChatGPT testing explanation
 

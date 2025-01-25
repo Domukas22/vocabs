@@ -16,7 +16,7 @@ export const MAX_TRANSLATION_LENGTH = 200;
 
 export const HEADER_MARGIN = 80;
 
-export const VOCAB_PAGINATION = 5;
+export const VOCAB_PAGINATION = 3;
 export const LIST_PAGINATION = 20;
 
 export const CREATE_internalErrorMsg = (process?: string) => {

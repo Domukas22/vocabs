@@ -47,6 +47,8 @@ export async function FETCH_myVocabs(
       GET_fetchMyVocabConditions(args);
 
     // fetch total result count before pagination
+    // -- this must be here, because we want to fetch the total count of filtered results,
+    // not just the total vocab count in this list
     const totalCount =
       (await query.extend(filter_CONDITIONS).fetchCount()) || 0;
 
