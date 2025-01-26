@@ -15,9 +15,13 @@ import { FlashList } from "@shopify/flash-list";
 import { VocabsFlatlistHeader_SECTION } from "../VocabsFlatlistHeader_SECTION/VocabsFlatlistHeader_SECTION";
 import BottomAction_BLOCK from "@/src/components/1_grouped/blocks/BottomAction_BLOCK";
 import { USE_vocabs } from "@/src/features/vocabs/functions";
-import { USE_vocabs_FETCH_TYPES } from "@/src/features/vocabs/functions/1_myVocabs/fetch/hooks/USE_myVocabs/USE_myVocabs";
+import {
+  USE_myVocabs,
+  USE_vocabs_FETCH_TYPES,
+} from "@/src/features/vocabs/functions/1_myVocabs/fetch/hooks/USE_myVocabs/USE_myVocabs";
 import List_MODEL from "@/src/db/models/List_MODEL";
 import { MyColors } from "@/src/constants/MyColors";
+import { USE_isSearching } from "@/src/hooks";
 
 export function MyVocabs_FLATLIST({
   PREPARE_vocabDelete,
@@ -59,42 +63,54 @@ export function MyVocabs_FLATLIST({
   list: List_MODEL | undefined;
 }) {
   const {
-    IS_searching,
     data: vocabs,
     error: fetchVocabs_ERROR,
-    IS_loadingMore,
     HAS_reachedEnd,
-    unpaginated_COUNT: totalFilteredVocab_COUNT,
+
+    loading_STATE,
+    unpaginated_COUNT,
     LOAD_more,
     ADD_toDisplayed,
     REMOVE_fromDisplayed,
-  } = USE_vocabs({
+  } = USE_myVocabs({
     type: fetch_TYPE,
     targetList_ID: list?.id,
     search: debouncedSearch,
     IS_debouncing,
   });
 
-  const data = useMemo(() => {
-    if (fetchVocabs_ERROR?.value || IS_searching) return [];
-    return vocabs;
-  }, [IS_searching, fetchVocabs_ERROR, vocabs]);
-
-  // console.log(fetchVocabs_ERROR);
+  // const data = useMemo(() => {
+  //   if (fetchVocabs_ERROR?.value || IS_searching) return [];
+  //   return vocabs;
+  // }, [IS_searching, fetchVocabs_ERROR, vocabs]);
 
   const Footer = () => {
-    if (error?.value) {
-      return <Error_BLOCK paragraph={error?.msg} />;
-    } else if (IS_searching) {
+    if (loading_STATE !== "none" && loading_STATE !== "loading_more") {
       return (
         <View style={{ gap: 12, flex: 1 }}>
           <Skeleton_BLOCK />
           <Skeleton_BLOCK />
           <Skeleton_BLOCK />
           <Skeleton_BLOCK />
+          <Skeleton_BLOCK />
         </View>
       );
-    } else return listFooter_EL;
+    } else
+      return (
+        <BottomAction_BLOCK
+          type="vocabs"
+          createBtn_ACTION={OPEN_createVocabModal}
+          {...{
+            search,
+            IS_debouncing,
+            loading_STATE,
+            HAS_reachedEnd,
+            LOAD_more,
+            RESET_search,
+          }}
+          totalFilteredResults_COUNT={unpaginated_COUNT}
+        />
+      );
   };
 
   const Vocab_BTN = (vocab: Vocab_MODEL) =>
@@ -134,28 +150,13 @@ export function MyVocabs_FLATLIST({
       extraData={highlightedVocab_ID}
       ListHeaderComponent={
         <VocabsFlatlistHeader_SECTION
-          search={search}
-          totalVocabs={totalFilteredVocab_COUNT}
-          IS_searching={IS_searching}
+          debouncedSearch={debouncedSearch}
+          loading_STATE={loading_STATE}
           list_NAME={list?.name}
-          vocabResults_COUNT={totalFilteredVocab_COUNT}
+          unpaginated_COUNT={unpaginated_COUNT}
         />
       }
-      ListFooterComponent={
-        <BottomAction_BLOCK
-          type="vocabs"
-          createBtn_ACTION={OPEN_createVocabModal}
-          {...{
-            search,
-            IS_debouncing,
-            IS_loadingMore,
-            HAS_reachedEnd,
-            LOAD_more,
-            RESET_search,
-          }}
-          totalFilteredResults_COUNT={totalFilteredVocab_COUNT}
-        />
-      }
+      ListFooterComponent={<Footer />}
     />
   );
 }

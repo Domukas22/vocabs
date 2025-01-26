@@ -5,66 +5,94 @@
 import { useMemo } from "react";
 import { ActivityIndicator } from "react-native";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
+import { loadingState_TYPES } from "@/src/features/vocabs/functions/1_myVocabs/fetch/hooks/USE_myVocabs/USE_myVocabs";
 
 export default function Flashlist_LABEL({
-  IS_searching = false,
-  search = "",
-  HAS_error = false,
+  debouncedSearch = "",
   appliedFiltersCount = 0,
   totalResult_COUNT = 0,
   target = "vocabs",
+  loading_STATE = "none",
 }: {
-  IS_searching: boolean;
-  HAS_error: boolean;
-  search: string;
+  debouncedSearch: string;
   appliedFiltersCount?: number;
   totalResult_COUNT: number;
   target: string;
+  loading_STATE: loadingState_TYPES;
 }) {
-  const label = useMemo(
-    () =>
-      HAS_error
-        ? "error"
-        : IS_searching
-        ? "searching"
-        : search !== ""
-        ? "search_results"
-        : appliedFiltersCount > 0
-        ? "filters_applied"
-        : "default",
-    [HAS_error, IS_searching, search, appliedFiltersCount]
-  );
   const GET_label = () => {
-    let res;
-    switch (label) {
-      case "error":
-        res = "Something went wrong";
-        break;
-      case "searching":
-        res = (
-          <Styled_TEXT>
-            <ActivityIndicator color="gray" /> Searching...
-          </Styled_TEXT>
-        );
-        break;
-      case "search_results":
-        res = (
-          <Styled_TEXT>
-            {totalResult_COUNT} Search results for
-            <Styled_TEXT type="text_18_medium"> '{search}' </Styled_TEXT>
-          </Styled_TEXT>
-        );
-        break;
-      case "filters_applied":
-        res = `${totalResult_COUNT} results, ${appliedFiltersCount} filters applied`;
-        break;
-      default:
-        res = `Browse through ${
-          totalResult_COUNT ? totalResult_COUNT : 0
-        } ${target}`;
+    if (loading_STATE === "error") {
+      // error case
+      return "Something went wrong...";
     }
 
-    return res;
+    if (loading_STATE === "searching") {
+      return (
+        // filtering only by debouncedSearch
+        <Styled_TEXT>
+          <ActivityIndicator color="gray" /> Searching...
+        </Styled_TEXT>
+      );
+    }
+
+    if (loading_STATE === "filtering") {
+      if (!debouncedSearch) {
+        return (
+          // filtering only by filtering params
+          <Styled_TEXT>
+            <ActivityIndicator color="gray" /> Filtering...
+          </Styled_TEXT>
+        );
+      }
+
+      // filtering by debouncedSearch and filter params
+      <Styled_TEXT>
+        <ActivityIndicator color="gray" /> Searching and filtering...
+      </Styled_TEXT>;
+    }
+
+    if (loading_STATE === "loading") {
+      return (
+        <Styled_TEXT>
+          <ActivityIndicator color="gray" /> Loading{" "}
+          <Styled_TEXT>{target}</Styled_TEXT>...
+        </Styled_TEXT>
+      );
+    }
+
+    if (loading_STATE === "none" || loading_STATE === "loading_more") {
+      // no debouncedSearch or filters
+      if (!debouncedSearch && !appliedFiltersCount) {
+        return `Browse through ${
+          totalResult_COUNT ? totalResult_COUNT : 0
+        } ${target}`;
+      }
+
+      // debouncedSearch without filters
+      if (debouncedSearch && !appliedFiltersCount) {
+        return (
+          <Styled_TEXT>
+            {totalResult_COUNT} debouncedSearch results for
+            <Styled_TEXT type="text_18_medium">
+              {" "}
+              '{debouncedSearch}'{" "}
+            </Styled_TEXT>
+          </Styled_TEXT>
+        );
+      }
+
+      // filters without debouncedSearch
+      if (!debouncedSearch && appliedFiltersCount) {
+        return <Styled_TEXT>{totalResult_COUNT} Filtered results</Styled_TEXT>;
+      }
+
+      // debouncedSearch AND filters
+      if (debouncedSearch && appliedFiltersCount) {
+        return `${totalResult_COUNT} results, ${appliedFiltersCount} filters applied`;
+      }
+    }
+
+    return `${totalResult_COUNT} results`;
   };
 
   return <Styled_TEXT type="label">{GET_label()}</Styled_TEXT>;

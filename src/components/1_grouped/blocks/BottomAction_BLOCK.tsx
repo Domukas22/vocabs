@@ -8,13 +8,13 @@ import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import { useCallback } from "react";
 import { USE_getActiveFilterCount, USE_zustand } from "@/src/hooks";
+import { loadingState_TYPES } from "@/src/features/vocabs/functions/1_myVocabs/fetch/hooks/USE_myVocabs/USE_myVocabs";
 
 export default function BottomAction_BLOCK({
   type = "list",
-
+  loading_STATE,
   search = "",
   IS_debouncing = false,
-  IS_loadingMore = false,
   HAS_reachedEnd = false,
   LOAD_more = async () => {},
 
@@ -23,10 +23,9 @@ export default function BottomAction_BLOCK({
   RESET_search = () => {},
 }: {
   type: "list" | "vocabs" | "users";
-
+  loading_STATE: loadingState_TYPES;
   search: string;
   IS_debouncing: boolean;
-  IS_loadingMore: boolean;
   HAS_reachedEnd: boolean;
   LOAD_more: () => Promise<void>;
 
@@ -119,12 +118,14 @@ export default function BottomAction_BLOCK({
           totalFilteredResults_COUNT > 0 &&
           !IS_debouncing && (
             <Btn
-              text={!IS_loadingMore ? "Load more" : ""}
+              text={loading_STATE !== "loading_more" ? "Load more" : ""}
               iconLeft={
-                IS_loadingMore ? <ActivityIndicator color="white" /> : null
+                loading_STATE === "loading_more" ? (
+                  <ActivityIndicator color="white" />
+                ) : null
               }
               onPress={async () => {
-                if (!IS_loadingMore) {
+                if (loading_STATE !== "loading_more") {
                   await LOAD_more();
                 }
               }}

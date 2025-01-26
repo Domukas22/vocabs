@@ -75,10 +75,15 @@ export default function BUILD_fetchMyVocabsFilterConditions(
     );
   }
 
+  const withoutExcluded = [...conditions];
+
   // exclude certain ids
   if (excludeIds.size > 0) {
     conditions.push(Q.where("id", Q.notIn([...excludeIds])));
   }
 
-  return Q.and(...conditions);
+  return {
+    withExluded: Q.and(...conditions),
+    withoutExcluded,
+  };
 }

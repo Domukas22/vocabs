@@ -109,7 +109,7 @@ export default function DeletedVocabs_PAGE() {
             totalVocabs={totalFilteredVocab_COUNT}
             IS_searching={IS_searching}
             list_NAME="Deleted vocabs"
-            vocabResults_COUNT={totalFilteredVocab_COUNT}
+            unpaginated_COUNT={totalFilteredVocab_COUNT}
             z_vocabDisplay_SETTINGS={z_vocabDisplay_SETTINGS}
             z_SET_vocabDisplaySettings={z_SET_vocabDisplaySettings}
           />

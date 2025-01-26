@@ -8,13 +8,12 @@ import { z_vocabDisplaySettings_PROPS } from "@/src/hooks/USE_zustand/USE_zustan
 import { Error_PROPS } from "@/src/props";
 
 export interface FETCH_myVocabs_ARG_TYPES {
-  type: "byTargetList" | "allVocabs" | "deletedVocabs" | "marked";
-  start: number;
-  search: string;
-  amount?: number;
   user_id: string;
-  excludeIds?: Set<string>;
+  type: "byTargetList" | "allVocabs" | "deletedVocabs" | "marked";
   targetList_ID?: string;
+  search: string;
+  amount: number;
+  excludeIds: Set<string>;
   z_vocabDisplay_SETTINGS: z_vocabDisplaySettings_PROPS;
 }
 
@@ -36,7 +35,6 @@ export type internalErrMsg_TYPES =
   | "fetch_type_undefined"
   | "target_list_id_undefined"
   | "display_settings_undefined"
-  | "pagination_start_undefined"
   | "pagination_amount_undefined"
   | "undefined_watermelon_totalCount"
   | "undefined_watermelon_vocabs";
@@ -57,7 +55,6 @@ export const FETCH_myVocabs_ERRORS: {
     fetch_type_undefined: `Fetch type undefined when ${action}.`,
     target_list_id_undefined: `Tried ${action} by target list, but targetList_ID was undefined`,
     display_settings_undefined: `Display settings undefined when ${action}.`,
-    pagination_start_undefined: `Pagination start undefined when ${action}.`,
     pagination_amount_undefined: `Pagination end undefined when ${action}.`,
     undefined_watermelon_totalCount: `totalCount did not return a number from WatermelonDB ${action}.`,
     undefined_watermelon_vocabs: `vocabs did not return an array from WatermelonDB ${action}.`,

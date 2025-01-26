@@ -17,21 +17,20 @@ import {
 } from "@/src/hooks/USE_zustand/USE_zustand";
 import Flashlist_LABEL from "@/src/components/1_grouped/texts/labels/Flashlist_LABEL";
 import { useCallback } from "react";
+import { loadingState_TYPES } from "@/src/features/vocabs/functions/1_myVocabs/fetch/hooks/USE_myVocabs/USE_myVocabs";
 
 type VocabsFlatlistHeader_SECTIONProps = {
-  search: string;
-  IS_searching: boolean;
-  vocabResults_COUNT: number | null;
-  totalVocabs: number | null;
+  debouncedSearch: string;
+  unpaginated_COUNT: number | null;
+  loading_STATE: loadingState_TYPES;
   list_NAME: string | undefined;
 };
 
 export function VocabsFlatlistHeader_SECTION({
-  search,
-  IS_searching = false,
+  debouncedSearch,
+  loading_STATE = "none",
   list_NAME = "INSERT LIST NAME",
-  vocabResults_COUNT = 0,
-  totalVocabs = 0,
+  unpaginated_COUNT = 0,
 }: VocabsFlatlistHeader_SECTIONProps) {
   const { z_vocabDisplay_SETTINGS, z_SET_vocabDisplaySettings } = USE_zustand();
   const difficultyFilters = z_vocabDisplay_SETTINGS.difficultyFilters || [];
@@ -63,8 +62,8 @@ export function VocabsFlatlistHeader_SECTION({
         <Styled_TEXT type="text_20_bold">{list_NAME}</Styled_TEXT>
 
         <Flashlist_LABEL
-          {...{ IS_searching, search, appliedFiltersCount }}
-          totalResult_COUNT={vocabResults_COUNT || 0}
+          {...{ loading_STATE, debouncedSearch, appliedFiltersCount }}
+          totalResult_COUNT={unpaginated_COUNT || 0}
           target="vocabs"
         />
       </View>

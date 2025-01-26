@@ -29,8 +29,6 @@ export function VALIDATE_args({
     throw THROW_err("display_settings_undefined");
   }
 
-  if (typeof args?.start !== "number")
-    throw THROW_err("pagination_start_undefined");
   if (typeof args?.amount !== "number")
     throw THROW_err("pagination_amount_undefined");
 }
