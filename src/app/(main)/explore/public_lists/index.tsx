@@ -4,7 +4,7 @@
 
 import React, { useMemo } from "react";
 import BottomAction_BLOCK from "@/src/components/1_grouped/blocks/BottomAction_BLOCK";
-import List_HEADER from "@/src/components/1_grouped/headers/listPage/List_HEADER";
+import VocabList_HEADER from "@/src/components/1_grouped/headers/listPage/VocabList_HEADER";
 import {
   ExploreLists_FLATLIST,
   ListDisplaySettings_MODAL,
@@ -63,7 +63,7 @@ export default function PublicLists_PAGE() {
 
   return (
     <>
-      <List_HEADER
+      <VocabList_HEADER
         SHOW_listName={showTitle}
         list_NAME="⭐ Public lists"
         GO_back={() => router.back()}

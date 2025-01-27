@@ -4,7 +4,7 @@
 import Styled_FLASHLIST from "@/src/components/3_other/Styled_FLASHLIST/Styled_FLASHLIST";
 import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 import { NativeScrollEvent, NativeSyntheticEvent, View } from "react-native";
-import React, { useMemo } from "react";
+import React from "react";
 
 import { Skeleton_BLOCK } from "@/src/components/1_grouped/blocks/Skeleton_BLOCK";
 import Error_BLOCK from "@/src/components/1_grouped/blocks/Error_BLOCK";
@@ -14,15 +14,10 @@ import { Deleted_VOCAB } from "../../vocabCards/Deleted_VOCAB/Deleted_VOCAB";
 import { FlashList } from "@shopify/flash-list";
 import { VocabsFlatlistHeader_SECTION } from "../VocabsFlatlistHeader_SECTION/VocabsFlatlistHeader_SECTION";
 import BottomAction_BLOCK from "@/src/components/1_grouped/blocks/BottomAction_BLOCK";
-import {
-  loadingState_TYPES,
-  USE_myVocabs,
-  USE_vocabs_FETCH_TYPES,
-} from "@/src/features/vocabs/functions/1_myVocabs/fetch/hooks/USE_myVocabs/USE_myVocabs";
 import List_MODEL from "@/src/db/models/List_MODEL";
 import { MyColors } from "@/src/constants/MyColors";
-import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
-import { FETCH_myVocabs_ERROR_PROPS } from "@/src/features/vocabs/functions/1_myVocabs/fetch/FETCH_myVocabs/types";
+import { USE_vocabs_FETCH_TYPES } from "@/src/features/vocabs/functions/1_myVocabs/fetch/FETCH_myVocabs/types";
+import { loadingState_TYPES } from "@/src/types";
 
 export function MyVocabs_FLATLIST({
   PREPARE_vocabDelete,
@@ -38,7 +33,7 @@ export function MyVocabs_FLATLIST({
   RESET_search = () => {},
   OPEN_createVocabModal = () => {},
   fetch_TYPE = "allVocabs",
-  list,
+  list_NAME = "",
   vocabs,
   fetchVocabs_ERROR,
   HAS_reachedEnd,
@@ -49,17 +44,17 @@ export function MyVocabs_FLATLIST({
   PREPARE_vocabDelete: (vocab: Vocab_MODEL) => void;
   onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
   SELECT_forRevival?: (vocab: Vocab_MODEL) => void;
-  HANDLE_updateModal: (vocab: Vocab_MODEL) => void;
+  HANDLE_updateModal?: (vocab: Vocab_MODEL) => void;
   highlightedVocab_ID: string | undefined;
   _ref?: React.RefObject<FlashList<any>>;
   search: string;
   debouncedSearch: string;
   IS_debouncing: boolean;
   RESET_search: () => void;
-  OPEN_createVocabModal: () => void;
+  OPEN_createVocabModal?: () => void;
   LOAD_more: () => void;
   fetch_TYPE: USE_vocabs_FETCH_TYPES;
-  list: List_MODEL | undefined;
+  list_NAME: string | undefined;
 
   vocabs: Vocab_MODEL[];
   fetchVocabs_ERROR: any;
@@ -140,7 +135,7 @@ export function MyVocabs_FLATLIST({
           debouncedSearch={debouncedSearch}
           search={search}
           loading_STATE={loading_STATE}
-          list_NAME={list?.name}
+          list_NAME={list_NAME}
           unpaginated_COUNT={unpaginated_COUNT}
         />
       }

@@ -3,7 +3,7 @@
 //
 
 import BottomAction_BLOCK from "@/src/components/1_grouped/blocks/BottomAction_BLOCK";
-import List_HEADER from "@/src/components/1_grouped/headers/listPage/List_HEADER";
+import VocabList_HEADER from "@/src/components/1_grouped/headers/listPage/VocabList_HEADER";
 import Page_WRAP from "@/src/components/1_grouped/Page_WRAP/Page_WRAP";
 import {
   ExploreLists_FLATLIST,
@@ -52,7 +52,7 @@ export default function SharedLists_PAGE() {
 
   return (
     <>
-      <List_HEADER
+      <VocabList_HEADER
         SHOW_listName={showTitle}
         list_NAME="🔒 Shared lists"
         GO_back={() => router.back()}

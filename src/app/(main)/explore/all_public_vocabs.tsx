@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useToast } from "react-native-toast-notifications";
 
-import List_HEADER from "@/src/components/1_grouped/headers/listPage/List_HEADER";
+import VocabList_HEADER from "@/src/components/1_grouped/headers/listPage/VocabList_HEADER";
 import { useRouter } from "expo-router";
 
 import BottomAction_BLOCK from "@/src/components/1_grouped/blocks/BottomAction_BLOCK";
@@ -56,7 +56,7 @@ export default function AllPublicVocabs_PAGE() {
 
   return (
     <>
-      <List_HEADER
+      <VocabList_HEADER
         SHOW_listName={showTitle}
         list_NAME="🔤 All public vocabs"
         GO_back={() => router.back()}

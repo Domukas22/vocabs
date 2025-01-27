@@ -3,7 +3,7 @@
 //
 
 import BottomAction_BLOCK from "@/src/components/1_grouped/blocks/BottomAction_BLOCK";
-import List_HEADER from "@/src/components/1_grouped/headers/listPage/List_HEADER";
+import VocabList_HEADER from "@/src/components/1_grouped/headers/listPage/VocabList_HEADER";
 import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 import {
   MyVocabs_FLATLIST,
@@ -23,11 +23,13 @@ import {
 } from "@/src/hooks";
 import { USE_zustand } from "@/src/hooks";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useToast } from "react-native-toast-notifications";
 import { USE_modalToggles } from "@/src/hooks/index";
 import { Portal } from "@gorhom/portal";
+import { USE_myVocabs } from "@/src/features/vocabs/functions/1_myVocabs/fetch/hooks/USE_myVocabs/USE_myVocabs";
+import { FlashList } from "@shopify/flash-list";
 
 export default function DeletedVocabs_PAGE() {
   const { t } = useTranslation();
@@ -60,79 +62,53 @@ export default function DeletedVocabs_PAGE() {
   const [toUpdate_VOCAB, SET_toUpdateVocab] = useState<
     Vocab_MODEL | undefined
   >();
+  const list_REF = useRef<FlashList<any>>(null);
 
   const {
-    IS_searching,
-    data: vocabs,
-    error: fetchVocabs_ERROR,
-    IS_loadingMore,
+    vocabs,
+    fetchVocabs_ERROR,
     HAS_reachedEnd,
-    unpaginated_COUNT: totalFilteredVocab_COUNT,
-    LOAD_more,
+    loading_STATE,
+    unpaginated_COUNT,
+    LOAD_moreVocabs,
+    ADD_toDisplayed,
     REMOVE_fromDisplayed,
-  } = USE_vocabs({
+  } = USE_myVocabs({
     type: "deletedVocabs",
     search: debouncedSearch,
-    user_id: z_user?.id,
-    IS_debouncing,
-    z_vocabDisplay_SETTINGS,
   });
 
   return (
     <>
-      <List_HEADER
+      <VocabList_HEADER
         SHOW_listName={showTitle}
-        list_NAME="Deleted vocabs"
+        list_NAME="🗑️ Deleted vocabs"
         GO_back={() => router.back()}
         OPEN_displaySettings={() => modals.displaySettings.set(true)}
         {...{ search, SET_search, activeFilter_COUNT }}
       />
 
       <MyVocabs_FLATLIST
-        {...{ vocabs, IS_searching }}
-        type="delete"
-        HANDLE_updateModal={() => {}}
+        _ref={list_REF}
+        list_NAME="🗑️ Deleted vocabs"
+        vocabs={vocabs}
+        search={search}
+        onScroll={handleScroll}
+        IS_debouncing={IS_debouncing}
+        debouncedSearch={debouncedSearch}
+        fetch_TYPE="byTargetList"
         highlightedVocab_ID={highlighted_ID}
         PREPARE_vocabDelete={(vocab: Vocab_MODEL) => {
           SET_targetDeleteVocab(vocab);
           modals.deleteVocab.set(true);
         }}
-        SELECT_forRevival={(vocab: Vocab_MODEL) => {
-          SET_targetReviveVocab(vocab);
-          modals.reviveVocab.set(true);
-        }}
-        error={fetchVocabs_ERROR}
-        onScroll={handleScroll}
-        listHeader_EL={
-          <VocabsFlatlistHeader_SECTION
-            search={search}
-            totalVocabs={totalFilteredVocab_COUNT}
-            IS_searching={IS_searching}
-            list_NAME="Deleted vocabs"
-            unpaginated_COUNT={totalFilteredVocab_COUNT}
-            z_vocabDisplay_SETTINGS={z_vocabDisplay_SETTINGS}
-            z_SET_vocabDisplaySettings={z_SET_vocabDisplaySettings}
-          />
-        }
-        listFooter_EL={
-          <BottomAction_BLOCK
-            type="vocabs"
-            search={search}
-            IS_debouncing={IS_debouncing}
-            IS_loadingMore={IS_loadingMore}
-            HAS_reachedEnd={HAS_reachedEnd}
-            activeFilter_COUNT={activeFilter_COUNT}
-            totalFilteredResults_COUNT={totalFilteredVocab_COUNT}
-            LOAD_more={LOAD_more}
-            RESET_search={() => SET_search("")}
-            RESET_filters={() =>
-              z_SET_vocabDisplaySettings({
-                langFilters: [],
-                difficultyFilters: [],
-              })
-            }
-          />
-        }
+        RESET_search={() => SET_search("")}
+        fetchVocabs_ERROR={fetchVocabs_ERROR}
+        HAS_reachedEnd={HAS_reachedEnd}
+        loading_STATE={loading_STATE}
+        unpaginated_COUNT={unpaginated_COUNT}
+        LOAD_more={LOAD_moreVocabs}
+        SELECT_forRevival={(vocab: Vocab_MODEL) => {}}
       />
 
       <Portal>

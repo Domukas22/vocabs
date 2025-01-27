@@ -7,6 +7,12 @@ import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 import { z_vocabDisplaySettings_PROPS } from "@/src/hooks/USE_zustand/USE_zustand";
 import { Error_PROPS } from "@/src/props";
 
+export type USE_vocabs_FETCH_TYPES =
+  | "byTargetList"
+  | "allVocabs"
+  | "deletedVocabs"
+  | "marked";
+
 export interface FETCH_myVocabs_ARG_TYPES {
   user_id: string;
   type: "byTargetList" | "allVocabs" | "deletedVocabs" | "marked";

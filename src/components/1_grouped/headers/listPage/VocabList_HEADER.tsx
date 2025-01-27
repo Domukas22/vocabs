@@ -33,10 +33,9 @@ interface ListHeader_PROPS {
   OPEN_create?: () => void | undefined;
   OPEN_displaySettings?: () => void | undefined;
   SAVE_list?: () => void | undefined;
-  oneList: boolean;
 }
 
-export default function List_HEADER({
+export default function VocabList_HEADER({
   SHOW_listName,
   list_NAME = "INSERT LIST NAME",
   search,
@@ -47,13 +46,10 @@ export default function List_HEADER({
   OPEN_create,
   OPEN_displaySettings,
   SAVE_list,
-  oneList = true,
 }: ListHeader_PROPS) {
   const [IS_searchOpen, SET_searchOpen] = useState(false);
   const search_REF = useRef<TextInput>(null);
-  const { activeFilter_COUNT } = USE_getActiveFilterCount(
-    oneList ? "vocabs" : "lists"
-  );
+  const { activeFilter_COUNT } = USE_getActiveFilterCount("vocabs");
 
   const headerTranslateY = useSharedValue(-34);
   const titleOpacity = useSharedValue(0);

@@ -5,7 +5,7 @@
 import React, { useEffect } from "react";
 import { ActivityIndicator } from "react-native";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
-import { loadingState_TYPES } from "@/src/features/vocabs/functions/1_myVocabs/fetch/hooks/USE_myVocabs/USE_myVocabs";
+import { loadingState_TYPES } from "@/src/types";
 
 export default function Flashlist_LABEL({
   debouncedSearch = "",
@@ -24,10 +24,6 @@ export default function Flashlist_LABEL({
   target: string;
   loading_STATE: loadingState_TYPES;
 }) {
-  useEffect(() => {
-    if (IS_debouncing) console.log("debouncing");
-  }, [IS_debouncing]);
-
   const GET_label = () => {
     if (IS_debouncing) {
       if (search && appliedFiltersCount) {

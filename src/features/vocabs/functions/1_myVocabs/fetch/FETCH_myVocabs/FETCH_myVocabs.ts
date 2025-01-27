@@ -39,7 +39,6 @@ export async function FETCH_myVocabs(
 ): Promise<FETCH_myVocabs_RESPONSE_TYPE> {
   try {
     VALIDATE_args({ args, THROW_err });
-
     const query = Vocabs_DB?.query();
 
     // get conditions for filter / sorting / pagination

@@ -8,7 +8,7 @@ import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import { useCallback } from "react";
 import { USE_getActiveFilterCount, USE_zustand } from "@/src/hooks";
-import { loadingState_TYPES } from "@/src/features/vocabs/functions/1_myVocabs/fetch/hooks/USE_myVocabs/USE_myVocabs";
+import { loadingState_TYPES } from "@/src/types";
 
 export default function BottomAction_BLOCK({
   type = "list",

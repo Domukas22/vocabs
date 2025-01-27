@@ -18,7 +18,7 @@ import { USE_myVocabs } from "@/src/features/vocabs/functions/1_myVocabs/fetch/h
 import { USE_zustand } from "@/src/hooks";
 
 import { Lists_DB } from "@/src/db";
-import List_HEADER from "@/src/components/1_grouped/headers/listPage/List_HEADER";
+import VocabList_HEADER from "@/src/components/1_grouped/headers/listPage/VocabList_HEADER";
 import BottomAction_BLOCK from "@/src/components/1_grouped/blocks/BottomAction_BLOCK";
 import { FlashList } from "@shopify/flash-list";
 import { ListSettings_MODAL } from "@/src/features/lists/components";
@@ -91,19 +91,18 @@ export default function SingleList_PAGE() {
     HAS_reachedEnd,
     loading_STATE,
     unpaginated_COUNT,
-    LOAD_more,
+    LOAD_moreVocabs,
     ADD_toDisplayed,
     REMOVE_fromDisplayed,
   } = USE_myVocabs({
     type: "byTargetList",
     targetList_ID: selected_LIST?.id,
     search: debouncedSearch,
-    IS_debouncing,
   });
 
   return (
     <>
-      <List_HEADER
+      <VocabList_HEADER
         SHOW_listName={showTitle}
         list_NAME={selected_LIST?.name}
         GO_back={() => router.back()}
@@ -111,16 +110,16 @@ export default function SingleList_PAGE() {
         OPEN_listSettings={() => modals.listSettings.set(true)}
         OPEN_create={() => modals.createVocab.set(true)}
         {...{ search, SET_search }}
-        oneList
       />
 
       <MyVocabs_FLATLIST
         _ref={list_REF}
-        list={selected_LIST}
-        onScroll={handleScroll}
+        list_NAME={selected_LIST?.name}
+        vocabs={vocabs}
         search={search}
-        debouncedSearch={debouncedSearch}
+        onScroll={handleScroll}
         IS_debouncing={IS_debouncing}
+        debouncedSearch={debouncedSearch}
         HANDLE_updateModal={(vocab: Vocab_MODEL) => {
           SET_toUpdateVocab(vocab);
           modals.updateVocab.toggle();
@@ -133,12 +132,11 @@ export default function SingleList_PAGE() {
         }}
         RESET_search={() => SET_search("")}
         OPEN_createVocabModal={() => modals.createVocab.set(true)}
-        vocabs={vocabs}
         fetchVocabs_ERROR={fetchVocabs_ERROR}
         HAS_reachedEnd={HAS_reachedEnd}
         loading_STATE={loading_STATE}
         unpaginated_COUNT={unpaginated_COUNT}
-        LOAD_more={LOAD_more}
+        LOAD_more={LOAD_moreVocabs}
       />
 
       <Portal>

@@ -11,7 +11,7 @@ import { useToast } from "react-native-toast-notifications";
 import { Portal } from "@gorhom/portal";
 
 import BottomAction_BLOCK from "@/src/components/1_grouped/blocks/BottomAction_BLOCK";
-import List_HEADER from "@/src/components/1_grouped/headers/listPage/List_HEADER";
+import VocabList_HEADER from "@/src/components/1_grouped/headers/listPage/VocabList_HEADER";
 
 import {
   USE_highlighedId,
@@ -58,7 +58,7 @@ export default function MyLists_PAGE() {
 
   return (
     <>
-      <List_HEADER
+      <VocabList_HEADER
         SHOW_listName={showTitle}
         list_NAME={"My Lists"}
         GO_back={() => router.back()}
