@@ -2,13 +2,14 @@
 //
 //
 
-import React from "react";
+import React, { useEffect } from "react";
 import { ActivityIndicator } from "react-native";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import { loadingState_TYPES } from "@/src/features/vocabs/functions/1_myVocabs/fetch/hooks/USE_myVocabs/USE_myVocabs";
 
 export default function Flashlist_LABEL({
   debouncedSearch = "",
+  search = "",
   appliedFiltersCount = 0,
   totalResult_COUNT = 0,
   target = "vocabs",
@@ -17,12 +18,48 @@ export default function Flashlist_LABEL({
 }: {
   IS_debouncing: boolean;
   debouncedSearch: string;
+  search: string;
   appliedFiltersCount?: number;
   totalResult_COUNT: number;
   target: string;
   loading_STATE: loadingState_TYPES;
 }) {
+  useEffect(() => {
+    if (IS_debouncing) console.log("debouncing");
+  }, [IS_debouncing]);
+
   const GET_label = () => {
+    if (IS_debouncing) {
+      if (search && appliedFiltersCount) {
+        return (
+          <>
+            <ActivityIndicator color="gray" /> Searching and filtering...
+          </>
+        );
+      }
+      if (search && !appliedFiltersCount) {
+        return (
+          <>
+            <ActivityIndicator color="gray" /> Searching...
+          </>
+        );
+      }
+      if (!search && appliedFiltersCount) {
+        return (
+          <>
+            <ActivityIndicator color="gray" /> Filtering...
+          </>
+        );
+      }
+      // if (!search && !appliedFiltersCount) {
+      //   return (
+      //     <>
+      //       <ActivityIndicator color="gray" /> Loading {target}...
+      //     </>
+      //   );
+      // }
+    }
+
     switch (loading_STATE) {
       case "error":
         return "Something went wrong...";

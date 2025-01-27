@@ -53,7 +53,7 @@ export const initialState: State = {
     unpaginated_COUNT: 0,
   },
   error: { value: false, msg: "" },
-  loading_STATE: "none",
+  loading_STATE: "loading",
 };
 
 export function vocabReducer(state: State, action: Action): State {
@@ -212,7 +212,6 @@ export function USE_myVocabs({
       try {
         dispatch({ type: "SET_LOADING_STATE", payload: fetch_TYPE });
 
-        // await Delay(2000);
         dispatch({ type: "SET_ERROR", payload: { value: false, msg: "" } });
 
         const data = await HELP_fetchMyVocabs({

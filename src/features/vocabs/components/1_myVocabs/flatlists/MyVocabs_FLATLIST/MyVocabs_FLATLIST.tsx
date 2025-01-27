@@ -32,6 +32,7 @@ export function MyVocabs_FLATLIST({
   SELECT_forRevival = () => {},
   _ref,
 
+  search = "",
   debouncedSearch = "",
   IS_debouncing = false,
   RESET_search = () => {},
@@ -67,7 +68,10 @@ export function MyVocabs_FLATLIST({
   unpaginated_COUNT: number;
 }) {
   const Footer = () => {
-    if (loading_STATE !== "none" && loading_STATE !== "loading_more") {
+    if (
+      IS_debouncing ||
+      (loading_STATE !== "none" && loading_STATE !== "loading_more")
+    ) {
       return (
         <View style={{ gap: 12, flex: 1 }}>
           <Skeleton_BLOCK />
@@ -125,15 +129,16 @@ export function MyVocabs_FLATLIST({
   return (
     <Styled_FLASHLIST
       {...{ onScroll }}
-      data={vocabs || []}
+      data={IS_debouncing ? [] : vocabs || []}
       _ref={_ref}
       renderItem={({ item }) => Vocab_BTN(item)}
       keyExtractor={(item) => "Vocab" + item.id}
       extraData={highlightedVocab_ID}
       ListHeaderComponent={
         <VocabsFlatlistHeader_SECTION
-          IS_debounding={IS_debouncing}
+          IS_debouncing={IS_debouncing}
           debouncedSearch={debouncedSearch}
+          search={search}
           loading_STATE={loading_STATE}
           list_NAME={list?.name}
           unpaginated_COUNT={unpaginated_COUNT}

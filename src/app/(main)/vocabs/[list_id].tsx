@@ -41,6 +41,7 @@ import { USE_modalToggles } from "@/src/hooks/index";
 import { USE_observeMyTargetList } from "@/src/features/lists/functions";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
+import { View } from "react-native";
 
 export default function SingleList_PAGE() {
   const { t } = useTranslation();

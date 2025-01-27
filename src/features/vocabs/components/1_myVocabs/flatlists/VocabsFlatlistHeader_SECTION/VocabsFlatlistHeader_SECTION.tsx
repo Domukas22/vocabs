@@ -16,11 +16,12 @@ import {
   z_vocabDisplaySettings_PROPS,
 } from "@/src/hooks/USE_zustand/USE_zustand";
 import Flashlist_LABEL from "@/src/components/1_grouped/texts/labels/Flashlist_LABEL";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { loadingState_TYPES } from "@/src/features/vocabs/functions/1_myVocabs/fetch/hooks/USE_myVocabs/USE_myVocabs";
 
 type VocabsFlatlistHeader_SECTIONProps = {
   debouncedSearch: string;
+  search: string;
   IS_debouncing: boolean;
   unpaginated_COUNT: number | null;
   loading_STATE: loadingState_TYPES;
@@ -28,6 +29,7 @@ type VocabsFlatlistHeader_SECTIONProps = {
 };
 
 export function VocabsFlatlistHeader_SECTION({
+  search,
   debouncedSearch,
   IS_debouncing,
   loading_STATE = "none",
@@ -69,6 +71,7 @@ export function VocabsFlatlistHeader_SECTION({
             debouncedSearch,
             appliedFiltersCount,
             IS_debouncing,
+            search,
           }}
           totalResult_COUNT={unpaginated_COUNT || 0}
           target="vocabs"
