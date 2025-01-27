@@ -267,7 +267,7 @@ export function CreateMyVocab_MODAL({
 
         <SelectMyList_MODAL
           open={modals.selectList.IS_open}
-          title="Saved vocab to list"
+          title="Select a list of yours"
           submit_ACTION={(list_id: string) => {
             if (list_id) {
               setValue("list_id", list_id);

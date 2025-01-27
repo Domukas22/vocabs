@@ -76,13 +76,29 @@ export default function SingleList_PAGE() {
     Vocab_MODEL | undefined
   >();
 
-  const HANDLE_updateModal = useCallback(
-    ({ clear = false, vocab }: { clear?: boolean; vocab?: Vocab_MODEL }) => {
-      SET_toUpdateVocab(!clear && vocab ? vocab : undefined);
-      modals.updateVocab.toggle();
-    },
-    [SET_toUpdateVocab]
-  );
+  // const HANDLE_updateModal = useCallback(
+  //   ({ clear = false, vocab }: { clear?: boolean; vocab?: Vocab_MODEL }) => {
+  //     SET_toUpdateVocab(!clear && vocab ? vocab : undefined);
+  //     modals.updateVocab.toggle();
+  //   },
+  //   [SET_toUpdateVocab]
+  // );
+
+  const {
+    vocabs,
+    fetchVocabs_ERROR,
+    HAS_reachedEnd,
+    loading_STATE,
+    unpaginated_COUNT,
+    LOAD_more,
+    ADD_toDisplayed,
+    REMOVE_fromDisplayed,
+  } = USE_myVocabs({
+    type: "byTargetList",
+    targetList_ID: selected_LIST?.id,
+    search: debouncedSearch,
+    IS_debouncing,
+  });
 
   return (
     <>
@@ -98,18 +114,30 @@ export default function SingleList_PAGE() {
       />
 
       <MyVocabs_FLATLIST
-        {...{ search, debouncedSearch, IS_debouncing, HANDLE_updateModal }}
+        _ref={list_REF}
+        list={selected_LIST}
+        onScroll={handleScroll}
+        search={search}
+        debouncedSearch={debouncedSearch}
+        IS_debouncing={IS_debouncing}
+        HANDLE_updateModal={(vocab: Vocab_MODEL) => {
+          SET_toUpdateVocab(vocab);
+          modals.updateVocab.toggle();
+        }}
         fetch_TYPE="byTargetList"
         highlightedVocab_ID={highlighted_ID}
         PREPARE_vocabDelete={(vocab: Vocab_MODEL) => {
           SET_targetDeleteVocab(vocab);
           modals.deleteVocab.set(true);
         }}
-        _ref={list_REF}
-        onScroll={handleScroll}
         RESET_search={() => SET_search("")}
-        list={selected_LIST}
         OPEN_createVocabModal={() => modals.createVocab.set(true)}
+        vocabs={vocabs}
+        fetchVocabs_ERROR={fetchVocabs_ERROR}
+        HAS_reachedEnd={HAS_reachedEnd}
+        loading_STATE={loading_STATE}
+        unpaginated_COUNT={unpaginated_COUNT}
+        LOAD_more={LOAD_more}
       />
 
       <Portal>
@@ -121,7 +149,7 @@ export default function SingleList_PAGE() {
             modals.createVocab.set(false);
 
             HIGHLIGHT_vocab(new_VOCAB.id);
-            // 🟢🟢 ADD_toDisplayed(new_VOCAB);
+            ADD_toDisplayed(new_VOCAB);
             list_REF?.current?.scrollToOffset({ animated: true, offset: 0 });
             toast.show(t("notifications.vocabCreated"), {
               type: "success",
@@ -166,7 +194,7 @@ export default function SingleList_PAGE() {
               type: "success",
               duration: 5000,
             });
-            // 🟢🟢REMOVE_fromDisplayed(targetDelete_VOCAB?.id || "");
+            REMOVE_fromDisplayed(targetDelete_VOCAB?.id || "");
             modals.deleteVocab.set(false);
           }}
         />

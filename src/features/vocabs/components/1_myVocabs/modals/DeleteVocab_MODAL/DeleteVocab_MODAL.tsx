@@ -42,7 +42,7 @@ export function DeleteVocab_MODAL({
   };
 
   const del = async () => {
-    let list_id = vocab?.list?.id;
+    let list_id = vocab?.list_id || "";
     vocab?.DELETE_vocab("soft");
     if (onSuccess) {
       onSuccess();

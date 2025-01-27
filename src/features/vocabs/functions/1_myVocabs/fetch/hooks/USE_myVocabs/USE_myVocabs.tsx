@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useReducer, useMemo, useState } from "react";
+import { useCallback, useEffect, useReducer, useMemo } from "react";
 import { FETCH_myVocabs } from "../../FETCH_myVocabs/FETCH_myVocabs";
 import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 import { USE_zustand } from "@/src/hooks/USE_zustand/USE_zustand";
 import { VOCAB_PAGINATION } from "@/src/constants/globalVars";
-import { USE_abortController, USE_isSearching } from "@/src/hooks";
+import { USE_abortController } from "@/src/hooks";
 import { Delay } from "@/src/utils";
 
 export type USE_vocabs_FETCH_TYPES =
@@ -16,62 +16,98 @@ export type loadingState_TYPES =
   | "loading"
   | "searching"
   | "filtering"
+  | "searching_and_filtering"
   | "loading_more"
   | "error"
   | "none";
 
 // types/state.ts
 export type State = {
-  data: Vocab_MODEL[];
-  unpaginated_COUNT: number;
+  data: {
+    vocabs: Vocab_MODEL[];
+    printed_IDS: Set<string>;
+    unpaginated_COUNT: number;
+  };
   error: { value: boolean; msg: string };
-  printed_IDS: Set<string>;
   loading_STATE: loadingState_TYPES;
 };
 
 // Actions
 export type Action =
-  | { type: "SET_DATA"; payload: Vocab_MODEL[] }
-  | { type: "ADD_DATA"; payload: Vocab_MODEL[] }
-  | { type: "SET_UNPAGINATED_COUNT"; payload: number }
-  | { type: "SET_ERROR"; payload: { value: boolean; msg: string } }
-  | { type: "ADD_PRINTED_ID"; payload: string }
-  | { type: "REMOVE_PRINTED_ID"; payload: string }
+  | { type: "ADD_VOCAB"; payload: Vocab_MODEL }
+  | {
+      type: "UPDATE_STATE";
+      payload: { vocabs: Vocab_MODEL[]; unpaginated_COUNT: number };
+    }
+  | { type: "REMOVE_VOCAB"; payload: string }
   | { type: "SET_LOADING_STATE"; payload: loadingState_TYPES }
-  | { type: "SET_TOTAL"; payload: number } // Action for total
+  | { type: "SET_ERROR"; payload: { value: boolean; msg: string } }
   | { type: "RESET_STATE" };
 
 //////////////////////////////////////////////////////////////////////////////////
 
 export const initialState: State = {
-  data: [],
-  unpaginated_COUNT: 0,
+  data: {
+    vocabs: [],
+    printed_IDS: new Set(),
+    unpaginated_COUNT: 0,
+  },
   error: { value: false, msg: "" },
-  printed_IDS: new Set(),
   loading_STATE: "none",
 };
 
 export function vocabReducer(state: State, action: Action): State {
   switch (action.type) {
-    case "SET_DATA":
-      return { ...state, data: action.payload };
-    case "ADD_DATA":
-      return { ...state, data: [...state.data, ...action.payload] };
-    case "SET_UNPAGINATED_COUNT":
-      return { ...state, unpaginated_COUNT: action.payload };
     case "SET_LOADING_STATE":
       return { ...state, loading_STATE: action.payload };
     case "SET_ERROR":
       return { ...state, error: action.payload };
-    case "ADD_PRINTED_ID":
+
+    case "UPDATE_STATE":
+      const updatedVocabs = [...state.data.vocabs, ...action.payload.vocabs];
+      const updatedPrintedIds = new Set(state.data.printed_IDS);
+      action.payload?.vocabs?.forEach((vocab) =>
+        updatedPrintedIds.add(vocab.id)
+      );
+
       return {
         ...state,
-        printed_IDS: new Set([...state.printed_IDS, action.payload]), // Spread syntax to ensure a new Set is created
+        data: {
+          vocabs: updatedVocabs,
+          printed_IDS: updatedPrintedIds,
+          unpaginated_COUNT: action.payload?.unpaginated_COUNT,
+        },
       };
-    case "REMOVE_PRINTED_ID":
-      const updatedSet = new Set(state.printed_IDS);
-      updatedSet.delete(action.payload);
-      return { ...state, printed_IDS: updatedSet };
+    case "ADD_VOCAB":
+      const newVocabs = [action.payload, ...state.data.vocabs];
+      const updatedIds = new Set(state.data.printed_IDS);
+      updatedIds.add(action.payload.id);
+
+      return {
+        ...state,
+        data: {
+          vocabs: newVocabs,
+          printed_IDS: updatedIds,
+          unpaginated_COUNT: state.data.unpaginated_COUNT + 1,
+        },
+      };
+
+    case "REMOVE_VOCAB": {
+      const updatedVocabs = state.data.vocabs.filter(
+        (vocab) => vocab.id !== action.payload
+      );
+      const updatedPrintedIds = new Set(state.data.printed_IDS);
+      updatedPrintedIds.delete(action.payload);
+
+      return {
+        ...state,
+        data: {
+          vocabs: updatedVocabs,
+          printed_IDS: updatedPrintedIds,
+          unpaginated_COUNT: state.data.unpaginated_COUNT - 1,
+        },
+      };
+    }
 
     case "RESET_STATE":
       return initialState;
@@ -139,39 +175,44 @@ export function USE_myVocabs({
   const { z_user, z_vocabDisplay_SETTINGS } = USE_zustand();
   const { startNewRequest } = USE_abortController();
 
-  const HAS_reachedEnd = useMemo(
-    () => state.data?.length >= state.unpaginated_COUNT,
-    [state.data, state.unpaginated_COUNT]
+  const ALLOW_action = useMemo(
+    () => state.loading_STATE === "none",
+    [state.loading_STATE]
   );
 
-  console.log("state: ", state.loading_STATE);
+  const HAS_reachedEnd = useMemo(
+    () => state.data?.vocabs?.length >= state.data?.unpaginated_COUNT,
+    [state.data?.vocabs, state.data?.unpaginated_COUNT]
+  );
+
+  const REMOVE_fromDisplayed = useCallback(
+    (id: string) => {
+      if (!ALLOW_action) return;
+      dispatch({ type: "REMOVE_VOCAB", payload: id });
+    },
+    [state]
+  );
+
+  const ADD_toDisplayed = useCallback(
+    (vocab: Vocab_MODEL) => {
+      if (!ALLOW_action) return;
+      dispatch({ type: "ADD_VOCAB", payload: vocab });
+    },
+    [state]
+  );
+
+  const LOAD_more = useCallback(() => {
+    if (!ALLOW_action) return;
+    fetch("loading_more");
+  }, [state]);
 
   const fetch = useCallback(
-    async (
-      fetch_TYPE: "re-fetch" | "search" | "re-sort" | "re-filter" | "load-more"
-    ) => {
+    async (fetch_TYPE: loadingState_TYPES) => {
       const abortController = startNewRequest();
       try {
-        // Set loading states based on printed_IDS size
-        switch (fetch_TYPE) {
-          case "re-fetch":
-            dispatch({ type: "SET_LOADING_STATE", payload: "loading" });
-            break;
-          case "re-sort":
-            dispatch({ type: "SET_LOADING_STATE", payload: "sorting" });
-            break;
-          case "re-filter":
-            dispatch({ type: "SET_LOADING_STATE", payload: "filtering" });
-            break;
-          case "load-more":
-            dispatch({ type: "SET_LOADING_STATE", payload: "loading_more" });
-            break;
-          case "search":
-            dispatch({ type: "SET_LOADING_STATE", payload: "searching" });
-            break;
-        }
+        dispatch({ type: "SET_LOADING_STATE", payload: fetch_TYPE });
 
-        await Delay(2000);
+        // await Delay(2000);
         dispatch({ type: "SET_ERROR", payload: { value: false, msg: "" } });
 
         const data = await HELP_fetchMyVocabs({
@@ -179,20 +220,15 @@ export function USE_myVocabs({
           search,
           amount: VOCAB_PAGINATION || 20,
           user_id: z_user?.id,
-          excludeIds: fetch_TYPE === "re-fetch" ? new Set() : state.printed_IDS,
+          excludeIds:
+            fetch_TYPE !== "loading_more" ? new Set() : state.data?.printed_IDS,
           targetList_ID,
           vocabDisplaySettings: z_vocabDisplay_SETTINGS,
           abortController,
         });
 
         if (data) {
-          dispatch({ type: "ADD_DATA", payload: data.vocabs });
-          dispatch({ type: "SET_UNPAGINATED_COUNT", payload: data.totalCount });
-
-          // Update printed_IDS with new IDs
-          data.vocabs.forEach((vocab) => {
-            dispatch({ type: "ADD_PRINTED_ID", payload: vocab.id });
-          });
+          dispatch({ type: "UPDATE_STATE", payload: data });
         }
       } catch {
         if (!abortController.signal.aborted) {
@@ -216,27 +252,26 @@ export function USE_myVocabs({
       z_vocabDisplay_SETTINGS.sorting,
       z_user?.id,
       targetList_ID,
-      state.printed_IDS,
+      state.data?.printed_IDS,
     ]
   );
 
   useEffect(() => {
-    const triggerFetch = () => {
-      dispatch({ type: "RESET_STATE" });
+    dispatch({ type: "RESET_STATE" });
 
-      if (search) {
-        fetch("search");
-      } else if (
-        z_vocabDisplay_SETTINGS.difficultyFilters?.length ||
-        z_vocabDisplay_SETTINGS.langFilters?.length
-      ) {
-        fetch("re-filter");
-      } else if (targetList_ID) {
-        fetch("re-fetch");
-      }
-    };
+    const HAS_filters =
+      z_vocabDisplay_SETTINGS.difficultyFilters?.length ||
+      z_vocabDisplay_SETTINGS.langFilters?.length;
 
-    triggerFetch();
+    if (search && HAS_filters) {
+      fetch("searching_and_filtering");
+    } else if (search) {
+      fetch("searching");
+    } else if (HAS_filters) {
+      fetch("filtering");
+    } else if (targetList_ID) {
+      fetch("loading");
+    }
   }, [
     search,
     z_vocabDisplay_SETTINGS.difficultyFilters,
@@ -247,34 +282,13 @@ export function USE_myVocabs({
   ]);
 
   return {
-    data: state.data,
-    error: state.error,
+    vocabs: state.data?.vocabs,
+    fetchVocabs_ERROR: state.error,
     loading_STATE: state.loading_STATE,
-    unpaginated_COUNT: state.unpaginated_COUNT, // Now using state.total
-    LOAD_more: () => {
-      if (state.loading_STATE !== "loading_more") {
-        fetch("load-more");
-      }
-    },
+    unpaginated_COUNT: state.data?.unpaginated_COUNT, // Now using state.total
     HAS_reachedEnd,
-    ADD_toDisplayed: (vocab: Vocab_MODEL) => {
-      dispatch({ type: "ADD_DATA", payload: [vocab] });
-      dispatch({ type: "ADD_PRINTED_ID", payload: vocab.id });
-      dispatch({
-        type: "SET_UNPAGINATED_COUNT",
-        payload: state.unpaginated_COUNT + 1,
-      });
-    },
-    REMOVE_fromDisplayed: (id: string) => {
-      dispatch({
-        type: "SET_DATA",
-        payload: state.data.filter((vocab) => vocab.id !== id),
-      });
-      dispatch({ type: "REMOVE_PRINTED_ID", payload: id });
-      dispatch({
-        type: "SET_UNPAGINATED_COUNT",
-        payload: state.unpaginated_COUNT - 1,
-      });
-    },
+    LOAD_more,
+    ADD_toDisplayed,
+    REMOVE_fromDisplayed,
   };
 }

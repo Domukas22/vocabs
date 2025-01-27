@@ -13,8 +13,6 @@ export function USE_observeMyTargetList(
   const [list, SET_list] = useState<List_MODEL | undefined>();
 
   useEffect(() => {
-    const startTime = new Date().getTime(); // Capture start time in milliseconds
-
     // If no `list_id` is provided, reset state and exit early
     if (!list_id) {
       SET_list(undefined);

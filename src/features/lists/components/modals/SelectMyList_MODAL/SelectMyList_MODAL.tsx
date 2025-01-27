@@ -31,6 +31,7 @@ import { t } from "i18next";
 import List_MODEL from "@/src/db/models/List_MODEL";
 import { CreateList_MODAL } from "../CreateList_MODAL/CreateList_MODAL";
 import EmptyFlatlist_BOTTOM from "@/src/components/3_other/EmptyFlatlist_BOTTOM/EmptyFlatlist_BOTTOM";
+import USE_observeMyList from "../../../functions/myLists/fetch/hooks/USE_observeMyLists/USE_observeMyLists";
 
 interface SelectListModal_PROPS {
   open: boolean;
@@ -67,7 +68,7 @@ export function SelectMyList_MODAL({
     <Big_MODAL open={open}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
+        style={{ flex: 1, width: "100%" }}
       >
         <Header
           title={title}
@@ -131,17 +132,17 @@ export function SelectMyList_MODAL({
   );
 }
 
-function _MyLists_FLATLIST({
-  lists,
+export default function MyLists_FLATLIST({
   TOGGLE_createListModal,
   selectedModal_LIST,
   SET_selectedModalList,
 }: {
-  lists: List_MODEL[];
   TOGGLE_createListModal: () => void;
   selectedModal_LIST: List_MODEL | undefined;
   SET_selectedModalList: React.Dispatch<React.SetStateAction<List_MODEL>>;
 }) {
+  const { lists } = USE_observeMyList();
+
   if (lists && lists.length > 0) {
     return (
       <FlatList
@@ -192,13 +193,3 @@ function _MyLists_FLATLIST({
     );
   }
 }
-
-const enhance = withObservables(
-  ["user_id"],
-  ({ user_id }: { user_id: string }) => ({
-    // vocabs: Vocabs_DB.query(Q.where("list_id", list_id)),
-    lists: Lists_DB.query(Q.where("user_id", user_id)),
-  })
-);
-
-export const MyLists_FLATLIST = enhance(_MyLists_FLATLIST);

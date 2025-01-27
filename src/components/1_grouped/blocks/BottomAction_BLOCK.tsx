@@ -13,7 +13,7 @@ import { loadingState_TYPES } from "@/src/features/vocabs/functions/1_myVocabs/f
 export default function BottomAction_BLOCK({
   type = "list",
   loading_STATE,
-  search = "",
+  debouncedSearch = "",
   IS_debouncing = false,
   HAS_reachedEnd = false,
   LOAD_more = async () => {},
@@ -24,7 +24,7 @@ export default function BottomAction_BLOCK({
 }: {
   type: "list" | "vocabs" | "users";
   loading_STATE: loadingState_TYPES;
-  search: string;
+  debouncedSearch: string;
   IS_debouncing: boolean;
   HAS_reachedEnd: boolean;
   LOAD_more: () => Promise<void>;
@@ -82,18 +82,18 @@ export default function BottomAction_BLOCK({
       )}
 
       <View style={{ gap: 8 }}>
-        {search &&
+        {debouncedSearch &&
           activeFilter_COUNT === 0 &&
           HAS_reachedEnd &&
           !IS_debouncing && (
             <Btn
-              text={`Clear search '${search}'`}
+              text={`Clear search '${debouncedSearch}'`}
               onPress={RESET_search}
               type="delete"
             />
           )}
         {activeFilter_COUNT > 0 &&
-          !search &&
+          !debouncedSearch &&
           HAS_reachedEnd &&
           !IS_debouncing && (
             <Btn
@@ -103,7 +103,7 @@ export default function BottomAction_BLOCK({
             />
           )}
 
-        {activeFilter_COUNT > 0 && search !== "" && !IS_debouncing && (
+        {activeFilter_COUNT > 0 && debouncedSearch !== "" && !IS_debouncing && (
           <Btn
             text="Clear search and filters"
             onPress={() => {

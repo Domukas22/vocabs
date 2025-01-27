@@ -21,6 +21,7 @@ import { loadingState_TYPES } from "@/src/features/vocabs/functions/1_myVocabs/f
 
 type VocabsFlatlistHeader_SECTIONProps = {
   debouncedSearch: string;
+  IS_debouncing: boolean;
   unpaginated_COUNT: number | null;
   loading_STATE: loadingState_TYPES;
   list_NAME: string | undefined;
@@ -28,6 +29,7 @@ type VocabsFlatlistHeader_SECTIONProps = {
 
 export function VocabsFlatlistHeader_SECTION({
   debouncedSearch,
+  IS_debouncing,
   loading_STATE = "none",
   list_NAME = "INSERT LIST NAME",
   unpaginated_COUNT = 0,
@@ -62,7 +64,12 @@ export function VocabsFlatlistHeader_SECTION({
         <Styled_TEXT type="text_20_bold">{list_NAME}</Styled_TEXT>
 
         <Flashlist_LABEL
-          {...{ loading_STATE, debouncedSearch, appliedFiltersCount }}
+          {...{
+            loading_STATE,
+            debouncedSearch,
+            appliedFiltersCount,
+            IS_debouncing,
+          }}
           totalResult_COUNT={unpaginated_COUNT || 0}
           target="vocabs"
         />

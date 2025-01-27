@@ -49,7 +49,7 @@ export async function FETCH_myVocabs(
     // fetch total result count before pagination
     // -- this must be here, because we want to fetch the total count of filtered results,
     // not just the total vocab count in this list
-    const totalCount =
+    const unpaginated_COUNT =
       (await query.extend(filter_CONDITIONS.withoutExcluded).fetchCount()) || 0;
 
     // fetch the final vocabs
@@ -61,12 +61,12 @@ export async function FETCH_myVocabs(
       )
       .fetch();
 
-    VALIDATE_watermelonFetch({ totalCount, vocabs, THROW_err });
+    VALIDATE_watermelonFetch({ unpaginated_COUNT, vocabs, THROW_err });
 
     return {
       data: {
         vocabs,
-        totalCount,
+        unpaginated_COUNT,
       },
     };
   } catch (error: any) {

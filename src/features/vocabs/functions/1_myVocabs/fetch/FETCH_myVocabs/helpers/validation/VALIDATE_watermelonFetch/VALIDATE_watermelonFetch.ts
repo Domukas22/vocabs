@@ -6,15 +6,15 @@ import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 import { internalErrMsg_TYPES } from "../../../types";
 
 export function VALIDATE_watermelonFetch({
-  totalCount,
+  unpaginated_COUNT,
   vocabs,
   THROW_err = () => {},
 }: {
-  totalCount: number;
+  unpaginated_COUNT: number;
   vocabs: Vocab_MODEL[];
   THROW_err: (type: internalErrMsg_TYPES) => void;
 }) {
-  if (typeof totalCount !== "number") {
+  if (typeof unpaginated_COUNT !== "number") {
     throw THROW_err("undefined_watermelon_totalCount");
   }
 
