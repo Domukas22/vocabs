@@ -23,7 +23,7 @@ export const MyRecentLists_FLATLIST = function RecentlyUsedPrivateLists_LIST({
 }) {
   return (
     <Block styles={{ gap: 12 }}>
-      <Label>My recent lists</Label>
+      <Label>Recent lists</Label>
       {lists ? (
         lists?.map((list) => (
           <MyList_BTN

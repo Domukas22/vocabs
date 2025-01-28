@@ -4,7 +4,7 @@
 
 import { loadingState_TYPES } from "@/src/types";
 import { useCallback } from "react";
-import { myVocabsReducerState_PROPS } from "../../reducer/myVocabs_REDUCER/myVocabs_REDUCER";
+import { myVocabsReducerState_PROPS } from "../../reducer/myVocabs_REDUCER/types";
 
 export default function USE_loadMoreVocabs({
   state,

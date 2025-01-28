@@ -2,28 +2,19 @@
 //
 //
 
-import BottomAction_BLOCK from "@/src/components/1_grouped/blocks/BottomAction_BLOCK";
 import VocabList_HEADER from "@/src/components/1_grouped/headers/listPage/VocabList_HEADER";
 import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 import {
   MyVocabs_FLATLIST,
-  VocabsFlatlistHeader_SECTION,
   UpdateMyVocab_MODAL,
   VocabDisplaySettings_MODAL,
   DeleteVocab_MODAL,
 } from "@/src/features/vocabs/components";
-import { CreateMyVocab_MODAL } from "@/src/features/vocabs/components/1_myVocabs/modals/CreateMyVocab_MODAL/CreateMyVocab_MODAL";
-import { USE_getActiveFilterCount } from "@/src/hooks";
-import {
-  USE_myTotalVocabCount,
-  USE_vocabs,
-} from "@/src/features/vocabs/functions";
 import {
   USE_debounceSearch,
   USE_showListHeaderTitle,
   USE_highlighedId,
 } from "@/src/hooks";
-import { USE_zustand } from "@/src/hooks";
 import { useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";

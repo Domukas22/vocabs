@@ -19,7 +19,6 @@ export function USE_myVocabs({
 }) {
   const {
     state,
-    HAS_reachedEnd,
     ADD_toDisplayed,
     REMOVE_fromDisplayed,
     RESET_reducerState,
@@ -38,8 +37,10 @@ export function USE_myVocabs({
     SET_loadingState,
   });
 
+  // insert SET_error here
   const { LOAD_moreVocabs } = USE_loadMoreVocabs({ state, FETCH });
 
+  // insert SET_error here
   USE_refetchVocabs({
     search,
     targetList_ID,
@@ -48,11 +49,11 @@ export function USE_myVocabs({
   });
 
   return {
-    vocabs: state.data?.vocabs,
-    fetchVocabs_ERROR: state.error,
-    loading_STATE: state.loading_STATE,
-    unpaginated_COUNT: state.data?.unpaginated_COUNT,
-    HAS_reachedEnd,
+    vocabs: state?.data?.vocabs,
+    fetchVocabs_ERROR: state?.error,
+    loading_STATE: state?.loading_STATE,
+    unpaginated_COUNT: state?.data?.unpaginated_COUNT,
+    HAS_reachedEnd: state?.data?.HAS_reachedEnd,
     LOAD_moreVocabs,
     ADD_toDisplayed,
     REMOVE_fromDisplayed,

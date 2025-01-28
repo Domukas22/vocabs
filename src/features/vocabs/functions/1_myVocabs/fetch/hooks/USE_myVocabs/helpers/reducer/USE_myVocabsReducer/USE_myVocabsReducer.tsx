@@ -8,18 +8,12 @@ import {
   myVocabsReducerInitial_STATE,
 } from "../myVocabs_REDUCER/myVocabs_REDUCER";
 import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
-import { USE_hasReachedEnd } from "@/src/hooks";
 import { loadingState_TYPES } from "@/src/types";
 
 export default function USE_myVocabsReducer() {
   const [state, dispatch] = useReducer(
     myVocabs_REDUCER,
     myVocabsReducerInitial_STATE
-  );
-
-  const { HAS_reachedEnd } = USE_hasReachedEnd(
-    state?.data?.vocabs?.length || 0,
-    state?.data?.unpaginated_COUNT || 0
   );
 
   const SET_loadingState = useCallback(
@@ -38,33 +32,23 @@ export default function USE_myVocabsReducer() {
   );
 
   const UPDATE_state = useCallback(
-    (data: { vocabs: Vocab_MODEL[]; unpaginated_COUNT: number }) => {
-      dispatch({ type: "UPDATE_STATE", payload: data });
-    },
+    (data: { vocabs: Vocab_MODEL[]; unpaginated_COUNT: number }) =>
+      dispatch({ type: "UPDATE_STATE", payload: data }),
     []
   );
 
   const ADD_toDisplayed = useCallback(
-    (vocab: Vocab_MODEL) => {
-      if (state?.loading_STATE === "none") {
-        dispatch({ type: "ADD_VOCAB", payload: vocab });
-      }
-    },
+    (vocab: Vocab_MODEL) => dispatch({ type: "ADD_VOCAB", payload: vocab }),
     [state?.loading_STATE]
   );
 
   const REMOVE_fromDisplayed = useCallback(
-    (id: string) => {
-      if (state?.loading_STATE === "none") {
-        dispatch({ type: "DELETE_VOCAB", payload: id });
-      }
-    },
+    (id: string) => dispatch({ type: "DELETE_VOCAB", payload: id }),
     [state?.loading_STATE]
   );
 
   return {
     state,
-    HAS_reachedEnd,
     UPDATE_state,
     SET_error,
     ADD_toDisplayed,

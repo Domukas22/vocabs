@@ -2,21 +2,15 @@
 //
 //
 
-import BottomAction_BLOCK from "@/src/components/1_grouped/blocks/BottomAction_BLOCK";
 import VocabList_HEADER from "@/src/components/1_grouped/headers/listPage/VocabList_HEADER";
 import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 import {
   MyVocabs_FLATLIST,
-  VocabsFlatlistHeader_SECTION,
   UpdateMyVocab_MODAL,
   VocabDisplaySettings_MODAL,
   DeleteVocab_MODAL,
 } from "@/src/features/vocabs/components";
 import { USE_getActiveFilterCount } from "@/src/hooks";
-import {
-  USE_myTotalVocabCount,
-  USE_vocabs,
-} from "@/src/features/vocabs/functions";
 import {
   USE_debounceSearch,
   USE_showListHeaderTitle,
@@ -49,8 +43,6 @@ export default function AllVocabs_PAGE() {
   const [targetDelete_VOCAB, SET_targetDeleteVocab] = useState<
     Vocab_MODEL | undefined
   >();
-
-  const totalListVocab_COUNT = USE_myTotalVocabCount(z_user);
 
   const { modals } = USE_modalToggles([
     "createVocab",

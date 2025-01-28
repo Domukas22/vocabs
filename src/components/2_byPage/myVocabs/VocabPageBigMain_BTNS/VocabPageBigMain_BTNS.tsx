@@ -23,7 +23,7 @@ export function VocabPageBigMain_BTNS({
 }) {
   return (
     <View style={{ padding: 12, gap: 12, paddingBottom: 36 }}>
-      <Label>My vocabs</Label>
+      {/* <Label>My vocabs</Label> */}
 
       <BigPage_BTN
         title="⭐ Saved vocabs"

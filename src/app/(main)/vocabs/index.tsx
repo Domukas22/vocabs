@@ -34,7 +34,7 @@ export default function Index_PAGE() {
         onLongPress={() => SET_resetDbModalOpen(!IS_resetDbModalOpen)}
         style={{ backgroundColor: MyColors.fill_bg }}
       >
-        <Header title="My lists and vocabs" big={true} />
+        <Header title="My vocabs" big={true} />
       </Pressable>
 
       <ScrollView style={{ backgroundColor: MyColors.fill_bg }}>
