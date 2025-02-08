@@ -10,7 +10,7 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "clearJestCache": "jest --clearCache",
-    "testFile": "jest --watch --coverage=false --testPathPattern=src/features/vocabs/functions/1_myVocabs/fetch/hooks/USE_myVocabs/helpers/reducer/myVocabs_REDUCER/actions/ADD_vocabToReducer/ADD_vocabToReducer.test.ts",
+    "testFile": "jest --watch --coverage=false --testPathPattern=src/features/vocabs/functions/1_myVocabs/fetch/hooks/USE_myVocabs/helpers/reducer/USE_myVocabsReducer/USE_myVocabsReducer.test.tsx",
     "test": "jest --watch --coverage=false --changedSince=origin/main",
     "testDebug": "jest -o --watch --coverage=false",
     "testFinal": "jest",

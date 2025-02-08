@@ -25,7 +25,7 @@ export function List_CONTROLLER({
   return (
     <Controller
       control={control}
-      name="list_id"
+      name="list"
       rules={{
         required: {
           value: true,
@@ -40,7 +40,7 @@ export function List_CONTROLLER({
         <Block>
           <Label>{t("label.chosenList")}</Label>
           <Btn
-            text={value || "Select a list..."}
+            text={value?.name || "Select a list..."}
             iconRight={<ICON_dropdownArrow />}
             onPress={TOGGLE_listModal}
             type="simple"

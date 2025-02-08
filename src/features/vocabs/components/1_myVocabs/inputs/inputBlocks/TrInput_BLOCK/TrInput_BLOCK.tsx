@@ -91,6 +91,7 @@ export function TrInput_BLOCK({
             text={t("btn.editHighlights")}
             type="seethrough"
             onPress={() => {
+              console.log("OPEN");
               OPEN_highlights(tr);
               setIsFocused(false);
               inputREF.current?.blur();

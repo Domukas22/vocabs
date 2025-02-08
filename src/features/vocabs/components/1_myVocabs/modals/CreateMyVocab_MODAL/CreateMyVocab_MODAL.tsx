@@ -38,16 +38,17 @@ import {
 import { TrHighlights_MODAL } from "../TrHighlights_MODAL/TrHighlights_MODAL";
 import { SelectMultipleLanguages_MODAL } from "@/src/features/languages/components";
 import { USE_modalToggles } from "@/src/hooks/index";
+import List_MODEL from "@/src/db/models/List_MODEL";
 
 interface CreateMyVocabModal_PROPS {
   IS_open: boolean;
-  initialList_ID?: string | undefined;
+  initial_LIST?: List_MODEL | undefined;
   TOGGLE_modal: () => void;
   onSuccess: (new_VOCAB: Vocab_MODEL) => void;
 }
 
 export type CreateMyVocabData_PROPS = {
-  list_id: string | undefined;
+  list: List_MODEL | undefined;
   difficulty: 1 | 2 | 3;
   description: string;
   translations: tr_PROPS[];
@@ -56,7 +57,7 @@ export type CreateMyVocabData_PROPS = {
 export function CreateMyVocab_MODAL({
   IS_open,
   TOGGLE_modal: TOGGLE_vocabModal,
-  initialList_ID,
+  initial_LIST,
   onSuccess = () => {},
 }: CreateMyVocabModal_PROPS) {
   const { t } = useTranslation();
@@ -89,10 +90,10 @@ export function CreateMyVocab_MODAL({
   };
 
   const create = async (data: CreateMyVocabData_PROPS) => {
-    const { list_id, description, difficulty, translations } = data;
+    const { list, description, difficulty, translations } = data;
     const result = await CREATE_vocab({
       user: z_user,
-      list_id,
+      list_id: list?.id,
       difficulty,
       description,
       translations,
@@ -125,7 +126,7 @@ export function CreateMyVocab_MODAL({
       //   [],
       translations: GET_defaultTranslations("en,de") || [],
       description: "",
-      list_id: initialList_ID,
+      list: initial_LIST,
       difficulty: 3,
     },
     criteriaMode: "all",
@@ -144,6 +145,7 @@ export function CreateMyVocab_MODAL({
   useEffect(() => {
     if (IS_open)
       setValue("translations", GET_defaultTranslations("en,de") || []);
+    setValue("list", initial_LIST);
   }, [IS_open]);
 
   const [selected_LANGS, SET_selectedLangs] = useState<Language_MODEL[]>([]);
@@ -268,10 +270,10 @@ export function CreateMyVocab_MODAL({
         <SelectMyList_MODAL
           open={modals.selectList.IS_open}
           title="Select a list of yours"
-          submit_ACTION={(list_id: string) => {
-            if (list_id) {
-              setValue("list_id", list_id);
-              clearErrors("list_id");
+          submit_ACTION={(list: List_MODEL) => {
+            if (list) {
+              setValue("list", list);
+              clearErrors("list");
               modals.selectList.set(false);
             }
           }}
@@ -279,7 +281,7 @@ export function CreateMyVocab_MODAL({
             modals.selectList.set(false);
           }}
           IS_inAction={IS_creatingVocab}
-          current_LIST={getValues("list_id")}
+          selected_LIST={getValues("list")}
         />
       </View>
     </Big_MODAL>

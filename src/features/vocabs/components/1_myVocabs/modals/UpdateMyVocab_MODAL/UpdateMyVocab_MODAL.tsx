@@ -48,7 +48,7 @@ interface UpdateMyVocabModal_PROPS {
 }
 
 export type UpdateMyVocabData_PROPS = {
-  list_id: string | undefined;
+  list: List_MODEL | undefined;
   user_id: string | undefined;
   difficulty: 1 | 2 | 3;
   description: string;
@@ -92,18 +92,18 @@ export function UpdateMyVocab_MODAL({
   };
 
   const update = async (data: UpdateMyVocabData_PROPS) => {
-    const { list_id, description, difficulty, translations } = data;
+    const { list, description, difficulty, translations } = data;
 
     const result = await UPDATE_vocab({
       vocab_id: toUpdate_VOCAB?.id,
-      list_id,
+      list_id: list?.id,
       difficulty,
       description,
       translations,
       is_public: false,
       onSuccess: (updated_VOCAB: Vocab_MODEL) => {
         onSuccess(updated_VOCAB);
-        collectLangs(updated_VOCAB?.list_id);
+        collectLangs(updated_VOCAB?.id);
 
         reset();
       },
@@ -127,7 +127,7 @@ export function UpdateMyVocab_MODAL({
     defaultValues: {
       translations: [],
       description: "",
-      list_id: undefined,
+      list: undefined,
       difficulty: undefined,
     },
     criteriaMode: "all",
@@ -153,7 +153,7 @@ export function UpdateMyVocab_MODAL({
         setValue("translations", toUpdate_VOCAB?.trs || []);
         setValue("description", toUpdate_VOCAB?.description || "");
         setValue("difficulty", toUpdate_VOCAB?.difficulty || 3);
-        setValue("list_id", _list?.[0]?.id || undefined);
+        setValue("list", _list?.[0] || undefined);
       }
     };
     fn();
@@ -282,8 +282,8 @@ export function UpdateMyVocab_MODAL({
           title="Saved vocab to list"
           submit_ACTION={(target_LIST: List_MODEL) => {
             if (target_LIST) {
-              setValue("list_id", target_LIST?.id);
-              clearErrors("list_id");
+              setValue("list", target_LIST);
+              clearErrors("list");
               modals.selectList.set(false);
             }
           }}
@@ -291,7 +291,7 @@ export function UpdateMyVocab_MODAL({
             modals.selectList.set(false);
           }}
           IS_inAction={false}
-          current_LIST={getValues("list_id")}
+          selected_LIST={getValues("list")}
         />
       </View>
     </Big_MODAL>

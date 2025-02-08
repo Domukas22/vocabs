@@ -4,32 +4,23 @@
 
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useToast } from "react-native-toast-notifications";
 import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
-import List_MODEL from "@/src/db/models/List_MODEL";
 
-import { withObservables } from "@nozbe/watermelondb/react";
-import { USE_sync } from "@/src/hooks/USE_sync/USE_sync";
 import { USE_myVocabs } from "@/src/features/vocabs/functions/1_myVocabs/fetch/hooks/USE_myVocabs/USE_myVocabs";
 
-import { USE_zustand } from "@/src/hooks";
-
-import { Lists_DB } from "@/src/db";
 import VocabList_HEADER from "@/src/components/1_grouped/headers/listPage/VocabList_HEADER";
-import BottomAction_BLOCK from "@/src/components/1_grouped/blocks/BottomAction_BLOCK";
 import { FlashList } from "@shopify/flash-list";
 import { ListSettings_MODAL } from "@/src/features/lists/components";
 import {
   MyVocabs_FLATLIST,
-  VocabsFlatlistHeader_SECTION,
   UpdateMyVocab_MODAL,
   VocabDisplaySettings_MODAL,
   DeleteVocab_MODAL,
 } from "@/src/features/vocabs/components";
-import { USE_getActiveFilterCount } from "@/src/hooks";
 import {
   USE_debounceSearch,
   USE_showListHeaderTitle,
@@ -39,9 +30,6 @@ import { CreateMyVocab_MODAL } from "@/src/features/vocabs/components/1_myVocabs
 import { Portal } from "@gorhom/portal";
 import { USE_modalToggles } from "@/src/hooks/index";
 import { USE_observeMyTargetList } from "@/src/features/lists/functions";
-import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
-import { MyColors } from "@/src/constants/MyColors";
-import { View } from "react-native";
 
 export default function SingleList_PAGE() {
   const { t } = useTranslation();
@@ -77,25 +65,25 @@ export default function SingleList_PAGE() {
     Vocab_MODEL | undefined
   >();
 
-  // const HANDLE_updateModal = useCallback(
-  //   ({ clear = false, vocab }: { clear?: boolean; vocab?: Vocab_MODEL }) => {
-  //     SET_toUpdateVocab(!clear && vocab ? vocab : undefined);
-  //     modals.updateVocab.toggle();
-  //   },
-  //   [SET_toUpdateVocab]
-  // );
+  const HANDLE_updateModal = useCallback(
+    ({ clear = false, vocab }: { clear?: boolean; vocab?: Vocab_MODEL }) => {
+      SET_toUpdateVocab(!clear && vocab ? vocab : undefined);
+      modals.updateVocab.toggle();
+    },
+    [SET_toUpdateVocab]
+  );
 
   const {
     vocabs,
-    fetchVocabs_ERROR,
+    vocabs_ERROR,
     HAS_reachedEnd,
     loading_STATE,
     unpaginated_COUNT,
     LOAD_moreVocabs,
-    ADD_toDisplayed,
-    REMOVE_fromDisplayed,
+    ADD_vocabToReducer,
+    REMOVE_vocabFromReducer,
   } = USE_myVocabs({
-    type: "byTargetList",
+    vocabFetch_TYPE: "byTargetList",
     targetList_ID: selected_LIST?.id,
     search: debouncedSearch,
   });
@@ -120,10 +108,7 @@ export default function SingleList_PAGE() {
         onScroll={handleScroll}
         IS_debouncing={IS_debouncing}
         debouncedSearch={debouncedSearch}
-        HANDLE_updateModal={(vocab: Vocab_MODEL) => {
-          SET_toUpdateVocab(vocab);
-          modals.updateVocab.toggle();
-        }}
+        HANDLE_updateModal={HANDLE_updateModal}
         fetch_TYPE="byTargetList"
         highlightedVocab_ID={highlighted_ID}
         PREPARE_vocabDelete={(vocab: Vocab_MODEL) => {
@@ -132,7 +117,7 @@ export default function SingleList_PAGE() {
         }}
         RESET_search={() => SET_search("")}
         OPEN_createVocabModal={() => modals.createVocab.set(true)}
-        fetchVocabs_ERROR={fetchVocabs_ERROR}
+        vocabs_ERROR={vocabs_ERROR}
         HAS_reachedEnd={HAS_reachedEnd}
         loading_STATE={loading_STATE}
         unpaginated_COUNT={unpaginated_COUNT}
@@ -142,13 +127,13 @@ export default function SingleList_PAGE() {
       <Portal>
         <CreateMyVocab_MODAL
           IS_open={modals.createVocab.IS_open}
-          initialList_ID={selected_LIST?.id}
+          initial_LIST={selected_LIST}
           TOGGLE_modal={() => modals.createVocab.set(false)}
           onSuccess={(new_VOCAB: Vocab_MODEL) => {
             modals.createVocab.set(false);
 
             HIGHLIGHT_vocab(new_VOCAB.id);
-            ADD_toDisplayed(new_VOCAB);
+            ADD_vocabToReducer(new_VOCAB);
             list_REF?.current?.scrollToOffset({ animated: true, offset: 0 });
             toast.show(t("notifications.vocabCreated"), {
               type: "success",
@@ -193,7 +178,7 @@ export default function SingleList_PAGE() {
               type: "success",
               duration: 5000,
             });
-            REMOVE_fromDisplayed(targetDelete_VOCAB?.id || "");
+            REMOVE_vocabFromReducer(targetDelete_VOCAB?.id || "");
             modals.deleteVocab.set(false);
           }}
         />

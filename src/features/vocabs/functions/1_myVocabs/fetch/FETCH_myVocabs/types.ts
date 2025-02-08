@@ -23,14 +23,12 @@ export interface FETCH_myVocabs_ARG_TYPES {
   z_vocabDisplay_SETTINGS: z_vocabDisplaySettings_PROPS;
 }
 
-export type FETCH_myVocabs_ERROR_PROPS = Error_PROPS;
-
 export type FETCH_myVocabs_RESPONSE_TYPE = {
   data?: {
     vocabs: Vocab_MODEL[];
     unpaginated_COUNT: number;
   };
-  error?: FETCH_myVocabs_ERROR_PROPS;
+  error?: Error_PROPS;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////

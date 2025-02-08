@@ -20,18 +20,19 @@ export function HANDLE_userErrorInsideFinalCatchBlock<
 
   const type = IS_networkFailure
     ? "user_network"
-    : error.error_TYPE || "unknown";
+    : error?.error_TYPE || "unknown";
 
-  const details = type === "unknown" ? error : error.error_DETAILS;
+  // const details = type === "unknown" ? error : error.error_DETAILS;
+  const details = error?.error_DETAILS ? error.error_DETAILS : error;
 
   return {
     user_MSG: IS_networkFailure
       ? "There seems to an issue with your internet connection"
-      : error.user_MSG || internalErrorUser_MSG,
-    internal_MSG: error.internal_MSG || error.message,
+      : error?.user_MSG || internalErrorUser_MSG,
+    internal_MSG: error?.internal_MSG || error?.message,
     error_TYPE: type,
     error_DETAILS: details,
-    falsyForm_INPUTS: error.falsyForm_INPUTS,
+    falsyForm_INPUTS: error?.falsyForm_INPUTS,
     function_NAME,
   };
 }

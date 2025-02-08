@@ -84,13 +84,13 @@ export function USE_myLists({
     fetch,
   });
 
-  const ADD_toDisplayed = (vocab: List_MODEL) => {
+  const ADD_vocabToReducer = (vocab: List_MODEL) => {
     SET_data((prev) => [vocab, ...prev]);
     SET_printedIds((prev) => new Set(prev).add(vocab.id));
     SET_unpaginatedCount((prev) => prev + 1);
   };
 
-  const REMOVE_fromDisplayed = (id: string) => {
+  const REMOVE_vocabFromReducer = (id: string) => {
     if (data?.length === 1 && data?.[0].id === id) {
       SET_data([]);
       RESET_pagination();
@@ -119,7 +119,7 @@ export function USE_myLists({
     IS_loadingMore,
     unpaginated_COUNT,
     LOAD_more: paginate,
-    ADD_toDisplayed,
-    REMOVE_fromDisplayed,
+    ADD_vocabToReducer,
+    REMOVE_vocabFromReducer,
   };
 }

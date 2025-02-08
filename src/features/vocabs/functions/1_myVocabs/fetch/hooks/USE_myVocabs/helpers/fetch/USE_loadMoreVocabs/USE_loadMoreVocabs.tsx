@@ -4,13 +4,13 @@
 
 import { loadingState_TYPES } from "@/src/types";
 import { useCallback } from "react";
-import { myVocabsReducerState_PROPS } from "../../reducer/myVocabs_REDUCER/types";
+import { myVocabs_REDUCER_RESPONSE_TYPE } from "../../reducer/myVocabs_REDUCER/types";
 
 export default function USE_loadMoreVocabs({
-  state,
+  reducer_STATE: state,
   FETCH,
 }: {
-  state: myVocabsReducerState_PROPS;
+  reducer_STATE: myVocabs_REDUCER_RESPONSE_TYPE;
   FETCH: (fetch_TYPE: loadingState_TYPES) => Promise<null | undefined>;
 }) {
   const LOAD_moreVocabs = useCallback(() => {

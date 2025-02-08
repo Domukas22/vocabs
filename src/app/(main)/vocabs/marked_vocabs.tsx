@@ -51,21 +51,21 @@ export default function SavedVocabs_PAGE() {
 
   const {
     vocabs,
-    fetchVocabs_ERROR,
+    vocabs_ERROR: vocabs_ERROR,
     HAS_reachedEnd,
     loading_STATE,
     unpaginated_COUNT,
     LOAD_moreVocabs,
-    ADD_toDisplayed,
-    REMOVE_fromDisplayed,
+    ADD_vocabToReducer,
+    REMOVE_vocabFromReducer,
   } = USE_myVocabs({
     type: "marked",
     search: debouncedSearch,
   });
 
   useEffect(() => {
-    if (fetchVocabs_ERROR?.value) console.error(fetchVocabs_ERROR);
-  }, [fetchVocabs_ERROR]);
+    if (vocabs_ERROR?.value) console.error(vocabs_ERROR);
+  }, [vocabs_ERROR]);
 
   return (
     <>
@@ -95,7 +95,7 @@ export default function SavedVocabs_PAGE() {
           modals.deleteVocab.set(true);
         }}
         RESET_search={() => SET_search("")}
-        fetchVocabs_ERROR={fetchVocabs_ERROR}
+        vocabs_ERROR={vocabs_ERROR}
         HAS_reachedEnd={HAS_reachedEnd}
         loading_STATE={loading_STATE}
         unpaginated_COUNT={unpaginated_COUNT}
@@ -132,7 +132,7 @@ export default function SavedVocabs_PAGE() {
               type: "success",
               duration: 5000,
             });
-            REMOVE_fromDisplayed(targetDelete_VOCAB?.id || "");
+            REMOVE_vocabFromReducer(targetDelete_VOCAB?.id || "");
             modals.deleteVocab.set(false);
           }}
         />

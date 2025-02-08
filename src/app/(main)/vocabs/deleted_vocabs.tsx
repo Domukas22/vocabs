@@ -58,13 +58,13 @@ export default function DeletedVocabs_PAGE() {
 
   const {
     vocabs,
-    fetchVocabs_ERROR,
+    vocabs_ERROR: vocabs_ERROR,
     HAS_reachedEnd,
     loading_STATE,
     unpaginated_COUNT,
     LOAD_moreVocabs,
-    ADD_toDisplayed,
-    REMOVE_fromDisplayed,
+    ADD_vocabToReducer,
+    REMOVE_vocabFromReducer,
   } = USE_myVocabs({
     type: "deletedVocabs",
     search: debouncedSearch,
@@ -95,7 +95,7 @@ export default function DeletedVocabs_PAGE() {
           modals.deleteVocab.set(true);
         }}
         RESET_search={() => SET_search("")}
-        fetchVocabs_ERROR={fetchVocabs_ERROR}
+        vocabs_ERROR={vocabs_ERROR}
         HAS_reachedEnd={HAS_reachedEnd}
         loading_STATE={loading_STATE}
         unpaginated_COUNT={unpaginated_COUNT}
@@ -111,7 +111,7 @@ export default function DeletedVocabs_PAGE() {
             modals.reviveVocab.set(false);
 
             HIGHLIGHT_vocab(new_VOCAB.id);
-            REMOVE_fromDisplayed(new_VOCAB.id);
+            REMOVE_vocabFromReducer(new_VOCAB.id);
             toast.show(t("notifications.vocabRevived"), {
               type: "success",
               duration: 3000,

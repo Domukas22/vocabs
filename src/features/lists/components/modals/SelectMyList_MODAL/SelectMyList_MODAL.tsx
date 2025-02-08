@@ -24,9 +24,6 @@ import { USE_toggle } from "@/src/hooks/USE_toggle/USE_toggle";
 
 import Big_MODAL from "@/src/components/1_grouped/modals/Big_MODAL/Big_MODAL";
 import { USE_auth } from "@/src/context/Auth_CONTEXT";
-import { Lists_DB } from "@/src/db";
-import { Q } from "@nozbe/watermelondb";
-import { withObservables } from "@nozbe/watermelondb/react";
 import { t } from "i18next";
 import List_MODEL from "@/src/db/models/List_MODEL";
 import { CreateList_MODAL } from "../CreateList_MODAL/CreateList_MODAL";
@@ -36,8 +33,8 @@ import USE_observeMyList from "../../../functions/myLists/fetch/hooks/USE_observ
 interface SelectListModal_PROPS {
   open: boolean;
   title: string;
-  current_LIST?: string | undefined;
-  submit_ACTION: (list_id: string) => void;
+  selected_LIST?: List_MODEL | undefined;
+  submit_ACTION: (list: List_MODEL) => void;
   cancel_ACTION: () => void;
   IS_inAction: boolean;
 }
@@ -45,7 +42,7 @@ interface SelectListModal_PROPS {
 export function SelectMyList_MODAL({
   open,
   title = "INTERT MODAL TITLE",
-  current_LIST,
+  selected_LIST,
   submit_ACTION,
   cancel_ACTION,
   IS_inAction,
@@ -55,13 +52,13 @@ export function SelectMyList_MODAL({
   const [SHOW_createListModal, TOGGLE_createListModal] = USE_toggle(false);
 
   const [selectedModal_LIST, SET_selectedModalList] = useState<
-    string | undefined
-  >(current_LIST);
+    List_MODEL | undefined
+  >(selected_LIST);
 
   const [search, SET_search] = useState("");
 
   useEffect(() => {
-    SET_selectedModalList(current_LIST);
+    SET_selectedModalList(selected_LIST);
   }, [open]);
 
   return (
@@ -124,8 +121,8 @@ export function SelectMyList_MODAL({
         IS_open={SHOW_createListModal}
         currentList_NAMES={[]}
         CLOSE_modal={() => TOGGLE_createListModal()}
-        onSuccess={(list_id: string) => {
-          SET_selectedModalList(list_id);
+        onSuccess={(list: List_MODEL) => {
+          SET_selectedModalList(list);
         }}
       />
     </Big_MODAL>

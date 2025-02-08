@@ -5,7 +5,6 @@
 import { Vocabs_DB } from "@/src/db";
 import {
   FETCH_myVocabs_ARG_TYPES,
-  FETCH_myVocabs_ERROR_PROPS,
   FETCH_myVocabs_ERRORS,
   FETCH_myVocabs_RESPONSE_TYPE,
   internalErrMsg_TYPES,
@@ -17,13 +16,14 @@ import {
   VALIDATE_args,
   VALIDATE_watermelonFetch,
 } from "./helpers";
+import { Error_PROPS } from "@/src/props";
 
 /////////////////////////////////////////////////////////////////////////////////
 
 export const function_NAME = "FETCH_myVocabs";
 export const err = FETCH_myVocabs_ERRORS;
 
-function THROW_err(type: internalErrMsg_TYPES): FETCH_myVocabs_ERROR_PROPS {
+function THROW_err(type: internalErrMsg_TYPES): Error_PROPS {
   return {
     error_TYPE: "internal",
     internal_MSG: err.internal[type],
@@ -46,8 +46,8 @@ export async function FETCH_myVocabs(
       GET_fetchMyVocabConditions(args);
 
     // fetch total result count before pagination
-    // -- this must be here, because we want to fetch the total count of filtered results,
-    // not just the total vocab count in this list
+    // -- This must be here, because we want to fetch the total count of filtered results,
+    // -- not just the total vocab count in this list
     const unpaginated_COUNT =
       (await query.extend(filter_CONDITIONS.withoutExcluded).fetchCount()) || 0;
 

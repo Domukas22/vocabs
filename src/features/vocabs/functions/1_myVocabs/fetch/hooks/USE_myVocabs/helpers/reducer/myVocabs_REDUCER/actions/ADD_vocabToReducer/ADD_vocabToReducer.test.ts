@@ -1,141 +1,116 @@
-//
-//
-//
-
-import { renderHook } from "@testing-library/react-native";
-
-import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
-import { myVocabsReducerState_PROPS } from "../../types";
 import { ADD_vocabToReducer } from "./ADD_vocabToReducer";
+import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
+import { myVocabs_REDUCER_RESPONSE_TYPE } from "../../types";
+import { CREATE_err_TYPE } from "../../myVocabs_REDUCER";
 
 describe("ADD_vocabToReducer", () => {
-  const initialState: myVocabsReducerState_PROPS = {
+  const mockCreateError = jest.fn((code, func) => ({
+    user_MSG: `${func}: ${code}`,
+  })) as unknown as CREATE_err_TYPE;
+
+  const initialState: myVocabs_REDUCER_RESPONSE_TYPE = {
     data: {
       vocabs: [],
       printed_IDS: new Set(),
       unpaginated_COUNT: 0,
+      HAS_reachedEnd: false,
     },
-    error: { value: false, msg: "" },
+    error: undefined,
     loading_STATE: "none",
   };
 
-  const validPayload = {
-    id: "vocab1",
-  } as Vocab_MODEL;
+  const mockVocab: Vocab_MODEL = {
+    id: "1",
+    word: "example",
+  } as unknown as Vocab_MODEL;
 
-  test("1. Adds a vocab entry to an empty state", () => {
-    const { result } = renderHook(() =>
-      ADD_vocabToReducer(initialState, validPayload)
+  test("1. Adds a vocab successfully", () => {
+    const newState = ADD_vocabToReducer(
+      initialState,
+      mockVocab,
+      mockCreateError
     );
 
-    expect(result.current.data.vocabs).toHaveLength(1);
-    expect(result.current.data.vocabs[0]).toEqual(validPayload);
-    expect(result.current.data.printed_IDS.has(validPayload.id)).toBe(true);
-    expect(result.current.data.unpaginated_COUNT).toBe(1);
+    expect(newState?.data?.vocabs.length).toBe(1);
+    expect(newState?.data?.vocabs[0]).toEqual(mockVocab);
+    expect(newState?.data?.unpaginated_COUNT).toBe(1);
+    expect(newState?.data?.HAS_reachedEnd).toBe(true);
+    expect(newState.error).toBeUndefined();
   });
 
-  test("2. Adds a vocab entry to a populated state", () => {
-    const populatedState = {
+  test("2. Prevents duplicate vocab entries", () => {
+    const prevState = {
       ...initialState,
       data: {
-        vocabs: [validPayload],
-        printed_IDS: new Set([validPayload.id]),
+        ...initialState.data,
+        vocabs: [mockVocab], // Existing vocab
+        printed_IDS: new Set(["1"]), // Existing ID
         unpaginated_COUNT: 1,
       },
-    };
+    } as myVocabs_REDUCER_RESPONSE_TYPE;
 
-    const newPayload = {
-      id: "vocab2",
-    } as Vocab_MODEL;
+    const newState = ADD_vocabToReducer(prevState, mockVocab, mockCreateError);
 
-    const { result } = renderHook(() =>
-      ADD_vocabToReducer(populatedState, newPayload)
-    );
+    // Ensure the vocab count remains the same (no duplicate added)
+    expect(newState?.data?.vocabs.length).toBe(1); // Should still be 1
+    expect(newState?.data?.unpaginated_COUNT).toBe(1); // Count shouldn't increase
+    expect(newState?.data?.printed_IDS.has("1")).toBe(true); // ID should still be there
 
-    expect(result.current.data.vocabs).toHaveLength(2);
-    expect(result.current.data.vocabs[0]).toEqual(newPayload);
-    expect(result.current.data.vocabs[1]).toEqual(validPayload);
-    expect(result.current.data.printed_IDS.has(newPayload.id)).toBe(true);
-    expect(result.current.data.unpaginated_COUNT).toBe(2);
+    // Ensure the state has not changed (reference check)
+    expect(newState).toEqual(prevState);
   });
 
-  test("3. Does not break when duplicate vocab entry is added", () => {
-    const populatedState = {
-      ...initialState,
-      data: {
-        vocabs: [validPayload],
-        printed_IDS: new Set([validPayload.id]),
-        unpaginated_COUNT: 1,
-      },
-    };
+  test("3. Returns error when state vocabs array is undefined", () => {
+    const brokenState = { ...initialState, data: undefined };
 
-    const { result } = renderHook(() =>
-      ADD_vocabToReducer(populatedState, validPayload)
+    const newState = ADD_vocabToReducer(
+      brokenState,
+      mockVocab,
+      mockCreateError
     );
 
-    expect(result.current.data.vocabs).toHaveLength(2); // Added again but considered valid
-    expect(result.current.data.printed_IDS.size).toBe(1); // Printed IDS doesn't duplicate
-    expect(result.current.data.unpaginated_COUNT).toBe(2);
-  });
-
-  test("4. Handles undefined payload gracefully", () => {
-    const { result } = renderHook(() =>
-      ADD_vocabToReducer(initialState, undefined as unknown as Vocab_MODEL)
-    );
-
-    expect(result.current).toEqual(initialState); // Should return initial state
-  });
-
-  test("5. Handles incomplete payload", () => {
-    const incompletePayload = {
-      word: "missing-id",
-      definition: "example definition",
-    } as unknown as Vocab_MODEL;
-
-    const { result } = renderHook(() =>
-      ADD_vocabToReducer(initialState, incompletePayload)
-    );
-
-    expect(result.current.data.vocabs).toHaveLength(0);
-    expect(result.current.data.unpaginated_COUNT).toBe(0);
-  });
-
-  test("6. Preserves state immutability", () => {
-    const { result } = renderHook(() =>
-      ADD_vocabToReducer(initialState, validPayload)
-    );
-
-    expect(result.current).not.toBe(initialState);
-    expect(result.current.data).not.toBe(initialState.data);
-    expect(result.current.data.vocabs).not.toBe(initialState.data.vocabs);
-    expect(result.current.data.printed_IDS).not.toBe(
-      initialState.data.printed_IDS
-    );
-  });
-
-  test("7. Handles large payload", () => {
-    const largePayload = Array.from({ length: 1000 }, (_, i) => ({
-      id: `vocab-${i}`,
-    })) as Vocab_MODEL[];
-
-    let updatedState = initialState;
-    largePayload.forEach((payload) => {
-      updatedState = ADD_vocabToReducer(updatedState, payload);
-    });
-
-    expect(updatedState.data.vocabs).toHaveLength(1000);
-    expect(updatedState.data.unpaginated_COUNT).toBe(1000);
-    expect(updatedState.data.printed_IDS.size).toBe(1000);
-  });
-
-  test("8. Handles null initial state gracefully", () => {
-    const { result } = renderHook(() =>
-      ADD_vocabToReducer(
-        null as unknown as myVocabsReducerState_PROPS,
-        validPayload
+    expect(newState.error).toEqual(
+      mockCreateError(
+        "current_state_vocabs_array_undefined",
+        "ADD_vocabToReducer"
       )
     );
+    expect(newState.loading_STATE).toBe("error");
+  });
 
-    expect(result.current).toBeNull(); // Should not throw but return null
+  test("4. Returns error when state unpaginated count is not a number", () => {
+    const brokenState = {
+      ...initialState,
+      data: { ...initialState.data, unpaginated_COUNT: "not_a_number" as any },
+    } as myVocabs_REDUCER_RESPONSE_TYPE;
+
+    const newState = ADD_vocabToReducer(
+      brokenState,
+      mockVocab,
+      mockCreateError
+    );
+
+    expect(newState.error).toEqual(
+      mockCreateError(
+        "current_state_unpaginated_count_is_not_number",
+        "ADD_vocabToReducer"
+      )
+    );
+    expect(newState.loading_STATE).toBe("error");
+  });
+
+  test("5. Returns error when payload vocab id is undefined", () => {
+    const brokenVocab = { word: "example" } as unknown as Vocab_MODEL;
+
+    const newState = ADD_vocabToReducer(
+      initialState,
+      brokenVocab,
+      mockCreateError
+    );
+
+    expect(newState.error).toEqual(
+      mockCreateError("payload_vocab_id_undefined", "ADD_vocabToReducer")
+    );
+    expect(newState.loading_STATE).toBe("error");
   });
 });

@@ -47,13 +47,6 @@ export default function Flashlist_LABEL({
           </>
         );
       }
-      // if (!search && !appliedFiltersCount) {
-      //   return (
-      //     <>
-      //       <ActivityIndicator color="gray" /> Loading {target}...
-      //     </>
-      //   );
-      // }
     }
 
     switch (loading_STATE) {

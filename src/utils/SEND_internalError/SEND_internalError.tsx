@@ -12,11 +12,10 @@ const GET_readableDateNow = () =>
 export async function SEND_internalError(error: Error_PROPS) {
   if (error.error_TYPE !== "internal" && error.error_TYPE !== "unknown") return;
 
-  console.warn("------------------------------------------------");
-  console.error("🔴 " + error.internal_MSG + " 🔴");
-  console.warn("function: ", error.function_NAME);
+  console.log("------------------------------------------------");
+  console.error(`🔴 ${error.function_NAME} => ${error.internal_MSG}`);
   if (error.error_DETAILS) {
-    console.warn("defailts: ", error.error_DETAILS);
+    console.log("details: ", error.error_DETAILS);
   }
 
   // Integrate Sentry here for logging
@@ -25,14 +24,20 @@ export async function SEND_internalError(error: Error_PROPS) {
   const err = await db.write(async () => {
     return await Errors_DB.create((waterMelon_ERR: Error_MODEL) => {
       waterMelon_ERR.message = `${GET_readableDateNow()}: ${
-        error.internal_MSG
+        error?.internal_MSG
+          ? error.internal_MSG
+          : "The erorr didn't have an internal_MSG"
       }`;
-      waterMelon_ERR.function = error.function_NAME;
-      waterMelon_ERR.details = JSON.stringify(error.error_DETAILS);
+      waterMelon_ERR.function = error?.function_NAME
+        ? error.function_NAME
+        : "The error didn't have a function_NAME";
+      waterMelon_ERR.details = error?.error_DETAILS
+        ? JSON.stringify(error.error_DETAILS)
+        : "No details provided";
     });
   });
 
-  if (err) console.warm("🟢 Error created 🟢");
-  else console.error("🔴  Error creation failed 🔴 ");
-  console.warm("------------------------------------------------");
+  if (err) console.log("🟢 Error created 🟢");
+  else console.error("🔴 Error creation failed 🔴 ");
+  console.log("------------------------------------------------");
 }

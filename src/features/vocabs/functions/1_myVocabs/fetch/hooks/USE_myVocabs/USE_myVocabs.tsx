@@ -9,38 +9,48 @@ import USE_loadMoreVocabs from "./helpers/fetch/USE_loadMoreVocabs/USE_loadMoreV
 import USE_myVocabsReducer from "./helpers/reducer/USE_myVocabsReducer/USE_myVocabsReducer";
 
 export function USE_myVocabs({
-  type,
+  vocabFetch_TYPE,
   search,
   targetList_ID,
 }: {
-  type: USE_vocabs_FETCH_TYPES;
+  vocabFetch_TYPE: USE_vocabs_FETCH_TYPES;
   search: string;
   targetList_ID?: string | undefined;
 }) {
+  // -----------------------------------------------------
+  // the main part of the hook
+  // tracks errors for teh FETCH function below as well
   const {
-    state,
-    ADD_toDisplayed,
-    REMOVE_fromDisplayed,
+    reducer_STATE,
+    PREPEND_vocabToReducer,
+    REMOVE_vocabFromReducer,
     RESET_reducerState,
-    UPDATE_state,
-    SET_loadingState,
-    SET_error,
+    APPEND_vocabsToPagination,
+    SET_reducerLoadingState,
+    SET_reducerError,
   } = USE_myVocabsReducer();
 
+  // -----------------------------------------------------
+  // -----------------------------------------------------
+
+  // fetches vocabs and insters them into the reducer state
   const { FETCH } = USE_fetchVocabsHelper({
-    type,
-    state,
+    type: vocabFetch_TYPE,
+    reducer_STATE,
     search,
     targetList_ID,
-    SET_error,
-    UPDATE_state,
-    SET_loadingState,
+    SET_reducerError,
+    APPEND_vocabsToPagination,
+    SET_reducerLoadingState,
   });
 
-  // insert SET_error here
-  const { LOAD_moreVocabs } = USE_loadMoreVocabs({ state, FETCH });
+  // adds paginated vocabs to the reducer state
+  const { LOAD_moreVocabs } = USE_loadMoreVocabs({
+    reducer_STATE,
+    FETCH,
+  });
 
-  // insert SET_error here
+  // refetches vocabs on changes: search / filters / sorting / targetList_ID
   USE_refetchVocabs({
     search,
     targetList_ID,
@@ -49,13 +59,13 @@ export function USE_myVocabs({
   });
 
   return {
-    vocabs: state?.data?.vocabs,
-    fetchVocabs_ERROR: state?.error,
-    loading_STATE: state?.loading_STATE,
-    unpaginated_COUNT: state?.data?.unpaginated_COUNT,
-    HAS_reachedEnd: state?.data?.HAS_reachedEnd,
+    vocabs: reducer_STATE?.data?.vocabs,
+    vocabs_ERROR: reducer_STATE?.error,
+    loading_STATE: reducer_STATE?.loading_STATE,
+    unpaginated_COUNT: reducer_STATE?.data?.unpaginated_COUNT,
+    HAS_reachedEnd: reducer_STATE?.data?.HAS_reachedEnd,
     LOAD_moreVocabs,
-    ADD_toDisplayed,
-    REMOVE_fromDisplayed,
+    ADD_vocabToReducer: PREPEND_vocabToReducer,
+    REMOVE_vocabFromReducer,
   };
 }

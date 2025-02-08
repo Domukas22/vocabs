@@ -2,48 +2,51 @@
 //
 //
 
-import { VOCAB_PAGINATION } from "@/src/constants/globalVars";
+import {
+  CREATE_internalErrorMsg,
+  VOCAB_PAGINATION,
+} from "@/src/constants/globalVars";
 import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 import { USE_zustand, USE_abortController } from "@/src/hooks";
 import { loadingState_TYPES } from "@/src/types";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { FETCH_myVocabs } from "../../../../../FETCH_myVocabs/FETCH_myVocabs";
 import { USE_vocabs_FETCH_TYPES } from "../../../../../FETCH_myVocabs/types";
-import { myVocabsReducerState_PROPS } from "../../reducer/myVocabs_REDUCER/myVocabs_REDUCER";
+import { myVocabs_REDUCER_RESPONSE_TYPE } from "../../reducer/myVocabs_REDUCER/types";
+import { Error_PROPS } from "@/src/props";
+import { HANDLE_userErrorInsideFinalCatchBlock } from "@/src/utils";
+
+const function_NAME = "USE_fetchVocabsHelper";
 
 export default function USE_fetchVocabsHelper({
   type,
   search,
   targetList_ID,
-  state,
-  UPDATE_state,
-  SET_loadingState,
-  SET_error,
+  reducer_STATE,
+  APPEND_vocabsToPagination,
+  SET_reducerLoadingState,
+  SET_reducerError,
 }: {
   type: USE_vocabs_FETCH_TYPES;
   search: string;
   targetList_ID?: string | undefined;
-  state: myVocabsReducerState_PROPS;
-  UPDATE_state: (data: {
+  reducer_STATE: myVocabs_REDUCER_RESPONSE_TYPE;
+  APPEND_vocabsToPagination: (data: {
     vocabs: Vocab_MODEL[];
     unpaginated_COUNT: number;
   }) => void;
-  SET_error: (err: { value: boolean; msg: string }) => void;
-  SET_loadingState: (fetch_TYPE: loadingState_TYPES) => void;
+  SET_reducerError: (err?: Error_PROPS) => void;
+  SET_reducerLoadingState: (fetch_TYPE: loadingState_TYPES) => void;
 }) {
   const { z_user, z_vocabDisplay_SETTINGS } = USE_zustand();
   const { startNewRequest } = USE_abortController();
-
-  const [count, setCount] = useState(0);
 
   const FETCH = useCallback(
     async (fetch_TYPE: loadingState_TYPES) => {
       const abortController = startNewRequest();
       try {
-        SET_loadingState(fetch_TYPE);
-        SET_error({ value: false, msg: "" });
-
-        setCount(0);
+        SET_reducerLoadingState(fetch_TYPE);
+        SET_reducerError(undefined);
 
         const { data, error } = await FETCH_myVocabs({
           type,
@@ -51,7 +54,9 @@ export default function USE_fetchVocabsHelper({
           amount: VOCAB_PAGINATION || 20,
           user_id: z_user?.id || "",
           excludeIds:
-            fetch_TYPE === "loading_more" ? state.data?.printed_IDS : new Set(),
+            fetch_TYPE === "loading_more"
+              ? reducer_STATE.data?.printed_IDS
+              : new Set(),
           targetList_ID,
           z_vocabDisplay_SETTINGS,
         });
@@ -63,19 +68,22 @@ export default function USE_fetchVocabsHelper({
         }
 
         if (data) {
-          UPDATE_state(data);
+          APPEND_vocabsToPagination(data);
         }
-      } catch {
+        SET_reducerLoadingState("none");
+      } catch (error: any) {
         if (!abortController.signal.aborted) {
-          SET_error({
-            value: true,
-            msg: `Some kind of error occurred while loading the vocabs. This error has been recorded and will be reviewed by developers shortly. If the problem persists, please try to re-load the app or contact support. We apologize for the troubles.`,
+          const _err = HANDLE_userErrorInsideFinalCatchBlock({
+            error,
+            function_NAME: error?.function_NAME
+              ? error.function_NAME
+              : function_NAME,
+            internalErrorUser_MSG: error?.internal_MSG
+              ? error.internal_MSG
+              : CREATE_internalErrorMsg("trying to fetch your vocabs"),
           });
-          SET_loadingState("error");
-        }
-      } finally {
-        if (!abortController.signal.aborted) {
-          SET_loadingState("none");
+          SET_reducerError(_err);
+          SET_reducerLoadingState("error");
         }
       }
     },
@@ -87,7 +95,7 @@ export default function USE_fetchVocabsHelper({
       z_vocabDisplay_SETTINGS.sorting,
       z_user?.id,
       targetList_ID,
-      state.data?.printed_IDS,
+      reducer_STATE.data?.printed_IDS,
     ]
   );
 

@@ -15,7 +15,7 @@ export function USE_supabaseVocabsOfAList({
   paginateBy?: number;
 }) {
   const [ARE_vocabsFetching, SET_vocabsFetching] = useState(false);
-  const [fetchVocabs_ERROR, SET_error] = useState<string | null>(null);
+  const [vocabs_ERROR, SET_error] = useState<string | null>(null);
   const [vocabs, SET_vocabs] = useState<any[]>([]);
   const [start, SET_start] = useState(0);
   const [end, SET_end] = useState(paginateBy);
@@ -106,7 +106,7 @@ export function USE_supabaseVocabsOfAList({
   return {
     vocabs,
     ARE_vocabsFetching,
-    fetchVocabs_ERROR,
+    vocabs_ERROR,
     LOAD_more,
     IS_loadingMore,
     HAS_reachedEnd,

@@ -104,7 +104,7 @@ export default function PublicListVocabs_PAGE() {
   const {
     IS_searching,
     data: vocabs,
-    error: fetchVocabs_ERROR,
+    error: vocabs_ERROR,
     IS_loadingMore,
     HAS_reachedEnd,
     unpaginated_COUNT: totalFilteredVocab_COUNT,
@@ -130,7 +130,7 @@ export default function PublicListVocabs_PAGE() {
 
       <ExploreVocabs_FLATLIST
         {...{ vocabs, IS_searching }}
-        error={fetchVocabs_ERROR}
+        error={vocabs_ERROR}
         SAVE_vocab={(vocab: Vocab_MODEL) => {
           SET_targetVocab(vocab);
           modals.saveList.set(false);

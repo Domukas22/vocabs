@@ -18,6 +18,7 @@ import List_MODEL from "@/src/db/models/List_MODEL";
 import { MyColors } from "@/src/constants/MyColors";
 import { USE_vocabs_FETCH_TYPES } from "@/src/features/vocabs/functions/1_myVocabs/fetch/FETCH_myVocabs/types";
 import { loadingState_TYPES } from "@/src/types";
+import { Error_PROPS } from "@/src/props";
 
 export function MyVocabs_FLATLIST({
   PREPARE_vocabDelete,
@@ -35,7 +36,7 @@ export function MyVocabs_FLATLIST({
   fetch_TYPE = "allVocabs",
   list_NAME = "",
   vocabs,
-  fetchVocabs_ERROR,
+  vocabs_ERROR,
   HAS_reachedEnd,
   loading_STATE,
   unpaginated_COUNT,
@@ -44,7 +45,10 @@ export function MyVocabs_FLATLIST({
   PREPARE_vocabDelete: (vocab: Vocab_MODEL) => void;
   onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
   SELECT_forRevival?: (vocab: Vocab_MODEL) => void;
-  HANDLE_updateModal?: (vocab: Vocab_MODEL) => void;
+  HANDLE_updateModal?: (params: {
+    clear?: boolean;
+    vocab?: Vocab_MODEL;
+  }) => void;
   highlightedVocab_ID: string | undefined;
   _ref?: React.RefObject<FlashList<any>>;
   search: string;
@@ -56,13 +60,17 @@ export function MyVocabs_FLATLIST({
   fetch_TYPE: USE_vocabs_FETCH_TYPES;
   list_NAME: string | undefined;
 
-  vocabs: Vocab_MODEL[];
-  fetchVocabs_ERROR: any;
+  vocabs: Vocab_MODEL[] | undefined;
+  vocabs_ERROR: Error_PROPS | undefined;
   HAS_reachedEnd: boolean;
   loading_STATE: loadingState_TYPES;
   unpaginated_COUNT: number;
 }) {
   const Footer = () => {
+    if (vocabs_ERROR) {
+      return <Error_BLOCK paragraph={vocabs_ERROR?.user_MSG} />;
+    }
+
     if (
       IS_debouncing ||
       (loading_STATE !== "none" && loading_STATE !== "loading_more")
@@ -111,11 +119,11 @@ export function MyVocabs_FLATLIST({
       <Deleted_VOCAB vocab={vocab} {...{ SELECT_forRevival }} />
     );
 
-  if (fetchVocabs_ERROR?.value)
+  if (vocabs_ERROR?.value)
     return (
       <View style={{ padding: 12, backgroundColor: MyColors.fill_bg, flex: 1 }}>
         <Error_BLOCK
-          paragraph={fetchVocabs_ERROR?.msg}
+          paragraph={vocabs_ERROR?.msg}
           title="Something went wrong..."
         />
       </View>

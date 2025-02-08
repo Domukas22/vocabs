@@ -69,13 +69,13 @@ export default function AllVocabs_PAGE() {
 
   const {
     vocabs,
-    fetchVocabs_ERROR,
+    vocabs_ERROR: vocabs_ERROR,
     HAS_reachedEnd,
     loading_STATE,
     unpaginated_COUNT,
     LOAD_moreVocabs,
-    ADD_toDisplayed,
-    REMOVE_fromDisplayed,
+    ADD_vocabToReducer,
+    REMOVE_vocabFromReducer,
   } = USE_myVocabs({
     type: "allVocabs",
     search: debouncedSearch,
@@ -111,7 +111,7 @@ export default function AllVocabs_PAGE() {
           modals.deleteVocab.set(true);
         }}
         RESET_search={() => SET_search("")}
-        fetchVocabs_ERROR={fetchVocabs_ERROR}
+        vocabs_ERROR={vocabs_ERROR}
         HAS_reachedEnd={HAS_reachedEnd}
         loading_STATE={loading_STATE}
         unpaginated_COUNT={unpaginated_COUNT}
@@ -125,7 +125,7 @@ export default function AllVocabs_PAGE() {
           onSuccess={(new_VOCAB: Vocab_MODEL) => {
             modals.createVocab.set(false);
             HIGHLIGHT_vocab(new_VOCAB.id);
-            ADD_toDisplayed(new_VOCAB);
+            ADD_vocabToReducer(new_VOCAB);
             toast.show(t("notifications.vocabCreated"), {
               type: "success",
               duration: 3000,
@@ -161,7 +161,7 @@ export default function AllVocabs_PAGE() {
               type: "success",
               duration: 5000,
             });
-            REMOVE_fromDisplayed(targetDelete_VOCAB?.id || "");
+            REMOVE_vocabFromReducer(targetDelete_VOCAB?.id || "");
             modals.deleteVocab.set(false);
           }}
         />
