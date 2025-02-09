@@ -2,7 +2,6 @@
 //
 //
 
-import Page_WRAP from "@/src/components/1_grouped/Page_WRAP/Page_WRAP";
 import Header from "@/src/components/1_grouped/headers/regular/Header";
 import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import Block from "@/src/components/1_grouped/blocks/Block/Block";
@@ -34,24 +33,18 @@ import * as SecureStore from "expo-secure-store";
 import { USE_zustand } from "@/src/hooks";
 import CurrentVocabCount_BAR from "@/src/components/2_byPage/general/CurrentVocabCount_BAR";
 import { useToast } from "react-native-toast-notifications";
-import { NAVIGATE_user } from "@/src/utils";
-import { USE_navigateUser } from "@/src/utils/NAVIGATE_user/NAVIGATE_user";
+import { USE_navigateUser } from "@/src/features/users/functions/general/hooks/USE_navigateUser/USE_navigateUser";
 import { USE_modalToggles } from "@/src/hooks/index";
 
 export default function General_PAGE() {
   const { t } = useTranslation();
   const { z_user, z_SET_user } = USE_zustand();
   const { sync } = USE_sync();
-  const { navigate } = USE_navigateUser({
-    navigateToWelcomeSreenOnError: true,
-  });
+  const { navigate } = USE_navigateUser();
+  const { logout } = USE_auth();
 
   const { notification_COUNT, totalUserVocab_COUNT } =
     USE_userObservables(z_user);
-
-  // const { SET_auth } = USE_auth();
-
-  const { logout } = USE_auth();
 
   const _logout = async () => {
     if (z_user) {
@@ -63,13 +56,6 @@ export default function General_PAGE() {
     }
 
     await SecureStore.setItemAsync("user_id", "");
-    // await NAVIGATE_user({
-    //   navigateToWelcomeSreenOnError: true,
-    //   z_SET_user,
-    //   SET_error,
-    //   router,
-    //   sync,
-    // });
     await navigate();
   };
 

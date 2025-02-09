@@ -11,7 +11,7 @@ import StyledText_INPUT from "../components/1_grouped/inputs/StyledText_INPUT/St
 import { useEffect, useState } from "react";
 import Label from "../components/1_grouped/texts/labels/Label/Label";
 import Btn from "../components/1_grouped/buttons/Btn/Btn";
-import { Link, useRouter } from "expo-router";
+import { Link } from "expo-router";
 import { supabase } from "../lib/supabase";
 import { Image } from "react-native";
 import { useTranslation } from "react-i18next";
@@ -23,13 +23,11 @@ import LoginRegister_SWITCH from "../components/2_byPage/authentication/LoginReg
 import { USE_auth } from "../context/Auth_CONTEXT";
 import * as SecureStore from "expo-secure-store";
 import { Users_DB } from "../db";
-import { USE_zustand } from "@/src/hooks";
 
 import { View } from "react-native";
 import Confirmation_MODAL from "../components/1_grouped/modals/Small_MODAL/Variations/Confirmation_MODAL/Confirmation_MODAL";
-import { USE_sync } from "../hooks/USE_sync/USE_sync";
 import { useToast } from "react-native-toast-notifications";
-import { USE_navigateUser } from "../utils/NAVIGATE_user/NAVIGATE_user";
+import { USE_navigateUser } from "../features/users/functions/general/hooks/USE_navigateUser/USE_navigateUser";
 import { USE_modalToggles } from "@/src/hooks/index";
 type LoginData_PROPS = {
   email: string;
@@ -40,18 +38,12 @@ export default function Login_PAGE() {
   const [loading, SET_loading] = useState(false);
   const [internal_ERROR, SET_internalError] = useState("");
   const { t } = useTranslation();
-  const router = useRouter(); // Initialize router
   const { login, logout } = USE_auth();
-  const { z_SET_user } = USE_zustand();
   const toast = useToast();
-  const { sync } = USE_sync();
-
   const { modals } = USE_modalToggles(["recoverDeletedAccount"]);
-
-  const { navigate } = USE_navigateUser({
-    navigateToWelcomeSreenOnError: false,
-    SHOW_recoveryModal: () => modals.recoverDeletedAccount.set(true),
-  });
+  const { navigate } = USE_navigateUser(() =>
+    modals.recoverDeletedAccount.set(true)
+  );
 
   const [error, SET_error] = useState({
     value: false,
@@ -83,35 +75,7 @@ export default function Login_PAGE() {
       duration: 10000,
     });
 
-    const { navigate } = USE_navigateUser({
-      navigateToWelcomeSreenOnError: false,
-      SHOW_recoveryModal: () => modals.recoverDeletedAccount.set(true),
-    });
-
     await navigate();
-    await navigate();
-    // await NAVIGATE_user({
-    //   navigateToWelcomeSreenOnError: false,
-    //   z_SET_user,
-    //   SET_error,
-    //   router,
-    //   SHOW_recoveryModal: () => TOGGLE_modal("recoverDeletedAccount"),
-    //   sync,
-    // });
-
-    // const { watermelon_USER, supabase_USER } =
-    //   await GET_watermelonAndSupabaseUser(targetUser_ID);
-
-    // if (watermelon_USER) {
-    //   z_SET_user(watermelon_USER);
-    //   await HANDLE_initialRouting({
-    //     watermelon_USER,
-    //     supabase_USER,
-    //     NAVIGATE_toVocabs,
-    //     NAVIGATE_toWelcomeScreen,
-    //   });
-    //   router.push("/(main)/vocabs");
-    // }
   };
 
   const _login = async (data: LoginData_PROPS) => {
@@ -132,14 +96,6 @@ export default function Login_PAGE() {
       SET_targetUserId(userData.id);
       await SecureStore.setItemAsync("user_id", userData?.id);
       await navigate();
-      // await NAVIGATE_user({
-      //   navigateToWelcomeSreenOnError: true,
-      //   z_SET_user,
-      //   SET_error,
-      //   router,
-      //   SHOW_recoveryModal: () => TOGGLE_modal("recoverDeletedAccount"),
-      //   sync,
-      // });
     }
   };
 

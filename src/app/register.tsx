@@ -9,7 +9,6 @@ import {
   Platform,
   ScrollView,
 } from "react-native";
-import Page_WRAP from "../components/1_grouped/Page_WRAP/Page_WRAP";
 import Block from "../components/1_grouped/blocks/Block/Block";
 import StyledText_INPUT from "../components/1_grouped/inputs/StyledText_INPUT/StyledText_INPUT";
 import { useState } from "react";
@@ -29,9 +28,9 @@ import { USE_auth } from "../context/Auth_CONTEXT";
 
 import { USE_zustand } from "@/src/hooks";
 
-import { NAVIGATE_user } from "../utils";
 import { USE_sync } from "../hooks/USE_sync/USE_sync";
-import { USE_navigateUser } from "../utils/NAVIGATE_user/NAVIGATE_user";
+import { USE_navigateUser } from "../features/users/functions/general/hooks/USE_navigateUser/USE_navigateUser";
+import { View } from "react-native";
 
 type RegisterData_PROPS = {
   username: string;
@@ -44,17 +43,7 @@ export default function Register_PAGE() {
   const [loading, SET_loading] = useState(false);
   const [internal_ERROR, SET_internalError] = useState("");
   const { t } = useTranslation();
-  const router = useRouter();
-  const { z_SET_user } = USE_zustand();
-  const { sync } = USE_sync();
-  const { navigate } = USE_navigateUser({
-    navigateToWelcomeSreenOnError: false,
-  });
-
-  const [error, SET_error] = useState({
-    value: false,
-    user_MSG: "",
-  });
+  const { navigate } = USE_navigateUser();
 
   const _register = async (data: RegisterData_PROPS) => {
     const { username, email, password } = data;
@@ -68,16 +57,8 @@ export default function Register_PAGE() {
       SET_internalError(error);
       console.error(error);
     } else if (!error && userData && typeof userData?.user?.id === "string") {
-      // account on supabase has been created, now insert user_id into local storage
       await SecureStore.setItemAsync("user_id", userData?.user?.id);
       await navigate();
-      // await NAVIGATE_user({
-      //   navigateToWelcomeSreenOnError: false,
-      //   z_SET_user,
-      //   SET_error,
-      //   router,
-      //   sync,
-      // });
     }
   };
 
@@ -95,7 +76,7 @@ export default function Register_PAGE() {
   const onSubmit = (data: RegisterData_PROPS) => _register(data);
   // const onSubmit = (data: RegisterData_PROPS) => {};
   return (
-    <>
+    <View>
       <KeyboardAvoidingView
         style={{ flex: 1, marginBottom: 20 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -215,9 +196,9 @@ export default function Register_PAGE() {
           {internal_ERROR && (
             <Notification_BLOCK text={internal_ERROR} type="error" />
           )}
-          {error.value && (
+          {/* {error.value && (
             <Notification_BLOCK text={error.user_MSG} type="error" />
-          )}
+          )} */}
           <Block styles={{ marginTop: 8, marginBottom: 100 }}>
             <Btn
               text={!loading ? "Create account" : ""}
@@ -229,6 +210,6 @@ export default function Register_PAGE() {
         </ScrollView>
       </KeyboardAvoidingView>
       <LoginRegister_SWITCH page="register" />
-    </>
+    </View>
   );
 }

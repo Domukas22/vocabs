@@ -22,7 +22,7 @@ export default function Welcome_PAGE() {
   }, []);
 
   return (
-    <>
+    <View>
       <View
         style={{
           alignItems: "center",
@@ -49,6 +49,6 @@ export default function Welcome_PAGE() {
         />
         <Btn text="Log in" onPress={() => router.push("/login")} />
       </View>
-    </>
+    </View>
   );
 }

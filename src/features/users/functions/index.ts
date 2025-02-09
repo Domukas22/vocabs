@@ -16,3 +16,7 @@ export { REFRESH_zustandUser } from "./refresh/REFRESH_zustandUser/REFRESH_zusta
 
 // update hooks
 export { USE_editUsername } from "./update/hooks/USE_editUsername/USE_editUsername";
+
+// general
+export { USE_clearUserContext } from "./general/hooks/USE_clearUserContext/USE_clearUserContext";
+export { USE_navigateUser } from "./general/hooks/USE_navigateUser/USE_navigateUser";

@@ -1,32 +1,38 @@
 import User_MODEL from "@/src/db/models/User_MODEL";
 import { supabase } from "@/src/lib/supabase";
+import { Error_PROPS } from "@/src/props";
 import { SEND_internalError } from "@/src/utils";
 
 interface Response {
-  success: boolean;
-  msg?: string;
   supabase_USER?: User_MODEL;
-  error_REASON?: "user_internet" | "internal";
+  error?: Error_PROPS;
 }
 
-const defaultError_MSG =
+const defaultUserError_MSG =
   "Something went wrong when trying to load your profile. Please reload the app and try again. This problem has been recorded and will be reviewed by developers as soon as possible. If the problem persists, please contact support. We apologize for the inconvenience.";
+
+const function_NAME = "FETCH_mySupabaseProfile";
+
+function _CREATE_internalErr(
+  internal_MSG = "Something went wrong..."
+): Error_PROPS {
+  return {
+    error_TYPE: "internal",
+    function_NAME,
+    internal_MSG,
+    user_MSG: defaultUserError_MSG,
+  };
+}
 
 export async function FETCH_mySupabaseProfile(
   userId: string | undefined
 ): Promise<Response> {
   try {
     if (!userId) {
-      SEND_internalError({
-        internal_MSG: "🔴 User ID not defined when fetching from Supabase 🔴",
-        function_NAME: "FETCH_mySupabaseProfile",
-        user_id: "",
-      });
-
       return {
-        success: false,
-        msg: defaultError_MSG,
-        error_REASON: "internal",
+        error: _CREATE_internalErr(
+          "User ID not defined when fetching from Supabase"
+        ),
       };
     }
     const { data: user, error } = await supabase
@@ -58,7 +64,7 @@ export async function FETCH_mySupabaseProfile(
       });
       return {
         success: false,
-        msg: defaultError_MSG,
+        msg: defaultUserError_MSG,
         error_REASON: "internal",
       };
     }
@@ -88,7 +94,7 @@ export async function FETCH_mySupabaseProfile(
     });
     return {
       success: false,
-      msg: defaultError_MSG,
+      msg: defaultUserError_MSG,
       error_REASON: "internal",
     };
   }

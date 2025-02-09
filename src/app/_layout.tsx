@@ -5,15 +5,13 @@
 import { useFonts } from "expo-font";
 import { Slot } from "expo-router";
 import React, { useEffect } from "react";
-import { ToastProvider } from "react-native-toast-notifications";
 
 import "@/src/i18n";
-import Notification_BLOCK from "../components/1_grouped/blocks/Notification_BLOCK/Notification_BLOCK";
 import { Auth_PROVIDER } from "../context/Auth_CONTEXT";
 
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { PortalProvider } from "@gorhom/portal";
-import { USE_navigateUser } from "../utils/NAVIGATE_user/NAVIGATE_user";
+import { USE_navigateUser } from "../features/users/functions/general/hooks/USE_navigateUser/USE_navigateUser";
 import Toast_CONTEXT from "../context/Toast_CONTEXT";
 import Page_WRAP from "../components/1_grouped/Page_WRAP/Page_WRAP";
 import { USE_zustand } from "@/src/hooks";
@@ -34,16 +32,14 @@ export default function _layout() {
 
 function Content() {
   const [fontsLoaded] = useFonts(loadFonts());
-  const { navigate } = USE_navigateUser({
-    navigateToWelcomeSreenOnError: true,
-  });
+  const { navigate } = USE_navigateUser();
   const { z_user } = USE_zustand();
 
   // in case something happens to the zustand user obj, re-navigate
   useEffect(() => {
     if ((!z_user || !z_user?.id) && fontsLoaded) {
       (async () => {
-        await navigate();
+        await navigate(true);
       })();
     }
   }, [z_user]);
@@ -51,7 +47,7 @@ function Content() {
   useEffect(() => {
     const initializeApp = async () => {
       if (fontsLoaded) {
-        await navigate();
+        await navigate(true);
       }
     };
 
