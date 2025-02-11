@@ -10,8 +10,8 @@ import { useEffect } from "react";
 export function USE_refetchVocabs({
   search,
   targetList_ID,
-  RESET_reducerState,
-  FETCH,
+  RESET_reducerState = () => {},
+  FETCH = () => Promise.resolve(),
 }: {
   search: string;
   targetList_ID: string | undefined;

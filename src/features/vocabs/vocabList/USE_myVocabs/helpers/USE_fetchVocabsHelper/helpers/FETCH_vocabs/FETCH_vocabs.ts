@@ -10,9 +10,8 @@ import {
 } from "./types";
 
 import {
-  BUILD_vocabFilterQuery,
-  BUILD_vocabSortingQuery,
-  BUILD_vocabPaginationQuery,
+  FETCH_finalVocabs,
+  FETCH_unpaginatedVocabCount,
   VALIDATE_args,
 } from "./helpers";
 import { TRANSFORM_error } from "@/src/utils/TRANSFORM_error/TRANSFORM_error";
@@ -32,28 +31,22 @@ export async function FETCH_vocabs(
       .select(`*, list:lists (id,name)`, { count: "exact" });
 
     // ---------------------------------------------------
-    // Build the query for only fetching the count BEFORE applying excluded ids and fetch the result count
-    const filteredVocabCount_QUERY = BUILD_vocabFilterQuery(query, args);
-    const { error: count_ERR, count } =
-      await filteredVocabCount_QUERY.abortSignal(args?.signal);
-
-    if (count_ERR) throw count_ERR;
+    // Fetch the count BEFORE applying excluded
+    const { unpaginated_COUNT } = await FETCH_unpaginatedVocabCount(
+      query,
+      args
+    );
 
     // ---------------------------------------------------
-    // Build a fully fledged query and fetch the results
-    const filtered_QUERY = BUILD_vocabFilterQuery(query, args, true);
-    const sorted_QUERY = BUILD_vocabSortingQuery(filtered_QUERY, args);
-    const paginated_QUERY = BUILD_vocabPaginationQuery(sorted_QUERY, args);
-
-    const { data, error } = await paginated_QUERY.abortSignal(args?.signal);
-    if (error) throw error;
+    // Fetch final vocab results with excluded ids applied
+    const { vocabs } = await FETCH_finalVocabs(query, args);
 
     // ---------------------------------------------------
     // Return valid data if fetch was successful
     return {
       data: {
-        vocabs: data || [],
-        unpaginated_COUNT: count || 0,
+        vocabs,
+        unpaginated_COUNT,
       },
     };
     // ---------------------------------------------------

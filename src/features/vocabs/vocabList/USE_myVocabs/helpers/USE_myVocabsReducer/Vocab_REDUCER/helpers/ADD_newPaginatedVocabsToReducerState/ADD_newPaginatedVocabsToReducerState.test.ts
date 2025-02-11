@@ -6,13 +6,13 @@ import { renderHook, act } from "@testing-library/react-native";
 
 import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 import { myVocabs_REDUCER_RESPONSE_TYPE } from "../../types";
-import { CREATE_err_TYPE } from "../../Vocab_REDUCER";
+
 import { ADD_newPaginatedVocabsToReducerState } from "./ADD_newPaginatedVocabsToReducerState";
 
 describe("ADD_newPaginatedVocabsToReducerState", () => {
   const mockCreateError = jest.fn((code, func) => ({
     user_MSG: `${func}: ${code}`,
-  })) as unknown as CREATE_err_TYPE;
+  })) as unknown as CREATE_err_TYPe;
 
   const initialState: myVocabs_REDUCER_RESPONSE_TYPE = {
     data: {

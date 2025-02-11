@@ -3,8 +3,6 @@
 //
 
 import { FETCH_myVocabs_ARG_TYPES, VocabQuery_TYPE } from "../../types";
-import { z_vocabDisplaySettings_PROPS } from "@/src/hooks/USE_zustand/USE_zustand";
-import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
 
 export function BUILD_vocabFilterQuery(
   query: VocabQuery_TYPE,
@@ -21,6 +19,8 @@ export function BUILD_vocabFilterQuery(
     difficultyFilters = [],
     langFilters = [],
   } = args;
+
+  if (!query) throw new Error("'query' undefined when building vocab filters");
 
   // If fetching vocabs that belong to you
   if (list_TYPE === "private") {

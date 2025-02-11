@@ -1,17 +1,20 @@
-//
-//
-//
-
 import { renderHook, act } from "@testing-library/react-native";
-import {
-  myVocabsReducerInitial_STATE,
-  USE_myVocabsReducer,
-} from "./USE_myVocabsReducer";
-
+import { USE_myVocabsReducer } from "./USE_myVocabsReducer";
 import { SEND_internalError } from "@/src/utils";
 import { Error_PROPS } from "@/src/props";
-import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 import { myVocabs_REDUCER_RESPONSE_TYPE } from "./Vocab_REDUCER/types";
+import { Vocab_MODEL } from "@/src/features/vocabs/types";
+
+// Initial state for reducer
+const myVocabsReducerInitial_STATE: myVocabs_REDUCER_RESPONSE_TYPE = {
+  data: {
+    vocabs: [],
+    printed_IDS: new Set(),
+    unpaginated_COUNT: 0,
+    HAS_reachedEnd: false,
+  },
+  loading_STATE: "loading",
+};
 
 jest.mock("@/src/utils", () => ({
   SEND_internalError: jest.fn(),

@@ -8,6 +8,9 @@ export function BUILD_vocabPaginationQuery(
   query: VocabQuery_TYPE,
   args: FETCH_myVocabs_ARG_TYPES
 ): VocabQuery_TYPE {
+  if (!query)
+    throw new Error("'query' undefined when building vocab pagination");
+
   query = query.limit(args?.amount || 0);
   return query;
 }

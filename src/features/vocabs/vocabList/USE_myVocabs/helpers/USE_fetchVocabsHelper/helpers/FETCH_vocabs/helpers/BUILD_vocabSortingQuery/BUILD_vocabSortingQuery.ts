@@ -8,6 +8,8 @@ export function BUILD_vocabSortingQuery(
   query: VocabQuery_TYPE,
   args: FETCH_myVocabs_ARG_TYPES
 ): VocabQuery_TYPE {
+  if (!query) throw new Error("'query' undefined when building vocab sorting");
+
   const sort_DIRECTION = args?.sortDirection === "ascending" ? "asc" : "desc";
 
   switch (args?.sorting) {
