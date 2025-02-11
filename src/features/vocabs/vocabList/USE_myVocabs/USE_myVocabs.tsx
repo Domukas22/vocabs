@@ -25,8 +25,8 @@ export function USE_myVocabs({
   targetList_ID?: string | undefined;
 }) {
   // -----------------------------------------------------
-  // the main part of the hook
-  // tracks errors for teh FETCH function below as well
+  // This is the main part of the hook.
+  // It also tracks errors for the FETCH function below.
   const {
     reducer_STATE,
     PREPEND_vocabToReducer,
@@ -40,7 +40,7 @@ export function USE_myVocabs({
   // -----------------------------------------------------
   // -----------------------------------------------------
 
-  // fetches vocabs and insters them into the reducer state
+  // Fetches vocabs and inserts them into the reducer state.
   const { FETCH } = USE_fetchVocabsHelper({
     fetch_TYPE: vocabFetch_TYPE,
     list_TYPE: vocabList_TYPE,
@@ -52,13 +52,13 @@ export function USE_myVocabs({
     SET_reducerLoadingState,
   });
 
-  // adds paginated vocabs to the reducer state
+  // Adds paginated vocabs to the reducer state.
   const { LOAD_moreVocabs } = USE_loadMoreVocabs({
     reducer_STATE,
     FETCH,
   });
 
-  // refetches vocabs on changes: search / filters / sorting / targetList_ID
+  // Refetches vocabs on changes ==> search / filters / sorting / targetList_ID
   USE_refetchVocabs({
     search,
     targetList_ID,

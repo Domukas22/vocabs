@@ -21,7 +21,7 @@ import { FETCH_vocabs } from "./helpers/FETCH_vocabs/FETCH_vocabs";
 import { TRANSFORM_errorInCatchBlock } from "@/src/utils/TRANSFORM_errorInCatchBlock/TRANSFORM_errorInCatchBlock";
 
 const function_NAME = "USE_fetchVocabsHelper";
-
+let counter = 0;
 export function USE_fetchVocabsHelper({
   search,
   targetList_ID,
@@ -45,18 +45,16 @@ export function USE_fetchVocabsHelper({
   SET_reducerLoadingState: (fetch_TYPE: loadingState_TYPES) => void;
 }) {
   const { z_user, z_vocabDisplay_SETTINGS } = USE_zustand();
-  const abortControllerRef = useRef<AbortController | null>(null);
+  const { START_newRequest } = USE_abortController();
 
   const FETCH = useCallback(
     async (loadingState_TYPE: loadingState_TYPES) => {
-      // Abort the previous fetch if it's still ongoing
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
+      const newController = START_newRequest();
 
-      // Create a new AbortController for this request
-      const abortController = new AbortController();
-      abortControllerRef.current = abortController;
+      const excludeIds: Set<string> =
+        loadingState_TYPE === "loading_more"
+          ? reducer_STATE?.data?.printed_IDS || new Set()
+          : new Set();
 
       try {
         SET_reducerLoadingState(loadingState_TYPE);
@@ -64,22 +62,20 @@ export function USE_fetchVocabsHelper({
 
         const { data, error } = await FETCH_vocabs({
           search,
-          signal: abortControllerRef?.current?.signal,
+          signal: newController.signal,
           // amount: VOCAB_PAGINATION || 20,
           amount: 2,
           user_id: z_user?.id || "",
           fetch_TYPE,
           list_TYPE,
-          excludeIds:
-            loadingState_TYPE === "loading_more"
-              ? reducer_STATE?.data?.printed_IDS || new Set()
-              : new Set(),
+          excludeIds,
           targetList_ID,
           z_vocabDisplay_SETTINGS,
         });
 
-        if (abortController.signal.aborted) {
-          // Prevent updates if the request was aborted
+        if (newController.signal.aborted) {
+          // Do not update the reducer state if signal has been aborted (if fetch has been canceled).
+          // Also, don't throw any errors, because the only reason this will abort is if a new fetch request has started.
           return;
         }
 
@@ -92,16 +88,14 @@ export function USE_fetchVocabsHelper({
         }
         SET_reducerLoadingState("none");
       } catch (error: any) {
-        if (!abortController.signal.aborted) {
-          const _err = TRANSFORM_errorInCatchBlock({
-            error,
-            function_NAME: error?.function_NAME
-              ? error.function_NAME
-              : function_NAME,
-          });
-          SET_reducerError(_err);
-          SET_reducerLoadingState("error");
-        }
+        const _err = TRANSFORM_errorInCatchBlock({
+          error,
+          function_NAME: error?.function_NAME
+            ? error.function_NAME
+            : function_NAME,
+        });
+        SET_reducerError(_err);
+        SET_reducerLoadingState("error");
       }
     },
     [

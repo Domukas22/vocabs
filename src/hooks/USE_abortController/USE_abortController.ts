@@ -7,7 +7,7 @@ import { useRef } from "react";
 export function USE_abortController() {
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  const startNewRequest = () => {
+  const START_newRequest = () => {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
     }
@@ -16,5 +16,5 @@ export function USE_abortController() {
     return newAbortController;
   };
 
-  return { startNewRequest, abortControllerRef };
+  return { START_newRequest };
 }
