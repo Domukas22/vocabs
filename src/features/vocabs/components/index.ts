@@ -6,7 +6,6 @@
 
 // flatlists
 export { DeletedVocabs_FLATLIST } from "./1_myVocabs/flatlists/DeletedVocabs_FLATLIST/DeletedVocabs_FLATLIST";
-export { MyVocabs_FLATLIST } from "./1_myVocabs/flatlists/MyVocabs_FLATLIST/MyVocabs_FLATLIST";
 export { VocabsFlatlistHeader_SECTION } from "./1_myVocabs/flatlists/VocabsFlatlistHeader_SECTION/VocabsFlatlistHeader_SECTION";
 
 // footers
@@ -37,7 +36,7 @@ export { UpdateMyVocab_MODAL } from "./1_myVocabs/modals/UpdateMyVocab_MODAL/Upd
 
 // vocab cards
 export { Deleted_VOCAB } from "./1_myVocabs/vocabCards/Deleted_VOCAB/Deleted_VOCAB";
-export { My_VOCAB } from "./1_myVocabs/vocabCards/My_VOCAB/My_VOCAB";
+
 export { Vocab_DUMMY } from "./1_myVocabs/vocabCards/Vocab_DUMMY/Vocab_DUMMY";
 export { Vocab } from "./1_myVocabs/vocabCards/Vocab";
 

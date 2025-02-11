@@ -4,7 +4,7 @@
 
 import Language_MODEL from "@/src/db/models/Language_MODEL";
 import { useState, useEffect } from "react";
-import { FETCH_langs } from "@/src/features/languages/functions";
+import { FETCH_langs } from "../../../fetch/FETCH_langs/FETCH_langs";
 
 export function USE_selectedLangs({
   lang_ids,

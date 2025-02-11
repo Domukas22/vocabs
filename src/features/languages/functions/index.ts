@@ -2,9 +2,6 @@
 //
 //
 
-// fetch
-export { FETCH_langs } from "../functions/fetch/FETCH_langs/FETCH_langs";
-
 // fetch hooks
 export { USE_searchedLangs } from "../functions/fetch/hooks/USE_searchedLangs/USE_searchedLangs";
 export { USE_langs_2 } from "../functions/fetch/hooks/USE_langs_2/USE_langs_2";

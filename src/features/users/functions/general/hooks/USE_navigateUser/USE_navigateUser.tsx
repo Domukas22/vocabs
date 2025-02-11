@@ -4,12 +4,11 @@ import * as SecureStore from "expo-secure-store";
 import { useRouter } from "expo-router";
 
 import { useCallback, useState } from "react";
-import {
-  FETCH_mySupabaseProfile,
-  USE_clearUserContext,
-} from "@/src/features/users/functions";
+
 import { USE_zustand } from "@/src/hooks";
 import { Error_PROPS } from "@/src/props";
+import { USE_clearUserContext } from "../USE_clearUserContext/USE_clearUserContext";
+import { FETCH_mySupabaseProfile } from "../../../fetch/FETCH_mySupabaseProfile/FETCH_mySupabaseProfile";
 
 export function USE_navigateUser(SHOW_recoveryModal = () => {}) {
   const { CLEAR_userContext } = USE_clearUserContext();
