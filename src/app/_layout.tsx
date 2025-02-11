@@ -39,7 +39,7 @@ function Content() {
   useEffect(() => {
     if ((!z_user || !z_user?.id) && fontsLoaded) {
       (async () => {
-        await navigate(true);
+        await navigate();
       })();
     }
   }, [z_user]);
@@ -47,7 +47,7 @@ function Content() {
   useEffect(() => {
     const initializeApp = async () => {
       if (fontsLoaded) {
-        await navigate(true);
+        await navigate();
       }
     };
 

@@ -5,7 +5,6 @@
 import VocabList_HEADER from "@/src/components/1_grouped/headers/listPage/VocabList_HEADER";
 import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 import {
-  MyVocabs_FLATLIST,
   ReviveDeletedVocab_MODAL,
   VocabDisplaySettings_MODAL,
 } from "@/src/features/vocabs/components";
@@ -22,8 +21,9 @@ import { useTranslation } from "react-i18next";
 import { useToast } from "react-native-toast-notifications";
 import { USE_modalToggles } from "@/src/hooks/index";
 import { Portal } from "@gorhom/portal";
-import { USE_myVocabs } from "@/src/features/vocabs/functions/1_myVocabs/fetch/USE_myVocabs/USE_myVocabs";
 import { FlashList } from "@shopify/flash-list";
+import { USE_myVocabs_2 } from "@/src/features/vocabs/vocabList/USE_myVocabs_2/USE_myVocabs_2";
+import { Vocab_LIST } from "@/src/features/vocabs/vocabList/Vocabs_LIST/Vocabs_LIST";
 
 export default function DeletedVocabs_PAGE() {
   const { t } = useTranslation();
@@ -58,15 +58,16 @@ export default function DeletedVocabs_PAGE() {
 
   const {
     vocabs,
-    vocabs_ERROR: vocabs_ERROR,
+    vocabs_ERROR,
     HAS_reachedEnd,
     loading_STATE,
     unpaginated_COUNT,
     LOAD_moreVocabs,
     ADD_vocabToReducer,
     REMOVE_vocabFromReducer,
-  } = USE_myVocabs({
-    type: "deletedVocabs",
+  } = USE_myVocabs_2({
+    vocabFetch_TYPE: "deleted",
+    vocabList_TYPE: "private",
     search: debouncedSearch,
   });
 
@@ -80,7 +81,7 @@ export default function DeletedVocabs_PAGE() {
         {...{ search, SET_search, activeFilter_COUNT }}
       />
 
-      <MyVocabs_FLATLIST
+      <Vocab_LIST
         _ref={list_REF}
         list_NAME="🗑️ Deleted vocabs"
         vocabs={vocabs}

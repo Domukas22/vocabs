@@ -16,13 +16,6 @@ export { USE_createVocab } from "./1_myVocabs/create/hooks/USE_createVocab/USE_c
 // delete hooks
 export { USE_deleteVocab } from "./1_myVocabs/delete/hooks/USE_deleteVocab/USE_deleteVocab";
 
-// fetch
-export { FETCH_myVocabs } from "./1_myVocabs/fetch/FETCH_myVocabs/FETCH_myVocabs";
-
-// fetch hooks
-export { USE_observeMyTotalVocabCount } from "./1_myVocabs/fetch/USE_observeMyTotalVocabCount/USE_observeMyTotalVocabCount";
-export { USE_myVocabs as USE_vocabs } from "./1_myVocabs/fetch/USE_myVocabs/USE_myVocabs";
-
 // update hooks
 export { USE_updateVocab } from "./1_myVocabs/update/hooks/USE_updateVocab/USE_updateVocab";
 export { USE_updateVocabDifficulty } from "./1_myVocabs/update/hooks/USE_updateVocabDifficulty/USE_updateVocabDifficulty";

@@ -10,14 +10,10 @@ import {
   ICON_flag,
   ICON_X,
 } from "@/src/components/1_grouped/icons/icons";
-import {
-  USE_zustand,
-  z_setVocabDisplaySettings_PROPS,
-  z_vocabDisplaySettings_PROPS,
-} from "@/src/hooks/USE_zustand/USE_zustand";
+import { USE_zustand } from "@/src/hooks/USE_zustand/USE_zustand";
 import Flashlist_LABEL from "@/src/components/1_grouped/texts/labels/Flashlist_LABEL";
-import { useCallback, useEffect } from "react";
-import { loadingState_TYPES } from "@/src/features/vocabs/functions/1_myVocabs/fetch/USE_myVocabs/USE_myVocabs";
+import { useCallback } from "react";
+import { loadingState_TYPES } from "@/src/types";
 
 type VocabsFlatlistHeader_SECTIONProps = {
   debouncedSearch: string;

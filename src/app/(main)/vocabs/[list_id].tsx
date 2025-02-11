@@ -10,13 +10,10 @@ import { useTranslation } from "react-i18next";
 import { useToast } from "react-native-toast-notifications";
 import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 
-import { USE_myVocabs } from "@/src/features/vocabs/functions/1_myVocabs/fetch/USE_myVocabs/USE_myVocabs";
-
 import VocabList_HEADER from "@/src/components/1_grouped/headers/listPage/VocabList_HEADER";
 import { FlashList } from "@shopify/flash-list";
 import { ListSettings_MODAL } from "@/src/features/lists/components";
 import {
-  MyVocabs_FLATLIST,
   UpdateMyVocab_MODAL,
   VocabDisplaySettings_MODAL,
   DeleteVocab_MODAL,
@@ -25,15 +22,12 @@ import {
   USE_debounceSearch,
   USE_showListHeaderTitle,
   USE_highlighedId,
-  USE_zustand,
 } from "@/src/hooks";
 import { CreateMyVocab_MODAL } from "@/src/features/vocabs/components/1_myVocabs/modals/CreateMyVocab_MODAL/CreateMyVocab_MODAL";
 import { Portal } from "@gorhom/portal";
 import { USE_modalToggles } from "@/src/hooks/index";
 import { USE_observeMyTargetList } from "@/src/features/lists/functions";
-import { FETCH_vocabs } from "@/src/features/vocabs/vocabList/USE_myVocabs/helpers/USE_fetchVocabsHelper/helpers/FETCH_vocabs/FETCH_vocabs";
-import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
-import { USE_myVocabs_2 } from "@/src/features/vocabs/vocabList/USE_myVocabs/USE_myVocabs";
+import { USE_myVocabs_2 } from "@/src/features/vocabs/vocabList/USE_myVocabs_2/USE_myVocabs_2";
 import { Vocab_LIST } from "@/src/features/vocabs/vocabList/Vocabs_LIST/Vocabs_LIST";
 
 export default function SingleList_PAGE() {
@@ -78,20 +72,6 @@ export default function SingleList_PAGE() {
     [SET_toUpdateVocab]
   );
 
-  // const {
-  //   vocabs,
-  //   vocabs_ERROR,
-  //   HAS_reachedEnd,
-  //   loading_STATE,
-  //   unpaginated_COUNT,
-  //   LOAD_moreVocabs,
-  //   ADD_vocabToReducer,
-  //   REMOVE_vocabFromReducer,
-  // } = USE_myVocabs({
-  //   vocabFetch_TYPE: "byTargetList",
-  //   targetList_ID: selected_LIST?.id,
-  //   search: debouncedSearch,
-  // });
   const {
     vocabs,
     vocabs_ERROR,

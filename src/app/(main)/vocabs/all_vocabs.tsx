@@ -5,7 +5,6 @@
 import VocabList_HEADER from "@/src/components/1_grouped/headers/listPage/VocabList_HEADER";
 import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 import {
-  MyVocabs_FLATLIST,
   UpdateMyVocab_MODAL,
   VocabDisplaySettings_MODAL,
   DeleteVocab_MODAL,
@@ -24,9 +23,10 @@ import { useTranslation } from "react-i18next";
 import { useToast } from "react-native-toast-notifications";
 import { CreateMyVocab_MODAL } from "@/src/features/vocabs/components/1_myVocabs/modals/CreateMyVocab_MODAL/CreateMyVocab_MODAL";
 import { USE_modalToggles } from "@/src/hooks/index";
-import { USE_myVocabs } from "@/src/features/vocabs/functions/1_myVocabs/fetch/USE_myVocabs/USE_myVocabs";
 import { FlashList } from "@shopify/flash-list";
 import { Portal } from "@gorhom/portal";
+import { USE_myVocabs_2 } from "@/src/features/vocabs/vocabList/USE_myVocabs_2/USE_myVocabs_2";
+import { Vocab_LIST } from "@/src/features/vocabs/vocabList/Vocabs_LIST/Vocabs_LIST";
 
 export default function AllVocabs_PAGE() {
   const { t } = useTranslation();
@@ -56,28 +56,19 @@ export default function AllVocabs_PAGE() {
     Vocab_MODEL | undefined
   >();
   const list_REF = useRef<FlashList<any>>(null);
-  // function HANDLE_updateModal({
-  //   clear = false,
-  //   vocab,
-  // }: {
-  //   clear?: boolean;
-  //   vocab?: Vocab_MODEL;
-  // }) {
-  //   SET_toUpdateVocab(!clear && vocab ? vocab : undefined);
-  //   modals.updateVocab.toggle();
-  // }
 
   const {
     vocabs,
-    vocabs_ERROR: vocabs_ERROR,
+    vocabs_ERROR,
     HAS_reachedEnd,
     loading_STATE,
     unpaginated_COUNT,
     LOAD_moreVocabs,
     ADD_vocabToReducer,
     REMOVE_vocabFromReducer,
-  } = USE_myVocabs({
-    type: "allVocabs",
+  } = USE_myVocabs_2({
+    vocabFetch_TYPE: "all",
+    vocabList_TYPE: "private",
     search: debouncedSearch,
   });
 
@@ -92,7 +83,7 @@ export default function AllVocabs_PAGE() {
         {...{ search, SET_search, activeFilter_COUNT }}
       />
 
-      <MyVocabs_FLATLIST
+      <Vocab_LIST
         _ref={list_REF}
         list_NAME="All my vocabs"
         vocabs={vocabs}
