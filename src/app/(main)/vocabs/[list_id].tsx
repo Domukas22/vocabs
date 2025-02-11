@@ -27,7 +27,7 @@ import { CreateMyVocab_MODAL } from "@/src/features/vocabs/components/1_myVocabs
 import { Portal } from "@gorhom/portal";
 import { USE_modalToggles } from "@/src/hooks/index";
 import { USE_observeMyTargetList } from "@/src/features/lists/functions";
-import { USE_myVocabs_2 } from "@/src/features/vocabs/vocabList/USE_myVocabs_2/USE_myVocabs_2";
+import { USE_myVocabs } from "@/src/features/vocabs/vocabList/USE_myVocabs/USE_myVocabs";
 import { Vocab_LIST } from "@/src/features/vocabs/vocabList/Vocabs_LIST/Vocabs_LIST";
 
 export default function SingleList_PAGE() {
@@ -81,7 +81,7 @@ export default function SingleList_PAGE() {
     LOAD_moreVocabs,
     ADD_vocabToReducer,
     REMOVE_vocabFromReducer,
-  } = USE_myVocabs_2({
+  } = USE_myVocabs({
     vocabFetch_TYPE: "byTargetList",
     vocabList_TYPE: "private",
     targetList_ID: selected_LIST?.id,

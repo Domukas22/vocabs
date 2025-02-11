@@ -50,7 +50,6 @@ export function USE_fetchVocabsHelper({
   const FETCH = useCallback(
     async (loadingState_TYPE: loadingState_TYPES) => {
       // Abort the previous fetch if it's still ongoing
-      // Abort the previous fetch if it's still ongoing
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
       }

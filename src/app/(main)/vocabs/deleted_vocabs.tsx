@@ -22,7 +22,7 @@ import { useToast } from "react-native-toast-notifications";
 import { USE_modalToggles } from "@/src/hooks/index";
 import { Portal } from "@gorhom/portal";
 import { FlashList } from "@shopify/flash-list";
-import { USE_myVocabs_2 } from "@/src/features/vocabs/vocabList/USE_myVocabs_2/USE_myVocabs_2";
+import { USE_myVocabs } from "@/src/features/vocabs/vocabList/USE_myVocabs/USE_myVocabs";
 import { Vocab_LIST } from "@/src/features/vocabs/vocabList/Vocabs_LIST/Vocabs_LIST";
 
 export default function DeletedVocabs_PAGE() {
@@ -65,7 +65,7 @@ export default function DeletedVocabs_PAGE() {
     LOAD_moreVocabs,
     ADD_vocabToReducer,
     REMOVE_vocabFromReducer,
-  } = USE_myVocabs_2({
+  } = USE_myVocabs({
     vocabFetch_TYPE: "deleted",
     vocabList_TYPE: "private",
     search: debouncedSearch,

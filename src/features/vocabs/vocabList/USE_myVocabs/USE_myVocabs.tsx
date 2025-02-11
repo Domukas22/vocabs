@@ -13,7 +13,7 @@ import {
   USE_refetchVocabs,
 } from "./helpers";
 
-export function USE_myVocabs_2({
+export function USE_myVocabs({
   vocabFetch_TYPE,
   vocabList_TYPE,
   search,
