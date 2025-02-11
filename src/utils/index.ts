@@ -15,7 +15,7 @@ export { GET_errorMessage } from "./errors/GET_errorMessage/GET_errorMessage";
 export { GET_errorType } from "./errors/GET_errorType/GET_errorType";
 
 export { HANDLE_keyboardDismiss } from "./HANDLE_keyboardDismiss/HANDLE_keyboardDismiss";
-export { HANDLE_userErrorInsideFinalCatchBlock } from "./HANDLE_userErrorInsideFinalCatchBlock/HANDLE_userErrorInsideFinalCatchBlock";
+export { TRANSFORM_errorInCatchBlock } from "./TRANSFORM_errorInCatchBlock/TRANSFORM_errorInCatchBlock";
 export { SEND_internalError } from "./SEND_internalError/SEND_internalError";
 
 export { CONVERT_EpochToTimestampWithTimeZone } from "./timestamps/CONVERT_EpochToTimestampWithTimeZone/CONVERT_EpochToTimestampWithTimeZone";

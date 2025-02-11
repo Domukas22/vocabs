@@ -12,10 +12,10 @@ import Vocab_FRONT from "../Components/Vocab_FRONT/Vocab_FRONT";
 import { VocabBack_TRS } from "../Components/VocabBack_TRS/VocabBack_TRS";
 import VocabBottomText_WRAP from "../Components/VocabBottomText_WRAP/VocabBottomText_WRAP";
 import List_MODEL from "@/src/db/models/List_MODEL";
-import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import { useTranslation } from "react-i18next";
 import { useToast } from "react-native-toast-notifications";
+import { Vocab_MODEL } from "@/src/features/vocabs/types";
 
 interface VocabProps {
   vocab: Vocab_MODEL | undefined;

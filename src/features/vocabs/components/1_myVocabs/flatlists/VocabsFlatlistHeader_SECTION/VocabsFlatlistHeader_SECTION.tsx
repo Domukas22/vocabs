@@ -17,7 +17,7 @@ import {
 } from "@/src/hooks/USE_zustand/USE_zustand";
 import Flashlist_LABEL from "@/src/components/1_grouped/texts/labels/Flashlist_LABEL";
 import { useCallback, useEffect } from "react";
-import { loadingState_TYPES } from "@/src/features/vocabs/functions/1_myVocabs/fetch/hooks/USE_myVocabs/USE_myVocabs";
+import { loadingState_TYPES } from "@/src/features/vocabs/functions/1_myVocabs/fetch/USE_myVocabs/USE_myVocabs";
 
 type VocabsFlatlistHeader_SECTIONProps = {
   debouncedSearch: string;

@@ -20,7 +20,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useToast } from "react-native-toast-notifications";
 import { USE_modalToggles } from "@/src/hooks/index";
-import { USE_myVocabs } from "@/src/features/vocabs/functions/1_myVocabs/fetch/hooks/USE_myVocabs/USE_myVocabs";
+import { USE_myVocabs } from "@/src/features/vocabs/functions/1_myVocabs/fetch/USE_myVocabs/USE_myVocabs";
 import { FlashList } from "@shopify/flash-list";
 import { Portal } from "@gorhom/portal";
 

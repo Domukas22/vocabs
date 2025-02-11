@@ -15,11 +15,11 @@ import VocabBottomText_WRAP from "../Components/VocabBottomText_WRAP/VocabBottom
 import VocabBack_BTNS from "../Components/VocabBack_BTNS/VocabBack_BTNS";
 import VocabBackDifficultyEdit_BTNS from "../Components/VocabBackDifficultyEdit_BTNS/VocabBackDifficultyEdit_BTNS";
 
-import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import { useTranslation } from "react-i18next";
 import { withObservables } from "@nozbe/watermelondb/react";
 import { useToast } from "react-native-toast-notifications";
+import { Vocab_MODEL } from "@/src/features/vocabs/types";
 
 interface VocabProps {
   _vocab: Vocab_MODEL;
@@ -37,16 +37,20 @@ interface VocabProps {
 }
 
 // TOGGLE_vocabModal needs to also pass in th etranslations, so we dont have to pass them async and get a delayed manageVocabModal update
-function _MyVocab({ _vocab, highlighted, HANDLE_updateModal }: VocabProps) {
+export default function MyVocab({
+  _vocab: vocab,
+  highlighted,
+  HANDLE_updateModal,
+}: VocabProps) {
   const [open, TOGGLE_open] = USE_toggle();
   const [SHOW_difficultyEdits, TOGGLE_difficultyEdits, SET_difficultyEdit] =
     USE_toggle(false);
 
-  const trs = _vocab?.trs || [];
+  const trs = vocab?.trs || [];
 
   const handleEdit = () => {
     HANDLE_updateModal({
-      vocab: _vocab,
+      vocab: vocab,
     });
   };
 
@@ -54,10 +58,10 @@ function _MyVocab({ _vocab, highlighted, HANDLE_updateModal }: VocabProps) {
     () => [
       s._vocab,
       open && s.vocab_open,
-      open && _vocab?.difficulty && s[`difficulty_${_vocab?.difficulty}`],
+      open && vocab?.difficulty && s[`difficulty_${vocab?.difficulty}`],
       highlighted && s.highlighted,
     ],
-    [open, _vocab.difficulty, highlighted]
+    [open, vocab.difficulty, highlighted]
   );
   const { t } = useTranslation();
   const toast = useToast();
@@ -69,23 +73,23 @@ function _MyVocab({ _vocab, highlighted, HANDLE_updateModal }: VocabProps) {
       {!open && (
         <Vocab_FRONT
           trs={trs || []}
-          difficulty={_vocab?.difficulty}
-          description={_vocab?.description}
+          difficulty={vocab?.difficulty}
+          description={vocab?.description}
           highlighted={highlighted}
           TOGGLE_open={TOGGLE_open}
-          IS_marked={_vocab?.is_marked}
+          IS_marked={vocab?.is_marked}
         />
       )}
       {open && (
         <>
-          <VocabBack_TRS trs={trs} difficulty={_vocab?.difficulty} />
-          <VocabBottomText_WRAP desc={_vocab.description} />
+          <VocabBack_TRS trs={trs} difficulty={vocab?.difficulty} />
+          <VocabBottomText_WRAP desc={vocab.description} />
 
           <View style={{ padding: 12, gap: 8 }}>
             {!SHOW_difficultyEdits ? (
               <VocabBack_BTNS
                 {...{
-                  vocab: _vocab,
+                  vocab: vocab,
                   trs,
 
                   TOGGLE_difficultyEdits,
@@ -94,10 +98,10 @@ function _MyVocab({ _vocab, highlighted, HANDLE_updateModal }: VocabProps) {
               />
             ) : (
               <VocabBackDifficultyEdit_BTNS
-                active_DIFFICULTY={_vocab.difficulty}
+                active_DIFFICULTY={vocab.difficulty}
                 UPDATE_difficulty={(diff: 1 | 2 | 3) => {
                   (async () => {
-                    await _vocab.EDIT_difficulty(diff);
+                    await vocab.EDIT_difficulty(diff);
                     TOGGLE_difficultyEdits();
                     toast.show(t("notifications.difficultyUpdated"), {
                       type: "success",
@@ -122,11 +126,6 @@ function _MyVocab({ _vocab, highlighted, HANDLE_updateModal }: VocabProps) {
     </View>
   );
 }
-
-const enhance = withObservables(["vocab"], ({ vocab }) => ({
-  _vocab: vocab.observe(),
-}));
-export const My_VOCAB = enhance(_MyVocab);
 
 const s = StyleSheet.create({
   _vocab: {

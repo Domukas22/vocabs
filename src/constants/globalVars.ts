@@ -28,6 +28,9 @@ export const CREATE_internalErrorMsg = (process?: string) => {
   return first_SENTENCE + second_SENTENCE;
 };
 
+export const DEFAULT_userErrorMsg =
+  "Something went wrong. Please reload the app and try again. This problem has been recorded and will be reviewed by developers as soon as possible. If the problem persists, please contact support. We apologize for the inconvenience.";
+
 export const VOCAB_PRICING = {
   1: {
     amount: 500,

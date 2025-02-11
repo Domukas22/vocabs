@@ -2,23 +2,23 @@
 //
 //
 import Styled_FLASHLIST from "@/src/components/3_other/Styled_FLASHLIST/Styled_FLASHLIST";
-import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 import { NativeScrollEvent, NativeSyntheticEvent, View } from "react-native";
 import React from "react";
 
 import { Skeleton_BLOCK } from "@/src/components/1_grouped/blocks/Skeleton_BLOCK";
 import Error_BLOCK from "@/src/components/1_grouped/blocks/Error_BLOCK";
 import SwipeableExample from "@/src/components/3_other/SwipeableExample/SwipeableExample";
-import { My_VOCAB } from "../../vocabCards/My_VOCAB/My_VOCAB";
+
 import { Deleted_VOCAB } from "../../vocabCards/Deleted_VOCAB/Deleted_VOCAB";
 import { FlashList } from "@shopify/flash-list";
 import { VocabsFlatlistHeader_SECTION } from "../VocabsFlatlistHeader_SECTION/VocabsFlatlistHeader_SECTION";
 import BottomAction_BLOCK from "@/src/components/1_grouped/blocks/BottomAction_BLOCK";
-import List_MODEL from "@/src/db/models/List_MODEL";
 import { MyColors } from "@/src/constants/MyColors";
 import { USE_vocabs_FETCH_TYPES } from "@/src/features/vocabs/functions/1_myVocabs/fetch/FETCH_myVocabs/types";
 import { loadingState_TYPES } from "@/src/types";
 import { Error_PROPS } from "@/src/props";
+import { Vocab_MODEL } from "@/src/features/vocabs/types";
+import { My_VOCAB } from "../../..";
 
 export function MyVocabs_FLATLIST({
   PREPARE_vocabDelete,

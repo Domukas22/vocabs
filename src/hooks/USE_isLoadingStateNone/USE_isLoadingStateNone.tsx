@@ -2,7 +2,7 @@
 //
 //
 
-import { myVocabs_REDUCER_RESPONSE_TYPE } from "@/src/features/vocabs/functions/1_myVocabs/fetch/hooks/USE_myVocabs/helpers/reducer/myVocabs_REDUCER/types";
+import { myVocabs_REDUCER_RESPONSE_TYPE } from "@/src/features/vocabs/functions/1_myVocabs/fetch/USE_myVocabs/helpers/reducer/myVocabs_REDUCER/types";
 import { useMemo } from "react";
 
 export function USE_isLoadingStateNone(state: myVocabs_REDUCER_RESPONSE_TYPE): {

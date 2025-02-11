@@ -11,7 +11,7 @@ import {
 } from "./props";
 import CHECK_ifNetworkFailure from "@/src/utils/CHECK_ifNetworkFailure/CHECK_ifNetworkFailure";
 import { PostgrestError } from "@supabase/supabase-js";
-import HANDLE_userErrorInsideFinalCatchBlock from "@/src/utils/HANDLE_userErrorInsideFinalCatchBlock/HANDLE_userErrorInsideFinalCatchBlock";
+import HANDLE_userErrorInsideFinalCatchBlock from "@/src/utils/TRANSFORM_errorInCatchBlock/TRANSFORM_errorInCatchBlock";
 
 export const errs = {
   internal: {
