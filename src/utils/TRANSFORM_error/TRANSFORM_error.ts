@@ -6,15 +6,10 @@ import { Error_PROPS } from "@/src/props";
 import { CHECK_ifNetworkFailure } from "../CHECK_ifNetworkFailure/CHECK_ifNetworkFailure";
 import { DEFAULT_userErrorMsg } from "@/src/constants/globalVars";
 
-export function TRANSFORM_errorInCatchBlock<
-  validInput_NAMES extends string = string
->({
-  error,
-  function_NAME,
-}: {
-  error: any;
-  function_NAME: string;
-}): Error_PROPS<validInput_NAMES> {
+export function TRANSFORM_error<validInput_NAMES extends string = string>(
+  function_NAME: string,
+  error: any
+): Error_PROPS<validInput_NAMES> {
   const IS_networkFailure = CHECK_ifNetworkFailure(error);
 
   const type = IS_networkFailure

@@ -2,15 +2,15 @@
 //
 //
 
-import { FETCH_myVocabs_ARG_TYPES } from "../../types";
+import { FETCH_myVocabs_ARG_TYPES, VocabQuery_TYPE } from "../../types";
 import { z_vocabDisplaySettings_PROPS } from "@/src/hooks/USE_zustand/USE_zustand";
 import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
 
 export function BUILD_vocabFilterQuery(
-  query: PostgrestFilterBuilder<any, any, any[], "vocabs", unknown>,
+  query: VocabQuery_TYPE,
   args: FETCH_myVocabs_ARG_TYPES,
   EXCLUDE_printed = false
-): PostgrestFilterBuilder<any, any, any[], "vocabs", unknown> {
+): VocabQuery_TYPE {
   const {
     fetch_TYPE = "all",
     list_TYPE = "private",
@@ -18,17 +18,16 @@ export function BUILD_vocabFilterQuery(
     targetList_ID = "",
     search = "",
     excludeIds = new Set(),
-    z_vocabDisplay_SETTINGS = {} as z_vocabDisplaySettings_PROPS,
+    difficultyFilters = [],
+    langFilters = [],
   } = args;
-
-  const { difficultyFilters = [], langFilters = [] } = z_vocabDisplay_SETTINGS;
 
   // If fetching vocabs that belong to you
   if (list_TYPE === "private") {
-    // filter by user
+    // Filter by the user id
     query = query.filter("user_id", "eq", user_id);
 
-    // filter by difficulty
+    // Filter by difficulty
     if (difficultyFilters.length > 0) {
       query = query.filter(
         "difficulty",
@@ -38,33 +37,38 @@ export function BUILD_vocabFilterQuery(
     }
   }
 
-  // Filter by fetch_TYPE
+  // Filter by the 'fetch_TYPE' provided
   switch (fetch_TYPE) {
+    // Fetch all, non-deleted vocabs
     case "all":
       query = query.filter("deleted_at", "is", null);
-
       break;
+
+    // Fetch non-deleted vocabs, that belong to a specific list
     case "byTargetList":
       query = query
         .filter("deleted_at", "is", null)
         .filter("list_id", "eq", targetList_ID);
-
       break;
+
+    // Fetch all deleted vocabs
     case "deleted":
       query = query.filter("deleted_at", "not.is", null);
-
       break;
+
+    // Fetch non-deleted vocabs, that have been marked
     case "marked":
       query = query
         .filter("deleted_at", "is", null)
         .filter("is_marked", "eq", true);
-
       break;
+
+    // Fetch all non-deleted vocabs by default
     default:
       query = query.filter("deleted_at", "is", null);
   }
 
-  // Add language filters (used as text search)
+  // Filter by language (used as text search)
   if (langFilters.length > 0) {
     query = query.or(
       langFilters.map((lang) => `lang_ids.ilike.%${lang}%`).join(",")
@@ -78,6 +82,7 @@ export function BUILD_vocabFilterQuery(
     );
   }
 
+  // Exclude certain vocab ids from the fetch
   if (EXCLUDE_printed) {
     query = query.filter(
       "id",

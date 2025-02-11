@@ -4,9 +4,7 @@
 
 import { Vocab_MODEL } from "@/src/features/vocabs/types";
 import { myVocabs_REDUCER_RESPONSE_TYPE } from "../../types";
-import { CREATE_err_TYPE } from "../../Vocab_REDUCER";
-
-const function_NAME = "UPDATE_reducerState";
+import { CREATE_reducerErr } from "../CREATE_reducerErr/CREATE_reducerErr";
 
 /**
  * Appends new covabs to the end of the reducer state.
@@ -17,35 +15,34 @@ const function_NAME = "UPDATE_reducerState";
  * @returns The updated state of the vocabs.
  */
 
+const function_NAME = "ADD_newPaginatedVocabsToReducerState";
+
 export function ADD_newPaginatedVocabsToReducerState(
   state: myVocabs_REDUCER_RESPONSE_TYPE,
-  payload: { vocabs: Vocab_MODEL[]; unpaginated_COUNT: number },
-  CREATE_err: CREATE_err_TYPE
+  payload: { vocabs: Vocab_MODEL[]; unpaginated_COUNT: number }
 ): myVocabs_REDUCER_RESPONSE_TYPE {
   // check if the CURRENT STATE has a valid vocab array
+
   if (!state?.data?.vocabs)
-    return {
-      error: CREATE_err("current_state_vocabs_array_undefined", function_NAME),
-      loading_STATE: "error",
-    };
+    return CREATE_reducerErr(
+      function_NAME,
+      "Reducer state 'data.vocabs' was undefined"
+    );
 
   // check if the PAYLOAD has a valid vocab array
   if (!payload?.vocabs) {
-    return {
-      error: CREATE_err("payload_vocabs_array_undefined", function_NAME),
-      loading_STATE: "error",
-    };
+    return CREATE_reducerErr(
+      function_NAME,
+      "Reducer state 'payload.vocabs' was undefined"
+    );
   }
 
   // check if the PAYLOAD has a valid unpaginated count
   if (typeof payload?.unpaginated_COUNT !== "number") {
-    return {
-      error: CREATE_err(
-        "payload_unpaginated_count_is_not_number",
-        function_NAME
-      ),
-      loading_STATE: "error",
-    };
+    return CREATE_reducerErr(
+      function_NAME,
+      "Reducer state 'payload.unpaginated_COUNT' was not a number"
+    );
   }
 
   // Prevent duplicates: filter out vocabs that already exist in printed_IDS

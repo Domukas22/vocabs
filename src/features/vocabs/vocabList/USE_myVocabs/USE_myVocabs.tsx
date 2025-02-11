@@ -5,7 +5,7 @@
 import {
   vocabFetch_TYPES,
   vocabList_TYPES,
-} from "./helpers/USE_fetchVocabsHelper/helpers/FETCH_vocabs/types";
+} from "./helpers/USE_fetchVocabsHelper/FETCH_vocabs/types";
 import {
   USE_myVocabsReducer,
   USE_fetchVocabsHelper,

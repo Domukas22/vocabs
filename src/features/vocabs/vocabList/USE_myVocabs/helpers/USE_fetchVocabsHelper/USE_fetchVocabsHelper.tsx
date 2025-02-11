@@ -2,26 +2,19 @@
 //
 //
 
-import {
-  CREATE_internalErrorMsg,
-  VOCAB_PAGINATION,
-} from "@/src/constants/globalVars";
 import { Vocab_MODEL } from "@/src/features/vocabs/types";
 import { USE_zustand, USE_abortController } from "@/src/hooks";
 import { loadingState_TYPES } from "@/src/types";
-import { useCallback, useRef } from "react";
+import { useCallback } from "react";
 
 import { Error_PROPS } from "@/src/props";
-import {
-  vocabFetch_TYPES,
-  vocabList_TYPES,
-} from "./helpers/FETCH_vocabs/types";
-import { myVocabs_REDUCER_RESPONSE_TYPE } from "../USE_myVocabsReducer/helpers/Vocab_REDUCER/types";
-import { FETCH_vocabs } from "./helpers/FETCH_vocabs/FETCH_vocabs";
-import { TRANSFORM_errorInCatchBlock } from "@/src/utils/TRANSFORM_errorInCatchBlock/TRANSFORM_errorInCatchBlock";
+import { vocabFetch_TYPES, vocabList_TYPES } from "./FETCH_vocabs/types";
+import { myVocabs_REDUCER_RESPONSE_TYPE } from "../USE_myVocabsReducer/Vocab_REDUCER/types";
+import { FETCH_vocabs } from "./FETCH_vocabs/FETCH_vocabs";
+import { TRANSFORM_error } from "@/src/utils/TRANSFORM_error/TRANSFORM_error";
 
 const function_NAME = "USE_fetchVocabsHelper";
-let counter = 0;
+
 export function USE_fetchVocabsHelper({
   search,
   targetList_ID,
@@ -49,8 +42,12 @@ export function USE_fetchVocabsHelper({
 
   const FETCH = useCallback(
     async (loadingState_TYPE: loadingState_TYPES) => {
+      // Create new fetch request, so that we could cancel it in case
+      // a new request was sent, and this one hasn't finished fetching
       const newController = START_newRequest();
 
+      // When fetching additional vocabs that we will add to the pagination,
+      // lets exclude the vocab ids that have already been printed
       const excludeIds: Set<string> =
         loadingState_TYPE === "loading_more"
           ? reducer_STATE?.data?.printed_IDS || new Set()
@@ -70,7 +67,10 @@ export function USE_fetchVocabsHelper({
           list_TYPE,
           excludeIds,
           targetList_ID,
-          z_vocabDisplay_SETTINGS,
+          difficultyFilters: z_vocabDisplay_SETTINGS?.difficultyFilters,
+          langFilters: z_vocabDisplay_SETTINGS?.langFilters,
+          sortDirection: z_vocabDisplay_SETTINGS?.sortDirection,
+          sorting: z_vocabDisplay_SETTINGS?.sorting,
         });
 
         if (newController.signal.aborted) {
@@ -79,21 +79,16 @@ export function USE_fetchVocabsHelper({
           return;
         }
 
-        if (error || !data) {
-          throw error || new Error("Failed to fetch vocabs.");
-        }
-
-        if (data) {
-          APPEND_vocabsToPagination(data);
-        }
+        if (error || !data) throw error || new Error("Failed to fetch vocabs.");
+        if (data) APPEND_vocabsToPagination(data);
         SET_reducerLoadingState("none");
+
+        // --------------------------------------------------
       } catch (error: any) {
-        const _err = TRANSFORM_errorInCatchBlock({
-          error,
-          function_NAME: error?.function_NAME
-            ? error.function_NAME
-            : function_NAME,
-        });
+        const _function_NAME = error?.function_NAME
+          ? error.function_NAME
+          : function_NAME;
+        const _err = TRANSFORM_error(_function_NAME, error);
         SET_reducerError(_err);
         SET_reducerLoadingState("error");
       }

@@ -3,7 +3,7 @@
 //
 
 import { Vocab_MODEL } from "@/src/features/vocabs/types";
-import { z_vocabDisplaySettings_PROPS } from "@/src/hooks/USE_zustand/USE_zustand";
+import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
 import { Error_PROPS } from "@/src/props";
 
 export type vocabFetch_TYPES = "byTargetList" | "all" | "deleted" | "marked";
@@ -18,7 +18,10 @@ export interface FETCH_myVocabs_ARG_TYPES {
   excludeIds: Set<string>;
   fetch_TYPE: vocabFetch_TYPES;
   targetList_ID?: string;
-  z_vocabDisplay_SETTINGS: z_vocabDisplaySettings_PROPS;
+  difficultyFilters: (1 | 2 | 3)[];
+  langFilters: string[];
+  sortDirection: "ascending" | "descending";
+  sorting: "difficulty" | "date" | "shuffle";
 }
 
 export type FETCH_myVocabs_RESPONSE_TYPE = {
@@ -28,3 +31,11 @@ export type FETCH_myVocabs_RESPONSE_TYPE = {
   };
   error?: Error_PROPS;
 };
+
+export type VocabQuery_TYPE = PostgrestFilterBuilder<
+  any,
+  any,
+  any[],
+  "vocabs",
+  unknown
+>;

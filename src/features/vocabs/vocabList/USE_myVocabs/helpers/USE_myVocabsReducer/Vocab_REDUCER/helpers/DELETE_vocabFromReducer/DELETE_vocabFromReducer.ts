@@ -2,10 +2,8 @@
 //
 //
 
-import { CREATE_err_TYPE } from "../../Vocab_REDUCER";
 import { myVocabs_REDUCER_RESPONSE_TYPE } from "../../types";
-
-const function_NAME = "DELETE_vocabFromReducer";
+import { CREATE_reducerErr } from "../CREATE_reducerErr/CREATE_reducerErr";
 
 /**
  * Deletes a vocab from the reducer by its ID.
@@ -16,34 +14,32 @@ const function_NAME = "DELETE_vocabFromReducer";
  * @returns The updated state of the vocabs.
  */
 
+const function_NAME = "DELETE_vocabFromReducer";
+
 export function DELETE_vocabFromReducer(
   state: myVocabs_REDUCER_RESPONSE_TYPE,
-  payload: string,
-  CREATE_err: CREATE_err_TYPE
+  payload: string
 ): myVocabs_REDUCER_RESPONSE_TYPE {
   // check if the CURRENT STATE has a valid vocab array
   if (!state?.data?.vocabs)
-    return {
-      error: CREATE_err("current_state_vocabs_array_undefined", function_NAME),
-      loading_STATE: "error",
-    };
+    return CREATE_reducerErr(
+      function_NAME,
+      "Reducer state 'data.vocabs' was undefined"
+    );
 
   // check if the CURRENT STATE has a valid unpaginated count
   if (typeof state?.data?.unpaginated_COUNT !== "number")
-    return {
-      error: CREATE_err(
-        "current_state_unpaginated_count_is_not_number",
-        function_NAME
-      ),
-      loading_STATE: "error",
-    };
+    return CREATE_reducerErr(
+      function_NAME,
+      "Reducer state 'payload.unpaginated_COUNT' was not a number"
+    );
 
   // check if PAYLOAD has the vocab id string
   if (!payload)
-    return {
-      error: CREATE_err("payload_vocab_id_undefined", function_NAME),
-      loading_STATE: "error",
-    };
+    return CREATE_reducerErr(
+      function_NAME,
+      "Reducer state 'payload' was undefined"
+    );
 
   // Check if the vocab actually exists in the array before removing
   const vocabExists = state.data.vocabs.some((vocab) => vocab.id === payload);

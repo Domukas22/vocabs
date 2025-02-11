@@ -4,14 +4,11 @@
 
 import { CREATE_internalErrorMsg } from "@/src/constants/globalVars";
 import { supabase } from "@/src/lib/supabase";
-import { SupabaseListAccessesError_PROPS } from "../props";
 import {
   ListIdsSharedWithMe_DATA,
   ListIdsSharedWithMe_RESPONSE,
 } from "./props";
-import CHECK_ifNetworkFailure from "@/src/utils/CHECK_ifNetworkFailure/CHECK_ifNetworkFailure";
 import { PostgrestError } from "@supabase/supabase-js";
-import HANDLE_userErrorInsideFinalCatchBlock from "@/src/utils/TRANSFORM_errorInCatchBlock/TRANSFORM_errorInCatchBlock";
 
 export const errs = {
   internal: {

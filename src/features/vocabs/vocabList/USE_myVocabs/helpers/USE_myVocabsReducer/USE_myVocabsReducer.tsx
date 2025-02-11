@@ -3,12 +3,11 @@
 //
 
 import { useCallback, useEffect, useReducer } from "react";
-
 import { loadingState_TYPES } from "@/src/types";
 import { Error_PROPS } from "@/src/props";
 import { SEND_internalError } from "@/src/utils";
-import { myVocabs_REDUCER_RESPONSE_TYPE } from "./helpers/Vocab_REDUCER/types";
-import { Vocab_REDUCER } from "./helpers/Vocab_REDUCER/Vocab_REDUCER";
+import { myVocabs_REDUCER_RESPONSE_TYPE } from "./Vocab_REDUCER/types";
+import { Vocab_REDUCER } from "./Vocab_REDUCER/Vocab_REDUCER";
 import { Vocab_MODEL } from "@/src/features/vocabs/types";
 
 export const myVocabsReducerInitial_STATE: myVocabs_REDUCER_RESPONSE_TYPE = {
