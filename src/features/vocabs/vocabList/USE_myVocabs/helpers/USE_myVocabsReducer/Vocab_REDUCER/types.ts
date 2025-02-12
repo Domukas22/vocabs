@@ -2,31 +2,39 @@
 //
 //
 
-import { Vocab_MODEL } from "@/src/features/vocabs/types";
-import { Error_PROPS } from "@/src/props";
-import { loadingState_TYPES } from "@/src/types";
+import { Vocab_TYPE } from "@/src/features/vocabs/types";
+import { General_ERROR } from "@/src/types/error_TYPES";
+import { loadingState_TYPES } from "@/src/types/general_TYPES";
+import { FETCH_myVocabs_RESPONSE_TYPE } from "../../USE_fetchVocabs/helpers/FETCH_vocabs/types";
+
+export type PREPEND_oneVocab_PAYLOAD = Vocab_TYPE;
+export type UPDATE_oneVocab_PAYLOAD = Vocab_TYPE;
+export type APPEND_manyVocabs_PAYLOAD = FETCH_myVocabs_RESPONSE_TYPE;
+export type DELETE_oneVocab_PAYLOAD = string;
+export type SET_error_PAYLOAD = General_ERROR;
+export type START_fetch_PAYLOAD = loadingState_TYPES;
 
 export type myVocabsReducerAction_PROPS =
-  | { type: "ADD_VOCAB"; payload: Vocab_MODEL }
+  | { type: "PREPEND_oneVocab"; payload: PREPEND_oneVocab_PAYLOAD }
+  | { type: "UPDATE_oneVocab"; payload: UPDATE_oneVocab_PAYLOAD }
   | {
-      type: "ADD_VOCABS_TO_PAGINATION";
-      payload: { vocabs: Vocab_MODEL[]; unpaginated_COUNT: number };
+      type: "APPEND_manyVocabs";
+      payload: APPEND_manyVocabs_PAYLOAD;
     }
-  | { type: "DELETE_VOCAB"; payload: string }
-  | { type: "SET_LOADING_STATE"; payload: loadingState_TYPES }
+  | { type: "DELETE_oneVocab"; payload: DELETE_oneVocab_PAYLOAD }
   | {
-      type: "SET_ERROR";
-      payload?: Error_PROPS;
+      type: "SET_error";
+      payload: SET_error_PAYLOAD;
     }
-  | { type: "RESET_STATE"; payload: myVocabs_REDUCER_RESPONSE_TYPE };
+  | { type: "START_fetch"; payload: START_fetch_PAYLOAD };
 
-export type myVocabs_REDUCER_RESPONSE_TYPE = {
+export type vocabsReducer_TYPE = {
   data?: {
-    vocabs: Vocab_MODEL[];
+    vocabs: Vocab_TYPE[];
     printed_IDS: Set<string>;
     unpaginated_COUNT: number;
     HAS_reachedEnd: boolean;
   };
   loading_STATE?: loadingState_TYPES;
-  error?: Error_PROPS;
+  error?: General_ERROR;
 };

@@ -3,11 +3,11 @@
 //
 
 import { renderHook, act } from "@testing-library/react-native";
-import { myVocabs_REDUCER_RESPONSE_TYPE } from "../USE_myVocabsReducer/Vocab_REDUCER/types";
+import { vocabsReducer_TYPE } from "../USE_myVocabsReducer/Vocab_REDUCER/types";
 import { USE_loadMoreVocabs } from "./USE_loadMoreVocabs";
 
 describe("USE_loadMoreVocabs", () => {
-  let mockState: myVocabs_REDUCER_RESPONSE_TYPE;
+  let mockState: vocabsReducer_TYPE;
   let mockFetch: jest.Mock;
 
   beforeEach(() => {
@@ -19,7 +19,7 @@ describe("USE_loadMoreVocabs", () => {
 
   it("1. Calls FETCH with 'loading_more' when loading_STATE is 'none'", async () => {
     const { result } = renderHook(() =>
-      USE_loadMoreVocabs({ reducer_STATE: mockState, FETCH: mockFetch })
+      USE_loadMoreVocabs({ reducer: mockState, FETCH: mockFetch })
     );
 
     await act(async () => {
@@ -33,7 +33,7 @@ describe("USE_loadMoreVocabs", () => {
     mockState.loading_STATE = "loading_more";
 
     const { result } = renderHook(() =>
-      USE_loadMoreVocabs({ reducer_STATE: mockState, FETCH: mockFetch })
+      USE_loadMoreVocabs({ reducer: mockState, FETCH: mockFetch })
     );
 
     await act(async () => {
@@ -44,10 +44,10 @@ describe("USE_loadMoreVocabs", () => {
   });
 
   it("3. Handles undefined loading_STATE gracefully", async () => {
-    mockState = {} as myVocabs_REDUCER_RESPONSE_TYPE;
+    mockState = {} as vocabsReducer_TYPE;
 
     const { result } = renderHook(() =>
-      USE_loadMoreVocabs({ reducer_STATE: mockState, FETCH: mockFetch })
+      USE_loadMoreVocabs({ reducer: mockState, FETCH: mockFetch })
     );
 
     await act(async () => {
@@ -57,9 +57,9 @@ describe("USE_loadMoreVocabs", () => {
     expect(mockFetch).not.toHaveBeenCalled();
   });
 
-  it("4. Does not call FETCH when reducer_STATE is missing", async () => {
+  it("4. Does not call FETCH when reducer is missing", async () => {
     const { result } = renderHook(() =>
-      USE_loadMoreVocabs({ reducer_STATE: undefined as any, FETCH: mockFetch })
+      USE_loadMoreVocabs({ reducer: undefined as any, FETCH: mockFetch })
     );
 
     await act(async () => {
@@ -73,7 +73,7 @@ describe("USE_loadMoreVocabs", () => {
     mockState.loading_STATE = "none";
 
     const { result } = renderHook(() =>
-      USE_loadMoreVocabs({ reducer_STATE: mockState, FETCH: mockFetch })
+      USE_loadMoreVocabs({ reducer: mockState, FETCH: mockFetch })
     );
 
     await act(async () => {
@@ -87,7 +87,7 @@ describe("USE_loadMoreVocabs", () => {
     mockState.loading_STATE = "invalid_state" as any;
 
     const { result } = renderHook(() =>
-      USE_loadMoreVocabs({ reducer_STATE: mockState, FETCH: mockFetch })
+      USE_loadMoreVocabs({ reducer: mockState, FETCH: mockFetch })
     );
 
     await act(async () => {
@@ -102,7 +102,7 @@ describe("USE_loadMoreVocabs", () => {
     mockState.loading_STATE = "none";
 
     const { result } = renderHook(() =>
-      USE_loadMoreVocabs({ reducer_STATE: mockState, FETCH: mockFetch })
+      USE_loadMoreVocabs({ reducer: mockState, FETCH: mockFetch })
     );
 
     // Call multiple times
@@ -119,8 +119,7 @@ describe("USE_loadMoreVocabs", () => {
     mockState.loading_STATE = "none";
 
     const { result, rerender } = renderHook(
-      ({ state }) =>
-        USE_loadMoreVocabs({ reducer_STATE: state, FETCH: mockFetch }),
+      ({ state }) => USE_loadMoreVocabs({ reducer: state, FETCH: mockFetch }),
       { initialProps: { state: mockState } }
     );
 

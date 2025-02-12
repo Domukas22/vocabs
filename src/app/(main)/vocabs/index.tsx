@@ -14,7 +14,7 @@ import { USE_myProfileObservables } from "@/src/features/users/functions/fetch/h
 import { MyColors } from "@/src/constants/MyColors";
 import { USE_resetDatabase, USE_routerPush } from "@/src/hooks";
 import { VocabPageBigMain_BTNS } from "@/src/components/2_byPage/myVocabs";
-import { FETCH_vocabs } from "@/src/features/vocabs/vocabList/USE_myVocabs/helpers/USE_fetchVocabsHelper/helpers/FETCH_vocabs/FETCH_vocabs";
+import { FETCH_vocabs } from "@/src/features/vocabs/vocabList/USE_myVocabs/helpers/USE_fetchVocabs/helpers/FETCH_vocabs/FETCH_vocabs";
 
 export default function Index_PAGE() {
   const { PUSH_router } = USE_routerPush();

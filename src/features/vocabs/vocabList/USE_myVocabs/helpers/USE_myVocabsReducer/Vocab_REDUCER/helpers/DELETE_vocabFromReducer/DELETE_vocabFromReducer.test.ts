@@ -3,7 +3,7 @@
 //
 import { DELETE_vocabFromReducer } from "./DELETE_vocabFromReducer";
 import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
-import { myVocabs_REDUCER_RESPONSE_TYPE } from "../../types";
+import { vocabsReducer_TYPE } from "../../types";
 import { CREATE_err_TYPE } from "../../Vocab_REDUCER";
 
 describe("DELETE_vocabFromReducer", () => {
@@ -11,7 +11,7 @@ describe("DELETE_vocabFromReducer", () => {
     user_MSG: `${func}: ${code}`,
   })) as unknown as CREATE_err_TYPE;
 
-  const initialState: myVocabs_REDUCER_RESPONSE_TYPE = {
+  const initialState: vocabsReducer_TYPE = {
     data: {
       vocabs: [
         { id: "1", word: "test" } as unknown as Vocab_MODEL,
@@ -66,7 +66,7 @@ describe("DELETE_vocabFromReducer", () => {
     const brokenState = {
       ...initialState,
       data: { ...initialState.data, unpaginated_COUNT: "invalid" as any },
-    } as myVocabs_REDUCER_RESPONSE_TYPE;
+    } as vocabsReducer_TYPE;
 
     const newState = DELETE_vocabFromReducer(brokenState, "1", mockCreateError);
 
@@ -122,7 +122,7 @@ describe("DELETE_vocabFromReducer", () => {
         unpaginated_COUNT: 1,
         HAS_reachedEnd: false,
       },
-    } as myVocabs_REDUCER_RESPONSE_TYPE;
+    } as vocabsReducer_TYPE;
 
     const newState = DELETE_vocabFromReducer(prevState, "1", mockCreateError);
 

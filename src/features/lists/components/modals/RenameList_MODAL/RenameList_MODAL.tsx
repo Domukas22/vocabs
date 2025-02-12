@@ -65,7 +65,7 @@ export function RenameList_MODAL({
     fn_NAME: "RENAME_list",
     fn: RENAME_list,
     onSuccess,
-    defaultErr_MSG: renameList_ERRS.user.defaultInternal_MSG,
+    defaultErr_MSG: renameList_ERRS.user.defaultmessage,
   });
 
   useEffect(() => {

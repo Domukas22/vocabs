@@ -3,7 +3,7 @@
 //
 
 import { CREATE_internalErrorMsg } from "@/src/constants/globalVars";
-import { Error_PROPS } from "@/src/props";
+import { Error_PROPS } from "@/src/types/error_TYPES";
 import { z_listDisplaySettings_PROPS } from "@/src/hooks/USE_zustand/USE_zustand";
 
 export const ExtendSupabaseListQuery_ERRS = {
@@ -37,7 +37,7 @@ export const ExtendSupabaseListQuery_ERRS = {
     failed_supabase_fetch: "Failed to fetch supabase lists",
   },
   user: {
-    defaultInternal_MSG: CREATE_internalErrorMsg("trying to load lists"),
+    defaultmessage: CREATE_internalErrorMsg("trying to load lists"),
     networkFailure: "There seems to an issue with your internet connection.",
   },
 };

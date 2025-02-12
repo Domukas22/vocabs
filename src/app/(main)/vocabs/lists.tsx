@@ -50,7 +50,7 @@ export default function MyLists_PAGE() {
     HAS_reachedEnd,
     unpaginated_COUNT,
     LOAD_more,
-    ADD_vocabToReducer,
+    PREPEND_oneVocabToReducer,
   } = USE_myLists({
     search: debouncedSearch,
     IS_debouncing,
@@ -94,7 +94,7 @@ export default function MyLists_PAGE() {
             highlight(newList?.id);
             list_REF?.current?.scrollToOffset({ animated: true, offset: 0 });
 
-            ADD_vocabToReducer(newList);
+            PREPEND_oneVocabToReducer(newList);
             toast.show(t("notifications.listCreated"), {
               type: "success",
               duration: 5000,

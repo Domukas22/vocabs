@@ -8,7 +8,7 @@ import FETCH_supabaseLists_OV from "../utils/FETCH_supabaseLists_OV/FETCH_supaba
 import FORMAT_publicListVocabCount from "../../../../../lists/functions/exploreLists/formatVocabCount/FORMAT_publicListVocabCount/FORMAT_publicListVocabCount";
 import FETCH_listIdsSharedWithMe from "../../../../../lists/functions/exploreLists/fetch/FETCH_listIdsSharedWithMe/FETCH_listIdsSharedWithMe";
 import AGGREGATE_uniqueStrings from "../utils/AGGREGATE_uniqueStrings";
-import { FlatlistError_PROPS } from "@/src/props";
+import { FlatlistError_PROPS } from "@/src/types/error_TYPES";
 import USE_pagination from "@/src/hooks/USE_pagination/USE_pagination";
 import { LIST_PAGINATION } from "@/src/constants/globalVars";
 import USE_isSearching from "@/src/hooks/USE_isSearching/USE_isSearching";

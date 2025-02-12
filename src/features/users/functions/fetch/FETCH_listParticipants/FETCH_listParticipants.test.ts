@@ -31,8 +31,8 @@ describe("FETCH_listParticipants", () => {
       data: [],
       error: expect.objectContaining({
         error_TYPE: "internal",
-        user_MSG: fetchListParticipants_ERRS.user.defaultInternal_MSG,
-        internal_MSG: fetchListParticipants_ERRS.internal.noListId,
+        user_MSG: fetchListParticipants_ERRS.user.defaultmessage,
+        message: fetchListParticipants_ERRS.internal.noListId,
       }),
     });
   });
@@ -44,8 +44,8 @@ describe("FETCH_listParticipants", () => {
       data: [],
       error: expect.objectContaining({
         error_TYPE: "internal",
-        user_MSG: fetchListParticipants_ERRS.user.defaultInternal_MSG,
-        internal_MSG: fetchListParticipants_ERRS.internal.noOwnerId,
+        user_MSG: fetchListParticipants_ERRS.user.defaultmessage,
+        message: fetchListParticipants_ERRS.internal.noOwnerId,
       }),
     });
   });
@@ -128,8 +128,8 @@ describe("FETCH_listParticipants", () => {
       data: [],
       error: expect.objectContaining({
         error_TYPE: "internal",
-        user_MSG: fetchListParticipants_ERRS.user.defaultInternal_MSG,
-        internal_MSG: fetchListParticipants_ERRS.internal.failedSupabaseFetch,
+        user_MSG: fetchListParticipants_ERRS.user.defaultmessage,
+        message: fetchListParticipants_ERRS.internal.failedSupabaseFetch,
         error_DETAILS: mockError,
       }),
     });
@@ -142,8 +142,8 @@ describe("FETCH_listParticipants", () => {
       data: [],
       error: expect.objectContaining({
         error_TYPE: "internal",
-        user_MSG: fetchListParticipants_ERRS.user.defaultInternal_MSG,
-        internal_MSG: fetchListParticipants_ERRS.internal.noListId,
+        user_MSG: fetchListParticipants_ERRS.user.defaultmessage,
+        message: fetchListParticipants_ERRS.internal.noListId,
       }),
     });
   });
@@ -155,8 +155,8 @@ describe("FETCH_listParticipants", () => {
       data: [],
       error: expect.objectContaining({
         error_TYPE: "internal",
-        user_MSG: fetchListParticipants_ERRS.user.defaultInternal_MSG,
-        internal_MSG: fetchListParticipants_ERRS.internal.noOwnerId,
+        user_MSG: fetchListParticipants_ERRS.user.defaultmessage,
+        message: fetchListParticipants_ERRS.internal.noOwnerId,
       }),
     });
   });
@@ -201,8 +201,8 @@ describe("FETCH_listParticipants", () => {
       data: [],
       error: expect.objectContaining({
         error_TYPE: "internal",
-        user_MSG: fetchListParticipants_ERRS.user.defaultInternal_MSG,
-        internal_MSG: fetchListParticipants_ERRS.internal.failedSupabaseFetch,
+        user_MSG: fetchListParticipants_ERRS.user.defaultmessage,
+        message: fetchListParticipants_ERRS.internal.failedSupabaseFetch,
         error_DETAILS: mockError,
       }),
     });
@@ -225,8 +225,8 @@ describe("FETCH_listParticipants", () => {
       data: [],
       error: expect.objectContaining({
         error_TYPE: "internal",
-        user_MSG: fetchListParticipants_ERRS.user.defaultInternal_MSG,
-        internal_MSG: fetchListParticipants_ERRS.internal.invalidDataReturned,
+        user_MSG: fetchListParticipants_ERRS.user.defaultmessage,
+        message: fetchListParticipants_ERRS.internal.invalidDataReturned,
       }),
     });
   });

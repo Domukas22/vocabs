@@ -3,7 +3,7 @@
 //
 
 import { CREATE_internalErrorMsg } from "../../../constants/globalVars";
-import { Error_TYPES } from "../../../props";
+import { Error_TYPES } from "../../../types/error_TYPES";
 
 export function GET_errorMessage({
   error,

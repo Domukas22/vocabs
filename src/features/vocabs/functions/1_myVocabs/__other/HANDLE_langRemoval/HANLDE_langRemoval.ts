@@ -2,12 +2,12 @@
 //
 //
 
-import { tr_PROPS } from "@/src/props";
+import { VocabTr_TYPE } from "@/src/features/vocabs/types";
 
 export interface HANDLE_langRemoval_PROPS {
   lang_id: string;
-  current_TRS: tr_PROPS[];
-  SET_trs: (langs: tr_PROPS[]) => void;
+  current_TRS: VocabTr_TYPE[];
+  SET_trs: (langs: VocabTr_TYPE[]) => void;
 }
 
 export function HANDLE_langRemoval({

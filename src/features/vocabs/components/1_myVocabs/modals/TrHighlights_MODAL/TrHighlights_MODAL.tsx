@@ -9,7 +9,7 @@ import { ScrollView, View } from "react-native";
 import Header from "@/src/components/1_grouped/headers/regular/Header";
 import TwoBtn_BLOCK from "@/src/components/1_grouped/blocks/TwoBtn_BLOCK/TwoBtn_BLOCK";
 import Label from "@/src/components/1_grouped/texts/labels/Label/Label";
-import { tr_PROPS } from "@/src/props";
+import { VocabTr_TYPE } from "@/src/features/vocabs/types";
 import Language_MODEL from "@/src/db/models/Language_MODEL";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
@@ -21,11 +21,11 @@ import GET_wordBtns from "./GET_wordBtns/GET_wordBtns";
 
 interface TrHighlightsModal_PROPS {
   open: boolean;
-  tr: tr_PROPS | undefined;
+  tr: VocabTr_TYPE | undefined;
   target_LANG: Language_MODEL | undefined;
   diff: 0 | 1 | 2 | 3;
   TOGGLE_open: () => void;
-  SET_trs: (trs: tr_PROPS[]) => void;
+  SET_trs: (trs: VocabTr_TYPE[]) => void;
   SUBMIT_highlights: ({
     lang_id,
     highlights,

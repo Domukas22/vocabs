@@ -5,16 +5,16 @@
 import { MAX_TRANSLATION_LENGTH } from "@/src/constants/globalVars";
 import { TrInput_BLOCK } from "../../inputBlocks/TrInput_BLOCK/TrInput_BLOCK";
 import { Control, Controller } from "react-hook-form";
-import { tr_PROPS } from "@/src/props";
+import { VocabTr_TYPE } from "@/src/features/vocabs/types";
 import Language_MODEL from "@/src/db/models/Language_MODEL";
 import { CreateMyVocabData_PROPS } from "../../../modals/CreateMyVocab_MODAL/CreateMyVocab_MODAL";
 
 interface TrInputController_PROPS {
-  trs: tr_PROPS[] | undefined;
+  trs: VocabTr_TYPE[] | undefined;
   diff: 1 | 2 | 3 | undefined;
   control: Control<CreateMyVocabData_PROPS, any>;
   selected_LANGS: Language_MODEL[] | undefined;
-  OPEN_highlights: (tr: tr_PROPS) => void;
+  OPEN_highlights: (tr: VocabTr_TYPE) => void;
 }
 
 export function TrInput_CONTROLLERS({

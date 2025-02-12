@@ -69,8 +69,8 @@ describe("RENAME_list", () => {
       data: false,
       error: expect.objectContaining({
         error_TYPE: "internal",
-        user_MSG: renameList_ERRS.user.defaultInternal_MSG,
-        internal_MSG: renameList_ERRS.internal.userUndefined,
+        user_MSG: renameList_ERRS.user.defaultmessage,
+        message: renameList_ERRS.internal.userUndefined,
       }),
     });
   });
@@ -111,8 +111,8 @@ describe("RENAME_list", () => {
       data: false,
       error: expect.objectContaining({
         error_TYPE: "internal",
-        user_MSG: renameList_ERRS.user.defaultInternal_MSG,
-        internal_MSG: renameList_ERRS.internal.listUndefined,
+        user_MSG: renameList_ERRS.user.defaultmessage,
+        message: renameList_ERRS.internal.listUndefined,
       }),
     });
   });
@@ -135,8 +135,8 @@ describe("RENAME_list", () => {
       data: false,
       error: expect.objectContaining({
         error_TYPE: "internal",
-        user_MSG: renameList_ERRS.user.defaultInternal_MSG,
-        internal_MSG: renameList_ERRS.internal.watermelonRename,
+        user_MSG: renameList_ERRS.user.defaultmessage,
+        message: renameList_ERRS.internal.watermelonRename,
       }),
     });
   });

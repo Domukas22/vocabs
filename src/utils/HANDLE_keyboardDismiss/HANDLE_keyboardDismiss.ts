@@ -2,7 +2,7 @@
 //
 //
 
-import { Error_TYPES } from "@/src/props";
+import { Error_TYPES } from "@/src/types/error_TYPES";
 import { Keyboard } from "react-native";
 
 export function HANDLE_keyboardDismiss(error_TYPE: Error_TYPES | undefined) {

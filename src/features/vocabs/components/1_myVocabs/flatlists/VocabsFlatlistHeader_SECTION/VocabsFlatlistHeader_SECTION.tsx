@@ -13,7 +13,7 @@ import {
 import { USE_zustand } from "@/src/hooks/USE_zustand/USE_zustand";
 import Flashlist_LABEL from "@/src/components/1_grouped/texts/labels/Flashlist_LABEL";
 import { useCallback } from "react";
-import { loadingState_TYPES } from "@/src/types";
+import { loadingState_TYPES } from "@/src/types/general_TYPES";
 
 type VocabsFlatlistHeader_SECTIONProps = {
   debouncedSearch: string;

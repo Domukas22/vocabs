@@ -1,12 +1,12 @@
 import { renderHook, act } from "@testing-library/react-native";
 import { USE_myVocabsReducer } from "./USE_myVocabsReducer";
 import { SEND_internalError } from "@/src/utils";
-import { Error_PROPS } from "@/src/props";
-import { myVocabs_REDUCER_RESPONSE_TYPE } from "./Vocab_REDUCER/types";
-import { Vocab_MODEL } from "@/src/features/vocabs/types";
+import { Error_PROPS } from "@/src/types/error_TYPES";
+import { vocabsReducer_TYPE } from "./Vocab_REDUCER/types";
+import { Vocab_TYPE } from "@/src/features/vocabs/types";
 
 // Initial state for reducer
-const myVocabsReducerInitial_STATE: myVocabs_REDUCER_RESPONSE_TYPE = {
+const myVocabsReducerInitial_STATE: vocabsReducer_TYPE = {
   data: {
     vocabs: [],
     printed_IDS: new Set(),
@@ -21,7 +21,7 @@ jest.mock("@/src/utils", () => ({
 }));
 
 describe("USE_myVocabsReducer", () => {
-  let initialState: myVocabs_REDUCER_RESPONSE_TYPE;
+  let initialState: vocabsReducer_TYPE;
 
   beforeEach(() => {
     initialState = { ...myVocabsReducerInitial_STATE };
@@ -39,7 +39,7 @@ describe("USE_myVocabsReducer", () => {
       result.current.SET_reducerLoadingState("loading");
     });
 
-    expect(result.current.reducer_STATE.loading_STATE).toBe("loading");
+    expect(result.current.reducer.loading_STATE).toBe("loading");
   });
 
   // 2. Sets error state and triggers internal error log
@@ -55,7 +55,7 @@ describe("USE_myVocabsReducer", () => {
       result.current.SET_reducerError(error);
     });
 
-    expect(result.current.reducer_STATE.error).toEqual(error);
+    expect(result.current.reducer.error).toEqual(error);
     expect(SEND_internalError).toHaveBeenCalledWith(error);
   });
 
@@ -65,17 +65,17 @@ describe("USE_myVocabsReducer", () => {
 
     // Triggering state reset
     act(() => {
-      result.current.RESET_reducerState();
+      result.current.r_RESET();
     });
 
-    expect(result.current.reducer_STATE).toEqual(initialState);
+    expect(result.current.reducer).toEqual(initialState);
   });
 
   // 4. Appends vocabs to pagination
   test("4. Appends vocabs to pagination", () => {
     const newVocabs = [{ id: "1", word: "example" }];
     const data = {
-      vocabs: newVocabs as unknown as Vocab_MODEL[],
+      vocabs: newVocabs as unknown as Vocab_TYPE[],
       unpaginated_COUNT: 1,
     };
     const { result } = renderHook(() => USE_myVocabsReducer());
@@ -86,25 +86,21 @@ describe("USE_myVocabsReducer", () => {
     });
 
     // Check if the state updated correctly
-    expect(result?.current?.reducer_STATE?.data?.vocabs).toContainEqual(
-      newVocabs[0]
-    );
-    expect(result?.current?.reducer_STATE?.data?.unpaginated_COUNT).toBe(1);
+    expect(result?.current?.reducer?.data?.vocabs).toContainEqual(newVocabs[0]);
+    expect(result?.current?.reducer?.data?.unpaginated_COUNT).toBe(1);
   });
 
   // 5. Prepends vocab to reducer
   test("5. Prepends vocab to reducer", () => {
-    const newVocab = { id: "1", word: "example" } as unknown as Vocab_MODEL;
+    const newVocab = { id: "1", word: "example" } as unknown as Vocab_TYPE;
     const { result } = renderHook(() => USE_myVocabsReducer());
 
     // Prepending vocab
     act(() => {
-      result.current.PREPEND_vocabToReducer(newVocab);
+      result.current.r_PREPEND_oneVocab(newVocab);
     });
 
-    expect(result?.current?.reducer_STATE?.data?.vocabs).toContainEqual(
-      newVocab
-    );
+    expect(result?.current?.reducer?.data?.vocabs).toContainEqual(newVocab);
   });
 
   // TODO ====> doesnt make sense
@@ -115,10 +111,10 @@ describe("USE_myVocabsReducer", () => {
 
     // Removing vocab
     act(() => {
-      result.current.REMOVE_vocabFromReducer("1");
+      result.current.r_DELETE_oneVocab("1");
     });
 
-    expect(result?.current?.reducer_STATE?.data?.vocabs).not.toContainEqual(
+    expect(result?.current?.reducer?.data?.vocabs).not.toContainEqual(
       existingVocab
     );
   });
@@ -132,7 +128,7 @@ describe("USE_myVocabsReducer", () => {
       result.current.SET_reducerError(undefined);
     });
 
-    expect(result.current.reducer_STATE.error).toBeUndefined();
+    expect(result.current.reducer.error).toBeUndefined();
   });
 
   // 8. Handles undefined vocab gracefully
@@ -141,13 +137,11 @@ describe("USE_myVocabsReducer", () => {
 
     // Attempting to prepend undefined vocab
     act(() => {
-      result.current.PREPEND_vocabToReducer(
-        undefined as unknown as Vocab_MODEL
-      );
+      result.current.r_PREPEND_oneVocab(undefined as unknown as Vocab_TYPE);
     });
 
-    expect(result?.current?.reducer_STATE?.data?.vocabs).toBeUndefined();
-    expect(result?.current?.reducer_STATE?.error).toBeDefined();
+    expect(result?.current?.reducer?.data?.vocabs).toBeUndefined();
+    expect(result?.current?.reducer?.error).toBeDefined();
   });
 
   // 9. Handles empty vocabs array gracefully
@@ -162,8 +156,8 @@ describe("USE_myVocabsReducer", () => {
       });
     });
 
-    expect(result?.current?.reducer_STATE?.data?.vocabs).toEqual([]);
-    expect(result?.current?.reducer_STATE?.data?.unpaginated_COUNT).toBe(0);
+    expect(result?.current?.reducer?.data?.vocabs).toEqual([]);
+    expect(result?.current?.reducer?.data?.unpaginated_COUNT).toBe(0);
   });
 
   test("10. Does not trigger error log when there is no error", () => {

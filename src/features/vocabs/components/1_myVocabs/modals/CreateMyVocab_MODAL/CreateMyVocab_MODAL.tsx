@@ -26,7 +26,7 @@ import {
   HANLDE_selectedLangs,
   HANLDE_selectedHighlights,
 } from "@/src/features/vocabs/functions";
-import { tr_PROPS } from "@/src/props";
+import { VocabTr_TYPE } from "@/src/features/vocabs/types";
 import { CreateMyVocab_FOOTER } from "../../footers/CreateMyVocab_FOOTER/CreateMyVocab_FOOTER";
 import {
   ChosenLangs_CONTROLLER,
@@ -51,7 +51,7 @@ export type CreateMyVocabData_PROPS = {
   list: List_MODEL | undefined;
   difficulty: 1 | 2 | 3;
   description: string;
-  translations: tr_PROPS[];
+  translations: VocabTr_TYPE[];
 };
 
 export function CreateMyVocab_MODAL({
@@ -68,7 +68,9 @@ export function CreateMyVocab_MODAL({
     "selectList",
   ]);
 
-  const [target_TR, SET_targetTr] = useState<tr_PROPS | undefined>(undefined);
+  const [target_TR, SET_targetTr] = useState<VocabTr_TYPE | undefined>(
+    undefined
+  );
   const { z_user } = USE_zustand();
 
   const { CREATE_vocab, IS_creatingVocab, db_ERROR, RESET_dbError } =
@@ -203,7 +205,7 @@ export function CreateMyVocab_MODAL({
             {...{ control, selected_LANGS }}
             trs={form_TRS}
             diff={getValues("difficulty")}
-            OPEN_highlights={(tr: tr_PROPS) => {
+            OPEN_highlights={(tr: VocabTr_TYPE) => {
               SET_targetTr(tr);
               modals.selectHighlights.set(true);
             }}
@@ -235,7 +237,7 @@ export function CreateMyVocab_MODAL({
             HANLDE_selectedLangs({
               newLang_IDS: lang_ids,
               current_TRS: form_TRS,
-              SET_trs: (updated_TRS: tr_PROPS[]) => {
+              SET_trs: (updated_TRS: VocabTr_TYPE[]) => {
                 setValue("translations", updated_TRS);
                 if (updated_TRS.length) {
                   clearErrors("translations");
@@ -252,7 +254,7 @@ export function CreateMyVocab_MODAL({
           target_LANG={target_LANG}
           diff={getValues("difficulty")}
           TOGGLE_open={() => modals.selectHighlights.set(false)}
-          SET_trs={(trs: tr_PROPS[]) => {
+          SET_trs={(trs: VocabTr_TYPE[]) => {
             setValue("translations", trs);
           }}
           SUBMIT_highlights={({ lang_id, highlights }) =>
@@ -261,7 +263,7 @@ export function CreateMyVocab_MODAL({
               new_HIGHLIGHTS: highlights,
               lang_id,
               current_TRS: form_TRS,
-              SET_trs: (updated_TRS: tr_PROPS[]) =>
+              SET_trs: (updated_TRS: VocabTr_TYPE[]) =>
                 setValue("translations", updated_TRS),
             })
           }

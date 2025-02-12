@@ -2,7 +2,7 @@ import { CREATE_internalErrorMsg } from "@/src/constants/globalVars";
 import List_MODEL from "@/src/db/models/List_MODEL";
 import User_MODEL from "@/src/db/models/User_MODEL";
 import { supabase } from "@/src/lib/supabase";
-import { Error_PROPS } from "@/src/props";
+import { Error_PROPS } from "@/src/types/error_TYPES";
 import { CHECK_ifNetworkFailure } from "@/src/utils";
 import { SEND_internalError } from "@/src/utils";
 import { useState } from "react";

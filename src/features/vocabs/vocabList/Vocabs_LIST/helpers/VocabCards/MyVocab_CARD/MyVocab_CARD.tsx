@@ -7,13 +7,13 @@ import { StyleSheet, View } from "react-native";
 import React, { useMemo } from "react";
 
 import { USE_toggle } from "@/src/hooks/USE_toggle/USE_toggle";
-import { tr_PROPS } from "@/src/props";
+import { VocabTr_TYPE } from "@/src/features/vocabs/types";
 
 import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import { useTranslation } from "react-i18next";
 import { withObservables } from "@nozbe/watermelondb/react";
 import { useToast } from "react-native-toast-notifications";
-import { Vocab_MODEL } from "@/src/features/vocabs/types";
+import { Vocab_TYPE } from "@/src/features/vocabs/types";
 import Vocab_FRONT from "../helpers/Vocab_FRONT/Vocab_FRONT";
 import { VocabBack_TRS } from "../helpers/VocabBack_TRS/VocabBack_TRS";
 import VocabBottomText_WRAP from "../helpers/VocabBottomText_WRAP/VocabBottomText_WRAP";
@@ -21,7 +21,7 @@ import VocabBack_BTNS from "../helpers/VocabBack_BTNS/VocabBack_BTNS";
 import VocabBackDifficultyEdit_BTNS from "../helpers/VocabBackDifficultyEdit_BTNS/VocabBackDifficultyEdit_BTNS";
 
 interface VocabProps {
-  vocab: Vocab_MODEL;
+  vocab: Vocab_TYPE;
   highlighted: boolean;
 
   HANDLE_updateModal: ({
@@ -30,8 +30,8 @@ interface VocabProps {
     trs,
   }: {
     clear?: boolean;
-    vocab?: Vocab_MODEL;
-    trs?: tr_PROPS[];
+    vocab?: Vocab_TYPE;
+    trs?: VocabTr_TYPE[];
   }) => void;
 }
 

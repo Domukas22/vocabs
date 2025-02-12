@@ -4,7 +4,7 @@ import { supabase } from "../../lib/supabase";
 import User_MODEL from "@/src/db/models/User_MODEL";
 import { useState } from "react";
 
-import { Error_PROPS } from "../../props";
+import { Error_PROPS } from "../../types/error_TYPES";
 import { CREATE_internalErrorMsg } from "../../constants/globalVars";
 import ADJUST_pullChangesData from "./utils/ADJUST_pullChangesData";
 import {
@@ -220,7 +220,7 @@ export async function PUSH_changes() {
     });
     return { success: true };
   } catch (error) {
-    return { success: false, internal_MSG: "🔴 PUSH_changes error: 🔴", error };
+    return { success: false, message: "🔴 PUSH_changes error: 🔴", error };
   } finally {
     // Reset the flag after sync operation finishes
     isSyncing = false;

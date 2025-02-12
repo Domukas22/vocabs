@@ -2,7 +2,7 @@ import { useState, useCallback } from "react";
 import db, { Lists_DB, Vocabs_DB } from "@/src/db";
 import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 import { Q } from "@nozbe/watermelondb";
-import { tr_PROPS } from "@/src/props";
+import { VocabTr_TYPE } from "@/src/features/vocabs/types";
 import List_MODEL from "@/src/db/models/List_MODEL";
 
 export interface CollectListLangs_PROPS {
@@ -65,7 +65,7 @@ export function USE_collectListLangs() {
       const langSet = new Set<string>();
       vocabularies.forEach((vocab: Vocab_MODEL) => {
         if (vocab.trs) {
-          vocab.trs.forEach((tr: tr_PROPS) => {
+          vocab.trs.forEach((tr: VocabTr_TYPE) => {
             langSet.add(tr.lang_id);
           });
         }

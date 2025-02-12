@@ -2,7 +2,7 @@
 //
 //
 
-import { Error_PROPS } from "@/src/props";
+import { Error_PROPS } from "@/src/types/error_TYPES";
 
 export type ListIdsSharedWithMe_DATA =
   | {

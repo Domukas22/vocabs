@@ -8,15 +8,16 @@ import { Skeleton_BLOCK } from "@/src/components/1_grouped/blocks/Skeleton_BLOCK
 import Styled_FLASHLIST from "@/src/components/3_other/Styled_FLASHLIST/Styled_FLASHLIST";
 import SwipeableExample from "@/src/components/3_other/SwipeableExample/SwipeableExample";
 import { MyColors } from "@/src/constants/MyColors";
-import { Error_PROPS } from "@/src/props";
-import { loadingState_TYPES } from "@/src/types";
+import { Error_PROPS, General_ERROR } from "@/src/types/error_TYPES";
+import { loadingState_TYPES } from "@/src/types/general_TYPES";
 import { FlashList } from "@shopify/flash-list";
 import { NativeSyntheticEvent, NativeScrollEvent, View } from "react-native";
 import { Deleted_VOCAB, VocabsFlatlistHeader_SECTION } from "../../components";
 import { USE_vocabs_FETCH_TYPES } from "../../functions/1_myVocabs/fetch/FETCH_myVocabs/types";
 import { VocabsSkeleton_BLOCK } from "./helpers/VocabsSkeleton_BLOCK/VocabsSkeleton_BLOCK";
-import { Vocab_MODEL } from "../../types";
+import { Vocab_TYPE } from "../../types";
 import My_VOCAB from "./helpers/VocabCards/MyVocab_CARD/MyVocab_CARD";
+import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 
 export function Vocab_LIST({
   PREPARE_vocabDelete,
@@ -39,12 +40,12 @@ export function Vocab_LIST({
   unpaginated_COUNT,
   LOAD_more = () => {},
 }: {
-  PREPARE_vocabDelete: (vocab: Vocab_MODEL) => void;
+  PREPARE_vocabDelete: (vocab: Vocab_TYPE) => void;
   onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
-  SELECT_forRevival?: (vocab: Vocab_MODEL) => void;
+  SELECT_forRevival?: (vocab: Vocab_TYPE) => void;
   HANDLE_updateModal?: (params: {
     clear?: boolean;
-    vocab?: Vocab_MODEL;
+    vocab?: Vocab_TYPE;
   }) => void;
   highlightedVocab_ID: string | undefined;
   _ref?: React.RefObject<FlashList<any>>;
@@ -57,8 +58,8 @@ export function Vocab_LIST({
   fetch_TYPE: USE_vocabs_FETCH_TYPES;
   list_NAME: string | undefined;
 
-  vocabs: Vocab_MODEL[] | undefined;
-  vocabs_ERROR: Error_PROPS | undefined;
+  vocabs: Vocab_TYPE[] | undefined;
+  vocabs_ERROR: General_ERROR | undefined;
   HAS_reachedEnd: boolean;
   loading_STATE: loadingState_TYPES;
   unpaginated_COUNT: number;
@@ -91,7 +92,7 @@ export function Vocab_LIST({
       );
   };
 
-  const Vocab_BTN = (vocab: Vocab_MODEL) =>
+  const Vocab_BTN = (vocab: Vocab_TYPE) =>
     fetch_TYPE !== "deletedVocabs" ? (
       <SwipeableExample
         rightBtn_ACTION={() => {
@@ -108,11 +109,11 @@ export function Vocab_LIST({
       <Deleted_VOCAB vocab={vocab} {...{ SELECT_forRevival }} />
     );
 
-  if (vocabs_ERROR?.value)
+  if (vocabs_ERROR)
     return (
       <View style={{ padding: 12, backgroundColor: MyColors.fill_bg, flex: 1 }}>
         <Error_BLOCK
-          paragraph={vocabs_ERROR?.msg}
+          paragraph={vocabs_ERROR?.message}
           title="Something went wrong..."
         />
       </View>

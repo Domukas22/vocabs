@@ -5,7 +5,7 @@
 import React, { useEffect } from "react";
 import { ActivityIndicator } from "react-native";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
-import { loadingState_TYPES } from "@/src/types";
+import { loadingState_TYPES } from "@/src/types/general_TYPES";
 
 export default function Flashlist_LABEL({
   debouncedSearch = "",

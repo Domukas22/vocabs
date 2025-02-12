@@ -7,13 +7,13 @@ import { ICON_flag } from "@/src/components/1_grouped/icons/icons";
 import Highlighted_TEXT from "@/src/components/1_grouped/texts/Highlighted_TEXT/Highlighted_TEXT";
 import { StyleSheet } from "react-native";
 import { MyColors } from "@/src/constants/MyColors";
-import { tr_PROPS } from "@/src/props";
+import { VocabTr_TYPE } from "@/src/features/vocabs/types";
 
 export function VocabBack_TRS({
   trs,
   difficulty = 0,
 }: {
-  trs: tr_PROPS[];
+  trs: VocabTr_TYPE[];
   difficulty: 0 | 1 | 2 | 3 | undefined;
 }) {
   return trs && trs.length > 0

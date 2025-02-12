@@ -63,11 +63,11 @@ export default function DeletedVocabs_PAGE() {
     loading_STATE,
     unpaginated_COUNT,
     LOAD_moreVocabs,
-    ADD_vocabToReducer,
-    REMOVE_vocabFromReducer,
+    PREPEND_oneVocabToReducer,
+    r_DELETE_oneVocab,
   } = USE_myVocabs({
-    vocabFetch_TYPE: "deleted",
-    vocabList_TYPE: "private",
+    fetch_TYPE: "deleted",
+    list_TYPE: "private",
     search: debouncedSearch,
   });
 
@@ -112,7 +112,7 @@ export default function DeletedVocabs_PAGE() {
             modals.reviveVocab.set(false);
 
             HIGHLIGHT_vocab(new_VOCAB.id);
-            REMOVE_vocabFromReducer(new_VOCAB.id);
+            r_DELETE_oneVocab(new_VOCAB.id);
             toast.show(t("notifications.vocabRevived"), {
               type: "success",
               duration: 3000,

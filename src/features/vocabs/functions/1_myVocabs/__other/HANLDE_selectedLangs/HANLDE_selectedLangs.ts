@@ -2,7 +2,7 @@
 //
 //
 
-import { tr_PROPS } from "@/src/props";
+import { VocabTr_TYPE } from "@/src/features/vocabs/types";
 
 export function HANLDE_selectedLangs({
   newLang_IDS,
@@ -10,8 +10,8 @@ export function HANLDE_selectedLangs({
   SET_trs,
 }: {
   newLang_IDS: string[] | undefined;
-  current_TRS: tr_PROPS[];
-  SET_trs: (langs: tr_PROPS[]) => void;
+  current_TRS: VocabTr_TYPE[];
+  SET_trs: (langs: VocabTr_TYPE[]) => void;
 }) {
   let updated_TRS = [...current_TRS];
 

@@ -33,10 +33,10 @@ const validSuapabse_METHODS = {
   abortSignal: jest.fn().mockReturnThis(),
 };
 
-const GET_errorObjContent = (internal_MSG: string) => ({
+const GET_errorObjContent = (message: string) => ({
   error_TYPE: "internal",
-  user_MSG: ExtendSupabaseListQuery_ERRS.user.defaultInternal_MSG,
-  internal_MSG: internal_MSG,
+  user_MSG: ExtendSupabaseListQuery_ERRS.user.defaultmessage,
+  message: message,
   function_NAME,
 });
 
@@ -628,9 +628,8 @@ describe("FETCH_supabaseLists handling the fetch", () => {
       data: { lists: [], count: 0 },
       error: expect.objectContaining({
         error_TYPE: "internal",
-        internal_MSG:
-          ExtendSupabaseListQuery_ERRS.internal.failed_supabase_fetch,
-        user_MSG: ExtendSupabaseListQuery_ERRS.user.defaultInternal_MSG,
+        message: ExtendSupabaseListQuery_ERRS.internal.failed_supabase_fetch,
+        user_MSG: ExtendSupabaseListQuery_ERRS.user.defaultmessage,
         function_NAME: "FETCH_supabaseLists",
         error_DETAILS: mockError,
       }),
@@ -689,7 +688,7 @@ describe("FETCH_supabaseLists handling the fetch", () => {
       },
       error: expect.objectContaining({
         error_TYPE: "unknown",
-        internal_MSG: "Query aborted",
+        message: "Query aborted",
       }),
     });
   });

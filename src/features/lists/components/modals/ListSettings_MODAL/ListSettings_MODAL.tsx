@@ -31,7 +31,7 @@ import Label from "@/src/components/1_grouped/texts/labels/Label/Label";
 
 import { USE_sync } from "@/src/hooks/USE_sync/USE_sync";
 import { USE_zustand } from "@/src/hooks";
-import { Error_PROPS } from "@/src/props";
+import { Error_PROPS } from "@/src/types/error_TYPES";
 import Error_TEXT from "@/src/components/1_grouped/texts/Error_TEXT/Error_TEXT";
 import { USE_highlightBoolean } from "@/src/hooks/USE_highlightBoolean/USE_highlightBoolean";
 import { SelectUsers_MODAL } from "@/src/features/users/components";
@@ -108,7 +108,7 @@ export function ListSettings_MODAL({
     },
     fn_NAME: "FETCH_listParticipants",
     dependencies: [open, list?.type, list?.id],
-    defaultErr_MSG: fetchListParticipants_ERRS.user.defaultInternal_MSG,
+    defaultErr_MSG: fetchListParticipants_ERRS.user.defaultmessage,
     SHOULD_fetchOnLoad: true,
     SHOULD_returnNothing: list?.type !== "shared",
     fn: FETCH_listParticipants,

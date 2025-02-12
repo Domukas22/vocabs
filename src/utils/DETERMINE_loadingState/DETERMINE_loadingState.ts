@@ -2,7 +2,7 @@
 //
 //
 
-import { loadingState_TYPES } from "@/src/types";
+import { loadingState_TYPES } from "@/src/types/general_TYPES";
 
 export default function DETERMINE_loadingState({
   search = "",

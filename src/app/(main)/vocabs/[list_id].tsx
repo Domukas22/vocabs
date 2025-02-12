@@ -29,12 +29,14 @@ import { USE_modalToggles } from "@/src/hooks/index";
 import { USE_observeMyTargetList } from "@/src/features/lists/functions";
 import { USE_myVocabs } from "@/src/features/vocabs/vocabList/USE_myVocabs/USE_myVocabs";
 import { Vocab_LIST } from "@/src/features/vocabs/vocabList/Vocabs_LIST/Vocabs_LIST";
+import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 
 export default function SingleList_PAGE() {
   const { t } = useTranslation();
   const toast = useToast();
   const router = useRouter();
-  const { list_id } = useLocalSearchParams();
+
+  const { list_id = "someIdToAvoidError" } = useLocalSearchParams();
 
   const selected_LIST = USE_observeMyTargetList(
     typeof list_id === "string" ? list_id : ""
@@ -79,12 +81,12 @@ export default function SingleList_PAGE() {
     loading_STATE,
     unpaginated_COUNT,
     LOAD_moreVocabs,
-    ADD_vocabToReducer,
-    REMOVE_vocabFromReducer,
+    PREPEND_oneVocabToReducer,
+    r_DELETE_oneVocab,
   } = USE_myVocabs({
-    vocabFetch_TYPE: "byTargetList",
-    vocabList_TYPE: "private",
-    targetList_ID: selected_LIST?.id,
+    fetch_TYPE: "byTargetList",
+    list_TYPE: "private",
+    targetList_ID: typeof list_id === "string" ? list_id : "",
     search: debouncedSearch,
   });
 
@@ -99,7 +101,7 @@ export default function SingleList_PAGE() {
         OPEN_create={() => modals.createVocab.set(true)}
         {...{ search, SET_search }}
       />
-
+      <Btn text="Test error" onPress={() => r_DELETE_oneVocab("ass")} />
       <Vocab_LIST
         _ref={list_REF}
         list_NAME={selected_LIST?.name}
@@ -133,7 +135,7 @@ export default function SingleList_PAGE() {
             modals.createVocab.set(false);
 
             HIGHLIGHT_vocab(new_VOCAB.id);
-            ADD_vocabToReducer(new_VOCAB);
+            PREPEND_oneVocabToReducer(new_VOCAB);
             list_REF?.current?.scrollToOffset({ animated: true, offset: 0 });
             toast.show(t("notifications.vocabCreated"), {
               type: "success",
@@ -178,7 +180,7 @@ export default function SingleList_PAGE() {
               type: "success",
               duration: 5000,
             });
-            REMOVE_vocabFromReducer(targetDelete_VOCAB?.id || "");
+            r_DELETE_oneVocab(targetDelete_VOCAB?.id || "");
             modals.deleteVocab.set(false);
           }}
         />

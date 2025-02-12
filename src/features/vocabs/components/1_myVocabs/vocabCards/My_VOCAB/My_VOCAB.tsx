@@ -7,7 +7,7 @@ import { StyleSheet, View } from "react-native";
 import React, { useMemo } from "react";
 
 import { USE_toggle } from "@/src/hooks/USE_toggle/USE_toggle";
-import { tr_PROPS } from "@/src/props";
+import { VocabTr_TYPE } from "@/src/features/vocabs/types";
 import Vocab_FRONT from "../Components/Vocab_FRONT/Vocab_FRONT";
 
 import { VocabBack_TRS } from "../Components/VocabBack_TRS/VocabBack_TRS";
@@ -19,10 +19,10 @@ import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import { useTranslation } from "react-i18next";
 import { withObservables } from "@nozbe/watermelondb/react";
 import { useToast } from "react-native-toast-notifications";
-import { Vocab_MODEL } from "@/src/features/vocabs/types";
+import { Vocab_TYPE } from "@/src/features/vocabs/types";
 
 interface VocabProps {
-  _vocab: Vocab_MODEL;
+  _vocab: Vocab_TYPE;
   highlighted: boolean;
 
   HANDLE_updateModal: ({
@@ -31,8 +31,8 @@ interface VocabProps {
     trs,
   }: {
     clear?: boolean;
-    vocab?: Vocab_MODEL;
-    trs?: tr_PROPS[];
+    vocab?: Vocab_TYPE;
+    trs?: VocabTr_TYPE[];
   }) => void;
 }
 

@@ -24,9 +24,7 @@ export const fetchListParticipants_ERRS = {
       "Failed to fetch list accesses where I am participant in",
   },
   user: {
-    defaultInternal_MSG: CREATE_internalErrorMsg(
-      "trying to load list participants"
-    ),
+    defaultmessage: CREATE_internalErrorMsg("trying to load list participants"),
     networkFailure: "There seems to an issue with your internet connection.",
   },
 };
@@ -59,8 +57,7 @@ export async function FETCH_listParticipants({
       error: HANDLE_userErrorInsideFinalCatchBlock({
         function_NAME: "FETCH_listParticipants",
         error,
-        internalErrorUser_MSG:
-          fetchListParticipants_ERRS.user.defaultInternal_MSG,
+        internalErrorUser_MSG: fetchListParticipants_ERRS.user.defaultmessage,
       }),
     };
   }
@@ -72,8 +69,8 @@ function VALIDATE_supabaseData(data: ListParticipants_DATA) {
     if (!data[0]?.id || !data[0]?.username)
       throw GENERATE_error({
         error_TYPE: "internal",
-        user_MSG: fetchListParticipants_ERRS.user.defaultInternal_MSG,
-        internal_MSG: fetchListParticipants_ERRS.internal.invalidDataReturned,
+        user_MSG: fetchListParticipants_ERRS.user.defaultmessage,
+        message: fetchListParticipants_ERRS.internal.invalidDataReturned,
       });
   }
 }
@@ -84,15 +81,15 @@ function VALIDATE_args(
   if (!list_id) {
     throw GENERATE_error({
       error_TYPE: "internal",
-      user_MSG: fetchListParticipants_ERRS.user.defaultInternal_MSG,
-      internal_MSG: fetchListParticipants_ERRS.internal.noListId,
+      user_MSG: fetchListParticipants_ERRS.user.defaultmessage,
+      message: fetchListParticipants_ERRS.internal.noListId,
     });
   }
   if (!owner_id) {
     throw GENERATE_error({
       error_TYPE: "internal",
-      user_MSG: fetchListParticipants_ERRS.user.defaultInternal_MSG,
-      internal_MSG: fetchListParticipants_ERRS.internal.noOwnerId,
+      user_MSG: fetchListParticipants_ERRS.user.defaultmessage,
+      message: fetchListParticipants_ERRS.internal.noOwnerId,
     });
   }
 }
@@ -109,8 +106,8 @@ function VALIDATE_supabaseFetch(error: PostgrestError | null) {
     } else {
       throw GENERATE_error({
         error_TYPE: "internal",
-        user_MSG: fetchListParticipants_ERRS.user.defaultInternal_MSG,
-        internal_MSG: fetchListParticipants_ERRS.internal.failedSupabaseFetch,
+        user_MSG: fetchListParticipants_ERRS.user.defaultmessage,
+        message: fetchListParticipants_ERRS.internal.failedSupabaseFetch,
         error_DETAILS: error,
       });
     }

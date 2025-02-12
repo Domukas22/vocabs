@@ -51,8 +51,7 @@ export async function FETCH_supabaseLists(
       error: HANDLE_userErrorInsideFinalCatchBlock({
         error,
         function_NAME: "FETCH_supabaseLists",
-        internalErrorUser_MSG:
-          ExtendSupabaseListQuery_ERRS.user.defaultInternal_MSG,
+        internalErrorUser_MSG: ExtendSupabaseListQuery_ERRS.user.defaultmessage,
       }),
     };
   }
@@ -184,8 +183,8 @@ function GENERATE_internalError(
 ) {
   return {
     error_TYPE: "internal",
-    internal_MSG: ExtendSupabaseListQuery_ERRS.internal[type],
-    user_MSG: ExtendSupabaseListQuery_ERRS.user.defaultInternal_MSG,
+    message: ExtendSupabaseListQuery_ERRS.internal[type],
+    user_MSG: ExtendSupabaseListQuery_ERRS.user.defaultmessage,
     function_NAME: "BUILD_supabaseListQuery",
     error_DETAILS: details,
   } as FetchSupabaseListsError_PROPS;

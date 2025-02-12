@@ -3,14 +3,20 @@
 //
 
 import { useCallback, useEffect, useReducer } from "react";
-import { loadingState_TYPES } from "@/src/types";
-import { Error_PROPS } from "@/src/props";
 import { SEND_internalError } from "@/src/utils";
-import { myVocabs_REDUCER_RESPONSE_TYPE } from "./Vocab_REDUCER/types";
+import {
+  APPEND_manyVocabs_PAYLOAD,
+  DELETE_oneVocab_PAYLOAD,
+  vocabsReducer_TYPE,
+  PREPEND_oneVocab_PAYLOAD,
+  SET_error_PAYLOAD,
+  START_fetch_PAYLOAD,
+  UPDATE_oneVocab_PAYLOAD,
+} from "./Vocab_REDUCER/types";
 import { Vocab_REDUCER } from "./Vocab_REDUCER/Vocab_REDUCER";
-import { Vocab_MODEL } from "@/src/features/vocabs/types";
+import { General_ERROR } from "@/src/types/error_TYPES";
 
-export const myVocabsReducerInitial_STATE: myVocabs_REDUCER_RESPONSE_TYPE = {
+export const myVocabsReducerInitial_STATE: vocabsReducer_TYPE = {
   data: {
     vocabs: [],
     printed_IDS: new Set(),
@@ -21,57 +27,97 @@ export const myVocabsReducerInitial_STATE: myVocabs_REDUCER_RESPONSE_TYPE = {
 };
 
 export function USE_myVocabsReducer() {
-  const [reducer_STATE, dispatch] = useReducer(
+  const [reducer, dispatch] = useReducer(
     Vocab_REDUCER,
     myVocabsReducerInitial_STATE
   );
 
-  // log errors -----------------------------------------
-  useEffect(() => {
-    if (reducer_STATE?.error) {
-      SEND_internalError(reducer_STATE?.error);
+  const _HANDLE_err = (err: any, function_NAME: string) => {
+    const error = new General_ERROR({
+      function_NAME: err?.function_NAME || function_NAME,
+      message: err?.message,
+      errorToSpread: err,
+    });
+
+    dispatch({
+      type: "SET_error",
+      payload: error,
+    });
+    SEND_internalError(error);
+  };
+
+  const r_START_fetch = useCallback((payload: START_fetch_PAYLOAD) => {
+    if (reducer.error) return;
+    try {
+      dispatch({ type: "START_fetch", payload });
+    } catch (error: any) {
+      _HANDLE_err(error, "r_START_fetch");
     }
-  }, [reducer_STATE?.error]);
-  // ----------------------------------------------------
+  }, []);
 
-  const SET_reducerLoadingState = useCallback(
-    (fetch_TYPE: loadingState_TYPES) =>
-      dispatch({ type: "SET_LOADING_STATE", payload: fetch_TYPE }),
-    []
-  );
-  const SET_reducerError = useCallback(
-    (err?: Error_PROPS) => dispatch({ type: "SET_ERROR", payload: err }),
-    []
-  );
-  const RESET_reducerState = useCallback(
-    () =>
-      dispatch({ type: "RESET_STATE", payload: myVocabsReducerInitial_STATE }),
+  const r_APPEND_manyVocabs = useCallback(
+    (payload: APPEND_manyVocabs_PAYLOAD) => {
+      if (reducer.error) return;
+
+      try {
+        dispatch({ type: "APPEND_manyVocabs", payload });
+      } catch (error: any) {
+        _HANDLE_err(error, "r_APPEND_manyVocabs");
+      }
+    },
     []
   );
 
-  const APPEND_vocabsToPagination = useCallback(
-    (data: { vocabs: Vocab_MODEL[]; unpaginated_COUNT: number }) =>
-      dispatch({ type: "ADD_VOCABS_TO_PAGINATION", payload: data }),
-    []
+  const r_PREPEND_oneVocab = useCallback(
+    (payload: PREPEND_oneVocab_PAYLOAD) => {
+      if (reducer.error) return;
+
+      try {
+        dispatch({ type: "PREPEND_oneVocab", payload });
+      } catch (error: any) {
+        _HANDLE_err(error, "r_PREPEND_oneVocab");
+      }
+    },
+    [reducer.loading_STATE, reducer.error]
+  );
+  const r_UPDATE_oneVocab = useCallback(
+    (payload: UPDATE_oneVocab_PAYLOAD) => {
+      if (reducer.error) return;
+
+      try {
+        dispatch({ type: "UPDATE_oneVocab", payload });
+      } catch (error: any) {
+        _HANDLE_err(error, "r_UPDATE_oneVocab");
+      }
+    },
+    [reducer.loading_STATE, reducer.error]
   );
 
-  const PREPEND_vocabToReducer = useCallback(
-    (vocab: Vocab_MODEL) => dispatch({ type: "ADD_VOCAB", payload: vocab }),
-    [reducer_STATE?.loading_STATE]
+  const r_DELETE_oneVocab = useCallback(
+    (payload: DELETE_oneVocab_PAYLOAD) => {
+      if (reducer.error) return;
+
+      try {
+        dispatch({ type: "DELETE_oneVocab", payload });
+      } catch (error: any) {
+        _HANDLE_err(error, "r_DELETE_oneVocab");
+      }
+    },
+    [reducer.loading_STATE, reducer.error]
   );
 
-  const REMOVE_vocabFromReducer = useCallback(
-    (id: string) => dispatch({ type: "DELETE_VOCAB", payload: id }),
-    [reducer_STATE?.loading_STATE]
-  );
+  const r_SET_error = useCallback((payload: SET_error_PAYLOAD) => {
+    dispatch({ type: "SET_error", payload });
+    SEND_internalError(payload);
+  }, []);
 
   return {
-    reducer_STATE,
-    SET_reducerLoadingState,
-    PREPEND_vocabToReducer,
-    APPEND_vocabsToPagination,
-    REMOVE_vocabFromReducer,
-    SET_reducerError,
-    RESET_reducerState,
+    reducer,
+    r_PREPEND_oneVocab,
+    r_UPDATE_oneVocab,
+    r_DELETE_oneVocab,
+    r_START_fetch,
+    r_APPEND_manyVocabs,
+    r_SET_error,
   };
 }

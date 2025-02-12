@@ -12,7 +12,7 @@ import Label from "@/src/components/1_grouped/texts/labels/Label/Label";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
 
-import { tr_PROPS } from "@/src/props";
+import { VocabTr_TYPE } from "@/src/features/vocabs/types";
 import Language_MODEL from "@/src/db/models/Language_MODEL";
 
 import { USE_zustand } from "@/src/hooks";
@@ -21,7 +21,7 @@ import { useMemo } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
 interface VocabFront_PROPS {
-  trs: tr_PROPS[] | undefined;
+  trs: VocabTr_TYPE[] | undefined;
   difficulty: 0 | 1 | 2 | 3 | undefined;
   description: string | undefined;
   TOGGLE_open: () => void;

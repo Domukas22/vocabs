@@ -2,7 +2,7 @@
 //
 //
 
-import { Error_PROPS } from "@/src/props";
+import { Error_PROPS } from "@/src/types/error_TYPES";
 import { CHECK_ifNetworkFailure } from "../CHECK_ifNetworkFailure/CHECK_ifNetworkFailure";
 import { DEFAULT_userErrorMsg } from "@/src/constants/globalVars";
 
@@ -16,19 +16,15 @@ export function TRANSFORM_error<validInput_NAMES extends string = string>(
     ? "There seems to an issue with your internet connection"
     : DEFAULT_userErrorMsg;
 
-  const internal_MSG = error?.internal_MSG || error?.message;
-
-  const error_TYPE = IS_networkFailure
-    ? "user_network"
-    : error?.error_TYPE || "unknown";
+  const message = error?.message || error?.message;
 
   // const details = type === "unknown" ? error : error.error_DETAILS;
   const error_DETAILS = error?.error_DETAILS ? error.error_DETAILS : error;
 
   return {
     user_MSG,
-    internal_MSG,
-    error_TYPE,
+    message,
+    error_TYPE: "general",
     error_DETAILS,
     falsyForm_INPUTS: error?.falsyForm_INPUTS,
     function_NAME,

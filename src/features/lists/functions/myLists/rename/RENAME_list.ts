@@ -22,7 +22,7 @@ export const renameList_ERRS = {
       "renamed_LIST object returned undefined from WatermelonDB when renaming list",
   },
   user: {
-    defaultInternal_MSG: CREATE_internalErrorMsg("trying to rename the list"),
+    defaultmessage: CREATE_internalErrorMsg("trying to rename the list"),
     falsyInput: "Please correct the errors above",
     noNameProvided_OBJ: [
       {
@@ -59,7 +59,7 @@ export async function RENAME_list(
       error: HANDLE_userErrorInsideFinalCatchBlock({
         function_NAME: "RENAME_list",
         error,
-        internalErrorUser_MSG: renameList_ERRS.user.defaultInternal_MSG,
+        internalErrorUser_MSG: renameList_ERRS.user.defaultmessage,
       }),
     };
   }
@@ -82,16 +82,16 @@ function VALIDATE_args(arg: RenameList_ARGS) {
   if (!user) {
     throw GENERATE_error({
       error_TYPE: "internal",
-      user_MSG: renameList_ERRS.user.defaultInternal_MSG,
-      internal_MSG: renameList_ERRS.internal.userUndefined,
+      user_MSG: renameList_ERRS.user.defaultmessage,
+      message: renameList_ERRS.internal.userUndefined,
     });
   }
 
   if (!list) {
     throw GENERATE_error({
       error_TYPE: "internal",
-      user_MSG: renameList_ERRS.user.defaultInternal_MSG,
-      internal_MSG: renameList_ERRS.internal.listUndefined,
+      user_MSG: renameList_ERRS.user.defaultmessage,
+      message: renameList_ERRS.internal.listUndefined,
     });
   }
 }
@@ -122,8 +122,8 @@ async function _RENAME_withWatermelon({
   if (!renamed_LIST) {
     throw GENERATE_error({
       error_TYPE: "internal",
-      user_MSG: renameList_ERRS.user.defaultInternal_MSG,
-      internal_MSG: renameList_ERRS.internal.watermelonRename,
+      user_MSG: renameList_ERRS.user.defaultmessage,
+      message: renameList_ERRS.internal.watermelonRename,
     });
   }
 }

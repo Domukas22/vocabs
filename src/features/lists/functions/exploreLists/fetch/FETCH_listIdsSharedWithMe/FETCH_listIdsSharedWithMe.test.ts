@@ -38,7 +38,7 @@ describe("FETCH_listIdsSharedWithMe", () => {
     error: expect.objectContaining({
       error_TYPE: "internal",
       user_MSG: userMessage,
-      internal_MSG: internalMessage,
+      message: internalMessage,
     }),
   });
 
@@ -47,7 +47,7 @@ describe("FETCH_listIdsSharedWithMe", () => {
     ["", errs.internal.noUserId],
   ])("1. Throws error if user_id is %p", async (user_id, expectedMessage) => {
     await expect(FETCH_listIdsSharedWithMe(user_id as any)).resolves.toEqual(
-      commonError(errs.internal.noUserId, errs.user.defaultInternal_MSG)
+      commonError(errs.internal.noUserId, errs.user.defaultmessage)
     );
   });
 
@@ -94,8 +94,8 @@ describe("FETCH_listIdsSharedWithMe", () => {
       data: [],
       error: expect.objectContaining({
         error_TYPE: "internal",
-        user_MSG: errs.user.defaultInternal_MSG,
-        internal_MSG: errs.internal.failedSupabaseFetch,
+        user_MSG: errs.user.defaultmessage,
+        message: errs.internal.failedSupabaseFetch,
         error_DETAILS: mockError,
       }),
     });
@@ -120,8 +120,8 @@ describe("FETCH_listIdsSharedWithMe", () => {
       data: [],
       error: expect.objectContaining({
         error_TYPE: "internal",
-        user_MSG: errs.user.defaultInternal_MSG,
-        internal_MSG: errs.internal.invalidDataReturned,
+        user_MSG: errs.user.defaultmessage,
+        message: errs.internal.invalidDataReturned,
       }),
     });
   });

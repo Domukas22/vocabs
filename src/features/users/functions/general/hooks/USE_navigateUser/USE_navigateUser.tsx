@@ -6,7 +6,7 @@ import { useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 
 import { USE_zustand } from "@/src/hooks";
-import { Error_PROPS } from "@/src/props";
+import { Error_PROPS } from "@/src/types/error_TYPES";
 import { USE_clearUserContext } from "../USE_clearUserContext/USE_clearUserContext";
 import { FETCH_mySupabaseProfile } from "../../../fetch/FETCH_mySupabaseProfile/FETCH_mySupabaseProfile";
 

@@ -2,7 +2,7 @@
 //
 //
 
-import { Error_TYPES } from "../../../props";
+import { Error_TYPES } from "../../../types/error_TYPES";
 import { CHECK_ifNetworkFailure } from "../../CHECK_ifNetworkFailure/CHECK_ifNetworkFailure";
 
 export function GET_errorType(error: any): Error_TYPES {

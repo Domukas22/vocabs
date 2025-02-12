@@ -3,77 +3,71 @@
 //
 
 import {
+  FETCH_myVocabs_RESPONSE_TYPE,
   vocabFetch_TYPES,
   vocabList_TYPES,
-} from "./helpers/USE_fetchVocabsHelper/helpers/FETCH_vocabs/types";
+} from "./helpers/USE_fetchVocabs/helpers/FETCH_vocabs/types";
 import {
   USE_myVocabsReducer,
-  USE_fetchVocabsHelper,
+  USE_fetchVocabs,
   USE_loadMoreVocabs,
   USE_refetchVocabs,
+  USE_fetchVocabsAndHanldeState,
 } from "./helpers";
+import { loadingState_TYPES } from "@/src/types/general_TYPES";
+import { vocabsReducer_TYPE } from "./helpers/USE_myVocabsReducer/Vocab_REDUCER/types";
+import { useCallback } from "react";
+import { General_ERROR } from "@/src/types/error_TYPES";
+import { USE_vocabReducerActions } from "./helpers/USE_vocabReducerActions/USE_vocabReducerActions";
 
-export function USE_myVocabs({
-  vocabFetch_TYPE,
-  vocabList_TYPE,
-  search,
-  targetList_ID,
-}: {
-  vocabList_TYPE: vocabList_TYPES;
-  vocabFetch_TYPE: vocabFetch_TYPES;
+interface USE_myVocabs_ARGS {
+  list_TYPE: vocabList_TYPES;
+  fetch_TYPE: vocabFetch_TYPES;
   search: string;
   targetList_ID?: string | undefined;
-}) {
-  // -----------------------------------------------------
-  // This is the main part of the hook.
-  // It also tracks errors for the FETCH function below.
+}
+
+export function USE_myVocabs(args: USE_myVocabs_ARGS) {
+  const { search, targetList_ID, list_TYPE, fetch_TYPE } = args;
   const {
-    reducer_STATE,
-    PREPEND_vocabToReducer,
-    REMOVE_vocabFromReducer,
-    RESET_reducerState,
-    APPEND_vocabsToPagination,
-    SET_reducerLoadingState,
-    SET_reducerError,
+    reducer,
+    r_PREPEND_oneVocab,
+    r_DELETE_oneVocab,
+    r_START_fetch,
+    r_APPEND_manyVocabs,
+    r_UPDATE_oneVocab,
+    r_SET_error,
   } = USE_myVocabsReducer();
 
-  // -----------------------------------------------------
-  // -----------------------------------------------------
-
-  // Fetches vocabs and inserts them into the reducer state.
-  const { FETCH } = USE_fetchVocabsHelper({
-    fetch_TYPE: vocabFetch_TYPE,
-    list_TYPE: vocabList_TYPE,
-    reducer_STATE,
+  // This hook simply interracts with the 'r_' functions
+  const { LOAD_moreVocabs, REFETCH_vocabs } = USE_vocabReducerActions({
+    reducer,
+    list_TYPE,
+    fetch_TYPE,
     search,
     targetList_ID,
-    SET_reducerError,
-    APPEND_vocabsToPagination,
-    SET_reducerLoadingState,
+    r_START_fetch,
+    r_APPEND_manyVocabs,
+    r_SET_error,
   });
 
-  // Adds paginated vocabs to the reducer state.
-  const { LOAD_moreVocabs } = USE_loadMoreVocabs({
-    reducer_STATE,
-    FETCH,
-  });
-
-  // Refetches vocabs on changes ==> search / filters / sorting / targetList_ID
+  // This triggers the "REFETCH_vocabs"
+  // on changes ==> search / filters / sorting / targetList_ID
   USE_refetchVocabs({
     search,
     targetList_ID,
-    RESET_reducerState,
-    FETCH,
+    REFETCH_vocabs,
   });
 
   return {
-    vocabs: reducer_STATE?.data?.vocabs,
-    vocabs_ERROR: reducer_STATE?.error,
-    loading_STATE: reducer_STATE?.loading_STATE,
-    unpaginated_COUNT: reducer_STATE?.data?.unpaginated_COUNT,
-    HAS_reachedEnd: reducer_STATE?.data?.HAS_reachedEnd,
+    vocabs: reducer?.data?.vocabs,
+    vocabs_ERROR: reducer?.error,
+    loading_STATE: reducer?.loading_STATE,
+    unpaginated_COUNT: reducer?.data?.unpaginated_COUNT,
+    HAS_reachedEnd: reducer?.data?.HAS_reachedEnd,
     LOAD_moreVocabs,
-    ADD_vocabToReducer: PREPEND_vocabToReducer,
-    REMOVE_vocabFromReducer,
+    r_PREPEND_oneVocab,
+    r_DELETE_oneVocab,
+    r_UPDATE_oneVocab,
   };
 }

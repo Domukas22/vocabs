@@ -4,7 +4,7 @@
 
 import List_MODEL from "@/src/db/models/List_MODEL";
 import User_MODEL from "@/src/db/models/User_MODEL";
-import { Error_PROPS, FormInputError_PROPS } from "@/src/props";
+import { Error_PROPS, FormInputError_PROPS } from "@/src/types/error_TYPES";
 
 type validInput_NAMES = "name";
 

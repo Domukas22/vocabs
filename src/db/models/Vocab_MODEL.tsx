@@ -2,7 +2,7 @@
 //
 //
 
-import { tr_PROPS } from "@/src/props";
+import { VocabTr_TYPE } from "@/src/features/vocabs/types";
 import { Model } from "@nozbe/watermelondb";
 import {
   date,
@@ -13,7 +13,7 @@ import {
   writer,
 } from "@nozbe/watermelondb/decorators";
 
-const sanitizeTranslations = (rawTranslations: tr_PROPS[]) => {
+const sanitizeTranslations = (rawTranslations: VocabTr_TYPE[]) => {
   if (!Array.isArray(rawTranslations)) return [];
 
   return rawTranslations?.map((item) => {
@@ -44,7 +44,7 @@ export default class Vocab_MODEL extends Model {
 
   @field("difficulty") difficulty!: 1 | 2 | 3;
   @text("description") description!: string | undefined;
-  @json("trs", sanitizeTranslations) trs!: tr_PROPS[] | undefined;
+  @json("trs", sanitizeTranslations) trs!: VocabTr_TYPE[] | undefined;
   @text("lang_ids") lang_ids!: string | undefined;
   @text("searchable") searchable!: string | undefined;
   @field("is_marked") is_marked!: boolean | undefined;

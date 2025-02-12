@@ -1,14 +1,14 @@
 import { renderHook, act } from "@testing-library/react-native";
 
-import { myVocabs_REDUCER_RESPONSE_TYPE } from "../../types";
-import { Error_PROPS } from "@/src/props";
+import { vocabsReducer_TYPE } from "../../types";
+import { Error_PROPS } from "@/src/types/error_TYPES";
 import { SET_reducerError } from "./SET_reducerError";
 
 describe("SET_reducerError", () => {
   const initialState = {
     error: undefined,
     loading_STATE: "none", // Example of other state values that should not be affected
-  } as unknown as myVocabs_REDUCER_RESPONSE_TYPE;
+  } as unknown as vocabsReducer_TYPE;
 
   test("1. Sets error when payload is provided", () => {
     const errorPayload = { user_MSG: "Something went wrong" } as Error_PROPS;

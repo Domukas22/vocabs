@@ -1,7 +1,7 @@
 //
 //
 
-import { tr_PROPS } from "@/src/props";
+import { VocabTr_TYPE } from "@/src/features/vocabs/types";
 import Language_MODEL from "@/src/db/models/Language_MODEL";
 import List_MODEL from "@/src/db/models/List_MODEL";
 import { useState } from "react";
@@ -11,11 +11,11 @@ export interface PrivateVocabState_PROPS {
   modal_DIFF: 1 | 2 | 3;
   modal_IMG: string;
   modal_DESC: string;
-  modal_TRs: tr_PROPS[];
+  modal_TRs: VocabTr_TYPE[];
   modal_LANGS: Language_MODEL[];
 }
 export interface PrivateVocabSet_PROPS {
-  SET_modalTRs: React.Dispatch<React.SetStateAction<tr_PROPS[]>>;
+  SET_modalTRs: React.Dispatch<React.SetStateAction<VocabTr_TYPE[]>>;
   SET_modalImg: React.Dispatch<React.SetStateAction<string>>;
   SET_modalDesc: React.Dispatch<React.SetStateAction<string>>;
   SET_modalList: React.Dispatch<React.SetStateAction<List_MODEL>>;
@@ -32,7 +32,7 @@ export function USE_myVocabValues(
   const [modal_DIFF, SET_modalDiff] = useState<1 | 2 | 3>(3);
   const [modal_IMG, SET_modalImg] = useState<string>("");
   const [modal_DESC, SET_modalDesc] = useState<string>("");
-  const [modal_TRs, SET_modalTRs] = useState<tr_PROPS[]>([]);
+  const [modal_TRs, SET_modalTRs] = useState<VocabTr_TYPE[]>([]);
   const [modal_LANGS, SET_modalLangs] = useState<Language_MODEL[]>([]);
 
   return {

@@ -1,6 +1,6 @@
 import User_MODEL from "@/src/db/models/User_MODEL";
 import { supabase } from "@/src/lib/supabase";
-import { Error_PROPS } from "@/src/props";
+import { Error_PROPS } from "@/src/types/error_TYPES";
 import { SEND_internalError } from "@/src/utils";
 
 interface Response {
@@ -13,13 +13,11 @@ const defaultUserError_MSG =
 
 const function_NAME = "FETCH_mySupabaseProfile";
 
-function _CREATE_internalErr(
-  internal_MSG = "Something went wrong..."
-): Error_PROPS {
+function _CREATE_internalErr(message = "Something went wrong..."): Error_PROPS {
   return {
     error_TYPE: "internal",
     function_NAME,
-    internal_MSG,
+    message,
     user_MSG: defaultUserError_MSG,
   };
 }

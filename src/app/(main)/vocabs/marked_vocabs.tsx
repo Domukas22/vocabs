@@ -56,11 +56,11 @@ export default function SavedVocabs_PAGE() {
     loading_STATE,
     unpaginated_COUNT,
     LOAD_moreVocabs,
-    ADD_vocabToReducer,
-    REMOVE_vocabFromReducer,
+    PREPEND_oneVocabToReducer,
+    r_DELETE_oneVocab,
   } = USE_myVocabs({
-    vocabFetch_TYPE: "marked",
-    vocabList_TYPE: "private",
+    fetch_TYPE: "marked",
+    list_TYPE: "private",
     search: debouncedSearch,
   });
 
@@ -129,7 +129,7 @@ export default function SavedVocabs_PAGE() {
               type: "success",
               duration: 5000,
             });
-            REMOVE_vocabFromReducer(targetDelete_VOCAB?.id || "");
+            r_DELETE_oneVocab(targetDelete_VOCAB?.id || "");
             modals.deleteVocab.set(false);
           }}
         />

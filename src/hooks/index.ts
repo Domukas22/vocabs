@@ -5,7 +5,6 @@
 export { USE_abortController } from "./USE_abortController/USE_abortController";
 export { USE_async } from "./USE_async/USE_async";
 export { USE_debounceSearch } from "./USE_debounceSearch/USE_debounceSearch";
-export { USE_displaySettings } from "./USE_displaySettings/USE_displaySettings";
 export { USE_highlighedId } from "./USE_highlighedId/USE_highlighedId";
 export { USE_highlightBoolean } from "./USE_highlightBoolean/USE_highlightBoolean";
 export { USE_isSearching } from "./USE_isSearching/USE_isSearching";

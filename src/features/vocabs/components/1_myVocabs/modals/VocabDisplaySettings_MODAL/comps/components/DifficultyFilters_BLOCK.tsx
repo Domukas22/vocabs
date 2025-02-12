@@ -5,8 +5,6 @@ import {
   ICON_difficultyDot,
 } from "@/src/components/1_grouped/icons/icons";
 import Label from "@/src/components/1_grouped/texts/labels/Label/Label";
-import { UpdateDisplaySettings_PROPS } from "@/src/hooks/USE_displaySettings/USE_displaySettings";
-import { _DisplaySettings_PROPS } from "@/src/utils/DisplaySettings/DisplaySettings";
 import { t } from "i18next";
 
 import {

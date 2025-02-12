@@ -2,7 +2,7 @@
 //
 //
 import { useState, useCallback, useEffect } from "react";
-import { Error_PROPS } from "../../props";
+import { Error_PROPS } from "../../types/error_TYPES";
 import {
   SEND_internalError,
   HANDLE_keyboardDismiss,

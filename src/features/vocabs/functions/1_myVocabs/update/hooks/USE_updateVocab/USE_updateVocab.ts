@@ -1,6 +1,6 @@
 import db, { Vocabs_DB } from "@/src/db";
 import { useCallback, useMemo, useState } from "react";
-import { tr_PROPS } from "@/src/props";
+import { VocabTr_TYPE } from "@/src/features/vocabs/types";
 import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 
 import { Q } from "@nozbe/watermelondb";
@@ -10,7 +10,7 @@ interface VocabUpdate_MODEL {
   list_id?: string | undefined;
   difficulty?: 1 | 2 | 3;
   description?: string | "";
-  translations: tr_PROPS[] | undefined;
+  translations: VocabTr_TYPE[] | undefined;
   is_public?: boolean;
   onSuccess: (updated_VOCAB: Vocab_MODEL) => void;
 }

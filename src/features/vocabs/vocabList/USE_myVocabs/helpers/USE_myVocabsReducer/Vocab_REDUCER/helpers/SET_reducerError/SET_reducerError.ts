@@ -2,15 +2,13 @@
 //
 //
 
-import { Error_PROPS } from "@/src/props";
-import { myVocabs_REDUCER_RESPONSE_TYPE } from "../../types";
+import { vocabsReducer_TYPE, SET_error_PAYLOAD } from "../../types";
 
 export function SET_reducerError(
-  state: myVocabs_REDUCER_RESPONSE_TYPE,
-  payload: Error_PROPS | undefined
-): myVocabs_REDUCER_RESPONSE_TYPE {
+  payload: SET_error_PAYLOAD
+): vocabsReducer_TYPE {
   return {
-    ...state,
     error: payload || undefined,
+    loading_STATE: "error",
   };
 }

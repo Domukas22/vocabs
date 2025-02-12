@@ -1,5 +1,5 @@
 import { renderHook, act, waitFor } from "@testing-library/react-native";
-import { loadingState_TYPES } from "@/src/types";
+import { loadingState_TYPES } from "@/src/types/general_TYPES";
 import DETERMINE_loadingState from "@/src/utils/DETERMINE_loadingState/DETERMINE_loadingState";
 import { USE_refetchVocabs } from "./USE_refetchVocabs";
 import { USE_zustand } from "@/src/hooks";
@@ -9,7 +9,7 @@ jest.mock("@/src/hooks", () => ({
   USE_zustand: jest.fn(),
 }));
 
-const mockRESET_reducerState = jest.fn();
+const mockr_RESET = jest.fn();
 const mockFETCH = jest.fn();
 const mockUSE_zustand = USE_zustand as unknown as jest.Mock;
 
@@ -18,7 +18,7 @@ describe("USE_refetchVocabs", () => {
     jest.clearAllMocks();
   });
 
-  it("1. Calls RESET_reducerState and FETCH with the correct loading state on initial render", async () => {
+  it("1. Calls r_RESET and FETCH with the correct loading state on initial render", async () => {
     const mockDetermineLoadingState = DETERMINE_loadingState as jest.Mock;
     mockDetermineLoadingState.mockReturnValue("loading" as loadingState_TYPES);
 
@@ -32,17 +32,17 @@ describe("USE_refetchVocabs", () => {
       },
     });
 
-    const { result } = renderHook(() =>
+    renderHook(() =>
       USE_refetchVocabs({
         search: "test",
         targetList_ID: "123",
-        RESET_reducerState: mockRESET_reducerState,
+        r_RESET: mockr_RESET,
         FETCH: mockFETCH,
       })
     );
 
     await waitFor(() => {
-      expect(mockRESET_reducerState).toHaveBeenCalledTimes(1);
+      expect(mockr_RESET).toHaveBeenCalledTimes(1);
       expect(mockFETCH).toHaveBeenCalledWith("loading");
     });
   });
@@ -65,13 +65,13 @@ describe("USE_refetchVocabs", () => {
       USE_refetchVocabs({
         search: undefined as unknown as string, // undefined search
         targetList_ID: undefined, // undefined targetList_ID
-        RESET_reducerState: mockRESET_reducerState,
+        r_RESET: mockr_RESET,
         FETCH: mockFETCH,
       })
     );
 
     await waitFor(() => {
-      expect(mockRESET_reducerState).toHaveBeenCalledTimes(1);
+      expect(mockr_RESET).toHaveBeenCalledTimes(1);
       expect(mockFETCH).toHaveBeenCalledWith("loading");
     });
   });
@@ -94,7 +94,7 @@ describe("USE_refetchVocabs", () => {
         USE_refetchVocabs({
           search,
           targetList_ID: "123",
-          RESET_reducerState: mockRESET_reducerState,
+          r_RESET: mockr_RESET,
           FETCH: mockFETCH,
         }),
       {
@@ -103,7 +103,7 @@ describe("USE_refetchVocabs", () => {
     );
 
     await waitFor(() => {
-      expect(mockRESET_reducerState).toHaveBeenCalledTimes(1);
+      expect(mockr_RESET).toHaveBeenCalledTimes(1);
       expect(mockFETCH).toHaveBeenCalledWith("loading");
     });
 
@@ -111,23 +111,23 @@ describe("USE_refetchVocabs", () => {
     rerender({ search: "new search" });
 
     await waitFor(() => {
-      expect(mockRESET_reducerState).toHaveBeenCalledTimes(2); // should be called again
+      expect(mockr_RESET).toHaveBeenCalledTimes(2); // should be called again
       expect(mockFETCH).toHaveBeenCalledWith("loading"); // should fetch again with the new state
     });
   });
 
   it("4. Handles missing FETCH function gracefully", async () => {
-    const { result } = renderHook(() =>
+    renderHook(() =>
       USE_refetchVocabs({
         search: "test",
         targetList_ID: "123",
-        RESET_reducerState: mockRESET_reducerState,
+        r_RESET: mockr_RESET,
         FETCH: undefined as any, // Passing undefined to FETCH
       })
     );
 
     await waitFor(() => {
-      expect(mockRESET_reducerState).toHaveBeenCalledTimes(1);
+      expect(mockr_RESET).toHaveBeenCalledTimes(1);
       expect(mockFETCH).not.toHaveBeenCalled(); // FETCH should not be called if undefined
     });
   });
@@ -149,13 +149,13 @@ describe("USE_refetchVocabs", () => {
       USE_refetchVocabs({
         search: "test",
         targetList_ID: "123",
-        RESET_reducerState: mockRESET_reducerState,
+        r_RESET: mockr_RESET,
         FETCH: mockFETCH,
       })
     );
 
     await waitFor(() => {
-      expect(mockRESET_reducerState).toHaveBeenCalledTimes(1);
+      expect(mockr_RESET).toHaveBeenCalledTimes(1);
       expect(mockFETCH).toHaveBeenCalledWith("loading");
     });
 
@@ -163,7 +163,7 @@ describe("USE_refetchVocabs", () => {
     rerender({});
 
     await waitFor(() => {
-      expect(mockRESET_reducerState).toHaveBeenCalledTimes(1); // Should not call again
+      expect(mockr_RESET).toHaveBeenCalledTimes(1); // Should not call again
       expect(mockFETCH).toHaveBeenCalledTimes(1); // Should not call again
     });
   });

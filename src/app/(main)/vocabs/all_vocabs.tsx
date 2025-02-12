@@ -64,11 +64,11 @@ export default function AllVocabs_PAGE() {
     loading_STATE,
     unpaginated_COUNT,
     LOAD_moreVocabs,
-    ADD_vocabToReducer,
-    REMOVE_vocabFromReducer,
+    PREPEND_oneVocabToReducer,
+    r_DELETE_oneVocab,
   } = USE_myVocabs({
-    vocabFetch_TYPE: "all",
-    vocabList_TYPE: "private",
+    fetch_TYPE: "all",
+    list_TYPE: "private",
     search: debouncedSearch,
   });
 
@@ -116,7 +116,7 @@ export default function AllVocabs_PAGE() {
           onSuccess={(new_VOCAB: Vocab_MODEL) => {
             modals.createVocab.set(false);
             HIGHLIGHT_vocab(new_VOCAB.id);
-            ADD_vocabToReducer(new_VOCAB);
+            PREPEND_oneVocabToReducer(new_VOCAB);
             toast.show(t("notifications.vocabCreated"), {
               type: "success",
               duration: 3000,
@@ -152,7 +152,7 @@ export default function AllVocabs_PAGE() {
               type: "success",
               duration: 5000,
             });
-            REMOVE_vocabFromReducer(targetDelete_VOCAB?.id || "");
+            r_DELETE_oneVocab(targetDelete_VOCAB?.id || "");
             modals.deleteVocab.set(false);
           }}
         />

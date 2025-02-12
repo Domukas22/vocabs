@@ -18,13 +18,13 @@ import i18next from "i18next";
 import StyledText_INPUT from "@/src/components/1_grouped/inputs/StyledText_INPUT/StyledText_INPUT";
 
 import { FieldError } from "react-hook-form";
-import { tr_PROPS } from "@/src/props";
+import { VocabTr_TYPE } from "@/src/features/vocabs/types";
 
 interface VocabTranslationInputs_PROPS {
-  tr: tr_PROPS;
+  tr: VocabTr_TYPE;
   lang: Language_MODEL | undefined;
   diff: 0 | 1 | 2 | 3;
-  OPEN_highlights: (tr: tr_PROPS) => void;
+  OPEN_highlights: (tr: VocabTr_TYPE) => void;
   error: FieldError | undefined;
   isSubmitted: boolean;
   onChange: (...event: any[]) => void;
@@ -91,7 +91,6 @@ export function TrInput_BLOCK({
             text={t("btn.editHighlights")}
             type="seethrough"
             onPress={() => {
-              console.log("OPEN");
               OPEN_highlights(tr);
               setIsFocused(false);
               inputREF.current?.blur();

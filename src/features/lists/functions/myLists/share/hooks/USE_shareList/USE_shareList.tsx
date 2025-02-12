@@ -5,7 +5,7 @@ import User_MODEL from "@/src/db/models/User_MODEL";
 
 import { CREATE_internalErrorMsg } from "@/src/constants/globalVars";
 import { SEND_internalError } from "@/src/utils";
-import { Error_PROPS } from "@/src/props";
+import { Error_PROPS } from "@/src/types/error_TYPES";
 import { CHECK_ifNetworkFailure } from "@/src/utils";
 
 export interface ShareList_PROPS {

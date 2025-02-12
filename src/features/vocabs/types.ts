@@ -2,7 +2,7 @@
 //
 //
 
-export interface Vocab_MODEL {
+export type Vocab_TYPE = {
   id: string;
   user_id: string;
 
@@ -17,4 +17,10 @@ export interface Vocab_MODEL {
   updated_at: string;
   created_at: string;
   deleted_at: string;
-}
+};
+
+export type VocabTr_TYPE = {
+  lang_id: string;
+  text: string;
+  highlights: number[];
+};
