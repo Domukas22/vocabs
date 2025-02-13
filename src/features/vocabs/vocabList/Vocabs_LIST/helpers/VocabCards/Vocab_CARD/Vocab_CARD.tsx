@@ -19,27 +19,26 @@ import { VocabBack_TRS } from "../helpers/VocabBack_TRS/VocabBack_TRS";
 import VocabBottomText_WRAP from "../helpers/VocabBottomText_WRAP/VocabBottomText_WRAP";
 import VocabBack_BTNS from "../helpers/VocabBack_BTNS/VocabBack_BTNS";
 import VocabBackDifficultyEdit_BTNS from "../helpers/VocabBackDifficultyEdit_BTNS/VocabBackDifficultyEdit_BTNS";
+import {
+  vocabFetch_TYPES,
+  vocabList_TYPES,
+} from "../../../../USE_myVocabs/helpers/USE_fetchVocabs/helpers/FETCH_vocabs/types";
 
 interface VocabProps {
   vocab: Vocab_TYPE;
   highlighted: boolean;
-
-  HANDLE_updateModal: ({
-    clear,
-    vocab,
-    trs,
-  }: {
-    clear?: boolean;
-    vocab?: Vocab_TYPE;
-    trs?: VocabTr_TYPE[];
-  }) => void;
+  list_TYPE: vocabList_TYPES;
+  fetch_TYPE: vocabFetch_TYPES;
+  // HANDLE_updateModal: () => void;
 }
 
 // TOGGLE_vocabModal needs to also pass in th etranslations, so we dont have to pass them async and get a delayed manageVocabModal update
-export default function MyVocab_CARD({
+export function Vocab_CARD({
+  list_TYPE,
+  fetch_TYPE,
   vocab,
   highlighted,
-  HANDLE_updateModal,
+  HANDLE_updateModal = () => {},
 }: VocabProps) {
   const [open, TOGGLE_open] = USE_toggle();
   const [SHOW_difficultyEdits, TOGGLE_difficultyEdits, SET_difficultyEdit] =
@@ -48,9 +47,7 @@ export default function MyVocab_CARD({
   const trs = vocab?.trs || [];
 
   const handleEdit = () => {
-    HANDLE_updateModal({
-      vocab: vocab,
-    });
+    HANDLE_updateModal();
   };
 
   const styles = useMemo(

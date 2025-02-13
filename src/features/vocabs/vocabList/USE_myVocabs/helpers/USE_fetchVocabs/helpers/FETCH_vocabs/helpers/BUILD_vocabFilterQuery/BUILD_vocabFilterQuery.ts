@@ -44,6 +44,12 @@ export function BUILD_vocabFilterQuery(
     }
   }
 
+  // If fetching public vocabs
+  if (list_TYPE === "public") {
+    // Only select vocabs with 'is_public = true'
+    query = query.filter("is_public", "eq", true);
+  }
+
   // Filter by the 'fetch_TYPE' provided
   switch (fetch_TYPE) {
     // Fetch all, non-deleted vocabs

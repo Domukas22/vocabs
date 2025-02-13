@@ -22,6 +22,7 @@ type VocabsFlatlistHeader_SECTIONProps = {
   unpaginated_COUNT: number | null;
   loading_STATE: loadingState_TYPES;
   list_NAME: string | undefined;
+  HAS_error: boolean;
 };
 
 export function VocabsFlatlistHeader_SECTION({
@@ -31,6 +32,7 @@ export function VocabsFlatlistHeader_SECTION({
   loading_STATE = "none",
   list_NAME = "INSERT LIST NAME",
   unpaginated_COUNT = 0,
+  HAS_error = false,
 }: VocabsFlatlistHeader_SECTIONProps) {
   const { z_vocabDisplay_SETTINGS, z_SET_vocabDisplaySettings } = USE_zustand();
   const difficultyFilters = z_vocabDisplay_SETTINGS.difficultyFilters || [];
@@ -68,6 +70,7 @@ export function VocabsFlatlistHeader_SECTION({
             appliedFiltersCount,
             IS_debouncing,
             search,
+            HAS_error,
           }}
           totalResult_COUNT={unpaginated_COUNT || 0}
           target="vocabs"

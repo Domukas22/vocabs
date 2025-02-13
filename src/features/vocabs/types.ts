@@ -5,6 +5,7 @@
 export type Vocab_TYPE = {
   id: string;
   user_id: string;
+  is_public: boolean;
 
   is_marked: boolean;
   difficulty: number;

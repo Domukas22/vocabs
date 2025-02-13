@@ -221,4 +221,18 @@ describe("BUILD_vocabFilterQuery", () => {
     const result = BUILD_vocabFilterQuery(mockQuery, args);
     expect(result.filter).toHaveBeenCalled();
   });
+  test("14. Applies is_public filter when list_TYPE is public", () => {
+    const args = {
+      list_TYPE: "public",
+      user_id: "123",
+      difficultyFilters: [],
+      fetch_TYPE: "all",
+      search: "",
+      excludeIds: new Set(),
+      langFilters: [],
+    } as unknown as FETCH_myVocabs_ARG_TYPES;
+
+    const result = BUILD_vocabFilterQuery(mockQuery, args);
+    expect(result.filter).toHaveBeenCalledWith("is_public", "eq", true);
+  });
 });

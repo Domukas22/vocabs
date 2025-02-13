@@ -12,7 +12,7 @@ import List_MODEL from "@/src/db/models/List_MODEL";
 import Language_MODEL from "@/src/db/models/Language_MODEL";
 import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 
-import { VocabTr_TYPE } from "@/src/features/vocabs/types";
+import { Vocab_TYPE, VocabTr_TYPE } from "@/src/features/vocabs/types";
 
 import { Q } from "@nozbe/watermelondb";
 import { FETCH_langs } from "@/src/features/languages/functions";
@@ -42,9 +42,9 @@ import { USE_modalToggles } from "@/src/hooks/index";
 
 interface UpdateMyVocabModal_PROPS {
   IS_open: boolean;
-  toUpdate_VOCAB: Vocab_MODEL | undefined;
-  TOGGLE_modal: () => void;
-  onSuccess: (new_VOCAB: Vocab_MODEL) => void;
+  toUpdate_VOCAB: Vocab_TYPE | undefined;
+  CLOSE_modal: () => void;
+  onSuccess: (new_VOCAB: Vocab_TYPE) => void;
 }
 
 export type UpdateMyVocabData_PROPS = {
@@ -58,7 +58,7 @@ export type UpdateMyVocabData_PROPS = {
 export function UpdateMyVocab_MODAL({
   IS_open,
   toUpdate_VOCAB,
-  TOGGLE_modal: TOGGLE_vocabModal,
+  CLOSE_modal,
   onSuccess = () => {},
 }: UpdateMyVocabModal_PROPS) {
   const { t } = useTranslation();
@@ -190,7 +190,7 @@ export function UpdateMyVocab_MODAL({
               type="seethrough"
               iconLeft={<ICON_X big={true} rotate={true} />}
               onPress={() => {
-                TOGGLE_vocabModal();
+                CLOSE_modal();
                 reset();
               }}
               style={{ borderRadius: 100 }}
@@ -233,7 +233,7 @@ export function UpdateMyVocab_MODAL({
           {...{ IS_updatingVocab, db_ERROR }}
           submit={handleSubmit(submit)}
           CANCEL_creation={() => {
-            TOGGLE_vocabModal();
+            CLOSE_modal();
             reset();
           }}
         />

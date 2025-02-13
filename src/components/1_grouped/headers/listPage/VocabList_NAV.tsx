@@ -35,7 +35,7 @@ interface ListHeader_PROPS {
   SAVE_list?: () => void | undefined;
 }
 
-export default function VocabList_HEADER({
+export default function VocabList_NAV({
   SHOW_listName,
   list_NAME = "INSERT LIST NAME",
   search,

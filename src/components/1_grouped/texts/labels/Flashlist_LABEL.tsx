@@ -15,6 +15,7 @@ export default function Flashlist_LABEL({
   target = "vocabs",
   loading_STATE = "none",
   IS_debouncing = false,
+  HAS_error = false,
 }: {
   IS_debouncing: boolean;
   debouncedSearch: string;
@@ -23,8 +24,11 @@ export default function Flashlist_LABEL({
   totalResult_COUNT: number;
   target: string;
   loading_STATE: loadingState_TYPES;
+  HAS_error: boolean;
 }) {
   const GET_label = () => {
+    if (HAS_error) return "Something went wrong...";
+
     if (IS_debouncing) {
       if (search && appliedFiltersCount) {
         return (

@@ -14,6 +14,7 @@ import {
 } from "./helpers/FETCH_vocabs/types";
 import { vocabsReducer_TYPE } from "../USE_myVocabsReducer/Vocab_REDUCER/types";
 import { FETCH_vocabs, GET_AlreadyPrintedVocabIds } from "./helpers";
+import { VOCAB_PAGINATION } from "@/src/constants/globalVars";
 
 const function_NAME = "USE_fetchVocabs";
 
@@ -52,8 +53,7 @@ export function USE_fetchVocabs({
         const data = await FETCH_vocabs({
           search,
           signal: newController.signal,
-          // amount: VOCAB_PAGINATION || 20,
-          amount: 2,
+          amount: VOCAB_PAGINATION || 20,
           user_id: z_user?.id || "",
           fetch_TYPE,
           list_TYPE,

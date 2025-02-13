@@ -26,7 +26,7 @@ import {
   HANLDE_selectedLangs,
   HANLDE_selectedHighlights,
 } from "@/src/features/vocabs/functions";
-import { VocabTr_TYPE } from "@/src/features/vocabs/types";
+import { Vocab_TYPE, VocabTr_TYPE } from "@/src/features/vocabs/types";
 import { CreateMyVocab_FOOTER } from "../../footers/CreateMyVocab_FOOTER/CreateMyVocab_FOOTER";
 import {
   ChosenLangs_CONTROLLER,
@@ -44,7 +44,7 @@ interface CreateMyVocabModal_PROPS {
   IS_open: boolean;
   initial_LIST?: List_MODEL | undefined;
   TOGGLE_modal: () => void;
-  onSuccess: (new_VOCAB: Vocab_MODEL) => void;
+  onSuccess: (new_VOCAB: Vocab_TYPE) => void;
 }
 
 export type CreateMyVocabData_PROPS = {

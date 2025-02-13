@@ -2,6 +2,8 @@
 //
 //
 
+import { General_ERROR } from "../types/error_TYPES";
+
 export const GET_langFlagUrl = (lang: string) =>
   `https://nmqzljcpoczrlruijbbk.supabase.co/storage/v1/object/public/lang_images/${lang}.png`;
 
@@ -16,8 +18,14 @@ export const MAX_TRANSLATION_LENGTH = 200;
 
 export const HEADER_MARGIN = 80;
 
-export const VOCAB_PAGINATION = 5;
+export const VOCAB_PAGINATION = 50;
 export const LIST_PAGINATION = 20;
+
+export const DummyError = new General_ERROR({
+  function_NAME: "Dummy function name",
+  message: "Dummy error message",
+  user_MSG: "A dummy error has occured",
+});
 
 export const CREATE_internalErrorMsg = (process?: string) => {
   const first_SENTENCE = process

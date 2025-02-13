@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 import React from "react";
 import { useToast } from "react-native-toast-notifications";
 import BottomAction_BLOCK from "@/src/components/1_grouped/blocks/BottomAction_BLOCK";
-import VocabList_HEADER from "@/src/components/1_grouped/headers/listPage/VocabList_HEADER";
+import VocabList_NAV from "@/src/components/1_grouped/headers/listPage/VocabList_NAV";
 import { CopyListAndVocabs_MODAL } from "@/src/features/lists/components";
 import {
   USE_fetchOnePublicList,
@@ -119,7 +119,7 @@ export default function PublicListVocabs_PAGE() {
 
   return (
     <>
-      <VocabList_HEADER
+      <VocabList_NAV
         SHOW_listName={showTitle}
         list_NAME={list?.name}
         GO_back={() => router.back()}

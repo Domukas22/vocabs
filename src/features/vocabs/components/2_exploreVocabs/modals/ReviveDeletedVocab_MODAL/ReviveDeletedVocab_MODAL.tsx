@@ -17,19 +17,20 @@ import { ChooseAList_FLATLIST } from "@/src/features/lists/components/flatlists/
 import { USE_collectListLangs } from "@/src/features/lists/functions";
 import { USE_zustand } from "@/src/hooks";
 import { USE_modalToggles } from "@/src/hooks/index";
+import { Vocab_TYPE } from "@/src/features/vocabs/types";
 
 interface SavePublicVocabToListModal_PROPS {
-  vocab: Vocab_MODEL | undefined;
+  vocab: Vocab_TYPE | undefined;
   IS_open: boolean;
-  TOGGLE_open: () => void;
-  onSuccess: (new_VOCAB: Vocab_MODEL) => void;
+  CLOSE_modal: () => void;
+  onSuccess: (new_VOCAB: Vocab_TYPE) => void;
 }
 
 export function ReviveDeletedVocab_MODAL({
   vocab,
   IS_open,
   onSuccess,
-  TOGGLE_open,
+  CLOSE_modal,
 }: SavePublicVocabToListModal_PROPS) {
   const { modals } = USE_modalToggles(["createList"]);
 
@@ -68,7 +69,7 @@ export function ReviveDeletedVocab_MODAL({
             <Btn
               type="seethrough"
               iconLeft={<ICON_X big={true} rotate={true} />}
-              onPress={TOGGLE_open}
+              onPress={CLOSE_modal}
               style={{ borderRadius: 100 }}
             />
           }
@@ -83,7 +84,7 @@ export function ReviveDeletedVocab_MODAL({
 
         <TwoBtn_BLOCK
           btnLeft={
-            <Btn text={t("btn.cancel")} onPress={TOGGLE_open} type="simple" />
+            <Btn text={t("btn.cancel")} onPress={CLOSE_modal} type="simple" />
           }
           btnRight={
             <Btn

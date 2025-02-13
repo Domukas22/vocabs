@@ -11,7 +11,7 @@ import { MyColors } from "@/src/constants/MyColors";
 interface StyledFlatListProps<T> extends FlashListProps<T> {
   padding?: number; // Optional padding
   gap?: number; // Optional gap between items
-  _ref?: React.RefObject<FlashList<T>>;
+  flashlist_REF?: React.RefObject<FlashList<T>>;
   headerPadding?: boolean;
 }
 
@@ -22,7 +22,7 @@ export default function Styled_FLASHLIST<T>({
   padding = 12,
   gap = 12,
   headerPadding = false,
-  _ref,
+  flashlist_REF,
   onScroll,
   ...rest
 }: StyledFlatListProps<T>) {
@@ -37,7 +37,7 @@ export default function Styled_FLASHLIST<T>({
       <FlashList
         keyboardShouldPersistTaps="always"
         onScroll={onScroll}
-        ref={_ref}
+        ref={flashlist_REF}
         data={data}
         renderItem={({ item }) => (
           <View style={[{ marginBottom: gap, flex: 1, width: "100%" }]}>

@@ -16,7 +16,7 @@ export default function BottomAction_BLOCK({
   debouncedSearch = "",
   IS_debouncing = false,
   HAS_reachedEnd = false,
-  LOAD_more = async () => {},
+  LOAD_more = () => {},
 
   totalFilteredResults_COUNT = 0,
   createBtn_ACTION,
@@ -27,7 +27,7 @@ export default function BottomAction_BLOCK({
   debouncedSearch: string;
   IS_debouncing: boolean;
   HAS_reachedEnd: boolean;
-  LOAD_more: () => Promise<void>;
+  LOAD_more: () => void;
 
   totalFilteredResults_COUNT: number;
   RESET_search: () => void;
