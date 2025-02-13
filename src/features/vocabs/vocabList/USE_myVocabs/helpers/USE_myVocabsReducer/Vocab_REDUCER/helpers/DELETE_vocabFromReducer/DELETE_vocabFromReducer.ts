@@ -27,38 +27,40 @@ export function DELETE_vocabFromReducer(
   state: vocabsReducer_TYPE,
   payload: DELETE_oneVocab_PAYLOAD
 ): vocabsReducer_TYPE {
-  // check if the CURRENT STATE has a valid vocab array
-  if (!state?.data?.vocabs)
-    throw err("Reducer state 'data.vocabs' was undefined");
+  if (!state) throw err("Reducer 'state' was undefined");
 
-  // check if the CURRENT STATE has a valid unpaginated count
-  if (typeof state?.data?.unpaginated_COUNT !== "number")
-    throw err("Reducer state 'payload.unpaginated_COUNT' was not a number");
+  if (!state.data) throw err("Reducer 'state.data' was undefined");
 
-  // check if PAYLOAD has the vocab id string
-  if (!payload) throw err("Reducer state 'payload' was undefined");
+  if (!state.data.vocabs)
+    throw err("Reducer 'state.data.vocabs' was undefined");
+
+  if (typeof state.data.unpaginated_COUNT !== "number")
+    throw err("Reducer 'state.data.unpaginated_COUNT' was not a number");
+
+  if (!payload) throw err("Reducer 'payload' was undefined");
 
   // Check if the vocab actually exists in the array before removing
   const vocabExists = state.data.vocabs.some((vocab) => vocab.id === payload);
-  if (!vocabExists) {
-    return state; // No change needed
-  }
+  if (!vocabExists) return state; // No change needed
 
   // Filter out the vocab to delete
-  const updatedVocabs = state.data.vocabs.filter(
-    (vocab) => vocab.id !== payload
-  );
+  const updatedVocabs = state.data.vocabs.filter((v) => {
+    if (!v.id)
+      throw err("A vocab inside 'state.data.vocabs' did not have an id");
+    return v.id !== payload;
+  });
 
   const updatedPrintedIds = new Set(updatedVocabs?.map((v) => v.id));
-  const totalCount = state?.data?.unpaginated_COUNT - 1;
+
+  const totalCount = state.data.unpaginated_COUNT - 1;
 
   return {
-    ...state,
     data: {
       vocabs: updatedVocabs,
       printed_IDS: updatedPrintedIds,
       unpaginated_COUNT: totalCount,
-      HAS_reachedEnd: updatedVocabs?.length >= totalCount,
+      HAS_reachedEnd: updatedVocabs.length >= totalCount,
     },
+    loading_STATE: "none",
   };
 }

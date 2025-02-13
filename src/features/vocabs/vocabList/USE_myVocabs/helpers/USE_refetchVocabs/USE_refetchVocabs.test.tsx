@@ -9,8 +9,7 @@ jest.mock("@/src/hooks", () => ({
   USE_zustand: jest.fn(),
 }));
 
-const mockr_RESET = jest.fn();
-const mockFETCH = jest.fn();
+const mock_REFETCH_vocabs = jest.fn();
 const mockUSE_zustand = USE_zustand as unknown as jest.Mock;
 
 describe("USE_refetchVocabs", () => {
@@ -36,14 +35,13 @@ describe("USE_refetchVocabs", () => {
       USE_refetchVocabs({
         search: "test",
         targetList_ID: "123",
-        r_RESET: mockr_RESET,
-        FETCH: mockFETCH,
+        REFETCH_vocabs: mock_REFETCH_vocabs,
       })
     );
 
     await waitFor(() => {
-      expect(mockr_RESET).toHaveBeenCalledTimes(1);
-      expect(mockFETCH).toHaveBeenCalledWith("loading");
+      expect(mock_REFETCH_vocabs).toHaveBeenCalledTimes(1);
+      expect(mock_REFETCH_vocabs).toHaveBeenCalledWith("loading");
     });
   });
 
@@ -65,18 +63,17 @@ describe("USE_refetchVocabs", () => {
       USE_refetchVocabs({
         search: undefined as unknown as string, // undefined search
         targetList_ID: undefined, // undefined targetList_ID
-        r_RESET: mockr_RESET,
-        FETCH: mockFETCH,
+        REFETCH_vocabs: mock_REFETCH_vocabs,
       })
     );
 
     await waitFor(() => {
-      expect(mockr_RESET).toHaveBeenCalledTimes(1);
-      expect(mockFETCH).toHaveBeenCalledWith("loading");
+      expect(mock_REFETCH_vocabs).toHaveBeenCalledTimes(1);
+      expect(mock_REFETCH_vocabs).toHaveBeenCalledWith("loading");
     });
   });
 
-  it("3. Calls FETCH with the correct state when search changes", async () => {
+  it("3. Calls REFETCH_vocabs with the correct state when search changes", async () => {
     const mockDetermineLoadingState = DETERMINE_loadingState as jest.Mock;
     mockDetermineLoadingState.mockReturnValue("loading" as loadingState_TYPES);
 
@@ -94,8 +91,7 @@ describe("USE_refetchVocabs", () => {
         USE_refetchVocabs({
           search,
           targetList_ID: "123",
-          r_RESET: mockr_RESET,
-          FETCH: mockFETCH,
+          REFETCH_vocabs: mock_REFETCH_vocabs,
         }),
       {
         initialProps: { search: "initial" },
@@ -103,16 +99,16 @@ describe("USE_refetchVocabs", () => {
     );
 
     await waitFor(() => {
-      expect(mockr_RESET).toHaveBeenCalledTimes(1);
-      expect(mockFETCH).toHaveBeenCalledWith("loading");
+      expect(mock_REFETCH_vocabs).toHaveBeenCalledTimes(1);
+      expect(mock_REFETCH_vocabs).toHaveBeenCalledWith("loading");
     });
 
     // Simulate search change
     rerender({ search: "new search" });
 
     await waitFor(() => {
-      expect(mockr_RESET).toHaveBeenCalledTimes(2); // should be called again
-      expect(mockFETCH).toHaveBeenCalledWith("loading"); // should fetch again with the new state
+      expect(mock_REFETCH_vocabs).toHaveBeenCalledTimes(2); // should be called again
+      expect(mock_REFETCH_vocabs).toHaveBeenCalledWith("loading"); // should fetch again with the new state
     });
   });
 
@@ -121,14 +117,13 @@ describe("USE_refetchVocabs", () => {
       USE_refetchVocabs({
         search: "test",
         targetList_ID: "123",
-        r_RESET: mockr_RESET,
-        FETCH: undefined as any, // Passing undefined to FETCH
+
+        REFETCH_vocabs: undefined as any, // Passing undefined to FETCH
       })
     );
 
     await waitFor(() => {
-      expect(mockr_RESET).toHaveBeenCalledTimes(1);
-      expect(mockFETCH).not.toHaveBeenCalled(); // FETCH should not be called if undefined
+      expect(mock_REFETCH_vocabs).not.toHaveBeenCalled(); // FETCH should not be called if undefined
     });
   });
 
@@ -149,22 +144,21 @@ describe("USE_refetchVocabs", () => {
       USE_refetchVocabs({
         search: "test",
         targetList_ID: "123",
-        r_RESET: mockr_RESET,
-        FETCH: mockFETCH,
+        REFETCH_vocabs: mock_REFETCH_vocabs,
       })
     );
 
     await waitFor(() => {
-      expect(mockr_RESET).toHaveBeenCalledTimes(1);
-      expect(mockFETCH).toHaveBeenCalledWith("loading");
+      expect(mock_REFETCH_vocabs).toHaveBeenCalledTimes(1);
+      expect(mock_REFETCH_vocabs).toHaveBeenCalledWith("loading");
     });
 
     // Simulate re-render with the same props
     rerender({});
 
     await waitFor(() => {
-      expect(mockr_RESET).toHaveBeenCalledTimes(1); // Should not call again
-      expect(mockFETCH).toHaveBeenCalledTimes(1); // Should not call again
+      expect(mock_REFETCH_vocabs).toHaveBeenCalledTimes(1); // Should not call again
+      expect(mock_REFETCH_vocabs).toHaveBeenCalledTimes(1); // Should not call again
     });
   });
 });

@@ -1,169 +1,51 @@
-import { renderHook, act } from "@testing-library/react-native";
+//
+import { renderHook, act, waitFor } from "@testing-library/react-native";
 import { USE_myVocabsReducer } from "./USE_myVocabsReducer";
-import { SEND_internalError } from "@/src/utils";
-import { Error_PROPS } from "@/src/types/error_TYPES";
-import { vocabsReducer_TYPE } from "./Vocab_REDUCER/types";
-import { Vocab_TYPE } from "@/src/features/vocabs/types";
 
-// Initial state for reducer
-const myVocabsReducerInitial_STATE: vocabsReducer_TYPE = {
-  data: {
-    vocabs: [],
-    printed_IDS: new Set(),
-    unpaginated_COUNT: 0,
-    HAS_reachedEnd: false,
-  },
-  loading_STATE: "loading",
-};
-
+// Mock `SEND_internalError`
 jest.mock("@/src/utils", () => ({
   SEND_internalError: jest.fn(),
 }));
 
+import { SEND_internalError } from "@/src/utils";
+import { General_ERROR } from "@/src/types/error_TYPES";
+
 describe("USE_myVocabsReducer", () => {
-  let initialState: vocabsReducer_TYPE;
-
-  beforeEach(() => {
-    initialState = { ...myVocabsReducerInitial_STATE };
-
-    // Reset mocks before each test
-    jest.clearAllMocks();
-  });
-
-  // 1. Sets loading state correctly
-  test("1. Sets loading state correctly", () => {
+  test("1. Returns reducer and helper functions", () => {
     const { result } = renderHook(() => USE_myVocabsReducer());
 
-    // Call the function to set loading state
+    // Ensure that the required functions are returned
+    expect(result.current).toHaveProperty("reducer");
+    expect(result.current).toHaveProperty("r_PREPEND_oneVocab");
+    expect(result.current).toHaveProperty("r_UPDATE_oneVocab");
+    expect(result.current).toHaveProperty("r_DELETE_oneVocab");
+    expect(result.current).toHaveProperty("r_START_fetch");
+    expect(result.current).toHaveProperty("r_APPEND_manyVocabs");
+    expect(result.current).toHaveProperty("r_SET_error");
+  });
+
+  test("2. Logs error when reducer state has an error", async () => {
+    const { result } = renderHook(() => USE_myVocabsReducer());
+
+    // Simulate an error state in the reducer
     act(() => {
-      result.current.SET_reducerLoadingState("loading");
+      result.current.r_SET_error({
+        message: "Critical error",
+      } as General_ERROR);
     });
 
-    expect(result.current.reducer.loading_STATE).toBe("loading");
-  });
-
-  // 2. Sets error state and triggers internal error log
-  test("2. Sets error state and triggers internal error log", () => {
-    const error = {
-      message: "Some error occurred",
-      code: "500",
-    } as unknown as Error_PROPS;
-    const { result } = renderHook(() => USE_myVocabsReducer());
-
-    // Triggering an error state
-    act(() => {
-      result.current.SET_reducerError(error);
-    });
-
-    expect(result.current.reducer.error).toEqual(error);
-    expect(SEND_internalError).toHaveBeenCalledWith(error);
-  });
-
-  // 3. Resets reducer state correctly
-  test("3. Resets reducer state correctly", () => {
-    const { result } = renderHook(() => USE_myVocabsReducer());
-
-    // Triggering state reset
-    act(() => {
-      result.current.r_RESET();
-    });
-
-    expect(result.current.reducer).toEqual(initialState);
-  });
-
-  // 4. Appends vocabs to pagination
-  test("4. Appends vocabs to pagination", () => {
-    const newVocabs = [{ id: "1", word: "example" }];
-    const data = {
-      vocabs: newVocabs as unknown as Vocab_TYPE[],
-      unpaginated_COUNT: 1,
-    };
-    const { result } = renderHook(() => USE_myVocabsReducer());
-
-    // Appending vocabs
-    act(() => {
-      result.current.APPEND_vocabsToPagination(data);
-    });
-
-    // Check if the state updated correctly
-    expect(result?.current?.reducer?.data?.vocabs).toContainEqual(newVocabs[0]);
-    expect(result?.current?.reducer?.data?.unpaginated_COUNT).toBe(1);
-  });
-
-  // 5. Prepends vocab to reducer
-  test("5. Prepends vocab to reducer", () => {
-    const newVocab = { id: "1", word: "example" } as unknown as Vocab_TYPE;
-    const { result } = renderHook(() => USE_myVocabsReducer());
-
-    // Prepending vocab
-    act(() => {
-      result.current.r_PREPEND_oneVocab(newVocab);
-    });
-
-    expect(result?.current?.reducer?.data?.vocabs).toContainEqual(newVocab);
-  });
-
-  // TODO ====> doesnt make sense
-  test("6. Removes vocab from reducer", () => {
-    const existingVocab = { id: "1", word: "example" };
-
-    const { result } = renderHook(() => USE_myVocabsReducer());
-
-    // Removing vocab
-    act(() => {
-      result.current.r_DELETE_oneVocab("1");
-    });
-
-    expect(result?.current?.reducer?.data?.vocabs).not.toContainEqual(
-      existingVocab
-    );
-  });
-
-  // 7. Handles undefined error gracefully
-  test("7. Handles undefined error gracefully", () => {
-    const { result } = renderHook(() => USE_myVocabsReducer());
-
-    // Setting error to undefined
-    act(() => {
-      result.current.SET_reducerError(undefined);
-    });
-
-    expect(result.current.reducer.error).toBeUndefined();
-  });
-
-  // 8. Handles undefined vocab gracefully
-  test("8. Handles undefined vocab gracefully", () => {
-    const { result } = renderHook(() => USE_myVocabsReducer());
-
-    // Attempting to prepend undefined vocab
-    act(() => {
-      result.current.r_PREPEND_oneVocab(undefined as unknown as Vocab_TYPE);
-    });
-
-    expect(result?.current?.reducer?.data?.vocabs).toBeUndefined();
-    expect(result?.current?.reducer?.error).toBeDefined();
-  });
-
-  // 9. Handles empty vocabs array gracefully
-  test("9. Handles empty vocabs array gracefully", () => {
-    const { result } = renderHook(() => USE_myVocabsReducer());
-
-    // Appending empty vocabs array
-    act(() => {
-      result.current.APPEND_vocabsToPagination({
-        vocabs: [],
-        unpaginated_COUNT: 0,
+    // Wait for the effect to run and check if the error handler was called
+    await waitFor(() => {
+      expect(SEND_internalError).toHaveBeenCalledWith({
+        message: "Critical error",
       });
     });
-
-    expect(result?.current?.reducer?.data?.vocabs).toEqual([]);
-    expect(result?.current?.reducer?.data?.unpaginated_COUNT).toBe(0);
   });
 
-  test("10. Does not trigger error log when there is no error", () => {
+  test("3. Returns the reducer state correctly", () => {
     const { result } = renderHook(() => USE_myVocabsReducer());
 
-    // Check that SEND_internalError is not called if there's no error
-    expect(SEND_internalError).not.toHaveBeenCalled();
+    // Ensure the reducer state is returned correctly
+    expect(result.current.reducer).toBeTruthy();
   });
 });

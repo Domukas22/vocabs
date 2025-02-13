@@ -3,7 +3,7 @@ import { USE_fetchVocabs } from "./USE_fetchVocabs";
 import { FETCH_vocabs } from "./helpers";
 import { USE_abortController } from "@/src/hooks";
 import { vocabsReducer_TYPE } from "../USE_myVocabsReducer/Vocab_REDUCER/types";
-import { PostgrestError } from "@supabase/supabase-js";
+import { General_ERROR } from "@/src/types/error_TYPES";
 
 // Mock dependencies
 jest.mock("./helpers", () => ({
@@ -33,22 +33,14 @@ jest.mock("@/src/utils/TRANSFORM_error/TRANSFORM_error", () => ({
 }));
 
 describe("USE_fetchVocabsHelper", () => {
-  let setLoadingState: jest.Mock;
-  let setErrorState: jest.Mock;
-  let appendToPagination: jest.Mock;
-
   beforeEach(() => {
-    setLoadingState = jest.fn();
-    setErrorState = jest.fn();
-    appendToPagination = jest.fn();
-
     jest.clearAllMocks();
   });
 
   it("1. Fetches vocabs with correct parameters", async () => {
     (FETCH_vocabs as jest.Mock).mockResolvedValueOnce({
-      data: { vocabs: [], unpaginated_COUNT: 0 },
-      error: null,
+      vocabs: [],
+      unpaginated_COUNT: 0,
     });
 
     const { result } = renderHook(() =>
@@ -60,9 +52,6 @@ describe("USE_fetchVocabsHelper", () => {
         targetList_ID: "list123",
         fetch_TYPE: "all",
         list_TYPE: "private", // Correct the expected value here as 'private'
-        APPEND_vocabsToPagination: appendToPagination,
-        SET_reducerLoadingState: setLoadingState,
-        SET_reducerError: setErrorState,
       })
     );
 
@@ -79,36 +68,9 @@ describe("USE_fetchVocabsHelper", () => {
     );
   });
 
-  it("2. Updates loading state properly", async () => {
-    (FETCH_vocabs as jest.Mock).mockResolvedValueOnce({
-      data: { vocabs: [], unpaginated_COUNT: 0 },
-      error: null,
-    });
-
-    const { result } = renderHook(() =>
-      USE_fetchVocabs({
-        search: "example",
-        reducer: {
-          data: { printed_IDS: new Set() },
-        } as vocabsReducer_TYPE,
-        targetList_ID: undefined,
-        fetch_TYPE: "all",
-        list_TYPE: "private",
-        APPEND_vocabsToPagination: appendToPagination,
-        SET_reducerLoadingState: setLoadingState,
-        SET_reducerError: setErrorState,
-      })
-    );
-
-    await act(() => result.current.FETCH("loading_more"));
-
-    expect(setLoadingState).toHaveBeenCalledWith("loading_more");
-    expect(setLoadingState).toHaveBeenCalledWith("none");
-  });
-
-  it("3. Throws an error when fetch fails", async () => {
+  it("2. Throws an error when fetch fails", async () => {
     const mockError = new Error("Network error");
-    (FETCH_vocabs as jest.Mock).mockRejectedValue(mockError);
+    (FETCH_vocabs as jest.Mock).mockRejectedValueOnce(mockError);
 
     const { result } = renderHook(() =>
       USE_fetchVocabs({
@@ -119,25 +81,19 @@ describe("USE_fetchVocabsHelper", () => {
         targetList_ID: "listError",
         fetch_TYPE: "all",
         list_TYPE: "public",
-        APPEND_vocabsToPagination: appendToPagination,
-        SET_reducerLoadingState: setLoadingState,
-        SET_reducerError: setErrorState,
       })
     );
 
-    await act(() => result.current.FETCH("loading"));
-
-    // Verify that setLoadingState was called with "loading" first (before the error)
-    expect(setLoadingState).toHaveBeenCalledWith("loading");
-
-    // Verify that setErrorState was called with the transformed error
-    expect(setErrorState).toHaveBeenCalled();
-
-    // Now, verify that setLoadingState was called with "error" after the failure
-    expect(setLoadingState).toHaveBeenCalledWith("error");
+    try {
+      await act(() => result.current.FETCH("loading"));
+    } catch (error) {
+      expect(error).toBeInstanceOf(General_ERROR);
+      expect((error as General_ERROR).message).toBe("Network error");
+      expect((error as General_ERROR).function_NAME).toBe("USE_fetchVocabs");
+    }
   });
 
-  it("4. Ignores aborted requests", async () => {
+  it("3. Ignores aborted requests", async () => {
     // Mock the fetch function to simulate the aborted state
     (FETCH_vocabs as jest.Mock).mockResolvedValueOnce({
       data: { vocabs: [], unpaginated_COUNT: 0 },
@@ -163,37 +119,48 @@ describe("USE_fetchVocabsHelper", () => {
         targetList_ID: undefined,
         fetch_TYPE: "all",
         list_TYPE: "private",
-        APPEND_vocabsToPagination: appendToPagination,
-        SET_reducerLoadingState: setLoadingState,
-        SET_reducerError: setErrorState,
       })
     );
 
-    // Trigger the fetch
-    await act(() => result.current.FETCH("loading"));
+    const response = await act(() => result.current.FETCH("loading"));
 
-    // Ensure that the fetch function was called
     expect(FETCH_vocabs).toHaveBeenCalledTimes(1);
+    expect(response).toBeUndefined();
+  });
+  it("4. Throws error if returned 'data' object was undefined", async () => {
+    // Mock the fetch function to simulate the aborted state
+    (FETCH_vocabs as jest.Mock).mockResolvedValueOnce(undefined);
 
-    // Ensure that the pagination function is NOT called due to abort
-    expect(appendToPagination).not.toHaveBeenCalled();
+    // Set up the hook for the test
+    const { result } = renderHook(() =>
+      USE_fetchVocabs({
+        search: "test_search",
+        reducer: {
+          data: { printed_IDS: new Set() },
+        } as vocabsReducer_TYPE,
+        targetList_ID: undefined,
+        fetch_TYPE: "all",
+        list_TYPE: "private",
+      })
+    );
 
-    // Ensure that the loading state is NOT set to "none" (should not proceed with setting the state after abort)
-    expect(setLoadingState).not.toHaveBeenCalledWith("none");
-
-    // Ensure no error state was set
-    expect(setErrorState).toHaveBeenCalledTimes(1);
+    try {
+      await act(() => result.current.FETCH("loading"));
+    } catch (error) {
+      expect(error).toBeInstanceOf(General_ERROR);
+      expect((error as General_ERROR).message).toBe(
+        "FETCH_vocabs returned an undefined 'data' object, although it didn't throw an error"
+      );
+      expect((error as General_ERROR).function_NAME).toBe("USE_fetchVocabs");
+    }
   });
 
-  it("5. Appends fetched data correctly", async () => {
+  it("5. Returns valid data", async () => {
     const mockData = {
       vocabs: [{ id: "1", word: "test" }],
       unpaginated_COUNT: 1,
     };
-    (FETCH_vocabs as jest.Mock).mockResolvedValueOnce({
-      data: mockData,
-      error: null,
-    });
+    (FETCH_vocabs as jest.Mock).mockResolvedValueOnce(mockData);
 
     const { result } = renderHook(() =>
       USE_fetchVocabs({
@@ -204,44 +171,11 @@ describe("USE_fetchVocabsHelper", () => {
         targetList_ID: undefined,
         fetch_TYPE: "all",
         list_TYPE: "private",
-        APPEND_vocabsToPagination: appendToPagination,
-        SET_reducerLoadingState: setLoadingState,
-        SET_reducerError: setErrorState,
       })
     );
 
-    await act(() => result.current.FETCH("loading"));
+    const response = await act(() => result.current.FETCH("loading"));
 
-    expect(appendToPagination).toHaveBeenCalledWith(mockData);
-  });
-  it("6. Handles empty data response", async () => {
-    const mockEmptyData = {
-      vocabs: [],
-      unpaginated_COUNT: 0,
-    };
-    (FETCH_vocabs as jest.Mock).mockResolvedValueOnce({
-      data: mockEmptyData,
-      error: null,
-    });
-
-    const { result } = renderHook(() =>
-      USE_fetchVocabs({
-        search: "empty_data_test",
-        reducer: {
-          data: { printed_IDS: new Set() },
-        } as vocabsReducer_TYPE,
-        targetList_ID: "list123",
-        fetch_TYPE: "all",
-        list_TYPE: "private",
-        APPEND_vocabsToPagination: appendToPagination,
-        SET_reducerLoadingState: setLoadingState,
-        SET_reducerError: setErrorState,
-      })
-    );
-
-    await act(() => result.current.FETCH("loading"));
-
-    expect(appendToPagination).toHaveBeenCalledWith(mockEmptyData);
-    expect(setLoadingState).toHaveBeenCalledWith("none");
+    expect(response).toBe(mockData);
   });
 });

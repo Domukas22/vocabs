@@ -19,9 +19,9 @@ export function USE_vocabReducerActions({
   fetch_TYPE,
   search,
   targetList_ID,
-  r_START_fetch,
-  r_APPEND_manyVocabs,
-  r_SET_error,
+  r_START_fetch = () => {},
+  r_APPEND_manyVocabs = () => {},
+  r_SET_error = () => {},
 }: {
   reducer: vocabsReducer_TYPE;
   list_TYPE: vocabList_TYPES;
@@ -55,5 +55,6 @@ export function USE_vocabReducerActions({
     FETCH_vocabsAndHanldeState,
   });
 
+  // Exported as "REFETCH_vocabs", because it's only going to be used as a refetch tool
   return { LOAD_moreVocabs, REFETCH_vocabs: FETCH_vocabsAndHanldeState };
 }

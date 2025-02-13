@@ -27,34 +27,40 @@ export function PREPEND_oneVocabToReducer(
   state: vocabsReducer_TYPE,
   payload: PREPEND_oneVocab_PAYLOAD
 ): vocabsReducer_TYPE {
-  // check if the CURRENT STATE has a valid vocab array
-  if (!state?.data?.vocabs)
-    throw err("Reducer state 'data.vocabs' was undefined");
+  if (!state) throw err("Reducer 'state' was undefined");
 
-  // check if the CURRENT STATE has a valid unpaginated count
-  if (typeof state?.data?.unpaginated_COUNT !== "number")
-    throw err("Reducer state 'payload.unpaginated_COUNT' was not a number");
+  if (!state.data) throw err("Reducer 'state.data' was undefined");
 
-  // check if the PAYLOAD has a valid vocab id
-  if (!payload?.id) throw err("Reducer state 'payload.id' was undefined");
+  if (!state.data.vocabs)
+    throw err("Reducer 'state.data.vocabs' was undefined");
+
+  if (typeof state.data.unpaginated_COUNT !== "number")
+    throw err("Reducer 'state.data.unpaginated_COUNT' was not a number");
+
+  if (!payload) throw err("Reducer 'payload' was undefined");
+
+  if (!payload.id) throw err("Reducer 'payload.id' was undefined");
 
   // Prevent duplicates
-  if (state.data.printed_IDS.has(payload.id)) {
-    return state;
-  }
+  if (state.data.printed_IDS.has(payload.id)) return state;
 
-  const newVocabs = [payload, ...state?.data?.vocabs];
-  const updatedIds = new Set(newVocabs?.map((v) => v?.id));
-  updatedIds.add(payload?.id);
-  const totalCount = state?.data?.unpaginated_COUNT + 1;
+  const newVocabs = [payload, ...state.data.vocabs];
+  const updatedIds = new Set(
+    newVocabs?.map((v) => {
+      if (!v.id) throw err("A vocab inside 'newVocabs' did not have an id");
+      return v?.id;
+    })
+  );
+  updatedIds.add(payload.id);
+  const totalCount = state.data.unpaginated_COUNT + 1;
 
   return {
-    ...state,
     data: {
       vocabs: newVocabs,
       printed_IDS: updatedIds,
       unpaginated_COUNT: totalCount,
       HAS_reachedEnd: newVocabs?.length >= totalCount,
     },
+    loading_STATE: "none",
   };
 }

@@ -6,10 +6,6 @@ import { USE_zustand } from "@/src/hooks";
 import { loadingState_TYPES } from "@/src/types/general_TYPES";
 import DETERMINE_loadingState from "@/src/utils/DETERMINE_loadingState/DETERMINE_loadingState";
 import { useEffect } from "react";
-import {
-  vocabFetch_TYPES,
-  vocabList_TYPES,
-} from "../USE_fetchVocabs/helpers/FETCH_vocabs/types";
 
 export function USE_refetchVocabs({
   search = "",

@@ -1,131 +1,114 @@
 //
 //
 //
+
+import { General_ERROR } from "@/src/types/error_TYPES";
+import { vocabsReducer_TYPE, DELETE_oneVocab_PAYLOAD } from "../../types";
 import { DELETE_vocabFromReducer } from "./DELETE_vocabFromReducer";
-import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
-import { vocabsReducer_TYPE } from "../../types";
-import { CREATE_err_TYPE } from "../../Vocab_REDUCER";
+import { Vocab_TYPE } from "@/src/features/vocabs/types";
+
+// Mock state and payload
+const mockState = {
+  data: {
+    vocabs: [{ id: "1" }, { id: "2" }] as Vocab_TYPE[],
+    printed_IDS: new Set(["1", "2"]),
+    unpaginated_COUNT: 2,
+    HAS_reachedEnd: false,
+  },
+  loading_STATE: "none",
+} as vocabsReducer_TYPE;
+
+const validPayload = "2" as DELETE_oneVocab_PAYLOAD; // id to delete
+const invalidPayload = "3" as DELETE_oneVocab_PAYLOAD; // id not in the vocabs
+
+const errorMessage = (message: string) => {
+  return new General_ERROR({
+    message,
+    function_NAME: "DELETE_vocabFromReducer",
+  });
+};
 
 describe("DELETE_vocabFromReducer", () => {
-  const mockCreateError = jest.fn((code, func) => ({
-    user_MSG: `${func}: ${code}`,
-  })) as unknown as CREATE_err_TYPE;
-
-  const initialState: vocabsReducer_TYPE = {
-    data: {
-      vocabs: [
-        { id: "1", word: "test" } as unknown as Vocab_MODEL,
-        { id: "2", word: "example" } as unknown as Vocab_MODEL,
-      ],
-      printed_IDS: new Set(["1", "2"]),
-      unpaginated_COUNT: 2,
-      HAS_reachedEnd: false,
-    },
-    error: undefined,
-    loading_STATE: "none",
-  };
-
-  test("1. Deletes a vocab successfully", () => {
-    const newState = DELETE_vocabFromReducer(
-      initialState,
-      "1",
-      mockCreateError
-    );
-
-    expect(newState?.data?.vocabs.length).toBe(1);
-    expect(newState?.data?.vocabs.some((v) => v.id === "1")).toBe(false);
-    expect(newState?.data?.unpaginated_COUNT).toBe(1);
-    expect(newState.error).toBeUndefined();
+  test("1. Deletes the vocab with the given id", () => {
+    const updatedState = DELETE_vocabFromReducer(mockState, validPayload);
+    expect(updatedState?.data?.vocabs).toHaveLength(1);
+    expect(updatedState?.data?.vocabs.map((vocab) => vocab.id)).toEqual(["1"]);
+    expect(updatedState?.data?.printed_IDS.has("2")).toBe(false);
   });
 
-  test("2. Returns the same state when vocab ID doesn't exist", () => {
-    const newState = DELETE_vocabFromReducer(
-      initialState,
-      "999",
-      mockCreateError
+  test("2. Throws error if state is undefined", () => {
+    const invalidState = undefined as unknown as vocabsReducer_TYPE;
+    expect(() => DELETE_vocabFromReducer(invalidState, validPayload)).toThrow(
+      errorMessage("Reducer 'state' was undefined")
     );
-
-    expect(newState).toEqual(initialState);
   });
 
-  test("3. Returns error when `state.data.vocabs` is undefined", () => {
-    const brokenState = { ...initialState, data: undefined };
-
-    const newState = DELETE_vocabFromReducer(brokenState, "1", mockCreateError);
-
-    expect(newState.error).toEqual(
-      mockCreateError(
-        "current_state_vocabs_array_undefined",
-        "DELETE_vocabFromReducer"
-      )
+  test("3. Throws error if state.data is undefined", () => {
+    const invalidState = {
+      ...mockState,
+      data: undefined,
+    } as unknown as vocabsReducer_TYPE;
+    expect(() => DELETE_vocabFromReducer(invalidState, validPayload)).toThrow(
+      errorMessage("Reducer 'state.data' was undefined")
     );
-    expect(newState.loading_STATE).toBe("error");
   });
 
-  test("4. Returns error when `state.data.unpaginated_COUNT` is not a number", () => {
-    const brokenState = {
-      ...initialState,
-      data: { ...initialState.data, unpaginated_COUNT: "invalid" as any },
-    } as vocabsReducer_TYPE;
-
-    const newState = DELETE_vocabFromReducer(brokenState, "1", mockCreateError);
-
-    expect(newState.error).toEqual(
-      mockCreateError(
-        "current_state_unpaginated_count_is_not_number",
-        "DELETE_vocabFromReducer"
-      )
+  test("4. Throws error if state.data.vocabs is undefined", () => {
+    const invalidState = {
+      ...mockState,
+      data: { ...mockState.data, vocabs: undefined },
+    } as unknown as vocabsReducer_TYPE;
+    expect(() => DELETE_vocabFromReducer(invalidState, validPayload)).toThrow(
+      errorMessage("Reducer 'state.data.vocabs' was undefined")
     );
-    expect(newState.loading_STATE).toBe("error");
   });
 
-  test("5. Returns error when payload vocab ID is undefined", () => {
-    const newState = DELETE_vocabFromReducer(
-      initialState,
-      undefined as any,
-      mockCreateError
-    );
-
-    expect(newState.error).toEqual(
-      mockCreateError("payload_vocab_id_undefined", "DELETE_vocabFromReducer")
-    );
-    expect(newState.loading_STATE).toBe("error");
-  });
-
-  test("6. Returns error when payload vocab ID is an empty string", () => {
-    const newState = DELETE_vocabFromReducer(initialState, "", mockCreateError);
-
-    expect(newState.error).toEqual(
-      mockCreateError("payload_vocab_id_undefined", "DELETE_vocabFromReducer")
-    );
-    expect(newState.loading_STATE).toBe("error");
-  });
-
-  test("7. Ensures `unpaginated_COUNT` decrements only when deletion happens", () => {
-    const prevState = { ...initialState };
-
-    const newState = DELETE_vocabFromReducer(
-      initialState,
-      "2",
-      mockCreateError
-    );
-
-    expect(newState?.data?.unpaginated_COUNT).toBe(1);
-    expect(newState).not.toEqual(prevState);
-  });
-
-  test("8. Ensures `HAS_reachedEnd` updates correctly when needed", () => {
-    const prevState = {
-      ...initialState,
+  test("5. Throws error if state.data.unpaginated_COUNT is not a number", () => {
+    const invalidState = {
+      ...mockState,
       data: {
-        ...initialState.data,
-        unpaginated_COUNT: 1,
+        vocabs: [{ id: "1" }, { id: "2" }] as Vocab_TYPE[],
+        printed_IDS: new Set(["1", "2"]),
+        unpaginated_COUNT: "not-a-number" as unknown as number,
         HAS_reachedEnd: false,
       },
+    };
+    expect(() => DELETE_vocabFromReducer(invalidState, validPayload)).toThrow(
+      errorMessage("Reducer 'state.data.unpaginated_COUNT' was not a number")
+    );
+  });
+
+  test("6. Throws error if payload is undefined", () => {
+    const invalidPayload = undefined as unknown as DELETE_oneVocab_PAYLOAD;
+    expect(() => DELETE_vocabFromReducer(mockState, invalidPayload)).toThrow(
+      errorMessage("Reducer 'payload' was undefined")
+    );
+  });
+
+  test("7. Returns the same state if vocab doesn't exist", () => {
+    const updatedState = DELETE_vocabFromReducer(mockState, invalidPayload);
+    expect(updatedState).toEqual(mockState); // No change
+  });
+
+  test("8. Updates printed_IDS after deletion", () => {
+    const updatedState = DELETE_vocabFromReducer(mockState, validPayload);
+    expect(updatedState?.data?.printed_IDS.has("2")).toBe(false);
+    expect(updatedState?.data?.printed_IDS.has("1")).toBe(true);
+  });
+
+  test("9. Throws error if a vocab inside 'state.data.vocabs' does not have an id", () => {
+    const invalidState = {
+      data: {
+        vocabs: [{ id: "1" }, { notid: "2" }] as Vocab_TYPE[],
+        printed_IDS: new Set(["1", "2"]),
+        unpaginated_COUNT: 2,
+        HAS_reachedEnd: false,
+      },
+      loading_STATE: "none",
     } as vocabsReducer_TYPE;
 
-    const newState = DELETE_vocabFromReducer(prevState, "1", mockCreateError);
-
-    expect(newState?.data?.HAS_reachedEnd).toBe(true);
+    expect(() => DELETE_vocabFromReducer(invalidState, "1")).toThrow(
+      errorMessage("A vocab inside 'state.data.vocabs' did not have an id")
+    );
   });
 });

@@ -2,7 +2,6 @@
 //
 //
 
-import { Vocab_TYPE } from "@/src/features/vocabs/types";
 import { USE_zustand, USE_abortController } from "@/src/hooks";
 import { loadingState_TYPES } from "@/src/types/general_TYPES";
 import { useCallback } from "react";
@@ -70,7 +69,11 @@ export function USE_fetchVocabs({
         // Also, don't throw any errors, because the only reason this will abort is if a new fetch request has started.
         if (newController.signal.aborted) return;
 
-        if (!data) {
+        if (
+          !data ||
+          typeof data?.unpaginated_COUNT !== "number" ||
+          !data?.vocabs
+        ) {
           throw new General_ERROR({
             function_NAME,
             message:

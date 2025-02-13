@@ -20,7 +20,7 @@ export const errs = {
       "Failed to fetch list accesses where I am participant in",
   },
   user: {
-    defaultInternal_MSG: CREATE_internalErrorMsg("trying to load shared lists"),
+    defaultmessage: CREATE_internalErrorMsg("trying to load shared lists"),
     networkFailure: "There seems to an issue with your internet connection.",
   },
 };
@@ -51,7 +51,7 @@ export async function FETCH_listIdsSharedWithMe(
       error: HANDLE_userErrorInsideFinalCatchBlock({
         function_NAME: "FETCH_listIdsSharedWithMe",
         error,
-        internalErrorUser_MSG: errs.user.defaultInternal_MSG,
+        internalErrorUser_MSG: errs.user.defaultmessage,
       }),
     };
   }
@@ -63,8 +63,8 @@ function VALIDATE_supabaseData(data: ListIdsSharedWithMe_DATA) {
     if (!data[0]?.list_id)
       throw GENERATE_error({
         error_TYPE: "internal",
-        user_MSG: errs.user.defaultInternal_MSG,
-        internal_MSG: errs.internal.invalidDataReturned,
+        user_MSG: errs.user.defaultmessage,
+        message: errs.internal.invalidDataReturned,
       });
   }
 }
@@ -72,8 +72,8 @@ function VALIDATE_args(user_id: string | undefined) {
   if (!user_id) {
     throw GENERATE_error({
       error_TYPE: "internal",
-      user_MSG: errs.user.defaultInternal_MSG,
-      internal_MSG: errs.internal.noUserId,
+      user_MSG: errs.user.defaultmessage,
+      message: errs.internal.noUserId,
     });
   }
 }
@@ -89,8 +89,8 @@ function VALIDATE_supabaseFetch(error: PostgrestError | null) {
     } else {
       throw GENERATE_error({
         error_TYPE: "internal",
-        user_MSG: errs.user.defaultInternal_MSG,
-        internal_MSG: errs.internal.failedSupabaseFetch,
+        user_MSG: errs.user.defaultmessage,
+        message: errs.internal.failedSupabaseFetch,
         error_DETAILS: error,
       });
     }

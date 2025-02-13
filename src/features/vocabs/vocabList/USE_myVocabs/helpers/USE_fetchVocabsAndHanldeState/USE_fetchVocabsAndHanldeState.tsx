@@ -13,10 +13,10 @@ import {
 } from "../USE_myVocabsReducer/Vocab_REDUCER/types";
 
 export function USE_fetchVocabsAndHanldeState({
-  FETCH_vocabs,
-  r_START_fetch,
-  r_APPEND_manyVocabs,
-  r_SET_error,
+  FETCH_vocabs = () => Promise.resolve(undefined),
+  r_START_fetch = () => {},
+  r_APPEND_manyVocabs = () => {},
+  r_SET_error = () => {},
 }: {
   FETCH_vocabs: (
     loadingState_TYPE: loadingState_TYPES
@@ -40,7 +40,14 @@ export function USE_fetchVocabsAndHanldeState({
 
         r_APPEND_manyVocabs(data);
       } catch (error: any) {
-        r_SET_error(error);
+        r_SET_error(
+          new General_ERROR({
+            function_NAME:
+              error?.function_NAME || "USE_fetchVocabsAndHanldeState",
+            message: error.message,
+            errorToSpread: error,
+          })
+        );
       }
     },
     [FETCH_vocabs]

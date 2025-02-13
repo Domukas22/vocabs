@@ -1,12 +1,9 @@
 import { supabase } from "@/src/lib/supabase";
-import {
-  FETCH_myVocabs_ARG_TYPES,
-  FETCH_myVocabs_RESPONSE_TYPE,
-} from "./types";
+import { FETCH_myVocabs_ARG_TYPES } from "./types";
 import {
   FETCH_unpaginatedVocabCount,
   FETCH_finalVocabs,
-  VALIDATE_args,
+  VALIDATE_fetchVocabArgs,
 } from "./helpers";
 import { General_ERROR } from "@/src/types/error_TYPES";
 import { FETCH_vocabs } from "./FETCH_vocabs";
@@ -21,7 +18,7 @@ jest.mock("@/src/lib/supabase", () => ({
 jest.mock("./helpers", () => ({
   FETCH_unpaginatedVocabCount: jest.fn(),
   FETCH_finalVocabs: jest.fn(),
-  VALIDATE_args: jest.fn(),
+  VALIDATE_fetchVocabArgs: jest.fn(),
 }));
 
 describe("FETCH_vocabs", () => {
@@ -55,7 +52,7 @@ describe("FETCH_vocabs", () => {
 
     const result = await FETCH_vocabs(mockArgs);
 
-    expect(result.data).toEqual({
+    expect(result).toEqual({
       vocabs: mockVocabs,
       unpaginated_COUNT: mockUnpaginatedCount,
     });
@@ -76,10 +73,10 @@ describe("FETCH_vocabs", () => {
     }
   });
 
-  test("3. Calls VALIDATE_args with correct arguments", async () => {
+  test("3. Calls VALIDATE_fetchVocabArgs with correct arguments", async () => {
     await FETCH_vocabs(mockArgs);
 
-    expect(VALIDATE_args).toHaveBeenCalledWith(mockArgs);
+    expect(VALIDATE_fetchVocabArgs).toHaveBeenCalledWith(mockArgs);
   });
 
   test("4. Handles undefined arguments gracefully", async () => {
@@ -105,7 +102,7 @@ describe("FETCH_vocabs", () => {
 
     const result = await FETCH_vocabs(mockArgs);
 
-    expect(result.data).toEqual({
+    expect(result).toEqual({
       vocabs: mockVocabs,
       unpaginated_COUNT: mockUnpaginatedCount,
     });

@@ -3,22 +3,14 @@
 //
 
 import {
-  FETCH_myVocabs_RESPONSE_TYPE,
   vocabFetch_TYPES,
   vocabList_TYPES,
 } from "./helpers/USE_fetchVocabs/helpers/FETCH_vocabs/types";
 import {
   USE_myVocabsReducer,
-  USE_fetchVocabs,
-  USE_loadMoreVocabs,
   USE_refetchVocabs,
-  USE_fetchVocabsAndHanldeState,
+  USE_vocabReducerActions,
 } from "./helpers";
-import { loadingState_TYPES } from "@/src/types/general_TYPES";
-import { vocabsReducer_TYPE } from "./helpers/USE_myVocabsReducer/Vocab_REDUCER/types";
-import { useCallback } from "react";
-import { General_ERROR } from "@/src/types/error_TYPES";
-import { USE_vocabReducerActions } from "./helpers/USE_vocabReducerActions/USE_vocabReducerActions";
 
 interface USE_myVocabs_ARGS {
   list_TYPE: vocabList_TYPES;

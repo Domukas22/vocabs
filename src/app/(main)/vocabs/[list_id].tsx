@@ -101,7 +101,6 @@ export default function SingleList_PAGE() {
         OPEN_create={() => modals.createVocab.set(true)}
         {...{ search, SET_search }}
       />
-      <Btn text="Test error" onPress={() => r_DELETE_oneVocab("ass")} />
       <Vocab_LIST
         _ref={list_REF}
         list_NAME={selected_LIST?.name}

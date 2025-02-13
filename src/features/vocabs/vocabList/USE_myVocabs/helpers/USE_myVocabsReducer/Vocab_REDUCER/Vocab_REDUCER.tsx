@@ -2,12 +2,9 @@
 //
 //
 
-import {
-  vocabsReducer_TYPE,
-  myVocabsReducerAction_PROPS,
-  START_fetch_PAYLOAD,
-  UPDATE_oneVocab_PAYLOAD,
-} from "./types";
+import { General_ERROR } from "@/src/types/error_TYPES";
+
+import { vocabsReducer_TYPE, myVocabsReducerAction_PROPS } from "./types";
 
 import {
   PREPEND_oneVocabToReducer,
@@ -17,10 +14,6 @@ import {
   UPDATE_oneVocabInReducer,
   START_vocabReducerFetch,
 } from "./helpers";
-
-import { General_ERROR } from "@/src/types/error_TYPES";
-
-///////////////////////////////////////////////////////////////////
 
 export function Vocab_REDUCER(
   state: vocabsReducer_TYPE,

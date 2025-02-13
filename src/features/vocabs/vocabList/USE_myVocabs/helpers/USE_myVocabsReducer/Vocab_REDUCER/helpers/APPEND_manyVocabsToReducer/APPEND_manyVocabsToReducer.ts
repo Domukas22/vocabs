@@ -26,36 +26,47 @@ export function APPEND_manyVocabsToReducer(
   state: vocabsReducer_TYPE,
   payload: APPEND_manyVocabs_PAYLOAD
 ): vocabsReducer_TYPE {
-  // check if the CURRENT STATE has a valid vocab array
-  if (!state?.data?.vocabs)
-    throw err("Reducer state 'data.vocabs' was undefined");
+  if (!state) throw err("Reducer 'state' was undefined");
 
-  // check if the PAYLOAD has a valid vocab array
-  if (!payload?.vocabs)
-    throw err("Reducer state 'payload.vocabs' was undefined");
+  if (!state.data) throw err("Reducer 'state.data' was undefined");
 
-  // check if the PAYLOAD has a valid unpaginated count
-  if (typeof payload?.unpaginated_COUNT !== "number")
-    throw err("Reducer state 'payload.unpaginated_COUNT' was not a number");
+  if (!state.data.vocabs)
+    throw err("Reducer 'state.data.vocabs' was undefined");
+
+  if (!state.data.printed_IDS)
+    throw err("Reducer 'state.data.printed_IDS' was undefined");
+
+  if (!payload) throw err("Reducer 'payload' was undefined");
+
+  if (!payload.vocabs) throw err("Reducer 'payload.vocabs' was undefined");
+
+  if (typeof payload.unpaginated_COUNT !== "number")
+    throw err("Reducer 'payload.unpaginated_COUNT' was not a number");
 
   // Prevent duplicates: filter out vocabs that already exist in printed_IDS
-  const newVocabs = payload.vocabs?.filter(
-    (vocab) => !state?.data?.printed_IDS.has(vocab.id)
+  const newVocabs = payload.vocabs?.filter((vocab) => {
+    if (!vocab.id)
+      throw err("A vocab inside 'payload.vocabs' did not have an id");
+    return !state?.data?.printed_IDS.has(vocab.id);
+  });
+
+  // Append new vocabs
+  const updatedVocabs = [...state.data.vocabs, ...newVocabs];
+
+  // Update printed ids
+  const updatedPrintedIds = new Set(
+    updatedVocabs?.map((v) => {
+      if (!v.id) throw err("A vocab inside 'updatedVocabs' did not have an id");
+      return v.id;
+    })
   );
-
-  // If 'CLEAR_previous' is true, it means we re-fetching based on dependency changes
-  // Else, we are loading additional vocabs (pagination)
-  const updatedVocabs = [...state?.data?.vocabs, ...newVocabs];
-
-  const updatedPrintedIds = new Set(updatedVocabs?.map((v) => v?.id));
-  payload.vocabs.forEach((vocab) => updatedPrintedIds.add(vocab.id));
 
   return {
     data: {
       vocabs: updatedVocabs,
       printed_IDS: updatedPrintedIds,
-      unpaginated_COUNT: payload?.unpaginated_COUNT,
-      HAS_reachedEnd: updatedVocabs?.length >= payload?.unpaginated_COUNT,
+      unpaginated_COUNT: payload.unpaginated_COUNT,
+      HAS_reachedEnd: updatedVocabs.length >= payload.unpaginated_COUNT,
     },
     loading_STATE: "none",
   };

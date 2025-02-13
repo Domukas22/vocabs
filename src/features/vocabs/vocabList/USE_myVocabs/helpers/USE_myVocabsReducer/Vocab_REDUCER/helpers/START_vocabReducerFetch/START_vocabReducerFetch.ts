@@ -18,10 +18,23 @@ export function START_vocabReducerFetch(
   state: vocabsReducer_TYPE,
   payload: START_fetch_PAYLOAD
 ): vocabsReducer_TYPE {
-  if (!state?.data?.vocabs)
-    throw err("Reducer state 'data.vocabs' was undefined");
+  if (!state) throw err("Reducer 'state' was undefined");
 
-  if (!payload) throw err("'payload' was undefined");
+  if (!state.data) throw err("Reducer 'state.data' was undefined");
+
+  if (!state.data.vocabs)
+    throw err("Reducer 'state.data.vocabs' was undefined");
+
+  if (!state.data.printed_IDS)
+    throw err("Reducer 'state.data.printed_IDS' was undefined");
+
+  if (typeof state.data.unpaginated_COUNT !== "number")
+    throw err("Reducer 'state.data.unpaginated_COUNT' was not a number");
+
+  if (typeof state.data.HAS_reachedEnd !== "boolean")
+    throw err("Reducer 'state.data.HAS_reachedEnd' was not a boolean");
+
+  if (!payload) throw err("Reducer 'payload' was undefined");
 
   // If fetching additional vocabs
   // - Leave the data state alone

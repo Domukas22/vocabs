@@ -8,7 +8,7 @@ import { vocabsReducer_TYPE } from "../USE_myVocabsReducer/Vocab_REDUCER/types";
 
 export function USE_loadMoreVocabs({
   reducer: state,
-  FETCH_vocabsAndHanldeState,
+  FETCH_vocabsAndHanldeState = () => Promise.resolve(),
 }: {
   reducer: vocabsReducer_TYPE;
   FETCH_vocabsAndHanldeState: (fetch_TYPE: loadingState_TYPES) => Promise<void>;

@@ -1,82 +1,31 @@
-import { renderHook, act } from "@testing-library/react-native";
+//
+//
+//
 
-import { vocabsReducer_TYPE } from "../../types";
-import { Error_PROPS } from "@/src/types/error_TYPES";
+import { General_ERROR } from "@/src/types/error_TYPES";
+import { SET_error_PAYLOAD } from "../../types";
 import { SET_reducerError } from "./SET_reducerError";
 
+// Mock payload
+const errorPayload = { message: "An error occurred" } as SET_error_PAYLOAD;
+
+// Alternative error if payload is missing
+const alternativeError = new General_ERROR({
+  function_NAME: "SET_reducerError",
+  message: "An error has been triggered, but hasn't been provided properly",
+});
+
 describe("SET_reducerError", () => {
-  const initialState = {
-    error: undefined,
-    loading_STATE: "none", // Example of other state values that should not be affected
-  } as unknown as vocabsReducer_TYPE;
-
-  test("1. Sets error when payload is provided", () => {
-    const errorPayload = { user_MSG: "Something went wrong" } as Error_PROPS;
-
-    const newState = SET_reducerError(initialState, errorPayload);
-
-    expect(newState.error).toEqual(errorPayload);
-    expect(newState.loading_STATE).toBe(initialState.loading_STATE);
+  test("1. Sets the error in the reducer when payload is provided", () => {
+    const updatedState = SET_reducerError(errorPayload);
+    expect(updatedState?.error).toEqual(errorPayload);
+    expect(updatedState?.loading_STATE).toBe("error");
   });
 
-  test("2. Clears error when payload is undefined", () => {
-    const prevState = {
-      ...initialState,
-      error: { user_MSG: "Old error" } as Error_PROPS,
-    };
-
-    const newState = SET_reducerError(prevState, undefined);
-
-    expect(newState.error).toBeUndefined();
-    expect(newState.loading_STATE).toBe(prevState.loading_STATE);
-  });
-
-  test("3. Handles null error gracefully", () => {
-    const prevState = {
-      ...initialState,
-      error: null as unknown as Error_PROPS,
-    };
-
-    const newState = SET_reducerError(prevState, undefined);
-
-    expect(newState.error).toBeUndefined();
-    expect(newState.loading_STATE).toBe(prevState.loading_STATE);
-  });
-
-  test("4. Does not modify other state properties", () => {
-    const prevState = {
-      ...initialState,
-      error: { user_MSG: "Keep this" } as Error_PROPS,
-    };
-
-    const newState = SET_reducerError(prevState, {
-      user_MSG: "New error",
-    } as Error_PROPS);
-
-    expect(newState.error).toEqual({ user_MSG: "New error" });
-    expect(newState.loading_STATE).toBe(prevState.loading_STATE);
-  });
-
-  test("5. Handles incorrect error structure", () => {
-    const prevState = { ...initialState, error: { user_MSG: "Valid error" } };
-
-    // @ts-expect-error Testing incorrect structure
-    const newState = SET_reducerError(prevState, { invalidProp: "Oops" });
-
-    expect(newState.error).toEqual({ invalidProp: "Oops" });
-    expect(newState.loading_STATE).toBe(prevState.loading_STATE);
-  });
-
-  test("6. Handles empty object as payload", () => {
-    const prevState = {
-      ...initialState,
-      error: { user_MSG: "Existing error" },
-    };
-
-    // @ts-expect-error Empty object as payload
-    const newState = SET_reducerError(prevState, {} as Error_PROPS);
-
-    expect(newState.error).toEqual({});
-    expect(newState.loading_STATE).toBe(prevState.loading_STATE);
+  test("2. Sets the alternative error if payload is undefined", () => {
+    const invalidPayload = undefined as unknown as SET_error_PAYLOAD;
+    const updatedState = SET_reducerError(invalidPayload);
+    expect(updatedState?.error).toEqual(alternativeError);
+    expect(updatedState?.loading_STATE).toBe("error");
   });
 });
