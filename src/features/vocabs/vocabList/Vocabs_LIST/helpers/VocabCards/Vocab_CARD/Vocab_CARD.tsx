@@ -16,7 +16,7 @@ import { useToast } from "react-native-toast-notifications";
 import { Vocab_TYPE } from "@/src/features/vocabs/types";
 import Vocab_FRONT from "../helpers/Vocab_FRONT/Vocab_FRONT";
 import { VocabBack_TRS } from "../helpers/VocabBack_TRS/VocabBack_TRS";
-import VocabBottomText_WRAP from "../helpers/VocabBottomText_WRAP/VocabBottomText_WRAP";
+import VocabBack_TEXT from "../helpers/VocabBack_TEXT/VocabBack_TEXT";
 import VocabBack_BTNS from "../helpers/VocabBack_BTNS/VocabBack_BTNS";
 import VocabBackDifficultyEdit_BTNS from "../helpers/VocabBackDifficultyEdit_BTNS/VocabBackDifficultyEdit_BTNS";
 import {
@@ -29,7 +29,6 @@ interface VocabProps {
   highlighted: boolean;
   list_TYPE: vocabList_TYPES;
   fetch_TYPE: vocabFetch_TYPES;
-  // HANDLE_updateModal: () => void;
 }
 
 // TOGGLE_vocabModal needs to also pass in th etranslations, so we dont have to pass them async and get a delayed manageVocabModal update
@@ -38,38 +37,26 @@ export function Vocab_CARD({
   fetch_TYPE,
   vocab,
   highlighted,
-  HANDLE_updateModal = () => {},
 }: VocabProps) {
   const [open, TOGGLE_open] = USE_toggle();
-  const [SHOW_difficultyEdits, TOGGLE_difficultyEdits, SET_difficultyEdit] =
-    USE_toggle(false);
-
   const trs = vocab?.trs || [];
-
-  const handleEdit = () => {
-    HANDLE_updateModal();
-  };
 
   const styles = useMemo(
     () => [
       s._vocab,
       open && s.vocab_open,
-      open && vocab?.difficulty && s[`difficulty_${vocab?.difficulty}`],
+      open && s[`difficulty_${vocab?.difficulty || 0}`],
       highlighted && s.highlighted,
     ],
     [open, vocab?.difficulty, highlighted]
   );
-  const { t } = useTranslation();
-  const toast = useToast();
 
   return (
     <View style={styles}>
-      {/* <Styled_TEXT>{`${_vocab?.created_at}`}</Styled_TEXT> */}
-
       {!open && (
         <Vocab_FRONT
           trs={trs || []}
-          difficulty={vocab?.difficulty}
+          difficulty={vocab?.difficulty || 0}
           description={vocab?.description}
           highlighted={highlighted}
           TOGGLE_open={TOGGLE_open}
@@ -78,45 +65,24 @@ export function Vocab_CARD({
       )}
       {open && (
         <>
-          <VocabBack_TRS trs={trs} difficulty={vocab?.difficulty} />
-          <VocabBottomText_WRAP desc={vocab?.description} />
+          <VocabBack_TRS trs={trs} difficulty={vocab?.difficulty || 0} />
+          <VocabBack_TEXT
+            desc={vocab?.description}
+            list_NAME={
+              list_TYPE === "public" ||
+              (list_TYPE === "private" &&
+                (fetch_TYPE === "all" || fetch_TYPE === "marked"))
+                ? vocab?.list?.name || "Not in any list"
+                : undefined
+            }
+          />
 
-          <View style={{ padding: 12, gap: 8 }}>
-            {!SHOW_difficultyEdits ? (
-              <VocabBack_BTNS
-                {...{
-                  vocab: vocab,
-                  trs,
-
-                  TOGGLE_difficultyEdits,
-                }}
-                editBtn_FN={handleEdit}
-              />
-            ) : (
-              <VocabBackDifficultyEdit_BTNS
-                active_DIFFICULTY={vocab?.difficulty}
-                UPDATE_difficulty={(diff: 1 | 2 | 3) => {
-                  (async () => {
-                    await vocab?.EDIT_difficulty(diff);
-                    TOGGLE_difficultyEdits();
-                    toast.show(t("notifications.difficultyUpdated"), {
-                      type: "success",
-                      duration: 2000,
-                    });
-                  })();
-                }}
-                TOGGLE_open={TOGGLE_difficultyEdits}
-              />
-            )}
-            <Btn
-              type="simple"
-              onPress={() => {
-                TOGGLE_open();
-                SET_difficultyEdit(false);
-              }}
-              text={t("btn.close")}
-            />
-          </View>
+          <VocabBack_BTNS
+            {...{ vocab, trs, list_TYPE, fetch_TYPE, TOGGLE_open }}
+            OPEN_vocabUpdateModal={() => {}}
+            OPEN_vocabCopyModal={() => {}}
+            OPEN_vocabPermaDeleteModal={() => {}}
+          />
         </>
       )}
     </View>

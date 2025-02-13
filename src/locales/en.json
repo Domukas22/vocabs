@@ -82,7 +82,10 @@
     "getMoreVocabs": "Get more vocabs",
     "inviteFriends": "Invite friends",
     "confirmProfileDeletion": "Yes, delete",
-    "deletePermanently": "Delete forever"
+    "deletePermanently": "Delete forever",
+    "goToListOfVocab": "View the list",
+    "restoreVocab": "Restore vocab",
+    "saveVocab": "Save vocab"
   },
   "pages": {
     "about": {

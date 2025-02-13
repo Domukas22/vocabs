@@ -82,7 +82,11 @@
     "confirmListCopy": "Ja, kopieren",
     "reviveVocab": "Vokabel wiederherstellen",
     "getMoreVocabs": "Mehr Vokabeln holen",
-    "inviteFriends": "Freunde einladen"
+    "inviteFriends": "Freunde einladen",
+    "goToListOfVocab": "Liste anschauen",
+    "restoreVocab": "Wiederherstellen",
+    "deletePermanently": "Endgültig löschen",
+    "saveVocab": "Vokabel speichern"
   },
   "pages": {
     "about": {

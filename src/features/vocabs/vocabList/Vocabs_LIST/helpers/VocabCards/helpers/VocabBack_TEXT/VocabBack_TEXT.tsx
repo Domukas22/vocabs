@@ -6,7 +6,7 @@ import { View } from "react-native";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
 
-export default function VocabBottomText_WRAP({
+export default function VocabBack_TEXT({
   desc,
   list_NAME,
 }: {
