@@ -4,7 +4,7 @@
 
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-import React, { useMemo, useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useToast } from "react-native-toast-notifications";
@@ -38,6 +38,7 @@ import {
   vocabFetch_TYPES,
   vocabList_TYPES,
 } from "@/src/features/vocabs/vocabList/USE_myVocabs/helpers/USE_fetchVocabs/helpers/FETCH_vocabs/types";
+import { Delay } from "@/src/utils";
 
 const fetch_TYPE: vocabFetch_TYPES = "byTargetList";
 const list_TYPE: vocabList_TYPES = "private";
@@ -121,9 +122,14 @@ export default function SingleList_PAGE() {
         OPEN_create={() => modals.createVocab.set(true)}
         {...{ search, SET_search }}
       />
-
+      <Btn
+        text="remove first"
+        onPress={() => r_DELETE_oneVocab(vocabs?.[0]?.id)}
+      />
       <Vocab_LIST
         vocabs={vocabs}
+        Header={<></>}
+        Footer={<></>}
         Header={<Flashlist_HEADER />}
         Footer={<Flashlist_FOOTER />}
         Vocab_CARD={Card}

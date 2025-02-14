@@ -55,7 +55,6 @@ export default function Styled_FLASHLIST<T>({
           paddingTop: headerPadding ? HEADER_MARGIN || 80 : 0,
         }}
         ListFooterComponentStyle={{ marginBottom: 50 }}
-        ListFooterComponent={<View />} // For bottom padding
         {...rest}
       />
     </View>

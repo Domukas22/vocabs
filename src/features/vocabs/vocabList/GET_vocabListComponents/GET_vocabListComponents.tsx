@@ -14,6 +14,7 @@ import {
   vocabFetch_TYPES,
   vocabList_TYPES,
 } from "../USE_myVocabs/helpers/USE_fetchVocabs/helpers/FETCH_vocabs/types";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 
 interface GET_vocabListComponents_PROPS {
   IS_debouncing: boolean;
@@ -50,7 +51,7 @@ export function GET_vocabListComponents({
   OPEN_modalUpdateVocab = () => {},
   RESET_search = () => {},
 }: GET_vocabListComponents_PROPS) {
-  const Flashlist_HEADER = () => (
+  const Flashlist_HEADER = React.memo(() => (
     <VocabsFlatlistHeader_SECTION
       IS_debouncing={IS_debouncing}
       debouncedSearch={debouncedSearch}
@@ -60,9 +61,9 @@ export function GET_vocabListComponents({
       unpaginated_COUNT={unpaginated_COUNT}
       HAS_error={!!vocabs_ERROR}
     />
-  );
+  ));
 
-  const Flashlist_FOOTER = () => {
+  const Flashlist_FOOTER = React.memo(() => {
     if (vocabs_ERROR)
       return (
         <Error_BLOCK
@@ -75,7 +76,7 @@ export function GET_vocabListComponents({
       (loading_STATE !== "none" && loading_STATE !== "loading_more")
     ) {
       return <VocabsSkeleton_BLOCK />;
-    } else
+    } else {
       return (
         <BottomAction_BLOCK
           type="vocabs"
@@ -91,13 +92,35 @@ export function GET_vocabListComponents({
           }}
         />
       );
-  };
+    }
+  });
 
-  const Card = ({ vocab }: { vocab: Vocab_TYPE }) => (
-    <Vocab_CARD
-      {...{ vocab, list_TYPE, fetch_TYPE }}
-      highlighted={highlighted_ID === vocab.id}
-    />
+  ///////////////////////////////////
+  //
+
+  const Card = React.memo(
+    ({
+      vocab,
+      openVocab_IDs,
+      TOGGLE_vocab,
+    }: {
+      vocab: Vocab_TYPE;
+      openVocab_IDs: Set<string>;
+      TOGGLE_vocab: (vocab_ID: string, val?: boolean) => void;
+    }) => (
+      <Vocab_CARD
+        {...{
+          vocab,
+          list_TYPE,
+          fetch_TYPE,
+          openVocab_IDs,
+          TOGGLE_vocab,
+        }}
+        highlighted={highlighted_ID === vocab.id}
+        IS_open={openVocab_IDs.has(vocab?.id)} // This will now reflect the updated Set reference
+        TOGGLE_open={(val?: boolean) => TOGGLE_vocab(vocab.id, val)}
+      />
+    )
   );
 
   return { Flashlist_HEADER, Flashlist_FOOTER, Card };

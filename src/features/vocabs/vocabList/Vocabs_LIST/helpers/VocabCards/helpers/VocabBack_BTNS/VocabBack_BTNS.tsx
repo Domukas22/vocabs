@@ -21,11 +21,12 @@ import {
 } from "@/src/features/vocabs/vocabList/USE_myVocabs/helpers/USE_fetchVocabs/helpers/FETCH_vocabs/types";
 import { USE_toggle } from "@/src/hooks";
 import { useTranslation } from "react-i18next";
-import { View } from "react-native";
+import { View, Animated, Easing } from "react-native";
 import { useToast } from "react-native-toast-notifications";
 import VocabBackDifficultyEdit_BTNS from "../VocabBackDifficultyEdit_BTNS/VocabBackDifficultyEdit_BTNS";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { MyColors } from "@/src/constants/MyColors";
+import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 
 interface VocabBackBtns_PROPS {
   vocab: Vocab_TYPE;
@@ -64,25 +65,48 @@ export default function VocabBack_BTNS({
     />
   );
 
-  const ToggleMarked_BTN = () => (
-    <Btn
-      type={vocab?.is_marked ? "active_green" : "simple"}
-      onPress={() => {
-        (async () => {
-          await vocab.TOGGLE_marked();
-          if (vocab?.is_marked === true) {
-            // only show when marked, dont show when unmarked
-            toast.show(t("notifications.markedVocab"), {
-              type: "success",
-              duration: 2000,
-            });
-          }
-        })();
-      }}
-      iconLeft={<ICON_bookmark_2 big active={vocab?.is_marked} />}
-    />
-  );
+  ////////////////////////////////////////////////////////////////////////////////
 
+  const ToggleMarked_BTN = () => {
+    const [IS_updatingMarked, SET_isUpdatingMarked] = useState(false);
+    const spinValue = useRef(new Animated.Value(0)).current;
+
+    useEffect(() => {
+      if (IS_updatingMarked) {
+        spinValue.setValue(0); // Reset animation
+        Animated.loop(
+          Animated.timing(spinValue, {
+            toValue: 1,
+            duration: 6000, // Adjust duration as needed
+            easing: Easing.linear,
+            useNativeDriver: true,
+          })
+        ).start();
+      } else {
+        spinValue.setValue(0); // Stop rotation when not updating
+      }
+    }, [IS_updatingMarked]);
+
+    const spin = spinValue.interpolate({
+      inputRange: [0, 1],
+      outputRange: ["0deg", "360deg"],
+    });
+
+    return (
+      <Btn
+        type={vocab?.is_marked ? "active_green" : "simple"}
+        onPress={() => {}} // Toggle spinning on press
+        stayPressed={IS_updatingMarked}
+        iconLeft={
+          <Animated.View style={{ transform: [{ rotate: spin }] }}>
+            <ICON_bookmark_2 big active={vocab?.is_marked} />
+          </Animated.View>
+        }
+      />
+    );
+  };
+
+  ////////////////////////////////////////////////////////////////////////////////
   const ToggleDifficulties_BTN = () => (
     <Btn
       type="simple"

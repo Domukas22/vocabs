@@ -4,7 +4,7 @@
 
 import { MyColors } from "@/src/constants/MyColors";
 import { StyleSheet, View } from "react-native";
-import React, { useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { USE_toggle } from "@/src/hooks/USE_toggle/USE_toggle";
 import { VocabTr_TYPE } from "@/src/features/vocabs/types";
@@ -29,6 +29,8 @@ interface VocabProps {
   highlighted: boolean;
   list_TYPE: vocabList_TYPES;
   fetch_TYPE: vocabFetch_TYPES;
+  IS_open: boolean;
+  TOGGLE_open: (val?: boolean) => void;
 }
 
 // TOGGLE_vocabModal needs to also pass in th etranslations, so we dont have to pass them async and get a delayed manageVocabModal update
@@ -37,33 +39,63 @@ export function Vocab_CARD({
   fetch_TYPE,
   vocab,
   highlighted,
+  IS_open,
+  TOGGLE_open,
 }: VocabProps) {
-  const [open, TOGGLE_open] = USE_toggle();
   const trs = vocab?.trs || [];
+
+  // ------------------------------------------------
+  // If we rely on only 'IS_open', there will be
+  // a slight delay after toggling the open state.
+
+  // So we have a local open state, which works instantly
+  // On mount, it will have the internal IS_open value
+  // from the Set provided as an argument.
+
+  // This way when we edit the vocab list array
+  // by f.e. re-sorting or re-filtering,
+  // the "open" state of each individual vocab will persist.
+  const [open, _toggle, _set] = USE_toggle(IS_open);
+  const toggle = useCallback(() => {
+    if (open) {
+      _set(false);
+      TOGGLE_open(false);
+    } else {
+      _set(true);
+      TOGGLE_open(true);
+    }
+  }, [open]);
+
+  useEffect(() => {
+    if (IS_open !== open) {
+      _set(IS_open);
+    }
+  }, [IS_open]);
+  // ------------------------------------------------
 
   const styles = useMemo(
     () => [
       s._vocab,
-      open && s.vocab_open,
-      open && s[`difficulty_${vocab?.difficulty || 0}`],
+      IS_open && s.vocab_open,
+      IS_open && s[`difficulty_${vocab?.difficulty || 0}`],
       highlighted && s.highlighted,
     ],
-    [open, vocab?.difficulty, highlighted]
+    [IS_open, vocab?.difficulty, highlighted]
   );
 
   return (
     <View style={styles}>
-      {!open && (
+      {!IS_open && (
         <Vocab_FRONT
           trs={trs || []}
           difficulty={vocab?.difficulty || 0}
           description={vocab?.description}
           highlighted={highlighted}
-          TOGGLE_open={TOGGLE_open}
+          TOGGLE_open={toggle}
           IS_marked={vocab?.is_marked}
         />
       )}
-      {open && (
+      {IS_open && (
         <>
           <VocabBack_TRS trs={trs} difficulty={vocab?.difficulty || 0} />
           <VocabBack_TEXT
@@ -78,7 +110,7 @@ export function Vocab_CARD({
           />
 
           <VocabBack_BTNS
-            {...{ vocab, trs, list_TYPE, fetch_TYPE, TOGGLE_open }}
+            {...{ vocab, trs, list_TYPE, fetch_TYPE, TOGGLE_open: toggle }}
             OPEN_vocabUpdateModal={() => {}}
             OPEN_vocabCopyModal={() => {}}
             OPEN_vocabPermaDeleteModal={() => {}}
