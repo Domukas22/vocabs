@@ -23,6 +23,7 @@ import {
   vocabFetch_TYPES,
   vocabList_TYPES,
 } from "../../../../USE_myVocabs/helpers/USE_fetchVocabs/helpers/FETCH_vocabs/types";
+import { currentVocabAction_TYPE } from "@/src/app/(main)/vocabs/[list_id]";
 
 interface VocabProps {
   vocab: Vocab_TYPE;
@@ -31,6 +32,13 @@ interface VocabProps {
   fetch_TYPE: vocabFetch_TYPES;
   IS_open: boolean;
   TOGGLE_open: (val?: boolean) => void;
+  UPDATE_vocabDifficulty: (
+    vocab_ID: string,
+    new_DIFFICULTY: 1 | 2 | 3
+  ) => Promise<void>;
+  UPDATE_vocabMarked: (vocab_ID: string, val: boolean) => Promise<void>;
+  current_ACTIONS: currentVocabAction_TYPE[];
+  OPEN_vocabSoftDeleteModal: (vocab: Vocab_TYPE) => void;
 }
 
 // TOGGLE_vocabModal needs to also pass in th etranslations, so we dont have to pass them async and get a delayed manageVocabModal update
@@ -40,7 +48,11 @@ export function Vocab_CARD({
   vocab,
   highlighted,
   IS_open,
-  TOGGLE_open,
+  TOGGLE_open = () => {},
+  OPEN_vocabSoftDeleteModal = (vocab: Vocab_TYPE) => {},
+  UPDATE_vocabDifficulty = () => Promise.resolve(),
+  UPDATE_vocabMarked = () => Promise.resolve(),
+  current_ACTIONS = [],
 }: VocabProps) {
   const trs = vocab?.trs || [];
 
@@ -112,8 +124,12 @@ export function Vocab_CARD({
           <VocabBack_BTNS
             {...{ vocab, trs, list_TYPE, fetch_TYPE, TOGGLE_open: toggle }}
             OPEN_vocabUpdateModal={() => {}}
+            UPDATE_vocabDifficulty={UPDATE_vocabDifficulty}
+            UPDATE_vocabMarked={UPDATE_vocabMarked}
             OPEN_vocabCopyModal={() => {}}
             OPEN_vocabPermaDeleteModal={() => {}}
+            OPEN_vocabSoftDeleteModal={OPEN_vocabSoftDeleteModal}
+            current_ACTIONS={current_ACTIONS}
           />
         </>
       )}

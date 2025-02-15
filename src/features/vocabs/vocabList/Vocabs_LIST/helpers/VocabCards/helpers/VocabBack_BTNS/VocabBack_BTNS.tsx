@@ -24,9 +24,10 @@ import { useTranslation } from "react-i18next";
 import { View, Animated, Easing } from "react-native";
 import { useToast } from "react-native-toast-notifications";
 import VocabBackDifficultyEdit_BTNS from "../VocabBackDifficultyEdit_BTNS/VocabBackDifficultyEdit_BTNS";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { MyColors } from "@/src/constants/MyColors";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
+import { currentVocabAction_TYPE } from "@/src/app/(main)/vocabs/[list_id]";
 
 interface VocabBackBtns_PROPS {
   vocab: Vocab_TYPE;
@@ -34,9 +35,16 @@ interface VocabBackBtns_PROPS {
   fetch_TYPE: vocabFetch_TYPES;
   OPEN_vocabUpdateModal: () => void;
   OPEN_vocabCopyModal: () => void;
-  OPEN_vocabPermaDeleteModal: () => void;
+  OPEN_vocabPermaDeleteModal: (vocab: Vocab_TYPE) => void;
+  OPEN_vocabSoftDeleteModal: (vocab: Vocab_TYPE) => void;
   TOGGLE_open: () => void;
   GO_toListOfVocab: () => void;
+  UPDATE_vocabDifficulty: (
+    vocab_ID: string,
+    new_DIFFICULTY: 1 | 2 | 3
+  ) => Promise<void>;
+  current_ACTIONS: currentVocabAction_TYPE[];
+  UPDATE_vocabMarked: (vocab_ID: string, val: boolean) => Promise<void>;
 }
 //
 export default function VocabBack_BTNS({
@@ -46,13 +54,25 @@ export default function VocabBack_BTNS({
   OPEN_vocabUpdateModal = () => {},
   OPEN_vocabCopyModal = () => {},
   OPEN_vocabPermaDeleteModal = () => {},
+  OPEN_vocabSoftDeleteModal = () => {},
   TOGGLE_open = () => {},
   GO_toListOfVocab = () => {},
+  UPDATE_vocabDifficulty = () => Promise.resolve(),
+  UPDATE_vocabMarked = () => Promise.resolve(),
+  current_ACTIONS = [],
 }: VocabBackBtns_PROPS) {
   const { t } = useTranslation();
   const toast = useToast();
   const [SHOW_difficultyEdits, TOGGLE_difficultyEdits, SET_difficultyEdit] =
     USE_toggle(false);
+
+  const AllBtn_WRAP = ({ children }: { children: React.ReactNode }) => (
+    <View style={{ padding: 12, gap: 8 }}>{children}</View>
+  );
+
+  const InlineBtn_WRAP = ({ children }: { children: React.ReactNode }) => (
+    <View style={{ flexDirection: "row", gap: 8 }}>{children}</View>
+  );
 
   const Edit_BTN = () => (
     <Btn
@@ -63,12 +83,29 @@ export default function VocabBack_BTNS({
       iconRight={<ICON_edit />}
       text_STYLES={{ marginRight: "auto" }}
     />
+    // <Btn
+    //   type="simple"
+    //   style={{ flex: 1 }}
+    //   onPress={OPEN_vocabUpdateModal}
+    //   text={t("btn.editVocab")}
+    //   iconRight={<ICON_edit />}
+    //   text_STYLES={{ marginRight: "auto" }}
+    // />
   );
 
-  ////////////////////////////////////////////////////////////////////////////////
+  const IS_updatingMarked = useMemo(() => {
+    return current_ACTIONS?.some(
+      (action) => action.action === "updating_marked"
+    );
+  }, [current_ACTIONS]);
+
+  const IS_vocabBeingDeleted = useMemo(() => {
+    return current_ACTIONS?.some((action) => action.action === "deleting");
+  }, [current_ACTIONS]);
+
+  const ALLOW_action = useMemo(() => current_ACTIONS?.length === 0, []);
 
   const ToggleMarked_BTN = () => {
-    const [IS_updatingMarked, SET_isUpdatingMarked] = useState(false);
     const spinValue = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {
@@ -85,7 +122,7 @@ export default function VocabBack_BTNS({
       } else {
         spinValue.setValue(0); // Stop rotation when not updating
       }
-    }, [IS_updatingMarked]);
+    }, []);
 
     const spin = spinValue.interpolate({
       inputRange: [0, 1],
@@ -95,7 +132,10 @@ export default function VocabBack_BTNS({
     return (
       <Btn
         type={vocab?.is_marked ? "active_green" : "simple"}
-        onPress={() => {}} // Toggle spinning on press
+        onPress={() => {
+          if (!IS_updatingMarked)
+            UPDATE_vocabMarked(vocab?.id, !vocab?.is_marked);
+        }} // Toggle spinning on press
         stayPressed={IS_updatingMarked}
         iconLeft={
           <Animated.View style={{ transform: [{ rotate: spin }] }}>
@@ -106,7 +146,6 @@ export default function VocabBack_BTNS({
     );
   };
 
-  ////////////////////////////////////////////////////////////////////////////////
   const ToggleDifficulties_BTN = () => (
     <Btn
       type="simple"
@@ -120,7 +159,11 @@ export default function VocabBack_BTNS({
   const VocabDifficulty_BTNS = () => (
     <VocabBackDifficultyEdit_BTNS
       active_DIFFICULTY={vocab?.difficulty}
-      UPDATE_difficulty={(diff: 1 | 2 | 3) => {}}
+      UPDATE_vocabDifficulty={(diff: 1 | 2 | 3) => {
+        if (ALLOW_action) {
+          UPDATE_vocabDifficulty(vocab?.id, diff);
+        }
+      }}
       TOGGLE_open={TOGGLE_difficultyEdits}
     />
   );
@@ -132,6 +175,7 @@ export default function VocabBack_BTNS({
         TOGGLE_open();
         SET_difficultyEdit(false);
       }}
+      style={{ flex: 1 }}
       text={t("btn.close")}
       iconRight={<ICON_X rotate big />}
       text_STYLES={{ marginRight: "auto" }}
@@ -164,6 +208,16 @@ export default function VocabBack_BTNS({
       text_STYLES={{ marginRight: "auto", color: MyColors.text_red }}
     />
   );
+  const Delete_BTN = () => (
+    <Btn
+      type="simple"
+      onPress={() => {
+        OPEN_vocabSoftDeleteModal(vocab);
+      }}
+      iconRight={<ICON_delete color="gray_light" />}
+    />
+  );
+
   const Copy_BTN = () => (
     <Btn
       type="simple"
@@ -178,23 +232,22 @@ export default function VocabBack_BTNS({
     SHOW_difficultyEdits ? (
       <VocabDifficulty_BTNS />
     ) : (
-      <View style={{ flexDirection: "row", gap: 8 }}>
+      <InlineBtn_WRAP>
         <Edit_BTN />
         <ToggleMarked_BTN />
         <ToggleDifficulties_BTN />
-      </View>
+      </InlineBtn_WRAP>
     );
-
-  const AllBtn_WRAP = ({ children }: { children: React.ReactNode }) => (
-    <View style={{ padding: 12, gap: 8 }}>{children}</View>
-  );
 
   if (list_TYPE === "private") {
     if (fetch_TYPE === "byTargetList") {
       return (
         <AllBtn_WRAP>
           <MyVocab3Btn_WRAP />
-          <Close_BTN />
+          <InlineBtn_WRAP>
+            <Delete_BTN />
+            <Close_BTN />
+          </InlineBtn_WRAP>
         </AllBtn_WRAP>
       );
     }
@@ -203,7 +256,10 @@ export default function VocabBack_BTNS({
         <AllBtn_WRAP>
           <MyVocab3Btn_WRAP />
           <GoToList_BTN />
-          <Close_BTN />
+          <InlineBtn_WRAP>
+            <Delete_BTN />
+            <Close_BTN />
+          </InlineBtn_WRAP>
         </AllBtn_WRAP>
       );
     }

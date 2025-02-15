@@ -11,17 +11,16 @@ import {
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import Language_MODEL from "@/src/db/models/Language_MODEL";
 
-import { _DisplaySettings_PROPS } from "@/src/utils/DisplaySettings/DisplaySettings";
-
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, View } from "react-native";
 import { DisplaySettingsModalView_PROPS } from "../../modals/VocabDisplaySettings_MODAL/VocabDisplaySettings_MODAL";
-import { FETCH_langs } from "@/src/features/languages/functions";
+import { FETCH_langs } from "@/src/features/languages/functions/fetch/FETCH_langs/FETCH_langs";
+import { z_listDisplaySettings_PROPS } from "@/src/hooks/USE_zustand/USE_zustand";
 
 interface VocabFront_PROPS {
   view: DisplaySettingsModalView_PROPS;
-  z_vocabDisplay_SETTINGS: _DisplaySettings_PROPS | undefined;
+  z_vocabDisplay_SETTINGS: z_listDisplaySettings_PROPS | undefined;
   SHOW_difficultyDot?: boolean;
 }
 

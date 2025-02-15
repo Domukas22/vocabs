@@ -10,7 +10,7 @@ import {
 } from "@/src/components/1_grouped/icons/icons";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import Language_MODEL from "@/src/db/models/Language_MODEL";
-import { FETCH_langs } from "@/src/features/languages/functions";
+import { FETCH_langs } from "@/src/features/languages/functions/fetch/FETCH_langs/FETCH_langs";
 import { _DisplaySettings_PROPS } from "@/src/utils/DisplaySettings/DisplaySettings";
 
 import { useEffect, useState } from "react";

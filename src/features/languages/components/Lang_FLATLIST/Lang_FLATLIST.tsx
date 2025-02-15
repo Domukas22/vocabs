@@ -4,7 +4,7 @@ import Styled_FLASHLIST from "@/src/components/3_other/Styled_FLASHLIST/Styled_F
 import Language_MODEL from "@/src/db/models/Language_MODEL";
 import React, { useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
-import { FETCH_langs } from "@/src/features/languages/functions";
+import { FETCH_langs } from "@/src/features/languages/functions/fetch/FETCH_langs/FETCH_langs";
 import i18next from "i18next";
 
 interface LangFlatlist_PROPS {

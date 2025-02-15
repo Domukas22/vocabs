@@ -15,7 +15,7 @@ import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 import { Vocab_TYPE, VocabTr_TYPE } from "@/src/features/vocabs/types";
 
 import { Q } from "@nozbe/watermelondb";
-import { FETCH_langs } from "@/src/features/languages/functions";
+import { FETCH_langs } from "@/src/features/languages/functions/fetch/FETCH_langs/FETCH_langs";
 import { Lists_DB } from "@/src/db";
 import Big_MODAL from "@/src/components/1_grouped/modals/Big_MODAL/Big_MODAL";
 import { SelectMyList_MODAL } from "@/src/features/lists/components";

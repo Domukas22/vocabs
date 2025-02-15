@@ -16,7 +16,6 @@ import { useForm } from "react-hook-form";
 import Language_MODEL from "@/src/db/models/Language_MODEL";
 import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 
-import { FETCH_langs } from "@/src/features/languages/functions";
 import { USE_zustand } from "@/src/hooks";
 import { SelectMyList_MODAL } from "@/src/features/lists/components";
 import { USE_collectListLangs } from "@/src/features/lists/functions";
@@ -39,6 +38,7 @@ import { TrHighlights_MODAL } from "../TrHighlights_MODAL/TrHighlights_MODAL";
 import { SelectMultipleLanguages_MODAL } from "@/src/features/languages/components";
 import { USE_modalToggles } from "@/src/hooks/index";
 import List_MODEL from "@/src/db/models/List_MODEL";
+import { FETCH_langs } from "@/src/features/languages/functions/fetch/FETCH_langs/FETCH_langs";
 
 interface CreateMyVocabModal_PROPS {
   IS_open: boolean;

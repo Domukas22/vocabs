@@ -8,6 +8,7 @@ import { NativeSyntheticEvent, NativeScrollEvent } from "react-native";
 import { Vocab_TYPE } from "../../types";
 import React from "react";
 import { USE_openVocabs } from "../USE_openVocabs/USE_openVocabs";
+import { currentVocabAction_TYPE } from "@/src/app/(main)/vocabs/[list_id]";
 
 export function Vocab_LIST({
   vocabs,
@@ -18,6 +19,7 @@ export function Vocab_LIST({
   Vocab_CARD,
   onScroll,
   HIDE_vocabs = false,
+  current_ACTIONS = [],
 }: {
   Header: React.JSX.Element;
   Footer: React.JSX.Element;
@@ -38,6 +40,7 @@ export function Vocab_LIST({
 
   HIDE_vocabs: boolean;
   vocabs: Vocab_TYPE[] | undefined;
+  current_ACTIONS: currentVocabAction_TYPE[];
 }) {
   const { openVocab_IDs, TOGGLE_vocab } = USE_openVocabs();
 
@@ -46,11 +49,13 @@ export function Vocab_LIST({
       {...{ onScroll }}
       data={HIDE_vocabs ? [] : vocabs || []}
       flashlist_REF={flashlist_REF}
-      renderItem={({ item }) => (
-        <Vocab_CARD vocab={item} {...{ openVocab_IDs, TOGGLE_vocab }} />
-      )}
+      renderItem={({ item }) =>
+        Vocab_CARD ? (
+          <Vocab_CARD vocab={item} {...{ openVocab_IDs, TOGGLE_vocab }} />
+        ) : null
+      }
       keyExtractor={(item) => "Vocab" + item.id}
-      extraData={[highlightedVocab_ID, openVocab_IDs]}
+      extraData={[highlightedVocab_ID, openVocab_IDs, current_ACTIONS]}
       ListHeaderComponent={Header}
       ListFooterComponent={Footer}
     />

@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next";
 import { useEffect, useMemo, useState } from "react";
 import i18next from "i18next";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
-import { FETCH_langs } from "@/src/features/languages/functions";
+import { FETCH_langs } from "@/src/features/languages/functions/fetch/FETCH_langs/FETCH_langs";
 
 interface ChosenLangsInputs_PROPS {
   label: string;

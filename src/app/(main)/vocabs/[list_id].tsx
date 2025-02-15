@@ -90,6 +90,44 @@ export default function SingleList_PAGE() {
     search: debouncedSearch,
   });
 
+  // 🟡 ----------------------------------------------------------------------
+  const { currentVocab_ACTIONS, START_vocabAction, STOP_vocabAction } =
+    USE_currentVocabActions();
+
+  const UPDATE_vocabDifficulty = useCallback(
+    async (vocab_ID: string, new_DIFFICULTY: 1 | 2 | 3) => {
+      try {
+        START_vocabAction({
+          action: "updating_difficulty",
+          id: vocab_ID,
+          new_DIFFICULTY,
+        });
+        console.log("Update difficulty to: ", new_DIFFICULTY);
+        await Delay(3000);
+        console.log("Updated difficulty");
+      } catch (error: any) {
+      } finally {
+        STOP_vocabAction(vocab_ID);
+      }
+    },
+    []
+  );
+  const UPDATE_vocabMarked = useCallback(
+    async (vocab_ID: string, val: boolean) => {
+      try {
+        START_vocabAction({ action: "updating_marked", id: vocab_ID });
+        console.log("Update marked to: ", val);
+        await Delay(3000);
+        console.log("Updated marked");
+      } catch (error: any) {
+      } finally {
+        STOP_vocabAction(vocab_ID);
+      }
+    },
+    []
+  );
+  // 🟡 ----------------------------------------------------------------------
+
   const { Flashlist_HEADER, Flashlist_FOOTER, Card } = GET_vocabListComponents({
     IS_debouncing,
     debouncedSearch,
@@ -107,8 +145,15 @@ export default function SingleList_PAGE() {
       SET_targetVocab(vocab, "update");
       modals.updateVocab.set(true);
     },
+    UPDATE_vocabDifficulty,
+    UPDATE_vocabMarked,
+    currentVocab_ACTIONS,
     LOAD_moreVocabs,
     RESET_search: () => SET_search(""),
+    OPEN_vocabSoftDeleteModal: (vocab: Vocab_TYPE) => {
+      SET_targetVocab(vocab, "update");
+      modals.deleteVocab.set(true);
+    },
   });
 
   return (
@@ -122,25 +167,23 @@ export default function SingleList_PAGE() {
         OPEN_create={() => modals.createVocab.set(true)}
         {...{ search, SET_search }}
       />
-      <Btn
-        text="remove first"
-        onPress={() => r_DELETE_oneVocab(vocabs?.[0]?.id)}
-      />
+      {/* <Btn text="Test update difficulty" onPress={UPDATE_vocabDifficulty} /> */}
       <Vocab_LIST
         vocabs={vocabs}
         Header={<></>}
         Footer={<></>}
-        Header={<Flashlist_HEADER />}
         Footer={<Flashlist_FOOTER />}
         Vocab_CARD={Card}
         flashlist_REF={list_REF}
         highlightedVocab_ID={highlighted_ID}
         onScroll={handleScroll}
         HIDE_vocabs={IS_debouncing || !!vocabs_ERROR}
+        currentVocab_ACTIONS={currentVocab_ACTIONS}
+        Header={<Flashlist_HEADER />}
       />
 
       <Portal>
-        <CreateMyVocab_MODAL
+        {/* <CreateMyVocab_MODAL
           IS_open={modals.createVocab.IS_open}
           initial_LIST={selected_LIST}
           TOGGLE_modal={() => modals.createVocab.set(false)}
@@ -156,8 +199,14 @@ export default function SingleList_PAGE() {
               duration: 3000,
             });
           }}
+        /> */}
+        <ListSettings_MODAL
+          selected_LIST={selected_LIST}
+          open={modals.listSettings.IS_open}
+          TOGGLE_open={() => modals.listSettings.set(false)}
+          backToIndex={() => router.back()}
         />
-        <UpdateMyVocab_MODAL
+        {/* <UpdateMyVocab_MODAL
           toUpdate_VOCAB={toUpdate_VOCAB}
           IS_open={modals.updateVocab.IS_open}
           CLOSE_modal={() => {
@@ -180,13 +229,8 @@ export default function SingleList_PAGE() {
           collectedLang_IDS={
             selected_LIST?.collected_lang_ids?.split(",") || []
           }
-        />
-        <ListSettings_MODAL
-          selected_LIST={selected_LIST}
-          open={modals.listSettings.IS_open}
-          TOGGLE_open={() => modals.listSettings.set(false)}
-          backToIndex={() => router.back()}
-        />
+        />*/}
+
         <DeleteVocab_MODAL
           IS_open={modals.deleteVocab.IS_open}
           vocab={toDelete_VOCAB}
@@ -208,4 +252,39 @@ export default function SingleList_PAGE() {
       </Portal>
     </>
   );
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+export interface currentVocabAction_TYPE {
+  id: string;
+  action:
+    | "deleting"
+    | "updating"
+    | "updating_difficulty"
+    | "updating_marked"
+    | "moving"
+    | "copying";
+  new_DIFFICULTY?: number;
+}
+
+function USE_currentVocabActions() {
+  const [currentVocab_ACTIONS, SET_currentVocabActions] = useState<
+    currentVocabAction_TYPE[]
+  >([]);
+
+  const STOP_vocabAction = useCallback((vocab_ID: string) => {
+    SET_currentVocabActions((prev) =>
+      prev.filter((action) => action.id !== vocab_ID)
+    );
+  }, []);
+
+  const START_vocabAction = useCallback(
+    (new_ACTION: currentVocabAction_TYPE) => {
+      SET_currentVocabActions((prev) => [...prev, new_ACTION]);
+    },
+    []
+  );
+
+  return { currentVocab_ACTIONS, START_vocabAction, STOP_vocabAction };
 }

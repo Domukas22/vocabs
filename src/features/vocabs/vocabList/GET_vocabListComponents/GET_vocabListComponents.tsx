@@ -15,6 +15,7 @@ import {
   vocabList_TYPES,
 } from "../USE_myVocabs/helpers/USE_fetchVocabs/helpers/FETCH_vocabs/types";
 import React, { useState, useCallback, useMemo, useEffect } from "react";
+import { currentVocabAction_TYPE } from "@/src/app/(main)/vocabs/[list_id]";
 
 interface GET_vocabListComponents_PROPS {
   IS_debouncing: boolean;
@@ -30,8 +31,15 @@ interface GET_vocabListComponents_PROPS {
   fetch_TYPE: vocabFetch_TYPES;
   LOAD_moreVocabs: () => void;
   OPEN_modalCreateVocab: () => void;
+  OPEN_vocabSoftDeleteModal: (vocab: Vocab_TYPE) => void;
   OPEN_modalUpdateVocab: (vocab: Vocab_TYPE) => void;
   RESET_search: () => void;
+  UPDATE_vocabDifficulty: (
+    vocab_ID: string,
+    new_DIFFICULTY: 1 | 2 | 3
+  ) => Promise<void>;
+  currentVocab_ACTIONS: currentVocabAction_TYPE[];
+  UPDATE_vocabMarked: (vocab_ID: string, val: boolean) => Promise<void>;
 }
 
 export function GET_vocabListComponents({
@@ -49,7 +57,11 @@ export function GET_vocabListComponents({
   LOAD_moreVocabs = () => {},
   OPEN_modalCreateVocab = () => {},
   OPEN_modalUpdateVocab = () => {},
+  OPEN_vocabSoftDeleteModal = (vocab: Vocab_TYPE) => {},
+  UPDATE_vocabDifficulty = () => Promise.resolve(),
+  currentVocab_ACTIONS = [],
   RESET_search = () => {},
+  UPDATE_vocabMarked = () => {},
 }: GET_vocabListComponents_PROPS) {
   const Flashlist_HEADER = React.memo(() => (
     <VocabsFlatlistHeader_SECTION
@@ -116,9 +128,15 @@ export function GET_vocabListComponents({
           openVocab_IDs,
           TOGGLE_vocab,
         }}
+        OPEN_vocabSoftDeleteModal={OPEN_vocabSoftDeleteModal}
+        UPDATE_vocabDifficulty={UPDATE_vocabDifficulty}
+        UPDATE_vocabMarked={UPDATE_vocabMarked}
         highlighted={highlighted_ID === vocab.id}
         IS_open={openVocab_IDs.has(vocab?.id)} // This will now reflect the updated Set reference
         TOGGLE_open={(val?: boolean) => TOGGLE_vocab(vocab.id, val)}
+        current_ACTIONS={currentVocab_ACTIONS?.filter(
+          (action) => action.id === vocab?.id
+        )}
       />
     )
   );
