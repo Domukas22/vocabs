@@ -17,6 +17,7 @@ import {
   UpdateMyVocab_MODAL,
   VocabDisplaySettings_MODAL,
   DeleteVocab_MODAL,
+  VocabsFlatlistHeader_SECTION,
 } from "@/src/features/vocabs/components";
 import {
   USE_debounceSearch,
@@ -39,6 +40,17 @@ import {
   vocabList_TYPES,
 } from "@/src/features/vocabs/vocabList/USE_myVocabs/helpers/USE_fetchVocabs/helpers/FETCH_vocabs/types";
 import { Delay } from "@/src/utils";
+import { USE_openVocabs } from "@/src/features/vocabs/vocabList/USE_openVocabs/USE_openVocabs";
+import BottomAction_BLOCK from "@/src/components/1_grouped/blocks/BottomAction_BLOCK";
+import Error_BLOCK from "@/src/components/1_grouped/blocks/Error_BLOCK";
+import Styled_FLASHLIST from "@/src/components/3_other/Styled_FLASHLIST/Styled_FLASHLIST";
+import { Vocab_CARD } from "@/src/features/vocabs/vocabList/Vocabs_LIST/helpers";
+import { VocabsSkeleton_BLOCK } from "@/src/features/vocabs/vocabList/Vocabs_LIST/helpers/VocabsSkeleton_BLOCK/VocabsSkeleton_BLOCK";
+import Vocab_FRONT from "@/src/features/vocabs/vocabList/Vocabs_LIST/helpers/VocabCards/helpers/Vocab_FRONT/Vocab_FRONT";
+import VocabBack_BTNS from "@/src/features/vocabs/components/1_myVocabs/vocabCards/Components/VocabBack_BTNS/VocabBack_BTNS";
+import { VocabBack_TRS } from "@/src/features/vocabs/components/1_myVocabs/vocabCards/Components/VocabBack_TRS/VocabBack_TRS";
+import VocabBack_TEXT from "@/src/features/vocabs/vocabList/Vocabs_LIST/helpers/VocabCards/helpers/VocabBack_TEXT/VocabBack_TEXT";
+import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 
 const fetch_TYPE: vocabFetch_TYPES = "byTargetList";
 const list_TYPE: vocabList_TYPES = "private";
@@ -89,10 +101,10 @@ export default function SingleList_PAGE() {
     targetList_ID: list_id,
     search: debouncedSearch,
   });
-
-  // 🟡 ----------------------------------------------------------------------
   const { currentVocab_ACTIONS, START_vocabAction, STOP_vocabAction } =
     USE_currentVocabActions();
+  const { openVocab_IDs, TOGGLE_vocab } = USE_openVocabs();
+  // 🟡 ----------------------------------------------------------------------
 
   const UPDATE_vocabDifficulty = useCallback(
     async (vocab_ID: string, new_DIFFICULTY: 1 | 2 | 3) => {
@@ -128,34 +140,6 @@ export default function SingleList_PAGE() {
   );
   // 🟡 ----------------------------------------------------------------------
 
-  const { Flashlist_HEADER, Flashlist_FOOTER, Card } = GET_vocabListComponents({
-    IS_debouncing,
-    debouncedSearch,
-    search,
-    loading_STATE,
-    list_NAME: selected_LIST?.name || "",
-    unpaginated_COUNT,
-    vocabs_ERROR,
-    HAS_reachedEnd,
-    highlighted_ID: highlighted_ID || "",
-    fetch_TYPE,
-    list_TYPE,
-    OPEN_modalCreateVocab: () => modals.createVocab.set(true),
-    OPEN_modalUpdateVocab: (vocab: Vocab_TYPE) => {
-      SET_targetVocab(vocab, "update");
-      modals.updateVocab.set(true);
-    },
-    UPDATE_vocabDifficulty,
-    UPDATE_vocabMarked,
-    currentVocab_ACTIONS,
-    LOAD_moreVocabs,
-    RESET_search: () => SET_search(""),
-    OPEN_vocabSoftDeleteModal: (vocab: Vocab_TYPE) => {
-      SET_targetVocab(vocab, "update");
-      modals.deleteVocab.set(true);
-    },
-  });
-
   return (
     <>
       <VocabList_NAV
@@ -168,22 +152,118 @@ export default function SingleList_PAGE() {
         {...{ search, SET_search }}
       />
       {/* <Btn text="Test update difficulty" onPress={UPDATE_vocabDifficulty} /> */}
-      <Vocab_LIST
-        vocabs={vocabs}
-        Header={<></>}
-        Footer={<></>}
-        Footer={<Flashlist_FOOTER />}
-        Vocab_CARD={Card}
-        flashlist_REF={list_REF}
-        highlightedVocab_ID={highlighted_ID}
+
+      <Styled_FLASHLIST
         onScroll={handleScroll}
-        HIDE_vocabs={IS_debouncing || !!vocabs_ERROR}
-        currentVocab_ACTIONS={currentVocab_ACTIONS}
-        Header={<Flashlist_HEADER />}
+        data={IS_debouncing || !!vocabs_ERROR ? [] : vocabs || []}
+        flashlist_REF={list_REF}
+        renderItem={({ item }) => (
+          <Vocab_CARD
+            Front={
+              <Vocab_FRONT
+                trs={item?.trs || []}
+                difficulty={item?.difficulty || 0}
+                description={item?.description}
+                highlighted={highlighted_ID === item.id}
+                TOGGLE_open={(val?: boolean) => TOGGLE_vocab(item.id, val)}
+                IS_marked={item?.is_marked}
+              />
+            }
+            Back={
+              <>
+                <VocabBack_TRS
+                  trs={item?.trs || []}
+                  difficulty={item?.difficulty || 0}
+                />
+                <VocabBack_TEXT
+                  desc={item?.description}
+                  list_NAME={
+                    list_TYPE === "public" ||
+                    (list_TYPE === "private" &&
+                      (fetch_TYPE === "all" || fetch_TYPE === "marked"))
+                      ? item?.list?.name || "Not in any list"
+                      : undefined
+                  }
+                />
+
+                <VocabBack_BTNS
+                  {...{
+                    list_TYPE,
+                    fetch_TYPE,
+                    TOGGLE_open: (val?: boolean) => TOGGLE_vocab(item.id, val),
+                  }}
+                  difficulty={item?.difficulty}
+                  OPEN_vocabUpdateModal={() => {}}
+                  UPDATE_vocabDifficulty={UPDATE_vocabDifficulty}
+                  UPDATE_vocabMarked={UPDATE_vocabMarked}
+                  OPEN_vocabCopyModal={() => {}}
+                  OPEN_vocabPermaDeleteModal={() => {}}
+                  OPEN_vocabSoftDeleteModal={(vocab: Vocab_TYPE) => {
+                    SET_targetVocab(vocab, "update");
+                    modals.deleteVocab.set(true);
+                  }}
+                  current_ACTIONS={currentVocab_ACTIONS?.filter(
+                    (action) => action.id === item?.id
+                  )}
+                />
+              </>
+            }
+            vocab={item}
+            list_TYPE={list_TYPE}
+            fetch_TYPE={fetch_TYPE}
+            OPEN_vocabSoftDeleteModal={(vocab: Vocab_TYPE) => {
+              SET_targetVocab(vocab, "update");
+              modals.deleteVocab.set(true);
+            }}
+            UPDATE_vocabDifficulty={UPDATE_vocabDifficulty}
+            UPDATE_vocabMarked={UPDATE_vocabMarked}
+            highlighted={highlighted_ID === item.id}
+            IS_open={openVocab_IDs.has(item?.id)} // This will now reflect the updated Set reference
+            TOGGLE_open={(val?: boolean) => TOGGLE_vocab(item.id, val)}
+            current_ACTIONS={currentVocab_ACTIONS?.filter(
+              (action) => action.id === item?.id
+            )}
+          />
+        )}
+        keyExtractor={(item) => "Vocab" + item.id}
+        extraData={[highlighted_ID, openVocab_IDs, currentVocab_ACTIONS]}
+        ListHeaderComponent={
+          <VocabsFlatlistHeader_SECTION
+            IS_debouncing={IS_debouncing}
+            debouncedSearch={debouncedSearch}
+            search={search}
+            loading_STATE={loading_STATE}
+            list_NAME={selected_LIST?.name || ""}
+            unpaginated_COUNT={unpaginated_COUNT}
+            HAS_error={!!vocabs_ERROR}
+          />
+        }
+        ListFooterComponent={
+          vocabs_ERROR ? (
+            <Error_BLOCK
+              paragraph={vocabs_ERROR?.user_MSG || "Something went wrong"}
+            />
+          ) : IS_debouncing ||
+            (loading_STATE !== "none" && loading_STATE !== "loading_more") ? (
+            <VocabsSkeleton_BLOCK />
+          ) : (
+            <BottomAction_BLOCK
+              type="vocabs"
+              createBtn_ACTION={() => modals.createVocab.set(true)}
+              LOAD_more={LOAD_moreVocabs}
+              RESET_search={() => SET_search("")}
+              totalFilteredResults_COUNT={unpaginated_COUNT}
+              debouncedSearch={debouncedSearch}
+              loading_STATE={loading_STATE}
+              HAS_reachedEnd={HAS_reachedEnd}
+              IS_debouncing={IS_debouncing}
+            />
+          )
+        }
       />
 
       <Portal>
-        {/* <CreateMyVocab_MODAL
+        <CreateMyVocab_MODAL
           IS_open={modals.createVocab.IS_open}
           initial_LIST={selected_LIST}
           TOGGLE_modal={() => modals.createVocab.set(false)}
@@ -199,14 +279,14 @@ export default function SingleList_PAGE() {
               duration: 3000,
             });
           }}
-        /> */}
+        />
         <ListSettings_MODAL
           selected_LIST={selected_LIST}
           open={modals.listSettings.IS_open}
           TOGGLE_open={() => modals.listSettings.set(false)}
           backToIndex={() => router.back()}
         />
-        {/* <UpdateMyVocab_MODAL
+        <UpdateMyVocab_MODAL
           toUpdate_VOCAB={toUpdate_VOCAB}
           IS_open={modals.updateVocab.IS_open}
           CLOSE_modal={() => {
@@ -229,7 +309,7 @@ export default function SingleList_PAGE() {
           collectedLang_IDS={
             selected_LIST?.collected_lang_ids?.split(",") || []
           }
-        />*/}
+        />
 
         <DeleteVocab_MODAL
           IS_open={modals.deleteVocab.IS_open}

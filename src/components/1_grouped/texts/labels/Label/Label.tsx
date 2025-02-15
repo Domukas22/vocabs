@@ -4,7 +4,7 @@
 
 import { StyleProp, View, ViewStyle } from "react-native";
 import React from "react";
-import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
+import { Styled_TEXT } from "../../Styled_TEXT/Styled_TEXT";
 
 interface Label_PROPS {
   icon?: React.ReactNode;
@@ -12,7 +12,11 @@ interface Label_PROPS {
   styles?: StyleProp<ViewStyle>;
 }
 
-export default function Label({ icon, children, styles }: Label_PROPS) {
+const Label = React.memo(function Label({
+  icon,
+  children,
+  styles,
+}: Label_PROPS) {
   return (
     <View
       style={[{ flexDirection: "row", gap: 8, alignItems: "center" }, styles]}
@@ -23,4 +27,5 @@ export default function Label({ icon, children, styles }: Label_PROPS) {
       </Styled_TEXT>
     </View>
   );
-}
+});
+export default Label;

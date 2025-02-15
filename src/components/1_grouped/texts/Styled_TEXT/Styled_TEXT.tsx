@@ -3,6 +3,7 @@
 //
 
 import { MyColors } from "@/src/constants/MyColors";
+import React from "react";
 import { Text, type TextProps, StyleSheet } from "react-native";
 
 export type ThemedTextProps = TextProps & {
@@ -27,13 +28,13 @@ export type ThemedTextProps = TextProps & {
     | "list_title";
 };
 
-export function Styled_TEXT({
+export const Styled_TEXT = React.memo(function Styled_TEXT({
   style,
   type = "text_18_regular",
   ...rest
 }: ThemedTextProps) {
   return <Text style={[s.default_COLOR, s[type], style]} {...rest} />;
-}
+});
 
 const s = StyleSheet.create({
   default_COLOR: {

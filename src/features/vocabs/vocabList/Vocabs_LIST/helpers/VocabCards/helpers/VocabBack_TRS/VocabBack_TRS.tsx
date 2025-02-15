@@ -8,8 +8,9 @@ import Highlighted_TEXT from "@/src/components/1_grouped/texts/Highlighted_TEXT/
 import { StyleSheet } from "react-native";
 import { MyColors } from "@/src/constants/MyColors";
 import { VocabTr_TYPE } from "@/src/features/vocabs/types";
+import React from "react";
 
-export function VocabBack_TRS({
+export const VocabBack_TRS = React.memo(function VocabBack_TRS({
   trs,
   difficulty = 0,
 }: {
@@ -33,7 +34,8 @@ export function VocabBack_TRS({
         </View>
       ))
     : null;
-}
+});
+//
 
 const s = StyleSheet.create({
   bottomTr: {

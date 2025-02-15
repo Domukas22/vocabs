@@ -5,8 +5,9 @@
 import { View } from "react-native";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
+import React from "react";
 
-export default function VocabBack_TEXT({
+const VocabBack_TEXT = React.memo(function VocabBack_TEXT({
   desc,
   list_NAME,
 }: {
@@ -27,4 +28,6 @@ export default function VocabBack_TEXT({
       )}
     </View>
   ) : null;
-}
+});
+
+export default VocabBack_TEXT;

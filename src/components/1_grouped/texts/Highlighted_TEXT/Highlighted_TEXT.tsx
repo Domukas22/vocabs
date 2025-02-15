@@ -3,7 +3,8 @@
 //
 
 import { MyColors } from "@/src/constants/MyColors";
-import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
+import React from "react";
+import { Styled_TEXT } from "../Styled_TEXT/Styled_TEXT";
 
 interface RenderTextWithhighlights_PROPS {
   text: string;
@@ -12,7 +13,7 @@ interface RenderTextWithhighlights_PROPS {
   light?: boolean;
 }
 
-export default function Highlighted_TEXT({
+const Highlighted_TEXT = React.memo(function Highlighted_TEXT({
   text,
   highlights,
   diff,
@@ -52,4 +53,6 @@ export default function Highlighted_TEXT({
       })}
     </Styled_TEXT>
   );
-}
+});
+
+export default Highlighted_TEXT;

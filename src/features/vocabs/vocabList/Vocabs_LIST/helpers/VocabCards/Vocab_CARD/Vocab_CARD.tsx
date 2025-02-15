@@ -4,26 +4,20 @@
 
 import { MyColors } from "@/src/constants/MyColors";
 import { StyleSheet, View } from "react-native";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 
 import { USE_toggle } from "@/src/hooks/USE_toggle/USE_toggle";
-import { VocabTr_TYPE } from "@/src/features/vocabs/types";
 
-import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
-import { useTranslation } from "react-i18next";
-import { withObservables } from "@nozbe/watermelondb/react";
-import { useToast } from "react-native-toast-notifications";
 import { Vocab_TYPE } from "@/src/features/vocabs/types";
 import Vocab_FRONT from "../helpers/Vocab_FRONT/Vocab_FRONT";
-import { VocabBack_TRS } from "../helpers/VocabBack_TRS/VocabBack_TRS";
-import VocabBack_TEXT from "../helpers/VocabBack_TEXT/VocabBack_TEXT";
-import VocabBack_BTNS from "../helpers/VocabBack_BTNS/VocabBack_BTNS";
-import VocabBackDifficultyEdit_BTNS from "../helpers/VocabBackDifficultyEdit_BTNS/VocabBackDifficultyEdit_BTNS";
 import {
   vocabFetch_TYPES,
   vocabList_TYPES,
 } from "../../../../USE_myVocabs/helpers/USE_fetchVocabs/helpers/FETCH_vocabs/types";
 import { currentVocabAction_TYPE } from "@/src/app/(main)/vocabs/[list_id]";
+import VocabBack_BTNS from "../helpers/VocabBack_BTNS/VocabBack_BTNS";
+import VocabBack_TEXT from "../helpers/VocabBack_TEXT/VocabBack_TEXT";
+import { VocabBack_TRS } from "../helpers/VocabBack_TRS/VocabBack_TRS";
 
 interface VocabProps {
   vocab: Vocab_TYPE;
@@ -41,8 +35,7 @@ interface VocabProps {
   OPEN_vocabSoftDeleteModal: (vocab: Vocab_TYPE) => void;
 }
 
-// TOGGLE_vocabModal needs to also pass in th etranslations, so we dont have to pass them async and get a delayed manageVocabModal update
-export function Vocab_CARD({
+export const Vocab_CARD = React.memo(function Vocab_CARD({
   list_TYPE,
   fetch_TYPE,
   vocab,
@@ -135,7 +128,7 @@ export function Vocab_CARD({
       )}
     </View>
   );
-}
+});
 
 const s = StyleSheet.create({
   _vocab: {

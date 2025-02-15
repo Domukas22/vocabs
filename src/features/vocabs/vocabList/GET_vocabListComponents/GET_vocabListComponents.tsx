@@ -61,7 +61,7 @@ export function GET_vocabListComponents({
   UPDATE_vocabDifficulty = () => Promise.resolve(),
   currentVocab_ACTIONS = [],
   RESET_search = () => {},
-  UPDATE_vocabMarked = () => {},
+  UPDATE_vocabMarked = () => Promise.resolve(),
 }: GET_vocabListComponents_PROPS) {
   const Flashlist_HEADER = React.memo(() => (
     <VocabsFlatlistHeader_SECTION
@@ -76,35 +76,26 @@ export function GET_vocabListComponents({
   ));
 
   const Flashlist_FOOTER = React.memo(() => {
-    if (vocabs_ERROR)
-      return (
-        <Error_BLOCK
-          paragraph={vocabs_ERROR?.user_MSG || "Something went wrong"}
-        />
-      );
-
-    if (
-      IS_debouncing ||
-      (loading_STATE !== "none" && loading_STATE !== "loading_more")
-    ) {
-      return <VocabsSkeleton_BLOCK />;
-    } else {
-      return (
-        <BottomAction_BLOCK
-          type="vocabs"
-          createBtn_ACTION={OPEN_modalCreateVocab}
-          LOAD_more={LOAD_moreVocabs}
-          RESET_search={RESET_search}
-          totalFilteredResults_COUNT={unpaginated_COUNT}
-          {...{
-            debouncedSearch,
-            loading_STATE,
-            HAS_reachedEnd,
-            IS_debouncing,
-          }}
-        />
-      );
-    }
+    return vocabs_ERROR ? (
+      <Error_BLOCK
+        paragraph={vocabs_ERROR?.user_MSG || "Something went wrong"}
+      />
+    ) : IS_debouncing ||
+      (loading_STATE !== "none" && loading_STATE !== "loading_more") ? (
+      <VocabsSkeleton_BLOCK />
+    ) : (
+      <BottomAction_BLOCK
+        type="vocabs"
+        createBtn_ACTION={OPEN_modalCreateVocab}
+        LOAD_more={LOAD_moreVocabs}
+        RESET_search={RESET_search}
+        totalFilteredResults_COUNT={unpaginated_COUNT}
+        debouncedSearch={debouncedSearch}
+        loading_STATE={loading_STATE}
+        HAS_reachedEnd={HAS_reachedEnd}
+        IS_debouncing={IS_debouncing}
+      />
+    );
   });
 
   ///////////////////////////////////
@@ -121,13 +112,9 @@ export function GET_vocabListComponents({
       TOGGLE_vocab: (vocab_ID: string, val?: boolean) => void;
     }) => (
       <Vocab_CARD
-        {...{
-          vocab,
-          list_TYPE,
-          fetch_TYPE,
-          openVocab_IDs,
-          TOGGLE_vocab,
-        }}
+        vocab={vocab}
+        list_TYPE={list_TYPE}
+        fetch_TYPE={fetch_TYPE}
         OPEN_vocabSoftDeleteModal={OPEN_vocabSoftDeleteModal}
         UPDATE_vocabDifficulty={UPDATE_vocabDifficulty}
         UPDATE_vocabMarked={UPDATE_vocabMarked}

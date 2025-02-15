@@ -6,8 +6,9 @@ import { View } from "react-native";
 import { MyColors } from "@/src/constants/MyColors";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import { ICON_error } from "@/src/components/1_grouped/icons/icons";
+import React from "react";
 
-export default function Error_BLOCK({
+const Error_BLOCK = React.memo(function Error_BLOCK({
   title = "An error has occured.",
   paragraph = "If the problem persists, please try to re-load the app or contact support. We apologize for the troubles.",
   children,
@@ -49,4 +50,6 @@ export default function Error_BLOCK({
       {children && children}
     </View>
   );
-}
+});
+
+export default Error_BLOCK;

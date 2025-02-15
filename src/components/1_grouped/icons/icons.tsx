@@ -4,6 +4,7 @@
 
 import { GET_langFlagUrl } from "@/src/constants/globalVars";
 import { MyColors } from "@/src/constants/MyColors";
+import React from "react";
 import { Image, StyleSheet, Text, View, ViewProps } from "react-native";
 import Svg, { Path, Circle, Rect } from "react-native-svg";
 
@@ -12,7 +13,9 @@ const sizing = {
   big: 24,
 };
 
-export function ICON_flag({
+// const XXX = React.memo()
+
+export const ICON_flag = React.memo(function ICON_flag({
   big = false,
   lang = "en",
   ...props
@@ -32,8 +35,9 @@ export function ICON_flag({
       />
     </View>
   );
-}
-export function ICON_difficultyDot({
+});
+
+export const ICON_difficultyDot = React.memo(function ICON_difficultyDot({
   big = false,
   difficulty = 2,
   ...props
@@ -66,7 +70,8 @@ export function ICON_difficultyDot({
       </View>
     </View>
   );
-}
+});
+
 export function ICON_X({
   color = "grey",
   big = false,
@@ -247,7 +252,10 @@ export function ICON_checkMarkFull({ ...props }: {} & ViewProps) {
     </View>
   );
 }
-export function ICON_error({ ...props }: {} & ViewProps) {
+
+export const ICON_error = React.memo(function ICON_error({
+  ...props
+}: {} & ViewProps) {
   return (
     <View {...props}>
       <Svg
@@ -267,7 +275,8 @@ export function ICON_error({ ...props }: {} & ViewProps) {
       </Svg>
     </View>
   );
-}
+});
+
 export function ICON_edit({
   color = "gray_light",
   big = false,
@@ -433,7 +442,7 @@ export function ICON_bookmark({
     </View>
   );
 }
-export function ICON_bookmark_2({
+export const ICON_bookmark_2 = React.memo(function ICON_bookmark_2({
   active = false,
   big = false,
   ...props
@@ -453,7 +462,8 @@ export function ICON_bookmark_2({
       </Svg>
     </View>
   );
-}
+});
+
 export function ICON_star({
   color = "gray",
   extraSmall = false,
