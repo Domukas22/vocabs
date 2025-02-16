@@ -4,7 +4,13 @@
 
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 
 import { useToast } from "react-native-toast-notifications";
@@ -65,6 +71,10 @@ export default function SingleList_PAGE() {
   const router = useRouter();
   const { list_id } = USE_listIdInParams();
   const selected_LIST = USE_observeMyTargetList(list_id);
+
+  useEffect(() => {
+    console.log("Gello");
+  }, []);
 
   const { showTitle, handleScroll } = USE_showListHeaderTitle();
   const { highlighted_ID, highlight: HIGHLIGHT_vocab } = USE_highlighedId();
