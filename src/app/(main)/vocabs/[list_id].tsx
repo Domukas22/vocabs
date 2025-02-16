@@ -29,6 +29,8 @@ import {
   USE_debounceSearch,
   USE_showListHeaderTitle,
   USE_highlighedId,
+  USE_zustand,
+  USE_abortController,
 } from "@/src/hooks";
 import { CreateMyVocab_MODAL } from "@/src/features/vocabs/components/1_myVocabs/modals/CreateMyVocab_MODAL/CreateMyVocab_MODAL";
 import { Portal } from "@gorhom/portal";
@@ -42,6 +44,7 @@ import { USE_targetVocabs } from "@/src/features/vocabs/vocabList/USE_targetVoca
 import { USE_listIdInParams } from "@/src/features/vocabs/vocabList/USE_listIdInParams/USE_listIdInParams";
 import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import {
+  FETCH_myVocabs_ARG_TYPES,
   vocabFetch_TYPES,
   vocabList_TYPES,
 } from "@/src/features/vocabs/vocabList/USE_myVocabs/helpers/USE_fetchVocabs/helpers/FETCH_vocabs/types";
@@ -61,6 +64,8 @@ import VocabBack_BTNS from "@/src/features/vocabs/vocabList/Vocabs_LIST/helpers/
 import { USE_updateVocabDifficulty } from "@/src/features/vocabs/vocabList/USE_updateVocabDifficulty/USE_updateVocabDifficulty";
 import { UPDATE_oneVocab_PAYLOAD } from "@/src/features/vocabs/vocabList/USE_myVocabs/helpers/USE_myVocabsReducer/Vocab_REDUCER/types";
 import { USE_softDeleteVocab } from "@/src/features/vocabs/vocabList/USE_softDeleteVocab/USE_softDeleteVocab";
+import { USE_vocabZustand } from "@/src/hooks/USE_vocabZustand/USE_vocabZustand";
+import { VOCAB_PAGINATION } from "@/src/constants/globalVars";
 
 const fetch_TYPE: vocabFetch_TYPES = "byTargetList";
 const list_TYPE: vocabList_TYPES = "private";
@@ -83,6 +88,87 @@ export default function SingleList_PAGE() {
   const { search, debouncedSearch, IS_debouncing, SET_search } =
     USE_debounceSearch();
 
+  const { z_user, z_vocabDisplay_SETTINGS } = USE_zustand();
+  const { difficultyFilters, langFilters, sortDirection, sorting } =
+    z_vocabDisplay_SETTINGS;
+
+  // const { currentVocab_ACTIONS, START_vocabAction, STOP_vocabAction } =
+  //   USE_currentVocabActions();
+  const { openVocab_IDs, TOGGLE_vocab } = USE_openVocabs();
+
+  const {
+    vocabs,
+    printed_IDS,
+    HAS_reachedEnd,
+    unpaginated_COUNT,
+    loading_STATE,
+    currentVocab_ACTIONS,
+    error,
+    r_FETCH_vocabs,
+    r_MARK_vocab,
+    r_UPDATE_vocabDifficulty,
+    r_SOFTDELETE_vocab,
+  } = USE_vocabZustand();
+
+  const { START_newRequest } = USE_abortController();
+  // const { FETCH_vocabs, x } = USE_vocabZustandActions({
+  //   search: debouncedSearch,
+  //   difficultyFilters,
+  //   langFilters,
+  //   sortDirection,
+  //   sorting,
+  //   user_id: z_user?.id || "",
+  //   targetList_ID: list_id,
+  //   amount: VOCAB_PAGINATION || 50,
+  //   printed_IDS,
+  //   fetch_TYPE,
+  //   list_TYPE,
+  //   r_FETCH_vocabs,
+  // });
+
+  const FETCH_vocabs = useCallback(
+    async (loadMore: boolean = false) => {
+      const newController = START_newRequest();
+      await r_FETCH_vocabs(
+        {
+          search: debouncedSearch,
+          difficultyFilters,
+          langFilters,
+          sortDirection,
+          sorting,
+          user_id: z_user?.id || "",
+          targetList_ID: list_id,
+          // amount: VOCAB_PAGINATION || 50,
+          amount: 2,
+          excludeIds: loadMore ? printed_IDS : new Set(),
+          fetch_TYPE,
+          list_TYPE,
+          signal: newController.signal,
+        },
+        loadMore,
+        loadMore ? "loading_more" : undefined
+      );
+    },
+    [
+      debouncedSearch,
+      // debouncedSearch,
+      difficultyFilters,
+      langFilters,
+      sortDirection,
+      sorting,
+      z_user?.id,
+      list_id,
+      printed_IDS,
+    ]
+  );
+  const MARK_vocab = useCallback(async (vocab_ID: string, val: boolean) => {
+    await r_MARK_vocab(vocab_ID, val);
+  }, []);
+
+  useEffect(() => {
+    (async () => await FETCH_vocabs())();
+  }, [search, difficultyFilters, langFilters, sortDirection, sorting, list_id]);
+
   const {
     toUpdate_VOCAB,
     toDelete_VOCAB,
@@ -99,50 +185,44 @@ export default function SingleList_PAGE() {
     "displaySettings",
   ]);
 
-  const {
-    vocabs,
-    vocabs_ERROR,
-    HAS_reachedEnd,
-    loading_STATE,
-    unpaginated_COUNT,
-    LOAD_moreVocabs,
-    r_UPDATE_oneVocab,
-    r_PREPEND_oneVocab,
-    r_DELETE_oneVocab,
-  } = USE_myVocabs({
-    fetch_TYPE,
-    list_TYPE,
-    targetList_ID: list_id,
-    search: debouncedSearch,
-  });
-  const { currentVocab_ACTIONS, START_vocabAction, STOP_vocabAction } =
-    USE_currentVocabActions();
-  const { openVocab_IDs, TOGGLE_vocab } = USE_openVocabs();
+  // const {
+  //   vocabs,
+  //   vocabs_ERROR,
+  //   HAS_reachedEnd,
+  //   loading_STATE,
+  //   unpaginated_COUNT,
+  //   LOAD_moreVocabs,
+  //   r_UPDATE_oneVocab,
+  //   r_PREPEND_oneVocab,
+  //   r_DELETE_oneVocab,
+  // } = USE_myVocabs({
+  //   fetch_TYPE,
+  //   list_TYPE,
+  //   targetList_ID: list_id,
+  //   search: debouncedSearch,
+  // });
+
   // 🟡 ----------------------------------------------------------------------
 
-  const { MARK_vocab } = USE_markVocab({
-    currentVocab_ACTIONS,
-    START_vocabAction,
-    STOP_vocabAction,
-    onSuccess: (vocab: Vocab_TYPE) => r_UPDATE_oneVocab(vocab),
-  });
-  const { UPDATE_difficulty } = USE_updateVocabDifficulty({
-    currentVocab_ACTIONS,
-    START_vocabAction,
-    STOP_vocabAction,
-    onSuccess: (vocab: Vocab_TYPE) => r_UPDATE_oneVocab(vocab),
-  });
-  const { SOFTDELETE_vocab } = USE_softDeleteVocab({
-    currentVocab_ACTIONS,
-    START_vocabAction,
-    STOP_vocabAction,
-    onSuccess: (vocab_ID: string) => r_DELETE_oneVocab(vocab_ID),
-  });
+  // const { MARK_vocab } = USE_markVocab({
+  //   currentVocab_ACTIONS,
+  //   START_vocabAction,
+  //   STOP_vocabAction,
+  //   onSuccess: (vocab: Vocab_TYPE) => r_UPDATE_oneVocab(vocab),
+  // });
+  // const { UPDATE_difficulty } = USE_updateVocabDifficulty({
+  //   currentVocab_ACTIONS,
+  //   START_vocabAction,
+  //   STOP_vocabAction,
+  //   onSuccess: (vocab: Vocab_TYPE) => r_UPDATE_oneVocab(vocab),
+  // });
+  // const { SOFTDELETE_vocab } = USE_softDeleteVocab({
+  //   currentVocab_ACTIONS,
+  //   START_vocabAction,
+  //   STOP_vocabAction,
+  //   onSuccess: (vocab_ID: string) => r_DELETE_oneVocab(vocab_ID),
+  // });
   // 🟡 ----------------------------------------------------------------------
-
-  const memoizedTest = useCallback((diff: number) => {
-    console.log("heeoo: ", diff);
-  }, []);
 
   return (
     <>
@@ -155,14 +235,19 @@ export default function SingleList_PAGE() {
         OPEN_create={() => modals.createVocab.set(true)}
         {...{ search, SET_search }}
       />
-      <Btn
-        text="Test "
-        onPress={() => UPDATE_difficulty(vocabs?.[0]?.id, 0, 3)}
-      />
+      <Btn text="Test " onPress={() => FETCH_vocabs()} />
 
       <Styled_FLASHLIST
         onScroll={handleScroll}
-        data={IS_debouncing || !!vocabs_ERROR ? [] : vocabs || []}
+        data={
+          IS_debouncing ||
+          !!error ||
+          (loading_STATE !== "none" &&
+            loading_STATE !== "error" &&
+            loading_STATE !== "loading_more")
+            ? []
+            : vocabs || []
+        }
         flashlist_REF={list_REF}
         renderItem={({ item }) => (
           <Vocab_CARD
@@ -179,15 +264,14 @@ export default function SingleList_PAGE() {
               new_DIFFICULTY: 1 | 2 | 3,
               CLOSE_editBtns: () => void
             ) => {
-              await UPDATE_difficulty(
+              await r_UPDATE_vocabDifficulty(
                 vocab_ID,
                 current_DIFFICULTY,
-                new_DIFFICULTY,
-                CLOSE_editBtns
+                new_DIFFICULTY
               );
             }}
             UPDATE_vocabMarked={MARK_vocab}
-            SOFTDELETE_vocab={SOFTDELETE_vocab}
+            SOFTDELETE_vocab={r_SOFTDELETE_vocab}
             highlighted={highlighted_ID === item.id}
             IS_open={openVocab_IDs.has(item?.id)} // This will now reflect the updated Set reference
             TOGGLE_open={(val?: boolean) => TOGGLE_vocab(item.id, val)}
@@ -201,7 +285,7 @@ export default function SingleList_PAGE() {
           highlighted_ID,
           openVocab_IDs,
           currentVocab_ACTIONS,
-          UPDATE_difficulty,
+          // UPDATE_difficulty,
         ]}
         ListHeaderComponent={
           <VocabsFlatlistHeader_SECTION
@@ -211,13 +295,13 @@ export default function SingleList_PAGE() {
             loading_STATE={loading_STATE}
             list_NAME={selected_LIST?.name || ""}
             unpaginated_COUNT={unpaginated_COUNT}
-            HAS_error={!!vocabs_ERROR}
+            HAS_error={!!error}
           />
         }
         ListFooterComponent={
-          vocabs_ERROR ? (
+          error ? (
             <Error_BLOCK
-              paragraph={vocabs_ERROR?.user_MSG || "Something went wrong"}
+              paragraph={error?.user_MSG || "Something went wrong"}
             />
           ) : IS_debouncing ||
             (loading_STATE !== "none" && loading_STATE !== "loading_more") ? (
@@ -226,7 +310,7 @@ export default function SingleList_PAGE() {
             <BottomAction_BLOCK
               type="vocabs"
               createBtn_ACTION={() => modals.createVocab.set(true)}
-              LOAD_more={LOAD_moreVocabs}
+              LOAD_more={() => FETCH_vocabs(true)}
               RESET_search={() => SET_search("")}
               totalFilteredResults_COUNT={unpaginated_COUNT}
               debouncedSearch={debouncedSearch}
@@ -248,7 +332,7 @@ export default function SingleList_PAGE() {
             RESET_targetVocabs();
 
             HIGHLIGHT_vocab(new_VOCAB.id);
-            r_PREPEND_oneVocab(new_VOCAB);
+            // r_PREPEND_oneVocab(new_VOCAB);
             list_REF?.current?.scrollToOffset({ animated: true, offset: 0 });
             toast.show(t("notifications.vocabCreated"), {
               type: "success",
@@ -285,25 +369,6 @@ export default function SingleList_PAGE() {
           collectedLang_IDS={
             selected_LIST?.collected_lang_ids?.split(",") || []
           }
-        />
-
-        <DeleteVocab_MODAL
-          IS_open={modals.deleteVocab.IS_open}
-          vocab={toDelete_VOCAB}
-          CLOSE_modal={() => {
-            modals.deleteVocab.set(false);
-            RESET_targetVocabs();
-          }}
-          onSuccess={() => {
-            RESET_targetVocabs();
-            modals.deleteVocab.set(false);
-            r_DELETE_oneVocab(toDelete_VOCAB?.id || "");
-
-            toast.show(t("notifications.vocabDeleted"), {
-              type: "success",
-              duration: 5000,
-            });
-          }}
         />
       </Portal>
     </>
@@ -343,4 +408,67 @@ function USE_currentVocabActions() {
   );
 
   return { currentVocab_ACTIONS, START_vocabAction, STOP_vocabAction };
+}
+
+///
+//
+//
+
+function USE_vocabZustandActions({
+  search,
+  difficultyFilters,
+  langFilters,
+  sortDirection,
+  sorting,
+  user_id,
+  targetList_ID,
+  printed_IDS,
+  r_FETCH_vocabs = () => Promise.resolve(),
+}: {
+  search: string;
+  amount: number;
+  user_id: string;
+  list_TYPE: vocabList_TYPES;
+  fetch_TYPE: vocabFetch_TYPES;
+  targetList_ID?: string;
+  difficultyFilters: (1 | 2 | 3)[];
+  printed_IDS: Set<string>;
+  langFilters: string[];
+  sortDirection: "ascending" | "descending";
+  sorting: "difficulty" | "date" | "shuffle";
+  r_FETCH_vocabs: (args: FETCH_myVocabs_ARG_TYPES) => Promise<void>;
+}) {
+  const x = useCallback(() => console.log("eetyooo"), []);
+  const FETCH_vocabs = useCallback(async () => {
+    const { START_newRequest } = USE_abortController();
+    const newController = START_newRequest();
+    console.log("ss");
+    await r_FETCH_vocabs({
+      search,
+      difficultyFilters,
+      langFilters,
+      sortDirection,
+      sorting,
+      user_id,
+      targetList_ID,
+      amount: VOCAB_PAGINATION || 50,
+      excludeIds: new Set(),
+      fetch_TYPE,
+      list_TYPE,
+      signal: newController.signal,
+    });
+  }, [
+    search,
+    difficultyFilters,
+    langFilters,
+    sortDirection,
+    sorting,
+    user_id,
+    targetList_ID,
+    printed_IDS,
+  ]);
+
+  const LOAD_moreVocabs = useCallback(() => {}, []);
+
+  return { FETCH_vocabs, x };
 }

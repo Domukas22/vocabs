@@ -10,7 +10,7 @@ export const function_NAME = "DELETE_vocab";
 
 export async function SOFTDELETE_vocab(
   vocab_ID: string
-): Promise<{ success?: boolean; error?: General_ERROR }> {
+): Promise<{ success?: boolean }> {
   // validate args
 
   try {
@@ -30,12 +30,10 @@ export async function SOFTDELETE_vocab(
 
     return { success: true };
   } catch (error: any) {
-    return {
-      error: new General_ERROR({
-        function_NAME,
-        message: error.message,
-        errorToSpread: error,
-      }),
-    };
+    throw new General_ERROR({
+      function_NAME,
+      message: error.message,
+      errorToSpread: error,
+    });
   }
 }
