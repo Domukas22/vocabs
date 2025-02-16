@@ -120,7 +120,7 @@ export default function DeletedVocabs_PAGE() {
             IS_open={openVocab_IDs.has(item?.id)} // This will now reflect the updated Set reference
             TOGGLE_open={(val?: boolean) => TOGGLE_vocab(item.id, val)}
             current_ACTIONS={currentVocab_ACTIONS?.filter(
-              (action) => action.id === item?.id
+              (action) => action.vocab_ID === item?.id
             )}
           />
         )}
@@ -199,7 +199,7 @@ function USE_currentVocabActions() {
 
   const STOP_vocabAction = useCallback((vocab_ID: string) => {
     SET_currentVocabActions((prev) =>
-      prev.filter((action) => action.id !== vocab_ID)
+      prev.filter((action) => action.vocab_ID !== vocab_ID)
     );
   }, []);
 

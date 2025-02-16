@@ -6,12 +6,13 @@ import { MyColors } from "@/src/constants/MyColors";
 import { StyleSheet, View } from "react-native";
 import { ICON_toastNotification } from "@/src/components/1_grouped/icons/icons";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
+import { Toast_TYPE } from "@/src/types/general_TYPES";
 
 export default function Notification_BLOCK({
   type,
   text = "This is a green toast",
 }: {
-  type: "success" | "error" | "warning";
+  type: Toast_TYPE;
   text: string | undefined;
 }) {
   return (

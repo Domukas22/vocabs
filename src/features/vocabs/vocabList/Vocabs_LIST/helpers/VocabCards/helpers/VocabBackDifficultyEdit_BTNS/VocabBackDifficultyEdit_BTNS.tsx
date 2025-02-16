@@ -2,22 +2,29 @@
 //
 //
 
+import { currentVocabAction_TYPE } from "@/src/app/(main)/vocabs/[list_id]";
 import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import {
   ICON_difficultyDot,
   ICON_X,
 } from "@/src/components/1_grouped/icons/icons";
-import { View } from "react-native";
+import { MyColors } from "@/src/constants/MyColors";
+import { useMemo } from "react";
+import { ActivityIndicator, View } from "react-native";
 
 export default function VocabBackDifficultyEdit_BTNS({
   active_DIFFICULTY,
   UPDATE_vocabDifficulty,
   TOGGLE_open,
+  IS_updatingDifficulty,
 }: {
-  active_DIFFICULTY: 1 | 2 | 3;
-
+  active_DIFFICULTY: number;
   UPDATE_vocabDifficulty: (diff: 1 | 2 | 3) => void;
   TOGGLE_open: () => void;
+  IS_updatingDifficulty: {
+    IS_updating: boolean;
+    target_DIFFICULTY: number | undefined;
+  };
 }) {
   return (
     <View
@@ -43,7 +50,14 @@ export default function VocabBackDifficultyEdit_BTNS({
         onPress={() => {
           if (active_DIFFICULTY !== 1) UPDATE_vocabDifficulty(1);
         }}
-        iconLeft={<ICON_difficultyDot difficulty={1} big={true} />}
+        iconLeft={
+          IS_updatingDifficulty?.IS_updating &&
+          IS_updatingDifficulty?.target_DIFFICULTY === 1 ? (
+            <ActivityIndicator color={MyColors.icon_difficulty_1} />
+          ) : (
+            <ICON_difficultyDot difficulty={1} big={true} />
+          )
+        }
       />
 
       <Btn
@@ -55,7 +69,14 @@ export default function VocabBackDifficultyEdit_BTNS({
         onPress={() => {
           if (active_DIFFICULTY !== 2) UPDATE_vocabDifficulty(2);
         }}
-        iconLeft={<ICON_difficultyDot difficulty={2} big={true} />}
+        iconLeft={
+          IS_updatingDifficulty?.IS_updating &&
+          IS_updatingDifficulty?.target_DIFFICULTY === 2 ? (
+            <ActivityIndicator color={MyColors.icon_difficulty_2} />
+          ) : (
+            <ICON_difficultyDot difficulty={2} big={true} />
+          )
+        }
       />
 
       <Btn
@@ -67,7 +88,14 @@ export default function VocabBackDifficultyEdit_BTNS({
         onPress={() => {
           if (active_DIFFICULTY !== 3) UPDATE_vocabDifficulty(3);
         }}
-        iconLeft={<ICON_difficultyDot difficulty={3} big={true} />}
+        iconLeft={
+          IS_updatingDifficulty?.IS_updating &&
+          IS_updatingDifficulty?.target_DIFFICULTY === 3 ? (
+            <ActivityIndicator color={MyColors.icon_difficulty_3} />
+          ) : (
+            <ICON_difficultyDot difficulty={3} big={true} />
+          )
+        }
       />
       <Btn
         type="simple"

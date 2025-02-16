@@ -24,8 +24,8 @@ const primitives = {
   green1: "#affb6d",
   green2: "#405231",
   green3: "#2e3528",
-  red0: "#ff9191", // p1: FF8185,
-  red1: "#ff9191",
+  red1: "#ff9191", // p1: FF8185,
+
   red2: "#6d3c3c",
   red3: "#412929",
   red4: "#412929",
@@ -42,10 +42,10 @@ export const MyColors = {
   border_white: primitives.white095,
   border_contrast: primitives.primary1,
   border_green: primitives.green1,
-  border_difficulty_3: primitives.red0,
+  border_difficulty_3: primitives.red1,
   border_difficulty_2: primitives.yellow0,
   border_difficulty_1: primitives.white095,
-  border_red: primitives.red0,
+  border_red: primitives.red1,
   border_yellow: primitives.yellow0,
   border_primary: primitives.primary1,
 
@@ -63,8 +63,8 @@ export const MyColors = {
   icon_gray: primitives.grey1,
   icon_gray_light: primitives.grey2,
   icon_green: primitives.green1,
-  icon_red: primitives.red0,
-  icon_difficulty_3: primitives.red0,
+  icon_red: primitives.red1,
+  icon_difficulty_3: primitives.red1,
   icon_difficulty_2: primitives.yellow0,
   icon_difficulty_1: primitives.grey2,
   icon_white: primitives.white095,
@@ -89,6 +89,9 @@ export const MyColors = {
   btn_red: primitives.red3,
   btn_red_press: primitives.red2,
 
+  btn_red_angry: primitives.red1,
+  btn_red_angry_press: primitives.red2,
+
   btn_difficulty_3: primitives.red3,
   btn_difficulty_3_press: primitives.red2,
 
@@ -99,17 +102,17 @@ export const MyColors = {
   btn_difficulty_1_press: primitives.dark4,
 
   // Text colors
-  text_difficulty_3: primitives.red0,
+  text_difficulty_3: primitives.red1,
   text_difficulty_2: primitives.yellow0,
   text_difficulty_1: primitives.white095,
 
   text_green: primitives.green1,
-  text_red: primitives.red0,
+  text_red: primitives.red1,
   text_yellow: primitives.yellow0,
   text_white: primitives.white095,
   text_white_06: primitives.white06,
 
   text_primary: primitives.primary1,
   text_black: primitives.black,
-  text_delete: primitives.red0,
+  text_delete: primitives.red1,
 };

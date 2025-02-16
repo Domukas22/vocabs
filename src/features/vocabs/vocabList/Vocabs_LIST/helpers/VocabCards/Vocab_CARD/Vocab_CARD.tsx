@@ -28,9 +28,12 @@ interface VocabProps {
   TOGGLE_open: (val?: boolean) => void;
   UPDATE_vocabDifficulty: (
     vocab_ID: string,
-    new_DIFFICULTY: 1 | 2 | 3
+    current_DIFFICULTY: number,
+    new_DIFFICULTY: 1 | 2 | 3,
+    CLOSE_editBtns: () => void
   ) => Promise<void>;
   UPDATE_vocabMarked: (vocab_ID: string, val: boolean) => Promise<void>;
+  SOFTDELETE_vocab: (vocab_ID: string) => Promise<void>;
   current_ACTIONS: currentVocabAction_TYPE[];
   OPEN_vocabSoftDeleteModal: (vocab: Vocab_TYPE) => void;
 }
@@ -45,52 +48,26 @@ export const Vocab_CARD = React.memo(function Vocab_CARD({
   OPEN_vocabSoftDeleteModal = (vocab: Vocab_TYPE) => {},
   UPDATE_vocabDifficulty = () => Promise.resolve(),
   UPDATE_vocabMarked = () => Promise.resolve(),
+  SOFTDELETE_vocab = () => Promise.resolve(),
   current_ACTIONS = [],
 }: VocabProps) {
   const trs = vocab?.trs || [];
 
-  // ------------------------------------------------
-  // If we rely on only 'IS_open', there will be
-  // a slight delay after toggling the open state.
-
-  // So we have a local open state, which works instantly
-  // On mount, it will have the internal IS_open value
-  // from the Set provided as an argument.
-
-  // This way when we edit the vocab list array
-  // by f.e. re-sorting or re-filtering,
-  // the "open" state of each individual vocab will persist.
-  const [open, _toggle, _set] = USE_toggle(IS_open);
-  const toggle = useCallback(() => {
-    if (open) {
-      _set(false);
-      TOGGLE_open(false);
-    } else {
-      _set(true);
-      TOGGLE_open(true);
-    }
-  }, [open]);
-
-  useEffect(() => {
-    if (IS_open !== open) {
-      _set(IS_open);
-    }
-  }, [IS_open]);
-  // ------------------------------------------------
+  const [open, toggle, set] = USE_toggle(IS_open);
 
   const styles = useMemo(
     () => [
       s._vocab,
-      IS_open && s.vocab_open,
-      IS_open && s[`difficulty_${vocab?.difficulty || 0}`],
+      open && s.vocab_open,
+      open && s[`difficulty_${vocab?.difficulty || 0}`],
       highlighted && s.highlighted,
     ],
-    [IS_open, vocab?.difficulty, highlighted]
+    [open, vocab?.difficulty, highlighted]
   );
 
   return (
     <View style={styles}>
-      {!IS_open && (
+      {!open && (
         <Vocab_FRONT
           trs={trs || []}
           difficulty={vocab?.difficulty || 0}
@@ -100,7 +77,7 @@ export const Vocab_CARD = React.memo(function Vocab_CARD({
           IS_marked={vocab?.is_marked}
         />
       )}
-      {IS_open && (
+      {open && (
         <>
           <VocabBack_TRS trs={trs} difficulty={vocab?.difficulty || 0} />
           <VocabBack_TEXT
@@ -117,8 +94,21 @@ export const Vocab_CARD = React.memo(function Vocab_CARD({
           <VocabBack_BTNS
             {...{ vocab, trs, list_TYPE, fetch_TYPE, TOGGLE_open: toggle }}
             OPEN_vocabUpdateModal={() => {}}
-            UPDATE_vocabDifficulty={UPDATE_vocabDifficulty}
+            UPDATE_vocabDifficulty={async (
+              vocab_ID: string,
+              current_DIFFICULTY: number,
+              new_DIFFICULTY: 1 | 2 | 3,
+              CLOSE_editBtns: () => void
+            ) => {
+              await UPDATE_vocabDifficulty(
+                vocab_ID,
+                current_DIFFICULTY,
+                new_DIFFICULTY,
+                CLOSE_editBtns
+              );
+            }}
             UPDATE_vocabMarked={UPDATE_vocabMarked}
+            SOFTDELETE_vocab={SOFTDELETE_vocab}
             OPEN_vocabCopyModal={() => {}}
             OPEN_vocabPermaDeleteModal={() => {}}
             OPEN_vocabSoftDeleteModal={OPEN_vocabSoftDeleteModal}

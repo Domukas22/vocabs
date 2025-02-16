@@ -122,7 +122,7 @@ export function GET_vocabListComponents({
         IS_open={openVocab_IDs.has(vocab?.id)} // This will now reflect the updated Set reference
         TOGGLE_open={(val?: boolean) => TOGGLE_vocab(vocab.id, val)}
         current_ACTIONS={currentVocab_ACTIONS?.filter(
-          (action) => action.id === vocab?.id
+          (action) => action.vocab_ID === vocab?.id
         )}
       />
     )

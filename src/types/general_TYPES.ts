@@ -10,3 +10,5 @@ export type loadingState_TYPES =
   | "loading_more"
   | "error"
   | "none";
+
+export type Toast_TYPE = "success" | "error" | "warning";

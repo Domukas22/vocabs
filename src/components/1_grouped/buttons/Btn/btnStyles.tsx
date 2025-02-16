@@ -12,6 +12,7 @@ export type btnTypes =
   | "active"
   | "active_green"
   | "delete"
+  | "delete_angry"
   | "seethrough"
   | "seethrough_primary"
   | "difficulty_3_active"
@@ -98,7 +99,7 @@ const s = StyleSheet.create({
   },
 
   delete: {
-    backgroundColor: MyColors.btn_2,
+    backgroundColor: MyColors.btn_red,
     borderColor: MyColors.border_white_005,
   },
   delete_press: {
@@ -107,6 +108,18 @@ const s = StyleSheet.create({
   },
   delete_text: {
     color: MyColors.text_delete,
+  },
+
+  delete_angry: {
+    backgroundColor: MyColors.btn_red_angry,
+    borderColor: MyColors.border_red,
+  },
+  delete_angry_press: {
+    backgroundColor: MyColors.btn_red_angry_press,
+    borderColor: MyColors.border_red,
+  },
+  delete_angry_text: {
+    color: MyColors.text_black,
   },
 
   seethrough: {
@@ -215,6 +228,13 @@ const btnStyles = {
       press: s.delete_press,
     },
     text: s.delete_text,
+  },
+  delete_angry: {
+    btn: {
+      normal: s.delete_angry,
+      press: s.delete_angry_press,
+    },
+    text: s.delete_angry_text,
   },
   seethrough: {
     btn: {

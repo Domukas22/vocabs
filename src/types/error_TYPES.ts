@@ -10,7 +10,7 @@ interface GeneralError_PROPS {
   details?: string; // Added details to match PostgrestError
   hint?: string; // Added hint to match PostgrestError
   other?: any;
-  errorToSpread?: GeneralError_PROPS;
+  errorToSpread?: any;
 }
 
 /**
@@ -29,12 +29,12 @@ interface GeneralError_PROPS {
 export class General_ERROR extends Error {
   function_NAME: string;
   message: string;
-  user_MSG?: string;
+  user_MSG: string;
   code?: string;
   details?: string;
   hint?: string;
   other?: any;
-  errorToSpread?: GeneralError_PROPS;
+  errorToSpread?: any;
 
   constructor(error: GeneralError_PROPS) {
     const {

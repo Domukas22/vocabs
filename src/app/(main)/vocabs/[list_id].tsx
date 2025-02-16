@@ -47,10 +47,14 @@ import Styled_FLASHLIST from "@/src/components/3_other/Styled_FLASHLIST/Styled_F
 import { Vocab_CARD } from "@/src/features/vocabs/vocabList/Vocabs_LIST/helpers";
 import { VocabsSkeleton_BLOCK } from "@/src/features/vocabs/vocabList/Vocabs_LIST/helpers/VocabsSkeleton_BLOCK/VocabsSkeleton_BLOCK";
 import Vocab_FRONT from "@/src/features/vocabs/vocabList/Vocabs_LIST/helpers/VocabCards/helpers/Vocab_FRONT/Vocab_FRONT";
-import VocabBack_BTNS from "@/src/features/vocabs/components/1_myVocabs/vocabCards/Components/VocabBack_BTNS/VocabBack_BTNS";
 import { VocabBack_TRS } from "@/src/features/vocabs/components/1_myVocabs/vocabCards/Components/VocabBack_TRS/VocabBack_TRS";
 import VocabBack_TEXT from "@/src/features/vocabs/vocabList/Vocabs_LIST/helpers/VocabCards/helpers/VocabBack_TEXT/VocabBack_TEXT";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
+import { USE_markVocab } from "@/src/features/vocabs/vocabList/USE_markVocab/USE_markVocab";
+import VocabBack_BTNS from "@/src/features/vocabs/vocabList/Vocabs_LIST/helpers/VocabCards/helpers/VocabBack_BTNS/VocabBack_BTNS";
+import { USE_updateVocabDifficulty } from "@/src/features/vocabs/vocabList/USE_updateVocabDifficulty/USE_updateVocabDifficulty";
+import { UPDATE_oneVocab_PAYLOAD } from "@/src/features/vocabs/vocabList/USE_myVocabs/helpers/USE_myVocabsReducer/Vocab_REDUCER/types";
+import { USE_softDeleteVocab } from "@/src/features/vocabs/vocabList/USE_softDeleteVocab/USE_softDeleteVocab";
 
 const fetch_TYPE: vocabFetch_TYPES = "byTargetList";
 const list_TYPE: vocabList_TYPES = "private";
@@ -106,39 +110,29 @@ export default function SingleList_PAGE() {
   const { openVocab_IDs, TOGGLE_vocab } = USE_openVocabs();
   // 🟡 ----------------------------------------------------------------------
 
-  const UPDATE_vocabDifficulty = useCallback(
-    async (vocab_ID: string, new_DIFFICULTY: 1 | 2 | 3) => {
-      try {
-        START_vocabAction({
-          action: "updating_difficulty",
-          id: vocab_ID,
-          new_DIFFICULTY,
-        });
-        console.log("Update difficulty to: ", new_DIFFICULTY);
-        await Delay(3000);
-        console.log("Updated difficulty");
-      } catch (error: any) {
-      } finally {
-        STOP_vocabAction(vocab_ID);
-      }
-    },
-    []
-  );
-  const UPDATE_vocabMarked = useCallback(
-    async (vocab_ID: string, val: boolean) => {
-      try {
-        START_vocabAction({ action: "updating_marked", id: vocab_ID });
-        console.log("Update marked to: ", val);
-        await Delay(3000);
-        console.log("Updated marked");
-      } catch (error: any) {
-      } finally {
-        STOP_vocabAction(vocab_ID);
-      }
-    },
-    []
-  );
+  const { MARK_vocab } = USE_markVocab({
+    currentVocab_ACTIONS,
+    START_vocabAction,
+    STOP_vocabAction,
+    onSuccess: (vocab: Vocab_TYPE) => r_UPDATE_oneVocab(vocab),
+  });
+  const { UPDATE_difficulty } = USE_updateVocabDifficulty({
+    currentVocab_ACTIONS,
+    START_vocabAction,
+    STOP_vocabAction,
+    onSuccess: (vocab: Vocab_TYPE) => r_UPDATE_oneVocab(vocab),
+  });
+  const { SOFTDELETE_vocab } = USE_softDeleteVocab({
+    currentVocab_ACTIONS,
+    START_vocabAction,
+    STOP_vocabAction,
+    onSuccess: (vocab_ID: string) => r_DELETE_oneVocab(vocab_ID),
+  });
   // 🟡 ----------------------------------------------------------------------
+
+  const memoizedTest = useCallback((diff: number) => {
+    console.log("heeoo: ", diff);
+  }, []);
 
   return (
     <>
@@ -151,7 +145,10 @@ export default function SingleList_PAGE() {
         OPEN_create={() => modals.createVocab.set(true)}
         {...{ search, SET_search }}
       />
-      {/* <Btn text="Test update difficulty" onPress={UPDATE_vocabDifficulty} /> */}
+      <Btn
+        text="Test "
+        onPress={() => UPDATE_difficulty(vocabs?.[0]?.id, 0, 3)}
+      />
 
       <Styled_FLASHLIST
         onScroll={handleScroll}
@@ -159,55 +156,6 @@ export default function SingleList_PAGE() {
         flashlist_REF={list_REF}
         renderItem={({ item }) => (
           <Vocab_CARD
-            Front={
-              <Vocab_FRONT
-                trs={item?.trs || []}
-                difficulty={item?.difficulty || 0}
-                description={item?.description}
-                highlighted={highlighted_ID === item.id}
-                TOGGLE_open={(val?: boolean) => TOGGLE_vocab(item.id, val)}
-                IS_marked={item?.is_marked}
-              />
-            }
-            Back={
-              <>
-                <VocabBack_TRS
-                  trs={item?.trs || []}
-                  difficulty={item?.difficulty || 0}
-                />
-                <VocabBack_TEXT
-                  desc={item?.description}
-                  list_NAME={
-                    list_TYPE === "public" ||
-                    (list_TYPE === "private" &&
-                      (fetch_TYPE === "all" || fetch_TYPE === "marked"))
-                      ? item?.list?.name || "Not in any list"
-                      : undefined
-                  }
-                />
-
-                <VocabBack_BTNS
-                  {...{
-                    list_TYPE,
-                    fetch_TYPE,
-                    TOGGLE_open: (val?: boolean) => TOGGLE_vocab(item.id, val),
-                  }}
-                  difficulty={item?.difficulty}
-                  OPEN_vocabUpdateModal={() => {}}
-                  UPDATE_vocabDifficulty={UPDATE_vocabDifficulty}
-                  UPDATE_vocabMarked={UPDATE_vocabMarked}
-                  OPEN_vocabCopyModal={() => {}}
-                  OPEN_vocabPermaDeleteModal={() => {}}
-                  OPEN_vocabSoftDeleteModal={(vocab: Vocab_TYPE) => {
-                    SET_targetVocab(vocab, "update");
-                    modals.deleteVocab.set(true);
-                  }}
-                  current_ACTIONS={currentVocab_ACTIONS?.filter(
-                    (action) => action.id === item?.id
-                  )}
-                />
-              </>
-            }
             vocab={item}
             list_TYPE={list_TYPE}
             fetch_TYPE={fetch_TYPE}
@@ -215,18 +163,36 @@ export default function SingleList_PAGE() {
               SET_targetVocab(vocab, "update");
               modals.deleteVocab.set(true);
             }}
-            UPDATE_vocabDifficulty={UPDATE_vocabDifficulty}
-            UPDATE_vocabMarked={UPDATE_vocabMarked}
+            UPDATE_vocabDifficulty={async (
+              vocab_ID: string,
+              current_DIFFICULTY: number,
+              new_DIFFICULTY: 1 | 2 | 3,
+              CLOSE_editBtns: () => void
+            ) => {
+              await UPDATE_difficulty(
+                vocab_ID,
+                current_DIFFICULTY,
+                new_DIFFICULTY,
+                CLOSE_editBtns
+              );
+            }}
+            UPDATE_vocabMarked={MARK_vocab}
+            SOFTDELETE_vocab={SOFTDELETE_vocab}
             highlighted={highlighted_ID === item.id}
             IS_open={openVocab_IDs.has(item?.id)} // This will now reflect the updated Set reference
             TOGGLE_open={(val?: boolean) => TOGGLE_vocab(item.id, val)}
             current_ACTIONS={currentVocab_ACTIONS?.filter(
-              (action) => action.id === item?.id
+              (action) => action.vocab_ID === item?.id
             )}
           />
         )}
         keyExtractor={(item) => "Vocab" + item.id}
-        extraData={[highlighted_ID, openVocab_IDs, currentVocab_ACTIONS]}
+        extraData={[
+          highlighted_ID,
+          openVocab_IDs,
+          currentVocab_ACTIONS,
+          UPDATE_difficulty,
+        ]}
         ListHeaderComponent={
           <VocabsFlatlistHeader_SECTION
             IS_debouncing={IS_debouncing}
@@ -337,7 +303,7 @@ export default function SingleList_PAGE() {
 ////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
 export interface currentVocabAction_TYPE {
-  id: string;
+  vocab_ID: string;
   action:
     | "deleting"
     | "updating"
@@ -355,7 +321,7 @@ function USE_currentVocabActions() {
 
   const STOP_vocabAction = useCallback((vocab_ID: string) => {
     SET_currentVocabActions((prev) =>
-      prev.filter((action) => action.id !== vocab_ID)
+      prev.filter((action) => action.vocab_ID !== vocab_ID)
     );
   }, []);
 
