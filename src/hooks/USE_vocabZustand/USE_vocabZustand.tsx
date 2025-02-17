@@ -2,7 +2,6 @@
 //
 //
 
-import { currentVocabAction_TYPE } from "@/src/app/(main)/vocabs/[list_id]";
 import { Vocab_TYPE } from "@/src/features/vocabs/types";
 import { IS_vocabMarkedBeingUpdated } from "@/src/features/vocabs/vocabList/USE_markVocab/helpers";
 import { UPDATE_vocabMarked } from "@/src/features/vocabs/vocabList/USE_markVocab/helpers/UPDATE_vocabMarked/UPDATE_vocabMarked";
@@ -10,6 +9,8 @@ import { FETCH_vocabs } from "@/src/features/vocabs/vocabList/USE_myVocabs/helpe
 import {
   FETCH_myVocabs_ARG_TYPES,
   FETCH_myVocabs_RESPONSE_TYPE,
+  vocabFetch_TYPES,
+  vocabList_TYPES,
 } from "@/src/features/vocabs/vocabList/USE_myVocabs/helpers/USE_fetchVocabs/helpers/FETCH_vocabs/types";
 import {
   IS_vocabMarkedBeingDeleted,
@@ -57,9 +58,40 @@ export type vocabsReducer_TYPE = {
   error?: General_ERROR;
 };
 
+export interface currentVocabAction_TYPE {
+  vocab_ID: string;
+  action:
+    | "deleting"
+    | "updating"
+    | "updating_difficulty"
+    | "updating_marked"
+    | "moving"
+    | "copying";
+  new_DIFFICULTY?: number;
+}
+
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
+
+export type r_FETCH_vocabs_ARG_TYPE = {
+  search: string;
+  signal: AbortSignal;
+  amount: number;
+  user_id: string;
+  list_TYPE: vocabList_TYPES;
+
+  fetch_TYPE: vocabFetch_TYPES;
+  targetList_ID?: string;
+  difficultyFilters: (1 | 2 | 3)[];
+  langFilters: string[];
+  sortDirection: "ascending" | "descending";
+  sorting: "difficulty" | "date" | "shuffle";
+
+  loadMore: boolean;
+  loading_STATE: loadingState_TYPES | undefined;
+  z_list_id: string;
+};
 
 type Vocabs_STATE = {
   vocabs: Vocab_TYPE[];
@@ -69,12 +101,9 @@ type Vocabs_STATE = {
   loading_STATE: loadingState_TYPES;
   error?: General_ERROR;
   currentVocab_ACTIONS: currentVocabAction_TYPE[];
+  z_list_id: string;
 
-  r_FETCH_vocabs: (
-    args: FETCH_myVocabs_ARG_TYPES,
-    loadMore?: boolean,
-    loading_STATE?: loadingState_TYPES
-  ) => Promise<void>;
+  r_FETCH_vocabs: (args: r_FETCH_vocabs_ARG_TYPE) => Promise<void>;
   r_MARK_vocab: (vocab_ID: string, val: boolean) => Promise<void>;
   r_UPDATE_vocabDifficulty: (
     vocab_ID: string,
@@ -92,15 +121,21 @@ export const USE_vocabZustand = create<Vocabs_STATE>((set, get) => ({
   loading_STATE: "none",
   error: undefined,
   currentVocab_ACTIONS: [],
+  z_list_id: "",
 
-  r_FETCH_vocabs: async (
-    args: FETCH_myVocabs_ARG_TYPES,
-    loadMore: boolean = false,
-    loading_STATE
-  ) => {
-    const { search, targetList_ID, difficultyFilters, langFilters } = args;
+  r_FETCH_vocabs: async (args) => {
+    const {
+      search,
+      targetList_ID,
+      difficultyFilters,
+      langFilters,
+      loadMore,
+      loading_STATE,
+      z_list_id,
+    } = args;
 
     try {
+      set({ z_list_id });
       // ----------------------------------------
       const _loading_STATE =
         loading_STATE ||
@@ -113,6 +148,7 @@ export const USE_vocabZustand = create<Vocabs_STATE>((set, get) => ({
       // ----------------------------------------
       set({ error: undefined, loading_STATE: _loading_STATE });
       if (!loadMore) set({ vocabs: [] });
+
       // ----------------------------------------
       const data = await FETCH_vocabs({
         ...args,
@@ -128,10 +164,14 @@ export const USE_vocabZustand = create<Vocabs_STATE>((set, get) => ({
 
       if (loadMore) {
         set((state) => ({
-          vocabs: loadMore ? [...state.vocabs, ...data.vocabs] : data.vocabs,
+          vocabs: [...state.vocabs, ...data.vocabs],
           unpaginated_COUNT: data.unpaginated_COUNT,
-          printed_IDS: new Set(data.vocabs.map((v) => v.id)),
-          HAS_reachedEnd: data.vocabs.length >= data.unpaginated_COUNT,
+          printed_IDS: new Set([
+            ...state.printed_IDS,
+            ...data.vocabs.map((v) => v.id),
+          ]),
+          HAS_reachedEnd:
+            [...state.vocabs, ...data.vocabs].length >= data.unpaginated_COUNT,
           loading_STATE: "none",
         }));
       } else {
