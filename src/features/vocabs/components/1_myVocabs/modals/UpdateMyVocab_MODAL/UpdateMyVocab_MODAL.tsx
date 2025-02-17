@@ -39,7 +39,7 @@ import {
 import { TrHighlights_MODAL } from "../TrHighlights_MODAL/TrHighlights_MODAL";
 import { SelectMultipleLanguages_MODAL } from "@/src/features/languages/components";
 import { USE_modalToggles } from "@/src/hooks/index";
-import { z_USE_oneList } from "@/src/hooks/z_USE_oneList/z_USE_oneList";
+import { z_USE_myVocabs } from "@/src/features/vocabs/Vocabs_FLASHLIST/helpers/z_USE_myVocabs/z_USE_myVocabs";
 
 interface UpdateMyVocabModal_PROPS {
   IS_open: boolean;
@@ -70,7 +70,7 @@ export function UpdateMyVocab_MODAL({
     "selectList",
   ]);
 
-  const { target_VOCAB: toUpdate_VOCAB } = z_USE_oneList();
+  const { z_target_VOCAB: toUpdate_VOCAB } = z_USE_myVocabs();
 
   const [target_TR, SET_targetTr] = useState<VocabTr_TYPE | undefined>(
     undefined

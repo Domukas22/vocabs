@@ -19,12 +19,12 @@ import { USE_abortController } from "@/src/hooks";
 const function_NAME = "USE_updateVocabDifficulty";
 
 export function USE_updateVocabDifficulty({
-  currentVocab_ACTIONS = [],
+  z_myVocabsCurrent_ACTIONS = [],
   START_vocabAction = () => {},
   STOP_vocabAction = () => {},
   onSuccess = () => {},
 }: {
-  currentVocab_ACTIONS: currentVocabAction_TYPE[];
+  z_myVocabsCurrent_ACTIONS: currentVocabAction_TYPE[];
   START_vocabAction: (new_ACTION: currentVocabAction_TYPE) => void;
   STOP_vocabAction: (vocab_ID: string) => void;
   onSuccess: (vocab: Vocab_TYPE) => void;
@@ -41,7 +41,7 @@ export function USE_updateVocabDifficulty({
     ) => {
       try {
         // If the marked value is already being updated, don't update again
-        if (IS_vocabDifficultyBeingUpdated(vocab_ID, currentVocab_ACTIONS))
+        if (IS_vocabDifficultyBeingUpdated(vocab_ID, z_myVocabsCurrent_ACTIONS))
           return;
 
         if (current_DIFFICULTY === new_DIFFICULTY) return;
@@ -82,7 +82,7 @@ export function USE_updateVocabDifficulty({
         await SEND_internalError(err);
       }
     },
-    [currentVocab_ACTIONS]
+    [z_myVocabsCurrent_ACTIONS]
   );
 
   return { UPDATE_difficulty };

@@ -15,7 +15,7 @@ const mockState = {
     unpaginated_COUNT: 2,
     HAS_reachedEnd: false,
   },
-  loading_STATE: "none",
+  z_myVocabsLoading_STATE: "none",
 } as vocabsReducer_TYPE;
 
 const loadingMorePayload = "loading_more" as START_fetch_PAYLOAD; // Trigger for loading more
@@ -32,13 +32,13 @@ const errorMessage = (message: string) => {
 describe("START_vocabReducerFetch", () => {
   test("1. Sets loading state to 'loading_more' without modifying data when payload is 'loading_more'", () => {
     const updatedState = START_vocabReducerFetch(mockState, loadingMorePayload);
-    expect(updatedState?.loading_STATE).toBe("loading_more");
+    expect(updatedState?.z_myVocabsLoading_STATE).toBe("loading_more");
     expect(updatedState?.data).toEqual(mockState.data); // Data state remains unchanged
   });
 
   test("2. Resets the state when payload is not 'loading_more'", () => {
     const updatedState = START_vocabReducerFetch(mockState, resetPayload);
-    expect(updatedState?.loading_STATE).toBe("reset");
+    expect(updatedState?.z_myVocabsLoading_STATE).toBe("reset");
     expect(updatedState?.data?.vocabs).toEqual([]);
     expect(updatedState?.data?.printed_IDS).toEqual(new Set());
     expect(updatedState?.data?.unpaginated_COUNT).toBe(0);
@@ -90,7 +90,7 @@ describe("START_vocabReducerFetch", () => {
         unpaginated_COUNT: "not-a-number" as unknown as number,
         HAS_reachedEnd: false,
       },
-      loading_STATE: "none",
+      z_myVocabsLoading_STATE: "none",
     } as vocabsReducer_TYPE;
 
     expect(() => START_vocabReducerFetch(invalidState, resetPayload)).toThrow(
@@ -106,7 +106,7 @@ describe("START_vocabReducerFetch", () => {
         unpaginated_COUNT: 2,
         HAS_reachedEnd: "notABoolean" as unknown as boolean,
       },
-      loading_STATE: "none",
+      z_myVocabsLoading_STATE: "none",
     } as vocabsReducer_TYPE;
 
     expect(() => START_vocabReducerFetch(invalidState, resetPayload)).toThrow(

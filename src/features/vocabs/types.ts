@@ -5,6 +5,7 @@
 export type Vocab_TYPE = {
   id: string;
   user_id: string;
+  list_id: string;
   is_public: boolean;
 
   is_marked: boolean;
@@ -25,3 +26,15 @@ export type VocabTr_TYPE = {
   text: string;
   highlights: number[];
 };
+
+export interface currentVocabAction_TYPE {
+  vocab_ID: string;
+  action:
+    | "deleting"
+    | "updating"
+    | "updating_difficulty"
+    | "updating_marked"
+    | "moving"
+    | "copying";
+  new_DIFFICULTY?: number;
+}

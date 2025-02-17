@@ -18,7 +18,7 @@ import { USE_collectListLangs } from "@/src/features/lists/functions";
 import { USE_zustand } from "@/src/hooks";
 import { USE_modalToggles } from "@/src/hooks/index";
 import { Vocab_TYPE } from "@/src/features/vocabs/types";
-import { z_USE_oneList } from "@/src/hooks/z_USE_oneList/z_USE_oneList";
+import { z_USE_myVocabs } from "@/src/features/vocabs/Vocabs_FLASHLIST/helpers/z_USE_myVocabs/z_USE_myVocabs";
 
 interface SavePublicVocabToListModal_PROPS {
   IS_open: boolean;
@@ -31,7 +31,7 @@ export function ReviveDeletedVocab_MODAL({
   CLOSE_modal,
 }: SavePublicVocabToListModal_PROPS) {
   const { modals } = USE_modalToggles(["createList"]);
-  const { target_VOCAB: vocab } = z_USE_oneList();
+  const { z_target_VOCAB: vocab } = z_USE_myVocabs();
 
   const { z_user } = USE_zustand();
 

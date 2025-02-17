@@ -85,7 +85,8 @@
     "deletePermanently": "Delete forever",
     "goToListOfVocab": "View the list",
     "restoreVocab": "Restore vocab",
-    "saveVocab": "Save vocab"
+    "saveVocab": "Save vocab",
+    "deleteVocabHard": "Delete forever"
   },
   "pages": {
     "about": {

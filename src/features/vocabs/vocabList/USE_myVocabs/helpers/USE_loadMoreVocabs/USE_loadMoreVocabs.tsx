@@ -14,7 +14,7 @@ export function USE_loadMoreVocabs({
   FETCH_vocabsAndHanldeState: (fetch_TYPE: loadingState_TYPES) => Promise<void>;
 }) {
   const LOAD_moreVocabs = useCallback(() => {
-    if (state?.loading_STATE === "none") {
+    if (state?.z_myVocabsLoading_STATE === "none") {
       FETCH_vocabsAndHanldeState("loading_more");
     }
   }, [state]);

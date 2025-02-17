@@ -17,6 +17,6 @@ export function SET_reducerError(
 
   return {
     error: payload || alternative_ERROR,
-    loading_STATE: "error",
+    z_myVocabsLoading_STATE: "error",
   };
 }

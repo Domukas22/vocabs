@@ -14,12 +14,12 @@ import { Vocab_TYPE } from "../../types";
 const function_NAME = "USE_markVocab";
 
 export function USE_markVocab({
-  currentVocab_ACTIONS = [],
+  z_myVocabsCurrent_ACTIONS = [],
   START_vocabAction = () => {},
   STOP_vocabAction = () => {},
   onSuccess = () => {},
 }: {
-  currentVocab_ACTIONS: currentVocabAction_TYPE[];
+  z_myVocabsCurrent_ACTIONS: currentVocabAction_TYPE[];
   START_vocabAction: (new_ACTION: currentVocabAction_TYPE) => void;
   STOP_vocabAction: (vocab_ID: string) => void;
   onSuccess: (vocab: Vocab_TYPE) => void;
@@ -29,7 +29,8 @@ export function USE_markVocab({
   const MARK_vocab = useCallback(async (vocab_ID: string, val: boolean) => {
     try {
       // If the marked value is already being updated, don't update again
-      if (IS_vocabMarkedBeingUpdated(vocab_ID, currentVocab_ACTIONS)) return;
+      if (IS_vocabMarkedBeingUpdated(vocab_ID, z_myVocabsCurrent_ACTIONS))
+        return;
       START_vocabAction({ action: "updating_marked", vocab_ID: vocab_ID });
 
       const { data, error } = await UPDATE_vocabMarked(vocab_ID, val);

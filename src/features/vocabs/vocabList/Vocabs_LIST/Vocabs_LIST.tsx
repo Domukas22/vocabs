@@ -34,7 +34,7 @@ export function Vocab_LIST({
   IS_debouncing,
   debouncedSearch,
   search,
-  loading_STATE,
+  z_myVocabsLoading_STATE,
   list_NAME,
   unpaginated_COUNT,
   vocabs_ERROR,
@@ -47,7 +47,7 @@ export function Vocab_LIST({
   OPEN_modalUpdateVocab = () => {},
   OPEN_vocabSoftDeleteModal = (vocab: Vocab_TYPE) => {},
   UPDATE_vocabDifficulty = () => Promise.resolve(),
-  currentVocab_ACTIONS = [],
+  z_myVocabsCurrent_ACTIONS = [],
   RESET_search = () => {},
   UPDATE_vocabMarked = () => Promise.resolve(),
 }: {
@@ -61,7 +61,7 @@ export function Vocab_LIST({
   IS_debouncing: boolean;
   debouncedSearch: string;
   search: string;
-  loading_STATE: loadingState_TYPES;
+  z_myVocabsLoading_STATE: loadingState_TYPES;
   list_NAME: string;
   unpaginated_COUNT: number;
   vocabs_ERROR: General_ERROR | undefined;
@@ -78,7 +78,7 @@ export function Vocab_LIST({
     vocab_ID: string,
     new_DIFFICULTY: 1 | 2 | 3
   ) => Promise<void>;
-  currentVocab_ACTIONS: currentVocabAction_TYPE[];
+  z_myVocabsCurrent_ACTIONS: currentVocabAction_TYPE[];
   UPDATE_vocabMarked: (vocab_ID: string, val: boolean) => Promise<void>;
 }) {
   const { openVocab_IDs, TOGGLE_vocab } = USE_openVocabs();
@@ -99,7 +99,7 @@ export function Vocab_LIST({
           highlighted={highlighted_ID === item.id}
           IS_open={openVocab_IDs.has(item?.id)} // This will now reflect the updated Set reference
           TOGGLE_open={(val?: boolean) => TOGGLE_vocab(item.id, val)}
-          current_ACTIONS={currentVocab_ACTIONS?.filter(
+          current_ACTIONS={z_myVocabsCurrent_ACTIONS?.filter(
             (action) => action.vocab_ID === item?.id
           )}
         />
@@ -111,7 +111,7 @@ export function Vocab_LIST({
           IS_debouncing={IS_debouncing}
           debouncedSearch={debouncedSearch}
           search={search}
-          loading_STATE={loading_STATE}
+          z_myVocabsLoading_STATE={z_myVocabsLoading_STATE}
           list_NAME={list_NAME}
           unpaginated_COUNT={unpaginated_COUNT}
           HAS_error={!!vocabs_ERROR}
@@ -123,7 +123,8 @@ export function Vocab_LIST({
             paragraph={vocabs_ERROR?.user_MSG || "Something went wrong"}
           />
         ) : IS_debouncing ||
-          (loading_STATE !== "none" && loading_STATE !== "loading_more") ? (
+          (z_myVocabsLoading_STATE !== "none" &&
+            z_myVocabsLoading_STATE !== "loading_more") ? (
           <VocabsSkeleton_BLOCK />
         ) : (
           <BottomAction_BLOCK
@@ -133,7 +134,7 @@ export function Vocab_LIST({
             RESET_search={RESET_search}
             totalFilteredResults_COUNT={unpaginated_COUNT}
             debouncedSearch={debouncedSearch}
-            loading_STATE={loading_STATE}
+            z_myVocabsLoading_STATE={z_myVocabsLoading_STATE}
             HAS_reachedEnd={HAS_reachedEnd}
             IS_debouncing={IS_debouncing}
           />

@@ -13,7 +13,7 @@ export default function Flashlist_LABEL({
   appliedFiltersCount = 0,
   totalResult_COUNT = 0,
   target = "vocabs",
-  loading_STATE = "none",
+  z_myVocabsLoading_STATE = "none",
   IS_debouncing = false,
   HAS_error = false,
 }: {
@@ -23,7 +23,7 @@ export default function Flashlist_LABEL({
   appliedFiltersCount?: number;
   totalResult_COUNT: number;
   target: string;
-  loading_STATE: loadingState_TYPES;
+  z_myVocabsLoading_STATE: loadingState_TYPES;
   HAS_error: boolean;
 }) {
   const GET_label = () => {
@@ -53,7 +53,7 @@ export default function Flashlist_LABEL({
       }
     }
 
-    switch (loading_STATE) {
+    switch (z_myVocabsLoading_STATE) {
       case "error":
         return "Something went wrong...";
 

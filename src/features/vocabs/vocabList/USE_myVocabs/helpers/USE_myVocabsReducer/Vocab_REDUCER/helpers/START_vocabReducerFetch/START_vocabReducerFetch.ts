@@ -43,7 +43,7 @@ export function START_vocabReducerFetch(
   if (payload === "loading_more")
     return {
       data: { ...state.data },
-      loading_STATE: "loading_more",
+      z_myVocabsLoading_STATE: "loading_more",
     };
 
   // Else start from scratch
@@ -54,6 +54,6 @@ export function START_vocabReducerFetch(
       unpaginated_COUNT: 0,
       HAS_reachedEnd: false,
     },
-    loading_STATE: payload,
+    z_myVocabsLoading_STATE: payload,
   };
 }

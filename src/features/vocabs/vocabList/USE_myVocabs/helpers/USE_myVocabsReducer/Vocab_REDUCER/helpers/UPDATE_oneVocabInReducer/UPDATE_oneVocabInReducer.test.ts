@@ -18,7 +18,7 @@ const mockState = {
     unpaginated_COUNT: 2,
     HAS_reachedEnd: false,
   },
-  loading_STATE: "none",
+  z_myVocabsLoading_STATE: "none",
 } as vocabsReducer_TYPE;
 
 const updatePayload = {
@@ -89,7 +89,7 @@ describe("UPDATE_oneVocabInReducer", () => {
         unpaginated_COUNT: "not-a-number" as unknown as number,
         HAS_reachedEnd: false,
       },
-      loading_STATE: "none",
+      z_myVocabsLoading_STATE: "none",
     } as vocabsReducer_TYPE;
 
     expect(() => UPDATE_oneVocabInReducer(invalidState, updatePayload)).toThrow(
@@ -108,7 +108,7 @@ describe("UPDATE_oneVocabInReducer", () => {
         unpaginated_COUNT: 2,
         HAS_reachedEnd: "notABoolean" as unknown as boolean,
       },
-      loading_STATE: "none",
+      z_myVocabsLoading_STATE: "none",
     } as vocabsReducer_TYPE;
 
     expect(() => UPDATE_oneVocabInReducer(invalidState, updatePayload)).toThrow(
@@ -143,7 +143,7 @@ describe("UPDATE_oneVocabInReducer", () => {
         unpaginated_COUNT: 2,
         HAS_reachedEnd: false,
       },
-      loading_STATE: "none",
+      z_myVocabsLoading_STATE: "none",
     } as vocabsReducer_TYPE;
 
     expect(() => UPDATE_oneVocabInReducer(invalidState, updatePayload)).toThrow(

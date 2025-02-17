@@ -54,7 +54,7 @@ export function USE_myVocabs(args: USE_myVocabs_ARGS) {
   return {
     vocabs: reducer?.data?.vocabs || [],
     vocabs_ERROR: reducer?.error,
-    loading_STATE: reducer?.loading_STATE || "none",
+    z_myVocabsLoading_STATE: reducer?.z_myVocabsLoading_STATE || "none",
     unpaginated_COUNT: reducer?.data?.unpaginated_COUNT || 0,
     HAS_reachedEnd: reducer?.data?.HAS_reachedEnd || false,
     LOAD_moreVocabs,

@@ -86,7 +86,8 @@
     "goToListOfVocab": "Liste anschauen",
     "restoreVocab": "Wiederherstellen",
     "deletePermanently": "Endgültig löschen",
-    "saveVocab": "Vokabel speichern"
+    "saveVocab": "Vokabel speichern",
+    "deleteVocabHard": "Endgültig löschen"
   },
   "pages": {
     "about": {

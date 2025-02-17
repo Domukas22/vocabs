@@ -64,7 +64,7 @@ describe("Vocab_REDUCER", () => {
 
     expect(result.error).toBeInstanceOf(General_ERROR);
     expect(result?.error?.message).toBe(errorMessage);
-    expect(result.loading_STATE).toBe("error"); // Ensure the state has an error and loading state set to "error"
+    expect(result.z_myVocabsLoading_STATE).toBe("error"); // Ensure the state has an error and loading state set to "error"
   });
 
   test("4. Ensures each helper function works as expected (APPEND_manyVocabs)", () => {
@@ -119,6 +119,6 @@ describe("Vocab_REDUCER", () => {
 
     expect(result.error).toBeInstanceOf(General_ERROR);
     expect(result?.error?.message).toBe(errorMessage);
-    expect(result.loading_STATE).toBe("error");
+    expect(result.z_myVocabsLoading_STATE).toBe("error");
   });
 });

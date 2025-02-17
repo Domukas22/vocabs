@@ -8,33 +8,37 @@ import React, { useCallback, useEffect, useMemo } from "react";
 
 import { USE_toggle } from "@/src/hooks/USE_toggle/USE_toggle";
 
-import { Vocab_TYPE } from "@/src/features/vocabs/types";
+import {
+  currentVocabAction_TYPE,
+  Vocab_TYPE,
+} from "@/src/features/vocabs/types";
 import Vocab_FRONT from "../helpers/Vocab_FRONT/Vocab_FRONT";
 import {
   vocabFetch_TYPES,
   vocabList_TYPES,
 } from "../../../../USE_myVocabs/helpers/USE_fetchVocabs/helpers/FETCH_vocabs/types";
-import { currentVocabAction_TYPE } from "@/src/app/(main)/vocabs/[list_id]";
 import VocabBack_BTNS from "../helpers/VocabBack_BTNS/VocabBack_BTNS";
 import VocabBack_TEXT from "../helpers/VocabBack_TEXT/VocabBack_TEXT";
 import { VocabBack_TRS } from "../helpers/VocabBack_TRS/VocabBack_TRS";
+import { useRouter } from "expo-router";
 
 interface VocabProps {
   vocab: Vocab_TYPE;
-  highlighted: boolean;
+  highlighted?: boolean;
   list_TYPE: vocabList_TYPES;
   fetch_TYPE: vocabFetch_TYPES;
   IS_open: boolean;
   TOGGLE_open: (val?: boolean) => void;
-  OPEN_updateVocabModal: (vocab?: Vocab_TYPE) => void;
-  UPDATE_vocabDifficulty: (
+  OPEN_updateVocabModal?: (vocab?: Vocab_TYPE) => void;
+  UPDATE_vocabDifficulty?: (
     vocab_ID: string,
     current_DIFFICULTY: number,
     new_DIFFICULTY: 1 | 2 | 3,
     CLOSE_editBtns: () => void
   ) => Promise<void>;
-  UPDATE_vocabMarked: (vocab_ID: string, val: boolean) => Promise<void>;
-  SOFTDELETE_vocab: (vocab_ID: string) => Promise<void>;
+  UPDATE_vocabMarked?: (vocab_ID: string, val: boolean) => Promise<void>;
+  SOFTDELETE_vocab?: (vocab_ID: string) => Promise<void>;
+  HARDDELETE_vocab?: (vocab_ID: string) => Promise<void>;
   current_ACTIONS: currentVocabAction_TYPE[];
 }
 
@@ -42,7 +46,7 @@ export const Vocab_CARD = React.memo(function Vocab_CARD({
   list_TYPE,
   fetch_TYPE,
   vocab,
-  highlighted,
+  highlighted = false,
   IS_open,
   TOGGLE_open = () => {},
   OPEN_updateVocabModal = () => {},
@@ -50,6 +54,7 @@ export const Vocab_CARD = React.memo(function Vocab_CARD({
   UPDATE_vocabDifficulty = () => Promise.resolve(),
   UPDATE_vocabMarked = () => Promise.resolve(),
   SOFTDELETE_vocab = () => Promise.resolve(),
+  HARDDELETE_vocab = () => Promise.resolve(),
   current_ACTIONS = [],
 }: VocabProps) {
   const trs = vocab?.trs || [];
@@ -111,6 +116,7 @@ export const Vocab_CARD = React.memo(function Vocab_CARD({
             }}
             UPDATE_vocabMarked={UPDATE_vocabMarked}
             SOFTDELETE_vocab={SOFTDELETE_vocab}
+            HARDDELETE_vocab={HARDDELETE_vocab}
             OPEN_vocabCopyModal={() => {}}
             OPEN_vocabPermaDeleteModal={() => {}}
             current_ACTIONS={current_ACTIONS}

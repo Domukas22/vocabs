@@ -15,7 +15,7 @@ const mockState = {
     unpaginated_COUNT: 2,
     HAS_reachedEnd: false,
   },
-  loading_STATE: "none",
+  z_myVocabsLoading_STATE: "none",
 } as vocabsReducer_TYPE;
 
 const validPayload = { id: "3" } as PREPEND_oneVocab_PAYLOAD; // New vocab to add
@@ -107,7 +107,7 @@ describe("PREPEND_oneVocabToReducer", () => {
         unpaginated_COUNT: 2,
         HAS_reachedEnd: false,
       },
-      loading_STATE: "none",
+      z_myVocabsLoading_STATE: "none",
     } as vocabsReducer_TYPE;
 
     const payload = { id: "2" } as PREPEND_oneVocab_PAYLOAD;
@@ -124,7 +124,7 @@ describe("PREPEND_oneVocabToReducer", () => {
         unpaginated_COUNT: 2,
         HAS_reachedEnd: false,
       },
-      loading_STATE: "none",
+      z_myVocabsLoading_STATE: "none",
     } as vocabsReducer_TYPE;
 
     expect(() => PREPEND_oneVocabToReducer(invalidState, validPayload)).toThrow(

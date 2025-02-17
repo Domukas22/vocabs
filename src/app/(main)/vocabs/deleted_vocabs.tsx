@@ -14,7 +14,7 @@ import {
   vocabFetch_TYPES,
   vocabList_TYPES,
 } from "@/src/features/vocabs/vocabList/USE_myVocabs/helpers/USE_fetchVocabs/helpers/FETCH_vocabs/types";
-import Vocabs_FLASHLIST from "@/src/features/vocabs/Vocabs_FLASHLIST/Vocabs_FLASHLIST";
+import MyVocabs_FLASHLIST from "@/src/features/vocabs/Vocabs_FLASHLIST/MyVocabs_FLASHLIST/MyVocabs_FLASHLIST";
 import { ListSettings_MODAL } from "@/src/features/lists/components";
 
 const fetch_TYPE: vocabFetch_TYPES = "deleted";
@@ -39,7 +39,7 @@ export default function DeletedVocabs_PAGE() {
         OPEN_listSettings={() => modals.listSettings.set(true)}
         {...{ search, SET_search }}
       />
-      <Vocabs_FLASHLIST
+      <MyVocabs_FLASHLIST
         RESET_search={() => SET_search("")}
         {...{
           IS_debouncing,

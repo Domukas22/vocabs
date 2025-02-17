@@ -19,7 +19,7 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
 } from "react-native-reanimated";
-import { USE_getActiveFilterCount, USE_getListName } from "@/src/hooks";
+import { USE_getActiveFilterCount, USE_getMyListName } from "@/src/hooks";
 import { useRouter } from "expo-router";
 
 interface ListHeader_PROPS {
@@ -48,7 +48,7 @@ export default function VocabList_NAV({
   const search_REF = useRef<TextInput>(null);
   const { activeFilter_COUNT } = USE_getActiveFilterCount("vocabs");
   const router = useRouter();
-  const { list_NAME } = USE_getListName();
+  const { list_NAME } = USE_getMyListName();
 
   const headerTranslateY = useSharedValue(-34);
   const titleOpacity = useSharedValue(0);

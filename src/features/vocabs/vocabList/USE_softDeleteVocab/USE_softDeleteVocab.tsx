@@ -8,17 +8,17 @@ import { SEND_internalError } from "@/src/utils";
 import { useCallback } from "react";
 
 import { SOFTDELETE_vocab, IS_vocabMarkedBeingDeleted } from "./helpers";
-import { currentVocabAction_TYPE } from "@/src/hooks/z_USE_oneList/z_USE_oneList";
+import { currentVocabAction_TYPE } from "@/src/features/vocabs/Vocabs_FLASHLIST/helpers/z_USE_myVocabs/z_USE_myVocabs";
 
 const function_NAME = "USE_deleteVocab";
 
 export function USE_softDeleteVocab({
-  currentVocab_ACTIONS = [],
+  z_myVocabsCurrent_ACTIONS = [],
   START_vocabAction = () => {},
   STOP_vocabAction = () => {},
   onSuccess = () => {},
 }: {
-  currentVocab_ACTIONS: currentVocabAction_TYPE[];
+  z_myVocabsCurrent_ACTIONS: currentVocabAction_TYPE[];
   START_vocabAction: (new_ACTION: currentVocabAction_TYPE) => void;
   STOP_vocabAction: (vocab_ID: string) => void;
   onSuccess: (vocab_ID: string) => void;
@@ -28,7 +28,8 @@ export function USE_softDeleteVocab({
   const _DELETE_vocab = useCallback(async (vocab_ID: string) => {
     try {
       // If the marked value is already being updated, don't update again
-      if (IS_vocabMarkedBeingDeleted(vocab_ID, currentVocab_ACTIONS)) return;
+      if (IS_vocabMarkedBeingDeleted(vocab_ID, z_myVocabsCurrent_ACTIONS))
+        return;
       START_vocabAction({ action: "deleting", vocab_ID: vocab_ID });
 
       const { success, error } = await SOFTDELETE_vocab(vocab_ID);

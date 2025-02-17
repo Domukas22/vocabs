@@ -61,6 +61,6 @@ export function DELETE_vocabFromReducer(
       unpaginated_COUNT: totalCount,
       HAS_reachedEnd: updatedVocabs.length >= totalCount,
     },
-    loading_STATE: "none",
+    z_myVocabsLoading_STATE: "none",
   };
 }

@@ -22,7 +22,7 @@ export const myVocabsReducerInitial_STATE: vocabsReducer_TYPE = {
     unpaginated_COUNT: 0,
     HAS_reachedEnd: false,
   },
-  loading_STATE: "loading",
+  z_myVocabsLoading_STATE: "loading",
 };
 
 export function USE_myVocabsReducer() {
@@ -45,20 +45,20 @@ export function USE_myVocabsReducer() {
     (payload: PREPEND_oneVocab_PAYLOAD) => {
       dispatch({ type: "PREPEND_oneVocab", payload });
     },
-    [reducer.loading_STATE]
+    [reducer.z_myVocabsLoading_STATE]
   );
   const r_UPDATE_oneVocab = useCallback(
     (payload: UPDATE_oneVocab_PAYLOAD) => {
       dispatch({ type: "UPDATE_oneVocab", payload });
     },
-    [reducer.loading_STATE]
+    [reducer.z_myVocabsLoading_STATE]
   );
 
   const r_DELETE_oneVocab = useCallback(
     (payload: DELETE_oneVocab_PAYLOAD) => {
       dispatch({ type: "DELETE_oneVocab", payload });
     },
-    [reducer.loading_STATE]
+    [reducer.z_myVocabsLoading_STATE]
   );
 
   const r_SET_error = useCallback((payload: SET_error_PAYLOAD) => {

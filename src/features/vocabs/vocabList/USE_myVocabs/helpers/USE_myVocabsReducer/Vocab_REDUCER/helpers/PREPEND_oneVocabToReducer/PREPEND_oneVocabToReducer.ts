@@ -61,6 +61,6 @@ export function PREPEND_oneVocabToReducer(
       unpaginated_COUNT: totalCount,
       HAS_reachedEnd: newVocabs?.length >= totalCount,
     },
-    loading_STATE: "none",
+    z_myVocabsLoading_STATE: "none",
   };
 }

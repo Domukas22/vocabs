@@ -4,15 +4,27 @@
 
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { z_USE_oneList } from "../z_USE_oneList/z_USE_oneList";
+import { z_USE_myVocabs } from "../../features/vocabs/Vocabs_FLASHLIST/helpers/z_USE_myVocabs/z_USE_myVocabs";
 
-export function USE_getListName() {
-  const { list } = z_USE_oneList();
+export function USE_getMyListName() {
+  const { z_myList: list, z_myVocabsLoading_STATE: loading_STATE } =
+    z_USE_myVocabs();
+
   const { t } = useTranslation();
 
-  console.log(list?.id);
   const list_NAME = useMemo(() => {
-    if (!list?.id) return "NO LIST FOUND";
+    if (!list?.id) {
+      if (
+        loading_STATE === "loading" ||
+        loading_STATE === "filtering" ||
+        loading_STATE === "searching" ||
+        loading_STATE === "searching_and_filtering"
+      ) {
+        return "Loading list...";
+      }
+
+      return "NO LIST FOUND";
+    }
     if (list.id === "all-public-vocabs") return t("listName.allPublicVocabs");
     if (list.id === "all-my-vocabs") return t("listName.allMyVocabs");
     if (list.id === "all-my-marked-vocabs") return t("listName.savedVocabs");
@@ -21,7 +33,7 @@ export function USE_getListName() {
     if (list.name) return list.name;
 
     return "NO LIST FOUND";
-  }, [list]);
+  }, [list, loading_STATE]);
 
   return { list_NAME };
 }

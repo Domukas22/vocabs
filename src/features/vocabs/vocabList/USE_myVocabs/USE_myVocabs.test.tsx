@@ -27,7 +27,7 @@ describe("USE_myVocabs", () => {
         HAS_reachedEnd: false,
       },
       error: null,
-      loading_STATE: "loading",
+      z_myVocabsLoading_STATE: "loading",
     };
     const mockLOAD_moreVocabs = jest.fn();
     const mockPREPEND_oneVocab = jest.fn();
@@ -61,7 +61,7 @@ describe("USE_myVocabs", () => {
     // Assert initial state of the hook
     expect(result.current.vocabs).toEqual(["vocab1", "vocab2"]);
     expect(result.current.vocabs_ERROR).toBeNull();
-    expect(result.current.loading_STATE).toBe("loading");
+    expect(result.current.z_myVocabsLoading_STATE).toBe("loading");
     expect(result.current.unpaginated_COUNT).toBe(2);
     expect(result.current.HAS_reachedEnd).toBe(false);
     expect(result.current.LOAD_moreVocabs).toBe(mockLOAD_moreVocabs);
@@ -87,7 +87,7 @@ describe("USE_myVocabs", () => {
         HAS_reachedEnd: false,
       },
       error: null,
-      loading_STATE: "loading",
+      z_myVocabsLoading_STATE: "loading",
     };
 
     (USE_myVocabsReducer as jest.Mock).mockReturnValue({
@@ -138,7 +138,7 @@ describe("USE_myVocabs", () => {
     const mockReducer = {
       data: undefined,
       error: undefined,
-      loading_STATE: undefined,
+      z_myVocabsLoading_STATE: undefined,
     };
 
     (USE_myVocabsReducer as jest.Mock).mockReturnValueOnce({
@@ -162,7 +162,7 @@ describe("USE_myVocabs", () => {
 
     expect(result.current.vocabs).toBeUndefined();
     expect(result.current.vocabs_ERROR).toBeUndefined();
-    expect(result.current.loading_STATE).toBeUndefined();
+    expect(result.current.z_myVocabsLoading_STATE).toBeUndefined();
     expect(result.current.unpaginated_COUNT).toBeUndefined();
     expect(result.current.HAS_reachedEnd).toBeUndefined();
   });

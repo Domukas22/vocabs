@@ -9,8 +9,8 @@ export function USE_isLoadingStateNone(state: myVocabs_REDUCER_RESPONSE_TYPE): {
   IS_loadingStateNone: boolean;
 } {
   const IS_loadingStateNone = useMemo(
-    () => state.loading_STATE === "none",
-    [state.loading_STATE]
+    () => state.z_myVocabsLoading_STATE === "none",
+    [state.z_myVocabsLoading_STATE]
   );
 
   return { IS_loadingStateNone };

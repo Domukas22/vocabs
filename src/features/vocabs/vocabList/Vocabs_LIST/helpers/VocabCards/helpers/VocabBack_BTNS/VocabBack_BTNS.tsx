@@ -9,36 +9,25 @@ import {
   ICON_difficultyDot,
   ICON_edit,
   ICON_restore,
-  ICON_shuffle,
-  ICON_trash,
   ICON_X,
 } from "@/src/components/1_grouped/icons/icons";
 
-import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
-import { Vocab_TYPE } from "@/src/features/vocabs/types";
+import {
+  currentVocabAction_TYPE,
+  Vocab_TYPE,
+} from "@/src/features/vocabs/types";
 import {
   vocabFetch_TYPES,
   vocabList_TYPES,
 } from "@/src/features/vocabs/vocabList/USE_myVocabs/helpers/USE_fetchVocabs/helpers/FETCH_vocabs/types";
 import { USE_toggle } from "@/src/hooks";
 import { useTranslation } from "react-i18next";
-import { View, Animated, Easing, ActivityIndicator } from "react-native";
+import { View, ActivityIndicator } from "react-native";
 import { useToast } from "react-native-toast-notifications";
 import VocabBackDifficultyEdit_BTNS from "../VocabBackDifficultyEdit_BTNS/VocabBackDifficultyEdit_BTNS";
-import React, {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  memo,
-  useCallback,
-} from "react";
+import React, { useMemo, memo } from "react";
 import { MyColors } from "@/src/constants/MyColors";
-import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
-import { currentVocabAction_TYPE } from "@/src/app/(main)/vocabs/[list_id]";
-import { USE_updateVocabDifficulty } from "@/src/features/vocabs/vocabList/USE_updateVocabDifficulty/USE_updateVocabDifficulty";
-import { USE_markVocab } from "@/src/features/vocabs/vocabList/USE_markVocab/USE_markVocab";
-import { UPDATE_oneVocab_PAYLOAD } from "@/src/features/vocabs/vocabList/USE_myVocabs/helpers/USE_myVocabsReducer/Vocab_REDUCER/types";
+import { useRouter } from "expo-router";
 
 interface VocabBackBtns_PROPS {
   vocab: Vocab_TYPE;
@@ -58,6 +47,7 @@ interface VocabBackBtns_PROPS {
   ) => Promise<void>;
   UPDATE_vocabMarked: (vocab_ID: string, val: boolean) => Promise<void>;
   SOFTDELETE_vocab: (vocab_ID: string) => Promise<void>;
+  HARDDELETE_vocab: (vocab_ID: string) => Promise<void>;
   current_ACTIONS: currentVocabAction_TYPE[];
   test: (num: number) => void;
 }
@@ -78,9 +68,10 @@ const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
   UPDATE_vocabDifficulty = () => Promise.resolve(),
   UPDATE_vocabMarked = () => Promise.resolve(),
   SOFTDELETE_vocab = () => Promise.resolve(),
+  HARDDELETE_vocab = () => Promise.resolve(),
 }: VocabBackBtns_PROPS) {
   const { t } = useTranslation();
-  const toast = useToast();
+  const router = useRouter();
 
   const [SHOW_difficultyEdits, TOGGLE_difficultyEdits, SET_difficultyEdit] =
     USE_toggle(false);
@@ -202,7 +193,11 @@ const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
   const GoToList_BTN = memo(() => (
     <Btn
       type="simple"
-      onPress={GO_toListOfVocab}
+      onPress={() => {
+        if (vocab?.list_id) {
+          router.replace(`/(main)/vocabs/${vocab?.list_id}`);
+        }
+      }}
       text={t("btn.goToListOfVocab")}
       iconRight={<ICON_arrow direction="right" />}
       text_STYLES={{ marginRight: "auto" }}
@@ -212,7 +207,7 @@ const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
   const Restore_BTN = memo(() => (
     <Btn
       type="simple"
-      onPress={GO_toListOfVocab}
+      onPress={() => {}}
       text={t("btn.restoreVocab")}
       iconRight={<ICON_restore />}
       text_STYLES={{ marginRight: "auto", color: MyColors.text_green }}
@@ -284,8 +279,8 @@ const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
       type="simple"
       onPress={OPEN_vocabCopyModal}
       text={t("btn.saveVocab")}
-      iconRight={<ICON_X color="primary" big />}
-      text_STYLES={{ marginRight: "auto", color: MyColors.text_primary }}
+      iconRight={<ICON_X color="green" big />}
+      text_STYLES={{ marginRight: "auto", color: MyColors.text_green }}
     />
   ));
 
@@ -301,23 +296,32 @@ const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
     )
   );
 
-  const CloseBtn_WRAP = memo(() =>
-    SHOW_deleteConfirmation ? (
-      <View style={{ flexDirection: "row" }}>
-        {!IS_deleting ? (
-          <X_BTN onPress={() => SET_deleteConfirmation(false)} />
-        ) : null}
-        <Delete_BTN
-          text={t("btn.deleteVocab")}
-          onPress={() => SOFTDELETE_vocab(vocab?.id)}
-        />
-      </View>
-    ) : (
-      <InlineBtn_WRAP>
-        <DeleteIcon_BTN />
-        <Close_BTN />
-      </InlineBtn_WRAP>
-    )
+  const CloseBtn_WRAP = memo(
+    ({ deleteType = "soft" }: { deleteType: "hard" | "soft" }) =>
+      SHOW_deleteConfirmation ? (
+        <View style={{ flexDirection: "row" }}>
+          {!IS_deleting ? (
+            <X_BTN onPress={() => SET_deleteConfirmation(false)} />
+          ) : null}
+          <Delete_BTN
+            text={
+              deleteType === "soft"
+                ? t("btn.deleteVocab")
+                : t("btn.deleteVocabHard")
+            }
+            onPress={() =>
+              deleteType === "hard"
+                ? HARDDELETE_vocab(vocab?.id)
+                : SOFTDELETE_vocab(vocab?.id)
+            }
+          />
+        </View>
+      ) : (
+        <InlineBtn_WRAP>
+          <DeleteIcon_BTN />
+          <Close_BTN />
+        </InlineBtn_WRAP>
+      )
   );
 
   if (list_TYPE === "private") {
@@ -325,7 +329,7 @@ const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
       return (
         <AllBtn_WRAP>
           <MyVocab3Btn_WRAP />
-          <CloseBtn_WRAP />
+          <CloseBtn_WRAP deleteType="soft" />
         </AllBtn_WRAP>
       );
     }
@@ -334,7 +338,7 @@ const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
         <AllBtn_WRAP>
           <MyVocab3Btn_WRAP />
           <GoToList_BTN />
-          <CloseBtn_WRAP />
+          <CloseBtn_WRAP deleteType="soft" />
         </AllBtn_WRAP>
       );
     }
@@ -342,8 +346,7 @@ const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
       return (
         <AllBtn_WRAP>
           <Restore_BTN />
-          <DeleteForever_BTN />
-          <Close_BTN />
+          <CloseBtn_WRAP deleteType="hard" />
         </AllBtn_WRAP>
       );
     }
@@ -352,6 +355,7 @@ const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
   return (
     <AllBtn_WRAP>
       <Copy_BTN />
+      <GoToList_BTN />
       <Close_BTN />
     </AllBtn_WRAP>
   );

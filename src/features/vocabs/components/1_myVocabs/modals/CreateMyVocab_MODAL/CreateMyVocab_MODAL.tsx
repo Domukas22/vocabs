@@ -40,7 +40,7 @@ import { USE_modalToggles } from "@/src/hooks/index";
 import List_MODEL from "@/src/db/models/List_MODEL";
 import { FETCH_langs } from "@/src/features/languages/functions/fetch/FETCH_langs/FETCH_langs";
 import { List_TYPE } from "@/src/types/general_TYPES";
-import { z_USE_oneList } from "@/src/hooks/z_USE_oneList/z_USE_oneList";
+import { z_USE_myVocabs } from "@/src/features/vocabs/Vocabs_FLASHLIST/helpers/z_USE_myVocabs/z_USE_myVocabs";
 
 interface CreateMyVocabModal_PROPS {
   IS_open: boolean;
@@ -61,7 +61,7 @@ export function CreateMyVocab_MODAL({
 }: CreateMyVocabModal_PROPS) {
   const { t } = useTranslation();
 
-  const { list: initial_LIST } = z_USE_oneList();
+  const { z_myList: initial_LIST } = z_USE_myVocabs();
 
   const { modals } = USE_modalToggles([
     "selectLangs",

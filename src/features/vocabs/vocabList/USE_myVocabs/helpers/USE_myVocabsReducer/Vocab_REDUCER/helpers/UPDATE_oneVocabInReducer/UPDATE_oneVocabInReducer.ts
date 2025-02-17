@@ -53,6 +53,6 @@ export function UPDATE_oneVocabInReducer(
       unpaginated_COUNT: state.data.unpaginated_COUNT,
       HAS_reachedEnd: state.data.HAS_reachedEnd,
     },
-    loading_STATE: "none",
+    z_myVocabsLoading_STATE: "none",
   };
 }

@@ -35,6 +35,6 @@ export type vocabsReducer_TYPE = {
     unpaginated_COUNT: number;
     HAS_reachedEnd: boolean;
   };
-  loading_STATE?: loadingState_TYPES;
+  z_myVocabsLoading_STATE?: loadingState_TYPES;
   error?: General_ERROR;
 };

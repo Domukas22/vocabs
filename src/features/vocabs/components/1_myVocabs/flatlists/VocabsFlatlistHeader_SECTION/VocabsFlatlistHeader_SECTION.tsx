@@ -20,7 +20,7 @@ type VocabsFlatlistHeader_SECTIONProps = {
   search: string;
   IS_debouncing: boolean;
   unpaginated_COUNT: number | null;
-  loading_STATE: loadingState_TYPES;
+  z_myVocabsLoading_STATE: loadingState_TYPES;
   list_NAME: string | undefined;
   HAS_error: boolean;
 };
@@ -29,7 +29,7 @@ export function VocabsFlatlistHeader_SECTION({
   search,
   debouncedSearch,
   IS_debouncing,
-  loading_STATE = "none",
+  z_myVocabsLoading_STATE = "none",
   list_NAME = "NO LIST FOUND",
   unpaginated_COUNT = 0,
   HAS_error = false,
@@ -65,7 +65,7 @@ export function VocabsFlatlistHeader_SECTION({
 
         <Flashlist_LABEL
           {...{
-            loading_STATE,
+            z_myVocabsLoading_STATE,
             debouncedSearch,
             appliedFiltersCount,
             IS_debouncing,

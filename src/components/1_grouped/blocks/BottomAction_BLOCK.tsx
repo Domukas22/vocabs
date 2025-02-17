@@ -12,7 +12,7 @@ import { loadingState_TYPES } from "@/src/types/general_TYPES";
 
 export default function BottomAction_BLOCK({
   type = "list",
-  loading_STATE,
+  z_myVocabsLoading_STATE,
   debouncedSearch = "",
   IS_debouncing = false,
   HAS_reachedEnd = false,
@@ -23,7 +23,7 @@ export default function BottomAction_BLOCK({
   RESET_search = () => {},
 }: {
   type: "list" | "vocabs" | "users";
-  loading_STATE: loadingState_TYPES;
+  z_myVocabsLoading_STATE: loadingState_TYPES;
   debouncedSearch: string;
   IS_debouncing: boolean;
   HAS_reachedEnd: boolean;
@@ -118,14 +118,16 @@ export default function BottomAction_BLOCK({
           totalFilteredResults_COUNT > 0 &&
           !IS_debouncing && (
             <Btn
-              text={loading_STATE !== "loading_more" ? "Load more" : ""}
+              text={
+                z_myVocabsLoading_STATE !== "loading_more" ? "Load more" : ""
+              }
               iconLeft={
-                loading_STATE === "loading_more" ? (
+                z_myVocabsLoading_STATE === "loading_more" ? (
                   <ActivityIndicator color="white" />
                 ) : null
               }
               onPress={async () => {
-                if (loading_STATE !== "loading_more") {
+                if (z_myVocabsLoading_STATE !== "loading_more") {
                   await LOAD_more();
                 }
               }}

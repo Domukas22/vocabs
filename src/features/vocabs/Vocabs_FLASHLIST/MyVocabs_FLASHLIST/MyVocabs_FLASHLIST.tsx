@@ -3,33 +3,26 @@
 //
 
 import Styled_FLASHLIST from "@/src/components/3_other/Styled_FLASHLIST/Styled_FLASHLIST";
-import List_MODEL from "@/src/db/models/List_MODEL";
-import {
-  USE_showListHeaderTitle,
-  USE_highlighedId,
-  USE_zustand,
-  USE_getListName,
-} from "@/src/hooks";
+import { USE_zustand, USE_getMyListName } from "@/src/hooks";
 import { USE_toast } from "@/src/hooks/USE_toast/USE_toast";
-import { z_USE_oneList } from "@/src/hooks/z_USE_oneList/z_USE_oneList";
+import { z_USE_myVocabs } from "@/src/features/vocabs/Vocabs_FLASHLIST/helpers/z_USE_myVocabs/z_USE_myVocabs";
 import { USE_vocabZustandActions } from "@/src/hooks/USE_vocabZustandActions/USE_vocabZustandActions";
 import { FlashList } from "@shopify/flash-list";
-import React, { useEffect, useMemo, useRef } from "react";
-import { VocabsFlatlistHeader_SECTION } from "../components";
-import { USE_openVocabs } from "../vocabList/USE_openVocabs/USE_openVocabs";
-import { Vocab_CARD } from "../vocabList/Vocabs_LIST/helpers";
+import React, { useEffect, useRef } from "react";
+import { VocabsFlatlistHeader_SECTION } from "../../components";
+import { USE_openVocabs } from "../../vocabList/USE_openVocabs/USE_openVocabs";
+import { Vocab_CARD } from "../../vocabList/Vocabs_LIST/helpers";
 import * as Haptics from "expo-haptics";
 import {
   vocabFetch_TYPES,
   vocabList_TYPES,
-} from "../vocabList/USE_myVocabs/helpers/USE_fetchVocabs/helpers/FETCH_vocabs/types";
-import { VocabFlatlistFooter_SECTION } from "./helpers";
+} from "../../vocabList/USE_myVocabs/helpers/USE_fetchVocabs/helpers/FETCH_vocabs/types";
+import { VocabFlatlistFooter_SECTION } from "../helpers";
 import { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
-import { useTranslation } from "react-i18next";
-import { USE_listIdInParams } from "../vocabList/USE_listIdInParams/USE_listIdInParams";
-import { Vocab_TYPE } from "../types";
+import { USE_listIdInParams } from "../../vocabList/USE_listIdInParams/USE_listIdInParams";
+import { Vocab_TYPE } from "../../types";
 
-export default function Vocabs_FLASHLIST({
+export default function MyVocabs_FLASHLIST({
   IS_debouncing = false,
   search = "",
   debouncedSearch = "",
@@ -43,7 +36,6 @@ export default function Vocabs_FLASHLIST({
   IS_debouncing: boolean;
   search: string;
   debouncedSearch: string;
-
   list_TYPE: vocabList_TYPES;
   fetch_TYPE: vocabFetch_TYPES;
   OPEN_createVocabModal?: () => void;
@@ -53,8 +45,6 @@ export default function Vocabs_FLASHLIST({
 }) {
   const { urlParamsList_ID } = USE_listIdInParams();
   const list_REF = useRef<FlashList<any>>(null);
-  const { highlighted_ID, highlight: HIGHLIGHT_vocab } = USE_highlighedId();
-  const { t } = useTranslation();
 
   const { TOAST } = USE_toast();
   const { openVocab_IDs, TOGGLE_vocab } = USE_openVocabs();
@@ -64,21 +54,22 @@ export default function Vocabs_FLASHLIST({
     z_vocabDisplay_SETTINGS;
 
   const {
-    list,
-    vocabs,
-    HAS_reachedEnd,
-    unpaginated_COUNT,
-    loading_STATE,
-    currentVocab_ACTIONS,
-    error,
-    oL_FETCH,
-    r_MARK_vocab,
-    r_UPDATE_vocabDifficulty,
-    r_SOFTDELETE_vocab,
-    r_SET_targetVocab,
-  } = z_USE_oneList();
+    z_myVocabs,
+    z_HAVE_myVocabsReachedEnd,
+    z_myVocabsUnpaginated_COUNT,
+    z_myVocabsLoading_STATE,
+    z_myVocabsCurrent_ACTIONS,
+    z_myVocabs_ERROR: error,
+    z_myVocabsHighlighted_ID,
+    z_FETCH_myVocabs,
+    z_MARK_myVocab,
+    z_UPDATE_myVocabDifficulty,
+    z_SOFTDELETE_myVocab,
+    z_HARDDELETE_myVocab,
+    z_SET_myTargetVocab,
+  } = z_USE_myVocabs();
 
-  const { list_NAME } = USE_getListName();
+  const { list_NAME } = USE_getMyListName();
 
   const { FETCH_vocabs } = USE_vocabZustandActions({
     user_id: z_user?.id || "",
@@ -92,7 +83,7 @@ export default function Vocabs_FLASHLIST({
 
     sortDirection,
     sorting,
-    oL_FETCH,
+    FETCH_v: z_FETCH_myVocabs,
   });
 
   // Refect on search / soritng / filter / list_id change
@@ -107,17 +98,19 @@ export default function Vocabs_FLASHLIST({
     urlParamsList_ID,
   ]);
 
+  console.log();
+
   return (
     <Styled_FLASHLIST
       onScroll={handleScroll}
       data={
         IS_debouncing ||
-        !!error ||
-        (loading_STATE !== "none" &&
-          loading_STATE !== "error" &&
-          loading_STATE !== "loading_more")
+        error ||
+        (z_myVocabsLoading_STATE !== "none" &&
+          z_myVocabsLoading_STATE !== "error" &&
+          z_myVocabsLoading_STATE !== "loading_more")
           ? []
-          : vocabs || []
+          : z_myVocabs || []
       }
       flashlist_REF={list_REF}
       renderItem={({ item }) => (
@@ -131,13 +124,13 @@ export default function Vocabs_FLASHLIST({
             new_DIFFICULTY: 1 | 2 | 3,
             CLOSE_editBtns: () => void
           ) => {
-            await r_UPDATE_vocabDifficulty(
+            await z_UPDATE_myVocabDifficulty(
               vocab_ID,
               current_DIFFICULTY,
               new_DIFFICULTY,
               {
                 onSuccess: () => {
-                  TOAST("success", "Difficulty updated", "top"),
+                  TOAST("success", "Difficulty updated", "bottom"),
                     CLOSE_editBtns();
                   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
                 },
@@ -147,12 +140,12 @@ export default function Vocabs_FLASHLIST({
             );
           }}
           UPDATE_vocabMarked={(vocab_ID: string, val: boolean) =>
-            r_MARK_vocab(vocab_ID, val, {
+            z_MARK_myVocab(vocab_ID, val, {
               onSuccess: () => {
                 TOAST(
                   "success",
                   val ? "Vocab marked" : "Vocab unmarked",
-                  "top"
+                  "bottom"
                 );
 
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
@@ -161,28 +154,35 @@ export default function Vocabs_FLASHLIST({
             })
           }
           SOFTDELETE_vocab={(vocab_ID: string) =>
-            r_SOFTDELETE_vocab(vocab_ID, {
-              onSuccess: () => TOAST("success", "Vocab deleted", "top"),
+            z_SOFTDELETE_myVocab(vocab_ID, {
+              onSuccess: () => TOAST("success", "Vocab deleted", "bottom"),
+              onFailure: (err) => TOAST("error", err.user_MSG, "bottom", 10000),
+            })
+          }
+          HARDDELETE_vocab={(vocab_ID: string) =>
+            z_HARDDELETE_myVocab(vocab_ID, {
+              onSuccess: () =>
+                TOAST("success", "Vocab deleted forever", "bottom"),
               onFailure: (err) => TOAST("error", err.user_MSG, "bottom", 10000),
             })
           }
           OPEN_updateVocabModal={(vocab: Vocab_TYPE) => {
-            r_SET_targetVocab(vocab);
+            z_SET_myTargetVocab(vocab);
             OPEN_updateVocabModal(vocab);
           }}
-          highlighted={highlighted_ID === item.id}
+          highlighted={z_myVocabsHighlighted_ID === item.id}
           IS_open={openVocab_IDs.has(item?.id)} // This will now reflect the updated Set reference
           TOGGLE_open={(val?: boolean) => TOGGLE_vocab(item.id, val)}
-          current_ACTIONS={currentVocab_ACTIONS?.filter(
+          current_ACTIONS={z_myVocabsCurrent_ACTIONS?.filter(
             (action) => action.vocab_ID === item?.id
           )}
         />
       )}
       keyExtractor={(item) => "Vocab" + item.id}
       extraData={[
-        highlighted_ID,
+        z_myVocabsHighlighted_ID,
         openVocab_IDs,
-        currentVocab_ACTIONS,
+        z_myVocabsCurrent_ACTIONS,
         // UPDATE_difficulty,
       ]}
       ListHeaderComponent={
@@ -190,9 +190,9 @@ export default function Vocabs_FLASHLIST({
           IS_debouncing={IS_debouncing}
           debouncedSearch={debouncedSearch}
           search={search}
-          loading_STATE={loading_STATE}
+          z_myVocabsLoading_STATE={z_myVocabsLoading_STATE}
           list_NAME={list_NAME}
-          unpaginated_COUNT={unpaginated_COUNT}
+          unpaginated_COUNT={z_myVocabsUnpaginated_COUNT}
           HAS_error={!!error}
         />
       }
@@ -201,12 +201,13 @@ export default function Vocabs_FLASHLIST({
           LOAD_more={() => FETCH_vocabs(true)}
           OPEN_createVocabModal={OPEN_createVocabModal}
           RESET_search={RESET_search}
+          unpaginated_COUNT={z_myVocabsUnpaginated_COUNT}
+          HAS_reachedEnd={z_HAVE_myVocabsReachedEnd}
           {...{
-            HAS_reachedEnd,
             IS_debouncing,
-            loading_STATE,
+            z_myVocabsLoading_STATE,
             debouncedSearch,
-            unpaginated_COUNT,
+
             error,
           }}
         />

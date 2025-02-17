@@ -14,7 +14,9 @@ export function USE_refetchVocabs({
 }: {
   search: string;
   targetList_ID: string | undefined;
-  REFETCH_vocabs: (loading_STATE: loadingState_TYPES) => Promise<void>;
+  REFETCH_vocabs: (
+    z_myVocabsLoading_STATE: loadingState_TYPES
+  ) => Promise<void>;
 }) {
   const { z_vocabDisplay_SETTINGS } = USE_zustand();
   const { difficultyFilters, langFilters, sortDirection, sorting } =
@@ -23,14 +25,14 @@ export function USE_refetchVocabs({
   useEffect(() => {
     // this will always return something, so no need to handle reducer errors here
     // + the REFETCH_vocabs function handles the reducer error
-    const loading_STATE = DETERMINE_loadingState({
+    const z_myVocabsLoading_STATE = DETERMINE_loadingState({
       search,
       targetList_ID,
       difficultyFilters,
       langFilters,
     });
 
-    REFETCH_vocabs(loading_STATE);
+    REFETCH_vocabs(z_myVocabsLoading_STATE);
   }, [
     search,
     difficultyFilters,

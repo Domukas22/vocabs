@@ -68,6 +68,6 @@ export function APPEND_manyVocabsToReducer(
       unpaginated_COUNT: payload.unpaginated_COUNT,
       HAS_reachedEnd: updatedVocabs.length >= payload.unpaginated_COUNT,
     },
-    loading_STATE: "none",
+    z_myVocabsLoading_STATE: "none",
   };
 }

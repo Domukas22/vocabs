@@ -49,7 +49,7 @@ export function Vocab_REDUCER(
         message: error?.message,
         errorToSpread: error,
       }),
-      loading_STATE: "error",
+      z_myVocabsLoading_STATE: "error",
     };
   }
 }

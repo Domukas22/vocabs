@@ -17,7 +17,7 @@ import {
   vocabFetch_TYPES,
   vocabList_TYPES,
 } from "@/src/features/vocabs/vocabList/USE_myVocabs/helpers/USE_fetchVocabs/helpers/FETCH_vocabs/types";
-import Vocabs_FLASHLIST from "@/src/features/vocabs/Vocabs_FLASHLIST/Vocabs_FLASHLIST";
+import MyVocabs_FLASHLIST from "@/src/features/vocabs/Vocabs_FLASHLIST/MyVocabs_FLASHLIST/MyVocabs_FLASHLIST";
 
 const fetch_TYPE: vocabFetch_TYPES = "all";
 const list_TYPE: vocabList_TYPES = "private";
@@ -41,7 +41,7 @@ export default function AllVocabs_PAGE() {
         OPEN_create={() => modals.createVocab.set(true)}
         {...{ search, SET_search }}
       />
-      <Vocabs_FLASHLIST
+      <MyVocabs_FLASHLIST
         OPEN_createVocabModal={() => modals.createVocab.set(true)}
         OPEN_updateVocabModal={() => modals.updateVocab.set(true)}
         RESET_search={() => SET_search("")}

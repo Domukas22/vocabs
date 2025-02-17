@@ -50,7 +50,7 @@ import { RenameList_MODAL } from "../RenameList_MODAL/RenameList_MODAL";
 import { SelectMultipleLanguages_MODAL } from "@/src/features/languages/components";
 import { USE_modalToggles } from "@/src/hooks/index";
 import { List_TYPE } from "@/src/types/general_TYPES";
-import { z_USE_oneList } from "@/src/hooks/z_USE_oneList/z_USE_oneList";
+import { z_USE_myVocabs } from "@/src/features/vocabs/Vocabs_FLASHLIST/helpers/z_USE_myVocabs/z_USE_myVocabs";
 
 interface ListSettingsModal_PROPS {
   IS_open: boolean;
@@ -66,7 +66,7 @@ export function ListSettings_MODAL({
   const { sync } = USE_sync();
   const toast = useToast();
   const router = useRouter();
-  const { list } = z_USE_oneList();
+  const { z_myList: list } = z_USE_myVocabs();
 
   const { modals } = USE_modalToggles([
     "deleteList",

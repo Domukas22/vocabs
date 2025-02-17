@@ -19,13 +19,13 @@ describe("SET_reducerError", () => {
   test("1. Sets the error in the reducer when payload is provided", () => {
     const updatedState = SET_reducerError(errorPayload);
     expect(updatedState?.error).toEqual(errorPayload);
-    expect(updatedState?.loading_STATE).toBe("error");
+    expect(updatedState?.z_myVocabsLoading_STATE).toBe("error");
   });
 
   test("2. Sets the alternative error if payload is undefined", () => {
     const invalidPayload = undefined as unknown as SET_error_PAYLOAD;
     const updatedState = SET_reducerError(invalidPayload);
     expect(updatedState?.error).toEqual(alternativeError);
-    expect(updatedState?.loading_STATE).toBe("error");
+    expect(updatedState?.z_myVocabsLoading_STATE).toBe("error");
   });
 });

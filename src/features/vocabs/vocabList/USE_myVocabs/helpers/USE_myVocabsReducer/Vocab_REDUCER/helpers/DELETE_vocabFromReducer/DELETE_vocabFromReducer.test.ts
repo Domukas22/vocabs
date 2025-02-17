@@ -15,7 +15,7 @@ const mockState = {
     unpaginated_COUNT: 2,
     HAS_reachedEnd: false,
   },
-  loading_STATE: "none",
+  z_myVocabsLoading_STATE: "none",
 } as vocabsReducer_TYPE;
 
 const validPayload = "2" as DELETE_oneVocab_PAYLOAD; // id to delete
@@ -104,7 +104,7 @@ describe("DELETE_vocabFromReducer", () => {
         unpaginated_COUNT: 2,
         HAS_reachedEnd: false,
       },
-      loading_STATE: "none",
+      z_myVocabsLoading_STATE: "none",
     } as vocabsReducer_TYPE;
 
     expect(() => DELETE_vocabFromReducer(invalidState, "1")).toThrow(

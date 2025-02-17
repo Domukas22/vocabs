@@ -15,7 +15,7 @@ const mockState = {
     unpaginated_COUNT: 2,
     HAS_reachedEnd: false,
   },
-  loading_STATE: "none",
+  z_myVocabsLoading_STATE: "none",
 } as vocabsReducer_TYPE;
 
 const validPayload = {
@@ -155,7 +155,7 @@ describe("APPEND_manyVocabsToReducer", () => {
         unpaginated_COUNT: 4,
         HAS_reachedEnd: false,
       },
-      loading_STATE: "none",
+      z_myVocabsLoading_STATE: "none",
     } as vocabsReducer_TYPE;
 
     const validPayload = {

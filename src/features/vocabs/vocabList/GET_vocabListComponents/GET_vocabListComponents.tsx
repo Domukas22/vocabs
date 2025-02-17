@@ -21,7 +21,7 @@ interface GET_vocabListComponents_PROPS {
   IS_debouncing: boolean;
   debouncedSearch: string;
   search: string;
-  loading_STATE: loadingState_TYPES;
+  z_myVocabsLoading_STATE: loadingState_TYPES;
   list_NAME: string;
   unpaginated_COUNT: number;
   vocabs_ERROR: General_ERROR | undefined;
@@ -38,7 +38,7 @@ interface GET_vocabListComponents_PROPS {
     vocab_ID: string,
     new_DIFFICULTY: 1 | 2 | 3
   ) => Promise<void>;
-  currentVocab_ACTIONS: currentVocabAction_TYPE[];
+  z_myVocabsCurrent_ACTIONS: currentVocabAction_TYPE[];
   UPDATE_vocabMarked: (vocab_ID: string, val: boolean) => Promise<void>;
 }
 
@@ -46,7 +46,7 @@ export function GET_vocabListComponents({
   IS_debouncing,
   debouncedSearch,
   search,
-  loading_STATE,
+  z_myVocabsLoading_STATE,
   list_NAME,
   unpaginated_COUNT,
   vocabs_ERROR,
@@ -59,7 +59,7 @@ export function GET_vocabListComponents({
   OPEN_modalUpdateVocab = () => {},
   OPEN_vocabSoftDeleteModal = (vocab: Vocab_TYPE) => {},
   UPDATE_vocabDifficulty = () => Promise.resolve(),
-  currentVocab_ACTIONS = [],
+  z_myVocabsCurrent_ACTIONS = [],
   RESET_search = () => {},
   UPDATE_vocabMarked = () => Promise.resolve(),
 }: GET_vocabListComponents_PROPS) {
@@ -68,7 +68,7 @@ export function GET_vocabListComponents({
       IS_debouncing={IS_debouncing}
       debouncedSearch={debouncedSearch}
       search={search}
-      loading_STATE={loading_STATE}
+      z_myVocabsLoading_STATE={z_myVocabsLoading_STATE}
       list_NAME={list_NAME}
       unpaginated_COUNT={unpaginated_COUNT}
       HAS_error={!!vocabs_ERROR}
@@ -81,7 +81,8 @@ export function GET_vocabListComponents({
         paragraph={vocabs_ERROR?.user_MSG || "Something went wrong"}
       />
     ) : IS_debouncing ||
-      (loading_STATE !== "none" && loading_STATE !== "loading_more") ? (
+      (z_myVocabsLoading_STATE !== "none" &&
+        z_myVocabsLoading_STATE !== "loading_more") ? (
       <VocabsSkeleton_BLOCK />
     ) : (
       <BottomAction_BLOCK
@@ -91,7 +92,7 @@ export function GET_vocabListComponents({
         RESET_search={RESET_search}
         totalFilteredResults_COUNT={unpaginated_COUNT}
         debouncedSearch={debouncedSearch}
-        loading_STATE={loading_STATE}
+        z_myVocabsLoading_STATE={z_myVocabsLoading_STATE}
         HAS_reachedEnd={HAS_reachedEnd}
         IS_debouncing={IS_debouncing}
       />
@@ -121,7 +122,7 @@ export function GET_vocabListComponents({
       //   highlighted={highlighted_ID === vocab.id}
       //   IS_open={openVocab_IDs.has(vocab?.id)} // This will now reflect the updated Set reference
       //   TOGGLE_open={(val?: boolean) => TOGGLE_vocab(vocab.id, val)}
-      //   current_ACTIONS={currentVocab_ACTIONS?.filter(
+      //   current_ACTIONS={z_myVocabsCurrent_ACTIONS?.filter(
       //     (action) => action.vocab_ID === vocab?.id
       //   )}
       // />
@@ -136,7 +137,7 @@ export function GET_vocabListComponents({
           new_DIFFICULTY: 1 | 2 | 3,
           CLOSE_editBtns: () => void
         ) => {
-          await r_UPDATE_vocabDifficulty(
+          await z_UPDATE_myVocabDifficulty(
             vocab_ID,
             current_DIFFICULTY,
             new_DIFFICULTY,
@@ -150,7 +151,7 @@ export function GET_vocabListComponents({
           );
         }}
         UPDATE_vocabMarked={(vocab_ID: string, val: boolean) =>
-          r_MARK_vocab(vocab_ID, val, {
+          z_MARK_myVocab(vocab_ID, val, {
             onSuccess: () => {
               TOAST("success", val ? "Vocab marked" : "Vocab unmarked", "top");
 
@@ -160,7 +161,7 @@ export function GET_vocabListComponents({
           })
         }
         SOFTDELETE_vocab={(vocab_ID: string) =>
-          r_SOFTDELETE_vocab(vocab_ID, {
+          z_SOFTDELETE_myVocab(vocab_ID, {
             onSuccess: () => TOAST("success", "Vocab deleted", "top"),
             onFailure: (err) => TOAST("error", err.user_MSG, "bottom", 10000),
           })
@@ -168,7 +169,7 @@ export function GET_vocabListComponents({
         highlighted={highlighted_ID === item.id}
         IS_open={openVocab_IDs.has(item?.id)} // This will now reflect the updated Set reference
         TOGGLE_open={(val?: boolean) => TOGGLE_vocab(item.id, val)}
-        current_ACTIONS={currentVocab_ACTIONS?.filter(
+        current_ACTIONS={z_myVocabsCurrent_ACTIONS?.filter(
           (action) => action.vocab_ID === item?.id
         )}
       />
