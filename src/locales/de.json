@@ -304,5 +304,11 @@
   },
   "success": {
     "updatedVocabDifficulty": "Vokabelschwierigkeit aktualisiert"
+  },
+  "listName": {
+    "allMyVocabs": "🅿️ Alle meine Vokabeln",
+    "savedVocabs": "⭐ Gemerkte Vokabeln",
+    "deletedVocabs": "🗑️ Gelöschte Vokabeln",
+    "allPublicVocabs": "🔤 Alle öffentliche Vokabeln"
   }
 }

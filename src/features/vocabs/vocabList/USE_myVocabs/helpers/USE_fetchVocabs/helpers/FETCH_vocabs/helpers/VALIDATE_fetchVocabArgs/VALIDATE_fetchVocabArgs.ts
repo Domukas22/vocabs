@@ -11,7 +11,7 @@ export function VALIDATE_fetchVocabArgs(args: FETCH_myVocabs_ARG_TYPES) {
   const {
     fetch_TYPE,
     user_id,
-    targetList_ID,
+    list_id,
     langFilters,
     difficultyFilters,
     sortDirection,
@@ -33,7 +33,7 @@ export function VALIDATE_fetchVocabArgs(args: FETCH_myVocabs_ARG_TYPES) {
   if (!fetch_TYPE) throw err("Fetch type undefined");
   if (!list_TYPE) throw err("List type undefined");
 
-  if (fetch_TYPE === "byTargetList" && !targetList_ID)
+  if (fetch_TYPE === "byTargetList" && !list_id)
     throw err("targetList_ID undefined");
 
   if (!langFilters) throw err("Language filters undefined");

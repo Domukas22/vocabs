@@ -111,18 +111,65 @@ export function GET_vocabListComponents({
       openVocab_IDs: Set<string>;
       TOGGLE_vocab: (vocab_ID: string, val?: boolean) => void;
     }) => (
+      // <Vocab_CARD
+      //   vocab={vocab}
+      //   list_TYPE={list_TYPE}
+      //   fetch_TYPE={fetch_TYPE}
+      //   OPEN_vocabSoftDeleteModal={OPEN_vocabSoftDeleteModal}
+      //   UPDATE_vocabDifficulty={UPDATE_vocabDifficulty}
+      //   UPDATE_vocabMarked={UPDATE_vocabMarked}
+      //   highlighted={highlighted_ID === vocab.id}
+      //   IS_open={openVocab_IDs.has(vocab?.id)} // This will now reflect the updated Set reference
+      //   TOGGLE_open={(val?: boolean) => TOGGLE_vocab(vocab.id, val)}
+      //   current_ACTIONS={currentVocab_ACTIONS?.filter(
+      //     (action) => action.vocab_ID === vocab?.id
+      //   )}
+      // />
       <Vocab_CARD
         vocab={vocab}
         list_TYPE={list_TYPE}
         fetch_TYPE={fetch_TYPE}
-        OPEN_vocabSoftDeleteModal={OPEN_vocabSoftDeleteModal}
-        UPDATE_vocabDifficulty={UPDATE_vocabDifficulty}
-        UPDATE_vocabMarked={UPDATE_vocabMarked}
-        highlighted={highlighted_ID === vocab.id}
-        IS_open={openVocab_IDs.has(vocab?.id)} // This will now reflect the updated Set reference
-        TOGGLE_open={(val?: boolean) => TOGGLE_vocab(vocab.id, val)}
+        OPEN_vocabSoftDeleteModal={() => {}}
+        UPDATE_vocabDifficulty={async (
+          vocab_ID: string,
+          current_DIFFICULTY: number,
+          new_DIFFICULTY: 1 | 2 | 3,
+          CLOSE_editBtns: () => void
+        ) => {
+          await r_UPDATE_vocabDifficulty(
+            vocab_ID,
+            current_DIFFICULTY,
+            new_DIFFICULTY,
+            {
+              onSuccess: () => {
+                TOAST("success", "Difficulty updated", "top"), CLOSE_editBtns();
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
+              },
+              onFailure: (err) => TOAST("error", err.user_MSG, "bottom", 10000),
+            }
+          );
+        }}
+        UPDATE_vocabMarked={(vocab_ID: string, val: boolean) =>
+          r_MARK_vocab(vocab_ID, val, {
+            onSuccess: () => {
+              TOAST("success", val ? "Vocab marked" : "Vocab unmarked", "top");
+
+              if (val) Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
+            },
+            onFailure: (err) => TOAST("error", err.user_MSG, "bottom", 10000),
+          })
+        }
+        SOFTDELETE_vocab={(vocab_ID: string) =>
+          r_SOFTDELETE_vocab(vocab_ID, {
+            onSuccess: () => TOAST("success", "Vocab deleted", "top"),
+            onFailure: (err) => TOAST("error", err.user_MSG, "bottom", 10000),
+          })
+        }
+        highlighted={highlighted_ID === item.id}
+        IS_open={openVocab_IDs.has(item?.id)} // This will now reflect the updated Set reference
+        TOGGLE_open={(val?: boolean) => TOGGLE_vocab(item.id, val)}
         current_ACTIONS={currentVocab_ACTIONS?.filter(
-          (action) => action.vocab_ID === vocab?.id
+          (action) => action.vocab_ID === item?.id
         )}
       />
     )

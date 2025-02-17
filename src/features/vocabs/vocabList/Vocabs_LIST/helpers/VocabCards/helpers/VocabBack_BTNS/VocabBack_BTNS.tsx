@@ -44,10 +44,10 @@ interface VocabBackBtns_PROPS {
   vocab: Vocab_TYPE;
   list_TYPE: vocabList_TYPES;
   fetch_TYPE: vocabFetch_TYPES;
-  OPEN_vocabUpdateModal: () => void;
+  OPEN_updateVocabModal: (vocab?: Vocab_TYPE) => void;
   OPEN_vocabCopyModal: () => void;
   OPEN_vocabPermaDeleteModal: (vocab: Vocab_TYPE) => void;
-  OPEN_vocabSoftDeleteModal: (vocab: Vocab_TYPE) => void;
+
   TOGGLE_open: () => void;
   GO_toListOfVocab: () => void;
   UPDATE_vocabDifficulty: (
@@ -67,11 +67,11 @@ const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
   list_TYPE,
   fetch_TYPE,
   current_ACTIONS = [],
-  OPEN_vocabUpdateModal = () => {},
+  OPEN_updateVocabModal = () => {},
   OPEN_vocabCopyModal = () => {},
 
   OPEN_vocabPermaDeleteModal = () => {},
-  OPEN_vocabSoftDeleteModal = () => {},
+
   TOGGLE_open = () => {},
   test = () => {},
   GO_toListOfVocab = () => {},
@@ -126,7 +126,7 @@ const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
     <Btn
       type="simple"
       style={{ flex: 1 }}
-      onPress={OPEN_vocabUpdateModal}
+      onPress={() => OPEN_updateVocabModal(vocab)}
       text={t("btn.editVocab")}
       iconRight={<ICON_edit />}
       text_STYLES={{ marginRight: "auto" }}

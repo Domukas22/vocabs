@@ -22,3 +22,4 @@ export { USE_zustand } from "./USE_zustand/USE_zustand";
 
 export { USE_hasReachedEnd } from "./USE_hasReachedEnd/USE_hasReachedEnd";
 export { USE_isLoadingStateNone } from "./USE_isLoadingStateNone/USE_isLoadingStateNone";
+export { USE_getListName } from "./USE_getListName/USE_getListName";

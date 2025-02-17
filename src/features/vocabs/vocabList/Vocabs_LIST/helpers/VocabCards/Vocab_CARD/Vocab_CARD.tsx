@@ -26,6 +26,7 @@ interface VocabProps {
   fetch_TYPE: vocabFetch_TYPES;
   IS_open: boolean;
   TOGGLE_open: (val?: boolean) => void;
+  OPEN_updateVocabModal: (vocab?: Vocab_TYPE) => void;
   UPDATE_vocabDifficulty: (
     vocab_ID: string,
     current_DIFFICULTY: number,
@@ -35,7 +36,6 @@ interface VocabProps {
   UPDATE_vocabMarked: (vocab_ID: string, val: boolean) => Promise<void>;
   SOFTDELETE_vocab: (vocab_ID: string) => Promise<void>;
   current_ACTIONS: currentVocabAction_TYPE[];
-  OPEN_vocabSoftDeleteModal: (vocab: Vocab_TYPE) => void;
 }
 
 export const Vocab_CARD = React.memo(function Vocab_CARD({
@@ -45,7 +45,8 @@ export const Vocab_CARD = React.memo(function Vocab_CARD({
   highlighted,
   IS_open,
   TOGGLE_open = () => {},
-  OPEN_vocabSoftDeleteModal = (vocab: Vocab_TYPE) => {},
+  OPEN_updateVocabModal = () => {},
+
   UPDATE_vocabDifficulty = () => Promise.resolve(),
   UPDATE_vocabMarked = () => Promise.resolve(),
   SOFTDELETE_vocab = () => Promise.resolve(),
@@ -77,6 +78,7 @@ export const Vocab_CARD = React.memo(function Vocab_CARD({
           IS_marked={vocab?.is_marked}
         />
       )}
+
       {open && (
         <>
           <VocabBack_TRS trs={trs} difficulty={vocab?.difficulty || 0} />
@@ -93,7 +95,7 @@ export const Vocab_CARD = React.memo(function Vocab_CARD({
 
           <VocabBack_BTNS
             {...{ vocab, trs, list_TYPE, fetch_TYPE, TOGGLE_open: toggle }}
-            OPEN_vocabUpdateModal={() => {}}
+            OPEN_updateVocabModal={OPEN_updateVocabModal}
             UPDATE_vocabDifficulty={async (
               vocab_ID: string,
               current_DIFFICULTY: number,
@@ -111,7 +113,6 @@ export const Vocab_CARD = React.memo(function Vocab_CARD({
             SOFTDELETE_vocab={SOFTDELETE_vocab}
             OPEN_vocabCopyModal={() => {}}
             OPEN_vocabPermaDeleteModal={() => {}}
-            OPEN_vocabSoftDeleteModal={OPEN_vocabSoftDeleteModal}
             current_ACTIONS={current_ACTIONS}
           />
         </>

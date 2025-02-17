@@ -305,5 +305,11 @@
   },
   "success": {
     "updatedVocabDifficulty": "Vocab difficulty updated"
+  },
+  "listName": {
+    "allPublicVocabs": "🔤 All public vocabs",
+    "allMyVocabs": "🅿️ All my vocabs",
+    "savedVocabs": "⭐ Saved vocabs",
+    "deletedVocabs": "🗑️ Deleted vocabs"
   }
 }

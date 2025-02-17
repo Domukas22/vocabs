@@ -20,12 +20,23 @@ export default function Notification_BLOCK({
       <View
         style={[
           s.box,
-          type === "success" && { backgroundColor: MyColors.btn_green },
-          type === "error" && { backgroundColor: MyColors.fill_red_dark },
-          type === "warning" && { backgroundColor: MyColors.fill_yellow_dark },
+          type === "success" && {
+            backgroundColor: MyColors.btn_green,
+            borderColor: MyColors.border_green,
+          },
+          type === "error" && {
+            backgroundColor: MyColors.fill_red_dark,
+            borderColor: MyColors.border_red,
+          },
+          type === "warning" && {
+            backgroundColor: MyColors.fill_yellow_dark,
+            borderColor: MyColors.border_yellow,
+          },
         ]}
       >
-        <ICON_toastNotification type={type} />
+        <View style={{ marginTop: 1 }}>
+          <ICON_toastNotification type={type} />
+        </View>
         <Styled_TEXT
           type="text_18_medium"
           style={[
@@ -51,9 +62,10 @@ const s = StyleSheet.create({
   box: {
     flexDirection: "row",
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 10,
     borderRadius: 12,
     marginTop: 8,
     gap: 12,
+    borderWidth: 1,
   },
 });

@@ -2,13 +2,13 @@
 //
 //
 
-import { currentVocabAction_TYPE } from "@/src/app/(main)/vocabs/[list_id]";
 import { USE_toast } from "@/src/hooks/USE_toast/USE_toast";
 import { General_ERROR } from "@/src/types/error_TYPES";
 import { SEND_internalError } from "@/src/utils";
 import { useCallback } from "react";
 
 import { SOFTDELETE_vocab, IS_vocabMarkedBeingDeleted } from "./helpers";
+import { currentVocabAction_TYPE } from "@/src/hooks/z_USE_oneList/z_USE_oneList";
 
 const function_NAME = "USE_deleteVocab";
 

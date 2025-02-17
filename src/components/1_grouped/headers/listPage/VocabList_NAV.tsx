@@ -19,16 +19,15 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
 } from "react-native-reanimated";
-import { USE_getActiveFilterCount } from "@/src/hooks";
+import { USE_getActiveFilterCount, USE_getListName } from "@/src/hooks";
+import { useRouter } from "expo-router";
 
 interface ListHeader_PROPS {
   SHOW_listName: boolean;
 
   IS_searchBig?: boolean;
-  list_NAME?: string;
   search: string | undefined;
   SET_search: React.Dispatch<React.SetStateAction<string>> | undefined;
-  GO_back?: () => void | undefined;
   OPEN_listSettings?: () => void | undefined;
   OPEN_create?: () => void | undefined;
   OPEN_displaySettings?: () => void | undefined;
@@ -37,11 +36,9 @@ interface ListHeader_PROPS {
 
 export default function VocabList_NAV({
   SHOW_listName,
-  list_NAME = "INSERT LIST NAME",
   search,
   IS_searchBig = false,
   SET_search,
-  GO_back,
   OPEN_listSettings,
   OPEN_create,
   OPEN_displaySettings,
@@ -50,6 +47,8 @@ export default function VocabList_NAV({
   const [IS_searchOpen, SET_searchOpen] = useState(false);
   const search_REF = useRef<TextInput>(null);
   const { activeFilter_COUNT } = USE_getActiveFilterCount("vocabs");
+  const router = useRouter();
+  const { list_NAME } = USE_getListName();
 
   const headerTranslateY = useSharedValue(-34);
   const titleOpacity = useSharedValue(0);
@@ -102,13 +101,11 @@ export default function VocabList_NAV({
 
         {!IS_searchOpen && (
           <View style={s.btn_WRAP}>
-            {GO_back && (
-              <Btn
-                onPress={GO_back}
-                iconLeft={<ICON_arrow direction="left" />}
-                style={{ flex: IS_searchBig ? 0 : 1 }}
-              />
-            )}
+            <Btn
+              onPress={() => router.back()}
+              iconLeft={<ICON_arrow direction="left" />}
+              style={{ flex: IS_searchBig ? 0 : 1 }}
+            />
             {OPEN_listSettings && (
               <Btn
                 onPress={OPEN_listSettings}

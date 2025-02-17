@@ -49,27 +49,24 @@ import { DeleteList_MODAL } from "../DeleteList_MODAL/DeleteList_MODAL";
 import { RenameList_MODAL } from "../RenameList_MODAL/RenameList_MODAL";
 import { SelectMultipleLanguages_MODAL } from "@/src/features/languages/components";
 import { USE_modalToggles } from "@/src/hooks/index";
+import { List_TYPE } from "@/src/types/general_TYPES";
+import { z_USE_oneList } from "@/src/hooks/z_USE_oneList/z_USE_oneList";
 
 interface ListSettingsModal_PROPS {
-  selected_LIST: List_MODEL | undefined;
-  open: boolean;
-  TOGGLE_open: () => void;
-  backToIndex: () => void;
+  IS_open: boolean;
+  CLOSE_modal: () => void;
 }
 
 export function ListSettings_MODAL({
-  open = false,
-  selected_LIST,
-  TOGGLE_open = () => {},
-  backToIndex = () => {},
+  IS_open = false,
+  CLOSE_modal = () => {},
 }: ListSettingsModal_PROPS) {
   const { t } = useTranslation();
   const { z_user } = USE_zustand();
   const { sync } = USE_sync();
   const toast = useToast();
   const router = useRouter();
-
-  const list = USE_observeMyTargetList(selected_LIST?.id);
+  const { list } = z_USE_oneList();
 
   const { modals } = USE_modalToggles([
     "deleteList",
@@ -107,7 +104,7 @@ export function ListSettings_MODAL({
       owner_id: z_user?.id,
     },
     fn_NAME: "FETCH_listParticipants",
-    dependencies: [open, list?.type, list?.id],
+    dependencies: [IS_open, list?.type, list?.id],
     defaultErr_MSG: fetchListParticipants_ERRS.user.defaultmessage,
     SHOULD_fetchOnLoad: true,
     SHOULD_returnNothing: list?.type !== "shared",
@@ -120,7 +117,7 @@ export function ListSettings_MODAL({
   } = USE_highlightBoolean(3000);
 
   return (
-    <Big_MODAL open={open}>
+    <Big_MODAL open={IS_open}>
       <Btn text="Fn" onPress={FETCH_participants} />
       <Header
         title={t("header.listSettings")}
@@ -129,7 +126,7 @@ export function ListSettings_MODAL({
           <Btn
             type="seethrough"
             iconLeft={<ICON_X big={true} rotate={true} />}
-            onPress={TOGGLE_open}
+            onPress={CLOSE_modal}
             style={{ borderRadius: 100 }}
           />
         }
@@ -148,7 +145,7 @@ export function ListSettings_MODAL({
                   : MyColors.text_white,
               }}
             >
-              {selected_LIST?.name || "NO LIST NAME PROVIDED"}
+              {list?.name || "NO LIST NAME PROVIDED"}
             </Styled_TEXT>
             {/* <Styled_TEXT>{user?.email || "---"}</Styled_TEXT> */}
           </View>
@@ -157,10 +154,10 @@ export function ListSettings_MODAL({
 
         <ChosenLangs_BLOCK
           label={t("label.defaultVocabLangs")}
-          default_lang_ids={selected_LIST?.default_lang_ids}
+          default_lang_ids={list?.default_lang_ids}
           toggle={() => modals.selectLangs.set(true)}
           REMOVE_lang={async (targetLang_ID: string) => {
-            await selected_LIST?.DELETE_defaultLangId(targetLang_ID);
+            await list?.DELETE_defaultLangId(targetLang_ID);
           }}
           // error={}
         />
@@ -173,7 +170,7 @@ export function ListSettings_MODAL({
             text="Reset all vocabs"
             onPress={() => {
               (async () => {
-                await selected_LIST?.RESET_allVocabsDifficulty();
+                await list?.RESET_allVocabsDifficulty();
                 toast.show("Difficulties reset", {
                   type: "success",
                   duration: 5000,
@@ -216,7 +213,7 @@ export function ListSettings_MODAL({
         btnLeft={
           <Btn
             text={t("btn.done")}
-            onPress={TOGGLE_open}
+            onPress={CLOSE_modal}
             type="simple"
             style={{ flex: 1 }}
           />
@@ -227,16 +224,16 @@ export function ListSettings_MODAL({
       <SelectMultipleLanguages_MODAL
         open={modals.selectLangs.IS_open}
         TOGGLE_open={() => modals.selectLangs.set(false)}
-        lang_ids={selected_LIST?.default_lang_ids?.split(",") || []}
+        lang_ids={list?.default_lang_ids?.split(",") || []}
         SUBMIT_langIds={async (lang_ids: string[]) => {
-          await selected_LIST?.UPDATE_defaultLangIds(lang_ids);
+          await list?.UPDATE_defaultLangIds(lang_ids);
         }}
       />
 
       <RenameList_MODAL
-        list={selected_LIST}
+        list={list}
         user_id={z_user?.id}
-        current_NAME={selected_LIST?.name}
+        current_NAME={list?.name}
         IS_open={modals.renameList.IS_open}
         CLOSE_modal={() => modals.renameList.set(false)}
         onSuccess={() => {
@@ -253,7 +250,7 @@ export function ListSettings_MODAL({
       <SelectUsers_MODAL
         open={modals.selectListParticipants.IS_open}
         TOGGLE_open={() => modals.selectListParticipants.set(false)}
-        list_id={selected_LIST?.id}
+        list_id={list?.id}
         onUpdate={() => {
           (async () =>
             await FETCH_participants({
@@ -280,7 +277,7 @@ export function ListSettings_MODAL({
 
       <DeleteList_MODAL
         IS_open={modals.deleteList.IS_open}
-        list={selected_LIST}
+        list={list}
         CLOSE_modal={() => modals.deleteList.set(false)}
         onSuccess={() => {
           modals.deleteList.set(false);

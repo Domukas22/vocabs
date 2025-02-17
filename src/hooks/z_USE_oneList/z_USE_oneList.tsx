@@ -20,8 +20,9 @@ import {
   IS_vocabDifficultyBeingUpdated,
   UPDATE_vocabDifficulty,
 } from "@/src/features/vocabs/vocabList/USE_updateVocabDifficulty/helpers";
+import { FETCH_oneList } from "@/src/features/vocabs/Vocabs_FLASHLIST/helpers/FETCH_oneList/FETCH_oneList";
 import { General_ERROR } from "@/src/types/error_TYPES";
-import { loadingState_TYPES } from "@/src/types/general_TYPES";
+import { List_TYPE, loadingState_TYPES } from "@/src/types/general_TYPES";
 import { Delay, SEND_internalError } from "@/src/utils";
 import DETERMINE_loadingState from "@/src/utils/DETERMINE_loadingState/DETERMINE_loadingState";
 import { create } from "zustand";
@@ -79,10 +80,10 @@ export type r_FETCH_vocabs_ARG_TYPE = {
   signal: AbortSignal;
   amount: number;
   user_id: string;
+  list_id: string;
   list_TYPE: vocabList_TYPES;
 
   fetch_TYPE: vocabFetch_TYPES;
-  targetList_ID?: string;
   difficultyFilters: (1 | 2 | 3)[];
   langFilters: string[];
   sortDirection: "ascending" | "descending";
@@ -90,66 +91,127 @@ export type r_FETCH_vocabs_ARG_TYPE = {
 
   loadMore: boolean;
   loading_STATE: loadingState_TYPES | undefined;
-  z_list_id: string;
 };
 
-type Vocabs_STATE = {
+type z_USE_oneList_PROPS = {
+  list: List_TYPE | undefined;
+  list_NAME: string; // When we click on a list, we can instantly provide a list name and not wait for the full list fetch to complete
   vocabs: Vocab_TYPE[];
+  target_VOCAB: Vocab_TYPE | undefined;
   printed_IDS: Set<string>;
   unpaginated_COUNT: number;
   HAS_reachedEnd: boolean;
   loading_STATE: loadingState_TYPES;
   error?: General_ERROR;
   currentVocab_ACTIONS: currentVocabAction_TYPE[];
-  z_list_id: string;
 
-  r_FETCH_vocabs: (args: r_FETCH_vocabs_ARG_TYPE) => Promise<void>;
-  r_MARK_vocab: (vocab_ID: string, val: boolean) => Promise<void>;
+  highlightedVocab_ID: string;
+  timeoutID: any;
+
+  oL_FETCH: (args: r_FETCH_vocabs_ARG_TYPE) => Promise<void>;
+  r_MARK_vocab: (
+    vocab_ID: string,
+    val: boolean,
+    sideEffects: {
+      onSuccess?: () => void;
+      onFailure?: (error: General_ERROR) => void;
+    }
+  ) => Promise<void>;
   r_UPDATE_vocabDifficulty: (
     vocab_ID: string,
     current_DIFFICULTY: number,
-    new_DIFFICULTY: 1 | 2 | 3
+    new_DIFFICULTY: 1 | 2 | 3,
+    sideEffects: {
+      onSuccess?: () => void;
+      onFailure?: (error: General_ERROR) => void;
+    }
   ) => Promise<void>;
-  r_SOFTDELETE_vocab: (vocab_ID: string) => Promise<void>;
+  r_SOFTDELETE_vocab: (
+    vocab_ID: string,
+    sideEffects: {
+      onSuccess?: () => void;
+      onFailure?: (error: General_ERROR) => void;
+    }
+  ) => Promise<void>;
+  r_HIGHLIGHT_vocab: (vocab_ID: string) => void;
+  r_SET_targetVocab: (vocab: Vocab_TYPE | undefined) => void;
 };
 
-export const USE_vocabZustand = create<Vocabs_STATE>((set, get) => ({
+// z = Zustand
+// oL == One List
+export const z_USE_oneList = create<z_USE_oneList_PROPS>((set, get) => ({
+  list: undefined,
+  list_NAME: "",
   vocabs: [],
+  target_VOCAB: undefined,
   printed_IDS: new Set<string>(),
   HAS_reachedEnd: false,
   unpaginated_COUNT: 0,
   loading_STATE: "none",
   error: undefined,
   currentVocab_ACTIONS: [],
-  z_list_id: "",
 
-  r_FETCH_vocabs: async (args) => {
+  highlightedVocab_ID: "",
+  timeoutID: "", // This will hold the reference to the timeout
+
+  oL_FETCH: async (args) => {
+    const function_NAME = "oL_FETCH";
     const {
       search,
-      targetList_ID,
       difficultyFilters,
       langFilters,
       loadMore,
       loading_STATE,
-      z_list_id,
+      list_id,
+      user_id,
+      fetch_TYPE,
+      list_TYPE,
     } = args;
 
     try {
-      set({ z_list_id });
-      // ----------------------------------------
+      if (!list_id) return;
+
       const _loading_STATE =
         loading_STATE ||
         DETERMINE_loadingState({
           search,
-          targetList_ID,
+          targetList_ID: list_id,
           difficultyFilters,
           langFilters,
         });
-      // ----------------------------------------
-      set({ error: undefined, loading_STATE: _loading_STATE });
+
+      set({ list: undefined, error: undefined, loading_STATE: _loading_STATE });
       if (!loadMore) set({ vocabs: [] });
 
+      await Delay(10000);
       // ----------------------------------------
+      // Handle initial
+
+      // ----------------------------------------
+      // Handle the list
+
+      if (list_TYPE === "public" && fetch_TYPE === "all") {
+        set({ list: { id: "all-public-vocabs" } as List_TYPE });
+      } else if (list_TYPE === "private" && fetch_TYPE === "all") {
+        set({ list: { id: "all-my-vocabs" } as List_TYPE });
+      } else if (list_TYPE === "private" && fetch_TYPE === "deleted") {
+        set({ list: { id: "all-my-deleted-vocabs" } as List_TYPE });
+      } else if (list_TYPE === "private" && fetch_TYPE === "marked") {
+        set({ list: { id: "all-my-marked-vocabs" } as List_TYPE });
+      } else {
+        const { list } = await FETCH_oneList(user_id, list_id);
+        if (!list)
+          throw new General_ERROR({
+            function_NAME,
+            message:
+              "'FETCH_oneList' returned an undefined 'list' object, although it didn't throw an error",
+          });
+
+        set({ list });
+      }
+
+      // ----------------------------------------
+      // Handle the vocabs
       const data = await FETCH_vocabs({
         ...args,
         excludeIds: loadMore ? get().printed_IDS : new Set(),
@@ -157,11 +219,13 @@ export const USE_vocabZustand = create<Vocabs_STATE>((set, get) => ({
 
       if (!data)
         throw new General_ERROR({
-          function_NAME: "r_FETCH_vocabs",
+          function_NAME,
           message:
             "'FETCH_vocabs' returned an undefined 'data' object, although it didn't throw an error",
         });
 
+      // ----------------------------------------
+      // Handle the state
       if (loadMore) {
         set((state) => ({
           vocabs: [...state.vocabs, ...data.vocabs],
@@ -183,13 +247,15 @@ export const USE_vocabZustand = create<Vocabs_STATE>((set, get) => ({
           loading_STATE: "none",
         });
       }
+
+      // ----------------------------------------
     } catch (error: any) {
       // Do not update state if signal has been aborted (if fetch has been canceled).
       // Also, don't throw any errors, because the only reason this will abort is if a new fetch request has started.
       if (error.message === "AbortError: Aborted") return;
 
       const err = new General_ERROR({
-        function_NAME: error?.function_NAME || "r_FETCH_vocabs",
+        function_NAME: error?.function_NAME || "oL_FETCH",
         message: error?.message,
         errorToSpread: error,
       });
@@ -198,8 +264,10 @@ export const USE_vocabZustand = create<Vocabs_STATE>((set, get) => ({
       SEND_internalError(err);
     }
   },
-  r_MARK_vocab: async (vocab_ID: string, val: boolean) => {
+  r_MARK_vocab: async (vocab_ID: string, val: boolean, sideEffects) => {
     const function_NAME = "r_MARK_vocab";
+    const { onSuccess = () => {}, onFailure = () => {} } = sideEffects;
+
     if (IS_vocabMarkedBeingUpdated(vocab_ID, get().currentVocab_ACTIONS))
       return;
     try {
@@ -230,6 +298,9 @@ export const USE_vocabZustand = create<Vocabs_STATE>((set, get) => ({
             action.action !== "updating_marked" && action.vocab_ID !== vocab_ID
         ),
       }));
+      onSuccess();
+
+      //--
     } catch (error: any) {
       const err = new General_ERROR({
         function_NAME: error?.function_NAME || function_NAME,
@@ -237,16 +308,19 @@ export const USE_vocabZustand = create<Vocabs_STATE>((set, get) => ({
         errorToSpread: error,
       });
 
-      // set({ loading_STATE: "error", error: err });
+      onFailure(err);
       SEND_internalError(err);
     }
   },
   r_UPDATE_vocabDifficulty: async (
     vocab_ID: string,
     current_DIFFICULTY: number,
-    new_DIFFICULTY: 1 | 2 | 3
+    new_DIFFICULTY: 1 | 2 | 3,
+    sideEffects
   ) => {
     const function_NAME = "r_UPDATE_vocabDifficulty";
+    const { onSuccess = () => {}, onFailure = () => {} } = sideEffects;
+
     if (IS_vocabDifficultyBeingUpdated(vocab_ID, get().currentVocab_ACTIONS))
       return;
 
@@ -283,6 +357,9 @@ export const USE_vocabZustand = create<Vocabs_STATE>((set, get) => ({
             action.vocab_ID !== vocab_ID
         ),
       }));
+
+      onSuccess();
+      // --
     } catch (error: any) {
       const err = new General_ERROR({
         function_NAME: error?.function_NAME || function_NAME,
@@ -290,12 +367,14 @@ export const USE_vocabZustand = create<Vocabs_STATE>((set, get) => ({
         errorToSpread: error,
       });
 
-      // set({ loading_STATE: "error", error: err });
+      onFailure(err);
       SEND_internalError(err);
     }
   },
-  r_SOFTDELETE_vocab: async (vocab_ID: string) => {
+  r_SOFTDELETE_vocab: async (vocab_ID: string, sideEffects) => {
     const function_NAME = "r_SOFTDELETE_vocab";
+    const { onSuccess = () => {}, onFailure = () => {} } = sideEffects;
+
     if (IS_vocabMarkedBeingDeleted(vocab_ID, get().currentVocab_ACTIONS))
       return;
 
@@ -326,6 +405,8 @@ export const USE_vocabZustand = create<Vocabs_STATE>((set, get) => ({
             action.action !== "deleting" && action.vocab_ID !== vocab_ID
         ),
       }));
+      onSuccess();
+      // --
     } catch (error: any) {
       const err = new General_ERROR({
         function_NAME: error?.function_NAME || function_NAME,
@@ -333,8 +414,31 @@ export const USE_vocabZustand = create<Vocabs_STATE>((set, get) => ({
         errorToSpread: error,
       });
 
-      // set({ loading_STATE: "error", error: err });
+      onFailure(err);
       SEND_internalError(err);
     }
+  },
+
+  r_HIGHLIGHT_vocab: (vocab_ID: string) => {
+    const currentTimeoutID = get().timeoutID;
+    // If there is a previous timeout, clear it
+    if (currentTimeoutID) {
+      clearTimeout(currentTimeoutID);
+    }
+
+    // Set the new highlighted vocab ID
+    set({ highlightedVocab_ID: vocab_ID });
+
+    // Set a new timeout to reset the highlighted vocab ID after 5 seconds
+    const timeoutID = setTimeout(() => {
+      set({ highlightedVocab_ID: "" });
+    }, 5000);
+
+    // Save the timeout reference in the state to clear it if needed
+    set({ timeoutID });
+  },
+
+  r_SET_targetVocab: (target_VOCAB) => {
+    set({ target_VOCAB });
   },
 }));

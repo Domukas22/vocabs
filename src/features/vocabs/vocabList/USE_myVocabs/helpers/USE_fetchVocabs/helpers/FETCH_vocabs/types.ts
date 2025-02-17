@@ -14,10 +14,10 @@ export interface FETCH_myVocabs_ARG_TYPES {
   signal: AbortSignal;
   amount: number;
   user_id: string;
+  list_id: string;
   list_TYPE: vocabList_TYPES;
   excludeIds: Set<string>;
   fetch_TYPE: vocabFetch_TYPES;
-  targetList_ID?: string;
   difficultyFilters: (1 | 2 | 3)[];
   langFilters: string[];
   sortDirection: "ascending" | "descending";

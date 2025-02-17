@@ -12,5 +12,5 @@ export function USE_listIdInParams() {
       Array.isArray(list_id) ? list_id[0] : list_id || "someIdToAvoidError",
     [list_id]
   );
-  return { list_id: listIdString };
+  return { urlParamsList_ID: listIdString };
 }

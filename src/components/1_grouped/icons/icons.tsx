@@ -832,9 +832,10 @@ export function ICON_image() {
 }
 export function ICON_toastNotification({
   type = "success",
+  ...props
 }: {
   type: "success" | "error" | "warning";
-}) {
+} & ViewProps) {
   return (
     <View
       style={{
@@ -851,6 +852,7 @@ export function ICON_toastNotification({
             ? MyColors.border_yellow
             : MyColors.border_green,
       }}
+      {...props}
     >
       {type === "success" && (
         <Svg width={10} height={10} viewBox="0 0 9 10" fill="none">

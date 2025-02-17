@@ -30,7 +30,7 @@ export function VocabsFlatlistHeader_SECTION({
   debouncedSearch,
   IS_debouncing,
   loading_STATE = "none",
-  list_NAME = "INSERT LIST NAME",
+  list_NAME = "NO LIST FOUND",
   unpaginated_COUNT = 0,
   HAS_error = false,
 }: VocabsFlatlistHeader_SECTIONProps) {

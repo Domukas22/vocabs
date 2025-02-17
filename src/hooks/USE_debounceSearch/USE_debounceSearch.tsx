@@ -21,7 +21,7 @@ export function USE_debounceSearch() {
     const handler = setTimeout(() => {
       SET_debouncedSearch(search);
       SET_isDebouncing(false);
-    }, 500);
+    }, 150);
 
     return () => {
       clearTimeout(handler);

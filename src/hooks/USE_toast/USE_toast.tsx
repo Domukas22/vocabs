@@ -10,10 +10,16 @@ export function USE_toast() {
   const toast = useToast();
 
   const TOAST = useCallback(
-    (type: Toast_TYPE, message: string, duration?: number) => {
+    (
+      type: Toast_TYPE,
+      message: string,
+      placement: "top" | "bottom",
+      duration?: number
+    ) => {
       toast.show(message, {
         type,
-        duration: duration || 3000,
+        placement,
+        duration: duration || 2000,
       });
     },
     []

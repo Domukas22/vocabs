@@ -26,11 +26,12 @@ import VocabLangFilters_BLOCK from "./comps/components/VocabLangFilters_BLOCK";
 import VocabPreviewToggles_BLOCK from "./comps/components/VocabPreviewToggles_BLOCK";
 import VocabSortDirection_BLOCK from "./comps/VocabSortDirection_BLOCK";
 import VocabSorting_BLOCK from "./comps/VocabSorting_BLOCK";
+import { z_USE_oneList } from "@/src/hooks/z_USE_oneList/z_USE_oneList";
 
 interface DisplaySettingsModal_PROPS {
   open: boolean;
   HAS_difficulties?: boolean;
-  collectedLang_IDS: string[] | undefined;
+
   TOGGLE_open: () => void;
 }
 
@@ -39,11 +40,16 @@ export type DisplaySettingsModalView_PROPS = "preview" | "sort" | "filter";
 export function VocabDisplaySettings_MODAL({
   open,
   HAS_difficulties = true,
-  collectedLang_IDS = [],
+
   TOGGLE_open,
 }: DisplaySettingsModal_PROPS) {
   const { t } = useTranslation();
   const [view, SET_view] = useState<DisplaySettingsModalView_PROPS>("preview");
+  const { list } = z_USE_oneList();
+  const collectedLang_IDS = useMemo(
+    () => list?.collected_lang_ids?.split(",") || [],
+    [list]
+  );
 
   const { z_vocabDisplay_SETTINGS, z_SET_vocabDisplaySettings } = USE_zustand();
   const { activeFilter_COUNT } = USE_getActiveFilterCount("vocabs");

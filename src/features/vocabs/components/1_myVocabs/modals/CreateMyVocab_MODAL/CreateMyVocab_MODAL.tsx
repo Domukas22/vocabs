@@ -39,12 +39,13 @@ import { SelectMultipleLanguages_MODAL } from "@/src/features/languages/componen
 import { USE_modalToggles } from "@/src/hooks/index";
 import List_MODEL from "@/src/db/models/List_MODEL";
 import { FETCH_langs } from "@/src/features/languages/functions/fetch/FETCH_langs/FETCH_langs";
+import { List_TYPE } from "@/src/types/general_TYPES";
+import { z_USE_oneList } from "@/src/hooks/z_USE_oneList/z_USE_oneList";
 
 interface CreateMyVocabModal_PROPS {
   IS_open: boolean;
-  initial_LIST?: List_MODEL | undefined;
-  TOGGLE_modal: () => void;
-  onSuccess: (new_VOCAB: Vocab_TYPE) => void;
+
+  CLOSE_modal: () => void;
 }
 
 export type CreateMyVocabData_PROPS = {
@@ -56,11 +57,11 @@ export type CreateMyVocabData_PROPS = {
 
 export function CreateMyVocab_MODAL({
   IS_open,
-  TOGGLE_modal: TOGGLE_vocabModal,
-  initial_LIST,
-  onSuccess = () => {},
+  CLOSE_modal: TOGGLE_vocabModal,
 }: CreateMyVocabModal_PROPS) {
   const { t } = useTranslation();
+
+  const { list: initial_LIST } = z_USE_oneList();
 
   const { modals } = USE_modalToggles([
     "selectLangs",
@@ -100,9 +101,9 @@ export function CreateMyVocab_MODAL({
       description,
       translations,
       onSuccess: (new_VOCAB: Vocab_MODEL) => {
-        onSuccess(new_VOCAB);
-        collectLangs(new_VOCAB.list_id || "");
-        reset();
+        // onSuccess(new_VOCAB);
+        // collectLangs(new_VOCAB.list_id || "");
+        // reset();
       },
     });
 

@@ -18,21 +18,20 @@ import { USE_collectListLangs } from "@/src/features/lists/functions";
 import { USE_zustand } from "@/src/hooks";
 import { USE_modalToggles } from "@/src/hooks/index";
 import { Vocab_TYPE } from "@/src/features/vocabs/types";
+import { z_USE_oneList } from "@/src/hooks/z_USE_oneList/z_USE_oneList";
 
 interface SavePublicVocabToListModal_PROPS {
-  vocab: Vocab_TYPE | undefined;
   IS_open: boolean;
   CLOSE_modal: () => void;
-  onSuccess: (new_VOCAB: Vocab_TYPE) => void;
 }
 
 export function ReviveDeletedVocab_MODAL({
-  vocab,
   IS_open,
-  onSuccess,
+
   CLOSE_modal,
 }: SavePublicVocabToListModal_PROPS) {
   const { modals } = USE_modalToggles(["createList"]);
+  const { target_VOCAB: vocab } = z_USE_oneList();
 
   const { z_user } = USE_zustand();
 
@@ -91,10 +90,10 @@ export function ReviveDeletedVocab_MODAL({
               text={t("btn.confirmListSelection")}
               onPress={() => {
                 if (selected_LIST?.id && vocab) {
-                  (async () => {
-                    await vocab.REVIVE_vocab(selected_LIST.id);
-                    if (onSuccess) onSuccess(vocab);
-                  })();
+                  // (async () => {
+                  //   await vocab.REVIVE_vocab(selected_LIST.id);
+                  //   if (onSuccess) onSuccess(vocab);
+                  // })();
                 }
               }}
               type="action"

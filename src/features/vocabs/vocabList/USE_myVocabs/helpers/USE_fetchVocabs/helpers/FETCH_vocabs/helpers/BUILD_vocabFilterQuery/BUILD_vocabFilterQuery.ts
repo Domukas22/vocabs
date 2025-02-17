@@ -16,7 +16,7 @@ export function BUILD_vocabFilterQuery(
     fetch_TYPE = "all",
     list_TYPE = "private",
     user_id = "",
-    targetList_ID = "",
+    list_id = "",
     search = "",
     excludeIds = new Set(),
     difficultyFilters = [],
@@ -61,7 +61,7 @@ export function BUILD_vocabFilterQuery(
     case "byTargetList":
       query = query
         .filter("deleted_at", "is", null)
-        .filter("list_id", "eq", targetList_ID);
+        .filter("list_id", "eq", list_id);
       break;
 
     // Fetch all deleted vocabs

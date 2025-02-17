@@ -39,12 +39,12 @@ import {
 import { TrHighlights_MODAL } from "../TrHighlights_MODAL/TrHighlights_MODAL";
 import { SelectMultipleLanguages_MODAL } from "@/src/features/languages/components";
 import { USE_modalToggles } from "@/src/hooks/index";
+import { z_USE_oneList } from "@/src/hooks/z_USE_oneList/z_USE_oneList";
 
 interface UpdateMyVocabModal_PROPS {
   IS_open: boolean;
-  toUpdate_VOCAB: Vocab_TYPE | undefined;
+
   CLOSE_modal: () => void;
-  onSuccess: (new_VOCAB: Vocab_TYPE) => void;
 }
 
 export type UpdateMyVocabData_PROPS = {
@@ -57,9 +57,8 @@ export type UpdateMyVocabData_PROPS = {
 
 export function UpdateMyVocab_MODAL({
   IS_open,
-  toUpdate_VOCAB,
+
   CLOSE_modal,
-  onSuccess = () => {},
 }: UpdateMyVocabModal_PROPS) {
   const { t } = useTranslation();
 
@@ -70,6 +69,8 @@ export function UpdateMyVocab_MODAL({
     "selectHighlights",
     "selectList",
   ]);
+
+  const { target_VOCAB: toUpdate_VOCAB } = z_USE_oneList();
 
   const [target_TR, SET_targetTr] = useState<VocabTr_TYPE | undefined>(
     undefined
@@ -104,10 +105,9 @@ export function UpdateMyVocab_MODAL({
       translations,
       is_public: false,
       onSuccess: (updated_VOCAB: Vocab_MODEL) => {
-        onSuccess(updated_VOCAB);
-        collectLangs(updated_VOCAB?.id);
-
-        reset();
+        // onSuccess(updated_VOCAB);
+        // collectLangs(updated_VOCAB?.id);
+        // reset();
       },
     });
 
