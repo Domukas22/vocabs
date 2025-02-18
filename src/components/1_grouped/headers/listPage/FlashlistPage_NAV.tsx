@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { Keyboard, StyleSheet, View } from "react-native";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
 import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
@@ -27,6 +27,7 @@ interface ListHeader_PROPS {
 
   IS_searchBig?: boolean;
   search: string | undefined;
+  list_NAME: string;
   SET_search: React.Dispatch<React.SetStateAction<string>> | undefined;
   OPEN_listSettings?: () => void | undefined;
   OPEN_create?: () => void | undefined;
@@ -34,10 +35,11 @@ interface ListHeader_PROPS {
   SAVE_list?: () => void | undefined;
 }
 
-export default function VocabList_NAV({
+export default function FlashlistPage_NAV({
   SHOW_listName,
   search,
   IS_searchBig = false,
+  list_NAME = "NO LIST NAME PROVIDED",
   SET_search,
   OPEN_listSettings,
   OPEN_create,
@@ -48,7 +50,6 @@ export default function VocabList_NAV({
   const search_REF = useRef<TextInput>(null);
   const { activeFilter_COUNT } = USE_getActiveFilterCount("vocabs");
   const router = useRouter();
-  const { list_NAME } = USE_getMyListName();
 
   const headerTranslateY = useSharedValue(-34);
   const titleOpacity = useSharedValue(0);
@@ -72,6 +73,8 @@ export default function VocabList_NAV({
   useEffect(() => {
     if (IS_searchOpen) {
       search_REF?.current?.focus();
+    } else {
+      // Keyboard.dismiss();
     }
   }, [search_REF, IS_searchOpen]);
 

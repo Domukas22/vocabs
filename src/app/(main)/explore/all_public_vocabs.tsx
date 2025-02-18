@@ -4,21 +4,21 @@
 
 import React from "react";
 
-import VocabList_NAV from "@/src/components/1_grouped/headers/listPage/VocabList_NAV";
+import FlashlistPage_NAV from "@/src/components/1_grouped/headers/listPage/FlashlistPage_NAV";
 
 import { VocabDisplaySettings_MODAL } from "@/src/features/vocabs/components";
 import { USE_debounceSearch, USE_showListHeaderTitle } from "@/src/hooks";
 import { USE_modalToggles } from "@/src/hooks/index";
 import {
   vocabFetch_TYPES,
-  vocabList_TYPES,
+  list_TYPES,
 } from "@/src/features/vocabs/vocabList/USE_myVocabs/helpers/USE_fetchVocabs/helpers/FETCH_vocabs/types";
 import { Portal } from "@gorhom/portal";
 import MyVocabs_FLASHLIST from "@/src/features/vocabs/Vocabs_FLASHLIST/MyVocabs_FLASHLIST/MyVocabs_FLASHLIST";
 import PublicVocabs_FLASHLIST from "@/src/features/vocabs/Vocabs_FLASHLIST/PublicVocabs_FLASHLIST/PublicVocabs_FLASHLIST";
 
 const fetch_TYPE: vocabFetch_TYPES = "all";
-const list_TYPE: vocabList_TYPES = "public";
+const list_TYPE: list_TYPES = "public";
 
 export default function AllPublicVocabs_PAGE() {
   const { showTitle, handleScroll } = USE_showListHeaderTitle();
@@ -29,7 +29,7 @@ export default function AllPublicVocabs_PAGE() {
 
   return (
     <>
-      <VocabList_NAV
+      <FlashlistPage_NAV
         SHOW_listName={showTitle}
         OPEN_displaySettings={() => modals.displaySettings.set(true)}
         {...{ search, SET_search }}

@@ -15,7 +15,7 @@ import {
 import Vocab_FRONT from "../helpers/Vocab_FRONT/Vocab_FRONT";
 import {
   vocabFetch_TYPES,
-  vocabList_TYPES,
+  list_TYPES,
 } from "../../../../USE_myVocabs/helpers/USE_fetchVocabs/helpers/FETCH_vocabs/types";
 import VocabBack_BTNS from "../helpers/VocabBack_BTNS/VocabBack_BTNS";
 import VocabBack_TEXT from "../helpers/VocabBack_TEXT/VocabBack_TEXT";
@@ -25,7 +25,7 @@ import { useRouter } from "expo-router";
 interface VocabProps {
   vocab: Vocab_TYPE;
   highlighted?: boolean;
-  list_TYPE: vocabList_TYPES;
+  list_TYPE: list_TYPES;
   fetch_TYPE: vocabFetch_TYPES;
   IS_open: boolean;
   TOGGLE_open: (val?: boolean) => void;

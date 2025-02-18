@@ -7,7 +7,7 @@ import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
 import { Error_PROPS, General_ERROR } from "@/src/types/error_TYPES";
 
 export type vocabFetch_TYPES = "byTargetList" | "all" | "deleted" | "marked";
-export type vocabList_TYPES = "private" | "public";
+export type list_TYPES = "private" | "public";
 
 export interface FETCH_myVocabs_ARG_TYPES {
   search: string;
@@ -15,7 +15,7 @@ export interface FETCH_myVocabs_ARG_TYPES {
   amount: number;
   user_id: string;
   list_id: string;
-  list_TYPE: vocabList_TYPES;
+  list_TYPE: list_TYPES;
   excludeIds: Set<string>;
   fetch_TYPE: vocabFetch_TYPES;
   difficultyFilters: (1 | 2 | 3)[];

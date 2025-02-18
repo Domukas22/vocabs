@@ -6,7 +6,7 @@ import { USE_loadMoreVocabs } from "../USE_loadMoreVocabs/USE_loadMoreVocabs";
 import { vocabsReducer_TYPE } from "../USE_myVocabsReducer/Vocab_REDUCER/types";
 import {
   vocabFetch_TYPES,
-  vocabList_TYPES,
+  list_TYPES,
 } from "../USE_fetchVocabs/helpers/FETCH_vocabs/types";
 
 jest.mock("../USE_fetchVocabs/USE_fetchVocabs", () => ({
@@ -83,7 +83,7 @@ describe("USE_vocabReducerActions", () => {
     const { result } = renderHook(() =>
       USE_vocabReducerActions({
         reducer: undefined as unknown as vocabsReducer_TYPE,
-        list_TYPE: undefined as unknown as vocabList_TYPES,
+        list_TYPE: undefined as unknown as list_TYPES,
         fetch_TYPE: undefined as unknown as vocabFetch_TYPES,
         search: undefined as unknown as string,
         targetList_ID: undefined,

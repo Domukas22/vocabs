@@ -9,18 +9,18 @@ import {
 import { FETCH_vocabs } from "@/src/features/vocabs/vocabList/USE_myVocabs/helpers/USE_fetchVocabs/helpers";
 import {
   vocabFetch_TYPES,
-  vocabList_TYPES,
+  list_TYPES,
 } from "@/src/features/vocabs/vocabList/USE_myVocabs/helpers/USE_fetchVocabs/helpers/FETCH_vocabs/types";
 import { FETCH_oneList } from "@/src/features/vocabs/Vocabs_FLASHLIST/helpers/FETCH_oneList/FETCH_oneList";
 import { General_ERROR } from "@/src/types/error_TYPES";
-import { List_TYPE, loadingState_TYPES } from "@/src/types/general_TYPES";
+import { raw_List_TYPE, loadingState_TYPES } from "@/src/types/general_TYPES";
 import { SEND_internalError } from "@/src/utils";
 import DETERMINE_loadingState from "@/src/utils/DETERMINE_loadingState/DETERMINE_loadingState";
 import { create } from "zustand";
 import { z_FETCH_vocabsArgument_TYPES } from "../types";
 
 type z_USE_publicVocabs_PROPS = {
-  z_publicList: List_TYPE | undefined;
+  z_publicList: raw_List_TYPE | undefined;
   z_publicVocabs: Vocab_TYPE[];
   z_publicPrinted_IDS: Set<string>;
   z_publicVocabsUnpaginated_COUNT: number;
@@ -70,14 +70,12 @@ export const z_USE_publicVocabs = create<z_USE_publicVocabs_PROPS>(
         // Handle initial
         if (!list_id) return;
 
-        const _loading_STATE: loadingState_TYPES = loadMore
-          ? "loading_more"
-          : DETERMINE_loadingState({
-              search,
-              targetList_ID: list_id,
-              difficultyFilters,
-              langFilters,
-            });
+        const _loading_STATE: loadingState_TYPES = DETERMINE_loadingState({
+          search,
+          loadMore,
+          difficultyFilters,
+          langFilters,
+        });
 
         set({
           z_publicList: undefined,
@@ -90,13 +88,17 @@ export const z_USE_publicVocabs = create<z_USE_publicVocabs_PROPS>(
         // Handle the list
 
         if (list_TYPE === "public" && fetch_TYPE === "all") {
-          set({ z_publicList: { id: "all-public-vocabs" } as List_TYPE });
+          set({ z_publicList: { id: "all-public-vocabs" } as raw_List_TYPE });
         } else if (list_TYPE === "private" && fetch_TYPE === "all") {
-          set({ z_publicList: { id: "all-my-vocabs" } as List_TYPE });
+          set({ z_publicList: { id: "all-my-vocabs" } as raw_List_TYPE });
         } else if (list_TYPE === "private" && fetch_TYPE === "deleted") {
-          set({ z_publicList: { id: "all-my-deleted-vocabs" } as List_TYPE });
+          set({
+            z_publicList: { id: "all-my-deleted-vocabs" } as raw_List_TYPE,
+          });
         } else if (list_TYPE === "private" && fetch_TYPE === "marked") {
-          set({ z_publicList: { id: "all-my-marked-vocabs" } as List_TYPE });
+          set({
+            z_publicList: { id: "all-my-marked-vocabs" } as raw_List_TYPE,
+          });
         } else {
           const { list } = await FETCH_oneList(user_id, list_id);
           if (!list)

@@ -6,7 +6,7 @@ import Styled_FLASHLIST from "@/src/components/3_other/Styled_FLASHLIST/Styled_F
 import { USE_zustand, USE_getMyListName } from "@/src/hooks";
 import { USE_toast } from "@/src/hooks/USE_toast/USE_toast";
 import { z_USE_myVocabs } from "@/src/features/vocabs/Vocabs_FLASHLIST/helpers/z_USE_myVocabs/z_USE_myVocabs";
-import { USE_vocabZustandActions } from "@/src/hooks/USE_vocabZustandActions/USE_vocabZustandActions";
+import { USE_vocabZustandActions } from "@/src/features/vocabs/Vocabs_FLASHLIST/helpers/USE_vocabZustandActions/USE_vocabZustandActions";
 import { FlashList } from "@shopify/flash-list";
 import React, { useEffect, useRef } from "react";
 import { VocabsFlatlistHeader_SECTION } from "../../components";
@@ -15,7 +15,7 @@ import { Vocab_CARD } from "../../vocabList/Vocabs_LIST/helpers";
 import * as Haptics from "expo-haptics";
 import {
   vocabFetch_TYPES,
-  vocabList_TYPES,
+  list_TYPES,
 } from "../../vocabList/USE_myVocabs/helpers/USE_fetchVocabs/helpers/FETCH_vocabs/types";
 import { VocabFlatlistFooter_SECTION } from "../helpers";
 import { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
@@ -26,6 +26,7 @@ export default function MyVocabs_FLASHLIST({
   IS_debouncing = false,
   search = "",
   debouncedSearch = "",
+  list_NAME = "",
   list_TYPE,
   fetch_TYPE,
   OPEN_createVocabModal = () => {},
@@ -35,8 +36,9 @@ export default function MyVocabs_FLASHLIST({
 }: {
   IS_debouncing: boolean;
   search: string;
+  list_NAME: string;
   debouncedSearch: string;
-  list_TYPE: vocabList_TYPES;
+  list_TYPE: list_TYPES;
   fetch_TYPE: vocabFetch_TYPES;
   OPEN_createVocabModal?: () => void;
   OPEN_updateVocabModal?: (vocab: Vocab_TYPE) => void;
@@ -69,8 +71,6 @@ export default function MyVocabs_FLASHLIST({
     z_SET_myTargetVocab,
   } = z_USE_myVocabs();
 
-  const { list_NAME } = USE_getMyListName();
-
   const { FETCH_vocabs } = USE_vocabZustandActions({
     user_id: z_user?.id || "",
     targetList_ID: urlParamsList_ID,
@@ -86,7 +86,7 @@ export default function MyVocabs_FLASHLIST({
     FETCH_v: z_FETCH_myVocabs,
   });
 
-  // Refect on search / soritng / filter / list_id change
+  // Refetch on search / sorting / filter / list_id change
   useEffect(() => {
     (async () => await FETCH_vocabs())();
   }, [
@@ -97,8 +97,6 @@ export default function MyVocabs_FLASHLIST({
     sorting,
     urlParamsList_ID,
   ]);
-
-  console.log();
 
   return (
     <Styled_FLASHLIST
@@ -113,7 +111,7 @@ export default function MyVocabs_FLASHLIST({
           : z_myVocabs || []
       }
       flashlist_REF={list_REF}
-      renderItem={({ item }) => (
+      renderItem={({ item }: { item: Vocab_TYPE }) => (
         <Vocab_CARD
           vocab={item}
           list_TYPE={list_TYPE}
@@ -155,14 +153,19 @@ export default function MyVocabs_FLASHLIST({
           }
           SOFTDELETE_vocab={(vocab_ID: string) =>
             z_SOFTDELETE_myVocab(vocab_ID, {
-              onSuccess: () => TOAST("success", "Vocab deleted", "bottom"),
+              onSuccess: () => {
+                TOAST("success", "Vocab deleted", "bottom");
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
+              },
               onFailure: (err) => TOAST("error", err.user_MSG, "bottom", 10000),
             })
           }
           HARDDELETE_vocab={(vocab_ID: string) =>
             z_HARDDELETE_myVocab(vocab_ID, {
-              onSuccess: () =>
-                TOAST("success", "Vocab deleted forever", "bottom"),
+              onSuccess: () => {
+                TOAST("success", "Vocab deleted forever", "bottom");
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
+              },
               onFailure: (err) => TOAST("error", err.user_MSG, "bottom", 10000),
             })
           }

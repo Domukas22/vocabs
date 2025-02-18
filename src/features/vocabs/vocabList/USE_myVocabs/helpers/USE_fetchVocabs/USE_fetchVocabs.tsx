@@ -10,7 +10,7 @@ import { General_ERROR } from "@/src/types/error_TYPES";
 import {
   FETCH_myVocabs_RESPONSE_TYPE,
   vocabFetch_TYPES,
-  vocabList_TYPES,
+  list_TYPES,
 } from "./helpers/FETCH_vocabs/types";
 import { vocabsReducer_TYPE } from "../USE_myVocabsReducer/Vocab_REDUCER/types";
 import { FETCH_vocabs, GET_AlreadyPrintedVocabIds } from "./helpers";
@@ -29,7 +29,7 @@ export function USE_fetchVocabs({
   targetList_ID?: string | undefined;
   reducer: vocabsReducer_TYPE;
   fetch_TYPE: vocabFetch_TYPES;
-  list_TYPE: vocabList_TYPES;
+  list_TYPE: list_TYPES;
 }) {
   const { z_user, z_vocabDisplay_SETTINGS } = USE_zustand();
   const { difficultyFilters, langFilters, sortDirection, sorting } =

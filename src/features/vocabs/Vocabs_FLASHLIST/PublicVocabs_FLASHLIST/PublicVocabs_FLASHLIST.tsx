@@ -9,7 +9,7 @@ import {
   USE_getPublicListName,
 } from "@/src/hooks";
 import { USE_toast } from "@/src/hooks/USE_toast/USE_toast";
-import { USE_vocabZustandActions } from "@/src/hooks/USE_vocabZustandActions/USE_vocabZustandActions";
+import { USE_vocabZustandActions } from "@/src/features/vocabs/Vocabs_FLASHLIST/helpers/USE_vocabZustandActions/USE_vocabZustandActions";
 import { FlashList } from "@shopify/flash-list";
 import React, { useEffect, useRef } from "react";
 import { VocabsFlatlistHeader_SECTION } from "../../components";
@@ -18,7 +18,7 @@ import { Vocab_CARD } from "../../vocabList/Vocabs_LIST/helpers";
 import * as Haptics from "expo-haptics";
 import {
   vocabFetch_TYPES,
-  vocabList_TYPES,
+  list_TYPES,
 } from "../../vocabList/USE_myVocabs/helpers/USE_fetchVocabs/helpers/FETCH_vocabs/types";
 import { VocabFlatlistFooter_SECTION } from "../helpers";
 import { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
@@ -38,7 +38,7 @@ export default function PublicVocabs_FLASHLIST({
   IS_debouncing: boolean;
   search: string;
   debouncedSearch: string;
-  list_TYPE: vocabList_TYPES;
+  list_TYPE: list_TYPES;
   fetch_TYPE: vocabFetch_TYPES;
   OPEN_createVocabModal?: () => void;
   OPEN_updateVocabModal?: (vocab: Vocab_TYPE) => void;
@@ -48,9 +48,7 @@ export default function PublicVocabs_FLASHLIST({
   const { urlParamsList_ID } = USE_listIdInParams();
   const list_REF = useRef<FlashList<any>>(null);
 
-  const { TOAST } = USE_toast();
   const { openVocab_IDs, TOGGLE_vocab } = USE_openVocabs();
-
   const { z_user, z_vocabDisplay_SETTINGS } = USE_zustand();
   const { difficultyFilters, langFilters, sortDirection, sorting } =
     z_vocabDisplay_SETTINGS;
@@ -82,7 +80,7 @@ export default function PublicVocabs_FLASHLIST({
     FETCH_v: z_FETCH_publicVocabs,
   });
 
-  // Refect on search / soritng / filter / list_id change
+  // Refetch on search / soritng / filter / list_id change
   useEffect(() => {
     (async () => await FETCH_vocabs())();
   }, [

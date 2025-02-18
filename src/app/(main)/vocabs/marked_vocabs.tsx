@@ -2,7 +2,7 @@
 //
 //
 
-import VocabList_NAV from "@/src/components/1_grouped/headers/listPage/VocabList_NAV";
+import FlashlistPage_NAV from "@/src/components/1_grouped/headers/listPage/FlashlistPage_NAV";
 import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 import {
   UpdateMyVocab_MODAL,
@@ -29,14 +29,14 @@ import { GET_vocabListComponents } from "@/src/features/vocabs/vocabList/GET_voc
 import { USE_listIdInParams } from "@/src/features/vocabs/vocabList/USE_listIdInParams/USE_listIdInParams";
 import {
   vocabFetch_TYPES,
-  vocabList_TYPES,
+  list_TYPES,
 } from "@/src/features/vocabs/vocabList/USE_myVocabs/helpers/USE_fetchVocabs/helpers/FETCH_vocabs/types";
 import { USE_targetVocabs } from "@/src/features/vocabs/vocabList/USE_targetVocabs/USE_targetVocabs";
 import MyVocabs_FLASHLIST from "@/src/features/vocabs/Vocabs_FLASHLIST/MyVocabs_FLASHLIST/MyVocabs_FLASHLIST";
 import { ListSettings_MODAL } from "@/src/features/lists/components";
 
 const fetch_TYPE: vocabFetch_TYPES = "marked";
-const list_TYPE: vocabList_TYPES = "private";
+const list_TYPE: list_TYPES = "private";
 
 export default function SavedVocabs_PAGE() {
   const { showTitle, handleScroll } = USE_showListHeaderTitle();
@@ -51,7 +51,7 @@ export default function SavedVocabs_PAGE() {
 
   return (
     <>
-      <VocabList_NAV
+      <FlashlistPage_NAV
         SHOW_listName={showTitle}
         OPEN_displaySettings={() => modals.displaySettings.set(true)}
         OPEN_listSettings={() => modals.listSettings.set(true)}

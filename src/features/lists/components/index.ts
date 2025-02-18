@@ -4,7 +4,7 @@
 
 // flatlists
 export { ExploreLists_FLATLIST } from "./flatlists/ExploreLists_FLATLIST/ExploreLists_FLATLIST";
-export { MyLists_FLATLIST } from "./flatlists/MyLists_FLATLIST/MyLists_FLATLIST";
+export { MyLists_FLASHLISTsssss as MyLists_FLATLIST } from "./flatlists/MyLists_FLASHLISTsssss/MyLists_FLASHLISTsssss";
 export { ChooseAList_FLATLIST } from "./flatlists/ChooseAList_FLATLIST/ChooseAList_FLATLIST";
 export { MyRecentLists_FLATLIST } from "./flatlists/MyRecentLists_FLATLIST/MyRecentLists_FLATLIST";
 

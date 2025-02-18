@@ -11,7 +11,7 @@ import { UPDATE_vocabMarked } from "@/src/features/vocabs/vocabList/USE_markVoca
 import { FETCH_vocabs } from "@/src/features/vocabs/vocabList/USE_myVocabs/helpers/USE_fetchVocabs/helpers";
 import {
   vocabFetch_TYPES,
-  vocabList_TYPES,
+  list_TYPES,
 } from "@/src/features/vocabs/vocabList/USE_myVocabs/helpers/USE_fetchVocabs/helpers/FETCH_vocabs/types";
 import {
   IS_vocabMarkedBeingDeleted,
@@ -23,15 +23,33 @@ import {
 } from "@/src/features/vocabs/vocabList/USE_updateVocabDifficulty/helpers";
 import { FETCH_oneList } from "@/src/features/vocabs/Vocabs_FLASHLIST/helpers/FETCH_oneList/FETCH_oneList";
 import { General_ERROR } from "@/src/types/error_TYPES";
-import { List_TYPE, loadingState_TYPES } from "@/src/types/general_TYPES";
+import { raw_List_TYPE, loadingState_TYPES } from "@/src/types/general_TYPES";
 import { SEND_internalError } from "@/src/utils";
 import DETERMINE_loadingState from "@/src/utils/DETERMINE_loadingState/DETERMINE_loadingState";
 import { create } from "zustand";
-import { z_FETCH_vocabsArgument_TYPES } from "../types";
+
 import { HARDDELETE_vocab } from "../../../vocabList/USE_softDeleteVocab/helpers/HARDDELETE_vocab/HARDDELETE_vocab";
+import { t } from "i18next";
+
+export type z_FETCH_vocabsArgument_TYPES = {
+  search: string;
+  signal: AbortSignal;
+  amount: number;
+  user_id: string;
+  list_id: string;
+  list_TYPE: list_TYPES;
+
+  fetch_TYPE: vocabFetch_TYPES;
+  difficultyFilters: (1 | 2 | 3)[];
+  langFilters: string[];
+  sortDirection: "ascending" | "descending";
+  sorting: "difficulty" | "date" | "shuffle";
+
+  loadMore: boolean;
+};
 
 type z_USE_myVocabs_PROPS = {
-  z_myList: List_TYPE | undefined;
+  z_myList: raw_List_TYPE | undefined;
   z_myVocabs: Vocab_TYPE[];
   z_target_VOCAB: Vocab_TYPE | undefined;
   z_myVocabPrinted_IDS: Set<string>;
@@ -104,7 +122,6 @@ export const z_USE_myVocabs = create<z_USE_myVocabs_PROPS>((set, get) => ({
       difficultyFilters,
       langFilters,
       loadMore,
-      loading_STATE,
       list_id,
       user_id,
       fetch_TYPE,
@@ -116,17 +133,16 @@ export const z_USE_myVocabs = create<z_USE_myVocabs_PROPS>((set, get) => ({
       // Handle initial
       if (!list_id) return;
 
-      const _z_myVocabsLoading_STATE: loadingState_TYPES = loadMore
-        ? "loading_more"
-        : DETERMINE_loadingState({
-            search,
-            targetList_ID: list_id,
-            difficultyFilters,
-            langFilters,
-          });
+      const _z_myVocabsLoading_STATE: loadingState_TYPES =
+        DETERMINE_loadingState({
+          search,
+          loadMore,
+          difficultyFilters,
+          langFilters,
+        });
 
       set({
-        z_myList: undefined,
+        // z_myList: undefined,
         z_myVocabs_ERROR: undefined,
         z_myVocabsLoading_STATE: _z_myVocabsLoading_STATE,
       });
@@ -136,13 +152,33 @@ export const z_USE_myVocabs = create<z_USE_myVocabs_PROPS>((set, get) => ({
       // Handle the list
 
       if (list_TYPE === "public" && fetch_TYPE === "all") {
-        set({ z_myList: { id: "all-public-vocabs" } as List_TYPE });
+        set({
+          z_myList: {
+            id: "all-public-vocabs",
+            name: t("listName.allPublicVocabs"),
+          } as raw_List_TYPE,
+        });
       } else if (list_TYPE === "private" && fetch_TYPE === "all") {
-        set({ z_myList: { id: "all-my-vocabs" } as List_TYPE });
+        set({
+          z_myList: {
+            id: "all-my-vocabs",
+            name: t("listName.allMyVocabs"),
+          } as raw_List_TYPE,
+        });
       } else if (list_TYPE === "private" && fetch_TYPE === "deleted") {
-        set({ z_myList: { id: "all-my-deleted-vocabs" } as List_TYPE });
+        set({
+          z_myList: {
+            id: "all-my-deleted-vocabs",
+            name: t("listName.deletedVocabs"),
+          } as raw_List_TYPE,
+        });
       } else if (list_TYPE === "private" && fetch_TYPE === "marked") {
-        set({ z_myList: { id: "all-my-marked-vocabs" } as List_TYPE });
+        set({
+          z_myList: {
+            id: "all-my-marked-vocabs",
+            name: t("listName.savedVocabs"),
+          } as raw_List_TYPE,
+        });
       } else {
         const { list } = await FETCH_oneList(user_id, list_id);
         if (!list)

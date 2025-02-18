@@ -4,7 +4,7 @@
 
 import {
   vocabFetch_TYPES,
-  vocabList_TYPES,
+  list_TYPES,
 } from "./helpers/USE_fetchVocabs/helpers/FETCH_vocabs/types";
 import {
   USE_myVocabsReducer,
@@ -13,7 +13,7 @@ import {
 } from "./helpers";
 
 interface USE_myVocabs_ARGS {
-  list_TYPE: vocabList_TYPES;
+  list_TYPE: list_TYPES;
   fetch_TYPE: vocabFetch_TYPES;
   search: string;
   targetList_ID?: string | undefined;

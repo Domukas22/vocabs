@@ -4,7 +4,7 @@
 
 import { loadingState_TYPES } from "@/src/types/general_TYPES";
 import {
-  vocabList_TYPES,
+  list_TYPES,
   vocabFetch_TYPES,
   FETCH_myVocabs_RESPONSE_TYPE,
 } from "../USE_fetchVocabs/helpers/FETCH_vocabs/types";
@@ -24,7 +24,7 @@ export function USE_vocabReducerActions({
   r_SET_error = () => {},
 }: {
   reducer: vocabsReducer_TYPE;
-  list_TYPE: vocabList_TYPES;
+  list_TYPE: list_TYPES;
   fetch_TYPE: vocabFetch_TYPES;
   search: string;
   targetList_ID?: string | undefined;

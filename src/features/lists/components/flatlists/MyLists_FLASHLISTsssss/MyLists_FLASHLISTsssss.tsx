@@ -38,7 +38,7 @@ interface MyListsFlatlist_PROPS {
   LOAD_more: () => Promise<void>;
 }
 
-export function MyLists_FLATLIST({
+export function MyLists_FLASHLISTsssss({
   lists,
   error,
   IS_searching,

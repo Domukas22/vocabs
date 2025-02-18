@@ -18,7 +18,7 @@ import {
 } from "@/src/features/vocabs/types";
 import {
   vocabFetch_TYPES,
-  vocabList_TYPES,
+  list_TYPES,
 } from "@/src/features/vocabs/vocabList/USE_myVocabs/helpers/USE_fetchVocabs/helpers/FETCH_vocabs/types";
 import { USE_toggle } from "@/src/hooks";
 import { useTranslation } from "react-i18next";
@@ -31,7 +31,7 @@ import { useRouter } from "expo-router";
 
 interface VocabBackBtns_PROPS {
   vocab: Vocab_TYPE;
-  list_TYPE: vocabList_TYPES;
+  list_TYPE: list_TYPES;
   fetch_TYPE: vocabFetch_TYPES;
   OPEN_updateVocabModal: (vocab?: Vocab_TYPE) => void;
   OPEN_vocabCopyModal: () => void;

@@ -39,6 +39,9 @@ export function VALIDATE_fetchVocabArgs(args: FETCH_myVocabs_ARG_TYPES) {
   if (!langFilters) throw err("Language filters undefined");
   if (!difficultyFilters) throw err("Difficulty filters undefined");
   if (!sortDirection) throw err("Sort direction undefined");
+  if (sortDirection !== "ascending" && sortDirection !== "descending")
+    err("'sortDirection' was neither ascending nor descending");
+
   if (!sorting) throw err("Sorting direction undefined");
   if (!excludeIds) throw err("Excluded ids undefined");
 

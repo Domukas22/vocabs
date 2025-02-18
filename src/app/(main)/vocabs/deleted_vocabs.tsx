@@ -2,7 +2,7 @@
 //
 //
 
-import VocabList_NAV from "@/src/components/1_grouped/headers/listPage/VocabList_NAV";
+import FlashlistPage_NAV from "@/src/components/1_grouped/headers/listPage/FlashlistPage_NAV";
 import {
   ReviveDeletedVocab_MODAL,
   VocabDisplaySettings_MODAL,
@@ -12,13 +12,13 @@ import { USE_modalToggles } from "@/src/hooks/index";
 import { Portal } from "@gorhom/portal";
 import {
   vocabFetch_TYPES,
-  vocabList_TYPES,
+  list_TYPES,
 } from "@/src/features/vocabs/vocabList/USE_myVocabs/helpers/USE_fetchVocabs/helpers/FETCH_vocabs/types";
 import MyVocabs_FLASHLIST from "@/src/features/vocabs/Vocabs_FLASHLIST/MyVocabs_FLASHLIST/MyVocabs_FLASHLIST";
 import { ListSettings_MODAL } from "@/src/features/lists/components";
 
 const fetch_TYPE: vocabFetch_TYPES = "deleted";
-const list_TYPE: vocabList_TYPES = "private";
+const list_TYPE: list_TYPES = "private";
 
 export default function DeletedVocabs_PAGE() {
   const { showTitle, handleScroll } = USE_showListHeaderTitle();
@@ -33,7 +33,7 @@ export default function DeletedVocabs_PAGE() {
 
   return (
     <>
-      <VocabList_NAV
+      <FlashlistPage_NAV
         SHOW_listName={showTitle}
         OPEN_displaySettings={() => modals.displaySettings.set(true)}
         OPEN_listSettings={() => modals.listSettings.set(true)}

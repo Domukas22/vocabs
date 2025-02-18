@@ -12,7 +12,7 @@ import { currentVocabAction_TYPE } from "@/src/app/(main)/vocabs/[list_id]";
 import { General_ERROR } from "@/src/types/error_TYPES";
 import { loadingState_TYPES } from "@/src/types/general_TYPES";
 import {
-  vocabList_TYPES,
+  list_TYPES,
   vocabFetch_TYPES,
 } from "../USE_myVocabs/helpers/USE_fetchVocabs/helpers/FETCH_vocabs/types";
 import { VocabsFlatlistHeader_SECTION } from "../../components";
@@ -67,7 +67,7 @@ export function Vocab_LIST({
   vocabs_ERROR: General_ERROR | undefined;
   HAS_reachedEnd: boolean;
   highlighted_ID: string;
-  list_TYPE: vocabList_TYPES;
+  list_TYPE: list_TYPES;
   fetch_TYPE: vocabFetch_TYPES;
   LOAD_moreVocabs: () => void;
   OPEN_modalCreateVocab: () => void;

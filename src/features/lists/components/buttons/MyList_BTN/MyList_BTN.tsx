@@ -16,40 +16,26 @@ import {
   ListBtn_TOP,
   ListBtnDifficulty_COUNTS,
 } from "../_components";
+import { List_TYPE } from "@/src/types/general_TYPES";
 
 function _MyList_BTN({
-  diff_1_count = 0,
-  diff_2_count = 0,
-  diff_3_count = 0,
-  vocab_COUNT = 0,
-  markedVocab_COUNT = 0,
   list,
   onPress,
   highlighted,
-  blurAndDisable = false,
 }: {
   diff_1_count: number;
   diff_2_count: number;
   diff_3_count: number;
   markedVocab_COUNT: number;
   vocab_COUNT: number;
-  list: List_MODEL;
+  list: List_TYPE;
   onPress: () => void;
   highlighted: boolean;
-  blurAndDisable?: boolean;
 }) {
   const { t } = useTranslation();
-  const IS_submitted = useMemo(
-    () => list?.is_submitted_for_publish,
-    [list?.is_submitted_for_publish]
-  );
-  const IS_accepted = useMemo(
-    () => list?.was_accepted_for_publish,
-    [list?.was_accepted_for_publish]
-  );
 
   return (
-    <Big_BTN {...{ onPress, blurAndDisable, highlighted }}>
+    <Big_BTN {...{ onPress, highlighted }}>
       <ListBtn_TOP
         name={list?.name}
         description={list?.description}

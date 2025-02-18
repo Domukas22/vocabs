@@ -4,14 +4,14 @@
 
 import { supabase } from "@/src/lib/supabase";
 import { General_ERROR } from "@/src/types/error_TYPES";
-import { List_TYPE } from "@/src/types/general_TYPES";
+import { raw_List_TYPE } from "@/src/types/general_TYPES";
 
 export const function_NAME = "FETCH_oneList";
 
 export async function FETCH_oneList(
   user_id: string,
   list_id: string
-): Promise<{ list?: List_TYPE }> {
+): Promise<{ list?: raw_List_TYPE }> {
   if (!user_id)
     throw new General_ERROR({
       function_NAME,
