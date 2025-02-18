@@ -3,15 +3,16 @@
 //
 
 import { General_ERROR } from "@/src/types/error_TYPES";
-import { loadingState_TYPES, List_TYPE } from "@/src/types/general_TYPES";
+import { loadingState_TYPES } from "@/src/types/general_TYPES";
 import { SEND_internalError } from "@/src/utils";
 import DETERMINE_loadingState from "@/src/utils/DETERMINE_loadingState/DETERMINE_loadingState";
-import { create } from "zustand";
 import {
   currentListAction_TYPE,
   z_FETCH_listsArgument_TYPES,
-} from "../../../../features/lists/Lists_FLASHLIST/helpers/types";
+} from "@/src/zustand/types";
+import { create } from "zustand";
 import { FETCH_lists } from "../../functions/FETCH_lists/FETCH_lists";
+import { List_TYPE } from "../../types";
 
 type z_USE_myLists_PROPS = {
   z_myLists: List_TYPE[];
@@ -31,13 +32,13 @@ type z_USE_myLists_PROPS = {
 
   z_FETCH_myLists: (args: z_FETCH_listsArgument_TYPES) => Promise<void>;
 
-  // z_HARDDELETE_myVocab: (
-  //   vocab_ID: string,
-  //   sideEffects: {
-  //     onSuccess?: () => void;
-  //     onFailure?: (error: General_ERROR) => void;
-  //   }
-  // ) => Promise<void>;
+  // Remove one list from already printed lists
+
+  // Create list + add list to printed lists
+  // Add list to printed lists
+
+  // Update a list inside the already printed lists
+
   z_HIGHLIGHT_myList: (list_id: string) => void;
   z_SET_myTargetList: (list: List_TYPE | undefined) => void;
 };

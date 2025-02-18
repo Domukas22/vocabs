@@ -16,9 +16,8 @@ export type raw_List_TYPE = {
   description: string;
   saved_count: number;
 
-  updated_at: string;
   created_at: string;
-  deleted_at: string;
+  updated_at: string;
 
   // only for private lists
   vocabs?: { difficulty: number; is_marked: boolean }[];
@@ -35,9 +34,8 @@ export type List_TYPE = {
   description: string;
   saved_count: number;
 
-  updated_at: string;
   created_at: string;
-  deleted_at: string;
+  updated_at: string;
 
   // only for private lists
   vocab_INFOS?: {

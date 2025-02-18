@@ -8,7 +8,7 @@ import { BUILD_listFilterQuery } from "../BUILD_listFilterQuery/BUILD_listFilter
 import { BUILD_listPaginationQuery } from "../BUILD_listPaginationQuery/BUILD_listPaginationQuery";
 import { BUILD_listSortingQuery } from "../BUILD_listSortingQuery/BUILD_listSortingQuery";
 import { General_ERROR } from "@/src/types/error_TYPES";
-import { raw_List_TYPE } from "@/src/types/general_TYPES";
+import { raw_List_TYPE } from "@/src/features_new/lists/types";
 
 const function_NAME = "FETCH_finalLists";
 

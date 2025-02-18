@@ -2,9 +2,6 @@
 //
 //
 
-🔴 Next up:
---> Create a function to fetch lists
---> Set up modal to select list
 // ------------------------------------------------------------------------
 
 --> Offer vocabs for a completed survey
