@@ -19,10 +19,10 @@ import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import { useTranslation } from "react-i18next";
 import { withObservables } from "@nozbe/watermelondb/react";
 import { useToast } from "react-native-toast-notifications";
-import { Vocab_TYPE } from "@/src/features/vocabs/types";
+import { raw_Vocab_TYPE } from "@/src/features_new/vocabs/types";
 
 interface VocabProps {
-  _vocab: Vocab_TYPE;
+  _vocab: raw_Vocab_TYPE;
   highlighted: boolean;
 
   HANDLE_updateModal: ({
@@ -31,7 +31,7 @@ interface VocabProps {
     trs,
   }: {
     clear?: boolean;
-    vocab?: Vocab_TYPE;
+    vocab?: raw_Vocab_TYPE;
     trs?: VocabTr_TYPE[];
   }) => void;
 }

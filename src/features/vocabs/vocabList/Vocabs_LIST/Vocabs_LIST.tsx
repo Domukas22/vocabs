@@ -5,7 +5,7 @@
 import Styled_FLASHLIST from "@/src/components/3_other/Styled_FLASHLIST/Styled_FLASHLIST";
 import { FlashList } from "@shopify/flash-list";
 import { NativeSyntheticEvent, NativeScrollEvent } from "react-native";
-import { Vocab_TYPE } from "../../types";
+import { raw_Vocab_TYPE } from "../../types";
 import React from "react";
 import { USE_openVocabs } from "../USE_openVocabs/USE_openVocabs";
 import { currentVocabAction_TYPE } from "@/src/app/(main)/vocabs/[list_id]";
@@ -13,12 +13,12 @@ import { General_ERROR } from "@/src/types/error_TYPES";
 import { loadingState_TYPES } from "@/src/types/general_TYPES";
 import {
   list_TYPES,
-  vocabFetch_TYPES,
-} from "../USE_myVocabs/helpers/USE_fetchVocabs/helpers/FETCH_vocabs/types";
+  myVocabFetch_TYPES,
+} from "../../../../features_new/vocabs/functions/fetch/FETCH_vocabs/types";
 import { VocabsFlatlistHeader_SECTION } from "../../components";
 import BottomAction_BLOCK from "@/src/components/1_grouped/blocks/BottomAction_BLOCK";
 import Error_BLOCK from "@/src/components/1_grouped/blocks/Error_BLOCK";
-import { VocabsSkeleton_BLOCK } from "./helpers/VocabsSkeleton_BLOCK/VocabsSkeleton_BLOCK";
+import { VocabsSkeleton_BLOCK } from "../../../../features_new/vocabs/components/flashlists/components/VocabsSkeleton_BLOCK/VocabsSkeleton_BLOCK";
 import { Vocab_CARD } from "./helpers";
 
 export function Vocab_LIST({
@@ -45,7 +45,7 @@ export function Vocab_LIST({
   LOAD_moreVocabs = () => {},
   OPEN_modalCreateVocab = () => {},
   OPEN_modalUpdateVocab = () => {},
-  OPEN_vocabSoftDeleteModal = (vocab: Vocab_TYPE) => {},
+  OPEN_vocabSoftDeleteModal = (vocab: raw_Vocab_TYPE) => {},
   UPDATE_vocabDifficulty = () => Promise.resolve(),
   z_myVocabsCurrent_ACTIONS = [],
   RESET_search = () => {},
@@ -55,7 +55,7 @@ export function Vocab_LIST({
   highlightedVocab_ID: string | undefined;
   flashlist_REF?: React.RefObject<FlashList<any>>;
   HIDE_vocabs: boolean;
-  vocabs: Vocab_TYPE[] | undefined;
+  vocabs: raw_Vocab_TYPE[] | undefined;
   current_ACTIONS: currentVocabAction_TYPE[];
 
   IS_debouncing: boolean;
@@ -68,11 +68,11 @@ export function Vocab_LIST({
   HAS_reachedEnd: boolean;
   highlighted_ID: string;
   list_TYPE: list_TYPES;
-  fetch_TYPE: vocabFetch_TYPES;
+  fetch_TYPE: myVocabFetch_TYPES;
   LOAD_moreVocabs: () => void;
   OPEN_modalCreateVocab: () => void;
-  OPEN_vocabSoftDeleteModal: (vocab: Vocab_TYPE) => void;
-  OPEN_modalUpdateVocab: (vocab: Vocab_TYPE) => void;
+  OPEN_vocabSoftDeleteModal: (vocab: raw_Vocab_TYPE) => void;
+  OPEN_modalUpdateVocab: (vocab: raw_Vocab_TYPE) => void;
   RESET_search: () => void;
   UPDATE_vocabDifficulty: (
     vocab_ID: string,

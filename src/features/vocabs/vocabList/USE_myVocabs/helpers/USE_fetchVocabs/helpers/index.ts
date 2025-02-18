@@ -2,5 +2,4 @@
 //
 //
 
-export { GET_AlreadyPrintedVocabIds } from "./GET_AlreadyPrintedVocabIds/GET_AlreadyPrintedVocabIds";
-export { FETCH_vocabs } from "./FETCH_vocabs/FETCH_vocabs";
+export { FETCH_vocabs } from "../../../../../../../features_new/vocabs/functions/fetch/FETCH_vocabs/FETCH_vocabs";

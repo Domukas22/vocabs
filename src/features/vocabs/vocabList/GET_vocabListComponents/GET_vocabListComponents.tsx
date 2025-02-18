@@ -7,13 +7,13 @@ import Error_BLOCK from "@/src/components/1_grouped/blocks/Error_BLOCK";
 import { General_ERROR } from "@/src/types/error_TYPES";
 import { loadingState_TYPES } from "@/src/types/general_TYPES";
 import { VocabsFlatlistHeader_SECTION } from "../../components";
-import { Vocab_TYPE } from "../../types";
+import { raw_Vocab_TYPE } from "../../types";
 import { Vocab_CARD } from "../Vocabs_LIST/helpers";
-import { VocabsSkeleton_BLOCK } from "../Vocabs_LIST/helpers/VocabsSkeleton_BLOCK/VocabsSkeleton_BLOCK";
+import { VocabsSkeleton_BLOCK } from "../../../../features_new/vocabs/components/flashlists/components/VocabsSkeleton_BLOCK/VocabsSkeleton_BLOCK";
 import {
-  vocabFetch_TYPES,
+  myVocabFetch_TYPES,
   list_TYPES,
-} from "../USE_myVocabs/helpers/USE_fetchVocabs/helpers/FETCH_vocabs/types";
+} from "../../../../features_new/vocabs/functions/fetch/FETCH_vocabs/types";
 import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { currentVocabAction_TYPE } from "@/src/app/(main)/vocabs/[list_id]";
 
@@ -28,11 +28,11 @@ interface GET_vocabListComponents_PROPS {
   HAS_reachedEnd: boolean;
   highlighted_ID: string;
   list_TYPE: list_TYPES;
-  fetch_TYPE: vocabFetch_TYPES;
+  fetch_TYPE: myVocabFetch_TYPES;
   LOAD_moreVocabs: () => void;
   OPEN_modalCreateVocab: () => void;
-  OPEN_vocabSoftDeleteModal: (vocab: Vocab_TYPE) => void;
-  OPEN_modalUpdateVocab: (vocab: Vocab_TYPE) => void;
+  OPEN_vocabSoftDeleteModal: (vocab: raw_Vocab_TYPE) => void;
+  OPEN_modalUpdateVocab: (vocab: raw_Vocab_TYPE) => void;
   RESET_search: () => void;
   UPDATE_vocabDifficulty: (
     vocab_ID: string,
@@ -57,7 +57,7 @@ export function GET_vocabListComponents({
   LOAD_moreVocabs = () => {},
   OPEN_modalCreateVocab = () => {},
   OPEN_modalUpdateVocab = () => {},
-  OPEN_vocabSoftDeleteModal = (vocab: Vocab_TYPE) => {},
+  OPEN_vocabSoftDeleteModal = (vocab: raw_Vocab_TYPE) => {},
   UPDATE_vocabDifficulty = () => Promise.resolve(),
   z_myVocabsCurrent_ACTIONS = [],
   RESET_search = () => {},
@@ -108,7 +108,7 @@ export function GET_vocabListComponents({
       openVocab_IDs,
       TOGGLE_vocab,
     }: {
-      vocab: Vocab_TYPE;
+      vocab: raw_Vocab_TYPE;
       openVocab_IDs: Set<string>;
       TOGGLE_vocab: (vocab_ID: string, val?: boolean) => void;
     }) => (

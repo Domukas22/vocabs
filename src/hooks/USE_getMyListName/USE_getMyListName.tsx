@@ -2,9 +2,9 @@
 //
 //
 
+import { z_USE_myVocabs } from "@/src/features_new/vocabs/hooks/z_USE_myVocabs/z_USE_myVocabs";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { z_USE_myVocabs } from "../../features/vocabs/Vocabs_FLASHLIST/helpers/z_USE_myVocabs/z_USE_myVocabs";
 
 export function USE_getMyListName() {
   const { z_myList: list, z_myVocabsLoading_STATE: loading_STATE } =

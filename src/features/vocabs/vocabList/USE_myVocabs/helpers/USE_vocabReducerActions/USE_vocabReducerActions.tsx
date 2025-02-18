@@ -5,9 +5,9 @@
 import { loadingState_TYPES } from "@/src/types/general_TYPES";
 import {
   list_TYPES,
-  vocabFetch_TYPES,
+  myVocabFetch_TYPES,
   FETCH_myVocabs_RESPONSE_TYPE,
-} from "../USE_fetchVocabs/helpers/FETCH_vocabs/types";
+} from "../../../../../../features_new/vocabs/functions/fetch/FETCH_vocabs/types";
 import { USE_fetchVocabs } from "../USE_fetchVocabs/USE_fetchVocabs";
 import { USE_fetchVocabsAndHanldeState } from "../USE_fetchVocabsAndHanldeState/USE_fetchVocabsAndHanldeState";
 import { USE_loadMoreVocabs } from "../USE_loadMoreVocabs/USE_loadMoreVocabs";
@@ -25,7 +25,7 @@ export function USE_vocabReducerActions({
 }: {
   reducer: vocabsReducer_TYPE;
   list_TYPE: list_TYPES;
-  fetch_TYPE: vocabFetch_TYPES;
+  fetch_TYPE: myVocabFetch_TYPES;
   search: string;
   targetList_ID?: string | undefined;
   r_START_fetch: (loadingState_TYPE: loadingState_TYPES) => void;

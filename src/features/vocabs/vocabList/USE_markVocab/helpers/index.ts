@@ -2,4 +2,4 @@
 //
 //
 
-export { IS_vocabMarkedBeingUpdated } from "./IS_vocabMarkedBeingUpdated/IS_vocabMarkedBeingUpdated";
+export { IS_vocabMarkedBeingUpdated } from "../../../../../features_new/vocabs/functions/update/marked/IS_vocabMarkedBeingUpdated/IS_vocabMarkedBeingUpdated";

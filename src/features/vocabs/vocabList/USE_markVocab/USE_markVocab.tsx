@@ -8,8 +8,8 @@ import { General_ERROR } from "@/src/types/error_TYPES";
 import { Delay, SEND_internalError } from "@/src/utils";
 import { useCallback } from "react";
 import { IS_vocabMarkedBeingUpdated } from "./helpers";
-import { UPDATE_vocabMarked } from "./helpers/UPDATE_vocabMarked/UPDATE_vocabMarked";
-import { Vocab_TYPE } from "../../types";
+import { UPDATE_vocabMarked } from "../../../../features_new/vocabs/functions/update/marked/UPDATE_vocabMarked/UPDATE_vocabMarked";
+import { raw_Vocab_TYPE } from "../../types";
 
 const function_NAME = "USE_markVocab";
 
@@ -22,7 +22,7 @@ export function USE_markVocab({
   z_myVocabsCurrent_ACTIONS: currentVocabAction_TYPE[];
   START_vocabAction: (new_ACTION: currentVocabAction_TYPE) => void;
   STOP_vocabAction: (vocab_ID: string) => void;
-  onSuccess: (vocab: Vocab_TYPE) => void;
+  onSuccess: (vocab: raw_Vocab_TYPE) => void;
 }) {
   const { TOAST } = USE_toast();
 

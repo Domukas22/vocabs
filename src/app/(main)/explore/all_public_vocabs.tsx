@@ -10,14 +10,14 @@ import { VocabDisplaySettings_MODAL } from "@/src/features/vocabs/components";
 import { USE_debounceSearch, USE_showListHeaderTitle } from "@/src/hooks";
 import { USE_modalToggles } from "@/src/hooks/index";
 import {
-  vocabFetch_TYPES,
+  myVocabFetch_TYPES,
   list_TYPES,
-} from "@/src/features/vocabs/vocabList/USE_myVocabs/helpers/USE_fetchVocabs/helpers/FETCH_vocabs/types";
+} from "@/src/features_new/vocabs/functions/fetch/FETCH_vocabs/types";
 import { Portal } from "@gorhom/portal";
-import MyVocabs_FLASHLIST from "@/src/features/vocabs/Vocabs_FLASHLIST/MyVocabs_FLASHLIST/MyVocabs_FLASHLIST";
-import PublicVocabs_FLASHLIST from "@/src/features/vocabs/Vocabs_FLASHLIST/PublicVocabs_FLASHLIST/PublicVocabs_FLASHLIST";
+import MyVocabs_FLASHLIST from "@/src/features_new/vocabs/components/flashlists/MyVocabs_FLASHLIST/MyVocabs_FLASHLIST";
+import PublicVocabs_FLASHLIST from "@/src/features_new/vocabs/components/flashlists/PublicVocabs_FLASHLIST/PublicVocabs_FLASHLIST";
 
-const fetch_TYPE: vocabFetch_TYPES = "all";
+const fetch_TYPE: myVocabFetch_TYPES = "all";
 const list_TYPE: list_TYPES = "public";
 
 export default function AllPublicVocabs_PAGE() {

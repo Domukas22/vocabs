@@ -5,9 +5,9 @@ import { USE_fetchVocabsAndHanldeState } from "../USE_fetchVocabsAndHanldeState/
 import { USE_loadMoreVocabs } from "../USE_loadMoreVocabs/USE_loadMoreVocabs";
 import { vocabsReducer_TYPE } from "../USE_myVocabsReducer/Vocab_REDUCER/types";
 import {
-  vocabFetch_TYPES,
+  myVocabFetch_TYPES,
   list_TYPES,
-} from "../USE_fetchVocabs/helpers/FETCH_vocabs/types";
+} from "../../../../../../features_new/vocabs/functions/fetch/FETCH_vocabs/types";
 
 jest.mock("../USE_fetchVocabs/USE_fetchVocabs", () => ({
   USE_fetchVocabs: jest.fn(),
@@ -84,7 +84,7 @@ describe("USE_vocabReducerActions", () => {
       USE_vocabReducerActions({
         reducer: undefined as unknown as vocabsReducer_TYPE,
         list_TYPE: undefined as unknown as list_TYPES,
-        fetch_TYPE: undefined as unknown as vocabFetch_TYPES,
+        fetch_TYPE: undefined as unknown as myVocabFetch_TYPES,
         search: undefined as unknown as string,
         targetList_ID: undefined,
         r_START_fetch: mock_START_fetch,

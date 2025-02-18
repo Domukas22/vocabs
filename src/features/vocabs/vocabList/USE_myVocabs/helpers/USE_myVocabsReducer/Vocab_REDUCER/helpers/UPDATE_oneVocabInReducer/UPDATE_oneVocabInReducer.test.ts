@@ -5,7 +5,7 @@
 import { General_ERROR } from "@/src/types/error_TYPES";
 import { vocabsReducer_TYPE, UPDATE_oneVocab_PAYLOAD } from "../../types";
 import { UPDATE_oneVocabInReducer } from "./UPDATE_oneVocabInReducer";
-import { Vocab_TYPE } from "@/src/features/vocabs/types";
+import { raw_Vocab_TYPE } from "@/src/features_new/vocabs/types";
 
 // Mock state and payload
 const mockState = {
@@ -13,7 +13,7 @@ const mockState = {
     vocabs: [
       { id: "1", searchable: "Searchable1" },
       { id: "2", searchable: "Searchable2" },
-    ] as Vocab_TYPE[],
+    ] as raw_Vocab_TYPE[],
     printed_IDS: new Set(["1", "2"]),
     unpaginated_COUNT: 2,
     HAS_reachedEnd: false,
@@ -84,7 +84,7 @@ describe("UPDATE_oneVocabInReducer", () => {
         vocabs: [
           { id: "1", searchable: "Searchable1" },
           { id: "2", searchable: "Searchable2" },
-        ] as Vocab_TYPE[],
+        ] as raw_Vocab_TYPE[],
         printed_IDS: new Set(["1", "2"]),
         unpaginated_COUNT: "not-a-number" as unknown as number,
         HAS_reachedEnd: false,
@@ -103,7 +103,7 @@ describe("UPDATE_oneVocabInReducer", () => {
         vocabs: [
           { id: "1", searchable: "Searchable1" },
           { id: "2", searchable: "Searchable2" },
-        ] as Vocab_TYPE[],
+        ] as raw_Vocab_TYPE[],
         printed_IDS: new Set(["1", "2"]),
         unpaginated_COUNT: 2,
         HAS_reachedEnd: "notABoolean" as unknown as boolean,
@@ -138,7 +138,7 @@ describe("UPDATE_oneVocabInReducer", () => {
         vocabs: [
           { searchable: "Searchable1" },
           { id: "2", searchable: "Searchable2" },
-        ] as Vocab_TYPE[],
+        ] as raw_Vocab_TYPE[],
         printed_IDS: new Set(["1", "2"]),
         unpaginated_COUNT: 2,
         HAS_reachedEnd: false,

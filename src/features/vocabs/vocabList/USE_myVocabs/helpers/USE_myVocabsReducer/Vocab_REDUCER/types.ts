@@ -2,13 +2,13 @@
 //
 //
 
-import { Vocab_TYPE } from "@/src/features/vocabs/types";
+import { raw_Vocab_TYPE } from "@/src/features_new/vocabs/types";
 import { General_ERROR } from "@/src/types/error_TYPES";
 import { loadingState_TYPES } from "@/src/types/general_TYPES";
-import { FETCH_myVocabs_RESPONSE_TYPE } from "../../USE_fetchVocabs/helpers/FETCH_vocabs/types";
+import { FETCH_myVocabs_RESPONSE_TYPE } from "../../../../../../../features_new/vocabs/functions/fetch/FETCH_vocabs/types";
 
-export type PREPEND_oneVocab_PAYLOAD = Vocab_TYPE;
-export type UPDATE_oneVocab_PAYLOAD = Vocab_TYPE;
+export type PREPEND_oneVocab_PAYLOAD = raw_Vocab_TYPE;
+export type UPDATE_oneVocab_PAYLOAD = raw_Vocab_TYPE;
 export type APPEND_manyVocabs_PAYLOAD = FETCH_myVocabs_RESPONSE_TYPE;
 export type DELETE_oneVocab_PAYLOAD = string;
 export type SET_error_PAYLOAD = General_ERROR;
@@ -30,7 +30,7 @@ export type myVocabsReducerAction_PROPS =
 
 export type vocabsReducer_TYPE = {
   data?: {
-    vocabs: Vocab_TYPE[];
+    vocabs: raw_Vocab_TYPE[];
     printed_IDS: Set<string>;
     unpaginated_COUNT: number;
     HAS_reachedEnd: boolean;

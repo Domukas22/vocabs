@@ -2,9 +2,9 @@
 //
 //
 
+import { z_USE_publicVocabs } from "@/src/features_new/vocabs/hooks/z_USE_publicVocabs/z_USE_publicVocabs";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { z_USE_publicVocabs } from "@/src/features/vocabs/Vocabs_FLASHLIST/helpers/z_USE_publicVocabs/z_USE_publicVocabs";
 
 export function USE_getPublicListName() {
   const { z_publicList: list, z_publicVocabsLoading_STATE: loading_STATE } =

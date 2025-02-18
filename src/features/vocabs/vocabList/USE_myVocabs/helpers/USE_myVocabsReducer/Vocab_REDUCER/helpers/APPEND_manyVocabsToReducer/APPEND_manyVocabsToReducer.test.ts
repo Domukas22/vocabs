@@ -5,7 +5,7 @@
 import { General_ERROR } from "@/src/types/error_TYPES";
 import { vocabsReducer_TYPE, APPEND_manyVocabs_PAYLOAD } from "../../types";
 import { APPEND_manyVocabsToReducer } from "./APPEND_manyVocabsToReducer";
-import { Vocab_TYPE } from "@/src/features/vocabs/types";
+import { raw_Vocab_TYPE } from "@/src/features_new/vocabs/types";
 
 // Mock state and payload
 const mockState = {
@@ -102,7 +102,7 @@ describe("APPEND_manyVocabsToReducer", () => {
   // 7. Throws an error when payload.vocabs is undefined
   test("7. Throws error if payload.vocabs is undefined", () => {
     const _invalidPayload = {
-      vocabs: undefined as unknown as Vocab_TYPE[],
+      vocabs: undefined as unknown as raw_Vocab_TYPE[],
       unpaginated_COUNT: 4,
     };
     expect(() =>
@@ -138,7 +138,7 @@ describe("APPEND_manyVocabsToReducer", () => {
       vocabs: [
         { id: "3" },
         { id: undefined as unknown as string },
-      ] as Vocab_TYPE[],
+      ] as raw_Vocab_TYPE[],
       unpaginated_COUNT: 4,
     };
     expect(() => APPEND_manyVocabsToReducer(mockState, invalidPayload)).toThrow(

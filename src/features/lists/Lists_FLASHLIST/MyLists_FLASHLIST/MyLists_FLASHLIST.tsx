@@ -9,10 +9,10 @@ import { FlashList } from "@shopify/flash-list";
 import React, { useEffect, useRef } from "react";
 
 import { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
-import { list_TYPES } from "@/src/features/vocabs/vocabList/USE_myVocabs/helpers/USE_fetchVocabs/helpers/FETCH_vocabs/types";
+import { list_TYPES } from "@/src/features_new/vocabs/functions/fetch/FETCH_vocabs/types";
 import { List_TYPE } from "@/src/types/general_TYPES";
-import { z_USE_myLists } from "../helpers/z_USE_myLists/z_USE_myLists";
-import { USE_listZustandActions } from "../helpers/USE_listZustandActions/USE_listZustandActions";
+import { z_USE_myLists } from "../../../../features_new/lists/hooks/z_USE_myLists/z_USE_myLists";
+import { USE_myListsZustandActions } from "../../../../features_new/lists/hooks/USE_myListsZustandActions/USE_myListsZustandActions";
 import { useRouter } from "expo-router";
 import { ListsFlatlist_HEADER } from "../../components";
 import { MyList_BTN } from "../helpers";
@@ -57,7 +57,7 @@ export default function MyLists_FLASHLIST({
     z_SET_myTargetList,
   } = z_USE_myLists();
 
-  const { FETCH_lists } = USE_listZustandActions({
+  const { FETCH_lists } = USE_myListsZustandActions({
     search: debouncedSearch,
     user_id: z_user?.id || "",
     list_TYPE,

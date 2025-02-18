@@ -24,18 +24,18 @@ import { Portal } from "@gorhom/portal";
 import { USE_myVocabs } from "@/src/features/vocabs/vocabList/USE_myVocabs/USE_myVocabs";
 import { Vocab_LIST } from "@/src/features/vocabs/vocabList/Vocabs_LIST/Vocabs_LIST";
 import { USE_observeMyTargetList } from "@/src/features/lists/functions";
-import { Vocab_TYPE } from "@/src/features/vocabs/types";
+import { raw_Vocab_TYPE } from "@/src/features_new/vocabs/types";
 import { GET_vocabListComponents } from "@/src/features/vocabs/vocabList/GET_vocabListComponents/GET_vocabListComponents";
 import { USE_listIdInParams } from "@/src/features/vocabs/vocabList/USE_listIdInParams/USE_listIdInParams";
 import {
-  vocabFetch_TYPES,
+  myVocabFetch_TYPES,
   list_TYPES,
-} from "@/src/features/vocabs/vocabList/USE_myVocabs/helpers/USE_fetchVocabs/helpers/FETCH_vocabs/types";
+} from "@/src/features_new/vocabs/functions/fetch/FETCH_vocabs/types";
 import { USE_targetVocabs } from "@/src/features/vocabs/vocabList/USE_targetVocabs/USE_targetVocabs";
-import MyVocabs_FLASHLIST from "@/src/features/vocabs/Vocabs_FLASHLIST/MyVocabs_FLASHLIST/MyVocabs_FLASHLIST";
+import MyVocabs_FLASHLIST from "@/src/features_new/vocabs/components/flashlists/MyVocabs_FLASHLIST/MyVocabs_FLASHLIST";
 import { ListSettings_MODAL } from "@/src/features/lists/components";
 
-const fetch_TYPE: vocabFetch_TYPES = "marked";
+const fetch_TYPE: myVocabFetch_TYPES = "marked";
 const list_TYPE: list_TYPES = "private";
 
 export default function SavedVocabs_PAGE() {

@@ -3,25 +3,29 @@
 //
 
 import { useCallback, useState } from "react";
-import { Vocab_TYPE } from "../../types";
+import { raw_Vocab_TYPE } from "../../types";
 
 type SetTargetVocab_ACTION = "update" | "move" | "copy" | "delete" | "revive";
 
 export function USE_targetVocabs() {
   const [toUpdate_VOCAB, SET_toUpdateVocab] = useState<
-    Vocab_TYPE | undefined
+    raw_Vocab_TYPE | undefined
   >();
   const [toDelete_VOCAB, SET_toDeleteVocab] = useState<
-    Vocab_TYPE | undefined
+    raw_Vocab_TYPE | undefined
   >();
-  const [toCopy_VOCAB, SET_toCopyVocab] = useState<Vocab_TYPE | undefined>();
-  const [toMove_VOCAB, SET_toMoveVocab] = useState<Vocab_TYPE | undefined>();
+  const [toCopy_VOCAB, SET_toCopyVocab] = useState<
+    raw_Vocab_TYPE | undefined
+  >();
+  const [toMove_VOCAB, SET_toMoveVocab] = useState<
+    raw_Vocab_TYPE | undefined
+  >();
   const [toRevive_VOCAB, SET_toReviveVocab] = useState<
-    Vocab_TYPE | undefined
+    raw_Vocab_TYPE | undefined
   >();
 
   const SET_targetVocab = useCallback(
-    (vocab: Vocab_TYPE, as: SetTargetVocab_ACTION) => {
+    (vocab: raw_Vocab_TYPE, as: SetTargetVocab_ACTION) => {
       if (!vocab || !as) return;
 
       switch (as) {

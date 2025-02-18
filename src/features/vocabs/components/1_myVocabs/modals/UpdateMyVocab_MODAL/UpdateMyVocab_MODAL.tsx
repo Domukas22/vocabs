@@ -12,8 +12,6 @@ import List_MODEL from "@/src/db/models/List_MODEL";
 import Language_MODEL from "@/src/db/models/Language_MODEL";
 import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 
-import { Vocab_TYPE, VocabTr_TYPE } from "@/src/features/vocabs/types";
-
 import { Q } from "@nozbe/watermelondb";
 import { FETCH_langs } from "@/src/features/languages/functions/fetch/FETCH_langs/FETCH_langs";
 import { Lists_DB } from "@/src/db";
@@ -39,7 +37,8 @@ import {
 import { TrHighlights_MODAL } from "../TrHighlights_MODAL/TrHighlights_MODAL";
 import { SelectMultipleLanguages_MODAL } from "@/src/features/languages/components";
 import { USE_modalToggles } from "@/src/hooks/index";
-import { z_USE_myVocabs } from "@/src/features/vocabs/Vocabs_FLASHLIST/helpers/z_USE_myVocabs/z_USE_myVocabs";
+import { z_USE_myVocabs } from "@/src/features_new/vocabs/hooks/z_USE_myVocabs/z_USE_myVocabs";
+import { VocabTr_TYPE } from "@/src/features_new/vocabs/types";
 
 interface UpdateMyVocabModal_PROPS {
   IS_open: boolean;

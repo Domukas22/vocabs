@@ -26,7 +26,7 @@ import VocabLangFilters_BLOCK from "./comps/components/VocabLangFilters_BLOCK";
 import VocabPreviewToggles_BLOCK from "./comps/components/VocabPreviewToggles_BLOCK";
 import VocabSortDirection_BLOCK from "./comps/VocabSortDirection_BLOCK";
 import VocabSorting_BLOCK from "./comps/VocabSorting_BLOCK";
-import { z_USE_myVocabs } from "@/src/features/vocabs/Vocabs_FLASHLIST/helpers/z_USE_myVocabs/z_USE_myVocabs";
+import { z_USE_myVocabs } from "@/src/features_new/vocabs/hooks/z_USE_myVocabs/z_USE_myVocabs";
 
 interface DisplaySettingsModal_PROPS {
   open: boolean;

@@ -49,8 +49,7 @@ import { DeleteList_MODAL } from "../DeleteList_MODAL/DeleteList_MODAL";
 import { RenameList_MODAL } from "../RenameList_MODAL/RenameList_MODAL";
 import { SelectMultipleLanguages_MODAL } from "@/src/features/languages/components";
 import { USE_modalToggles } from "@/src/hooks/index";
-import { raw_List_TYPE } from "@/src/types/general_TYPES";
-import { z_USE_myVocabs } from "@/src/features/vocabs/Vocabs_FLASHLIST/helpers/z_USE_myVocabs/z_USE_myVocabs";
+import { z_USE_myVocabs } from "@/src/features_new/vocabs/hooks/z_USE_myVocabs/z_USE_myVocabs";
 
 interface ListSettingsModal_PROPS {
   IS_open: boolean;

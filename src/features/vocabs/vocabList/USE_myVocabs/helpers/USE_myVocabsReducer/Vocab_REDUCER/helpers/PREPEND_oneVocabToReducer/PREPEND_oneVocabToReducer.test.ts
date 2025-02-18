@@ -5,12 +5,12 @@
 import { General_ERROR } from "@/src/types/error_TYPES";
 import { vocabsReducer_TYPE, PREPEND_oneVocab_PAYLOAD } from "../../types";
 import { PREPEND_oneVocabToReducer } from "./PREPEND_oneVocabToReducer";
-import { Vocab_TYPE } from "@/src/features/vocabs/types";
+import { raw_Vocab_TYPE } from "@/src/features_new/vocabs/types";
 
 // Mock state and payload
 const mockState = {
   data: {
-    vocabs: [{ id: "1" }, { id: "2" }] as Vocab_TYPE[],
+    vocabs: [{ id: "1" }, { id: "2" }] as raw_Vocab_TYPE[],
     printed_IDS: new Set(["1", "2"]),
     unpaginated_COUNT: 2,
     HAS_reachedEnd: false,
@@ -72,7 +72,7 @@ describe("PREPEND_oneVocabToReducer", () => {
     const invalidState = {
       ...mockState,
       data: {
-        vocabs: [{ id: "1" }, { id: "2" }] as Vocab_TYPE[],
+        vocabs: [{ id: "1" }, { id: "2" }] as raw_Vocab_TYPE[],
         printed_IDS: new Set(["1", "2"]),
         unpaginated_COUNT: "not-a-number" as unknown as number,
         HAS_reachedEnd: false,
@@ -102,7 +102,7 @@ describe("PREPEND_oneVocabToReducer", () => {
   test("8. Prevents duplicates when vocab already exists", () => {
     const state = {
       data: {
-        vocabs: [{ id: "1" }, { id: "2" }] as Vocab_TYPE[],
+        vocabs: [{ id: "1" }, { id: "2" }] as raw_Vocab_TYPE[],
         printed_IDS: new Set(["1", "2"]),
         unpaginated_COUNT: 2,
         HAS_reachedEnd: false,
@@ -119,7 +119,7 @@ describe("PREPEND_oneVocabToReducer", () => {
   test("9. Throws error if a vocab inside 'newVocabs' did not have an id", () => {
     const invalidState = {
       data: {
-        vocabs: [{ id: "1" }, { notid: "2" }] as Vocab_TYPE[], // Missing 'id' for second vocab
+        vocabs: [{ id: "1" }, { notid: "2" }] as raw_Vocab_TYPE[], // Missing 'id' for second vocab
         printed_IDS: new Set(["1", "2"]),
         unpaginated_COUNT: 2,
         HAS_reachedEnd: false,

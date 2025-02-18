@@ -25,7 +25,7 @@ import {
   HANLDE_selectedLangs,
   HANLDE_selectedHighlights,
 } from "@/src/features/vocabs/functions";
-import { Vocab_TYPE, VocabTr_TYPE } from "@/src/features/vocabs/types";
+
 import { CreateMyVocab_FOOTER } from "../../footers/CreateMyVocab_FOOTER/CreateMyVocab_FOOTER";
 import {
   ChosenLangs_CONTROLLER,
@@ -39,8 +39,8 @@ import { SelectMultipleLanguages_MODAL } from "@/src/features/languages/componen
 import { USE_modalToggles } from "@/src/hooks/index";
 import List_MODEL from "@/src/db/models/List_MODEL";
 import { FETCH_langs } from "@/src/features/languages/functions/fetch/FETCH_langs/FETCH_langs";
-import { raw_List_TYPE } from "@/src/types/general_TYPES";
-import { z_USE_myVocabs } from "@/src/features/vocabs/Vocabs_FLASHLIST/helpers/z_USE_myVocabs/z_USE_myVocabs";
+import { z_USE_myVocabs } from "@/src/features_new/vocabs/hooks/z_USE_myVocabs/z_USE_myVocabs";
+import { VocabTr_TYPE } from "@/src/features_new/vocabs/types";
 
 interface CreateMyVocabModal_PROPS {
   IS_open: boolean;

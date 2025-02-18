@@ -18,16 +18,14 @@ import {
 import { CreateMyVocab_MODAL } from "@/src/features/vocabs/components/1_myVocabs/modals/CreateMyVocab_MODAL/CreateMyVocab_MODAL";
 import { Portal } from "@gorhom/portal";
 import { USE_modalToggles } from "@/src/hooks/index";
-import {
-  vocabFetch_TYPES,
-  list_TYPES,
-} from "@/src/features/vocabs/vocabList/USE_myVocabs/helpers/USE_fetchVocabs/helpers/FETCH_vocabs/types";
-import MyVocabs_FLASHLIST from "@/src/features/vocabs/Vocabs_FLASHLIST/MyVocabs_FLASHLIST/MyVocabs_FLASHLIST";
+import { myVocabFetch_TYPES } from "@/src/features_new/vocabs/functions/fetch/FETCH_vocabs/types";
+import MyVocabs_FLASHLIST from "@/src/features_new/vocabs/components/flashlists/MyVocabs_FLASHLIST/MyVocabs_FLASHLIST";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import { t } from "i18next";
-import { z_USE_myVocabs } from "@/src/features/vocabs/Vocabs_FLASHLIST/helpers/z_USE_myVocabs/z_USE_myVocabs";
+import { list_TYPES } from "@/src/features_new/lists/types";
+import { z_USE_myVocabs } from "@/src/features_new/vocabs/hooks/z_USE_myVocabs/z_USE_myVocabs";
 
-const fetch_TYPE: vocabFetch_TYPES = "byTargetList";
+const fetch_TYPE: myVocabFetch_TYPES = "byTargetList";
 const list_TYPE: list_TYPES = "private";
 
 export default function SingleList_PAGE() {

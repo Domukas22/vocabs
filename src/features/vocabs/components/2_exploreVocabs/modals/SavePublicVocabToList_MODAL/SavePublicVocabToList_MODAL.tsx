@@ -22,10 +22,10 @@ import { ChooseAList_FLATLIST } from "@/src/features/lists/components/flatlists/
 import { USE_collectListLangs } from "@/src/features/lists/functions";
 import { USE_zustand } from "@/src/hooks";
 import { USE_modalToggles } from "@/src/hooks/index";
-import { Vocab_TYPE } from "@/src/features/vocabs/types";
+import { raw_Vocab_TYPE } from "@/src/features_new/vocabs/types";
 
 interface SavePublicVocabToListModal_PROPS {
-  vocab: Vocab_TYPE | undefined;
+  vocab: raw_Vocab_TYPE | undefined;
   IS_open: boolean;
   TOGGLE_open: () => void;
   onSuccess: (new_VOCAB: Vocab_MODEL) => void;

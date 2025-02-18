@@ -5,12 +5,12 @@
 import { General_ERROR } from "@/src/types/error_TYPES";
 import { vocabsReducer_TYPE, START_fetch_PAYLOAD } from "../../types";
 import { START_vocabReducerFetch } from "./START_vocabReducerFetch";
-import { Vocab_TYPE } from "@/src/features/vocabs/types";
+import { raw_Vocab_TYPE } from "@/src/features_new/vocabs/types";
 
 // Mock state and payload
 const mockState = {
   data: {
-    vocabs: [{ id: "1" }, { id: "2" }] as Vocab_TYPE[],
+    vocabs: [{ id: "1" }, { id: "2" }] as raw_Vocab_TYPE[],
     printed_IDS: new Set(["1", "2"]),
     unpaginated_COUNT: 2,
     HAS_reachedEnd: false,
@@ -85,7 +85,7 @@ describe("START_vocabReducerFetch", () => {
   test("7. Throws error if state.data.unpaginated_COUNT is not a number", () => {
     const invalidState = {
       data: {
-        vocabs: [{ id: "1" }, { id: "2" }] as Vocab_TYPE[],
+        vocabs: [{ id: "1" }, { id: "2" }] as raw_Vocab_TYPE[],
         printed_IDS: new Set(["1", "2"]),
         unpaginated_COUNT: "not-a-number" as unknown as number,
         HAS_reachedEnd: false,
@@ -101,7 +101,7 @@ describe("START_vocabReducerFetch", () => {
   test("8. Throws error if state.data.HAS_reachedEnd is not a boolean", () => {
     const invalidState = {
       data: {
-        vocabs: [{ id: "1" }, { id: "2" }] as Vocab_TYPE[],
+        vocabs: [{ id: "1" }, { id: "2" }] as raw_Vocab_TYPE[],
         printed_IDS: new Set(["1", "2"]),
         unpaginated_COUNT: 2,
         HAS_reachedEnd: "notABoolean" as unknown as boolean,

@@ -15,11 +15,11 @@ import List_MODEL from "@/src/db/models/List_MODEL";
 import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import { useTranslation } from "react-i18next";
 import { useToast } from "react-native-toast-notifications";
-import { Vocab_TYPE } from "@/src/features/vocabs/types";
+import { raw_Vocab_TYPE } from "@/src/features_new/vocabs/types";
 
 interface VocabProps {
-  vocab: Vocab_TYPE | undefined;
-  SELECT_forRevival: (vocab: Vocab_TYPE) => void | undefined;
+  vocab: raw_Vocab_TYPE | undefined;
+  SELECT_forRevival: (vocab: raw_Vocab_TYPE) => void | undefined;
 }
 
 // TOGGLEvocabModal needs to also pass in th etranslations, so we dont have to pass them async and get a delayed manageVocabModal update

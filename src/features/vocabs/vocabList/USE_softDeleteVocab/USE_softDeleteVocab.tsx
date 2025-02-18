@@ -8,7 +8,7 @@ import { SEND_internalError } from "@/src/utils";
 import { useCallback } from "react";
 
 import { SOFTDELETE_vocab, IS_vocabMarkedBeingDeleted } from "./helpers";
-import { currentVocabAction_TYPE } from "@/src/features/vocabs/Vocabs_FLASHLIST/helpers/z_USE_myVocabs/z_USE_myVocabs";
+import { currentVocabAction_TYPE } from "@/src/features_new/vocabs/Vocabs_FLASHLIST/helpers/hooks/z_USE_myVocabs/z_USE_myVocabs";
 
 const function_NAME = "USE_deleteVocab";
 

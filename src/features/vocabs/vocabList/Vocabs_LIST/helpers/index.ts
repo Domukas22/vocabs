@@ -2,4 +2,4 @@
 //
 //
 
-export { Vocab_CARD } from "./VocabCards/Vocab_CARD/Vocab_CARD";
+export { Vocab_CARD } from "../../../../../features_new/vocabs/components/flashlists/components/VocabCards/Vocab_CARD/Vocab_CARD";

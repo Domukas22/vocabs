@@ -7,11 +7,11 @@ import Error_TEXT from "@/src/components/1_grouped/texts/Error_TEXT/Error_TEXT";
 import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 import { USE_collectListLangs } from "@/src/features/lists/functions";
 import { USE_deleteVocab } from "@/src/features/vocabs/functions";
-import { Vocab_TYPE } from "@/src/features/vocabs/types";
+import { raw_Vocab_TYPE } from "@/src/features_new/vocabs/types";
 
 interface DeleteVocabModal_PROPS {
   IS_open: boolean;
-  vocab: Vocab_TYPE | undefined;
+  vocab: raw_Vocab_TYPE | undefined;
   CLOSE_modal: () => void | undefined;
   onSuccess: () => void | undefined;
 }

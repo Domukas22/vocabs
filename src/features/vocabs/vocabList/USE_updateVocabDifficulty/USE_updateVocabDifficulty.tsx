@@ -12,7 +12,7 @@ import {
   UPDATE_vocabDifficulty,
 } from "./helpers";
 
-import { Vocab_TYPE } from "../../types";
+import { raw_Vocab_TYPE } from "../../types";
 import { useTranslation } from "react-i18next";
 import { USE_abortController } from "@/src/hooks";
 
@@ -27,7 +27,7 @@ export function USE_updateVocabDifficulty({
   z_myVocabsCurrent_ACTIONS: currentVocabAction_TYPE[];
   START_vocabAction: (new_ACTION: currentVocabAction_TYPE) => void;
   STOP_vocabAction: (vocab_ID: string) => void;
-  onSuccess: (vocab: Vocab_TYPE) => void;
+  onSuccess: (vocab: raw_Vocab_TYPE) => void;
 }) {
   const { TOAST } = USE_toast();
   const { t } = useTranslation();

@@ -14,12 +14,12 @@ import { CreateMyVocab_MODAL } from "@/src/features/vocabs/components/1_myVocabs
 import { USE_modalToggles } from "@/src/hooks/index";
 import { Portal } from "@gorhom/portal";
 import {
-  vocabFetch_TYPES,
+  myVocabFetch_TYPES,
   list_TYPES,
-} from "@/src/features/vocabs/vocabList/USE_myVocabs/helpers/USE_fetchVocabs/helpers/FETCH_vocabs/types";
-import MyVocabs_FLASHLIST from "@/src/features/vocabs/Vocabs_FLASHLIST/MyVocabs_FLASHLIST/MyVocabs_FLASHLIST";
+} from "@/src/features_new/vocabs/functions/fetch/FETCH_vocabs/types";
+import MyVocabs_FLASHLIST from "@/src/features_new/vocabs/components/flashlists/MyVocabs_FLASHLIST/MyVocabs_FLASHLIST";
 
-const fetch_TYPE: vocabFetch_TYPES = "all";
+const fetch_TYPE: myVocabFetch_TYPES = "all";
 const list_TYPE: list_TYPES = "private";
 
 export default function AllVocabs_PAGE() {
