@@ -298,7 +298,8 @@
   "error": {
     "provideAListName": "Bitte einen Listenname eingeben",
     "listNameTaken": "Du hast bereits eine Liste mit dieser Name",
-    "noListSelected": "Keine Liste ausgewählt"
+    "noListSelected": "Keine Liste ausgewählt",
+    "correctErrorsAbove": "Bitte korrigieren Sie die oben genannten Fehler"
   },
   "undertext": {
     "shared": "Geteilt"

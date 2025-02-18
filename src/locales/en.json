@@ -299,7 +299,8 @@
   "error": {
     "provideAListName": "Please provide a list name",
     "listNameTaken": "You already have a list with this name",
-    "noListSelected": "No list selected"
+    "noListSelected": "No list selected",
+    "correctErrorsAbove": "Please correct the errors above"
   },
   "undertext": {
     "shared": "Shared"

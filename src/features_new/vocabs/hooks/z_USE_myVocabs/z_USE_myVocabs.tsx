@@ -4,7 +4,7 @@
 
 import { raw_Vocab_TYPE } from "@/src/features_new/vocabs/types";
 import { IS_vocabMarkedBeingDeleted } from "@/src/features/vocabs/vocabList/USE_softDeleteVocab/helpers";
-import { FETCH_oneList } from "@/src/features_new/lists/functions/FETCH_oneList/FETCH_oneList";
+import { FETCH_oneList } from "@/src/features_new/lists/functions/fetch/FETCH_oneList/FETCH_oneList";
 import { General_ERROR } from "@/src/types/error_TYPES";
 import { raw_List_TYPE, loadingState_TYPES } from "@/src/types/general_TYPES";
 import { SEND_internalError } from "@/src/utils";

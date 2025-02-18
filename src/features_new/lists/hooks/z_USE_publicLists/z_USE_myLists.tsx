@@ -11,7 +11,7 @@ import {
   z_FETCH_listsArgument_TYPES,
 } from "@/src/zustand/types";
 import { create } from "zustand";
-import { FETCH_lists } from "../../functions/FETCH_lists/FETCH_lists";
+import { FETCH_lists } from "../../functions/fetch/FETCH_lists/FETCH_lists";
 import { List_TYPE } from "../../types";
 
 type z_USE_publicLists_PROPS = {

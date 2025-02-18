@@ -2,7 +2,7 @@
 //
 //
 
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import FlashlistPage_NAV from "@/src/components/1_grouped/headers/listPage/FlashlistPage_NAV";
 import { ListSettings_MODAL } from "@/src/features/lists/components";
 import {
@@ -24,6 +24,8 @@ import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled
 import { t } from "i18next";
 import { list_TYPES } from "@/src/features_new/lists/types";
 import { z_USE_myVocabs } from "@/src/features_new/vocabs/hooks/z_USE_myVocabs/z_USE_myVocabs";
+import { UPDATE_listName } from "@/src/features_new/lists/functions/update/name/UPDATE_myOneListName/UPDATE_myOneListName";
+import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 
 const fetch_TYPE: myVocabFetch_TYPES = "byTargetList";
 const list_TYPE: list_TYPES = "private";
@@ -42,6 +44,19 @@ export default function SingleList_PAGE() {
     "displaySettings",
   ]);
 
+  ///////////////////////////////////////////
+
+  const { z_myList } = z_USE_myVocabs();
+
+  const test = useCallback(() => {
+    const fn = async () => {
+      await UPDATE_listName(z_myList?.id, "--> Test here <--");
+    };
+
+    fn();
+  }, [z_myList]);
+
+  ///////////////////////////////////////////
   return (
     <>
       <FlashlistPage_NAV
@@ -52,6 +67,8 @@ export default function SingleList_PAGE() {
         OPEN_create={() => modals.createVocab.set(true)}
         {...{ search, SET_search }}
       />
+
+      <Btn text="Test btn" onPress={test} />
 
       <MyVocabs_FLASHLIST
         OPEN_createVocabModal={() => modals.createVocab.set(true)}

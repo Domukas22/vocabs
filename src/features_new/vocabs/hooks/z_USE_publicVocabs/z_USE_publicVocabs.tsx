@@ -4,7 +4,7 @@
 
 import { currentVocabAction_TYPE } from "@/src/features/vocabs/types";
 import { FETCH_vocabs } from "@/src/features/vocabs/vocabList/USE_myVocabs/helpers/USE_fetchVocabs/helpers";
-import { FETCH_oneList } from "@/src/features_new/lists/functions/FETCH_oneList/FETCH_oneList";
+import { FETCH_oneList } from "@/src/features_new/lists/functions/fetch/FETCH_oneList/FETCH_oneList";
 import { raw_List_TYPE } from "@/src/features_new/lists/types";
 import { General_ERROR } from "@/src/types/error_TYPES";
 import { loadingState_TYPES } from "@/src/types/general_TYPES";
