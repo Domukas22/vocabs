@@ -5,7 +5,7 @@
 import {
   myVocabFetch_TYPES,
   list_TYPES,
-} from "@/src/features_new/vocabs/functions/fetch/FETCH_vocabs/types";
+} from "@/src/features_new/vocabs/hooks/USE_fetchVocabs/FETCH_vocabs/types";
 import { loadingState_TYPES } from "@/src/types/general_TYPES";
 import { r_FETCH_vocabs_ARG_TYPE } from "../z_USE_myVocabs/z_USE_myVocabs";
 import { useCallback } from "react";

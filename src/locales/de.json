@@ -295,7 +295,9 @@
     "profileReviced": "Ihr Profil wurde wiederbelebt!"
   },
   "notification": {
-    "atLeast1LangError": "Mindestens 1 Sprache muss ausgewählt sein"
+    "atLeast1LangError": "Mindestens 1 Sprache muss ausgewählt sein",
+    "vocabMarked": "Vokabel gemerkt",
+    "vocabUnmarked": "Vokabel nicht gemerkt"
   },
   "emptyText": {
     "noLangsSelected": "Keine Sprachen ausgewählt"

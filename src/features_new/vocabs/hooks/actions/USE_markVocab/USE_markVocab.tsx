@@ -4,11 +4,13 @@
 
 import { z_USE_currentActions } from "@/src/hooks/zustand/z_USE_currentActions/z_USE_currentActions";
 import { General_ERROR } from "@/src/types/error_TYPES";
-import { SEND_internalError } from "@/src/utils";
+import { SEND_internalError, VIBRATE } from "@/src/utils";
 import { useCallback } from "react";
 import { USE_zustand } from "@/src/hooks";
 import { z_USE_myVocabs } from "../../zustand/z_USE_myVocabs/z_USE_myVocabs";
 import { MARK_vocab } from "./MARK_vocab/MARK_vocab";
+import { USE_toast } from "@/src/hooks/USE_toast/USE_toast";
+import { t } from "i18next";
 
 const function_NAME = "USE_markVocab";
 
@@ -19,6 +21,8 @@ export function USE_markVocab() {
     z_USE_currentActions();
 
   const { z_UPDATE_vocabInMyVocabsList } = z_USE_myVocabs();
+
+  const { TOAST } = USE_toast();
 
   const _MARK_vocab = useCallback(
     async (vocab_ID: string, list_ID: string, IS_marked: boolean) => {
@@ -51,6 +55,15 @@ export function USE_markVocab() {
         // refetch item inside all lists page
         // refetch item inside one list state
         // refetch starter page state
+
+        TOAST(
+          "success",
+          IS_marked
+            ? t("notification.vocabMarked")
+            : t("notification.vocabUnmarked"),
+          "bottom"
+        );
+        VIBRATE("soft");
 
         // -----------------------------
       } catch (error: any) {

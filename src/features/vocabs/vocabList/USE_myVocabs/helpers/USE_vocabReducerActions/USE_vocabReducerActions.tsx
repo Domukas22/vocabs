@@ -7,8 +7,8 @@ import {
   list_TYPES,
   myVocabFetch_TYPES,
   FETCH_myVocabs_RESPONSE_TYPE,
-} from "../../../../../../features_new/vocabs/functions/fetch/FETCH_vocabs/types";
-import { USE_fetchVocabs } from "../USE_fetchVocabs/USE_fetchVocabs";
+} from "../../../../../../features_new/vocabs/hooks/USE_fetchVocabs/FETCH_vocabs/types";
+import { USE_fetchVocabs } from "../../../../../../features_new/vocabs/hooks/USE_fetchVocabs/USE_fetchMyVocabs";
 import { USE_fetchVocabsAndHanldeState } from "../USE_fetchVocabsAndHanldeState/USE_fetchVocabsAndHanldeState";
 import { USE_loadMoreVocabs } from "../USE_loadMoreVocabs/USE_loadMoreVocabs";
 import { vocabsReducer_TYPE } from "../USE_myVocabsReducer/Vocab_REDUCER/types";

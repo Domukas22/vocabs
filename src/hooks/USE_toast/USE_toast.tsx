@@ -19,7 +19,7 @@ export function USE_toast() {
       toast.show(message, {
         type,
         placement,
-        duration: duration || 2000,
+        duration: duration || type === "success" ? 1500 : 15000,
       });
     },
     []

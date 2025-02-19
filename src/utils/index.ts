@@ -18,3 +18,4 @@ export { CONVERT_TimestampzToReadableDate } from "./timestamps/CONVERT_Timestamp
 export { NEW_timestampWithTimeZone } from "./timestamps/NEW_timestampWithTimeZone/NEW_timestampWithTimeZone";
 
 export { REDUCE_collectedLangIds } from "./REDUCE_collectedLangIds/REDUCE_collectedLangIds";
+export { VIBRATE } from "./VIBRATE/VIBRATE";

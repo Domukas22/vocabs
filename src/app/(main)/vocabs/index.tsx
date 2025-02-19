@@ -15,6 +15,7 @@ import { z_USE_starterContent } from "@/src/hooks/zustand/z_USE_starterContent/z
 export default function Index_PAGE() {
   const { z_IS_starterContentRefetching } = z_USE_starterContent();
   const { REFETCH_starterContent } = USE_refetchStarterContent();
+
   useEffect(() => {
     REFETCH_starterContent(true);
   }, []);

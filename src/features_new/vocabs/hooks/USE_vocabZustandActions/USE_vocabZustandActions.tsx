@@ -5,7 +5,7 @@
 import {
   myVocabFetch_TYPES,
   list_TYPES,
-} from "@/src/features_new/vocabs/functions/fetch/FETCH_vocabs/types";
+} from "@/src/features_new/vocabs/hooks/USE_fetchVocabs/FETCH_vocabs/types";
 import { useCallback } from "react";
 import { USE_abortController } from "../../../../hooks/USE_abortController/USE_abortController";
 import { VOCAB_PAGINATION } from "@/src/constants/globalVars";

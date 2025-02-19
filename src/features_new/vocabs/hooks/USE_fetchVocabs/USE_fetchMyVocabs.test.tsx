@@ -1,8 +1,8 @@
 import { renderHook, act } from "@testing-library/react-native";
-import { USE_fetchVocabs } from "./USE_fetchVocabs";
+import { USE_fetchVocabs } from "./USE_fetchMyVocabs";
 import { FETCH_vocabs } from "./helpers";
 import { USE_abortController } from "@/src/hooks";
-import { vocabsReducer_TYPE } from "../USE_myVocabsReducer/Vocab_REDUCER/types";
+import { vocabsReducer_TYPE } from "../../../../features/vocabs/vocabList/USE_myVocabs/helpers/USE_myVocabsReducer/Vocab_REDUCER/types";
 import { General_ERROR } from "@/src/types/error_TYPES";
 
 // Mock dependencies

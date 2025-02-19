@@ -5,7 +5,7 @@
 import {
   myVocabFetch_TYPES,
   list_TYPES,
-} from "../../../../features_new/vocabs/functions/fetch/FETCH_vocabs/types";
+} from "../../../../features_new/vocabs/hooks/USE_fetchVocabs/FETCH_vocabs/types";
 import {
   USE_myVocabsReducer,
   USE_refetchVocabs,

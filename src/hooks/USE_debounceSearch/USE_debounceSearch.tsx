@@ -2,7 +2,7 @@
 //
 //
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 export function USE_debounceSearch() {
   // put "search" in the searchbar, and "debouncedSearch" in the filters
@@ -34,5 +34,13 @@ export function USE_debounceSearch() {
     SET_search(value && typeof value === "string" ? value : "");
   };
 
-  return { search, debouncedSearch, IS_debouncing, SET_search: SET_safeSearch };
+  const RESET_search = useCallback(() => SET_search(""), []);
+
+  return {
+    search,
+    debouncedSearch,
+    IS_debouncing,
+    SET_search: SET_safeSearch,
+    RESET_search,
+  };
 }

@@ -1,7 +1,7 @@
 import { renderHook, act } from "@testing-library/react-native";
 import { USE_fetchVocabsAndHanldeState } from "./USE_fetchVocabsAndHanldeState";
 import { General_ERROR } from "@/src/types/error_TYPES";
-import { FETCH_myVocabs_RESPONSE_TYPE } from "../../../../../../features_new/vocabs/functions/fetch/FETCH_vocabs/types";
+import { FETCH_myVocabs_RESPONSE_TYPE } from "../../../../../../features_new/vocabs/hooks/USE_fetchVocabs/FETCH_vocabs/types";
 import {
   APPEND_manyVocabs_PAYLOAD,
   SET_error_PAYLOAD,

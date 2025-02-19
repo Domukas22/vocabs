@@ -16,7 +16,7 @@ import { VocabFlashlist_HEADER } from "../../../../../features/vocabs/components
 import { USE_openVocabs } from "../../../../../features/vocabs/vocabList/USE_openVocabs/USE_openVocabs";
 import { Vocab_CARD } from "../../../../../features/vocabs/vocabList/Vocabs_LIST/helpers";
 import * as Haptics from "expo-haptics";
-import { myVocabFetch_TYPES } from "../../../functions/fetch/FETCH_vocabs/types";
+import { myVocabFetch_TYPES } from "../../../hooks/USE_fetchVocabs/FETCH_vocabs/types";
 
 import { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
 import { USE_listIdInParams } from "../../../../../features/vocabs/vocabList/USE_listIdInParams/USE_listIdInParams";

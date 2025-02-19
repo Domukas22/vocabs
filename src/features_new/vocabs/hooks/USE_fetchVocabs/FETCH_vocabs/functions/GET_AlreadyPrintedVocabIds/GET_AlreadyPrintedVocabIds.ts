@@ -2,8 +2,8 @@
 //
 //
 
+import { vocabsReducer_TYPE } from "@/src/features/vocabs/vocabList/USE_myVocabs/helpers/USE_myVocabsReducer/Vocab_REDUCER/types";
 import { loadingState_TYPES } from "@/src/types/general_TYPES";
-import { vocabsReducer_TYPE } from "../../../USE_myVocabsReducer/Vocab_REDUCER/types";
 
 export function GET_AlreadyPrintedVocabIds(
   loadingState_TYPE: loadingState_TYPES,

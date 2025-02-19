@@ -5,7 +5,7 @@
 import { raw_Vocab_TYPE } from "@/src/features_new/vocabs/types";
 import { General_ERROR } from "@/src/types/error_TYPES";
 import { loadingState_TYPES } from "@/src/types/general_TYPES";
-import { FETCH_myVocabs_RESPONSE_TYPE } from "../../../../../../../features_new/vocabs/functions/fetch/FETCH_vocabs/types";
+import { FETCH_myVocabs_RESPONSE_TYPE } from "../../../../../../../features_new/vocabs/hooks/USE_fetchVocabs/FETCH_vocabs/types";
 
 export type PREPEND_oneVocab_PAYLOAD = raw_Vocab_TYPE;
 export type UPDATE_oneVocab_PAYLOAD = raw_Vocab_TYPE;

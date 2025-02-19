@@ -13,7 +13,7 @@ import { VocabsSkeleton_BLOCK } from "../../../../features_new/vocabs/components
 import {
   myVocabFetch_TYPES,
   list_TYPES,
-} from "../../../../features_new/vocabs/functions/fetch/FETCH_vocabs/types";
+} from "../../../../features_new/vocabs/hooks/USE_fetchVocabs/FETCH_vocabs/types";
 import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { currentVocabAction_TYPE } from "@/src/app/(main)/vocabs/[list_id]";
 

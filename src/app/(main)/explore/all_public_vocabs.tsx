@@ -12,7 +12,7 @@ import { USE_modalToggles } from "@/src/hooks/index";
 import {
   myVocabFetch_TYPES,
   list_TYPES,
-} from "@/src/features_new/vocabs/functions/fetch/FETCH_vocabs/types";
+} from "@/src/features_new/vocabs/hooks/USE_fetchVocabs/FETCH_vocabs/types";
 import { Portal } from "@gorhom/portal";
 import MyVocabs_FLASHLIST from "@/src/features_new/vocabs/components/flashlists/MyVocabs_FLASHLIST/MyVocabs_FLASHLIST";
 import PublicVocabs_FLASHLIST from "@/src/features_new/vocabs/components/flashlists/PublicVocabs_FLASHLIST/PublicVocabs_FLASHLIST";

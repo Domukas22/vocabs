@@ -3,7 +3,6 @@
 //
 
 import { currentVocabAction_TYPE } from "@/src/features/vocabs/types";
-import { FETCH_vocabs } from "@/src/features/vocabs/vocabList/USE_myVocabs/helpers/USE_fetchVocabs/helpers";
 import { FETCH_oneList } from "@/src/features_new/lists/functions/fetch/FETCH_oneList/FETCH_oneList";
 import { raw_List_TYPE } from "@/src/features_new/lists/types";
 import { General_ERROR } from "@/src/types/error_TYPES";
@@ -13,6 +12,7 @@ import DETERMINE_loadingState from "@/src/utils/DETERMINE_loadingState/DETERMINE
 import { create } from "zustand";
 import { raw_Vocab_TYPE } from "../../../types";
 import { z_FETCH_vocabsArgument_TYPES } from "../z_USE_myVocabs/z_USE_myVocabs";
+import { FETCH_vocabs } from "../../USE_fetchVocabs/FETCH_vocabs/FETCH_vocabs";
 
 type z_USE_publicVocabs_PROPS = {
   z_publicList: raw_List_TYPE | undefined;

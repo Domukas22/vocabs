@@ -14,7 +14,7 @@ import { loadingState_TYPES } from "@/src/types/general_TYPES";
 import {
   list_TYPES,
   myVocabFetch_TYPES,
-} from "../../../../features_new/vocabs/functions/fetch/FETCH_vocabs/types";
+} from "../../../../features_new/vocabs/hooks/USE_fetchVocabs/FETCH_vocabs/types";
 import { VocabFlashlist_HEADER } from "../../components";
 import BottomAction_BLOCK from "@/src/components/1_grouped/blocks/BottomAction_BLOCK";
 import Error_BLOCK from "@/src/components/1_grouped/blocks/Error_BLOCK";

@@ -12,73 +12,61 @@ import {
   ICON_X,
 } from "@/src/components/1_grouped/icons/icons";
 
-import {
-  currentVocabAction_TYPE,
-  raw_Vocab_TYPE,
-} from "@/src/features/vocabs/types";
-import {
-  myVocabFetch_TYPES,
-  list_TYPES,
-} from "@/src/features_new/vocabs/functions/fetch/FETCH_vocabs/types";
+import { myVocabFetch_TYPES } from "@/src/features_new/vocabs/hooks/USE_fetchVocabs/FETCH_vocabs/types";
 import { USE_toggle, USE_zustand } from "@/src/hooks";
 import { useTranslation } from "react-i18next";
 import { View, ActivityIndicator } from "react-native";
-import { useToast } from "react-native-toast-notifications";
 import VocabBackDifficultyEdit_BTNS from "../VocabBackDifficultyEdit_BTNS/VocabBackDifficultyEdit_BTNS";
 import React, { useMemo, memo } from "react";
 import { MyColors } from "@/src/constants/MyColors";
 import { useRouter } from "expo-router";
 import { z_USE_myOneList } from "@/src/features_new/lists/hooks/z_USE_myOneList/z_USE_myOneList";
+import { z_USE_currentActions } from "@/src/hooks/zustand/z_USE_currentActions/z_USE_currentActions";
+import { list_TYPES } from "@/src/features_new/lists/types";
+import { Vocab_TYPE } from "@/src/features_new/vocabs/types";
+import { USE_markVocab } from "@/src/features_new/vocabs/hooks/actions/USE_markVocab/USE_markVocab";
+import { USE_updateVocabDifficulty } from "@/src/features_new/vocabs/hooks/actions/USE_updateVocabDifficulty/USE_updateVocabDifficulty";
+import { USE_softDeletevocab } from "@/src/features_new/vocabs/hooks/actions/USE_softDeletevocab/USE_softDeletevocab";
+import { USE_hardDeleteVocab } from "@/src/features_new/vocabs/hooks/actions/USE_hardDeleteVocab/USE_hardDeleteVocab";
 
 interface VocabBackBtns_PROPS {
-  vocab: raw_Vocab_TYPE;
+  vocab: Vocab_TYPE;
   list_TYPE: list_TYPES;
   fetch_TYPE: myVocabFetch_TYPES;
-  OPEN_updateVocabModal: (vocab?: raw_Vocab_TYPE) => void;
+  OPEN_updateVocabModal: () => void;
   OPEN_vocabCopyModal: () => void;
-  OPEN_vocabPermaDeleteModal: (vocab: raw_Vocab_TYPE) => void;
 
   TOGGLE_open: () => void;
   GO_toListOfVocab: () => void;
-  UPDATE_vocabDifficulty: (
-    vocab_ID: string,
-    current_DIFFICULTY: number,
-    new_DIFFICULTY: 1 | 2 | 3,
-    CLOSE_editBtns: () => void
-  ) => Promise<void>;
-  UPDATE_vocabMarked: (vocab_ID: string, val: boolean) => Promise<void>;
-  SOFTDELETE_vocab: (vocab_ID: string) => Promise<void>;
-  HARDDELETE_vocab: (vocab_ID: string) => Promise<void>;
-  current_ACTIONS: currentVocabAction_TYPE[];
-  test: (num: number) => void;
 }
 
 const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
   vocab,
   list_TYPE,
   fetch_TYPE,
-  current_ACTIONS = [],
+
   OPEN_updateVocabModal = () => {},
   OPEN_vocabCopyModal = () => {},
 
-  OPEN_vocabPermaDeleteModal = () => {},
-
   TOGGLE_open = () => {},
-  test = () => {},
+
   GO_toListOfVocab = () => {},
-  UPDATE_vocabDifficulty = () => Promise.resolve(),
-  UPDATE_vocabMarked = () => Promise.resolve(),
-  SOFTDELETE_vocab = () => Promise.resolve(),
-  HARDDELETE_vocab = () => Promise.resolve(),
 }: VocabBackBtns_PROPS) {
   const { t } = useTranslation();
   const router = useRouter();
   const { z_user } = USE_zustand();
 
+  const { z_currentActions, IS_inAction } = z_USE_currentActions();
+
   const [SHOW_difficultyEdits, TOGGLE_difficultyEdits, SET_difficultyEdit] =
     USE_toggle(false);
 
   const { z_FETCH_myOneListById } = z_USE_myOneList();
+
+  const { MARK_vocab } = USE_markVocab();
+  const { UPDATE_vocabDifficulty } = USE_updateVocabDifficulty();
+  const { SOFTDELETE_vocab } = USE_softDeletevocab();
+  const { HARDDELETE_vocab } = USE_hardDeleteVocab();
 
   const [
     SHOW_deleteConfirmation,
@@ -86,28 +74,20 @@ const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
     SET_deleteConfirmation,
   ] = USE_toggle(false);
 
-  const IS_updatingMarked = useMemo(() => {
-    return current_ACTIONS?.some(
-      (action) => action.action === "updating_marked"
-    );
-  }, [current_ACTIONS]);
+  const IS_updatingMarked = useMemo(
+    () => IS_inAction("vocab", vocab?.id, "updating_marked"),
+    [z_currentActions]
+  );
 
-  const IS_deleting = useMemo(() => {
-    return current_ACTIONS?.some((action) => action.action === "deleting");
-  }, [current_ACTIONS]);
+  const IS_deleting = useMemo(
+    () => IS_inAction("vocab", vocab?.id, "deleting"),
+    [z_currentActions]
+  );
 
-  const IS_updatingDifficulty = useMemo(() => {
-    const target = current_ACTIONS?.find(
-      (action) => action.action === "updating_difficulty"
-    );
-
-    const infos = {
-      IS_updating: !!target,
-      target_DIFFICULTY: target?.new_DIFFICULTY,
-    };
-
-    return infos;
-  }, [current_ACTIONS]);
+  const IS_updatingDifficulty = useMemo(
+    () => IS_inAction("vocab", vocab?.id, "updating_difficulty"),
+    [z_currentActions]
+  );
 
   const AllBtn_WRAP = memo(({ children }: { children: React.ReactNode }) => (
     <View style={{ padding: 12, gap: 8 }}>{children}</View>
@@ -121,7 +101,7 @@ const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
     <Btn
       type="simple"
       style={{ flex: 1 }}
-      onPress={() => OPEN_updateVocabModal(vocab)}
+      onPress={() => OPEN_updateVocabModal()}
       text={t("btn.editVocab")}
       iconRight={<ICON_edit />}
       text_STYLES={{ marginRight: "auto" }}
@@ -133,7 +113,7 @@ const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
       <Btn
         type={vocab?.is_marked ? "active_green" : "simple"}
         onPress={async () => {
-          await UPDATE_vocabMarked(vocab?.id, !vocab?.is_marked);
+          await MARK_vocab(vocab?.id, vocab?.list_id, !vocab?.is_marked);
         }} // Toggle spinning on press
         stayPressed={IS_updatingMarked}
         iconLeft={
@@ -158,7 +138,7 @@ const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
       type="simple"
       onPress={TOGGLE_difficultyEdits}
       iconLeft={
-        IS_updatingDifficulty?.IS_updating ? (
+        IS_updatingDifficulty ? (
           <ActivityIndicator color={MyColors.icon_gray} />
         ) : (
           <ICON_difficultyDot difficulty={vocab?.difficulty || 0} big={true} />
@@ -170,9 +150,11 @@ const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
   const VocabDifficulty_BTNS = memo(() => (
     <VocabBackDifficultyEdit_BTNS
       active_DIFFICULTY={vocab?.difficulty || 0}
-      UPDATE_vocabDifficulty={(diff: 1 | 2 | 3) =>
-        UPDATE_vocabDifficulty(vocab?.id, vocab?.difficulty, diff, () =>
-          SET_difficultyEdit(false)
+      UPDATE_vocabDifficulty={async (new_DIFFICULY: 1 | 2 | 3) =>
+        await UPDATE_vocabDifficulty(
+          vocab?.id,
+          vocab?.difficulty,
+          new_DIFFICULY
         )
       }
       TOGGLE_open={TOGGLE_difficultyEdits}
@@ -314,10 +296,10 @@ const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
                 ? t("btn.deleteVocab")
                 : t("btn.deleteVocabHard")
             }
-            onPress={() =>
+            onPress={async () =>
               deleteType === "hard"
-                ? HARDDELETE_vocab(vocab?.id)
-                : SOFTDELETE_vocab(vocab?.id)
+                ? await HARDDELETE_vocab(vocab?.id)
+                : await SOFTDELETE_vocab(vocab?.id, vocab?.list_id)
             }
           />
         </View>

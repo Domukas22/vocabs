@@ -4,42 +4,26 @@
 
 import { MyColors } from "@/src/constants/MyColors";
 import { StyleSheet, View } from "react-native";
-import React, { useCallback, useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 
 import { USE_toggle } from "@/src/hooks/USE_toggle/USE_toggle";
 
-import {
-  currentVocabAction_TYPE,
-  raw_Vocab_TYPE,
-} from "@/src/features/vocabs/types";
 import Vocab_FRONT from "../helpers/Vocab_FRONT/Vocab_FRONT";
-import {
-  myVocabFetch_TYPES,
-  list_TYPES,
-} from "../../../../../functions/fetch/FETCH_vocabs/types";
+import { myVocabFetch_TYPES } from "../../../../../hooks/USE_fetchVocabs/FETCH_vocabs/types";
 import VocabBack_BTNS from "../helpers/VocabBack_BTNS/VocabBack_BTNS";
 import VocabBack_TEXT from "../helpers/VocabBack_TEXT/VocabBack_TEXT";
 import { VocabBack_TRS } from "../helpers/VocabBack_TRS/VocabBack_TRS";
-import { useRouter } from "expo-router";
+import { Vocab_TYPE } from "@/src/features_new/vocabs/types";
+import { list_TYPES } from "@/src/features_new/lists/types";
 
 interface VocabProps {
-  vocab: raw_Vocab_TYPE;
+  vocab: Vocab_TYPE;
   highlighted?: boolean;
   list_TYPE: list_TYPES;
   fetch_TYPE: myVocabFetch_TYPES;
-  IS_open: boolean;
-  TOGGLE_open: (val?: boolean) => void;
-  OPEN_updateVocabModal?: (vocab?: raw_Vocab_TYPE) => void;
-  UPDATE_vocabDifficulty?: (
-    vocab_ID: string,
-    current_DIFFICULTY: number,
-    new_DIFFICULTY: 1 | 2 | 3,
-    CLOSE_editBtns: () => void
-  ) => Promise<void>;
-  UPDATE_vocabMarked?: (vocab_ID: string, val: boolean) => Promise<void>;
-  SOFTDELETE_vocab?: (vocab_ID: string) => Promise<void>;
-  HARDDELETE_vocab?: (vocab_ID: string) => Promise<void>;
-  current_ACTIONS: currentVocabAction_TYPE[];
+
+  OPEN_updateVocabModal?: () => void;
+  OPEN_vocabCopyModal?: () => void;
 }
 
 export const Vocab_CARD = React.memo(function Vocab_CARD({
@@ -47,19 +31,13 @@ export const Vocab_CARD = React.memo(function Vocab_CARD({
   fetch_TYPE,
   vocab,
   highlighted = false,
-  IS_open,
-  TOGGLE_open = () => {},
-  OPEN_updateVocabModal = () => {},
 
-  UPDATE_vocabDifficulty = () => Promise.resolve(),
-  UPDATE_vocabMarked = () => Promise.resolve(),
-  SOFTDELETE_vocab = () => Promise.resolve(),
-  HARDDELETE_vocab = () => Promise.resolve(),
-  current_ACTIONS = [],
+  OPEN_updateVocabModal = () => {},
+  OPEN_vocabCopyModal = () => {},
 }: VocabProps) {
   const trs = vocab?.trs || [];
 
-  const [open, toggle, set] = USE_toggle(IS_open);
+  const [open, toggle, set] = USE_toggle();
 
   const styles = useMemo(
     () => [
@@ -101,25 +79,7 @@ export const Vocab_CARD = React.memo(function Vocab_CARD({
           <VocabBack_BTNS
             {...{ vocab, trs, list_TYPE, fetch_TYPE, TOGGLE_open: toggle }}
             OPEN_updateVocabModal={OPEN_updateVocabModal}
-            UPDATE_vocabDifficulty={async (
-              vocab_ID: string,
-              current_DIFFICULTY: number,
-              new_DIFFICULTY: 1 | 2 | 3,
-              CLOSE_editBtns: () => void
-            ) => {
-              await UPDATE_vocabDifficulty(
-                vocab_ID,
-                current_DIFFICULTY,
-                new_DIFFICULTY,
-                CLOSE_editBtns
-              );
-            }}
-            UPDATE_vocabMarked={UPDATE_vocabMarked}
-            SOFTDELETE_vocab={SOFTDELETE_vocab}
-            HARDDELETE_vocab={HARDDELETE_vocab}
-            OPEN_vocabCopyModal={() => {}}
-            OPEN_vocabPermaDeleteModal={() => {}}
-            current_ACTIONS={current_ACTIONS}
+            OPEN_vocabCopyModal={OPEN_vocabCopyModal}
           />
         </>
       )}

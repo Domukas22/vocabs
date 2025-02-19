@@ -9,7 +9,6 @@ import { Delay, SEND_internalError } from "@/src/utils";
 import { useCallback } from "react";
 import { IS_vocabMarkedBeingUpdated } from "./helpers";
 import { MARK_vocab } from "../../../../features_new/vocabs/hooks/actions/USE_markVocab/MARK_vocab/MARK_vocab";
-import { raw_Vocab_TYPE } from "../../types";
 
 const function_NAME = "USE_markVocab";
 
