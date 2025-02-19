@@ -24,7 +24,7 @@ import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled
 import { t } from "i18next";
 import { list_TYPES } from "@/src/features_new/lists/types";
 import { z_USE_myVocabs } from "@/src/features_new/vocabs/hooks/z_USE_myVocabs/z_USE_myVocabs";
-import { UPDATE_listName } from "@/src/features_new/lists/functions/update/name/UPDATE_myOneListName/UPDATE_myOneListName";
+import { UPDATE_listName } from "@/src/features_new/lists/hooks/USE_updateListName/UPDATE_listName/UPDATE_listName";
 import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 
 const fetch_TYPE: myVocabFetch_TYPES = "byTargetList";

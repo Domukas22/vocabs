@@ -9,10 +9,10 @@ import { ARE_listVocabDifficultiesBeingReset } from "../../functions/update/rese
 import { RESET_allDifficultiesOfAList } from "../../functions/update/resetDifficulties/RESET_allDifficultiesOfAList/RESET_allDifficultiesOfAList";
 import { SEND_internalError } from "@/src/utils";
 import { IS_myOneListNameUpdating } from "../../functions/update/name/IS_myOneListNameUpdating/IS_myOneListNameUpdating";
-import { UPDATE_listName } from "../../functions/update/name/UPDATE_myOneListName/UPDATE_myOneListName";
+import { UPDATE_listName } from "../USE_updateListName/UPDATE_listName/UPDATE_listName";
 import { t } from "i18next";
 import { IS_myOneListDeleting } from "../../functions/delete/IS_myOneListDeleting/IS_myOneListDeleting";
-import { DELETE_list } from "../../functions/delete/DELETE_list/DELETE_list";
+import { DELETE_list } from "../USE_deleteList/DELETE_list/DELETE_list";
 import { FETCH_oneList } from "../../functions/fetch/FETCH_oneList/FETCH_oneList";
 import { ARE_myOneListDefaultLangIdsUpdating } from "../../functions/update/defaultLangIds/ARE_myOneListDefaultLangIdsUpdating/ARE_myOneListDefaultLangIdsUpdating";
 import { UPDATE_listDefaultLangIds } from "../../functions/update/defaultLangIds/UPDATE_listDefaultLangIds/UPDATE_listDefaultLangIds";
@@ -53,15 +53,6 @@ type z_USE_myOneList_PROPS = {
     }
   ) => Promise<void>;
 
-  z_DELETE_myOneList: (
-    list_id: string,
-    user_id: string,
-
-    sideEffects: {
-      onSuccess?: () => void;
-      onFailure?: (error: General_ERROR) => void;
-    }
-  ) => Promise<void>;
   z_FETCH_myOneListById: (
     list_id: string,
     user_id: string,
@@ -195,46 +186,6 @@ export const z_USE_myOneList = create<z_USE_myOneList_PROPS>((set, get) => ({
         ),
       });
       onSuccess();
-
-      // ----------------------------------------
-    } catch (error: any) {
-      const err = new General_ERROR({
-        function_NAME: error?.function_NAME || function_NAME,
-        message: error?.message,
-        errorToSpread: error,
-      });
-
-      onFailure(err);
-      SEND_internalError(err);
-    }
-  },
-  z_DELETE_myOneList: async (list_id, user_id, sideEffects) => {
-    const function_NAME = "z_DELETE_myOneList";
-    const { onSuccess = () => {}, onFailure = () => {} } = sideEffects;
-
-    if (IS_myOneListDeleting(list_id, get().z_myOneListCurrent_ACTIONS)) return;
-
-    // ----------------------------------------
-    try {
-      set({
-        z_myOneListCurrent_ACTIONS: [
-          ...get().z_myOneListCurrent_ACTIONS,
-          { action: "deleting", list_id },
-        ],
-      });
-
-      await DELETE_list(list_id, user_id);
-
-      // ----------------------------------------
-      // First, naviate back, then remove the one list state
-      onSuccess();
-      set({
-        z_myOneList: undefined,
-        z_myOneListCurrent_ACTIONS: get().z_myOneListCurrent_ACTIONS.filter(
-          (action) =>
-            action.action !== "updating_name" && action.list_id !== list_id
-        ),
-      });
 
       // ----------------------------------------
     } catch (error: any) {
