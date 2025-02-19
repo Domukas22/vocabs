@@ -16,7 +16,7 @@ import { useTranslation } from "react-i18next";
 import { StyleSheet, View } from "react-native";
 import { DisplaySettingsModalView_PROPS } from "../../modals/VocabDisplaySettings_MODAL/VocabDisplaySettings_MODAL";
 import { FETCH_langs } from "@/src/features/languages/functions/fetch/FETCH_langs/FETCH_langs";
-import { z_listDisplaySettings_PROPS } from "@/src/hooks/USE_zustand/USE_zustand";
+import { z_listDisplaySettings_PROPS } from "@/src/hooks/zustand/USE_zustand/USE_zustand";
 
 interface VocabFront_PROPS {
   view: DisplaySettingsModalView_PROPS;

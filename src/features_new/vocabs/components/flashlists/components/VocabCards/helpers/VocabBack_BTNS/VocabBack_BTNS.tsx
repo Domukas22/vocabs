@@ -20,7 +20,7 @@ import {
   myVocabFetch_TYPES,
   list_TYPES,
 } from "@/src/features_new/vocabs/functions/fetch/FETCH_vocabs/types";
-import { USE_toggle } from "@/src/hooks";
+import { USE_toggle, USE_zustand } from "@/src/hooks";
 import { useTranslation } from "react-i18next";
 import { View, ActivityIndicator } from "react-native";
 import { useToast } from "react-native-toast-notifications";
@@ -28,6 +28,7 @@ import VocabBackDifficultyEdit_BTNS from "../VocabBackDifficultyEdit_BTNS/VocabB
 import React, { useMemo, memo } from "react";
 import { MyColors } from "@/src/constants/MyColors";
 import { useRouter } from "expo-router";
+import { z_USE_myOneList } from "@/src/features_new/lists/hooks/z_USE_myOneList/z_USE_myOneList";
 
 interface VocabBackBtns_PROPS {
   vocab: raw_Vocab_TYPE;
@@ -72,9 +73,12 @@ const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
 }: VocabBackBtns_PROPS) {
   const { t } = useTranslation();
   const router = useRouter();
+  const { z_user } = USE_zustand();
 
   const [SHOW_difficultyEdits, TOGGLE_difficultyEdits, SET_difficultyEdit] =
     USE_toggle(false);
+
+  const { z_FETCH_myOneListById } = z_USE_myOneList();
 
   const [
     SHOW_deleteConfirmation,
@@ -195,6 +199,7 @@ const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
       type="simple"
       onPress={() => {
         if (vocab?.list_id) {
+          z_FETCH_myOneListById(vocab?.list_id, z_user?.id || "", {});
           router.replace(`/(main)/vocabs/${vocab?.list_id}`);
         }
       }}

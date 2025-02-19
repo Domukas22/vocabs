@@ -7,7 +7,7 @@ import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import { ICON_calendar } from "@/src/components/1_grouped/icons/icons";
 import Label from "@/src/components/1_grouped/texts/labels/Label/Label";
 import { t } from "i18next";
-import { USE_zustand } from "@/src/hooks/USE_zustand/USE_zustand";
+import { USE_zustand } from "@/src/hooks/zustand/USE_zustand/USE_zustand";
 import { useCallback } from "react";
 
 export default function ListSorting_BLOCK() {

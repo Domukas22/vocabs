@@ -3,7 +3,7 @@
 //
 
 import { Users_DB } from "@/src/db";
-import { z_setUser_PROPS } from "@/src/hooks/USE_zustand/USE_zustand";
+import { z_setUser_PROPS } from "@/src/hooks/zustand/USE_zustand/USE_zustand";
 import { Q } from "@nozbe/watermelondb";
 
 export async function REFRESH_zustandUser({

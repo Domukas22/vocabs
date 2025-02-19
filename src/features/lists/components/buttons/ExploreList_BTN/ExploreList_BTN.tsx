@@ -34,7 +34,7 @@ export function ExploreList_BTN({
         <Styled_TEXT type="label_small" style={{ marginRight: "auto" }}>
           {list?.vocab_COUNT ? `${list?.vocab_COUNT} vocabs` : "Empty list"}
         </Styled_TEXT>
-        <ListBtn_FLAGS lang_ids={list?.collected_lang_ids?.split(",") || []} />
+        <ListBtn_FLAGS lang_ids={list?.collected_lang_ids || []} />
       </ListBtn_BOTTOM>
     </Big_BTN>
   );

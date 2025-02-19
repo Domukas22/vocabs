@@ -3,7 +3,9 @@
 //
 
 import React, { useCallback, useMemo } from "react";
-import FlashlistPage_NAV from "@/src/components/1_grouped/headers/listPage/FlashlistPage_NAV";
+import FlashlistPage_NAV, {
+  USE_getListName,
+} from "@/src/components/1_grouped/headers/listPage/FlashlistPage_NAV";
 import { ListSettings_MODAL } from "@/src/features/lists/components";
 import {
   UpdateMyVocab_MODAL,
@@ -14,6 +16,7 @@ import {
   USE_debounceSearch,
   USE_getMyListName,
   USE_showListHeaderTitle,
+  USE_zustand,
 } from "@/src/hooks";
 import { CreateMyVocab_MODAL } from "@/src/features/vocabs/components/1_myVocabs/modals/CreateMyVocab_MODAL/CreateMyVocab_MODAL";
 import { Portal } from "@gorhom/portal";
@@ -23,9 +26,13 @@ import MyVocabs_FLASHLIST from "@/src/features_new/vocabs/components/flashlists/
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import { t } from "i18next";
 import { list_TYPES } from "@/src/features_new/lists/types";
-import { z_USE_myVocabs } from "@/src/features_new/vocabs/hooks/z_USE_myVocabs/z_USE_myVocabs";
-import { UPDATE_listName } from "@/src/features_new/lists/hooks/USE_updateListName/UPDATE_listName/UPDATE_listName";
+import { z_USE_myVocabs } from "@/src/features_new/vocabs/hooks/zustand/z_USE_myVocabs/z_USE_myVocabs";
+import { UPDATE_listName } from "@/src/features_new/lists/hooks/actions/USE_updateListName/UPDATE_listName/UPDATE_listName";
 import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
+import { USE_updateVocabDifficultysasd } from "@/src/features/vocabs/vocabList/USE_updateVocabDifficulty/USE_updateVocabDifficulty";
+import { USE_updateVocabDifficulty } from "@/src/features_new/vocabs/hooks/actions/USE_updateVocabDifficulty/USE_updateVocabDifficulty";
+import { RECOLLECT_listLangIds } from "@/src/features_new/lists/hooks/actions/USE_recollectListLangIds/RECOLLECT_listLangIds/RECOLLECT_listLangIds";
+import { z_USE_myOneList } from "@/src/features_new/lists/hooks/z_USE_myOneList/z_USE_myOneList";
 
 const fetch_TYPE: myVocabFetch_TYPES = "byTargetList";
 const list_TYPE: list_TYPES = "private";
@@ -35,7 +42,7 @@ export default function SingleList_PAGE() {
   const { search, debouncedSearch, IS_debouncing, SET_search } =
     USE_debounceSearch();
 
-  const { list_NAME } = USE_getMyVocabFlashlistName();
+  const { list_NAME } = USE_getListName({ type: "private" });
 
   const { modals } = USE_modalToggles([
     "createVocab",
@@ -46,15 +53,18 @@ export default function SingleList_PAGE() {
 
   ///////////////////////////////////////////
 
-  const { z_myList } = z_USE_myVocabs();
+  const { z_myOneList } = z_USE_myOneList();
+  const { z_user } = USE_zustand();
+
+  // const {UPDATE_vocabDifficulty} = USE_updateVocabDifficulty();
 
   const test = useCallback(() => {
     const fn = async () => {
-      await UPDATE_listName(z_myList?.id, "--> Test here <--");
+      await RECOLLECT_listLangIds(z_myOneList?.id || "", z_user?.id || "");
     };
 
     fn();
-  }, [z_myList]);
+  }, [z_myOneList, z_user]);
 
   ///////////////////////////////////////////
   return (

@@ -3,8 +3,7 @@
 //
 
 import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
-import { list_TYPES } from "@/src/features_new/vocabs/functions/fetch/FETCH_vocabs/types";
-import { List_TYPE, raw_List_TYPE } from "@/src/types/general_TYPES";
+import { list_TYPES, List_TYPE } from "../../../types";
 
 export interface FETCH_lists_ARGS {
   search: string;

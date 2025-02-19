@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { BUILD_fetchVocabsOfPublicListQuery } from "../../BUILD_fetchVocabsOfPublicListQuery/BUILD_fetchVocabsOfPublicListQuery";
 import List_MODEL from "@/src/db/models/List_MODEL";
-import { z_vocabDisplaySettings_PROPS } from "@/src/hooks/USE_zustand/USE_zustand";
+import { z_vocabDisplaySettings_PROPS } from "@/src/hooks/zustand/USE_zustand/USE_zustand";
 
 export function USE_supabaseVocabsOfAList({
   search,

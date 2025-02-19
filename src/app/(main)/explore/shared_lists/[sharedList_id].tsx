@@ -19,7 +19,7 @@ import {
 } from "@/src/features/lists/functions";
 import {
   ExploreVocabs_FLATLIST,
-  VocabsFlatlistHeader_SECTION,
+  VocabFlashlist_HEADER,
   SavePublicVocabToList_MODAL,
   VocabDisplaySettings_MODAL,
 } from "@/src/features/vocabs/components";
@@ -80,7 +80,7 @@ export default function PublicListVocabs_PAGE() {
 
   const collectedLangIds = useMemo(() => {
     // infinite loop occurs if not defined
-    return sharedList?.collected_lang_ids?.split(",") || [];
+    return sharedList?.collected_lang_ids || [];
   }, [sharedList?.collected_lang_ids]);
 
   const {
@@ -119,7 +119,7 @@ export default function PublicListVocabs_PAGE() {
         }}
         onScroll={handleScroll}
         listHeader_EL={
-          <VocabsFlatlistHeader_SECTION
+          <VocabFlashlist_HEADER
             search={search}
             totalVocabs={totalFilteredVocab_COUNT}
             IS_searching={IS_searching}

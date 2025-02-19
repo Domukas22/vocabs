@@ -1,5 +1,5 @@
 import { supabase } from "@/src/lib/supabase";
-import { z_vocabDisplaySettings_PROPS } from "@/src/hooks/USE_zustand/USE_zustand";
+import { z_vocabDisplaySettings_PROPS } from "@/src/hooks/zustand/USE_zustand/USE_zustand";
 
 export interface VocabFilter_PROPS {
   search?: string;

@@ -4,7 +4,7 @@
 
 import { CREATE_internalErrorMsg } from "@/src/constants/globalVars";
 import { Error_PROPS } from "@/src/types/error_TYPES";
-import { z_listDisplaySettings_PROPS } from "@/src/hooks/USE_zustand/USE_zustand";
+import { z_listDisplaySettings_PROPS } from "@/src/hooks/zustand/USE_zustand/USE_zustand";
 
 export const ExtendSupabaseListQuery_ERRS = {
   internal: {

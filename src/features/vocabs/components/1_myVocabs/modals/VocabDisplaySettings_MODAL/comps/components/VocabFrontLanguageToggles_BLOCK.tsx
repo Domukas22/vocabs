@@ -12,7 +12,7 @@ import Language_MODEL from "@/src/db/models/Language_MODEL";
 import {
   z_vocabDisplaySettings_PROPS,
   z_setVocabDisplaySettings_PROPS,
-} from "@/src/hooks/USE_zustand/USE_zustand";
+} from "@/src/hooks/zustand/USE_zustand/USE_zustand";
 import { t } from "i18next";
 import { ScrollView, View } from "react-native";
 import { DisplaySettingsModalView_PROPS } from "../../VocabDisplaySettings_MODAL";

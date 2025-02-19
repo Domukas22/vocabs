@@ -12,7 +12,7 @@ import { Skeleton_BLOCK } from "@/src/components/1_grouped/blocks/Skeleton_BLOCK
 import { useRouter } from "expo-router";
 import { View } from "react-native";
 import { MyList_BTN } from "../../buttons/MyList_BTN/MyList_BTN";
-import { ListsFlatlist_HEADER } from "../../headers/ListsFlatlist_HEADER/ListsFlatlist_HEADER";
+import { ListFlashlist_HEADER } from "../../../../../features_new/lists/components/flashlists/components/ListsFlashlist_HEADER/ListFlashlist_HEADER";
 import BottomAction_BLOCK from "@/src/components/1_grouped/blocks/BottomAction_BLOCK";
 
 interface MyListsFlatlist_PROPS {
@@ -92,7 +92,7 @@ export function MyLists_FLASHLISTsssss({
       renderItem={({ item }) => Button(item)}
       keyExtractor={(item) => item?.id}
       ListHeaderComponent={
-        <ListsFlatlist_HEADER
+        <ListFlashlist_HEADER
           list_NAME="My lists"
           totalLists={unpaginated_COUNT}
           HAS_error={error?.value}

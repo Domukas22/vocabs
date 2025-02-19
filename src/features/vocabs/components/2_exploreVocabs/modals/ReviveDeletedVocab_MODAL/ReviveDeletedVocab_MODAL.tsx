@@ -18,7 +18,7 @@ import { USE_collectListLangs } from "@/src/features/lists/functions";
 import { USE_zustand } from "@/src/hooks";
 import { USE_modalToggles } from "@/src/hooks/index";
 import { raw_Vocab_TYPE } from "@/src/features_new/vocabs/types";
-import { z_USE_myVocabs } from "@/src/features_new/vocabs/hooks/z_USE_myVocabs/z_USE_myVocabs";
+import { z_USE_myVocabs } from "@/src/features_new/vocabs/hooks/zustand/z_USE_myVocabs/z_USE_myVocabs";
 
 interface SavePublicVocabToListModal_PROPS {
   IS_open: boolean;

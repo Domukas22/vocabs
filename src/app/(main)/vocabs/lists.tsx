@@ -3,7 +3,6 @@
 //
 
 import React from "react";
-import List_MODEL from "@/src/db/models/List_MODEL";
 import { Portal } from "@gorhom/portal";
 
 import FlashlistPage_NAV from "@/src/components/1_grouped/headers/listPage/FlashlistPage_NAV";
@@ -18,7 +17,9 @@ import {
   CreateList_MODAL,
   ListDisplaySettings_MODAL,
 } from "@/src/features/lists/components";
-import MyLists_FLASHLIST from "@/src/features/lists/Lists_FLASHLIST/MyLists_FLASHLIST/MyLists_FLASHLIST";
+import MyLists_FLASHLIST from "@/src/features_new/lists/components/flashlists/MyLists_FLASHLIST/MyLists_FLASHLIST";
+import { t } from "i18next";
+import { Keyboard } from "react-native";
 
 export default function MyLists_PAGE() {
   const { showTitle, handleScroll } = USE_showListHeaderTitle();
@@ -31,7 +32,7 @@ export default function MyLists_PAGE() {
     <>
       <FlashlistPage_NAV
         SHOW_listName={showTitle}
-        list_NAME="My Lists"
+        list_NAME={t("header.myLists")}
         OPEN_displaySettings={() => modals.displaySettings.toggle()}
         OPEN_create={() => modals.createList.toggle()}
         {...{ search, SET_search }}
@@ -53,15 +54,9 @@ export default function MyLists_PAGE() {
         <CreateList_MODAL
           IS_open={modals.createList.IS_open}
           currentList_NAMES={[]}
-          CLOSE_modal={() => modals.createList.toggle()}
-          onSuccess={(newList: List_MODEL) => {
-            // highlight(newList?.id);
-            // list_REF?.current?.scrollToOffset({ animated: true, offset: 0 });
-            // PREPEND_oneVocabToReducer(newList);
-            // toast.show(t("notifications.listCreated"), {
-            //   type: "success",
-            //   duration: 5000,
-            // });
+          CLOSE_modal={() => {
+            modals.createList.toggle();
+            Keyboard.dismiss();
           }}
         />
 

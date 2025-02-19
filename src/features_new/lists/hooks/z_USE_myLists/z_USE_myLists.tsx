@@ -16,7 +16,6 @@ import { List_TYPE } from "../../types";
 
 type z_USE_myLists_PROPS = {
   z_myLists: List_TYPE[];
-  z_myTarget_LIST: List_TYPE | undefined;
 
   z_myListsPrinted_IDS: Set<string>;
   z_myListsUnpaginated_COUNT: number;
@@ -32,22 +31,15 @@ type z_USE_myLists_PROPS = {
 
   z_FETCH_myLists: (args: z_FETCH_listsArgument_TYPES) => Promise<void>;
 
-  // Remove one list from already printed lists
-
-  // Create list + add list to printed lists
-  // Add list to printed lists
-
-  // Update a list inside the already printed lists
+  z_REMOVE_listFromMyLists: (list_ID: string) => void;
+  z_PREPEND_listToMyLists: (list: List_TYPE) => void;
+  z_UPDATE_listInMyLists: (list: List_TYPE) => void;
 
   z_HIGHLIGHT_myList: (list_id: string) => void;
-  z_SET_myTargetList: (list: List_TYPE | undefined) => void;
 };
 
-// z = Zustand
-// oL == One List
 export const z_USE_myLists = create<z_USE_myLists_PROPS>((set, get) => ({
   z_myLists: [],
-  z_myTarget_LIST: undefined,
 
   z_myListsPrinted_IDS: new Set<string>(),
   z_HAVE_myListsReachedEnd: false,
@@ -138,6 +130,31 @@ export const z_USE_myLists = create<z_USE_myLists_PROPS>((set, get) => ({
       SEND_internalError(err);
     }
   },
+  z_REMOVE_listFromMyLists: (list_ID) => {
+    const new_LISTS = [...get().z_myLists].filter(
+      (list) => list.id !== list_ID
+    );
+
+    set({
+      z_myLists: new_LISTS,
+      z_myListsPrinted_IDS: new Set(new_LISTS.map((x) => x.id)),
+    });
+  },
+  z_PREPEND_listToMyLists: (list) => {
+    const new_LISTS = [list, ...get().z_myLists];
+
+    set({
+      z_myLists: new_LISTS,
+      z_myListsPrinted_IDS: new Set(new_LISTS.map((x) => x.id)),
+    });
+  },
+  z_UPDATE_listInMyLists: (new_LIST) => {
+    set((state) => ({
+      z_myLists: [...state.z_myLists].map((list) =>
+        list.id === new_LIST.id ? new_LIST : list
+      ),
+    }));
+  },
 
   z_HIGHLIGHT_myList: (vocab_ID: string) => {
     const currentTimeoutID = get().z_myListsHighlightTimeoutID;
@@ -156,9 +173,5 @@ export const z_USE_myLists = create<z_USE_myLists_PROPS>((set, get) => ({
 
     // Save the timeout reference in the state to clear it if needed
     set({ z_myListsHighlightTimeoutID: timeoutID });
-  },
-
-  z_SET_myTargetList: (target_VOCAB) => {
-    set({ z_myTarget_LIST: target_VOCAB });
   },
 }));

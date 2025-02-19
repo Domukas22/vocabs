@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { supabase } from "@/src/lib/supabase";
-import { z_vocabDisplaySettings_PROPS } from "@/src/hooks/USE_zustand/USE_zustand";
+import { z_vocabDisplaySettings_PROPS } from "@/src/hooks/zustand/USE_zustand/USE_zustand";
 import FETCH_supabaseVocabs from "../../FETCH_supabaseVocabs/FETCH_supabaseVocabs";
 import { VOCAB_PAGINATION } from "@/src/constants/globalVars";
 import { USE_isSearching, USE_pagination } from "@/src/hooks";

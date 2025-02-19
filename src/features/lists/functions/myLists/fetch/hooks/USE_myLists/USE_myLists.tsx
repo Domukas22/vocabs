@@ -3,7 +3,7 @@ import List_MODEL from "@/src/db/models/List_MODEL";
 import {
   USE_zustand,
   z_listDisplaySettings_PROPS,
-} from "@/src/hooks/USE_zustand/USE_zustand";
+} from "@/src/hooks/zustand/USE_zustand/USE_zustand";
 
 import { LIST_PAGINATION } from "@/src/constants/globalVars";
 import { USE_isSearching, USE_pagination } from "@/src/hooks";

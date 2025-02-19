@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Keyboard, StyleSheet, View } from "react-native";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
@@ -21,6 +21,9 @@ import Animated, {
 } from "react-native-reanimated";
 import { USE_getActiveFilterCount, USE_getMyListName } from "@/src/hooks";
 import { useRouter } from "expo-router";
+import { z_USE_myOneList } from "@/src/features_new/lists/hooks/z_USE_myOneList/z_USE_myOneList";
+import { list_TYPES } from "@/src/features_new/lists/types";
+import { t } from "i18next";
 
 interface ListHeader_PROPS {
   SHOW_listName: boolean;
@@ -28,6 +31,7 @@ interface ListHeader_PROPS {
   IS_searchBig?: boolean;
   search: string | undefined;
   list_NAME: string;
+
   SET_search: React.Dispatch<React.SetStateAction<string>> | undefined;
   OPEN_listSettings?: () => void | undefined;
   OPEN_create?: () => void | undefined;
@@ -36,10 +40,10 @@ interface ListHeader_PROPS {
 }
 
 export default function FlashlistPage_NAV({
+  list_NAME = t("header.noListFound"),
   SHOW_listName,
   search,
   IS_searchBig = false,
-  list_NAME = "NO LIST NAME PROVIDED",
   SET_search,
   OPEN_listSettings,
   OPEN_create,
@@ -205,3 +209,17 @@ const s = StyleSheet.create({
     paddingHorizontal: 1,
   },
 });
+
+export function USE_getListName({ type = "private" }: { type: list_TYPES }) {
+  const { z_myOneList, z_IS_myOneListFetching } = z_USE_myOneList();
+  const list_NAME = useMemo(() => {
+    if (type === "private") {
+      if (z_IS_myOneListFetching) return t("header.fetchingOneList");
+      if (z_myOneList?.name) return z_myOneList?.name;
+      return t("header.noListFound");
+    }
+    return "🟡 Implement Public list name 🟡";
+  }, [z_myOneList]);
+
+  return { list_NAME };
+}

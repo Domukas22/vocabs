@@ -15,7 +15,7 @@ import {
   list_TYPES,
   myVocabFetch_TYPES,
 } from "../../../../features_new/vocabs/functions/fetch/FETCH_vocabs/types";
-import { VocabsFlatlistHeader_SECTION } from "../../components";
+import { VocabFlashlist_HEADER } from "../../components";
 import BottomAction_BLOCK from "@/src/components/1_grouped/blocks/BottomAction_BLOCK";
 import Error_BLOCK from "@/src/components/1_grouped/blocks/Error_BLOCK";
 import { VocabsSkeleton_BLOCK } from "../../../../features_new/vocabs/components/flashlists/components/VocabsSkeleton_BLOCK/VocabsSkeleton_BLOCK";
@@ -107,11 +107,11 @@ export function Vocab_LIST({
       keyExtractor={(item) => "Vocab" + item.id}
       extraData={[highlightedVocab_ID, openVocab_IDs, current_ACTIONS]}
       ListHeaderComponent={
-        <VocabsFlatlistHeader_SECTION
+        <VocabFlashlist_HEADER
           IS_debouncing={IS_debouncing}
           debouncedSearch={debouncedSearch}
           search={search}
-          z_myVocabsLoading_STATE={z_myVocabsLoading_STATE}
+          loading_STATE={z_myVocabsLoading_STATE}
           list_NAME={list_NAME}
           unpaginated_COUNT={unpaginated_COUNT}
           HAS_error={!!vocabs_ERROR}

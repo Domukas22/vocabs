@@ -55,6 +55,7 @@ export function BUILD_vocabFilterQuery(
     // Fetch all, non-deleted vocabs
     case "all":
       query = query.filter("deleted_at", "is", null);
+
       break;
 
     // Fetch non-deleted vocabs, that belong to a specific list

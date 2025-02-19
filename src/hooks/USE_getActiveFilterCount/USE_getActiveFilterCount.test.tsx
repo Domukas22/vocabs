@@ -7,7 +7,7 @@ import { USE_getActiveFilterCount } from "./USE_getActiveFilterCount"; // Adjust
 import {
   z_listDisplaySettings_PROPS,
   z_vocabDisplaySettings_PROPS,
-} from "@/src/hooks/USE_zustand/USE_zustand";
+} from "@/src/hooks/zustand/USE_zustand/USE_zustand";
 
 describe("USE_getActiveFilterCount", () => {
   test("should return 0 when no filters are provided", () => {

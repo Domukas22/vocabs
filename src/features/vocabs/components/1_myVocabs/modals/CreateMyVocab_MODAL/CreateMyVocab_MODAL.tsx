@@ -39,7 +39,7 @@ import { SelectMultipleLanguages_MODAL } from "@/src/features/languages/componen
 import { USE_modalToggles } from "@/src/hooks/index";
 import List_MODEL from "@/src/db/models/List_MODEL";
 import { FETCH_langs } from "@/src/features/languages/functions/fetch/FETCH_langs/FETCH_langs";
-import { z_USE_myVocabs } from "@/src/features_new/vocabs/hooks/z_USE_myVocabs/z_USE_myVocabs";
+import { z_USE_myVocabs } from "@/src/features_new/vocabs/hooks/zustand/z_USE_myVocabs/z_USE_myVocabs";
 import { VocabTr_TYPE } from "@/src/features_new/vocabs/types";
 
 interface CreateMyVocabModal_PROPS {
@@ -124,9 +124,6 @@ export function CreateMyVocab_MODAL({
     watch,
   } = useForm<CreateMyVocabData_PROPS>({
     defaultValues: {
-      // translations:
-      //   GET_defaultTranslations(initial_LIST?.default_lang_ids || "en,de") ||
-      //   [],
       translations: GET_defaultTranslations("en,de") || [],
       description: "",
       list: initial_LIST,

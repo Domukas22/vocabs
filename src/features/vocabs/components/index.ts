@@ -6,7 +6,7 @@
 
 // flatlists
 export { DeletedVocabs_FLATLIST } from "./1_myVocabs/flatlists/DeletedVocabs_FLATLIST/DeletedVocabs_FLATLIST";
-export { VocabsFlatlistHeader_SECTION } from "./1_myVocabs/flatlists/VocabsFlatlistHeader_SECTION/VocabsFlatlistHeader_SECTION";
+export { VocabFlashlist_HEADER } from "../../../features_new/vocabs/components/flashlists/components/VocabFlashlist_HEADER/VocabFlashlist_HEADER";
 
 // footers
 export { CreateMyVocab_FOOTER } from "./1_myVocabs/footers/CreateMyVocab_FOOTER/CreateMyVocab_FOOTER";

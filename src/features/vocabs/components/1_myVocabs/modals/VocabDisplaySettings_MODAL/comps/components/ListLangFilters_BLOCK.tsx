@@ -11,7 +11,7 @@ import {
   USE_zustand,
   z_listDisplaySettings_PROPS,
   z_setlistDisplaySettings_PROPS,
-} from "@/src/hooks/USE_zustand/USE_zustand";
+} from "@/src/hooks/zustand/USE_zustand/USE_zustand";
 import { useCallback, useMemo } from "react";
 import { View } from "react-native";
 import { USE_langs_2 } from "@/src/features/languages/functions";

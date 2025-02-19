@@ -7,7 +7,7 @@ import { DisplaySettingsModalView_PROPS } from "../../VocabDisplaySettings_MODAL
 import {
   z_vocabDisplaySettings_PROPS,
   z_setVocabDisplaySettings_PROPS,
-} from "@/src/hooks/USE_zustand/USE_zustand";
+} from "@/src/hooks/zustand/USE_zustand/USE_zustand";
 import {
   ICON_difficultyDot,
   ICON_flag,

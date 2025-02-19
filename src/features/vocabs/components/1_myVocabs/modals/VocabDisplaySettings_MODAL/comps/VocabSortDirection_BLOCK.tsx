@@ -11,7 +11,7 @@ import { useMemo } from "react";
 import {
   z_vocabDisplaySettings_PROPS,
   z_setVocabDisplaySettings_PROPS,
-} from "@/src/hooks/USE_zustand/USE_zustand";
+} from "@/src/hooks/zustand/USE_zustand/USE_zustand";
 
 export default function VocabSortDirection_BLOCK({
   view = "preview",

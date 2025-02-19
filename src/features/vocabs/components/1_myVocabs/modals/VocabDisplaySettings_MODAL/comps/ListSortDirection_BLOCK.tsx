@@ -7,7 +7,7 @@ import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import Label from "@/src/components/1_grouped/texts/labels/Label/Label";
 import { t } from "i18next";
 import { useCallback } from "react";
-import { USE_zustand } from "@/src/hooks/USE_zustand/USE_zustand";
+import { USE_zustand } from "@/src/hooks/zustand/USE_zustand/USE_zustand";
 
 export default function ListSortDirection_BLOCK() {
   const { z_listDisplay_SETTINGS, z_SET_listDisplaySettings } = USE_zustand();

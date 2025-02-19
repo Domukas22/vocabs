@@ -4,7 +4,7 @@
 
 import { useMemo } from "react";
 import { _DisplaySettings_PROPS } from "@/src/utils/DisplaySettings/DisplaySettings";
-import { USE_zustand } from "@/src/hooks/USE_zustand/USE_zustand";
+import { USE_zustand } from "@/src/hooks/zustand/USE_zustand/USE_zustand";
 
 export function USE_getActiveFilterCount(target: "lists" | "vocabs" = "lists") {
   const { z_listDisplay_SETTINGS, z_vocabDisplay_SETTINGS } = USE_zustand();

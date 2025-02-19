@@ -13,7 +13,7 @@ import {
   CHECK_ifNetworkFailure,
 } from "@/src/utils";
 import { GET_targetDate } from "./utils/GET_targetDate";
-import { USE_zustand } from "../USE_zustand/USE_zustand";
+import { USE_zustand } from "../zustand/USE_zustand/USE_zustand";
 
 const defaultError_MSG =
   "Something went wrong when trying to synchronize data. Please reload the app and try again. This problem has been recorded and will be reviewed by developers as soon as possible. If the problem persists, please contact support. We apologize for the inconvenience.";

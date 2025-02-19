@@ -21,7 +21,10 @@
     "getVocabs": "Vokabel holen",
     "copyListAndVocabs": "Diese Liste und ihre Vokabeln kopieren?",
     "notifications": "Benachrichtigungen",
-    "payments": "Zahlungen"
+    "payments": "Zahlungen",
+    "fetchingOneList": "Liste wird geladen...",
+    "noListFound": "Keine Liste gefunden",
+    "myLists": "Meine Listen"
   },
   "blockLabels": {
     "uiLang": "App Sprache"
@@ -192,7 +195,9 @@
     "username": "Benutzername",
     "email": "Email",
     "sortLists": "Listen sortieren",
-    "emptyList": "Leere Liste"
+    "emptyList": "Leere Liste",
+    "loadingRecentLists": "Zuletzt verwendete Listen laden...",
+    "recentLists": "Zuletzt verwendete Listen"
   },
   "modal": {
     "displaySettings": {

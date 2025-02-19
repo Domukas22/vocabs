@@ -2,7 +2,7 @@
 //
 //
 
-import { z_listDisplaySettings_PROPS } from "@/src/hooks/USE_zustand/USE_zustand";
+import { z_listDisplaySettings_PROPS } from "@/src/hooks/zustand/USE_zustand/USE_zustand";
 import { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import FETCH_supabaseLists_OV from "../utils/FETCH_supabaseLists_OV/FETCH_supabaseLists_OV";
 import FORMAT_publicListVocabCount from "../../../../../lists/functions/exploreLists/formatVocabCount/FORMAT_publicListVocabCount/FORMAT_publicListVocabCount";

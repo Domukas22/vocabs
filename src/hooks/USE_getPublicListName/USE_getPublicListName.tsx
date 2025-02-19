@@ -2,7 +2,7 @@
 //
 //
 
-import { z_USE_publicVocabs } from "@/src/features_new/vocabs/hooks/z_USE_publicVocabs/z_USE_publicVocabs";
+import { z_USE_publicVocabs } from "@/src/features_new/vocabs/hooks/zustand/z_USE_publicVocabs/z_USE_publicVocabs";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 

@@ -57,6 +57,7 @@ export default function Header({
 const s = StyleSheet.create({
   header: {
     flexDirection: "row",
+    backgroundColor: MyColors.fill_bg,
     borderBottomWidth: 1,
     borderColor: MyColors.border_white_005,
     paddingHorizontal: 12,

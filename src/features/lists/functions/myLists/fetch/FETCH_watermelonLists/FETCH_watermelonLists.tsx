@@ -5,7 +5,7 @@
 import { Q } from "@nozbe/watermelondb";
 import { Lists_DB } from "@/src/db";
 
-import { z_listDisplaySettings_PROPS } from "@/src/hooks/USE_zustand/USE_zustand";
+import { z_listDisplaySettings_PROPS } from "@/src/hooks/zustand/USE_zustand/USE_zustand";
 
 interface ListFilter_PROPS {
   search?: string;

@@ -19,4 +19,4 @@ export { SelectMyList_MODAL } from "./modals/SelectMyList_MODAL/SelectMyList_MOD
 export { UpdateList_MODAL } from "./modals/UpdateList_MODAL/UpdateList_MODAL";
 
 // headers
-export { ListsFlatlist_HEADER } from "./headers/ListsFlatlist_HEADER/ListsFlatlist_HEADER";
+export { ListFlashlist_HEADER as ListsFlatlist_HEADER } from "../../../features_new/lists/components/flashlists/components/ListsFlashlist_HEADER/ListFlashlist_HEADER";

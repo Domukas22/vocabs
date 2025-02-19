@@ -12,7 +12,7 @@ import { USE_toast } from "@/src/hooks/USE_toast/USE_toast";
 import { USE_vocabZustandActions } from "@/src/features_new/vocabs/hooks/USE_vocabZustandActions/USE_vocabZustandActions";
 import { FlashList } from "@shopify/flash-list";
 import React, { useEffect, useRef } from "react";
-import { VocabsFlatlistHeader_SECTION } from "../../../../../features/vocabs/components";
+import { VocabFlashlist_HEADER } from "../../../../../features/vocabs/components";
 import { USE_openVocabs } from "../../../../../features/vocabs/vocabList/USE_openVocabs/USE_openVocabs";
 import { Vocab_CARD } from "../../../../../features/vocabs/vocabList/Vocabs_LIST/helpers";
 import * as Haptics from "expo-haptics";
@@ -21,8 +21,8 @@ import { myVocabFetch_TYPES } from "../../../functions/fetch/FETCH_vocabs/types"
 import { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
 import { USE_listIdInParams } from "../../../../../features/vocabs/vocabList/USE_listIdInParams/USE_listIdInParams";
 import { list_TYPES } from "@/src/features_new/lists/types";
-import { z_USE_publicVocabs } from "../../../hooks/z_USE_publicVocabs/z_USE_publicVocabs";
-import { VocabFlatlistFooter_SECTION } from "../components/VocabFlatlistFooter_SECTION/VocabFlatlistFooter_SECTION";
+import { z_USE_publicVocabs } from "../../../hooks/zustand/z_USE_publicVocabs/z_USE_publicVocabs";
+import { VocabFlatlist_FOOTER } from "../components/VocabFlatlist_FOOTER/VocabFlatlist_FOOTER";
 import { raw_Vocab_TYPE } from "../../../types";
 
 export default function PublicVocabs_FLASHLIST({
@@ -123,18 +123,18 @@ export default function PublicVocabs_FLASHLIST({
         // UPDATE_difficulty,
       ]}
       ListHeaderComponent={
-        <VocabsFlatlistHeader_SECTION
+        <VocabFlashlist_HEADER
           IS_debouncing={IS_debouncing}
           debouncedSearch={debouncedSearch}
           search={search}
-          z_myVocabsLoading_STATE={z_publicVocabsLoading_STATE}
+          loading_STATE={z_publicVocabsLoading_STATE}
           list_NAME={list_NAME}
           unpaginated_COUNT={z_publicVocabsUnpaginated_COUNT}
           HAS_error={!!error}
         />
       }
       ListFooterComponent={
-        <VocabFlatlistFooter_SECTION
+        <VocabFlatlist_FOOTER
           LOAD_more={() => FETCH_vocabs(true)}
           RESET_search={RESET_search}
           unpaginated_COUNT={z_publicVocabsUnpaginated_COUNT}

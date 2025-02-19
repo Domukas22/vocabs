@@ -9,7 +9,7 @@ import {
 import { useCallback } from "react";
 import { USE_abortController } from "../../../../hooks/USE_abortController/USE_abortController";
 import { VOCAB_PAGINATION } from "@/src/constants/globalVars";
-import { z_FETCH_vocabsArgument_TYPES } from "../z_USE_myVocabs/z_USE_myVocabs";
+import { z_FETCH_vocabsArgument_TYPES } from "../zustand/z_USE_myVocabs/z_USE_myVocabs";
 
 export type USE_vocabZustandActions_ARGTYPES = {
   user_id: string;

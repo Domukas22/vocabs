@@ -10,8 +10,8 @@ import { FORMAT_rawLists } from "../FETCH_lists/helpers";
 export const function_NAME = "FETCH_oneList";
 
 export async function FETCH_oneList(
-  user_id: string,
-  list_id: string
+  list_id: string,
+  user_id: string
 ): Promise<{ list?: List_TYPE }> {
   if (!user_id)
     throw new General_ERROR({
@@ -45,6 +45,7 @@ export async function FETCH_oneList(
 
     return { list: formated_LISTS?.[0] };
   } catch (error: any) {
+    console.log("🟡 error 🟡", error);
     throw new General_ERROR({
       function_NAME,
       message: error.message,

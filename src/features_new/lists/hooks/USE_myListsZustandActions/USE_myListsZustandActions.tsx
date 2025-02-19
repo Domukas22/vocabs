@@ -11,7 +11,7 @@ import { r_FETCH_vocabs_ARG_TYPE } from "../z_USE_myVocabs/z_USE_myVocabs";
 import { useCallback } from "react";
 import { USE_abortController } from "../../../../hooks/USE_abortController/USE_abortController";
 import { LIST_PAGINATION, VOCAB_PAGINATION } from "@/src/constants/globalVars";
-import { z_FETCH_listsArgument_TYPES } from "../../../../features/lists/Lists_FLASHLIST/helpers/types";
+import { z_FETCH_listsArgument_TYPES } from "../../components/flashlists/MyLists_FLASHLIST/helpers/types";
 
 export type USE_vocabZustandActions_ARGTYPES = {
   search: string;
@@ -42,14 +42,10 @@ export function USE_myListsZustandActions(
         search,
         user_id,
         list_TYPE,
-
         langFilters,
         sortDirection,
-
         amount: LIST_PAGINATION || 50,
-
         signal: newController.signal,
-
         loadMore,
       });
     },

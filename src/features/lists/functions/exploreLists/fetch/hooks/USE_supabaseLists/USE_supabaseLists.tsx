@@ -3,7 +3,7 @@
 //
 
 import { USE_abortController } from "@/src/hooks/USE_abortController/USE_abortController";
-import { z_listDisplaySettings_PROPS } from "@/src/hooks/USE_zustand/USE_zustand";
+import { z_listDisplaySettings_PROPS } from "@/src/hooks/zustand/USE_zustand/USE_zustand";
 import { uniq } from "lodash";
 import { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import { FETCH_supabaseLists } from "../../../../myLists/fetch/FETCH_supabaseLists/FETCH_supabaseLists";

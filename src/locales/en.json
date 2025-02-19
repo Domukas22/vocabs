@@ -19,7 +19,10 @@
     "copyListAndVocabs": "Copy this list and it's vocabs?",
     "notifications": "Notifications",
     "payments": "Payments",
-    "deleteProfile": "Delete profile?"
+    "deleteProfile": "Delete profile?",
+    "fetchingOneList": "Loading list...",
+    "noListFound": "No list found",
+    "myLists": "My lists"
   },
   "blockLabels": {
     "uiLang": "App language"
@@ -193,7 +196,9 @@
     "sortLists": "Sort lists",
     "emptyList": "Empty list",
     "contactMessageType": "What would you like to talk about?",
-    "emailInput": "Which E-Mail adress would you like us to send a reply to?"
+    "emailInput": "Which E-Mail adress would you like us to send a reply to?",
+    "loadingRecentLists": "Loading recent lists...",
+    "recentLists": "Recently used lists"
   },
   "modal": {
     "displaySettings": {

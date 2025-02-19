@@ -2,7 +2,7 @@
 //
 //
 
-import { list_TYPES } from "@/src/features_new/vocabs/functions/fetch/FETCH_vocabs/types";
+import { list_TYPES } from "@/src/features_new/lists/types";
 import { supabase } from "@/src/lib/supabase";
 
 export function BUILD_listQuery(list_TYPE: list_TYPES) {
@@ -10,7 +10,7 @@ export function BUILD_listQuery(list_TYPE: list_TYPES) {
   return list_TYPE === "private"
     ? supabase
         .from("lists")
-        .select(`*, vocabs(difficulty, is_marked)`)
+        .select(`*, vocabs(difficulty, is_marked)`, { count: "exact" })
         .is("vocabs.deleted_at", null) // make sure we only fetch non-deleted vocab info
     : supabase.from("lists").select(`*`);
 }

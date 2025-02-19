@@ -8,7 +8,7 @@ import { General_ERROR } from "@/src/types/error_TYPES";
 import { Delay, SEND_internalError } from "@/src/utils";
 import { useCallback } from "react";
 import { IS_vocabMarkedBeingUpdated } from "./helpers";
-import { UPDATE_vocabMarked } from "../../../../features_new/vocabs/functions/update/marked/UPDATE_vocabMarked/UPDATE_vocabMarked";
+import { MARK_vocab } from "../../../../features_new/vocabs/hooks/actions/USE_markVocab/MARK_vocab/MARK_vocab";
 import { raw_Vocab_TYPE } from "../../types";
 
 const function_NAME = "USE_markVocab";
@@ -33,7 +33,7 @@ export function USE_markVocab({
         return;
       START_vocabAction({ action: "updating_marked", vocab_ID: vocab_ID });
 
-      const { data, error } = await UPDATE_vocabMarked(vocab_ID, val);
+      const { data, error } = await MARK_vocab(vocab_ID, val);
 
       if (error) throw error;
 

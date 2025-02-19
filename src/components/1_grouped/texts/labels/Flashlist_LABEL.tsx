@@ -2,10 +2,21 @@
 //
 //
 
-import React, { useEffect } from "react";
+import React from "react";
 import { ActivityIndicator } from "react-native";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import { loadingState_TYPES } from "@/src/types/general_TYPES";
+
+interface FlashlistLabel_PROPS {
+  IS_debouncing: boolean;
+  debouncedSearch: string;
+  search: string;
+  appliedFiltersCount?: number;
+  totalResult_COUNT: number;
+  target: "lists" | "vocabs";
+  loading_STATE: loadingState_TYPES;
+  HAS_error: boolean;
+}
 
 export default function Flashlist_LABEL({
   debouncedSearch = "",
@@ -13,19 +24,10 @@ export default function Flashlist_LABEL({
   appliedFiltersCount = 0,
   totalResult_COUNT = 0,
   target = "vocabs",
-  z_myVocabsLoading_STATE = "none",
+  loading_STATE = "none",
   IS_debouncing = false,
   HAS_error = false,
-}: {
-  IS_debouncing: boolean;
-  debouncedSearch: string;
-  search: string;
-  appliedFiltersCount?: number;
-  totalResult_COUNT: number;
-  target: string;
-  z_myVocabsLoading_STATE: loadingState_TYPES;
-  HAS_error: boolean;
-}) {
+}: FlashlistLabel_PROPS) {
   const GET_label = () => {
     if (HAS_error) return "Something went wrong...";
 
@@ -53,7 +55,7 @@ export default function Flashlist_LABEL({
       }
     }
 
-    switch (z_myVocabsLoading_STATE) {
+    switch (loading_STATE) {
       case "error":
         return "Something went wrong...";
 

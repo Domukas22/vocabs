@@ -49,7 +49,8 @@ import { DeleteList_MODAL } from "../DeleteList_MODAL/DeleteList_MODAL";
 import { RenameList_MODAL } from "../RenameList_MODAL/RenameList_MODAL";
 import { SelectMultipleLanguages_MODAL } from "@/src/features/languages/components";
 import { USE_modalToggles } from "@/src/hooks/index";
-import { z_USE_myVocabs } from "@/src/features_new/vocabs/hooks/z_USE_myVocabs/z_USE_myVocabs";
+import { z_USE_myVocabs } from "@/src/features_new/vocabs/hooks/zustand/z_USE_myVocabs/z_USE_myVocabs";
+import { z_USE_myOneList } from "@/src/features_new/lists/hooks/z_USE_myOneList/z_USE_myOneList";
 
 interface ListSettingsModal_PROPS {
   IS_open: boolean;
@@ -65,7 +66,7 @@ export function ListSettings_MODAL({
   const { sync } = USE_sync();
   const toast = useToast();
   const router = useRouter();
-  const { z_myList: list } = z_USE_myVocabs();
+  const { z_myOneList } = z_USE_myOneList();
 
   const { modals } = USE_modalToggles([
     "deleteList",
@@ -80,7 +81,7 @@ export function ListSettings_MODAL({
     USE_shareList();
   const share = async (val: boolean) => {
     await SHARE_list({
-      list,
+      z_myOneList,
       user: z_user,
       val,
       sync: async () => await sync({ user: z_user, PULL_EVERYTHING: true }),
@@ -99,14 +100,14 @@ export function ListSettings_MODAL({
     ListParticipantsError_PROPS
   >({
     args: {
-      list_id: list?.id,
+      list_id: z_myOneList?.id,
       owner_id: z_user?.id,
     },
     fn_NAME: "FETCH_listParticipants",
-    dependencies: [IS_open, list?.type, list?.id],
+    dependencies: [IS_open, z_myOneList?.type, z_myOneList?.id],
     defaultErr_MSG: fetchListParticipants_ERRS.user.defaultmessage,
     SHOULD_fetchOnLoad: true,
-    SHOULD_returnNothing: list?.type !== "shared",
+    SHOULD_returnNothing: z_myOneList?.type !== "shared",
     fn: FETCH_listParticipants,
   });
 
@@ -144,7 +145,7 @@ export function ListSettings_MODAL({
                   : MyColors.text_white,
               }}
             >
-              {list?.name || "NO LIST NAME PROVIDED"}
+              {z_myOneList?.name || "NO LIST NAME PROVIDED"}
             </Styled_TEXT>
             {/* <Styled_TEXT>{user?.email || "---"}</Styled_TEXT> */}
           </View>
@@ -153,23 +154,23 @@ export function ListSettings_MODAL({
 
         <ChosenLangs_BLOCK
           label={t("label.defaultVocabLangs")}
-          default_lang_ids={list?.default_lang_ids}
+          default_lang_ids={z_myOneList?.default_lang_ids}
           toggle={() => modals.selectLangs.set(true)}
           REMOVE_lang={async (targetLang_ID: string) => {
-            await list?.DELETE_defaultLangId(targetLang_ID);
+            await z_myOneList?.DELETE_defaultLangId(targetLang_ID);
           }}
           // error={}
         />
 
         <Block>
           <Label>
-            Reset the difficulty of every vocab in this list to "Hard"
+            Reset the difficulty of every vocab in this z_myOneList to "Hard"
           </Label>
           <Btn
             text="Reset all vocabs"
             onPress={() => {
               (async () => {
-                await list?.RESET_allVocabsDifficulty();
+                await z_myOneList?.RESET_allVocabsDifficulty();
                 toast.show("Difficulties reset", {
                   type: "success",
                   duration: 5000,
@@ -182,7 +183,7 @@ export function ListSettings_MODAL({
 
         <ListSharing_BLOCK
           {...{
-            list,
+            z_myOneList,
             share,
             IS_sharing,
             listSharing_ERROR,
@@ -223,16 +224,16 @@ export function ListSettings_MODAL({
       <SelectMultipleLanguages_MODAL
         open={modals.selectLangs.IS_open}
         TOGGLE_open={() => modals.selectLangs.set(false)}
-        lang_ids={list?.default_lang_ids?.split(",") || []}
+        lang_ids={z_myOneList?.default_lang_ids || []}
         SUBMIT_langIds={async (lang_ids: string[]) => {
-          await list?.UPDATE_defaultLangIds(lang_ids);
+          await z_myOneList?.UPDATE_defaultLangIds(lang_ids);
         }}
       />
 
       <RenameList_MODAL
-        list={list}
+        z_myOneList={z_myOneList}
         user_id={z_user?.id}
-        current_NAME={list?.name}
+        current_NAME={z_myOneList?.name}
         IS_open={modals.renameList.IS_open}
         CLOSE_modal={() => modals.renameList.set(false)}
         onSuccess={() => {
@@ -249,11 +250,11 @@ export function ListSettings_MODAL({
       <SelectUsers_MODAL
         open={modals.selectListParticipants.IS_open}
         TOGGLE_open={() => modals.selectListParticipants.set(false)}
-        list_id={list?.id}
+        list_id={z_myOneList?.id}
         onUpdate={() => {
           (async () =>
             await FETCH_participants({
-              list_id: list?.id,
+              list_id: z_myOneList?.id,
               owner_id: z_user?.id,
             }))();
         }}
@@ -270,13 +271,14 @@ export function ListSettings_MODAL({
         actionBtnText={t("btn.confirmStop")}
       >
         <Styled_TEXT style={{ color: MyColors.text_red }}>
-          The people you have selected won't be able to view your list anymore
+          The people you have selected won't be able to view your z_myOneList
+          anymore
         </Styled_TEXT>
       </Confirmation_MODAL>
 
       <DeleteList_MODAL
         IS_open={modals.deleteList.IS_open}
-        list={list}
+        z_myOneList={z_myOneList}
         CLOSE_modal={() => modals.deleteList.set(false)}
         onSuccess={() => {
           modals.deleteList.set(false);
@@ -308,7 +310,7 @@ function HowDoesSharingListWork_MODAL({
             onPress={TOGGLE_modal}
           />
         }
-        title="Share a list"
+        title="Share a z_myOneList"
         big
       />
     </Big_MODAL>
@@ -331,7 +333,7 @@ function HowDoesPublishingListWork_MODAL({
             onPress={TOGGLE_modal}
           />
         }
-        title="Publish a list"
+        title="Publish a z_myOneList"
         big
       />
     </Big_MODAL>
@@ -378,7 +380,7 @@ export function SharedWithUsers_BULLETS({
 }
 
 export function ListSharing_BLOCK({
-  list,
+  z_myOneList,
   IS_sharing,
   listSharing_ERROR,
   share,
@@ -387,7 +389,7 @@ export function ListSharing_BLOCK({
   TOGGLE_selectUsersModal,
   participants,
 }: {
-  list: List_MODEL | undefined;
+  z_myOneList: List_MODEL | undefined;
   IS_sharing: boolean;
   listSharing_ERROR: Error_PROPS | undefined;
   share: (val: boolean) => Promise<void>;
@@ -398,12 +400,12 @@ export function ListSharing_BLOCK({
 }) {
   return (
     <Block>
-      {list?.type !== "shared" && (
+      {z_myOneList?.type !== "shared" && (
         <>
-          <Label>Share your list with others</Label>
+          <Label>Share your z_myOneList with others</Label>
           <View style={{ flexDirection: "row", gap: 8 }}>
             <Btn
-              text={!IS_sharing ? "Share list" : ""}
+              text={!IS_sharing ? "Share z_myOneList" : ""}
               iconRight={
                 IS_sharing ? <ActivityIndicator color="white" /> : null
               }
@@ -419,14 +421,14 @@ export function ListSharing_BLOCK({
           </View>
         </>
       )}
-      {list?.type === "shared" && (
+      {z_myOneList?.type === "shared" && (
         <>
           <Styled_TEXT style={{ color: MyColors.text_green }}>
-            This list is shared with {participants?.length || 0} people
+            This z_myOneList is shared with {participants?.length || 0} people
           </Styled_TEXT>
           <SharedWithUsers_BULLETS users={participants || []} />
           <Btn
-            text="Edit people list"
+            text="Edit people z_myOneList"
             style={{ flex: 1 }}
             iconRight={<ICON_arrow direction="right" />}
             text_STYLES={{
@@ -436,7 +438,7 @@ export function ListSharing_BLOCK({
             onPress={TOGGLE_selectUsersModal}
           />
           <Btn
-            text={!IS_sharing ? "Unshare this list" : ""}
+            text={!IS_sharing ? "Unshare this z_myOneList" : ""}
             iconRight={
               IS_sharing ? (
                 <ActivityIndicator color={MyColors.icon_red} />
@@ -455,14 +457,14 @@ export function ListSharing_BLOCK({
   );
 }
 export function ListPublishing_BLOCK({
-  list,
+  z_myOneList,
   IS_publishing,
   listPublish_ERROR,
   publish,
   TOGGLE_infoModal,
   TOGGLE_cancelPublishModal,
 }: {
-  list: List_MODEL | undefined;
+  z_myOneList: List_MODEL | undefined;
   IS_publishing: boolean;
   listPublish_ERROR: Error_PROPS | undefined;
   publish: (val: boolean) => Promise<void>;
@@ -471,19 +473,23 @@ export function ListPublishing_BLOCK({
 }) {
   const list_STATUS = useMemo(
     () =>
-      list?.is_submitted_for_publish && !list?.was_accepted_for_publish
+      z_myOneList?.is_submitted_for_publish &&
+      !z_myOneList?.was_accepted_for_publish
         ? "submitted"
-        : list?.was_accepted_for_publish
+        : z_myOneList?.was_accepted_for_publish
         ? "accepted"
         : "not_submitted_or_accepted",
-    [list?.is_submitted_for_publish, list?.was_accepted_for_publish]
+    [
+      z_myOneList?.is_submitted_for_publish,
+      z_myOneList?.was_accepted_for_publish,
+    ]
   );
 
   return (
     <Block>
       {list_STATUS === "not_submitted_or_accepted" && (
         <>
-          <Label>Publish your list and get free vocabs</Label>
+          <Label>Publish your z_myOneList and get free vocabs</Label>
           <View style={{ flexDirection: "row", gap: 8 }}>
             <Btn
               text={!IS_publishing ? "Submit for publish" : ""}
@@ -506,13 +512,13 @@ export function ListPublishing_BLOCK({
       {list_STATUS === "submitted" && (
         <>
           <Styled_TEXT style={{ color: MyColors.text_yellow }}>
-            This list is being reviewed for publishing, which shouldn't take
-            longer than a few days. You'll be notified as soon as the list is
-            accepted or rejected.
+            This z_myOneList is being reviewed for publishing, which shouldn't
+            take longer than a few days. You'll be notified as soon as the
+            z_myOneList is accepted or rejected.
           </Styled_TEXT>
           <View style={{ flexDirection: "row", gap: 8 }}>
             <Btn
-              text={!IS_publishing ? "Unpublish list" : ""}
+              text={!IS_publishing ? "Unpublish z_myOneList" : ""}
               iconRight={
                 IS_publishing ? (
                   <ActivityIndicator color={MyColors.icon_red} />
@@ -530,7 +536,8 @@ export function ListPublishing_BLOCK({
       {list_STATUS === "accepted" && (
         <>
           <Styled_TEXT style={{ color: MyColors.text_green }}>
-            Great Work! You have received 57 vocabs for publishing this list.
+            Great Work! You have received 57 vocabs for publishing this
+            z_myOneList.
           </Styled_TEXT>
         </>
       )}

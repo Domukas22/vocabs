@@ -80,9 +80,7 @@ function _MyList_BTN({
             {...{ diff_1_count, diff_2_count, diff_3_count, markedVocab_COUNT }}
           />
 
-          <ListBtn_FLAGS
-            lang_ids={list?.collected_lang_ids?.split(",") || []}
-          />
+          <ListBtn_FLAGS lang_ids={list?.collected_lang_ids || []} />
         </ListBtn_BOTTOM>
       )}
     </Big_BTN>

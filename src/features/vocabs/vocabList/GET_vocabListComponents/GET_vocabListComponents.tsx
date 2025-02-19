@@ -6,7 +6,7 @@ import BottomAction_BLOCK from "@/src/components/1_grouped/blocks/BottomAction_B
 import Error_BLOCK from "@/src/components/1_grouped/blocks/Error_BLOCK";
 import { General_ERROR } from "@/src/types/error_TYPES";
 import { loadingState_TYPES } from "@/src/types/general_TYPES";
-import { VocabsFlatlistHeader_SECTION } from "../../components";
+import { VocabFlashlist_HEADER } from "../../components";
 import { raw_Vocab_TYPE } from "../../types";
 import { Vocab_CARD } from "../Vocabs_LIST/helpers";
 import { VocabsSkeleton_BLOCK } from "../../../../features_new/vocabs/components/flashlists/components/VocabsSkeleton_BLOCK/VocabsSkeleton_BLOCK";
@@ -64,11 +64,11 @@ export function GET_vocabListComponents({
   UPDATE_vocabMarked = () => Promise.resolve(),
 }: GET_vocabListComponents_PROPS) {
   const Flashlist_HEADER = React.memo(() => (
-    <VocabsFlatlistHeader_SECTION
+    <VocabFlashlist_HEADER
       IS_debouncing={IS_debouncing}
       debouncedSearch={debouncedSearch}
       search={search}
-      z_myVocabsLoading_STATE={z_myVocabsLoading_STATE}
+      loading_STATE={z_myVocabsLoading_STATE}
       list_NAME={list_NAME}
       unpaginated_COUNT={unpaginated_COUNT}
       HAS_error={!!vocabs_ERROR}

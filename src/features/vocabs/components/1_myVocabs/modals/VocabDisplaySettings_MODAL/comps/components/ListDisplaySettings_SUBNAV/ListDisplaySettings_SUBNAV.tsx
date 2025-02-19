@@ -8,7 +8,7 @@ import { USE_getActiveFilterCount } from "@/src/hooks";
 import {
   USE_zustand,
   z_listDisplaySettings_PROPS,
-} from "@/src/hooks/USE_zustand/USE_zustand";
+} from "@/src/hooks/zustand/USE_zustand/USE_zustand";
 import React from "react";
 import { ScrollView } from "react-native";
 
