@@ -29,7 +29,7 @@ export function VALIDATE_fetchVocabArgs(args: FETCH_myVocabs_ARG_TYPES) {
     });
   };
 
-  if (!user_id) throw err("User id undefined");
+  if (!user_id && list_TYPE === "private") throw err("User id undefined");
   if (!fetch_TYPE) throw err("Fetch type undefined");
   if (!list_TYPE) throw err("List type undefined");
 

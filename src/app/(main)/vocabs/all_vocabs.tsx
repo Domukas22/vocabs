@@ -14,14 +14,12 @@ import React from "react";
 import { CreateMyVocab_MODAL } from "@/src/features/vocabs/components/1_myVocabs/modals/CreateMyVocab_MODAL/CreateMyVocab_MODAL";
 import { USE_modalToggles } from "@/src/hooks/index";
 import { Portal } from "@gorhom/portal";
-import { myVocabFetch_TYPES } from "@/src/features_new/vocabs/hooks/USE_fetchVocabs/FETCH_vocabs/types";
+import { vocabFetch_TYPES } from "@/src/features_new/vocabs/hooks/fetchVocabs/FETCH_vocabs/types";
 import MyVocabs_FLASHLIST from "@/src/features_new/vocabs/components/flashlists/MyVocabs_FLASHLIST/MyVocabs_FLASHLIST";
-import USE_controlMyVocabsFetch from "@/src/features_new/vocabs/hooks/USE_controlMyVocabsFetch/USE_controlMyVocabsFetch";
+import USE_controlMyVocabsFetch from "@/src/features_new/vocabs/hooks/fetchVocabs/USE_controlMyVocabsFetch/USE_controlMyVocabsFetch";
 import { t } from "i18next";
 import { VocabFlatlist_FOOTER } from "@/src/features_new/vocabs/components/flashlists/components/VocabFlatlist_FOOTER/VocabFlatlist_FOOTER";
 import { z_USE_myVocabs } from "@/src/features_new/vocabs/hooks/zustand/z_USE_myVocabs/z_USE_myVocabs";
-
-const fetch_TYPE: myVocabFetch_TYPES = "all";
 
 export default function AllVocabs_PAGE() {
   const { modals } = USE_modalToggles([
@@ -44,7 +42,7 @@ export default function AllVocabs_PAGE() {
   // Refetches on filter changes
   const { LOAD_more } = USE_controlMyVocabsFetch({
     search: debouncedSearch,
-    fetch_TYPE,
+    fetch_TYPE: "all",
     targetList_ID: "",
   });
 
@@ -80,7 +78,7 @@ export default function AllVocabs_PAGE() {
             unpaginated_COUNT={z_myVocabsUnpaginated_COUNT}
             HAS_reachedEnd={z_HAVE_myVocabsReachedEnd}
             IS_debouncing={IS_debouncing}
-            z_myVocabsLoading_STATE={z_myVocabsLoading_STATE}
+            loading_STATE={z_myVocabsLoading_STATE}
             debouncedSearch={debouncedSearch}
             error={z_myVocabs_ERROR}
           />

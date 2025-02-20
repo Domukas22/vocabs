@@ -27,11 +27,6 @@ export default function Explore_PAGE() {
           description="Search all public vocabs in the app"
           onPress={() => router.push("/(main)/explore/all_public_vocabs")}
         />
-        <BigPage_BTN
-          title="🔒 Shared lists"
-          description="Find a list your friend created"
-          onPress={() => router.push("/(main)/explore/shared_lists")}
-        />
       </View>
     </>
   );

@@ -12,7 +12,7 @@ import {
   ICON_X,
 } from "@/src/components/1_grouped/icons/icons";
 
-import { myVocabFetch_TYPES } from "@/src/features_new/vocabs/hooks/USE_fetchVocabs/FETCH_vocabs/types";
+import { vocabFetch_TYPES } from "@/src/features_new/vocabs/hooks/fetchVocabs/FETCH_vocabs/types";
 import { USE_toggle, USE_zustand } from "@/src/hooks";
 import { useTranslation } from "react-i18next";
 import { View, ActivityIndicator } from "react-native";
@@ -32,7 +32,7 @@ import { USE_hardDeleteVocab } from "@/src/features_new/vocabs/hooks/actions/USE
 interface VocabBackBtns_PROPS {
   vocab: Vocab_TYPE;
   list_TYPE: list_TYPES;
-  fetch_TYPE: myVocabFetch_TYPES;
+  fetch_TYPE: vocabFetch_TYPES;
   OPEN_updateVocabModal: () => void;
   OPEN_vocabCopyModal: () => void;
 

@@ -9,15 +9,15 @@ import { ActivityIndicator, ScrollView } from "react-native";
 import { MyRecentLists_FLATLIST } from "@/src/features/lists/components";
 import { MyColors } from "@/src/constants/MyColors";
 import { VocabPageBigMain_BTNS } from "@/src/components/2_byPage/myVocabs";
-import USE_refetchStarterContent from "@/src/hooks/zustand/z_USE_starterContent/USE_refetchStarterContent/USE_refetchStarterContent";
-import { z_USE_starterContent } from "@/src/hooks/zustand/z_USE_starterContent/z_USE_starterContent";
+import USE_refetchStarterContent from "@/src/hooks/zustand/z_USE_myStarterContent/USE_refetchStarterContent/USE_refetchStarterContent";
+import { z_USE_myStarterContent } from "@/src/hooks/zustand/z_USE_myStarterContent/z_USE_myStarterContent";
 
 export default function Index_PAGE() {
-  const { z_IS_starterContentRefetching } = z_USE_starterContent();
-  const { REFETCH_starterContent } = USE_refetchStarterContent();
+  const { z_IS_myStarterContentRefetching } = z_USE_myStarterContent();
+  const { REFETCH_myStarterContent } = USE_refetchStarterContent();
 
   useEffect(() => {
-    REFETCH_starterContent(true);
+    REFETCH_myStarterContent(true);
   }, []);
 
   return (
@@ -26,7 +26,7 @@ export default function Index_PAGE() {
         title="My vocabs"
         big={true}
         btnRight={
-          z_IS_starterContentRefetching ? (
+          z_IS_myStarterContentRefetching ? (
             <ActivityIndicator color={MyColors.icon_gray} />
           ) : null
         }

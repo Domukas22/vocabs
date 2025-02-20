@@ -25,7 +25,7 @@ export default function MyVocabs_FLASHLIST({
   Header: React.JSX.Element;
   Footer: React.JSX.Element;
 }) {
-  const list_REF = useRef<FlashList<any>>(null);
+  const flashlist_REF = useRef<FlashList<any>>(null);
   const { z_currentActions } = z_USE_currentActions();
 
   const {
@@ -48,11 +48,11 @@ export default function MyVocabs_FLASHLIST({
           ? []
           : z_myVocabs || []
       }
-      flashlist_REF={list_REF}
+      flashlist_REF={flashlist_REF}
       renderItem={({ item }: { item: Vocab_TYPE }) => (
         <Vocab_CARD
           vocab={item}
-          list_TYPE={"private"}
+          list_TYPE="private"
           fetch_TYPE={z_myVocabsFetch_TYPE}
           OPEN_updateVocabModal={OPEN_updateVocabModal}
           highlighted={z_myVocabsHighlighted_ID === item.id}

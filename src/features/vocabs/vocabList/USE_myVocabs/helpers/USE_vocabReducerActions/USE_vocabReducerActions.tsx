@@ -5,10 +5,10 @@
 import { loadingState_TYPES } from "@/src/types/general_TYPES";
 import {
   list_TYPES,
-  myVocabFetch_TYPES,
+  vocabFetch_TYPES,
   FETCH_myVocabs_RESPONSE_TYPE,
-} from "../../../../../../features_new/vocabs/hooks/USE_fetchVocabs/FETCH_vocabs/types";
-import { USE_fetchVocabs } from "../../../../../../features_new/vocabs/hooks/USE_fetchVocabs/USE_fetchMyVocabs";
+} from "../../../../../../features_new/vocabs/hooks/fetchVocabs/FETCH_vocabs/types";
+import { USE_fetchVocabs } from "../../../../../../features_new/vocabs/hooks/fetchVocabs/USE_controlMyVocabsFetch/USE_fetchMyVocabs/USE_fetchMyVocabs";
 import { USE_fetchVocabsAndHanldeState } from "../USE_fetchVocabsAndHanldeState/USE_fetchVocabsAndHanldeState";
 import { USE_loadMoreVocabs } from "../USE_loadMoreVocabs/USE_loadMoreVocabs";
 import { vocabsReducer_TYPE } from "../USE_myVocabsReducer/Vocab_REDUCER/types";
@@ -25,7 +25,7 @@ export function USE_vocabReducerActions({
 }: {
   reducer: vocabsReducer_TYPE;
   list_TYPE: list_TYPES;
-  fetch_TYPE: myVocabFetch_TYPES;
+  fetch_TYPE: vocabFetch_TYPES;
   search: string;
   targetList_ID?: string | undefined;
   r_START_fetch: (loadingState_TYPE: loadingState_TYPES) => void;

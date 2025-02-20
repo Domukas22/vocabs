@@ -4,9 +4,9 @@
 
 import { USE_zustand } from "@/src/hooks";
 import { useCallback, useEffect } from "react";
-import { myVocabFetch_TYPES } from "../USE_fetchVocabs/FETCH_vocabs/types";
-import { USE_fetchMyVocabs } from "../USE_fetchVocabs/USE_fetchMyVocabs";
-import { z_USE_myVocabs } from "../zustand/z_USE_myVocabs/z_USE_myVocabs";
+import { vocabFetch_TYPES } from "../FETCH_vocabs/types";
+import { USE_fetchMyVocabs } from "./USE_fetchMyVocabs/USE_fetchMyVocabs";
+import { z_USE_myVocabs } from "../../zustand/z_USE_myVocabs/z_USE_myVocabs";
 
 export default function USE_controlMyVocabsFetch({
   search = "",
@@ -14,14 +14,26 @@ export default function USE_controlMyVocabsFetch({
   targetList_ID = "",
 }: {
   search: string;
-  fetch_TYPE: myVocabFetch_TYPES;
+  fetch_TYPE: vocabFetch_TYPES;
   targetList_ID: string;
 }) {
-  const { FETCH_myVocabs } = USE_fetchMyVocabs();
   const { z_user, z_vocabDisplay_SETTINGS } = USE_zustand();
+
   const { difficultyFilters, langFilters, sortDirection, sorting } =
     z_vocabDisplay_SETTINGS;
-  const { z_myVocabPrinted_IDS } = z_USE_myVocabs();
+
+  const {
+    z_myVocabPrinted_IDS,
+    z_INSERT_myVocabsError,
+    z_INSERT_fetchedVocabs,
+    z_PREPARE_myVocabsForFetch,
+  } = z_USE_myVocabs();
+
+  const { FETCH_myVocabs } = USE_fetchMyVocabs({
+    z_INSERT_myVocabsError,
+    z_INSERT_fetchedVocabs,
+    z_PREPARE_myVocabsForFetch,
+  });
 
   const FETCH = useCallback(
     async (loadMore: boolean = false) => {

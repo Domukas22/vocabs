@@ -13,8 +13,8 @@ import { General_ERROR } from "@/src/types/error_TYPES";
 import { loadingState_TYPES } from "@/src/types/general_TYPES";
 import {
   list_TYPES,
-  myVocabFetch_TYPES,
-} from "../../../../features_new/vocabs/hooks/USE_fetchVocabs/FETCH_vocabs/types";
+  vocabFetch_TYPES,
+} from "../../../../features_new/vocabs/hooks/fetchVocabs/FETCH_vocabs/types";
 import { VocabFlashlist_HEADER } from "../../components";
 import BottomAction_BLOCK from "@/src/components/1_grouped/blocks/BottomAction_BLOCK";
 import Error_BLOCK from "@/src/components/1_grouped/blocks/Error_BLOCK";
@@ -68,7 +68,7 @@ export function Vocab_LIST({
   HAS_reachedEnd: boolean;
   highlighted_ID: string;
   list_TYPE: list_TYPES;
-  fetch_TYPE: myVocabFetch_TYPES;
+  fetch_TYPE: vocabFetch_TYPES;
   LOAD_moreVocabs: () => void;
   OPEN_modalCreateVocab: () => void;
   OPEN_vocabSoftDeleteModal: (vocab: raw_Vocab_TYPE) => void;

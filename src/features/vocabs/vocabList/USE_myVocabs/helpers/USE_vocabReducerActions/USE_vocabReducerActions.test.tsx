@@ -1,13 +1,13 @@
 import { renderHook, act, waitFor } from "@testing-library/react-native";
 import { USE_vocabReducerActions } from "./USE_vocabReducerActions";
-import { USE_fetchVocabs } from "../../../../../../features_new/vocabs/hooks/USE_fetchVocabs/USE_fetchMyVocabs";
+import { USE_fetchVocabs } from "../../../../../../features_new/vocabs/hooks/fetchVocabs/USE_controlMyVocabsFetch/USE_fetchMyVocabs/USE_fetchMyVocabs";
 import { USE_fetchVocabsAndHanldeState } from "../USE_fetchVocabsAndHanldeState/USE_fetchVocabsAndHanldeState";
 import { USE_loadMoreVocabs } from "../USE_loadMoreVocabs/USE_loadMoreVocabs";
 import { vocabsReducer_TYPE } from "../USE_myVocabsReducer/Vocab_REDUCER/types";
 import {
-  myVocabFetch_TYPES,
+  vocabFetch_TYPES,
   list_TYPES,
-} from "../../../../../../features_new/vocabs/hooks/USE_fetchVocabs/FETCH_vocabs/types";
+} from "../../../../../../features_new/vocabs/hooks/fetchVocabs/FETCH_vocabs/types";
 
 jest.mock("../USE_fetchVocabs/USE_fetchVocabs", () => ({
   USE_fetchVocabs: jest.fn(),
@@ -84,7 +84,7 @@ describe("USE_vocabReducerActions", () => {
       USE_vocabReducerActions({
         reducer: undefined as unknown as vocabsReducer_TYPE,
         list_TYPE: undefined as unknown as list_TYPES,
-        fetch_TYPE: undefined as unknown as myVocabFetch_TYPES,
+        fetch_TYPE: undefined as unknown as vocabFetch_TYPES,
         search: undefined as unknown as string,
         targetList_ID: undefined,
         r_START_fetch: mock_START_fetch,

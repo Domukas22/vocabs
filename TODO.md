@@ -2,25 +2,24 @@
 //
 //
 
-🔴🔴 Create a global current action state
----> Create a hook for each separarte action, and simply update the ui
-of all teh other hoioks, instead of doing th eupdates inside the zustand hooks themselves
+--> Public vocabs and lists need to have a "saved" count
+--> Add the 'saved' icon to the list/vocab card ui
 
+--> Create 4 separate states:
+----> z_USE_myListsDisplaySettings
+----> z_USE_myVocabsDisplaySettings
+----> z_USE_publicListsDisplaySettings
+----> z_USE_publicVocabsDisplaySettings
+
+--> Explore starter page should have:
+----> Public lists + total count
+----> Public vocabs + total count
+----> Top 5 saved lists
+----> Top 5 saved vocabs
+
+--> Connect all hooks so that everythign works together and updates properly
+
+// ------------------------------------------------------------------------
 // ------------------------------------------------------------------------
 
 --> Offer vocabs for a completed survey
-
-# Public
-
-- Copy list and its vocabs
-- Copy vocab
-
-# My vocabs
-
-- Create vocab
-- Update vocab
-- Move vocab
-
-# Deleted
-
-- Revive vocab

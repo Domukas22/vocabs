@@ -2,7 +2,7 @@
 //
 //
 
-import { list_TYPES } from "../features_new/vocabs/hooks/USE_fetchVocabs/FETCH_vocabs/types";
+import { list_TYPES } from "../features_new/vocabs/hooks/fetchVocabs/FETCH_vocabs/types";
 
 export interface currentVocabAction_TYPE {
   vocab_ID: string;

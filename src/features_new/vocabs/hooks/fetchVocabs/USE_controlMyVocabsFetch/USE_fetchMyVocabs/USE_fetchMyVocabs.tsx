@@ -7,49 +7,59 @@ import { loadingState_TYPES } from "@/src/types/general_TYPES";
 import { useCallback } from "react";
 
 import { General_ERROR } from "@/src/types/error_TYPES";
-import { myVocabFetch_TYPES } from "./FETCH_vocabs/types";
+import { vocabFetch_TYPES } from "../../FETCH_vocabs/types";
 
 import { VOCAB_PAGINATION } from "@/src/constants/globalVars";
-import { FETCH_vocabs } from "./FETCH_vocabs/FETCH_vocabs";
-import { z_USE_myVocabs } from "../zustand/z_USE_myVocabs/z_USE_myVocabs";
+import { FETCH_vocabs } from "../../FETCH_vocabs/FETCH_vocabs";
+import {
+  z_INSERT_fetchedVocabs_TYPE,
+  z_INSERT_myVocabsError_TYPE,
+  z_PREPARE_myVocabsForFetch_TYPE,
+} from "../../../zustand/z_USE_myVocabs/z_USE_myVocabs";
 import DETERMINE_loadingState from "@/src/utils/DETERMINE_loadingState/DETERMINE_loadingState";
 import { SEND_internalError } from "@/src/utils";
 
-const function_NAME = "USE_fetchVocabs";
+interface USE_fetchMyVocabs_PROPS {
+  search: string;
+  sorting: "date" | "difficulty" | "shuffle";
+  user_id: string;
+  loadMore: boolean;
+  excludeIds: Set<string>;
+  fetch_TYPE: vocabFetch_TYPES;
+  langFilters: string[];
+  sortDirection: "descending" | "ascending";
+  targetList_ID?: string | undefined;
+  difficultyFilters: (1 | 2 | 3)[];
+}
 
-export function USE_fetchMyVocabs() {
-  const {
-    z_INSERT_myVocabsError,
-    z_INSERT_fetchedVocabs,
-    z_PREPARE_myVocabsForFetch,
-  } = z_USE_myVocabs();
+const function_NAME = "USE_fetchMyVocabs";
 
+export function USE_fetchMyVocabs({
+  z_INSERT_myVocabsError,
+  z_INSERT_fetchedVocabs,
+  z_PREPARE_myVocabsForFetch,
+}: {
+  z_INSERT_myVocabsError: z_INSERT_myVocabsError_TYPE;
+  z_INSERT_fetchedVocabs: z_INSERT_fetchedVocabs_TYPE;
+  z_PREPARE_myVocabsForFetch: z_PREPARE_myVocabsForFetch_TYPE;
+}) {
   const { START_newRequest } = USE_abortController();
 
   const FETCH_myVocabs = useCallback(
-    async ({
-      search = "",
-      loadMore = false,
-      fetch_TYPE = "all",
-      targetList_ID = "",
-      difficultyFilters = [],
-      langFilters = [],
-      sortDirection = "descending",
-      sorting = "date",
-      user_id = "",
-      excludeIds = new Set(),
-    }: {
-      search: string;
-      loadMore: boolean;
-      fetch_TYPE: myVocabFetch_TYPES;
-      targetList_ID?: string | undefined;
-      difficultyFilters: (1 | 2 | 3)[];
-      langFilters: string[];
-      sortDirection: "descending" | "ascending";
-      sorting: "date" | "difficulty" | "shuffle";
-      user_id: string;
-      excludeIds: Set<string>;
-    }): Promise<void> => {
+    async (args: USE_fetchMyVocabs_PROPS): Promise<void> => {
+      const {
+        search = "",
+        sorting = "date",
+        user_id = "",
+        loadMore = false,
+        excludeIds = new Set(),
+        fetch_TYPE = "all",
+        langFilters = [],
+        sortDirection = "descending",
+        targetList_ID = "",
+        difficultyFilters = [],
+      } = args;
+
       // Create new fetch request, so that we could cancel it in case
       // a new request was sent, and this one hasn't finished fetching
       const newController = START_newRequest();

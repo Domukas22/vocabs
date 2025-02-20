@@ -12,7 +12,7 @@ export function VocabFlatlist_FOOTER({
   error = undefined,
   IS_debouncing = false,
   HAS_reachedEnd = false,
-  z_myVocabsLoading_STATE = "none",
+  loading_STATE = "none",
   unpaginated_COUNT = 0,
   debouncedSearch = "",
   LOAD_more = () => Promise.resolve(),
@@ -22,7 +22,7 @@ export function VocabFlatlist_FOOTER({
   error?: General_ERROR;
   IS_debouncing: boolean;
   HAS_reachedEnd: boolean;
-  z_myVocabsLoading_STATE: loadingState_TYPES;
+  loading_STATE: loadingState_TYPES;
   unpaginated_COUNT: number;
   debouncedSearch: string;
   LOAD_more: () => Promise<void>;
@@ -32,8 +32,7 @@ export function VocabFlatlist_FOOTER({
   return error ? (
     <Error_BLOCK paragraph={error?.user_MSG || "Something went wrong"} />
   ) : IS_debouncing ||
-    (z_myVocabsLoading_STATE !== "none" &&
-      z_myVocabsLoading_STATE !== "loading_more") ? (
+    (loading_STATE !== "none" && loading_STATE !== "loading_more") ? (
     <VocabsSkeleton_BLOCK />
   ) : (
     <BottomAction_BLOCK
@@ -43,7 +42,7 @@ export function VocabFlatlist_FOOTER({
       RESET_search={RESET_search}
       totalFilteredResults_COUNT={unpaginated_COUNT}
       debouncedSearch={debouncedSearch}
-      z_myVocabsLoading_STATE={z_myVocabsLoading_STATE}
+      z_myVocabsLoading_STATE={loading_STATE}
       HAS_reachedEnd={HAS_reachedEnd}
       IS_debouncing={IS_debouncing}
     />

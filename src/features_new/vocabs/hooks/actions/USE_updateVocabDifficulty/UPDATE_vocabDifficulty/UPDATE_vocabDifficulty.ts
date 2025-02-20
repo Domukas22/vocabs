@@ -2,7 +2,7 @@
 //
 //
 
-import { FORMAT_rawVocabs } from "@/src/features_new/vocabs/hooks/USE_fetchVocabs/FETCH_vocabs/functions";
+import { FORMAT_rawVocabs } from "@/src/features_new/vocabs/hooks/fetchVocabs/FETCH_vocabs/functions";
 import { raw_Vocab_TYPE, Vocab_TYPE } from "@/src/features_new/vocabs/types";
 import { supabase } from "@/src/lib/supabase";
 import { General_ERROR } from "@/src/types/error_TYPES";

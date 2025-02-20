@@ -3,7 +3,7 @@
 //
 
 import { useCallback } from "react";
-import { z_USE_starterContent } from "../z_USE_starterContent";
+import { z_USE_myStarterContent } from "../z_USE_myStarterContent";
 import { General_ERROR } from "@/src/types/error_TYPES";
 import { SEND_internalError } from "@/src/utils";
 import { USE_zustand } from "../../USE_zustand/USE_zustand";
@@ -18,20 +18,20 @@ const function_NAME = "USE_refetchStarterContent";
 export default function USE_refetchStarterContent() {
   const { z_user } = USE_zustand();
   const {
-    z_IS_starterInitialFetchDone,
-    z_SET_starterContentRefetch,
-    z_SET_starterContent,
-    z_SET_starterContentFetch_ERROR,
-    z_SET_starterInitialFetchToTrue,
-  } = z_USE_starterContent();
+    z_IS_myStarterInitialFetchDone,
+    z_SET_myStarterContentRefetch,
+    z_SET_myStarterContent,
+    z_SET_myStarterContentFetch_ERROR,
+    z_SET_myStarterInitialFetchToTrue,
+  } = z_USE_myStarterContent();
 
-  const _REFETCH_starterContent = useCallback(
+  const _REFETCH_myStarterContent = useCallback(
     async (IS_initialFetch: boolean = false) => {
       // If initial fetch re-triggers, eventhough the it was completed, don't fetch again.
-      if (IS_initialFetch && z_IS_starterInitialFetchDone) return;
+      if (IS_initialFetch && z_IS_myStarterInitialFetchDone) return;
       try {
         if (!IS_initialFetch) {
-          z_SET_starterContentRefetch(true);
+          z_SET_myStarterContentRefetch(true);
         }
 
         // ---------------------------------------------------------
@@ -69,15 +69,15 @@ export default function USE_refetchStarterContent() {
           z_user?.id || ""
         );
 
-        z_SET_starterContent({
+        z_SET_myStarterContent({
           allVocab_COUNT: totalVocab_COUNT,
           savedVocab_COUNT,
           softDeleltedVocab_COUNT: deletedVocab_COUNT,
           top3_LISTS,
-          z_starterTotalListCount: totalList_COUNT,
+          z_myStarterTotalListCount: totalList_COUNT,
         });
 
-        if (IS_initialFetch) z_SET_starterInitialFetchToTrue();
+        if (IS_initialFetch) z_SET_myStarterInitialFetchToTrue();
       } catch (error: any) {
         const err = new General_ERROR({
           function_NAME: error?.function_NAME || function_NAME,
@@ -85,14 +85,14 @@ export default function USE_refetchStarterContent() {
           errorToSpread: error,
         });
 
-        z_SET_starterContentFetch_ERROR(err);
+        z_SET_myStarterContentFetch_ERROR(err);
         SEND_internalError(err);
       } finally {
-        z_SET_starterContentRefetch(false);
+        z_SET_myStarterContentRefetch(false);
       }
     },
     []
   );
 
-  return { REFETCH_starterContent: _REFETCH_starterContent };
+  return { REFETCH_myStarterContent: _REFETCH_myStarterContent };
 }

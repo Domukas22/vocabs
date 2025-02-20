@@ -3,9 +3,9 @@
 //
 
 import {
-  myVocabFetch_TYPES,
+  vocabFetch_TYPES,
   list_TYPES,
-} from "@/src/features_new/vocabs/hooks/USE_fetchVocabs/FETCH_vocabs/types";
+} from "@/src/features_new/vocabs/hooks/fetchVocabs/FETCH_vocabs/types";
 import { useCallback } from "react";
 import { USE_abortController } from "../../../../hooks/USE_abortController/USE_abortController";
 import { VOCAB_PAGINATION } from "@/src/constants/globalVars";
@@ -15,7 +15,7 @@ export type USE_vocabZustandActions_ARGTYPES = {
   user_id: string;
   targetList_ID?: string;
   list_TYPE: list_TYPES;
-  fetch_TYPE: myVocabFetch_TYPES;
+  fetch_TYPE: vocabFetch_TYPES;
 
   search: string;
   difficultyFilters: (1 | 2 | 3)[];

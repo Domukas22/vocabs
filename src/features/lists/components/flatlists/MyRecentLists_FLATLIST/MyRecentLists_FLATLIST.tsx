@@ -10,7 +10,7 @@ import Label from "@/src/components/1_grouped/texts/labels/Label/Label";
 import { router } from "expo-router";
 import React from "react";
 
-import { z_USE_starterContent } from "@/src/hooks/zustand/z_USE_starterContent/z_USE_starterContent";
+import { z_USE_myStarterContent } from "@/src/hooks/zustand/z_USE_myStarterContent/z_USE_myStarterContent";
 import { t } from "i18next";
 import { ActivityIndicator } from "react-native";
 import { MyColors } from "@/src/constants/MyColors";
@@ -23,12 +23,12 @@ export const MyRecentLists_FLATLIST = function RecentlyUsedPrivateLists_LIST() {
   const { z_SET_myOneList } = z_USE_myOneList();
 
   const {
-    z_IS_starterInitialFetchDone,
-    z_starterTop3Lists,
-    z_starterTotalListCount,
-  } = z_USE_starterContent();
+    z_IS_myStarterInitialFetchDone,
+    z_myStarterTop3Lists,
+    z_myStarterTotalListCount,
+  } = z_USE_myStarterContent();
 
-  if (!z_IS_starterInitialFetchDone)
+  if (!z_IS_myStarterInitialFetchDone)
     return (
       <Block styles={{ gap: 12 }}>
         <Label icon={<ActivityIndicator color={MyColors.icon_gray} />}>
@@ -42,8 +42,8 @@ export const MyRecentLists_FLATLIST = function RecentlyUsedPrivateLists_LIST() {
 
   return (
     <Block styles={{ gap: 12 }}>
-      <Label> {t("label.recentLists")}</Label>
-      {z_starterTop3Lists?.map((list) => (
+      <Label>{t("label.recentLists")}</Label>
+      {z_myStarterTop3Lists?.map((list) => (
         <MyList_BTN
           key={list.id}
           list={list}
@@ -56,7 +56,7 @@ export const MyRecentLists_FLATLIST = function RecentlyUsedPrivateLists_LIST() {
       ))}
 
       <Btn
-        text={`See all ${z_starterTotalListCount} lists`}
+        text={`See all ${z_myStarterTotalListCount} lists`}
         iconRight={<ICON_arrow direction="right" />}
         text_STYLES={{ flex: 1 }}
         onPress={() => PUSH_router("my-lists")}

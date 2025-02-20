@@ -11,9 +11,9 @@ import { raw_Vocab_TYPE } from "../../types";
 import { Vocab_CARD } from "../Vocabs_LIST/helpers";
 import { VocabsSkeleton_BLOCK } from "../../../../features_new/vocabs/components/flashlists/components/VocabsSkeleton_BLOCK/VocabsSkeleton_BLOCK";
 import {
-  myVocabFetch_TYPES,
+  vocabFetch_TYPES,
   list_TYPES,
-} from "../../../../features_new/vocabs/hooks/USE_fetchVocabs/FETCH_vocabs/types";
+} from "../../../../features_new/vocabs/hooks/fetchVocabs/FETCH_vocabs/types";
 import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { currentVocabAction_TYPE } from "@/src/app/(main)/vocabs/[list_id]";
 
@@ -28,7 +28,7 @@ interface GET_vocabListComponents_PROPS {
   HAS_reachedEnd: boolean;
   highlighted_ID: string;
   list_TYPE: list_TYPES;
-  fetch_TYPE: myVocabFetch_TYPES;
+  fetch_TYPE: vocabFetch_TYPES;
   LOAD_moreVocabs: () => void;
   OPEN_modalCreateVocab: () => void;
   OPEN_vocabSoftDeleteModal: (vocab: raw_Vocab_TYPE) => void;

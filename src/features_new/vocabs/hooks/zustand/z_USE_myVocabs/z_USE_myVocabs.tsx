@@ -5,36 +5,38 @@
 import { Vocab_TYPE } from "@/src/features_new/vocabs/types";
 import { General_ERROR } from "@/src/types/error_TYPES";
 import { loadingState_TYPES } from "@/src/types/general_TYPES";
-import { SEND_internalError } from "@/src/utils";
-import DETERMINE_loadingState from "@/src/utils/DETERMINE_loadingState/DETERMINE_loadingState";
 import { create } from "zustand";
 
-import { myVocabFetch_TYPES } from "../../USE_fetchVocabs/FETCH_vocabs/types";
-import { FETCH_vocabs } from "../../USE_fetchVocabs/FETCH_vocabs/FETCH_vocabs";
-import { list_TYPES } from "@/src/features_new/lists/types";
+import { vocabFetch_TYPES } from "../../fetchVocabs/FETCH_vocabs/types";
 
-export type z_FETCH_vocabsArgument_TYPES = {
-  search: string;
-  signal: AbortSignal;
-  amount: number;
-  user_id: string;
-  list_id: string;
-  list_TYPE: list_TYPES;
-
-  fetch_TYPE: myVocabFetch_TYPES;
-  difficultyFilters: (1 | 2 | 3)[];
-  langFilters: string[];
-  sortDirection: "ascending" | "descending";
-  sorting: "difficulty" | "date" | "shuffle";
-
+export type z_PREPARE_myVocabsForFetch_TYPE = ({
+  loadMore,
+  loading_STATE,
+  fetch_TYPE,
+}: {
   loadMore: boolean;
-};
+  loading_STATE: loadingState_TYPES;
+  fetch_TYPE: vocabFetch_TYPES;
+}) => void;
+
+export type z_INSERT_fetchedVocabs_TYPE = ({
+  vocabs,
+  unpaginated_COUNT,
+  loadMore,
+}: {
+  vocabs: Vocab_TYPE[];
+  unpaginated_COUNT: number;
+  loadMore: boolean;
+}) => void;
+
+export type z_INSERT_myVocabsError_TYPE = (error: General_ERROR) => void;
+//////////////////////////////////////////////////////////////////////////////////////////
 
 type z_USE_myVocabs_PROPS = {
   z_myVocabs: Vocab_TYPE[];
   z_myVocabPrinted_IDS: Set<string>;
 
-  z_myVocabsFetch_TYPE: myVocabFetch_TYPES;
+  z_myVocabsFetch_TYPE: vocabFetch_TYPES;
 
   z_myVocabsUnpaginated_COUNT: number;
   z_HAVE_myVocabsReachedEnd: boolean;
@@ -49,26 +51,9 @@ type z_USE_myVocabs_PROPS = {
   z_UPDATE_vocabInMyVocabsList: (target_VOCAB: Vocab_TYPE) => void;
   z_REMOVE_vocabFromMyVocabsList: (vocab_ID: string) => void;
 
-  z_PREPARE_myVocabsForFetch: ({
-    loadMore,
-    loading_STATE,
-    fetch_TYPE,
-  }: {
-    loadMore: boolean;
-    loading_STATE: loadingState_TYPES;
-    fetch_TYPE: myVocabFetch_TYPES;
-  }) => void;
-  z_INSERT_fetchedVocabs: ({
-    vocabs,
-    unpaginated_COUNT,
-    loadMore,
-  }: {
-    vocabs: Vocab_TYPE[];
-    unpaginated_COUNT: number;
-    loadMore: boolean;
-  }) => void;
-
-  z_INSERT_myVocabsError: (error: General_ERROR) => void;
+  z_PREPARE_myVocabsForFetch: z_PREPARE_myVocabsForFetch_TYPE;
+  z_INSERT_fetchedVocabs: z_INSERT_fetchedVocabs_TYPE;
+  z_INSERT_myVocabsError: z_INSERT_myVocabsError_TYPE;
 };
 
 // z = Zustand
@@ -106,10 +91,10 @@ export const z_USE_myVocabs = create<z_USE_myVocabs_PROPS>((set, get) => ({
     // Save the timeout reference in the state to clear it if needed
     set({ z_myVocabsHighlightTimeoutID: timeoutID });
   },
-  z_UPDATE_vocabInMyVocabsList: (target_VOCAB) =>
+  z_UPDATE_vocabInMyVocabsList: (updated_VOCAB) =>
     set((state) => ({
-      z_myVocabs: [...state.z_myVocabs].map((x) =>
-        x.id === target_VOCAB.id ? target_VOCAB : x
+      z_myVocabs: [...state.z_myVocabs].map((existing_VOCAB) =>
+        existing_VOCAB.id === updated_VOCAB.id ? updated_VOCAB : existing_VOCAB
       ),
     })),
   z_REMOVE_vocabFromMyVocabsList: (vocab_ID) =>
