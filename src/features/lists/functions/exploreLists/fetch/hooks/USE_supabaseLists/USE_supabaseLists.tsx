@@ -90,7 +90,7 @@ export function USE_supabaseLists({
 
   const { FETCH_new, FETCH_more, IS_loading, IS_loadingMore } =
     USE_pagination_NEW({
-      // paginateBy: LIST_PAGINATION || 20,
+      // paginateBy: LIST_PAGINATION ,
       paginateBy: 2,
       fetch,
     });

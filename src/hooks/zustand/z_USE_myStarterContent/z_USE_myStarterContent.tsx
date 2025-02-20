@@ -7,7 +7,7 @@ import { create } from "zustand";
 import { List_TYPE } from "@/src/features_new/lists/types";
 
 type z_USE_myStarterContent_PROPS = {
-  z_myStarterTop3Lists: List_TYPE[];
+  z_myStarterTop4Lists: List_TYPE[];
   z_myStarterTotalListCount: number;
   z_myStarterSavedVocab_COUNT: number;
   z_myStarterAllVocab_COUNT: number;
@@ -17,13 +17,13 @@ type z_USE_myStarterContent_PROPS = {
   z_SET_myStarterContentFetch_ERROR: (error: General_ERROR) => void;
 
   z_SET_myStarterContent: ({
-    top3_LISTS,
+    top4_LISTS,
     savedVocab_COUNT,
     z_myStarterTotalListCount,
     allVocab_COUNT,
     softDeleltedVocab_COUNT,
   }: {
-    top3_LISTS: List_TYPE[];
+    top4_LISTS: List_TYPE[];
     z_myStarterTotalListCount: number;
     savedVocab_COUNT: number;
     allVocab_COUNT: number;
@@ -41,7 +41,7 @@ type z_USE_myStarterContent_PROPS = {
 // oL == One List
 export const z_USE_myStarterContent = create<z_USE_myStarterContent_PROPS>(
   (set) => ({
-    z_myStarterTop3Lists: [],
+    z_myStarterTop4Lists: [],
     z_myStarterTotalListCount: 0,
     z_myStarterSavedVocab_COUNT: 0,
     z_myStarterAllVocab_COUNT: 0,
@@ -50,14 +50,14 @@ export const z_USE_myStarterContent = create<z_USE_myStarterContent_PROPS>(
     z_myStarterContentFetch_ERROR: undefined,
 
     z_SET_myStarterContent: ({
-      top3_LISTS = [],
+      top4_LISTS = [],
       z_myStarterTotalListCount = 0,
       savedVocab_COUNT = 0,
       allVocab_COUNT = 0,
       softDeleltedVocab_COUNT = 0,
     }) =>
       set({
-        z_myStarterTop3Lists: top3_LISTS,
+        z_myStarterTop4Lists: top4_LISTS,
         z_myStarterTotalListCount: z_myStarterTotalListCount,
         z_myStarterSavedVocab_COUNT: savedVocab_COUNT,
         z_myStarterAllVocab_COUNT: allVocab_COUNT,

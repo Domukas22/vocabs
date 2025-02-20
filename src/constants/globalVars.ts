@@ -18,7 +18,7 @@ export const MAX_TRANSLATION_LENGTH = 200;
 
 export const HEADER_MARGIN = 80;
 
-export const VOCAB_PAGINATION = 50;
+export const VOCAB_PAGINATION = 2;
 export const LIST_PAGINATION = 50;
 
 export const DummyError = new General_ERROR({

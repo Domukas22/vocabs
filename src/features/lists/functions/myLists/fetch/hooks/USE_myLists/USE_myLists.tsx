@@ -52,7 +52,7 @@ export function USE_myLists({
         const { lists, count, error } = await FETCH_watermelonLists({
           search,
           user_id: z_user?.id,
-          amount: LIST_PAGINATION || 20,
+          amount: LIST_PAGINATION,
           z_listDisplay_SETTINGS,
           excludeIds: printed_IDS,
         });
@@ -80,7 +80,7 @@ export function USE_myLists({
   );
 
   const { RESET_pagination, paginate } = USE_pagination({
-    paginateBy: LIST_PAGINATION || 20,
+    paginateBy: LIST_PAGINATION,
     fetch,
   });
 

@@ -4,7 +4,7 @@
 import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import {
   ICON_arrow,
-  ICON_bookmark_2,
+  ICON_markedStar,
   ICON_delete,
   ICON_difficultyDot,
   ICON_edit,
@@ -20,18 +20,20 @@ import VocabBackDifficultyEdit_BTNS from "../VocabBackDifficultyEdit_BTNS/VocabB
 import React, { useMemo, memo } from "react";
 import { MyColors } from "@/src/constants/MyColors";
 import { useRouter } from "expo-router";
-import { z_USE_myOneList } from "@/src/features_new/lists/hooks/z_USE_myOneList/z_USE_myOneList";
+import { z_USE_myOneList } from "@/src/features_new/lists/hooks/zustand/z_USE_myOneList/z_USE_myOneList";
 import { z_USE_currentActions } from "@/src/hooks/zustand/z_USE_currentActions/z_USE_currentActions";
-import { list_TYPES } from "@/src/features_new/lists/types";
+import { itemVisibility_TYPE } from "@/src/types/general_TYPES";
 import { Vocab_TYPE } from "@/src/features_new/vocabs/types";
 import { USE_markVocab } from "@/src/features_new/vocabs/hooks/actions/USE_markVocab/USE_markVocab";
 import { USE_updateVocabDifficulty } from "@/src/features_new/vocabs/hooks/actions/USE_updateVocabDifficulty/USE_updateVocabDifficulty";
 import { USE_softDeletevocab } from "@/src/features_new/vocabs/hooks/actions/USE_softDeletevocab/USE_softDeletevocab";
 import { USE_hardDeleteVocab } from "@/src/features_new/vocabs/hooks/actions/USE_hardDeleteVocab/USE_hardDeleteVocab";
+import { z_USE_publicOneList } from "@/src/features_new/lists/hooks/zustand/z_USE_publicOneList/z_USE_publicOneList";
+import { useRoute } from "@react-navigation/native";
 
 interface VocabBackBtns_PROPS {
   vocab: Vocab_TYPE;
-  list_TYPE: list_TYPES;
+  list_TYPE: itemVisibility_TYPE;
   fetch_TYPE: vocabFetch_TYPES;
   OPEN_updateVocabModal: () => void;
   OPEN_vocabCopyModal: () => void;
@@ -62,6 +64,7 @@ const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
     USE_toggle(false);
 
   const { z_FETCH_myOneListById } = z_USE_myOneList();
+  const { z_FETCH_publicOneListById } = z_USE_publicOneList();
 
   const { MARK_vocab } = USE_markVocab();
   const { UPDATE_vocabDifficulty } = USE_updateVocabDifficulty();
@@ -125,7 +128,7 @@ const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
                 }
               />
             ) : (
-              <ICON_bookmark_2 big active={vocab?.is_marked} />
+              <ICON_markedStar active={vocab?.is_marked} size="big" />
             )}
           </View>
         }
@@ -137,11 +140,12 @@ const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
     <Btn
       type="simple"
       onPress={TOGGLE_difficultyEdits}
+      style={{ width: 56 }}
       iconLeft={
         IS_updatingDifficulty ? (
           <ActivityIndicator color={MyColors.icon_gray} />
         ) : (
-          <ICON_difficultyDot difficulty={vocab?.difficulty || 0} big={true} />
+          <ICON_difficultyDot difficulty={vocab?.difficulty || 0} size="big" />
         )
       }
     />
@@ -176,13 +180,39 @@ const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
     />
   ));
 
+  const route = useRoute();
   const GoToList_BTN = memo(() => (
     <Btn
       type="simple"
       onPress={() => {
         if (vocab?.list_id) {
-          z_FETCH_myOneListById(vocab?.list_id, z_user?.id || "", {});
-          router.replace(`/(main)/vocabs/${vocab?.list_id}`);
+          list_TYPE === "private"
+            ? z_FETCH_myOneListById(
+                vocab?.list_id,
+                z_user?.id || "",
+                "private",
+                {}
+              )
+            : z_FETCH_publicOneListById(
+                vocab?.list_id,
+                z_user?.id || "",
+                "public",
+                {}
+              );
+
+          if (route.name === "index") {
+            router.push(
+              list_TYPE === "private"
+                ? `/(main)/vocabs/${vocab?.list_id}`
+                : `/(main)/explore/public_lists/${vocab?.list_id}`
+            );
+          } else {
+            router.replace(
+              list_TYPE === "private"
+                ? `/(main)/vocabs/${vocab?.list_id}`
+                : `/(main)/explore/public_lists/${vocab?.list_id}`
+            );
+          }
         }
       }}
       text={t("btn.goToListOfVocab")}
@@ -338,14 +368,27 @@ const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
       );
     }
   }
+  if (list_TYPE === "public") {
+    if (fetch_TYPE === "byTargetList") {
+      return (
+        <AllBtn_WRAP>
+          <Copy_BTN />
+          <Close_BTN />
+        </AllBtn_WRAP>
+      );
+    }
+    if (fetch_TYPE === "all") {
+      return (
+        <AllBtn_WRAP>
+          <Copy_BTN />
+          <GoToList_BTN />
+          <Close_BTN />
+        </AllBtn_WRAP>
+      );
+    }
+  }
 
-  return (
-    <AllBtn_WRAP>
-      <Copy_BTN />
-      <GoToList_BTN />
-      <Close_BTN />
-    </AllBtn_WRAP>
-  );
+  return null;
 });
 
 export default VocabBack_BTNS;

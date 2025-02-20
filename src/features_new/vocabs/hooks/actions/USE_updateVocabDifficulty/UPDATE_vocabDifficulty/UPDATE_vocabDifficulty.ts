@@ -37,7 +37,7 @@ export async function UPDATE_vocabDifficulty(
       .update({ difficulty: new_DIFFICULTY })
       .eq("id", vocab_ID)
       .eq("user_id", user_ID)
-      .select()
+      .select("* , list:lists (id,name)")
       .single();
 
     if (error)

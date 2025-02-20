@@ -16,17 +16,34 @@ import {
 import {
   CreateList_MODAL,
   ListDisplaySettings_MODAL,
+  ListsFlatlist_HEADER,
 } from "@/src/features/lists/components";
 import MyLists_FLASHLIST from "@/src/features_new/lists/components/flashlists/MyLists_FLASHLIST/MyLists_FLASHLIST";
 import { t } from "i18next";
 import { Keyboard } from "react-native";
+import USE_controlMyListsFetch from "@/src/features_new/lists/hooks/fetchLists/USE_controlMyListsFetch/USE_controlMyListsFetch";
+import { z_USE_myLists } from "@/src/features_new/lists/hooks/zustand/z_USE_myLists/z_USE_myLists";
+import { ListFlatlist_FOOTER } from "@/src/features_new/lists/components/flashlists/components/ListFlatlist_FOOTER/ListFlatlist_FOOTER";
 
 export default function MyLists_PAGE() {
+  const { modals } = USE_modalToggles(["createList", "displaySettings"]);
   const { showTitle, handleScroll } = USE_showListHeaderTitle();
-  const { search, debouncedSearch, IS_debouncing, SET_search } =
+  const { search, debouncedSearch, IS_debouncing, SET_search, RESET_search } =
     USE_debounceSearch();
 
-  const { modals } = USE_modalToggles(["createList", "displaySettings"]);
+  const {
+    z_myListsLoading_STATE,
+    z_myListsUnpaginated_COUNT,
+    z_myLists_ERROR,
+    z_HAVE_myListsReachedEnd,
+  } = z_USE_myLists();
+
+  // Refetches on filter changes
+  const { LOAD_more } = USE_controlMyListsFetch({
+    search: debouncedSearch,
+    fetch_TYPE: "all",
+    targetList_ID: "",
+  });
 
   return (
     <>
@@ -39,15 +56,32 @@ export default function MyLists_PAGE() {
       />
 
       <MyLists_FLASHLIST
-        OPEN_createListModal={() => modals.createList.set(true)}
-        RESET_search={() => SET_search("")}
-        list_TYPE="private"
-        {...{
-          IS_debouncing,
-          search,
-          debouncedSearch,
-          handleScroll,
-        }}
+        IS_debouncing={IS_debouncing}
+        handleScroll={handleScroll}
+        Header={
+          <ListsFlatlist_HEADER
+            IS_debouncing={IS_debouncing}
+            debouncedSearch={debouncedSearch}
+            search={search}
+            loading_STATE={z_myListsLoading_STATE}
+            list_NAME={t("header.myLists")}
+            unpaginated_COUNT={z_myListsUnpaginated_COUNT}
+            HAS_error={!!z_myLists_ERROR}
+          />
+        }
+        Footer={
+          <ListFlatlist_FOOTER
+            LOAD_more={LOAD_more}
+            OPEN_createVocabModal={() => modals.createList.set(true)}
+            RESET_search={RESET_search}
+            unpaginated_COUNT={z_myListsUnpaginated_COUNT}
+            HAS_reachedEnd={z_HAVE_myListsReachedEnd}
+            IS_debouncing={IS_debouncing}
+            loading_STATE={z_myListsLoading_STATE}
+            debouncedSearch={debouncedSearch}
+            error={z_myLists_ERROR}
+          />
+        }
       />
 
       <Portal>

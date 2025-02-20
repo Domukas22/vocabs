@@ -2,14 +2,14 @@
 //
 //
 
-export type list_TYPES = "private" | "public";
+import { itemVisibility_TYPE } from "@/src/types/general_TYPES";
 
 export type raw_List_TYPE = {
   id: string;
   user_id: string;
 
   name: string;
-  type: "public" | "private";
+  type: itemVisibility_TYPE;
 
   default_lang_ids: string; // Example: "en, de, lt"
   collected_lang_ids: string; // Example: "en, de, lt"
@@ -21,13 +21,16 @@ export type raw_List_TYPE = {
 
   // only for private lists
   vocabs?: { difficulty: number; is_marked: boolean }[];
+
+  vocab_count: { count: number }[];
 };
+
 export type List_TYPE = {
   id: string;
   user_id: string;
 
   name: string;
-  type: "public" | "private";
+  type: itemVisibility_TYPE;
 
   default_lang_ids: string[]; // Example: ["en", "de", "lt"]
   collected_lang_ids: string[]; // Example: ["en", "de", "lt"]
@@ -44,4 +47,6 @@ export type List_TYPE = {
     diff_3: number;
     marked: number;
   }; // transform the vocabs property
+
+  vocab_count: number;
 };

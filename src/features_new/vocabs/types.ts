@@ -2,6 +2,8 @@
 //
 //
 
+import { itemVisibility_TYPE } from "@/src/types/general_TYPES";
+
 export type VocabTr_TYPE = {
   lang_id: string;
   text: string;
@@ -12,7 +14,7 @@ export type raw_Vocab_TYPE = {
   id: string;
   user_id: string;
   list_id: string;
-  is_public: boolean;
+  type: itemVisibility_TYPE;
 
   is_marked: boolean;
   difficulty: number;
@@ -22,6 +24,7 @@ export type raw_Vocab_TYPE = {
 
   description: string;
   searchable: string;
+  saved_count: number;
 
   updated_at: string;
   created_at: string;
@@ -37,7 +40,7 @@ export type Vocab_TYPE = {
   id: string;
   user_id: string;
   list_id: string;
-  is_public: boolean;
+  type: itemVisibility_TYPE;
 
   is_marked: boolean;
   difficulty: number;
@@ -47,8 +50,14 @@ export type Vocab_TYPE = {
 
   description: string;
   searchable: string;
+  saved_count: number;
 
   updated_at: string;
   created_at: string;
   deleted_at: string;
+
+  list: {
+    id: string;
+    name: string;
+  };
 };

@@ -2,9 +2,6 @@
 //
 //
 
---> Public vocabs and lists need to have a "saved" count
---> Add the 'saved' icon to the list/vocab card ui
-
 --> Create 4 separate states:
 ----> z_USE_myListsDisplaySettings
 ----> z_USE_myVocabsDisplaySettings

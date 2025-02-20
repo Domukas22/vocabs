@@ -2,7 +2,7 @@
 //
 //
 
-import { list_TYPES } from "../features_new/vocabs/hooks/fetchVocabs/FETCH_vocabs/types";
+import { itemVisibility_TYPE } from "../features_new/vocabs/hooks/fetchVocabs/FETCH_vocabs/types";
 
 export interface currentVocabAction_TYPE {
   vocab_ID: string;
@@ -26,7 +26,7 @@ export interface currentListAction_TYPE {
 export type z_FETCH_listsArgument_TYPES = {
   search: string;
   user_id: string;
-  list_TYPE: list_TYPES;
+  list_TYPE: itemVisibility_TYPE;
 
   langFilters: string[];
   sortDirection: "ascending" | "descending";

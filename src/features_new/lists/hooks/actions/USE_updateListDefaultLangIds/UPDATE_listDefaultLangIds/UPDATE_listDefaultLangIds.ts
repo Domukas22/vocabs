@@ -4,7 +4,7 @@
 
 import { supabase } from "@/src/lib/supabase";
 import { General_ERROR } from "@/src/types/error_TYPES";
-import { FORMAT_rawLists } from "../../../../functions/fetch/FETCH_lists/helpers";
+import { FORMAT_rawLists } from "../../../fetchLists/FETCH_lists/helpers";
 import { List_TYPE } from "@/src/features_new/lists/types";
 
 export const function_NAME = "UPDATE_listDefaultLangIds";

@@ -20,7 +20,7 @@ import { vocabFetch_TYPES } from "../../../hooks/fetchVocabs/FETCH_vocabs/types"
 
 import { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
 import { USE_listIdInParams } from "../../../../../features/vocabs/vocabList/USE_listIdInParams/USE_listIdInParams";
-import { list_TYPES } from "@/src/features_new/lists/types";
+import { itemVisibility_TYPE } from "@/src/types/general_TYPES";
 import { z_USE_publicVocabs } from "../../../hooks/zustand/z_USE_publicVocabs/z_USE_publicVocabs";
 import { VocabFlatlist_FOOTER } from "../components/VocabFlatlist_FOOTER/VocabFlatlist_FOOTER";
 import { raw_Vocab_TYPE, Vocab_TYPE } from "../../../types";

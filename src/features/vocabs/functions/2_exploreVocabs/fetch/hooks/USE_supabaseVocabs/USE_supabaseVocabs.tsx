@@ -148,7 +148,7 @@ export function USE_supabaseVocabs({
   );
 
   const { RESET_pagination, paginate } = USE_pagination({
-    paginateBy: VOCAB_PAGINATION || 20,
+    paginateBy: VOCAB_PAGINATION,
     fetch,
   });
 

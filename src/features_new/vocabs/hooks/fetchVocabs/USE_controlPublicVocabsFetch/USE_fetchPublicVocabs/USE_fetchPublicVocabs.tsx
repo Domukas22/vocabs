@@ -71,7 +71,7 @@ export function USE_fetchPublicVocabs({
         const { vocabs, unpaginated_COUNT } = await FETCH_vocabs({
           search,
           signal: newController.signal,
-          amount: VOCAB_PAGINATION || 20,
+          amount: VOCAB_PAGINATION,
           user_id: "",
           fetch_TYPE,
           list_TYPE: "public",

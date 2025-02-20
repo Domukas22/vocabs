@@ -2,6 +2,8 @@
 //
 //
 
+export type itemVisibility_TYPE = "private" | "public";
+
 export type loadingState_TYPES =
   | "loading"
   | "searching"

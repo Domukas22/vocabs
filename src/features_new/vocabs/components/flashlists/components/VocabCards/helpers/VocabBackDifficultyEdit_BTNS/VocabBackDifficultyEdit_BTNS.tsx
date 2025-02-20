@@ -55,7 +55,7 @@ export default function VocabBackDifficultyEdit_BTNS({
           IS_updatingDifficulty?.target_DIFFICULTY === 1 ? (
             <ActivityIndicator color={MyColors.icon_difficulty_1} />
           ) : (
-            <ICON_difficultyDot difficulty={1} big={true} />
+            <ICON_difficultyDot difficulty={1} size="big" />
           )
         }
       />
@@ -74,7 +74,7 @@ export default function VocabBackDifficultyEdit_BTNS({
           IS_updatingDifficulty?.target_DIFFICULTY === 2 ? (
             <ActivityIndicator color={MyColors.icon_difficulty_2} />
           ) : (
-            <ICON_difficultyDot difficulty={2} big={true} />
+            <ICON_difficultyDot difficulty={2} size="big" />
           )
         }
       />
@@ -93,7 +93,7 @@ export default function VocabBackDifficultyEdit_BTNS({
           IS_updatingDifficulty?.target_DIFFICULTY === 3 ? (
             <ActivityIndicator color={MyColors.icon_difficulty_3} />
           ) : (
-            <ICON_difficultyDot difficulty={3} big={true} />
+            <ICON_difficultyDot difficulty={3} size="big" />
           )
         }
       />
@@ -107,7 +107,7 @@ export default function VocabBackDifficultyEdit_BTNS({
           paddingRight: 20,
         }}
         onPress={TOGGLE_open}
-        iconLeft={<ICON_X big={true} rotate={true} />}
+        iconLeft={<ICON_X big rotate={true} />}
       />
     </View>
   );

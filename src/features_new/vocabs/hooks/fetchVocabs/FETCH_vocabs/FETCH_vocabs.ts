@@ -20,7 +20,7 @@ import { raw_Vocab_TYPE, Vocab_TYPE, VocabTr_TYPE } from "../../../types";
 
 //////////////////////////////////////////////////////////////
 
-export const function_NAME = "FETCH_myVocabs";
+export const function_NAME = "FETCH_vocabs";
 
 export async function FETCH_vocabs(
   args: FETCH_myVocabs_ARG_TYPES

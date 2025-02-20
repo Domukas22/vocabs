@@ -2,21 +2,16 @@
 //
 //
 
-import {
-  vocabFetch_TYPES,
-  list_TYPES,
-} from "@/src/features_new/vocabs/hooks/fetchVocabs/FETCH_vocabs/types";
-import { loadingState_TYPES } from "@/src/types/general_TYPES";
-import { r_FETCH_vocabs_ARG_TYPE } from "../z_USE_myVocabs/z_USE_myVocabs";
+import { itemVisibility_TYPE } from "@/src/types/general_TYPES";
 import { useCallback } from "react";
 import { USE_abortController } from "../../../../hooks/USE_abortController/USE_abortController";
-import { LIST_PAGINATION, VOCAB_PAGINATION } from "@/src/constants/globalVars";
-import { z_FETCH_listsArgument_TYPES } from "../../components/flashlists/MyLists_FLASHLIST/helpers/types";
+import { LIST_PAGINATION } from "@/src/constants/globalVars";
+import { z_FETCH_listsArgument_TYPES } from "@/src/zustand/types";
 
 export type USE_vocabZustandActions_ARGTYPES = {
   search: string;
   user_id: string;
-  list_TYPE: list_TYPES;
+  list_TYPE: itemVisibility_TYPE;
   langFilters: string[];
   sortDirection: "ascending" | "descending";
   FETCH_l: (args: z_FETCH_listsArgument_TYPES) => Promise<void>;
@@ -44,7 +39,7 @@ export function USE_myListsZustandActions(
         list_TYPE,
         langFilters,
         sortDirection,
-        amount: LIST_PAGINATION || 50,
+        amount: LIST_PAGINATION,
         signal: newController.signal,
         loadMore,
       });

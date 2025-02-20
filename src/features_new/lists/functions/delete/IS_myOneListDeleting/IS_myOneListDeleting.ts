@@ -2,7 +2,7 @@
 //
 //
 
-import { myOneListAction_TYPE } from "@/src/features_new/lists/hooks/z_USE_myOneList/z_USE_myOneList";
+import { myOneListAction_TYPE } from "@/src/features_new/lists/hooks/zustand/z_USE_myOneList/z_USE_myOneList";
 
 export function IS_myOneListDeleting(
   list_id: string,

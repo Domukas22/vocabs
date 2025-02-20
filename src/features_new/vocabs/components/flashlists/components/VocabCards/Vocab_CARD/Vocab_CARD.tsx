@@ -14,12 +14,12 @@ import VocabBack_BTNS from "../helpers/VocabBack_BTNS/VocabBack_BTNS";
 import VocabBack_TEXT from "../helpers/VocabBack_TEXT/VocabBack_TEXT";
 import { VocabBack_TRS } from "../helpers/VocabBack_TRS/VocabBack_TRS";
 import { Vocab_TYPE } from "@/src/features_new/vocabs/types";
-import { list_TYPES } from "@/src/features_new/lists/types";
+import { itemVisibility_TYPE } from "@/src/types/general_TYPES";
 
 interface VocabProps {
   vocab: Vocab_TYPE;
   highlighted?: boolean;
-  list_TYPE: list_TYPES;
+  list_TYPE: itemVisibility_TYPE;
   fetch_TYPE: vocabFetch_TYPES;
 
   OPEN_updateVocabModal?: () => void;
@@ -59,21 +59,18 @@ export const Vocab_CARD = React.memo(function Vocab_CARD({
           highlighted={highlighted}
           TOGGLE_open={toggle}
           IS_marked={vocab?.is_marked}
+          count={vocab?.saved_count}
+          list_TYPE={list_TYPE}
         />
       )}
 
       {open && (
         <>
-          <VocabBack_TRS trs={trs} difficulty={vocab?.difficulty || 0} />
+          <VocabBack_TRS vocab={vocab} />
           <VocabBack_TEXT
-            desc={vocab?.description}
-            list_NAME={
-              list_TYPE === "public" ||
-              (list_TYPE === "private" &&
-                (fetch_TYPE === "all" || fetch_TYPE === "marked"))
-                ? vocab?.list?.name || "Not in any list"
-                : undefined
-            }
+            vocab={vocab}
+            fetch_TYPE={fetch_TYPE}
+            list_TYPE={list_TYPE}
           />
 
           <VocabBack_BTNS

@@ -15,8 +15,8 @@ import { t } from "i18next";
 import { ActivityIndicator } from "react-native";
 import { MyColors } from "@/src/constants/MyColors";
 import { USE_routerPush } from "@/src/hooks";
-import { MyList_BTN } from "@/src/features_new/lists/components/flashlists/components/MyList_BTN/MyList_BTN";
-import { z_USE_myOneList } from "@/src/features_new/lists/hooks/z_USE_myOneList/z_USE_myOneList";
+import { List_CARD } from "@/src/features_new/lists/components/flashlists/components/List_CARD/List_CARD";
+import { z_USE_myOneList } from "@/src/features_new/lists/hooks/zustand/z_USE_myOneList/z_USE_myOneList";
 
 export const MyRecentLists_FLATLIST = function RecentlyUsedPrivateLists_LIST() {
   const { PUSH_router } = USE_routerPush();
@@ -24,7 +24,7 @@ export const MyRecentLists_FLATLIST = function RecentlyUsedPrivateLists_LIST() {
 
   const {
     z_IS_myStarterInitialFetchDone,
-    z_myStarterTop3Lists,
+    z_myStarterTop4Lists,
     z_myStarterTotalListCount,
   } = z_USE_myStarterContent();
 
@@ -34,17 +34,19 @@ export const MyRecentLists_FLATLIST = function RecentlyUsedPrivateLists_LIST() {
         <Label icon={<ActivityIndicator color={MyColors.icon_gray} />}>
           {t("label.loadingRecentLists")}
         </Label>
-        <Skeleton_BLOCK />
-        <Skeleton_BLOCK />
-        <Skeleton_BLOCK />
+        <Skeleton_BLOCK height={80} />
+        <Skeleton_BLOCK height={80} />
+        <Skeleton_BLOCK height={80} />
+        <Skeleton_BLOCK height={80} />
       </Block>
     );
 
   return (
     <Block styles={{ gap: 12 }}>
       <Label>{t("label.recentLists")}</Label>
-      {z_myStarterTop3Lists?.map((list) => (
-        <MyList_BTN
+      {z_myStarterTop4Lists?.map((list) => (
+        <List_CARD
+          list_TYPE="private"
           key={list.id}
           list={list}
           highlighted={false}

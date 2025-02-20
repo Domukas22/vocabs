@@ -5,7 +5,7 @@ import { Animated, Easing } from "react-native";
 import { MyColors } from "@/src/constants/MyColors";
 import { useEffect, useRef } from "react";
 
-export function Skeleton_BLOCK() {
+export function Skeleton_BLOCK({ height = 100 }: { height?: number }) {
   const backgroundColor = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -40,7 +40,7 @@ export function Skeleton_BLOCK() {
       style={{
         borderRadius: 12,
         backgroundColor: interpolatedColor,
-        height: 100,
+        height: height || 100,
         borderWidth: 1,
         borderColor: MyColors.border_white_005,
       }}

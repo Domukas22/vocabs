@@ -4,14 +4,16 @@
 
 import Highlighted_TEXT from "@/src/components/1_grouped/texts/Highlighted_TEXT/Highlighted_TEXT";
 import {
-  ICON_bookmark_2,
+  ICON_markedStar,
   ICON_difficultyDot,
+  ICON_download,
+  ICON_downloadArrowOnly,
   ICON_flag,
+  ICON_savedCount,
 } from "@/src/components/1_grouped/icons/icons";
 import Label from "@/src/components/1_grouped/texts/labels/Label/Label";
 import { MyColors } from "@/src/constants/MyColors";
 
-import { VocabTr_TYPE } from "@/src/features/vocabs/types";
 import Language_MODEL from "@/src/db/models/Language_MODEL";
 
 import { USE_zustand } from "@/src/hooks";
@@ -19,6 +21,8 @@ import i18next, { t } from "i18next";
 import React, { useMemo } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
+import { itemVisibility_TYPE } from "@/src/types/general_TYPES";
+import { VocabTr_TYPE } from "@/src/features_new/vocabs/types";
 
 interface VocabFront_PROPS {
   trs: VocabTr_TYPE[] | undefined;
@@ -27,6 +31,8 @@ interface VocabFront_PROPS {
   TOGGLE_open: () => void;
   highlighted?: boolean;
   IS_marked?: boolean;
+  count: number;
+  list_TYPE: itemVisibility_TYPE;
 }
 
 const Vocab_FRONT = React.memo(function Vocab_FRONT({
@@ -36,6 +42,8 @@ const Vocab_FRONT = React.memo(function Vocab_FRONT({
   TOGGLE_open,
   highlighted = false,
   IS_marked = false,
+  count = 0,
+  list_TYPE = "public",
 }: VocabFront_PROPS) {
   const { z_vocabDisplay_SETTINGS } = USE_zustand();
   const { SHOW_description, SHOW_flags, SHOW_difficulty, frontTrLang_ID } =
@@ -68,7 +76,7 @@ const Vocab_FRONT = React.memo(function Vocab_FRONT({
           <Highlighted_TEXT
             text={front_TR?.text || "EMPTY TRANSLATION"}
             highlights={front_TR?.highlights || []}
-            diff={difficulty}
+            diff={list_TYPE === "private" ? difficulty : 0}
           />
         ) : (
           <Label>{t("label.missingTranslation") + " " + frontTrLang_ID}</Label>
@@ -76,24 +84,40 @@ const Vocab_FRONT = React.memo(function Vocab_FRONT({
         {description && SHOW_description && (
           <Styled_TEXT type="label_small">{description}</Styled_TEXT>
         )}
-        {(SHOW_flags || SHOW_difficulty || IS_marked) && (
-          <View style={s.iconWrap}>
-            {SHOW_flags &&
-              trs &&
-              trs.length > 0 &&
-              trs.map((tr) => (
-                <ICON_flag
-                  key={"FrontFlag" + tr.lang_id}
-                  lang={tr.lang_id}
-                  big
-                />
-              ))}
-            {SHOW_difficulty && !!difficulty && (
-              <ICON_difficultyDot difficulty={difficulty} big />
-            )}
-            {IS_marked && <ICON_bookmark_2 active={true} />}
-          </View>
-        )}
+        <View
+          style={{
+            flexDirection: "row",
+            marginTop: 12,
+            justifyContent: "flex-end",
+          }}
+        >
+          {list_TYPE === "public" && <ICON_savedCount count={count} />}
+
+          {(SHOW_flags || SHOW_difficulty || IS_marked) && (
+            <View style={s.iconWrap}>
+              <View style={{ flexDirection: "row", gap: 4 }}>
+                {SHOW_flags &&
+                  trs &&
+                  trs.length > 0 &&
+                  trs.map((tr) => (
+                    <ICON_flag
+                      key={"FrontFlag" + tr.lang_id}
+                      lang={tr.lang_id}
+                      big
+                    />
+                  ))}
+              </View>
+              {list_TYPE === "private" && (
+                <>
+                  {SHOW_difficulty && !!difficulty && (
+                    <ICON_difficultyDot difficulty={difficulty} />
+                  )}
+                  {IS_marked && <ICON_markedStar active={true} size="tiny" />}
+                </>
+              )}
+            </View>
+          )}
+        </View>
       </View>
     </Pressable>
   );
@@ -113,13 +137,12 @@ const s = StyleSheet.create({
   },
   content: {
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 10,
+    paddingRight: 12,
   },
   iconWrap: {
     flexDirection: "row",
-    justifyContent: "flex-end",
-    gap: 4,
-    marginTop: 12,
+    gap: 6,
     alignItems: "center",
   },
   tagWrap: {

@@ -9,8 +9,8 @@ import { useCallback } from "react";
 import { USE_zustand } from "@/src/hooks";
 import { t } from "i18next";
 import { UPDATE_listUpdatedAt } from "./UPDATE_listUpdatedAt/UPDATE_listUpdatedAt";
-import { z_USE_myOneList } from "../../z_USE_myOneList/z_USE_myOneList";
-import { z_USE_myLists } from "../../z_USE_myLists/z_USE_myLists";
+import { z_USE_myOneList } from "../../zustand/z_USE_myOneList/z_USE_myOneList";
+import { z_USE_myLists } from "../../zustand/z_USE_myLists/z_USE_myLists";
 
 const function_NAME = "USE_updateListUpdatedAt";
 

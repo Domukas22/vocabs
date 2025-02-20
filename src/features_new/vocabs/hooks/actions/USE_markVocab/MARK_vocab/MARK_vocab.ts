@@ -36,7 +36,7 @@ export async function MARK_vocab(
       .update({ is_marked: val })
       .eq("id", vocab_ID)
       .eq("user_id", user_ID)
-      .select()
+      .select("* , list:lists (id,name)")
       .single();
 
     if (error)

@@ -98,7 +98,7 @@ export default function USE_supabaseUsers_2({
   );
 
   const { RESET_pagination, paginate } = USE_pagination({
-    paginateBy: LIST_PAGINATION || 20,
+    paginateBy: LIST_PAGINATION,
     fetch,
   });
 

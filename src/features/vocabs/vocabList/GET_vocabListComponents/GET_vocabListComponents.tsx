@@ -12,7 +12,7 @@ import { Vocab_CARD } from "../Vocabs_LIST/helpers";
 import { VocabsSkeleton_BLOCK } from "../../../../features_new/vocabs/components/flashlists/components/VocabsSkeleton_BLOCK/VocabsSkeleton_BLOCK";
 import {
   vocabFetch_TYPES,
-  list_TYPES,
+  itemVisibility_TYPE,
 } from "../../../../features_new/vocabs/hooks/fetchVocabs/FETCH_vocabs/types";
 import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { currentVocabAction_TYPE } from "@/src/app/(main)/vocabs/[list_id]";
@@ -27,7 +27,7 @@ interface GET_vocabListComponents_PROPS {
   vocabs_ERROR: General_ERROR | undefined;
   HAS_reachedEnd: boolean;
   highlighted_ID: string;
-  list_TYPE: list_TYPES;
+  list_TYPE: itemVisibility_TYPE;
   fetch_TYPE: vocabFetch_TYPES;
   LOAD_moreVocabs: () => void;
   OPEN_modalCreateVocab: () => void;

@@ -7,9 +7,13 @@ import { MyColors } from "@/src/constants/MyColors";
 import React from "react";
 import { Image, StyleSheet, Text, View, ViewProps } from "react-native";
 import Svg, { Path, Circle, Rect } from "react-native-svg";
+import { Styled_TEXT } from "../texts/Styled_TEXT/Styled_TEXT";
+
+type sizing_TYPE = "tiny" | "medium" | "big";
 
 const sizing = {
-  small: 20,
+  tiny: 16,
+  medium: 20,
   big: 24,
 };
 
@@ -25,10 +29,18 @@ export const ICON_flag = React.memo(function ICON_flag({
 } & ViewProps) {
   const _size = big
     ? { width: sizing.big, height: 14 }
-    : { width: sizing.small, height: 11 };
+    : { width: sizing.medium, height: 11 };
 
   return (
-    <View {...props}>
+    <View
+      style={{
+        borderColor: "rgba(255, 255, 255, 0.15)",
+        shadowColor: "rgba(255, 255, 255, 0.05)",
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 1,
+      }}
+      {...props}
+    >
       <Image
         style={[_size, { borderRadius: 3 }]}
         source={{ uri: GET_langFlagUrl(lang) }}
@@ -38,15 +50,20 @@ export const ICON_flag = React.memo(function ICON_flag({
 });
 
 export const ICON_difficultyDot = React.memo(function ICON_difficultyDot({
-  big = false,
+  size = "medium",
   difficulty = 2,
   ...props
 }: {
-  big?: boolean;
   difficulty?: 0 | 1 | 2 | 3;
   primary?: boolean;
+  size?: sizing_TYPE;
 } & ViewProps) {
-  const _size = big ? { width: 14, height: 14 } : { width: 11, height: 11 };
+  const _size =
+    size === "big"
+      ? { width: 16, height: 16 }
+      : size === "medium"
+      ? { width: 14, height: 14 }
+      : { width: 11, height: 11 };
 
   const _color =
     difficulty === 0
@@ -59,15 +76,7 @@ export const ICON_difficultyDot = React.memo(function ICON_difficultyDot({
 
   return (
     <View {...props}>
-      <View
-        style={{
-          width: sizing.small,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <View style={[_size, _color, { borderRadius: 100 }]} />
-      </View>
+      <View style={[_size, _color, { borderRadius: 100 }]} />
     </View>
   );
 });
@@ -299,8 +308,8 @@ export function ICON_edit({
   return (
     <View {...props}>
       <Svg
-        width={big ? sizing.big : sizing.small}
-        height={big ? sizing.big : sizing.small}
+        width={big ? sizing.big : sizing.medium}
+        height={big ? sizing.big : sizing.medium}
         viewBox="0 0 18 18"
         fill="none"
       >
@@ -336,8 +345,8 @@ export function ICON_restore({
   return (
     <View {...props}>
       <Svg
-        width={big ? sizing.big : sizing.small}
-        height={big ? sizing.big : sizing.small}
+        width={big ? sizing.big : sizing.medium}
+        height={big ? sizing.big : sizing.medium}
         viewBox="0 0 18 20"
         fill="none"
       >
@@ -373,8 +382,8 @@ export function ICON_delete({
   return (
     <View {...props}>
       <Svg
-        width={big ? sizing.big : sizing.small}
-        height={big ? sizing.big : sizing.small}
+        width={big ? sizing.big : sizing.medium}
+        height={big ? sizing.big : sizing.medium}
         viewBox="0 0 18 20"
         fill="none"
       >
@@ -409,8 +418,8 @@ export function ICON_letterT({ ...props }: {} & ViewProps) {
   return (
     <View {...props}>
       <Svg
-        width={sizing.small}
-        height={sizing.small}
+        width={sizing.medium}
+        height={sizing.medium}
         viewBox="0 0 8 8"
         fill="none"
       >
@@ -442,16 +451,17 @@ export function ICON_bookmark({
     </View>
   );
 }
-export const ICON_bookmark_2 = React.memo(function ICON_bookmark_2({
+export const ICON_markedStar = React.memo(function ICON_bookmark_2({
   active = false,
-  big = false,
+
+  size = "medium",
   ...props
-}: { active: boolean | undefined; big?: boolean } & ViewProps) {
+}: { active: boolean | undefined; size?: sizing_TYPE } & ViewProps) {
   return (
     <View {...props}>
       <Svg
-        width={sizing[big ? "big" : "small"]}
-        height={sizing[big ? "big" : "small"]}
+        width={sizing[size]}
+        height={sizing[size]}
         viewBox="0 0 18 17"
         fill="none"
       >
@@ -472,8 +482,8 @@ export function ICON_star({
   return (
     <View {...props}>
       <Svg
-        width={!extraSmall ? sizing.small : 16}
-        height={!extraSmall ? sizing.small : 16}
+        width={!extraSmall ? sizing.medium : 16}
+        height={!extraSmall ? sizing.medium : 16}
         viewBox="0 0 18 17"
         fill="none"
       >
@@ -485,15 +495,24 @@ export function ICON_star({
     </View>
   );
 }
+
 export function ICON_download({
   color = "black",
+  big = false,
   ...props
-}: { color?: "black" } & ViewProps) {
+}: { color?: "black" | "gray"; big?: boolean } & ViewProps) {
+  const fillColor =
+    color === "gray"
+      ? MyColors.icon_gray
+      : color === "black"
+      ? "black"
+      : "black";
+
   return (
     <View {...props}>
       <Svg
-        width={sizing.big}
-        height={sizing.big}
+        width={sizing[big ? "big" : "medium"]}
+        height={sizing[big ? "big" : "medium"]}
         viewBox="0 0 20 20"
         fill="none"
       >
@@ -501,7 +520,32 @@ export function ICON_download({
           fillRule="evenodd"
           clipRule="evenodd"
           d="M10 0C10.5523 0 11 0.447715 11 1V10.5858L14.2929 7.29289C14.6834 6.90237 15.3166 6.90237 15.7071 7.29289C16.0976 7.68342 16.0976 8.31658 15.7071 8.70711L10.7071 13.7071C10.3166 14.0976 9.68342 14.0976 9.29289 13.7071L4.29289 8.70711C3.90237 8.31658 3.90237 7.68342 4.29289 7.29289C4.68342 6.90237 5.31658 6.90237 5.70711 7.29289L9 10.5858V1C9 0.447715 9.44771 0 10 0ZM1 12C1.55228 12 2 12.4477 2 13V17C2 17.2652 2.10536 17.5196 2.29289 17.7071C2.48043 17.8946 2.73478 18 3 18H17C17.2652 18 17.5196 17.8946 17.7071 17.7071C17.8946 17.5196 18 17.2652 18 17V13C18 12.4477 18.4477 12 19 12C19.5523 12 20 12.4477 20 13V17C20 17.7957 19.6839 18.5587 19.1213 19.1213C18.5587 19.6839 17.7957 20 17 20H3C2.20435 20 1.44129 19.6839 0.87868 19.1213C0.31607 18.5587 0 17.7957 0 17V13C0 12.4477 0.447715 12 1 12Z"
-          fill="black"
+          fill={fillColor}
+        />
+      </Svg>
+    </View>
+  );
+}
+export function ICON_downloadArrowOnly({
+  color = "gray_light",
+  big = false,
+  ...props
+}: { color?: "black" | "gray" | "gray_light"; big?: boolean } & ViewProps) {
+  const fillColor =
+    color === "gray"
+      ? MyColors.icon_gray
+      : color === "gray_light"
+      ? MyColors.icon_gray_light
+      : color === "black"
+      ? "black"
+      : "gray_light";
+
+  return (
+    <View {...props}>
+      <Svg width={12} height={12} viewBox="0 0 19 25" fill="none">
+        <Path
+          d="M9.49992 25C9.22387 25 8.96507 24.9553 8.72352 24.8661C8.48198 24.7768 8.25769 24.6234 8.05065 24.406L0.597228 16.6306C0.183149 16.1987 -0.0156076 15.6947 0.00095557 15.1188C0.0175187 14.5428 0.216276 14.0389 0.597228 13.6069C1.01131 13.1749 1.50337 12.9503 2.07342 12.933C2.64347 12.9158 3.13484 13.1224 3.54754 13.5529L7.42953 17.6026V2.15983C7.42953 1.54788 7.62829 1.03528 8.0258 0.622037C8.42332 0.208791 8.91469 0.00144733 9.49992 7.44766e-06C10.0852 -0.00143243 10.5772 0.205911 10.9761 0.622037C11.375 1.03816 11.5731 1.55076 11.5703 2.15983V17.6026L15.4523 13.5529C15.8664 13.1209 16.3584 12.9136 16.9285 12.9309C17.4985 12.9482 17.9899 13.1735 18.4026 13.6069C18.7822 14.0389 18.9809 14.5428 18.9989 15.1188C19.0168 15.6947 18.8181 16.1987 18.4026 16.6306L10.9492 24.406C10.7422 24.622 10.5179 24.7753 10.2763 24.8661C10.0348 24.9568 9.77597 25.0014 9.49992 25Z"
+          fill={fillColor}
         />
       </Svg>
     </View>
@@ -713,8 +757,8 @@ export function ICON_search({
 }) {
   return (
     <Svg
-      width={big ? sizing.big : sizing.small}
-      height={big ? sizing.big : sizing.small}
+      width={big ? sizing.big : sizing.medium}
+      height={big ? sizing.big : sizing.medium}
       viewBox="0 0 22 22"
       fill="none"
     >
@@ -738,8 +782,8 @@ export function ICON_calendar({
 }) {
   return (
     <Svg
-      width={sizing.small}
-      height={sizing.small}
+      width={sizing.medium}
+      height={sizing.medium}
       viewBox="0 0 18 18"
       fill="none"
     >
@@ -759,8 +803,8 @@ export function ICON_shuffle({
 }) {
   return (
     <Svg
-      width={sizing.small}
-      height={sizing.small}
+      width={sizing.medium}
+      height={sizing.medium}
       viewBox="0 0 20 18"
       fill="none"
     >
@@ -977,6 +1021,39 @@ export function ICON_general({
       {notification_COUNT > 0 && (
         <ICON_activeCount count={notification_COUNT} />
       )}
+    </View>
+  );
+}
+
+export function ICON_savedCount({ count = 0 }: { count: number }) {
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        marginRight: 8,
+      }}
+    >
+      <Styled_TEXT
+        type="text_14_bold"
+        style={{
+          color: MyColors.text_white_06,
+
+          lineHeight: 15.5,
+          textAlign: "center",
+          textAlignVertical: "center",
+          height: 14,
+        }}
+      >
+        {count}
+      </Styled_TEXT>
+      <ICON_downloadArrowOnly
+        big={false}
+        style={{
+          marginBottom: 1,
+          marginLeft: 1,
+        }}
+      />
     </View>
   );
 }

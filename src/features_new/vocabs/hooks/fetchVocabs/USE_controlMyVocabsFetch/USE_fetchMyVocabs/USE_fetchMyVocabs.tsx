@@ -77,7 +77,7 @@ export function USE_fetchMyVocabs({
         const { vocabs, unpaginated_COUNT } = await FETCH_vocabs({
           search,
           signal: newController.signal,
-          amount: VOCAB_PAGINATION || 20,
+          amount: VOCAB_PAGINATION,
           user_id,
           fetch_TYPE,
           list_TYPE: "private",
@@ -93,7 +93,7 @@ export function USE_fetchMyVocabs({
           throw new General_ERROR({
             function_NAME,
             message:
-              "'FETCH_vocabs' returned an undefined 'vocabs' object, although it didn't throw an error",
+              "'FETCH_vocabs' returned an undefined 'vocabs' array, although it didn't throw an error",
           });
 
         if (typeof unpaginated_COUNT !== "number")

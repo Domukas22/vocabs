@@ -4,7 +4,7 @@
 
 import Highlighted_TEXT from "@/src/components/1_grouped/texts/Highlighted_TEXT/Highlighted_TEXT";
 import {
-  ICON_bookmark_2,
+  ICON_markedStar,
   ICON_difficultyDot,
   ICON_flag,
 } from "@/src/components/1_grouped/icons/icons";
@@ -103,7 +103,7 @@ export default function Vocab_FRONT({
             {SHOW_difficulty && !!difficulty && (
               <ICON_difficultyDot difficulty={difficulty} big />
             )}
-            {IS_marked && <ICON_bookmark_2 active={true} />}
+            {IS_marked && <ICON_markedStar active={true} />}
           </View>
         )}
       </View>

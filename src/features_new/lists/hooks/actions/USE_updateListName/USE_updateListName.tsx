@@ -9,8 +9,8 @@ import { useCallback } from "react";
 import { USE_zustand } from "@/src/hooks";
 import { t } from "i18next";
 import { UPDATE_listName } from "./UPDATE_listName/UPDATE_listName";
-import { z_USE_myOneList } from "../../z_USE_myOneList/z_USE_myOneList";
-import { z_USE_myLists } from "../../z_USE_myLists/z_USE_myLists";
+import { z_USE_myOneList } from "../../zustand/z_USE_myOneList/z_USE_myOneList";
+import { z_USE_myLists } from "../../zustand/z_USE_myLists/z_USE_myLists";
 
 const function_NAME = "USE_updateListName";
 
@@ -24,7 +24,7 @@ export function USE_updateListName() {
 
   const _UPDATE_listName = useCallback(
     async (
-      item_ID: string,
+      list_ID: string,
       new_NAME: string,
       sideEffects: {
         onSuccess?: () => void;
@@ -36,7 +36,7 @@ export function USE_updateListName() {
       try {
         // --------------------------------------------------
         // Check if item is already in action
-        if (IS_inAction("list", item_ID)) return;
+        if (IS_inAction("list", list_ID, "updating_name")) return;
 
         // --------------------------------------------------
         // Don't allow empty name
@@ -54,12 +54,12 @@ export function USE_updateListName() {
 
         // --------------------------------------------------
         // Insert action
-        ADD_currentAction("list", item_ID, "updating_name");
+        ADD_currentAction("list", list_ID, "updating_name");
 
         // --------------------------------------------------
         // Proceed to update
         const { updated_LIST } = await UPDATE_listName(
-          item_ID,
+          list_ID,
           z_user?.id || "",
           new_NAME
         );
@@ -88,7 +88,7 @@ export function USE_updateListName() {
         onFailure(err);
         SEND_internalError(err);
       } finally {
-        REMOVE_currentAction(item_ID);
+        REMOVE_currentAction(list_ID, "updating_name");
       }
     },
     []

@@ -21,7 +21,7 @@ import { Portal } from "@gorhom/portal";
 import { USE_modalToggles } from "@/src/hooks/index";
 import { vocabFetch_TYPES } from "@/src/features_new/vocabs/hooks/fetchVocabs/FETCH_vocabs/types";
 import MyVocabs_FLASHLIST from "@/src/features_new/vocabs/components/flashlists/MyVocabs_FLASHLIST/MyVocabs_FLASHLIST";
-import { list_TYPES } from "@/src/features_new/lists/types";
+import { itemVisibility_TYPE } from "@/src/types/general_TYPES";
 import { USE_getListName } from "@/src/features_new/lists/hooks/USE_getListName/USE_getListName";
 import { USE_fetchMyVocabs } from "@/src/features_new/vocabs/hooks/fetchVocabs/USE_controlMyVocabsFetch/USE_fetchMyVocabs/USE_fetchMyVocabs";
 import { z_USE_myVocabs } from "@/src/features_new/vocabs/hooks/zustand/z_USE_myVocabs/z_USE_myVocabs";
@@ -30,12 +30,9 @@ import { USE_myVocabs } from "@/src/features/vocabs/vocabList/USE_myVocabs/USE_m
 import { VocabFlatlist_FOOTER } from "@/src/features_new/vocabs/components/flashlists/components/VocabFlatlist_FOOTER/VocabFlatlist_FOOTER";
 import USE_controlMyVocabsFetch from "@/src/features_new/vocabs/hooks/fetchVocabs/USE_controlMyVocabsFetch/USE_controlMyVocabsFetch";
 
-const fetch_TYPE: vocabFetch_TYPES = "byTargetList";
-
 export default function SingleList_PAGE() {
   const { urlParamsList_ID } = USE_listIdInParams();
   const { list_NAME } = USE_getListName({ type: "private" });
-
   const { modals } = USE_modalToggles([
     "createVocab",
     "updateVocab",
@@ -57,7 +54,7 @@ export default function SingleList_PAGE() {
   // Refetches on filter changes
   const { LOAD_more } = USE_controlMyVocabsFetch({
     search: debouncedSearch,
-    fetch_TYPE,
+    fetch_TYPE: "byTargetList",
     targetList_ID: urlParamsList_ID,
   });
 

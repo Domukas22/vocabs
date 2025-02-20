@@ -4,7 +4,7 @@
 
 import {
   vocabFetch_TYPES,
-  list_TYPES,
+  itemVisibility_TYPE,
 } from "@/src/features_new/vocabs/hooks/fetchVocabs/FETCH_vocabs/types";
 import { useCallback } from "react";
 import { USE_abortController } from "../../../../hooks/USE_abortController/USE_abortController";
@@ -14,7 +14,7 @@ import { z_FETCH_vocabsArgument_TYPES } from "../zustand/z_USE_myVocabs/z_USE_my
 export type USE_vocabZustandActions_ARGTYPES = {
   user_id: string;
   targetList_ID?: string;
-  list_TYPE: list_TYPES;
+  list_TYPE: itemVisibility_TYPE;
   fetch_TYPE: vocabFetch_TYPES;
 
   search: string;
@@ -54,7 +54,7 @@ export function USE_vocabZustandActions(
         sorting,
         user_id,
         list_id: targetList_ID || "",
-        amount: VOCAB_PAGINATION || 50,
+        amount: VOCAB_PAGINATION,
         // amount: 2,
 
         fetch_TYPE,

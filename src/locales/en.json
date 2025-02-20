@@ -22,7 +22,9 @@
     "deleteProfile": "Delete profile?",
     "fetchingOneList": "Loading list...",
     "noListFound": "No list found",
-    "myLists": "My lists"
+    "myLists": "My lists",
+    "publicLists": "⭐ Public lists",
+    "exploreTab": "Explore lists and vocabs"
   },
   "blockLabels": {
     "uiLang": "App language"
@@ -198,7 +200,10 @@
     "contactMessageType": "What would you like to talk about?",
     "emailInput": "Which E-Mail adress would you like us to send a reply to?",
     "loadingRecentLists": "Loading recent lists...",
-    "recentLists": "Recently used lists"
+    "recentLists": "Recently used lists",
+    "loadingPopularVocabs": "Loading popular vocabs...",
+    "mostPopularVocabs": "Most popular vocabs",
+    "loadingPopularLists": "Loading popular lists..."
   },
   "modal": {
     "displaySettings": {

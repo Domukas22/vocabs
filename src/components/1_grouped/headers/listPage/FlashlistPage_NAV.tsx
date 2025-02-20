@@ -21,8 +21,8 @@ import Animated, {
 } from "react-native-reanimated";
 import { USE_getActiveFilterCount, USE_getMyListName } from "@/src/hooks";
 import { useRouter } from "expo-router";
-import { z_USE_myOneList } from "@/src/features_new/lists/hooks/z_USE_myOneList/z_USE_myOneList";
-import { list_TYPES } from "@/src/features_new/lists/types";
+import { z_USE_myOneList } from "@/src/features_new/lists/hooks/zustand/z_USE_myOneList/z_USE_myOneList";
+import { itemVisibility_TYPE } from "@/src/types/general_TYPES";
 import { t } from "i18next";
 
 interface ListHeader_PROPS {

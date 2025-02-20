@@ -4,7 +4,7 @@
 
 import {
   vocabFetch_TYPES,
-  list_TYPES,
+  itemVisibility_TYPE,
 } from "../../../../features_new/vocabs/hooks/fetchVocabs/FETCH_vocabs/types";
 import {
   USE_myVocabsReducer,
@@ -13,7 +13,7 @@ import {
 } from "./helpers";
 
 interface USE_myVocabs_ARGS {
-  list_TYPE: list_TYPES;
+  list_TYPE: itemVisibility_TYPE;
   fetch_TYPE: vocabFetch_TYPES;
   search: string;
   targetList_ID?: string | undefined;
