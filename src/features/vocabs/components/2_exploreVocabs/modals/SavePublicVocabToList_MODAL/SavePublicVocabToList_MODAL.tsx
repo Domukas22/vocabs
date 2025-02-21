@@ -23,6 +23,7 @@ import { USE_collectListLangs } from "@/src/features/lists/functions";
 import { USE_zustand } from "@/src/hooks";
 import { USE_modalToggles } from "@/src/hooks/index";
 import { raw_Vocab_TYPE } from "@/src/features_new/vocabs/types";
+import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 
 interface SavePublicVocabToListModal_PROPS {
   vocab: raw_Vocab_TYPE | undefined;
@@ -38,7 +39,7 @@ export function SavePublicVocabToList_MODAL({
   TOGGLE_open,
 }: SavePublicVocabToListModal_PROPS) {
   const { modals } = USE_modalToggles(["createList"]);
-  const { z_user } = USE_zustand();
+  const { z_user } = z_USE_user();
 
   const { CREATE_vocab, IS_creatingVocab, db_ERROR, RESET_dbError } =
     USE_createVocab();

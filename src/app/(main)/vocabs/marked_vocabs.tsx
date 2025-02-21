@@ -2,7 +2,7 @@
 //
 //
 
-import FlashlistPage_NAV from "@/src/components/1_grouped/headers/listPage/FlashlistPage_NAV";
+// import FlashlistPage_NAV from "@/src/components/1_grouped/headers/listPage/FlashlistPage_NAV";
 import {
   UpdateMyVocab_MODAL,
   VocabDisplaySettings_MODAL,
@@ -12,13 +12,14 @@ import { USE_debounceSearch, USE_showListHeaderTitle } from "@/src/hooks";
 import React from "react";
 import { USE_modalToggles } from "@/src/hooks/index";
 import { Portal } from "@gorhom/portal";
-import { vocabFetch_TYPES } from "@/src/features_new/vocabs/hooks/fetchVocabs/FETCH_vocabs/types";
+import { vocabFetch_TYPES } from "@/src/features_new/vocabs/functions/FETCH_vocabs/types";
 import MyVocabs_FLASHLIST from "@/src/features_new/vocabs/components/flashlists/MyVocabs_FLASHLIST/MyVocabs_FLASHLIST";
 import { ListSettings_MODAL } from "@/src/features/lists/components";
 import { z_USE_myVocabs } from "@/src/features_new/vocabs/hooks/zustand/z_USE_myVocabs/z_USE_myVocabs";
-import USE_controlMyVocabsFetch from "@/src/features_new/vocabs/hooks/fetchVocabs/USE_controlMyVocabsFetch/USE_controlMyVocabsFetch";
+import USE_controlMyVocabsFetch from "@/src/features_new/vocabs/hooks/fetchControls/USE_controlMyVocabsFetch/USE_controlMyVocabsFetch";
 import { t } from "i18next";
 import { VocabFlatlist_FOOTER } from "@/src/features_new/vocabs/components/flashlists/components/VocabFlatlist_FOOTER/VocabFlatlist_FOOTER";
+import { MySavedVocabs_NAV } from "@/src/features_new/vocabs/components/navs";
 
 export default function SavedVocabs_PAGE() {
   const { modals } = USE_modalToggles([
@@ -47,12 +48,11 @@ export default function SavedVocabs_PAGE() {
 
   return (
     <>
-      <FlashlistPage_NAV
-        SHOW_listName={showTitle}
-        list_NAME={t("listName.savedVocabs")}
+      <MySavedVocabs_NAV
+        search={search}
+        SET_search={SET_search}
         OPEN_displaySettings={() => modals.displaySettings.set(true)}
-        OPEN_listSettings={() => modals.listSettings.set(true)}
-        {...{ search, SET_search }}
+        SHOW_listName={showTitle}
       />
       <MyVocabs_FLASHLIST
         OPEN_updateVocabModal={() => modals.updateVocab.set(true)}

@@ -9,11 +9,12 @@ import { USE_zustand } from "@/src/hooks";
 import { Error_PROPS } from "@/src/types/error_TYPES";
 import { USE_clearUserContext } from "../USE_clearUserContext/USE_clearUserContext";
 import { FETCH_mySupabaseProfile } from "../../../fetch/FETCH_mySupabaseProfile/FETCH_mySupabaseProfile";
+import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 
 export function USE_navigateUser(SHOW_recoveryModal = () => {}) {
   const { CLEAR_userContext } = USE_clearUserContext();
   const router = useRouter();
-  const { z_SET_user } = USE_zustand();
+  const { z_SET_user } = z_USE_user();
 
   const [navigation_ERROR, SET_navigationError] = useState<
     Error_PROPS | undefined
@@ -54,7 +55,7 @@ export function USE_navigateUser(SHOW_recoveryModal = () => {}) {
 
     // User found on supabase => insert into zustand state
     z_SET_user(supabase_USER);
-    router.push("/explore");
+    router.push("/(main)/vocabs");
   };
 
   return { navigate, navigation_ERROR, SHOW_recoveryModal };

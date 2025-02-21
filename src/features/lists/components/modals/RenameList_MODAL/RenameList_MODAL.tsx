@@ -12,7 +12,6 @@ import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import Label from "@/src/components/1_grouped/texts/labels/Label/Label";
 import Error_TEXT from "@/src/components/1_grouped/texts/Error_TEXT/Error_TEXT";
 import Small_MODAL from "@/src/components/1_grouped/modals/Small_MODAL/Small_MODAL";
-import { USE_zustand } from "@/src/hooks";
 
 import StyledText_INPUT from "@/src/components/1_grouped/inputs/StyledText_INPUT/StyledText_INPUT";
 
@@ -24,6 +23,7 @@ import {
 import { USE_async } from "@/src/hooks";
 import { RENAME_list } from "../../../functions";
 import { renameList_ERRS } from "../../../functions/myLists/rename/RENAME_list";
+import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 
 interface LogoutConfirmationModal_PROPS {
   list: List_MODEL | undefined;
@@ -40,7 +40,7 @@ export function RenameList_MODAL({
 }: LogoutConfirmationModal_PROPS) {
   const _ref = useRef<TextInput>(null);
   const { t } = useTranslation();
-  const { z_user } = USE_zustand();
+  const { z_user } = z_USE_user();
   const [isFocused, setIsFocused] = useState(false);
   const [invalidAttempts, setInvalidAttempts] = useState(0);
 

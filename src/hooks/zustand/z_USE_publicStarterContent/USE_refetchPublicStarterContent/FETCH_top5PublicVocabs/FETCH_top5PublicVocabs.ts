@@ -5,7 +5,7 @@
 import { General_ERROR } from "@/src/types/error_TYPES";
 import { supabase } from "@/src/lib/supabase";
 import { Vocab_TYPE } from "@/src/features_new/vocabs/types";
-import { FORMAT_rawVocabs } from "@/src/features_new/vocabs/hooks/fetchVocabs/FETCH_vocabs/functions";
+import { FORMAT_rawVocabs } from "@/src/features_new/vocabs/functions/FETCH_vocabs/functions";
 
 export const function_NAME = "FETCH_top5PublicVocabs";
 

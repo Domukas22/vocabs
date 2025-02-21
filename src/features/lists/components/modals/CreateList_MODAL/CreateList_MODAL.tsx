@@ -12,7 +12,7 @@ import { TextInput } from "react-native";
 
 import List_MODEL from "@/src/db/models/List_MODEL";
 
-import { USE_zustand } from "@/src/hooks";
+import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 
 interface CreateListModal_PROPS {
   IS_open: boolean;
@@ -33,7 +33,7 @@ export function CreateList_MODAL({
 }: CreateListModal_PROPS) {
   const inputREF = useRef<TextInput>(null);
   const [isFocused, setIsFocused] = useState(false);
-  const { z_user } = USE_zustand();
+  const { z_user } = z_USE_user();
 
   const { t } = useTranslation();
   const {

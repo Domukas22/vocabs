@@ -14,8 +14,7 @@ import { PortalProvider } from "@gorhom/portal";
 import { USE_navigateUser } from "../features/users/functions/general/hooks/USE_navigateUser/USE_navigateUser";
 import Toast_CONTEXT from "../context/Toast_CONTEXT";
 import Page_WRAP from "../components/1_grouped/Page_WRAP/Page_WRAP";
-import { USE_zustand } from "@/src/hooks";
-import USE_refetchStarterContent from "../hooks/zustand/z_USE_myStarterContent/USE_refetchStarterContent/USE_refetchStarterContent";
+import { z_USE_user } from "../features_new/user/hooks/z_USE_user/z_USE_user";
 
 export default function _layout() {
   return (
@@ -34,17 +33,10 @@ export default function _layout() {
 function Content() {
   const [fontsLoaded] = useFonts(loadFonts());
   const { navigate } = USE_navigateUser();
-  const { z_user } = USE_zustand();
+  const { z_user } = z_USE_user();
 
-  // in case something happens to the zustand user obj, re-navigate
-  useEffect(() => {
-    if ((!z_user || !z_user?.id) && fontsLoaded) {
-      (async () => {
-        await navigate();
-      })();
-    }
-  }, [z_user]);
-
+  // --------------------------------------------
+  // Initial navigation
   useEffect(() => {
     const initializeApp = async () => {
       if (fontsLoaded) {
@@ -54,6 +46,16 @@ function Content() {
 
     initializeApp();
   }, [fontsLoaded]);
+
+  // --------------------------------------------
+  // in case something happens to the zustand user obj, re-navigate
+  useEffect(() => {
+    if ((!z_user || !z_user?.id) && fontsLoaded) {
+      (async () => {
+        await navigate();
+      })();
+    }
+  }, [z_user]);
 
   return (
     <Page_WRAP>

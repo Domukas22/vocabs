@@ -87,21 +87,5 @@ const styles = StyleSheet.create({
 });
 
 function USE_listLangFilters() {
-  const { z_listDisplay_SETTINGS, z_SET_listDisplaySettings } = USE_zustand();
-
-  const lang_FILTERS = useMemo(
-    () => z_listDisplay_SETTINGS.langFilters || [],
-    [z_listDisplay_SETTINGS.langFilters]
-  );
-
-  const REMOVE_listLangfilter = useCallback(
-    (lang_id: string) => {
-      z_SET_listDisplaySettings({
-        langFilters: lang_FILTERS.filter((l) => l !== lang_id),
-      });
-    },
-    [z_listDisplay_SETTINGS, lang_FILTERS]
-  );
-
-  return { REMOVE_listLangfilter, lang_FILTERS };
+  return { REMOVE_listLangfilter: () => {}, lang_FILTERS: [] };
 }

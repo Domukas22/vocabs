@@ -35,6 +35,7 @@ export default function BottomAction_BLOCK({
 }) {
   const { z_SET_listDisplaySettings, z_SET_vocabDisplaySettings } =
     USE_zustand();
+
   const { activeFilter_COUNT } = USE_getActiveFilterCount("lists");
 
   const RESET_filters = useCallback(() => {

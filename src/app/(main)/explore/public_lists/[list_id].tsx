@@ -2,41 +2,19 @@
 //
 //
 
-import Page_WRAP from "@/src/components/1_grouped/Page_WRAP/Page_WRAP";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { useMemo, useState } from "react";
-import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
-import List_MODEL from "@/src/db/models/List_MODEL";
-import { useTranslation } from "react-i18next";
 import React from "react";
-import { useToast } from "react-native-toast-notifications";
-import BottomAction_BLOCK from "@/src/components/1_grouped/blocks/BottomAction_BLOCK";
-import FlashlistPage_NAV from "@/src/components/1_grouped/headers/listPage/FlashlistPage_NAV";
-import { CopyListAndVocabs_MODAL } from "@/src/features/lists/components";
-import {
-  USE_fetchOnePublicList,
-  USE_copyListAndItsVocabs,
-  USE_incrementPublicListSavedCount,
-} from "@/src/features/lists/functions";
-import {
-  ExploreVocabs_FLATLIST,
-  VocabFlashlist_HEADER,
-  SavePublicVocabToList_MODAL,
-  VocabDisplaySettings_MODAL,
-} from "@/src/features/vocabs/components";
-import { USE_getActiveFilterCount } from "@/src/hooks";
-import { USE_supabaseVocabs } from "@/src/features/vocabs/functions";
+// import FlashlistPage_NAV from "@/src/components/1_grouped/headers/listPage/FlashlistPage_NAV";
+import { VocabFlashlist_HEADER } from "@/src/features/vocabs/components";
 import { USE_showListHeaderTitle, USE_debounceSearch } from "@/src/hooks";
-import { USE_zustand } from "@/src/hooks";
 import { USE_modalToggles } from "@/src/hooks/index";
 import { z_USE_publicVocabs } from "@/src/features_new/vocabs/hooks/zustand/z_USE_publicVocabs/z_USE_publicVocabs";
-import USE_controlPublicVocabsFetch from "@/src/features_new/vocabs/hooks/fetchVocabs/USE_controlPublicVocabsFetch/USE_controlPublicVocabsFetch";
+import USE_controlPublicVocabsFetch from "@/src/features_new/vocabs/hooks/fetchControls/USE_controlPublicVocabsFetch/USE_controlPublicVocabsFetch";
 import { USE_listIdInParams } from "@/src/features/vocabs/vocabList/USE_listIdInParams/USE_listIdInParams";
 import { USE_getListName } from "@/src/features_new/lists/hooks/USE_getListName/USE_getListName";
 import PublicVocabs_FLASHLIST from "@/src/features_new/vocabs/components/flashlists/PublicVocabs_FLASHLIST/PublicVocabs_FLASHLIST";
-import { t } from "i18next";
 import { VocabFlatlist_FOOTER } from "@/src/features_new/vocabs/components/flashlists/components/VocabFlatlist_FOOTER/VocabFlatlist_FOOTER";
 import { Portal } from "@gorhom/portal";
+import { PublicOneList_NAV } from "@/src/features_new/lists/components/navs";
 
 export default function PublicListVocabs_PAGE() {
   const { urlParamsList_ID } = USE_listIdInParams();
@@ -63,14 +41,13 @@ export default function PublicListVocabs_PAGE() {
 
   return (
     <>
-      <FlashlistPage_NAV
+      <PublicOneList_NAV
         SHOW_listName={showTitle}
-        list_NAME={list_NAME}
+        search={search}
+        SET_search={SET_search}
+        OPEN_saveListModal={() => modals.saveList.set(true)}
         OPEN_displaySettings={() => modals.displaySettings.set(true)}
-        SAVE_list={() => modals.saveList.set(true)}
-        {...{ search, SET_search }}
       />
-
       <PublicVocabs_FLASHLIST
         IS_debouncing={IS_debouncing}
         handleScroll={handleScroll}

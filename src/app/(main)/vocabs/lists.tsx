@@ -5,8 +5,6 @@
 import React from "react";
 import { Portal } from "@gorhom/portal";
 
-import FlashlistPage_NAV from "@/src/components/1_grouped/headers/listPage/FlashlistPage_NAV";
-
 import {
   USE_debounceSearch,
   USE_showListHeaderTitle,
@@ -21,9 +19,11 @@ import {
 import MyLists_FLASHLIST from "@/src/features_new/lists/components/flashlists/MyLists_FLASHLIST/MyLists_FLASHLIST";
 import { t } from "i18next";
 import { Keyboard } from "react-native";
-import USE_controlMyListsFetch from "@/src/features_new/lists/hooks/fetchLists/USE_controlMyListsFetch/USE_controlMyListsFetch";
+import USE_controlMyListsFetch from "@/src/features_new/lists/hooks/fetchControl/USE_controlMyListsFetch/USE_controlMyListsFetch";
 import { z_USE_myLists } from "@/src/features_new/lists/hooks/zustand/z_USE_myLists/z_USE_myLists";
 import { ListFlatlist_FOOTER } from "@/src/features_new/lists/components/flashlists/components/ListFlatlist_FOOTER/ListFlatlist_FOOTER";
+
+import { MyLists_NAV } from "@/src/features_new/lists/components/navs";
 
 export default function MyLists_PAGE() {
   const { modals } = USE_modalToggles(["createList", "displaySettings"]);
@@ -47,14 +47,13 @@ export default function MyLists_PAGE() {
 
   return (
     <>
-      <FlashlistPage_NAV
+      <MyLists_NAV
+        search={search}
+        SET_search={SET_search}
+        OPEN_displaySettings={() => modals.displaySettings.set(true)}
+        OPEN_createListModal={() => modals.createList.set(true)}
         SHOW_listName={showTitle}
-        list_NAME={t("header.myLists")}
-        OPEN_displaySettings={() => modals.displaySettings.toggle()}
-        OPEN_create={() => modals.createList.toggle()}
-        {...{ search, SET_search }}
       />
-
       <MyLists_FLASHLIST
         IS_debouncing={IS_debouncing}
         handleScroll={handleScroll}

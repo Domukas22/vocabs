@@ -5,7 +5,7 @@
 import { supabase } from "@/src/lib/supabase";
 import { General_ERROR } from "@/src/types/error_TYPES";
 import { List_TYPE } from "../../../types";
-import { FORMAT_rawLists } from "../../../hooks/fetchLists/FETCH_lists/helpers";
+import { FORMAT_rawLists } from "../FETCH_lists/helpers";
 import { itemVisibility_TYPE } from "@/src/types/general_TYPES";
 
 export const function_NAME = "FETCH_oneList";

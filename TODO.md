@@ -4,6 +4,8 @@
 
 Functions:
 
+--> When you open a new personal list, check the colelcted_lang_ids array. If the current frontTrLang_ID inside 'z_USE_myVocabDisplaySettings' is not one of those, then change it on list load/insertion.
+
 --> Create list
 --> Update list
 --> Create vocab
@@ -11,8 +13,6 @@ Functions:
 
 --> Create a "copy vocab" function
 --> Create a "copy list and its vocabs" function
-
---> Connect all hooks so that everythign works together and updates properly
 
 --> Create 4 separate states:
 ----> z_USE_myListsDisplaySettings

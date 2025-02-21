@@ -13,7 +13,7 @@ export { USE_collectSharedListLangs } from "./exploreLists/collectLangs/USE_coll
 export { FETCH_listIdsSharedWithMe } from "./exploreLists/fetch/FETCH_listIdsSharedWithMe/FETCH_listIdsSharedWithMe";
 
 // fetch hooks
-export { USE_supabaseLists } from "./exploreLists/fetch/hooks/USE_supabaseLists/USE_supabaseLists";
+
 export { USE_fetchOneSharedList } from "./exploreLists/fetch/hooks/USE_fetchOneSharedList/USE_fetchOneSharedList";
 export { USE_fetchOnePublicList } from "./exploreLists/fetch/hooks/USE_fetchOnePublicList/USE_fetchOnePublicList";
 export { USE_fetchListAccessesSharedWithMe } from "./exploreLists/fetch/hooks/USE_fetchListAccessesSharedWithMe/USE_fetchListAccessesSharedWithMe";
@@ -39,15 +39,6 @@ export { USE_copyListAndItsVocabs } from "./myLists/copy/hooks/USE_copyListAndIt
 
 // create hooks
 export { USE_createList } from "./myLists/create/hooks/USE_createList/USE_createList";
-
-// fetch
-export { FETCH_supabaseLists } from "./myLists/fetch/FETCH_supabaseLists/FETCH_supabaseLists";
-export { FETCH_watermelonLists } from "./myLists/fetch/FETCH_watermelonLists/FETCH_watermelonLists";
-
-// fetch hooks
-export { USE_fetchParticipantsOfMyList } from "./myLists/fetch/hooks/USE_fetchParticipantsOfMyList/USE_fetchParticipantsOfMyList";
-export { USE_myLists } from "./myLists/fetch/hooks/USE_myLists/USE_myLists";
-export { USE_observeMyTargetList } from "./myLists/fetch/hooks/USE_observeMyTargetList/USE_observeMyTargetList";
 
 // publish hooks
 export { USE_publishMySupabaseList } from "./myLists/publish/hooks/USE_publishMySupabaseList/USE_publishMySupabaseList";

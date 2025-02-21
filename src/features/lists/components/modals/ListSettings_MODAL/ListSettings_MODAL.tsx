@@ -30,7 +30,6 @@ import List_MODEL from "@/src/db/models/List_MODEL";
 import Label from "@/src/components/1_grouped/texts/labels/Label/Label";
 
 import { USE_sync } from "@/src/hooks/USE_sync/USE_sync";
-import { USE_zustand } from "@/src/hooks";
 import { Error_PROPS } from "@/src/types/error_TYPES";
 import Error_TEXT from "@/src/components/1_grouped/texts/Error_TEXT/Error_TEXT";
 import { USE_highlightBoolean } from "@/src/hooks/USE_highlightBoolean/USE_highlightBoolean";
@@ -44,13 +43,13 @@ import {
 } from "@/src/features/users/functions/fetch/FETCH_listParticipants/props";
 import { USE_async } from "@/src/hooks";
 
-import { USE_observeMyTargetList, USE_shareList } from "../../../functions";
+import { USE_shareList } from "../../../functions";
 import { DeleteList_MODAL } from "../DeleteList_MODAL/DeleteList_MODAL";
 import { RenameList_MODAL } from "../RenameList_MODAL/RenameList_MODAL";
 import { SelectMultipleLanguages_MODAL } from "@/src/features/languages/components";
 import { USE_modalToggles } from "@/src/hooks/index";
-import { z_USE_myVocabs } from "@/src/features_new/vocabs/hooks/zustand/z_USE_myVocabs/z_USE_myVocabs";
 import { z_USE_myOneList } from "@/src/features_new/lists/hooks/zustand/z_USE_myOneList/z_USE_myOneList";
+import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 
 interface ListSettingsModal_PROPS {
   IS_open: boolean;
@@ -62,7 +61,7 @@ export function ListSettings_MODAL({
   CLOSE_modal = () => {},
 }: ListSettingsModal_PROPS) {
   const { t } = useTranslation();
-  const { z_user } = USE_zustand();
+  const { z_user } = z_USE_user();
   const { sync } = USE_sync();
   const toast = useToast();
   const router = useRouter();

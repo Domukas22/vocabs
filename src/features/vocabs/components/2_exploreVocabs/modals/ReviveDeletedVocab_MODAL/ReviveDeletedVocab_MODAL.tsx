@@ -4,7 +4,6 @@
 
 import { useState } from "react";
 import List_MODEL from "@/src/db/models/List_MODEL";
-import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import TwoBtn_BLOCK from "@/src/components/1_grouped/blocks/TwoBtn_BLOCK/TwoBtn_BLOCK";
 import { ICON_X } from "@/src/components/1_grouped/icons/icons";
@@ -15,10 +14,9 @@ import { KeyboardAvoidingView, Platform } from "react-native";
 import Header from "@/src/components/1_grouped/headers/regular/Header";
 import { ChooseAList_FLATLIST } from "@/src/features/lists/components/flatlists/ChooseAList_FLATLIST/ChooseAList_FLATLIST";
 import { USE_collectListLangs } from "@/src/features/lists/functions";
-import { USE_zustand } from "@/src/hooks";
 import { USE_modalToggles } from "@/src/hooks/index";
-import { raw_Vocab_TYPE } from "@/src/features_new/vocabs/types";
 import { z_USE_myVocabs } from "@/src/features_new/vocabs/hooks/zustand/z_USE_myVocabs/z_USE_myVocabs";
+import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 
 interface SavePublicVocabToListModal_PROPS {
   IS_open: boolean;
@@ -33,7 +31,7 @@ export function ReviveDeletedVocab_MODAL({
   const { modals } = USE_modalToggles(["createList"]);
   const { z_target_VOCAB: vocab } = z_USE_myVocabs();
 
-  const { z_user } = USE_zustand();
+  const { z_user } = z_USE_user();
 
   const [selected_LIST, SET_selectedList] = useState<List_MODEL | undefined>(
     undefined

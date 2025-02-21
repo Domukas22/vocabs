@@ -7,7 +7,7 @@ import { loadingState_TYPES } from "@/src/types/general_TYPES";
 import { currentListAction_TYPE } from "@/src/zustand/types";
 import { create } from "zustand";
 import { List_TYPE } from "../../../types";
-import { listFetch_TYPES } from "../../fetchLists/FETCH_lists/types";
+import { listFetch_TYPES } from "../../../functions/fetch/FETCH_lists/types";
 
 export type z_PREPARE_publicListsForFetch_TYPE = ({
   loadMore,

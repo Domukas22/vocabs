@@ -2,20 +2,19 @@
 //
 //
 
-import { currentActionItem_TYPE } from "@/src/hooks/zustand/z_USE_currentActions/types";
 import { z_USE_currentActions } from "@/src/hooks/zustand/z_USE_currentActions/z_USE_currentActions";
 import { General_ERROR } from "@/src/types/error_TYPES";
 import { SEND_internalError } from "@/src/utils";
 import { useCallback } from "react";
 import { DELETE_list } from "./DELETE_list/DELETE_list";
-import { USE_zustand } from "@/src/hooks";
 import { z_USE_myOneList } from "../../zustand/z_USE_myOneList/z_USE_myOneList";
 import { z_USE_myLists } from "../../zustand/z_USE_myLists/z_USE_myLists";
+import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 
 const function_NAME = "USE_deleteList";
 
 export function USE_deleteList() {
-  const { z_user } = USE_zustand();
+  const { z_user } = z_USE_user();
 
   const { IS_inAction, ADD_currentAction, REMOVE_currentAction } =
     z_USE_currentActions();

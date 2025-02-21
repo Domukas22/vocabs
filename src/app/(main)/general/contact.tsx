@@ -16,28 +16,25 @@ import React, { useCallback, useMemo, useState } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
-  StyleSheet,
   View,
   ScrollView,
   Image,
 } from "react-native";
 
-import { Link, router, useRouter } from "expo-router";
+import { Link, useRouter } from "expo-router";
 
 import Block from "@/src/components/1_grouped/blocks/Block/Block";
 import StyledText_INPUT from "@/src/components/1_grouped/inputs/StyledText_INPUT/StyledText_INPUT";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
-import Page_WRAP from "@/src/components/1_grouped/Page_WRAP/Page_WRAP";
 import Label from "@/src/components/1_grouped/texts/labels/Label/Label";
 import { useTranslation } from "react-i18next";
 import { Controller, useForm } from "react-hook-form";
 
 import Error_TEXT from "@/src/components/1_grouped/texts/Error_TEXT/Error_TEXT";
 import { supabase } from "@/src/lib/supabase";
-import { USE_zustand } from "@/src/hooks";
 
-import { USE_sync } from "@/src/hooks/USE_sync/USE_sync";
+import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 
 type ContactMessage_PROPS = {
   message_type: "bug" | "feedback" | "idea" | "hello" | "other";
@@ -68,15 +65,13 @@ export default function Contact_PAGE() {
   const [name, SET_name] = useState("");
   const [email, SET_email] = useState("");
   const router = useRouter();
-  const { z_user } = USE_zustand();
+  const { z_user } = z_USE_user();
 
   const [internal_ERROR, SET_internalError] = useState("");
   const [sent, SET_sent] = useState(false);
 
   const { SEND_contactMessage, loading, error, RESET_error } =
     USE_sendContactMessage();
-
-  const { sync: sync_2 } = USE_sync();
 
   const SEND_message = async (data: ContactMessage_PROPS) => {
     const { message, name, email, message_type } = data;
@@ -92,8 +87,6 @@ export default function Contact_PAGE() {
     if (error) {
       return console.error(error);
     }
-
-    await sync_2("all", z_user);
 
     SET_message(message);
     SET_messageType(message_type);

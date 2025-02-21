@@ -1,16 +1,17 @@
 import { createContext, useState, ReactNode, useContext } from "react";
 import { supabase } from "../lib/supabase";
 import User_MODEL from "@/src/db/models/User_MODEL";
+import { User_TYPE } from "../features_new/user/types";
+import { User } from "@supabase/supabase-js";
 
 // Define the shape of the Auth context
 interface AuthContextType {
-  user: User_MODEL | null;
+  user: User | null;
   login: (
     email: string,
     password: string
-  ) => Promise<{ userData: User_MODEL | null; error: string | null }>;
+  ) => Promise<{ userData: User | null; error: string | null }>;
   register: (
-    username: string,
     email: string,
     password: string
   ) => Promise<{ userData: any; error: string | null }>;
@@ -21,20 +22,13 @@ interface AuthContextType {
 const Auth_CONTEXT = createContext<AuthContextType | null>(null);
 
 export const Auth_PROVIDER = ({ children }: { children: ReactNode }) => {
-  const [user, SET_user] = useState<User_MODEL | null>(null);
+  const [user, SET_user] = useState<User | null>(null);
 
-  const register = async (
-    username: string,
-    email: string,
-    password: string
-  ) => {
+  const register = async (email: string, password: string) => {
     try {
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
-        options: {
-          data: { username },
-        },
       });
 
       if (error) {

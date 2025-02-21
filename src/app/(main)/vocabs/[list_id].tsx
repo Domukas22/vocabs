@@ -2,8 +2,8 @@
 //
 //
 
-import React, { useCallback, useEffect } from "react";
-import FlashlistPage_NAV from "@/src/components/1_grouped/headers/listPage/FlashlistPage_NAV";
+import React from "react";
+// import FlashlistPage_NAV from "@/src/components/1_grouped/headers/listPage/FlashlistPage_NAV";
 import { ListSettings_MODAL } from "@/src/features/lists/components";
 import {
   UpdateMyVocab_MODAL,
@@ -11,24 +11,20 @@ import {
   VocabFlashlist_HEADER,
 } from "@/src/features/vocabs/components";
 
-import {
-  USE_debounceSearch,
-  USE_showListHeaderTitle,
-  USE_zustand,
-} from "@/src/hooks";
+import { USE_debounceSearch, USE_showListHeaderTitle } from "@/src/hooks";
 import { CreateMyVocab_MODAL } from "@/src/features/vocabs/components/1_myVocabs/modals/CreateMyVocab_MODAL/CreateMyVocab_MODAL";
 import { Portal } from "@gorhom/portal";
 import { USE_modalToggles } from "@/src/hooks/index";
-import { vocabFetch_TYPES } from "@/src/features_new/vocabs/hooks/fetchVocabs/FETCH_vocabs/types";
 import MyVocabs_FLASHLIST from "@/src/features_new/vocabs/components/flashlists/MyVocabs_FLASHLIST/MyVocabs_FLASHLIST";
-import { itemVisibility_TYPE } from "@/src/types/general_TYPES";
 import { USE_getListName } from "@/src/features_new/lists/hooks/USE_getListName/USE_getListName";
-import { USE_fetchMyVocabs } from "@/src/features_new/vocabs/hooks/fetchVocabs/USE_controlMyVocabsFetch/USE_fetchMyVocabs/USE_fetchMyVocabs";
 import { z_USE_myVocabs } from "@/src/features_new/vocabs/hooks/zustand/z_USE_myVocabs/z_USE_myVocabs";
 import { USE_listIdInParams } from "@/src/features/vocabs/vocabList/USE_listIdInParams/USE_listIdInParams";
-import { USE_myVocabs } from "@/src/features/vocabs/vocabList/USE_myVocabs/USE_myVocabs";
 import { VocabFlatlist_FOOTER } from "@/src/features_new/vocabs/components/flashlists/components/VocabFlatlist_FOOTER/VocabFlatlist_FOOTER";
-import USE_controlMyVocabsFetch from "@/src/features_new/vocabs/hooks/fetchVocabs/USE_controlMyVocabsFetch/USE_controlMyVocabsFetch";
+import USE_controlMyVocabsFetch from "@/src/features_new/vocabs/hooks/fetchControls/USE_controlMyVocabsFetch/USE_controlMyVocabsFetch";
+import {
+  MyLists_NAV,
+  MyOneList_NAV,
+} from "@/src/features_new/lists/components/navs";
 
 export default function SingleList_PAGE() {
   const { urlParamsList_ID } = USE_listIdInParams();
@@ -60,13 +56,13 @@ export default function SingleList_PAGE() {
 
   return (
     <>
-      <FlashlistPage_NAV
-        SHOW_listName={showTitle}
-        list_NAME={list_NAME}
+      <MyOneList_NAV
+        search={search}
+        SET_search={SET_search}
         OPEN_displaySettings={() => modals.displaySettings.set(true)}
+        OPEN_createVocabModal={() => modals.createVocab.set(true)}
         OPEN_listSettings={() => modals.listSettings.set(true)}
-        OPEN_create={() => modals.createVocab.set(true)}
-        {...{ search, SET_search }}
+        SHOW_listName={showTitle}
       />
 
       <MyVocabs_FLASHLIST

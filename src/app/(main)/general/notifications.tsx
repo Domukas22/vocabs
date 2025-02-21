@@ -15,17 +15,16 @@ import { router } from "expo-router";
 import { View } from "react-native";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
-import Page_WRAP from "@/src/components/1_grouped/Page_WRAP/Page_WRAP";
 import { useTranslation } from "react-i18next";
 import Styled_FLASHLIST from "@/src/components/3_other/Styled_FLASHLIST/Styled_FLASHLIST";
 import Notifications_MODEL from "@/src/db/models/Notifications_MODEL";
 
-import { USE_zustand } from "@/src/hooks";
 import { withObservables } from "@nozbe/watermelondb/react";
 import {
   USE_fetchNotifications,
   USE_updateNotification,
 } from "@/src/features/notifications/functions";
+import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 
 const EnhancedNotification_BTN = withObservables(
   ["notification"],
@@ -36,7 +35,7 @@ const EnhancedNotification_BTN = withObservables(
 
 export default function Notifications_PAGE() {
   const { t } = useTranslation();
-  const { z_user } = USE_zustand();
+  const { z_user } = z_USE_user();
   const { notifications, ARE_notificationsFetching, fetchNotifications_ERROR } =
     USE_fetchNotifications(z_user?.id);
 

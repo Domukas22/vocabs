@@ -7,7 +7,7 @@ import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled
 import { MyColors } from "@/src/constants/MyColors";
 import React from "react";
 import { Vocab_TYPE } from "@/src/features_new/vocabs/types";
-import { vocabFetch_TYPES } from "@/src/features_new/vocabs/hooks/fetchVocabs/FETCH_vocabs/types";
+import { vocabFetch_TYPES } from "@/src/features_new/vocabs/functions/FETCH_vocabs/types";
 import { itemVisibility_TYPE } from "@/src/types/general_TYPES";
 
 const VocabBack_TEXT = React.memo(function VocabBack_TEXT({

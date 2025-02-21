@@ -14,7 +14,6 @@ import StyledText_INPUT from "../components/1_grouped/inputs/StyledText_INPUT/St
 import { useState } from "react";
 import Label from "../components/1_grouped/texts/labels/Label/Label";
 import Btn from "../components/1_grouped/buttons/Btn/Btn";
-import { useRouter } from "expo-router";
 
 import { useForm, Controller } from "react-hook-form";
 import Notification_BLOCK from "../components/1_grouped/blocks/Notification_BLOCK/Notification_BLOCK";
@@ -26,14 +25,10 @@ import LoginRegister_SWITCH from "../components/2_byPage/authentication/LoginReg
 import * as SecureStore from "expo-secure-store";
 import { USE_auth } from "../context/Auth_CONTEXT";
 
-import { USE_zustand } from "@/src/hooks";
-
-import { USE_sync } from "../hooks/USE_sync/USE_sync";
 import { USE_navigateUser } from "../features/users/functions/general/hooks/USE_navigateUser/USE_navigateUser";
 import { View } from "react-native";
 
 type RegisterData_PROPS = {
-  username: string;
   email: string;
   password: string;
 };
@@ -46,11 +41,11 @@ export default function Register_PAGE() {
   const { navigate } = USE_navigateUser();
 
   const _register = async (data: RegisterData_PROPS) => {
-    const { username, email, password } = data;
-    if (!email || !password || !username) return;
+    const { email, password } = data;
+    if (!email || !password) return;
 
     SET_loading(true);
-    const { userData, error } = await register(username, email, password);
+    const { userData, error } = await register(email, password);
     SET_loading(false);
 
     if (error) {
@@ -68,7 +63,6 @@ export default function Register_PAGE() {
     formState: { errors, isSubmitted },
   } = useForm({
     defaultValues: {
-      username: "",
       email: "",
       password: "",
     },
@@ -92,37 +86,7 @@ export default function Register_PAGE() {
               />
             }
           />
-          <Block noBorder>
-            <Label>Create a username</Label>
 
-            <Controller
-              control={control}
-              rules={{
-                required: {
-                  value: true,
-                  message: "Please provide an username",
-                },
-                minLength: {
-                  value: 5,
-                  message: "Username must be at least 5 characters long",
-                },
-              }}
-              render={({
-                field: { onChange, onBlur, value },
-                fieldState: { error },
-              }) => (
-                <StyledText_INPUT
-                  {...{ value, error, isSubmitted, onBlur }}
-                  SET_value={(val) => {
-                    onChange(val);
-                    SET_internalError("");
-                  }}
-                />
-              )}
-              name="username"
-            />
-            {errors.username && <Error_TEXT text={errors.username.message} />}
-          </Block>
           <Block noBorder>
             <Label>What is your E-Mail?</Label>
 

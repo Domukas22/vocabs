@@ -18,7 +18,6 @@ export { USE_deleteVocab } from "./1_myVocabs/delete/hooks/USE_deleteVocab/USE_d
 
 // update hooks
 export { USE_updateVocab } from "./1_myVocabs/update/hooks/USE_updateVocab/USE_updateVocab";
-export { USE_updateVocabDifficulty } from "./1_myVocabs/update/hooks/USE_updateVocabDifficulty/USE_updateVocabDifficulty";
 export { USE_updateVocabIsMarked } from "./1_myVocabs/update/hooks/USE_updateVocabIsMarked/USE_updateVocabIsMarked";
 
 //hooks

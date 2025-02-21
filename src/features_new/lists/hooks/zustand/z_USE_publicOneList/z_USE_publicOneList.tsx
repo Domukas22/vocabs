@@ -7,7 +7,7 @@ import { List_TYPE } from "@/src/features_new/lists/types";
 import { General_ERROR } from "@/src/types/error_TYPES";
 import { SEND_internalError } from "@/src/utils";
 import { FETCH_oneList } from "../../../functions/fetch/FETCH_oneList/FETCH_oneList";
-import { listFetch_TYPES } from "../../fetchLists/FETCH_lists/types";
+import { listFetch_TYPES } from "../../../functions/fetch/FETCH_lists/types";
 import { itemVisibility_TYPE } from "@/src/types/general_TYPES";
 
 type z_USE_publicOneList_PROPS = {

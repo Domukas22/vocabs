@@ -20,28 +20,27 @@ import Block from "@/src/components/1_grouped/blocks/Block/Block";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
-import { USE_zustand } from "@/src/hooks";
 import { EditUsername_MODAL } from "@/src/features/users/components";
 
 import { useToast } from "react-native-toast-notifications";
 import { USE_highlightBoolean } from "@/src/hooks/USE_highlightBoolean/USE_highlightBoolean";
 import { MyColors } from "@/src/constants/MyColors";
-import { PUSH_changes } from "@/src/hooks/USE_sync/USE_sync";
 import { USE_modalToggles } from "@/src/hooks/index";
+import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 
 export default function Settings_PAGE() {
-  const { z_user, z_SET_user } = USE_zustand();
+  const { z_user } = z_USE_user();
   const { t } = useTranslation();
   const toast = useToast();
 
   const changeLanguage = async (lang: "en" | "de") => {
     if (z_user) {
-      const updated_USER = await z_user.UPDATE_preferredLangId(lang);
-      if (updated_USER) {
-        z_SET_user(updated_USER);
-        PUSH_changes();
-        i18next.changeLanguage(lang);
-      }
+      // const updated_USER = await z_user.UPDATE_preferredLangId(lang);
+      // if (updated_USER) {
+      //   z_SET_user(updated_USER);
+      //   PUSH_changes();
+      //   i18next.changeLanguage(lang);
+      // }
     }
   };
   const appLang = useMemo(() => i18next.language, [i18next.language]);
@@ -74,13 +73,9 @@ export default function Settings_PAGE() {
           />
         }
       />
+
       <Edit_BLOCK
-        title={t("label.username")}
-        content={z_user?.username}
-        editBtn_ACTION={() => modals.editUsername.set(true)}
-        IS_contentHighlighted={IS_usernameHighlighted}
-      />
-      <Edit_BLOCK
+        IS_contentHighlighted={false}
         title={t("label.email")}
         content={z_user?.email}
         editBtn_ACTION={() => modals.editEmail.set(true)}

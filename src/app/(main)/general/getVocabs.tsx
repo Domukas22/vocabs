@@ -15,24 +15,22 @@ import { router, useRouter } from "expo-router";
 import Block from "@/src/components/1_grouped/blocks/Block/Block";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
-import Page_WRAP from "@/src/components/1_grouped/Page_WRAP/Page_WRAP";
 import { useTranslation } from "react-i18next";
-import { USE_zustand } from "@/src/hooks";
 import CurrentVocabCount_BAR from "@/src/components/2_byPage/general/CurrentVocabCount_BAR";
 import { VOCAB_PRICING } from "@/src/constants/globalVars";
 import { PUSH_changes, USE_sync } from "@/src/hooks/USE_sync/USE_sync";
 import { supabase } from "@/src/lib/supabase";
 import Pricing_BTN from "@/src/components/1_grouped/buttons/Pricing_BTN/Pricing_BTN";
 
-import { USE_observeMyTotalVocabCount } from "@/src/features/vocabs/functions";
+import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 
 export default function GetVocabs_PAGE() {
   const { t } = useTranslation();
-  const { z_user, z_SET_user } = USE_zustand();
+  const { z_user } = z_USE_user();
   const [loading, SET_loading] = useState(false);
   const [IS_referringAFriend, SET_referringAFriend] = useState(false);
 
-  const totalUserVocab_COUNT = USE_observeMyTotalVocabCount(z_user?.id);
+  const totalUserVocab_COUNT = 0;
 
   const [purchase, SET_purchase] = useState({
     completed: false,

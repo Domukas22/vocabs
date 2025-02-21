@@ -9,7 +9,7 @@ import React, { useMemo } from "react";
 import { USE_toggle } from "@/src/hooks/USE_toggle/USE_toggle";
 
 import Vocab_FRONT from "../helpers/Vocab_FRONT/Vocab_FRONT";
-import { vocabFetch_TYPES } from "../../../../../hooks/fetchVocabs/FETCH_vocabs/types";
+import { vocabFetch_TYPES } from "../../../../../functions/FETCH_vocabs/types";
 import VocabBack_BTNS from "../helpers/VocabBack_BTNS/VocabBack_BTNS";
 import VocabBack_TEXT from "../helpers/VocabBack_TEXT/VocabBack_TEXT";
 import { VocabBack_TRS } from "../helpers/VocabBack_TRS/VocabBack_TRS";

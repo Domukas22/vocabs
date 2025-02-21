@@ -14,3 +14,5 @@ export type loadingState_TYPES =
   | "none";
 
 export type Toast_TYPE = "success" | "error" | "warning";
+
+export type sortDirection_TYPE = "ascending" | "descending";

@@ -14,11 +14,12 @@ import USE_refetchAndReplaceMyListInAllLists from "@/src/features_new/lists/hook
 import USE_refetchStarterContent from "@/src/hooks/zustand/z_USE_myStarterContent/USE_refetchStarterContent/USE_refetchStarterContent";
 import { USE_toast } from "@/src/hooks/USE_toast/USE_toast";
 import { t } from "i18next";
+import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 
 const function_NAME = "USE_updateVocabDifficulty";
 
 export function USE_updateVocabDifficulty() {
-  const { z_user } = USE_zustand();
+  const { z_user } = z_USE_user();
 
   const {
     IS_inAction = () => false,

@@ -9,11 +9,12 @@ import { FETCH_oneList } from "../../../functions/fetch/FETCH_oneList/FETCH_oneL
 import { USE_zustand } from "@/src/hooks";
 import { General_ERROR } from "@/src/types/error_TYPES";
 import { SEND_internalError } from "@/src/utils";
+import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 
 const function_NAME = "USE_refetchAndReplaceMyListInAllLists";
 
 export default function USE_refetchAndReplaceMyListInAllLists() {
-  const { z_user } = USE_zustand();
+  const { z_user } = z_USE_user();
   const { z_UPDATE_listInMyLists } = z_USE_myLists();
   const { IS_inAction } = z_USE_currentActions();
 

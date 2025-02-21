@@ -6,7 +6,7 @@ import { Vocab_TYPE } from "@/src/features_new/vocabs/types";
 import { General_ERROR } from "@/src/types/error_TYPES";
 import { loadingState_TYPES } from "@/src/types/general_TYPES";
 import { create } from "zustand";
-import { vocabFetch_TYPES } from "../../fetchVocabs/FETCH_vocabs/types";
+import { vocabFetch_TYPES } from "../../../functions/FETCH_vocabs/types";
 
 export type z_PREPARE_publicVocabsForFetch_TYPE = ({
   loadMore,

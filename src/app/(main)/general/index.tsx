@@ -30,15 +30,15 @@ import { useEffect, useState } from "react";
 import { USE_sync } from "@/src/hooks/USE_sync/USE_sync";
 import User_MODEL from "@/src/db/models/User_MODEL";
 import * as SecureStore from "expo-secure-store";
-import { USE_zustand } from "@/src/hooks";
 import CurrentVocabCount_BAR from "@/src/components/2_byPage/general/CurrentVocabCount_BAR";
 import { useToast } from "react-native-toast-notifications";
 import { USE_navigateUser } from "@/src/features/users/functions/general/hooks/USE_navigateUser/USE_navigateUser";
 import { USE_modalToggles } from "@/src/hooks/index";
+import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 
 export default function General_PAGE() {
   const { t } = useTranslation();
-  const { z_user, z_SET_user } = USE_zustand();
+  const { z_user } = z_USE_user();
   const { sync } = USE_sync();
   const { navigate } = USE_navigateUser();
   const { logout } = USE_auth();

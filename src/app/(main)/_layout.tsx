@@ -10,7 +10,7 @@ import {
 
 import { MyColors } from "@/src/constants/MyColors";
 import { USE_observeMyUnreadNotificationCount } from "@/src/features/notifications/functions";
-import { USE_zustand } from "@/src/hooks";
+import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 import { Tabs } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { View } from "react-native";
@@ -19,7 +19,7 @@ const tabBar_HEIGHT = 70;
 
 export default function TabLayout() {
   const { t } = useTranslation();
-  const { z_user } = USE_zustand();
+  const { z_user } = z_USE_user();
   const unreadNotifications_COUnt = USE_observeMyUnreadNotificationCount(
     z_user?.id
   );

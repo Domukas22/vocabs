@@ -7,37 +7,26 @@ import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import { ICON_X, ICON_flag } from "@/src/components/1_grouped/icons/icons";
 import Label from "@/src/components/1_grouped/texts/labels/Label/Label";
 import i18next, { t } from "i18next";
-import {
-  USE_zustand,
-  z_listDisplaySettings_PROPS,
-  z_setlistDisplaySettings_PROPS,
-} from "@/src/hooks/zustand/USE_zustand/USE_zustand";
+import { USE_zustand } from "@/src/hooks/zustand/USE_zustand/USE_zustand";
 import { useCallback, useMemo } from "react";
 import { View } from "react-native";
 import { USE_langs_2 } from "@/src/features/languages/functions";
 import USE_collectAllUniqueLangIdsFromAllLists from "@/src/features/lists/functions/myLists/collectLangs/hooks/USE_collectAllUniqueLangIdsFromAllLists";
-import User_MODEL from "@/src/db/models/User_MODEL";
+import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 
 export default function ListLangFilters_BLOCK() {
   const appLang = useMemo(() => i18next.language, [i18next.language]);
-  const { z_user, z_listDisplay_SETTINGS, z_SET_listDisplaySettings } =
-    USE_zustand();
+  const { z_user } = z_USE_user();
   const { collectedLang_IDS } = USE_collectAllUniqueLangIdsFromAllLists(z_user);
 
   const SELECT_langFilter = useCallback(
     (incoming_LANG: string) => {
       const newLangs = GET_handledLangs({
-        langFilters: z_listDisplay_SETTINGS?.langFilters || [],
+        langFilters: [],
         incoming_LANG,
       });
-
-      if (z_SET_listDisplaySettings) {
-        z_SET_listDisplaySettings({
-          langFilters: newLangs,
-        });
-      }
     },
-    [collectedLang_IDS, z_listDisplay_SETTINGS, z_SET_listDisplaySettings]
+    [collectedLang_IDS]
   );
 
   const { langs } = USE_langs_2({
@@ -48,9 +37,7 @@ export default function ListLangFilters_BLOCK() {
     <Block>
       <Label>{t("label.filterByLanguage")}</Label>
       {langs?.map((lang, index) => {
-        const active = z_listDisplay_SETTINGS?.langFilters.some(
-          (lang_ID) => lang_ID === lang?.lang_id
-        );
+        const active = [].some((lang_ID) => lang_ID === lang?.lang_id);
         return (
           <Btn
             key={`langFilterBtn ${lang?.lang_id}`}

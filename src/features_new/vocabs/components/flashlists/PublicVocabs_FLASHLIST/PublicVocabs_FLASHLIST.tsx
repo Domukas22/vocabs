@@ -3,26 +3,12 @@
 //
 
 import Styled_FLASHLIST from "@/src/components/3_other/Styled_FLASHLIST/Styled_FLASHLIST";
-import {
-  USE_zustand,
-  USE_getMyListName,
-  USE_getPublicListName,
-} from "@/src/hooks";
-import { USE_toast } from "@/src/hooks/USE_toast/USE_toast";
-import { USE_vocabZustandActions } from "@/src/features_new/vocabs/hooks/USE_vocabZustandActions/USE_vocabZustandActions";
 import { FlashList } from "@shopify/flash-list";
-import React, { useEffect, useRef } from "react";
-import { VocabFlashlist_HEADER } from "../../../../../features/vocabs/components";
-import { USE_openVocabs } from "../../../../../features/vocabs/vocabList/USE_openVocabs/USE_openVocabs";
-import * as Haptics from "expo-haptics";
-import { vocabFetch_TYPES } from "../../../hooks/fetchVocabs/FETCH_vocabs/types";
+import React, { useRef } from "react";
 
 import { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
-import { USE_listIdInParams } from "../../../../../features/vocabs/vocabList/USE_listIdInParams/USE_listIdInParams";
-import { itemVisibility_TYPE } from "@/src/types/general_TYPES";
 import { z_USE_publicVocabs } from "../../../hooks/zustand/z_USE_publicVocabs/z_USE_publicVocabs";
-import { VocabFlatlist_FOOTER } from "../components/VocabFlatlist_FOOTER/VocabFlatlist_FOOTER";
-import { raw_Vocab_TYPE, Vocab_TYPE } from "../../../types";
+import { Vocab_TYPE } from "../../../types";
 import { z_USE_currentActions } from "@/src/hooks/zustand/z_USE_currentActions/z_USE_currentActions";
 import { Vocab_CARD } from "../components/VocabCards/Vocab_CARD/Vocab_CARD";
 

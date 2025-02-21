@@ -10,15 +10,9 @@ import { useCallback } from "react";
 import { USE_zustand } from "@/src/hooks/zustand/USE_zustand/USE_zustand";
 
 export default function ListSortDirection_BLOCK() {
-  const { z_listDisplay_SETTINGS, z_SET_listDisplaySettings } = USE_zustand();
-
   const SET_sortDirection = useCallback(
-    (direction: "ascending" | "descending") => {
-      if (z_SET_listDisplaySettings) {
-        z_SET_listDisplaySettings({ sortDirection: direction });
-      }
-    },
-    [z_SET_listDisplaySettings]
+    (direction: "ascending" | "descending") => {},
+    []
   );
 
   return (
@@ -28,21 +22,13 @@ export default function ListSortDirection_BLOCK() {
       <Btn
         text={t("btn.newToOld")}
         onPress={() => SET_sortDirection("descending")}
-        type={
-          z_listDisplay_SETTINGS?.sortDirection === "descending"
-            ? "active"
-            : "simple"
-        }
+        type={{}?.sortDirection === "descending" ? "active" : "simple"}
         text_STYLES={{ flex: 1 }}
       />
       <Btn
         text={t("btn.oldToNew")}
         onPress={() => SET_sortDirection("ascending")}
-        type={
-          z_listDisplay_SETTINGS?.sortDirection === "ascending"
-            ? "active"
-            : "simple"
-        }
+        type={{}?.sortDirection === "ascending" ? "active" : "simple"}
         text_STYLES={{ flex: 1 }}
       />
     </Block>

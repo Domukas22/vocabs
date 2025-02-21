@@ -15,17 +15,16 @@ import { router } from "expo-router";
 import { View } from "react-native";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
-import Page_WRAP from "@/src/components/1_grouped/Page_WRAP/Page_WRAP";
 import { useTranslation } from "react-i18next";
 import Styled_FLASHLIST from "@/src/components/3_other/Styled_FLASHLIST/Styled_FLASHLIST";
 import Payments_MODEL from "@/src/db/models/Payments_MODEL";
 import { USE_fetchPayments } from "@/src/features/payments/functions";
-import { USE_zustand } from "@/src/hooks";
 import Expandable_BTN from "@/src/components/1_grouped/buttons/Expandable_BTN/Expandable_BTN";
+import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 
 export default function Payments_PAGE() {
   const { t } = useTranslation();
-  const { z_user } = USE_zustand();
+  const { z_user } = z_USE_user();
   const { payments, ARE_paymentsFetching, fetchPayments_ERROR } =
     USE_fetchPayments(z_user?.id);
 

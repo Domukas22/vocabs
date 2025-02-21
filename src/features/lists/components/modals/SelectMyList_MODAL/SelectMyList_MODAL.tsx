@@ -28,7 +28,6 @@ import { t } from "i18next";
 import List_MODEL from "@/src/db/models/List_MODEL";
 import { CreateList_MODAL } from "../CreateList_MODAL/CreateList_MODAL";
 import EmptyFlatlist_BOTTOM from "@/src/components/3_other/EmptyFlatlist_BOTTOM/EmptyFlatlist_BOTTOM";
-import USE_observeMyList from "../../../functions/myLists/fetch/hooks/USE_observeMyLists/USE_observeMyLists";
 
 interface SelectListModal_PROPS {
   open: boolean;

@@ -3,18 +3,19 @@
 //
 
 import React from "react";
-import FlashlistPage_NAV from "@/src/components/1_grouped/headers/listPage/FlashlistPage_NAV";
+// import FlashlistPage_NAV from "@/src/components/1_grouped/headers/listPage/FlashlistPage_NAV";
 import {
   ListDisplaySettings_MODAL,
   ListsFlatlist_HEADER,
 } from "@/src/features/lists/components";
 import { USE_showListHeaderTitle, USE_debounceSearch } from "@/src/hooks";
 import { USE_modalToggles } from "@/src/hooks/index";
-import USE_controlPublicListsFetch from "@/src/features_new/lists/hooks/fetchLists/USE_controlPublicListsFetch/USE_controlPublicListsFetch";
+import USE_controlPublicListsFetch from "@/src/features_new/lists/hooks/fetchControl/USE_controlPublicListsFetch/USE_controlPublicListsFetch";
 import { t } from "i18next";
 import PublicLists_FLASHLIST from "@/src/features_new/lists/components/flashlists/PublicLists_FLASHLIST/PublicLists_FLASHLIST";
 import { ListFlatlist_FOOTER } from "@/src/features_new/lists/components/flashlists/components/ListFlatlist_FOOTER/ListFlatlist_FOOTER";
 import { z_USE_publicLists } from "@/src/features_new/lists/hooks/zustand/z_USE_publicLists/z_USE_myLists";
+import { PublicLists_NAV } from "@/src/features_new/lists/components/navs/PublicLists_NAV/PublicLists_NAV";
 
 export default function PublicLists_PAGE() {
   const { modals } = USE_modalToggles(["displaySettings"]);
@@ -38,13 +39,12 @@ export default function PublicLists_PAGE() {
 
   return (
     <>
-      <FlashlistPage_NAV
+      <PublicLists_NAV
+        search={search}
+        SET_search={SET_search}
+        OPEN_displaySettings={() => modals.displaySettings.set(true)}
         SHOW_listName={showTitle}
-        list_NAME={t("header.publicLists")}
-        OPEN_displaySettings={() => modals.displaySettings.toggle()}
-        {...{ search, SET_search }}
       />
-
       <PublicLists_FLASHLIST
         IS_debouncing={IS_debouncing}
         handleScroll={handleScroll}

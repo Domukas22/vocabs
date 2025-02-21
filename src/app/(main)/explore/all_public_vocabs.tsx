@@ -4,8 +4,6 @@
 
 import React from "react";
 
-import FlashlistPage_NAV from "@/src/components/1_grouped/headers/listPage/FlashlistPage_NAV";
-
 import {
   VocabDisplaySettings_MODAL,
   VocabFlashlist_HEADER,
@@ -15,10 +13,11 @@ import { USE_modalToggles } from "@/src/hooks/index";
 import { Portal } from "@gorhom/portal";
 import PublicVocabs_FLASHLIST from "@/src/features_new/vocabs/components/flashlists/PublicVocabs_FLASHLIST/PublicVocabs_FLASHLIST";
 import { z_USE_publicVocabs } from "@/src/features_new/vocabs/hooks/zustand/z_USE_publicVocabs/z_USE_publicVocabs";
-import USE_controlPublicVocabsFetch from "@/src/features_new/vocabs/hooks/fetchVocabs/USE_controlPublicVocabsFetch/USE_controlPublicVocabsFetch";
+import USE_controlPublicVocabsFetch from "@/src/features_new/vocabs/hooks/fetchControls/USE_controlPublicVocabsFetch/USE_controlPublicVocabsFetch";
 import { t } from "i18next";
 import { VocabFlatlist_FOOTER } from "@/src/features_new/vocabs/components/flashlists/components/VocabFlatlist_FOOTER/VocabFlatlist_FOOTER";
 import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
+import { AllPublicVocabs_NAV } from "@/src/features_new/vocabs/components/navs/AllPublicVocabs_NAV/AllPublicVocabs_NAV";
 
 export default function AllPublicVocabs_PAGE() {
   const { modals } = USE_modalToggles(["saveVocab", "displaySettings"]);
@@ -43,11 +42,11 @@ export default function AllPublicVocabs_PAGE() {
 
   return (
     <>
-      <FlashlistPage_NAV
-        SHOW_listName={showTitle}
-        list_NAME={t("listName.allPublicVocabs")}
+      <AllPublicVocabs_NAV
+        search={search}
+        SET_search={SET_search}
         OPEN_displaySettings={() => modals.displaySettings.set(true)}
-        {...{ search, SET_search }}
+        SHOW_listName={showTitle}
       />
 
       <PublicVocabs_FLASHLIST

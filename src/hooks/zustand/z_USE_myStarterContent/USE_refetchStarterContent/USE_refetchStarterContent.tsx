@@ -6,17 +6,17 @@ import { useCallback } from "react";
 import { z_USE_myStarterContent } from "../z_USE_myStarterContent";
 import { General_ERROR } from "@/src/types/error_TYPES";
 import { SEND_internalError } from "@/src/utils";
-import { USE_zustand } from "../../USE_zustand/USE_zustand";
 import { FETCH_myTopLists } from "./FETCH_myTopLists/FETCH_myTopLists";
 import { FETCH_totalUserVocabCount } from "./FETCH_totalUserVocabCount/FETCH_totalUserVocabCount";
 import { FETCH_savedUserVocabCount } from "./FETCH_savedUserVocabCount/FETCH_savedUserVocabCount";
 import { FETCH_deletedUserVocabCount } from "./FETCH_deletedUserVocabCount/FETCH_deletedUserVocabCount";
 import { FETCH_totalUserListCount } from "./FETCH_totalUserListCount/FETCH_totalUserListCount";
+import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 
 const function_NAME = "USE_refetchStarterContent";
 
 export default function USE_refetchStarterContent() {
-  const { z_user } = USE_zustand();
+  const { z_user } = z_USE_user();
   const {
     z_IS_myStarterInitialFetchDone,
     z_SET_myStarterContentRefetch,

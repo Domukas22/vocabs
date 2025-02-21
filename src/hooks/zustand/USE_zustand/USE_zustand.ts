@@ -38,20 +38,9 @@ interface ZustandStore {
 
   z_listDisplay_SETTINGS: z_listDisplaySettings_PROPS;
   z_SET_listDisplaySettings: z_setlistDisplaySettings_PROPS;
-
-  z_user: User_MODEL | undefined;
-  z_SET_user: z_setUser_PROPS;
 }
 
 export const USE_zustand = create<ZustandStore>((set) => ({
-  z_user: undefined,
-
-  z_SET_user: (newUser_CONTENT) => {
-    set(() => ({
-      z_user: newUser_CONTENT,
-    }));
-  },
-
   z_listDisplay_SETTINGS: {
     sorting: "date",
     sortDirection: "descending",

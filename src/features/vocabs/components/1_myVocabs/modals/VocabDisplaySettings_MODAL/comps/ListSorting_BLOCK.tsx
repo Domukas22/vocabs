@@ -11,16 +11,7 @@ import { USE_zustand } from "@/src/hooks/zustand/USE_zustand/USE_zustand";
 import { useCallback } from "react";
 
 export default function ListSorting_BLOCK() {
-  const { z_listDisplay_SETTINGS, z_SET_listDisplaySettings } = USE_zustand();
-
-  const SET_sorting = useCallback(
-    (sorting: "date") => {
-      if (z_SET_listDisplaySettings) {
-        z_SET_listDisplaySettings({ sorting });
-      }
-    },
-    [z_SET_listDisplaySettings]
-  );
+  const SET_sorting = useCallback((sorting: "date") => {}, []);
 
   return (
     <Block row={false}>
@@ -29,14 +20,10 @@ export default function ListSorting_BLOCK() {
       <Btn
         text={t("btn.sortByDate")}
         iconRight={
-          <ICON_calendar
-            color={
-              z_listDisplay_SETTINGS?.sorting === "date" ? "primary" : "grey"
-            }
-          />
+          <ICON_calendar color={{}?.sorting === "date" ? "primary" : "grey"} />
         }
         onPress={() => SET_sorting("date")}
-        type={z_listDisplay_SETTINGS?.sorting === "date" ? "active" : "simple"}
+        type={{}?.sorting === "date" ? "active" : "simple"}
         style={{ flex: 1 }}
         text_STYLES={{ flex: 1 }}
       />

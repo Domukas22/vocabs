@@ -12,8 +12,8 @@ import {
   ICON_X,
 } from "@/src/components/1_grouped/icons/icons";
 
-import { vocabFetch_TYPES } from "@/src/features_new/vocabs/hooks/fetchVocabs/FETCH_vocabs/types";
-import { USE_toggle, USE_zustand } from "@/src/hooks";
+import { vocabFetch_TYPES } from "@/src/features_new/vocabs/functions/FETCH_vocabs/types";
+import { USE_toggle } from "@/src/hooks";
 import { useTranslation } from "react-i18next";
 import { View, ActivityIndicator } from "react-native";
 import VocabBackDifficultyEdit_BTNS from "../VocabBackDifficultyEdit_BTNS/VocabBackDifficultyEdit_BTNS";
@@ -30,6 +30,7 @@ import { USE_softDeletevocab } from "@/src/features_new/vocabs/hooks/actions/USE
 import { USE_hardDeleteVocab } from "@/src/features_new/vocabs/hooks/actions/USE_hardDeleteVocab/USE_hardDeleteVocab";
 import { z_USE_publicOneList } from "@/src/features_new/lists/hooks/zustand/z_USE_publicOneList/z_USE_publicOneList";
 import { useRoute } from "@react-navigation/native";
+import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 
 interface VocabBackBtns_PROPS {
   vocab: Vocab_TYPE;
@@ -56,7 +57,7 @@ const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
 }: VocabBackBtns_PROPS) {
   const { t } = useTranslation();
   const router = useRouter();
-  const { z_user } = USE_zustand();
+  const { z_user } = z_USE_user();
 
   const { z_currentActions, IS_inAction } = z_USE_currentActions();
 

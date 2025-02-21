@@ -16,7 +16,6 @@ import { useForm } from "react-hook-form";
 import Language_MODEL from "@/src/db/models/Language_MODEL";
 import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 
-import { USE_zustand } from "@/src/hooks";
 import { SelectMyList_MODAL } from "@/src/features/lists/components";
 import { USE_collectListLangs } from "@/src/features/lists/functions";
 import {
@@ -41,6 +40,7 @@ import List_MODEL from "@/src/db/models/List_MODEL";
 import { FETCH_langs } from "@/src/features/languages/functions/fetch/FETCH_langs/FETCH_langs";
 import { z_USE_myVocabs } from "@/src/features_new/vocabs/hooks/zustand/z_USE_myVocabs/z_USE_myVocabs";
 import { VocabTr_TYPE } from "@/src/features_new/vocabs/types";
+import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 
 interface CreateMyVocabModal_PROPS {
   IS_open: boolean;
@@ -72,7 +72,7 @@ export function CreateMyVocab_MODAL({
   const [target_TR, SET_targetTr] = useState<VocabTr_TYPE | undefined>(
     undefined
   );
-  const { z_user } = USE_zustand();
+  const { z_user } = z_USE_user();
 
   const { CREATE_vocab, IS_creatingVocab, db_ERROR, RESET_dbError } =
     USE_createVocab();
