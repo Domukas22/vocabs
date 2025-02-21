@@ -14,7 +14,7 @@ import { t } from "i18next";
 import { ActivityIndicator } from "react-native";
 import { MyColors } from "@/src/constants/MyColors";
 import { z_USE_publicStarterContent } from "@/src/hooks/zustand/z_USE_publicStarterContent/z_USE_publicStarterContent";
-import { Vocab_CARD } from "@/src/features/vocabs/vocabList/Vocabs_LIST/helpers";
+import { Vocab_CARD } from "@/src/features_new/vocabs/components/flashlists/components/VocabCards/Vocab_CARD/Vocab_CARD";
 
 export const Top5PublicVocabs_LIST = function Top5PublicVocabs_LIST() {
   const router = useRouter();
@@ -43,7 +43,12 @@ export const Top5PublicVocabs_LIST = function Top5PublicVocabs_LIST() {
     <Block styles={{ gap: 12 }}>
       <Label>{t("label.mostPopularVocabs")}</Label>
       {z_publicStarterTop5Vocabs?.map((vocab) => (
-        <Vocab_CARD vocab={vocab} list_TYPE="public" fetch_TYPE="all" />
+        <Vocab_CARD
+          key={vocab?.id}
+          vocab={vocab}
+          list_TYPE="public"
+          fetch_TYPE="all"
+        />
       ))}
 
       <Btn

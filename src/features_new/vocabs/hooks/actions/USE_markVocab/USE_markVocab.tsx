@@ -11,21 +11,36 @@ import { z_USE_myVocabs } from "../../zustand/z_USE_myVocabs/z_USE_myVocabs";
 import { MARK_vocab } from "./MARK_vocab/MARK_vocab";
 import { USE_toast } from "@/src/hooks/USE_toast/USE_toast";
 import { t } from "i18next";
+import { z_USE_myStarterContent } from "@/src/hooks/zustand/z_USE_myStarterContent/z_USE_myStarterContent";
+import USE_refetchStarterContent from "@/src/hooks/zustand/z_USE_myStarterContent/USE_refetchStarterContent/USE_refetchStarterContent";
+import USE_refetchAndReplaceMyListInAllLists from "@/src/features_new/lists/hooks/actions/USE_refetchAndReplaceMyListInAllLists/USE_refetchAndReplaceMyListInAllLists";
+import { USE_updateListUpdatedAt } from "@/src/features_new/lists/hooks/actions/USE_updateListUpdatedAt/ USE_updateListUpdatedAt";
 
 const function_NAME = "USE_markVocab";
 
 export function USE_markVocab() {
   const { z_user } = USE_zustand();
 
-  const { IS_inAction, ADD_currentAction, REMOVE_currentAction } =
-    z_USE_currentActions();
+  const {
+    IS_inAction = () => false,
+    ADD_currentAction = () => {},
+    REMOVE_currentAction = () => {},
+  } = z_USE_currentActions();
 
-  const { z_UPDATE_vocabInMyVocabsList } = z_USE_myVocabs();
-
+  const { z_UPDATE_vocabInMyVocabsList = () => {} } = z_USE_myVocabs();
+  const { REFETCH_myStarterContent = () => {} } = USE_refetchStarterContent();
+  const { REFECH_andReplaceMyListInLists = () => {} } =
+    USE_refetchAndReplaceMyListInAllLists();
   const { TOAST } = USE_toast();
+  const { UPDATE_listUpdatedAt = () => {} } = USE_updateListUpdatedAt();
 
   const _MARK_vocab = useCallback(
-    async (vocab_ID: string, list_ID: string, IS_marked: boolean) => {
+    async (
+      vocab_ID: string,
+      list_ID: string,
+      IS_marked: boolean,
+      SHOULD_updateListUpdatedAt: boolean
+    ) => {
       try {
         // --------------------------------------------------
         // Check if item is already in action
@@ -50,19 +65,26 @@ export function USE_markVocab() {
               "'MARK_vocab' returned undefined 'updated_VOCAB', although no error was thrown",
           });
 
+        // --------------------------------------------------
+        if (SHOULD_updateListUpdatedAt) {
+          // Update list
+          await UPDATE_listUpdatedAt(list_ID);
+        }
+
+        // Update my lists page
+        await REFECH_andReplaceMyListInLists(list_ID);
+
+        // Update starter page
+        await REFETCH_myStarterContent();
+
+        // Update UI
         z_UPDATE_vocabInMyVocabsList(updated_VOCAB);
 
-        // refetch item inside all lists page
-        // refetch item inside one list state
-        // refetch starter page state
-
-        TOAST(
-          "success",
-          IS_marked
-            ? t("notification.vocabMarked")
-            : t("notification.vocabUnmarked"),
-          "bottom"
-        );
+        // Provide sensory user feedback
+        const toast_MSG = IS_marked
+          ? t("notification.vocabMarked")
+          : t("notification.vocabUnmarked");
+        TOAST("success", toast_MSG);
         VIBRATE("soft");
 
         // -----------------------------

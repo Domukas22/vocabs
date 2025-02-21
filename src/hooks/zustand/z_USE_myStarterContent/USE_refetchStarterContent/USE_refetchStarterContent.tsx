@@ -7,7 +7,7 @@ import { z_USE_myStarterContent } from "../z_USE_myStarterContent";
 import { General_ERROR } from "@/src/types/error_TYPES";
 import { SEND_internalError } from "@/src/utils";
 import { USE_zustand } from "../../USE_zustand/USE_zustand";
-import { FETCH_top4Lists } from "./FETCH_top4Lists/FETCH_top4Lists";
+import { FETCH_myTopLists } from "./FETCH_myTopLists/FETCH_myTopLists";
 import { FETCH_totalUserVocabCount } from "./FETCH_totalUserVocabCount/FETCH_totalUserVocabCount";
 import { FETCH_savedUserVocabCount } from "./FETCH_savedUserVocabCount/FETCH_savedUserVocabCount";
 import { FETCH_deletedUserVocabCount } from "./FETCH_deletedUserVocabCount/FETCH_deletedUserVocabCount";
@@ -27,7 +27,6 @@ export default function USE_refetchStarterContent() {
 
   const _REFETCH_myStarterContent = useCallback(
     async (IS_initialFetch: boolean = false) => {
-      console.log("ree");
       // If initial fetch re-triggers, eventhough the it was completed, don't fetch again.
       if (IS_initialFetch && z_IS_myStarterInitialFetchDone) return;
       try {
@@ -37,15 +36,13 @@ export default function USE_refetchStarterContent() {
 
         // ---------------------------------------------------------
         // Fetch top 3 lists
-        const { top4_LISTS } = await FETCH_top4Lists(z_user?.id || "");
+        const { top_LISTS } = await FETCH_myTopLists(z_user?.id || "");
 
-        console.log("top 1 list again: ", top4_LISTS?.[0]);
-
-        if (!top4_LISTS)
+        if (!top_LISTS)
           throw new General_ERROR({
             function_NAME,
             message:
-              "'FETCH_top3Lists' returned undefined 'top4_LISTS' array, although no error was thrown",
+              "'FETCH_myTopLists' returned undefined 'top_LISTS' array, although no error was thrown",
           });
 
         // ---------------------------------------------------------
@@ -76,7 +73,7 @@ export default function USE_refetchStarterContent() {
           allVocab_COUNT: totalVocab_COUNT,
           savedVocab_COUNT,
           softDeleltedVocab_COUNT: deletedVocab_COUNT,
-          top4_LISTS,
+          top_LISTS,
           z_myStarterTotalListCount: totalList_COUNT,
         });
 

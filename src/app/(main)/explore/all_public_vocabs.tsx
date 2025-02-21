@@ -18,6 +18,7 @@ import { z_USE_publicVocabs } from "@/src/features_new/vocabs/hooks/zustand/z_US
 import USE_controlPublicVocabsFetch from "@/src/features_new/vocabs/hooks/fetchVocabs/USE_controlPublicVocabsFetch/USE_controlPublicVocabsFetch";
 import { t } from "i18next";
 import { VocabFlatlist_FOOTER } from "@/src/features_new/vocabs/components/flashlists/components/VocabFlatlist_FOOTER/VocabFlatlist_FOOTER";
+import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 
 export default function AllPublicVocabs_PAGE() {
   const { modals } = USE_modalToggles(["saveVocab", "displaySettings"]);
@@ -48,6 +49,7 @@ export default function AllPublicVocabs_PAGE() {
         OPEN_displaySettings={() => modals.displaySettings.set(true)}
         {...{ search, SET_search }}
       />
+
       <PublicVocabs_FLASHLIST
         OPEN_copyVocabModal={() => modals.saveVocab.set(true)}
         IS_debouncing={IS_debouncing}

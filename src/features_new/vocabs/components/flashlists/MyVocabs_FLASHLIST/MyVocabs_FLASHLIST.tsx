@@ -5,12 +5,12 @@
 import Styled_FLASHLIST from "@/src/components/3_other/Styled_FLASHLIST/Styled_FLASHLIST";
 import { FlashList } from "@shopify/flash-list";
 import React, { useRef } from "react";
-import { Vocab_CARD } from "../../../../../features/vocabs/vocabList/Vocabs_LIST/helpers";
 
 import { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
 import { z_USE_myVocabs } from "../../../hooks/zustand/z_USE_myVocabs/z_USE_myVocabs";
 import { Vocab_TYPE } from "../../../types";
 import { z_USE_currentActions } from "@/src/hooks/zustand/z_USE_currentActions/z_USE_currentActions";
+import { Vocab_CARD } from "../components/VocabCards/Vocab_CARD/Vocab_CARD";
 
 export default function MyVocabs_FLASHLIST({
   IS_debouncing = false,

@@ -116,7 +116,12 @@ const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
       <Btn
         type={vocab?.is_marked ? "active_green" : "simple"}
         onPress={async () => {
-          await MARK_vocab(vocab?.id, vocab?.list_id, !vocab?.is_marked);
+          await MARK_vocab(
+            vocab?.id,
+            vocab?.list_id,
+            !vocab?.is_marked,
+            fetch_TYPE === "byTargetList"
+          );
         }} // Toggle spinning on press
         stayPressed={IS_updatingMarked}
         iconLeft={
@@ -158,7 +163,8 @@ const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
         await UPDATE_vocabDifficulty(
           vocab?.id,
           vocab?.difficulty,
-          new_DIFFICULY
+          new_DIFFICULY,
+          fetch_TYPE === "byTargetList"
         )
       }
       TOGGLE_open={TOGGLE_difficultyEdits}
@@ -329,7 +335,7 @@ const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
             onPress={async () =>
               deleteType === "hard"
                 ? await HARDDELETE_vocab(vocab?.id)
-                : await SOFTDELETE_vocab(vocab?.id, vocab?.list_id)
+                : await SOFTDELETE_vocab(vocab?.id, vocab?.list_id, true)
             }
           />
         </View>

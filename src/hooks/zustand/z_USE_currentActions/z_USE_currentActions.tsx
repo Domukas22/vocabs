@@ -28,11 +28,16 @@ export const z_USE_currentActions = create<z_USE_currentActions_PROPS>(
       })),
 
     IS_inAction: (item_TYPE, item_ID, item_ACTION) =>
-      get().z_currentActions.some(
-        (action) =>
-          action.item_TYPE === item_TYPE &&
-          action.item_ID === item_ID &&
-          action.item_ACTION === item_ACTION
-      ),
+      item_ACTION === "any"
+        ? get().z_currentActions.some(
+            (action) =>
+              action.item_TYPE === item_TYPE && action.item_ID === item_ID
+          )
+        : get().z_currentActions.some(
+            (action) =>
+              action.item_TYPE === item_TYPE &&
+              action.item_ID === item_ID &&
+              action.item_ACTION === item_ACTION
+          ),
   })
 );

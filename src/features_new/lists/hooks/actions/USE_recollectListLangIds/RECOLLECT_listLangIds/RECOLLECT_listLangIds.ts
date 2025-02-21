@@ -35,9 +35,6 @@ export async function RECOLLECT_listLangIds(
         .eq("user_id", user_id)
         .is("deleted_at", null);
 
-    // Convert lang ids into a string, example: "en, de, lt"
-    const listLang_IDs = REDUCE_collectedLangIds(collectedLang_IDs);
-
     if (childrenVocabs_ERROR)
       throw new General_ERROR({
         function_NAME,
@@ -45,17 +42,16 @@ export async function RECOLLECT_listLangIds(
         errorToSpread: childrenVocabs_ERROR,
       });
 
+    // Convert lang ids into a string, example: "en, de, lt"
+    const listLang_IDs = REDUCE_collectedLangIds(collectedLang_IDs);
+
     // Update the list
     const { data: list, error } = await supabase
       .from("lists")
-      .update({
-        collected_lang_ids: listLang_IDs,
-        updated_at: new Date().toISOString(),
-      })
+      .update({ collected_lang_ids: listLang_IDs })
       .eq("id", list_id)
       .eq("user_id", user_id)
-      .is("vocabs.deleted_at", null)
-      .select(`*, vocabs(difficulty, is_marked)`)
+      .select(`*, vocabs(difficulty, is_marked), vocab_count: vocabs(count)`)
       .single();
 
     if (error)

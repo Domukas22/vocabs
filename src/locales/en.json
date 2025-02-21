@@ -275,7 +275,7 @@
     "listDeleted": "List deleted",
     "listRenamed": "Renamed list",
     "defaultTRsUpdated": "Default list translations updated ",
-    "vocabDifficultyUpdated": "Updated vocab difficulty",
+    "vocabDifficultyUpdatedd": "Updated vocab difficulty",
     "vocabCopied": "The vocab was added to your list",
     "publicVocabCreated": "Public vocab created",
     "publicVocabUpdated": "Public vocab updated",
@@ -303,7 +303,10 @@
   "notification": {
     "atLeast1LangError": "Atleast 1 language must be selected",
     "vocabMarked": "Vocab saved",
-    "vocabUnmarked": "Vocab unsaved"
+    "vocabUnmarked": "Vocab unsaved",
+    "vocabDeletedForever": "Vocab deleted forever",
+    "vocabSoftDeleted": "Vocab deleted",
+    "vocabDifficultyUpdated": "Vocab difficulty updated"
   },
   "emptyText": {
     "noLangsSelected": "No languages selected"

@@ -68,7 +68,7 @@ export default function USE_controlPublicListsFetch({
 
   const LOAD_more = useCallback(async () => {
     (async () => await FETCH(true))();
-  }, []);
+  }, [FETCH]);
 
   return { LOAD_more };
 }

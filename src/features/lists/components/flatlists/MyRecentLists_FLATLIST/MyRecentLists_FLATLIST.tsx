@@ -37,7 +37,6 @@ export const MyRecentLists_FLATLIST = function RecentlyUsedPrivateLists_LIST() {
         <Skeleton_BLOCK height={80} />
         <Skeleton_BLOCK height={80} />
         <Skeleton_BLOCK height={80} />
-        <Skeleton_BLOCK height={80} />
       </Block>
     );
 

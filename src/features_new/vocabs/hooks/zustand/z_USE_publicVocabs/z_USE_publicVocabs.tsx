@@ -76,17 +76,22 @@ export const z_USE_publicVocabs = create<z_USE_publicVocabs_PROPS>(
 
     z_INSERT_fetchedVocabs: ({ vocabs, unpaginated_COUNT, loadMore }) => {
       if (loadMore) {
-        const withNewlyAppendedVocab_ARR = [...get().z_publicVocabs, ...vocabs];
-        set({
-          z_publicVocabs: withNewlyAppendedVocab_ARR,
-          z_publicVocabsUnpaginated_COUNT: unpaginated_COUNT,
-          z_publicVocabPrinted_IDS: new Set(
-            withNewlyAppendedVocab_ARR.map((x) => x.id)
-          ),
-          z_HAVE_publicVocabsReachedEnd:
-            withNewlyAppendedVocab_ARR.length >= unpaginated_COUNT,
+        set((state) => {
+          const updatedVocabs = [...state.z_publicVocabs, ...vocabs];
 
-          z_publicVocabsLoading_STATE: "none",
+          // Mutate existing Set instead of creating a new one
+          const updatedPrintedIDs = new Set(state.z_publicVocabPrinted_IDS);
+          vocabs.forEach((v) => updatedPrintedIDs.add(v.id));
+
+          return {
+            z_publicVocabs: updatedVocabs,
+            z_publicVocabsUnpaginated_COUNT: unpaginated_COUNT,
+            z_publicVocabPrinted_IDS: updatedPrintedIDs,
+            z_HAVE_publicVocabsReachedEnd:
+              updatedVocabs.length >= unpaginated_COUNT,
+
+            z_publicVocabsLoading_STATE: "none",
+          };
         });
       } else {
         set({

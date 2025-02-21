@@ -8,12 +8,11 @@ import { useToast } from "react-native-toast-notifications";
 
 export function USE_toast() {
   const toast = useToast();
-
   const TOAST = useCallback(
     (
-      type: Toast_TYPE,
+      type: Toast_TYPE = "success",
       message: string,
-      placement: "top" | "bottom",
+      placement?: "top" | "bottom",
       duration?: number
     ) => {
       toast.show(message, {

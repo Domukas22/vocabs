@@ -35,9 +35,9 @@ export const ICON_flag = React.memo(function ICON_flag({
     <View
       style={{
         borderColor: "rgba(255, 255, 255, 0.15)",
-        shadowColor: "rgba(255, 255, 255, 0.05)",
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 1,
+        // shadowColor: "rgba(255, 255, 255, 0.05)",
+        // shadowOffset: { width: 1, height: 1 },
+        // shadowOpacity: 1,
       }}
       {...props}
     >

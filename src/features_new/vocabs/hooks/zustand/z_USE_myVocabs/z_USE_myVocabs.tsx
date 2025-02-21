@@ -49,6 +49,7 @@ type z_USE_myVocabs_PROPS = {
 
   z_HIGHLIGHT_myVocab: (vocab_ID: string) => void;
   z_UPDATE_vocabInMyVocabsList: (target_VOCAB: Vocab_TYPE) => void;
+  z_PREPEND_vocabToMyVocabsList: (new_VOCAB: Vocab_TYPE) => void;
   z_REMOVE_vocabFromMyVocabsList: (vocab_ID: string) => void;
 
   z_PREPARE_myVocabsForFetch: z_PREPARE_myVocabsForFetch_TYPE;
@@ -100,6 +101,12 @@ export const z_USE_myVocabs = create<z_USE_myVocabs_PROPS>((set, get) => ({
   z_REMOVE_vocabFromMyVocabsList: (vocab_ID) =>
     set((state) => ({
       z_myVocabs: [...state.z_myVocabs].filter((x) => x.id !== vocab_ID),
+      z_myVocabsUnpaginated_COUNT: state.z_myVocabsUnpaginated_COUNT - 1,
+    })),
+  z_PREPEND_vocabToMyVocabsList: (new_VOCAB) =>
+    set((state) => ({
+      z_myVocabs: [new_VOCAB, ...state.z_myVocabs],
+      z_myVocabsUnpaginated_COUNT: state.z_myVocabsUnpaginated_COUNT + 1,
     })),
 
   z_PREPARE_myVocabsForFetch: ({ loadMore, loading_STATE, fetch_TYPE }) => {

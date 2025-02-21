@@ -86,6 +86,7 @@ export const z_USE_myLists = create<z_USE_myLists_PROPS>((set, get) => ({
     set({
       z_myLists: new_LISTS,
       z_myListsPrinted_IDS: new Set(new_LISTS.map((x) => x.id)),
+      z_myListsUnpaginated_COUNT: get().z_myListsUnpaginated_COUNT - 1,
     });
   },
   z_PREPEND_listToMyLists: (list) => {
@@ -94,6 +95,7 @@ export const z_USE_myLists = create<z_USE_myLists_PROPS>((set, get) => ({
     set({
       z_myLists: new_LISTS,
       z_myListsPrinted_IDS: new Set(new_LISTS.map((x) => x.id)),
+      z_myListsUnpaginated_COUNT: get().z_myListsUnpaginated_COUNT + 1,
     });
   },
   z_UPDATE_listInMyLists: (new_LIST) => {

@@ -274,7 +274,7 @@
     "listDeleted": "Liste gelöscht",
     "listRenamed": "Liste umbennant",
     "defaultTRsUpdated": "Standardübersetzungen der Liste aktualisiert",
-    "vocabDifficultyUpdated": "Schwerkeit der Vokabel aktualisiert",
+    "vocabDifficultyUpdatedd": "Schwerkeit der Vokabel aktualisiert",
     "vocabCopied": "Die Vokabel wurde in deine Liste hingefügt",
     "publicVocabCreated": "Öffentliches Vokabel erstellt",
     "publicVocabUpdated": "Öffentliches Vokabel bearbeitet",
@@ -302,7 +302,10 @@
   "notification": {
     "atLeast1LangError": "Mindestens 1 Sprache muss ausgewählt sein",
     "vocabMarked": "Vokabel gemerkt",
-    "vocabUnmarked": "Vokabel nicht gemerkt"
+    "vocabUnmarked": "Vokabel nicht gemerkt",
+    "vocabDeletedForever": "Vokabel für immer gelöscht",
+    "vocabSoftDeleted": "Vokabel gelöscht",
+    "vocabDifficultyUpdated": "Vokabelschwierigkeit aktualisiert"
   },
   "emptyText": {
     "noLangsSelected": "Keine Sprachen ausgewählt"

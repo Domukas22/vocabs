@@ -37,7 +37,7 @@ export function USE_resetVocabDifficultiesOfAList() {
       try {
         // --------------------------------------------------
         // Check if item is already in action
-        if (IS_inAction("list", list_ID)) return;
+        if (IS_inAction("list", list_ID, "resetting_difficulties")) return;
 
         // --------------------------------------------------
         // Insert action
@@ -74,7 +74,7 @@ export function USE_resetVocabDifficultiesOfAList() {
         onFailure(err);
         SEND_internalError(err);
       } finally {
-        REMOVE_currentAction(list_ID);
+        REMOVE_currentAction(list_ID, "resetting_difficulties");
       }
     },
     []

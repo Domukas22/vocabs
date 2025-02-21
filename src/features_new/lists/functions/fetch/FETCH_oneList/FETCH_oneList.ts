@@ -37,7 +37,9 @@ export async function FETCH_oneList(
     const { data: list, error } = await (list_TYPE === "private"
       ? supabase
           .from("lists")
-          .select(`*, vocabs(difficulty, is_marked)`)
+          .select(
+            `*, vocabs(difficulty, is_marked), vocab_count: vocabs(count)`
+          )
           .is("vocabs.deleted_at", null)
           .eq("id", list_id)
           .eq("user_id", user_id)
@@ -45,7 +47,9 @@ export async function FETCH_oneList(
           .single()
       : supabase
           .from("lists")
-          .select(`*, vocabs(difficulty, is_marked)`)
+          .select(
+            `*, vocabs(difficulty, is_marked), vocab_count: vocabs(count)`
+          )
           .is("vocabs.deleted_at", null)
           .eq("id", list_id)
           .eq("type", "public")

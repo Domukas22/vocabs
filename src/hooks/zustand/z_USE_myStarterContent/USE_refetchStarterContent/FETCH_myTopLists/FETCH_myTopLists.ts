@@ -7,11 +7,11 @@ import { supabase } from "@/src/lib/supabase";
 import { List_TYPE } from "@/src/features_new/lists/types";
 import { FORMAT_rawLists } from "@/src/features_new/lists/hooks/fetchLists/FETCH_lists/helpers";
 
-export const function_NAME = "FETCH_top4Lists";
+export const function_NAME = "FETCH_myTopLists";
 
-export async function FETCH_top4Lists(
+export async function FETCH_myTopLists(
   user_id: string
-): Promise<{ top4_LISTS: List_TYPE[] }> {
+): Promise<{ top_LISTS: List_TYPE[] }> {
   if (!user_id)
     throw new General_ERROR({
       function_NAME,
@@ -26,7 +26,7 @@ export async function FETCH_top4Lists(
       .eq("user_id", user_id)
       .eq("type", "private")
       .order("updated_at", { ascending: false })
-      .limit(4);
+      .limit(3);
 
     if (error)
       throw new General_ERROR({
@@ -37,7 +37,7 @@ export async function FETCH_top4Lists(
 
     const { formated_LISTS } = FORMAT_rawLists(lists);
 
-    return { top4_LISTS: formated_LISTS };
+    return { top_LISTS: formated_LISTS };
   } catch (error: any) {
     throw new General_ERROR({
       function_NAME: error?.function_NAME || function_NAME,

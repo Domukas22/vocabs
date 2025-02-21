@@ -2,14 +2,12 @@
 //
 //
 
-import { currentVocabAction_TYPE } from "@/src/app/(main)/vocabs/[list_id]";
 import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import {
   ICON_difficultyDot,
   ICON_X,
 } from "@/src/components/1_grouped/icons/icons";
 import { MyColors } from "@/src/constants/MyColors";
-import { useMemo } from "react";
 import { ActivityIndicator, View } from "react-native";
 
 export default function VocabBackDifficultyEdit_BTNS({

@@ -22,6 +22,7 @@ export async function FETCH_savedUserVocabCount(
       .select("id", { count: "exact" })
       .is("deleted_at", null)
       .eq("is_marked", true)
+      .eq("type", "private")
       .eq("user_id", user_id);
 
     if (error)

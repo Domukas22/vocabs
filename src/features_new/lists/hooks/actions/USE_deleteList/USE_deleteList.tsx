@@ -26,6 +26,7 @@ export function USE_deleteList() {
   const _DELETE_list = useCallback(
     async (
       list_ID: string,
+      SHOULD_updateListUpdatedAt: boolean = true,
       sideEffects: {
         onSuccess?: () => void;
         onFailure?: (error: General_ERROR) => void;
@@ -36,7 +37,7 @@ export function USE_deleteList() {
       try {
         // --------------------------------------------------
         // Check if item is already in action
-        if (IS_inAction("list", list_ID)) return;
+        if (IS_inAction("list", list_ID, "deleting")) return;
 
         // --------------------------------------------------
         // Insert action

@@ -19,9 +19,6 @@ export function USE_updateListUpdatedAt() {
   const { IS_inAction, ADD_currentAction, REMOVE_currentAction } =
     z_USE_currentActions();
 
-  const { z_SET_myOneList, z_HIGHLIGHT_myOneListName } = z_USE_myOneList();
-  const { z_UPDATE_listInMyLists } = z_USE_myLists();
-
   const _UPDATE_listUpdatedAt = useCallback(async (list_ID: string) => {
     try {
       // --------------------------------------------------
@@ -46,17 +43,13 @@ export function USE_updateListUpdatedAt() {
             "'UPDATE_listUpdatedAt' returned undefined 'updated_LIST', although no error was thrown",
         });
 
-      // refetch starter page state
-
       // -----------------------------
     } catch (error: any) {
-      const err = new General_ERROR({
+      throw new General_ERROR({
         function_NAME: error?.function_NAME || function_NAME,
         message: error?.message,
         errorToSpread: error,
       });
-
-      SEND_internalError(err);
     } finally {
       REMOVE_currentAction(list_ID, "updating_updated_at");
     }

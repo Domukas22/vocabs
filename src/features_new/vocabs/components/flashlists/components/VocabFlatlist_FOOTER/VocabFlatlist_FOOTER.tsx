@@ -42,7 +42,7 @@ export function VocabFlatlist_FOOTER({
       RESET_search={RESET_search}
       totalFilteredResults_COUNT={unpaginated_COUNT}
       debouncedSearch={debouncedSearch}
-      z_myVocabsLoading_STATE={loading_STATE}
+      loading_STATE={loading_STATE}
       HAS_reachedEnd={HAS_reachedEnd}
       IS_debouncing={IS_debouncing}
     />

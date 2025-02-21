@@ -57,5 +57,6 @@ export type z_USE_currentActions_PROPS = {
     item_ACTION:
       | listAction_TYPE["item_ACTION"]
       | vocabAction_TYPE["item_ACTION"]
+      | "any"
   ) => boolean;
 };

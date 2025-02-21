@@ -46,7 +46,13 @@ export default function USE_controlPublicVocabsFetch({
         excludeIds: loadMore ? z_publicVocabPrinted_IDS : new Set(),
       });
     },
-    [langFilters, sortDirection, z_publicVocabPrinted_IDS, search]
+    [
+      langFilters,
+      sortDirection,
+      z_publicVocabPrinted_IDS,
+      search,
+      targetList_ID,
+    ]
   );
 
   // Refetch on search / sorting / filter / targetList_ID
@@ -56,7 +62,7 @@ export default function USE_controlPublicVocabsFetch({
 
   const LOAD_more = useCallback(async () => {
     (async () => await FETCH(true))();
-  }, []);
+  }, [FETCH]);
 
   return { LOAD_more };
 }
