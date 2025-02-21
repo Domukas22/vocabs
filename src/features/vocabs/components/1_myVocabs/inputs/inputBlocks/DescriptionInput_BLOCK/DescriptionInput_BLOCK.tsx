@@ -34,7 +34,7 @@ export function DescriptionInput_BLOCK({
         staySmall
         value={value || ""}
         SET_value={onChange}
-        {...{ error, isSubmitted, isFocused, setIsFocused }}
+        {...{ HAS_error: error, isSubmitted, isFocused, setIsFocused }}
       />
       {error && <Styled_TEXT type="text_error">{error?.message}</Styled_TEXT>}
     </Block>

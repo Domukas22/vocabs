@@ -79,7 +79,7 @@ export function TrInput_BLOCK({
           style={{ fontFamily: "Nunito-Medium" }}
           // placeholder={t("placeholder.translation")}
           _ref={inputREF}
-          {...{ error, isSubmitted, isFocused, setIsFocused }}
+          {...{ HAS_error: error, isSubmitted, isFocused, setIsFocused }}
         />
       </View>
       {error && <Styled_TEXT type="text_error">{error.message}</Styled_TEXT>}

@@ -37,9 +37,6 @@ export { FetchedSharedList_PROPS } from "./exploreLists/props";
 // copy hooks
 export { USE_copyListAndItsVocabs } from "./myLists/copy/hooks/USE_copyListAndItsVocabs/USE_copyListAndItsVocabs";
 
-// create hooks
-export { USE_createList } from "./myLists/create/hooks/USE_createList/USE_createList";
-
 // publish hooks
 export { USE_publishMySupabaseList } from "./myLists/publish/hooks/USE_publishMySupabaseList/USE_publishMySupabaseList";
 

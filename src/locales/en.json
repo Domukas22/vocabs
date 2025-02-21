@@ -306,7 +306,8 @@
     "vocabUnmarked": "Vocab unsaved",
     "vocabDeletedForever": "Vocab deleted forever",
     "vocabSoftDeleted": "Vocab deleted",
-    "vocabDifficultyUpdated": "Vocab difficulty updated"
+    "vocabDifficultyUpdated": "Vocab difficulty updated",
+    "listCreated": "List created"
   },
   "emptyText": {
     "noLangsSelected": "No languages selected"

@@ -2,6 +2,8 @@
 //
 //
 
+teciui banko sasaktia atsiust
+
 Functions:
 
 --> When you open a new personal list, check the colelcted_lang_ids array. If the current frontTrLang_ID inside 'z_USE_myVocabDisplaySettings' is not one of those, then change it on list load/insertion.

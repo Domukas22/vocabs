@@ -365,7 +365,7 @@ export default function Contact_PAGE() {
                         SET_internalError("");
                       }}
                       value={value}
-                      error={!!error}
+                      HAS_error={!!error}
                       // props={{ keyboardType: "email-address" }}
                       IS_errorCorrected={
                         isSubmitted && !errors.email && !internal_ERROR
@@ -397,7 +397,7 @@ export default function Contact_PAGE() {
                         SET_internalError("");
                       }}
                       value={value}
-                      error={!!error}
+                      HAS_error={!!error}
                       IS_errorCorrected={
                         isSubmitted && !error && !internal_ERROR
                       }
@@ -432,7 +432,7 @@ export default function Contact_PAGE() {
                         SET_internalError("");
                       }}
                       value={value}
-                      error={!!error}
+                      HAS_error={!!error}
                       props={{ keyboardType: "email-address" }}
                       IS_errorCorrected={
                         isSubmitted && !error && !internal_ERROR

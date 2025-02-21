@@ -4,7 +4,6 @@
 
 import { MyColors } from "@/src/constants/MyColors";
 import React, { Ref } from "react";
-import { FieldError } from "react-hook-form";
 import { TextStyle } from "react-native";
 
 import {
@@ -17,7 +16,7 @@ import { ICON_toastNotification } from "@/src/components/1_grouped/icons/icons";
 
 type _TextInputProps = TextInputProps & {
   value: string;
-  error: FieldError | undefined;
+  HAS_error: boolean;
   isSubmitted: boolean;
   SET_value: (val: string) => void;
   isFocused: boolean;
@@ -34,7 +33,7 @@ export default function StyledText_INPUT({
   SET_value,
   placeholder,
   multiline = false,
-  error = undefined,
+  HAS_error = false,
   isSubmitted = false,
   style,
   _ref,
@@ -50,9 +49,9 @@ export default function StyledText_INPUT({
           s.textInput,
           multiline && { height: "auto" },
           multiline && !staySmall && { minHeight: 100 },
-          error && s.error,
+          HAS_error && s.error,
           isSubmitted &&
-            !error &&
+            !HAS_error &&
             isFocused && { ...s.IS_errorCorrected, paddingRight: 44 },
           style,
         ]}
@@ -68,7 +67,7 @@ export default function StyledText_INPUT({
         ref={_ref && _ref}
         {...props}
       />
-      {isSubmitted && !error && isFocused && (
+      {isSubmitted && !HAS_error && isFocused && (
         <View style={{ position: "absolute", right: 12 }}>
           <ICON_toastNotification type="success" />
         </View>

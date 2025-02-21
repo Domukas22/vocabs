@@ -20,11 +20,11 @@ export default function _layout() {
   return (
     <Auth_PROVIDER>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <PortalProvider>
-          <Toast_CONTEXT>
+        <Toast_CONTEXT>
+          <PortalProvider>
             <Content />
-          </Toast_CONTEXT>
-        </PortalProvider>
+          </PortalProvider>
+        </Toast_CONTEXT>
       </GestureHandlerRootView>
     </Auth_PROVIDER>
   );

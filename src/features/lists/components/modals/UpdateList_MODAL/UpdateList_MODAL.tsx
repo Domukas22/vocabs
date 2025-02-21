@@ -124,7 +124,7 @@ export function UpdateList_MODAL({
               RESET_error();
             }}
             value={value}
-            error={!!errors.name || !!updateList_ERROR}
+            HAS_error={!!errors.name || !!updateList_ERROR}
             props={{ keyboardType: "default" }}
             IS_errorCorrected={isSubmitted && !errors.name && !updateList_ERROR}
             _ref={inputREF}

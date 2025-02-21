@@ -33,7 +33,12 @@ export function Flashlist_HEADER({
   appliedFilter_COUNT = 0,
 }: Flashlist_HEADER_PROPS) {
   return (
-    <View style={styles.headerContainer}>
+    <View
+      style={{
+        paddingTop: 6,
+        paddingBottom: 16,
+      }}
+    >
       <View>
         <Styled_TEXT type="text_20_bold">{list_NAME}</Styled_TEXT>
         <Flashlist_LABEL
@@ -47,7 +52,7 @@ export function Flashlist_HEADER({
         />
       </View>
 
-      <Filter_BULLETS type={type} />
+      {appliedFilter_COUNT > 0 && <Filter_BULLETS type={type} />}
     </View>
   );
 }
@@ -55,12 +60,6 @@ export function Flashlist_HEADER({
 const styles = StyleSheet.create({
   headerContainer: {
     paddingBottom: 16,
-  },
-  filtersContainer: {
-    flexDirection: "row",
-    gap: 8,
-    flexWrap: "wrap",
-    paddingTop: 12,
   },
 });
 

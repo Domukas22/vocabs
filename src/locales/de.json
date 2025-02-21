@@ -305,7 +305,8 @@
     "vocabUnmarked": "Vokabel nicht gemerkt",
     "vocabDeletedForever": "Vokabel für immer gelöscht",
     "vocabSoftDeleted": "Vokabel gelöscht",
-    "vocabDifficultyUpdated": "Vokabelschwierigkeit aktualisiert"
+    "vocabDifficultyUpdated": "Vokabelschwierigkeit aktualisiert",
+    "listCreated": "Liste erstellt"
   },
   "emptyText": {
     "noLangsSelected": "Keine Sprachen ausgewählt"

@@ -5,20 +5,20 @@ import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled
 import StyledText_INPUT from "@/src/components/1_grouped/inputs/StyledText_INPUT/StyledText_INPUT";
 import Small_MODAL from "@/src/components/1_grouped/modals/Small_MODAL/Small_MODAL";
 import { useTranslation } from "react-i18next";
-import { USE_createList } from "../../../functions";
+
 import Error_TEXT from "@/src/components/1_grouped/texts/Error_TEXT/Error_TEXT";
 import { Controller, useForm } from "react-hook-form";
 import { TextInput } from "react-native";
 
 import List_MODEL from "@/src/db/models/List_MODEL";
 
-import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
+import { USE_createList } from "@/src/features_new/lists/hooks/actions/USE_createList/USE_createList";
+import { useToast } from "react-native-toast-notifications";
+import { TOAST_FN_TYPE } from "@/src/hooks/USE_toast/USE_toast";
 
 interface CreateListModal_PROPS {
   IS_open: boolean;
-  currentList_NAMES?: string[];
   CLOSE_modal: () => void;
-  onSuccess: (newList: List_MODEL) => void;
 }
 
 type NewList_PROPS = {
@@ -27,21 +27,15 @@ type NewList_PROPS = {
 
 export function CreateList_MODAL({
   IS_open,
-  currentList_NAMES,
   CLOSE_modal,
-  onSuccess,
 }: CreateListModal_PROPS) {
   const inputREF = useRef<TextInput>(null);
   const [isFocused, setIsFocused] = useState(false);
-  const { z_user } = z_USE_user();
 
   const { t } = useTranslation();
-  const {
-    CREATE_list,
-    IS_creatingList,
-    createList_ERROR,
-    RESET_createListError,
-  } = USE_createList();
+
+  const { CREATE_list, IS_creatingList, createList_ERROR, RESET_hookError } =
+    USE_createList();
 
   const {
     control,
@@ -55,36 +49,19 @@ export function CreateList_MODAL({
   });
 
   useEffect(() => {
-    if (IS_open) {
-      inputREF.current?.focus();
-    }
+    if (IS_open) inputREF.current?.focus();
   }, [IS_open]);
 
   const create = async (data: NewList_PROPS) => {
     const { name } = data;
-    const newList = await CREATE_list({
-      name,
-      description: "",
-      user_id: z_user?.id,
-      currentList_NAMES,
-      onSuccess: (new_LIST: List_MODEL) => {
-        onSuccess(new_LIST);
-      },
-      cleanup: () => {
-        setTimeout(() => {
-          // doesn't call for some reason without the timeout
-          HANLDE_toggle();
-        }, 0);
-      },
+    await CREATE_list(name, () => {
+      CLOSE_modal();
+      reset();
     });
-
-    if (!newList.success) {
-      console.error(newList.msg); // Log internal message for debugging.
-    }
   };
 
   const HANLDE_toggle = () => {
-    RESET_createListError();
+    RESET_hookError();
     CLOSE_modal();
     reset();
   };
@@ -117,24 +94,22 @@ export function CreateList_MODAL({
             value: true,
             message: t("error.provideAListName"),
           },
-          validate: {
-            uniqueName: (value) => {
-              // const IS_nameTaken = await IS_listNameTaken(z_user, value);
-              const IS_nameTaken = false;
-
-              return IS_nameTaken ? t("error.listNameTaken") : true;
-            },
-          },
         }}
         render={({
           field: { onChange, onBlur, value },
           fieldState: { error },
         }) => (
           <StyledText_INPUT
-            {...{ value, error, isSubmitted, isFocused, setIsFocused }}
+            {...{
+              value,
+              isSubmitted,
+              isFocused,
+              setIsFocused,
+            }}
+            HAS_error={!!error || !!createList_ERROR}
             SET_value={(val) => {
               onChange(val);
-              RESET_createListError();
+              RESET_hookError();
             }}
             value={value}
             props={{ keyboardType: "default" }} // Changed to "default" for list names
@@ -143,8 +118,19 @@ export function CreateList_MODAL({
         )}
         name="name"
       />
+      {/* Error message from the from hook*/}
       {errors.name && <Error_TEXT text={errors.name.message} />}
-      {createList_ERROR && <Error_TEXT text={createList_ERROR} />}
+
+      {/* Error message from the db*/}
+      {createList_ERROR && (
+        <Error_TEXT
+          text={
+            createList_ERROR?.falsyForm_INPUTS?.[0]?.message ||
+            createList_ERROR?.user_MSG ||
+            "Something went wrong"
+          }
+        />
+      )}
     </Small_MODAL>
   );
 }

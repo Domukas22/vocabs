@@ -179,7 +179,7 @@ export default function Login_PAGE() {
                     SET_internalError(""); // Clear internal error on change
                   }}
                   value={value}
-                  error={!!errors.email}
+                  HAS_error={!!errors.email}
                   props={{ keyboardType: "email-address" }}
                   IS_errorCorrected={
                     isSubmitted && !errors.email && !internal_ERROR
@@ -214,7 +214,7 @@ export default function Login_PAGE() {
                     SET_internalError(""); // Clear internal error on change
                   }}
                   value={value}
-                  error={!!errors.password}
+                  HAS_error={!!errors.password}
                   IS_errorCorrected={
                     isSubmitted && !errors.password && !internal_ERROR
                   }

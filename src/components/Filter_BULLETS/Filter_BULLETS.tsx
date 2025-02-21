@@ -31,7 +31,9 @@ const Filter_BULLETS = memo(({ type }: { type?: flashlistHeader_TYPE }) => {
   if (!type) return null;
 
   return (
-    <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 4 }}>
+    <View
+      style={{ flexDirection: "row", flexWrap: "wrap", gap: 8, marginTop: 12 }}
+    >
       {renderFilter}
     </View>
   );

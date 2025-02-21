@@ -146,7 +146,7 @@ export function RenameList_MODAL({
           <StyledText_INPUT
             {...{
               _ref,
-              error,
+              HAS_error: error,
               value,
               isFocused,
               setIsFocused,

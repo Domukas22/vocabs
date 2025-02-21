@@ -14,7 +14,6 @@ import {
 import {
   CreateList_MODAL,
   ListDisplaySettings_MODAL,
-  ListsFlatlist_HEADER,
 } from "@/src/features/lists/components";
 import MyLists_FLASHLIST from "@/src/features_new/lists/components/flashlists/MyLists_FLASHLIST/MyLists_FLASHLIST";
 import { t } from "i18next";
@@ -58,6 +57,7 @@ export default function MyLists_PAGE() {
         OPEN_createListModal={() => modals.createList.set(true)}
         SHOW_listName={showTitle}
       />
+
       <MyLists_FLASHLIST
         IS_debouncing={IS_debouncing}
         handleScroll={handleScroll}
@@ -93,13 +93,11 @@ export default function MyLists_PAGE() {
       <Portal>
         <CreateList_MODAL
           IS_open={modals.createList.IS_open}
-          currentList_NAMES={[]}
           CLOSE_modal={() => {
             modals.createList.toggle();
             Keyboard.dismiss();
           }}
         />
-
         <ListDisplaySettings_MODAL
           open={modals.displaySettings.IS_open}
           TOGGLE_open={() => modals.displaySettings.toggle()}

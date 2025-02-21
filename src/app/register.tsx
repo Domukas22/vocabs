@@ -107,7 +107,7 @@ export default function Register_PAGE() {
                 fieldState: { error },
               }) => (
                 <StyledText_INPUT
-                  {...{ value, error, isSubmitted, onBlur }}
+                  {...{ value, HAS_error: error, isSubmitted, onBlur }}
                   SET_value={(val) => {
                     onChange(val);
                     SET_internalError("");
@@ -141,7 +141,7 @@ export default function Register_PAGE() {
                 fieldState: { error },
               }) => (
                 <StyledText_INPUT
-                  {...{ value, error, isSubmitted, onBlur }}
+                  {...{ value, HAS_error: error, isSubmitted, onBlur }}
                   SET_value={(val) => {
                     onChange(val);
                     SET_internalError("");
