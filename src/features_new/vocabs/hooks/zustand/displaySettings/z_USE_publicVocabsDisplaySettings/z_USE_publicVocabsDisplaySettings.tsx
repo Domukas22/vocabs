@@ -17,19 +17,20 @@ export type z_publicVocabsDisplaySettings_PROPS = {
   sorting: publicVocabsSorting_TYPE;
   sortDirection: sortDirection_TYPE;
 
-  difficultyFilters: (1 | 2 | 3)[];
   langFilters: string[];
 };
 
-interface z_USE_publicVocabDisplaySettings_PROPS {
+interface z_USE_publicVocabsDisplaySettings_PROPS {
   z_publicVocabDisplay_SETTINGS: z_publicVocabsDisplaySettings_PROPS;
   z_SET_publicVocabDisplaySettings: (
     new_SETTINGS: Partial<z_publicVocabsDisplaySettings_PROPS>
   ) => void;
+  z_REMOVE_langFilter: (toRemoveLang_ID: string) => void;
+  z_GET_activeFilterCount: () => void;
 }
 
-export const z_USE_publicVocabDisplaySettings =
-  create<z_USE_publicVocabDisplaySettings_PROPS>((set) => ({
+export const z_USE_publicVocabsDisplaySettings =
+  create<z_USE_publicVocabsDisplaySettings_PROPS>((set, get) => ({
     z_publicVocabDisplay_SETTINGS: {
       frontTrLang_ID: "en",
 
@@ -40,7 +41,6 @@ export const z_USE_publicVocabDisplaySettings =
       sorting: "date",
       sortDirection: "descending",
 
-      difficultyFilters: [],
       langFilters: [],
     },
 
@@ -52,4 +52,16 @@ export const z_USE_publicVocabDisplaySettings =
         },
       }));
     },
+    z_REMOVE_langFilter: (toRemoveLang_ID) =>
+      set((state) => ({
+        z_publicVocabDisplay_SETTINGS: {
+          ...state.z_publicVocabDisplay_SETTINGS,
+          langFilters: state.z_publicVocabDisplay_SETTINGS.langFilters.filter(
+            (lang_id) => lang_id !== toRemoveLang_ID
+          ),
+        },
+      })),
+
+    z_GET_activeFilterCount: () =>
+      get().z_publicVocabDisplay_SETTINGS?.langFilters?.length,
   }));

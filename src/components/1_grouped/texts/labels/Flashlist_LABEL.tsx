@@ -2,10 +2,13 @@
 //
 //
 
-import React from "react";
+import React, { useMemo } from "react";
 import { ActivityIndicator } from "react-native";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
-import { loadingState_TYPES } from "@/src/types/general_TYPES";
+import {
+  flashlistHeader_TYPE,
+  loadingState_TYPES,
+} from "@/src/types/general_TYPES";
 
 interface FlashlistLabel_PROPS {
   IS_debouncing: boolean;
@@ -13,9 +16,8 @@ interface FlashlistLabel_PROPS {
   search: string;
   appliedFiltersCount?: number;
   totalResult_COUNT: number;
-  target: "lists" | "vocabs";
   loading_STATE: loadingState_TYPES;
-  HAS_error: boolean;
+  type: flashlistHeader_TYPE;
 }
 
 export default function Flashlist_LABEL({
@@ -23,14 +25,16 @@ export default function Flashlist_LABEL({
   search = "",
   appliedFiltersCount = 0,
   totalResult_COUNT = 0,
-  target = "vocabs",
   loading_STATE = "none",
   IS_debouncing = false,
-  HAS_error = false,
+  type,
 }: FlashlistLabel_PROPS) {
-  const GET_label = () => {
-    if (HAS_error) return "Something went wrong...";
+  const target = useMemo(
+    () => (type === "my-lists" || type === "public-lists" ? "lists" : "vocabs"),
+    [type]
+  );
 
+  const GET_label = () => {
     if (IS_debouncing) {
       if (search && appliedFiltersCount) {
         return (

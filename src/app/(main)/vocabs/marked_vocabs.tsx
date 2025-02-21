@@ -20,6 +20,8 @@ import USE_controlMyVocabsFetch from "@/src/features_new/vocabs/hooks/fetchContr
 import { t } from "i18next";
 import { VocabFlatlist_FOOTER } from "@/src/features_new/vocabs/components/flashlists/components/VocabFlatlist_FOOTER/VocabFlatlist_FOOTER";
 import { MySavedVocabs_NAV } from "@/src/features_new/vocabs/components/navs";
+import { Flashlist_HEADER } from "@/src/components/Flashlist_HEADER/Flashlist_HEADER";
+import { z_USE_myVocabsDisplaySettings } from "@/src/features_new/vocabs/hooks/zustand/displaySettings/z_USE_myVocabsDisplaySettings/z_USE_myVocabsDisplaySettings";
 
 export default function SavedVocabs_PAGE() {
   const { modals } = USE_modalToggles([
@@ -38,6 +40,8 @@ export default function SavedVocabs_PAGE() {
     z_myVocabs_ERROR,
     z_HAVE_myVocabsReachedEnd,
   } = z_USE_myVocabs();
+
+  const { z_myVocabDisplay_SETTINGS } = z_USE_myVocabsDisplaySettings();
 
   // Refetches on filter changes
   const { LOAD_more } = USE_controlMyVocabsFetch({
@@ -59,14 +63,18 @@ export default function SavedVocabs_PAGE() {
         IS_debouncing={IS_debouncing}
         handleScroll={handleScroll}
         Header={
-          <VocabFlashlist_HEADER
+          <Flashlist_HEADER
             IS_debouncing={IS_debouncing}
             debouncedSearch={debouncedSearch}
             search={search}
             loading_STATE={z_myVocabsLoading_STATE}
             list_NAME={t("listName.savedVocabs")}
             unpaginated_COUNT={z_myVocabsUnpaginated_COUNT}
-            HAS_error={!!z_myVocabs_ERROR}
+            appliedFilter_COUNT={
+              (z_myVocabDisplay_SETTINGS?.langFilters?.length || 0) +
+              (z_myVocabDisplay_SETTINGS?.difficultyFilters?.length || 0)
+            }
+            type="my-vocabs"
           />
         }
         Footer={

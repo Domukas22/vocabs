@@ -15,6 +15,8 @@ import PublicVocabs_FLASHLIST from "@/src/features_new/vocabs/components/flashli
 import { VocabFlatlist_FOOTER } from "@/src/features_new/vocabs/components/flashlists/components/VocabFlatlist_FOOTER/VocabFlatlist_FOOTER";
 import { Portal } from "@gorhom/portal";
 import { PublicOneList_NAV } from "@/src/features_new/lists/components/navs";
+import { Flashlist_HEADER } from "@/src/components/Flashlist_HEADER/Flashlist_HEADER";
+import { z_USE_publicVocabsDisplaySettings } from "@/src/features_new/vocabs/hooks/zustand/displaySettings/z_USE_publicVocabsDisplaySettings/z_USE_publicVocabsDisplaySettings";
 
 export default function PublicListVocabs_PAGE() {
   const { urlParamsList_ID } = USE_listIdInParams();
@@ -39,6 +41,8 @@ export default function PublicListVocabs_PAGE() {
     targetList_ID: urlParamsList_ID,
   });
 
+  const { z_publicVocabDisplay_SETTINGS } = z_USE_publicVocabsDisplaySettings();
+
   return (
     <>
       <PublicOneList_NAV
@@ -52,14 +56,17 @@ export default function PublicListVocabs_PAGE() {
         IS_debouncing={IS_debouncing}
         handleScroll={handleScroll}
         Header={
-          <VocabFlashlist_HEADER
+          <Flashlist_HEADER
             IS_debouncing={IS_debouncing}
             debouncedSearch={debouncedSearch}
             search={search}
             loading_STATE={z_publicVocabsLoading_STATE}
             list_NAME={list_NAME}
             unpaginated_COUNT={z_publicVocabsUnpaginated_COUNT}
-            HAS_error={!!z_publicVocabs_ERROR}
+            appliedFilter_COUNT={
+              z_publicVocabDisplay_SETTINGS?.langFilters?.length || 0
+            }
+            type="public-vocabs"
           />
         }
         Footer={

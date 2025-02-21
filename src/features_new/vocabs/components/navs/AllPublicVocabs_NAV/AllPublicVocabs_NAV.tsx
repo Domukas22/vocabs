@@ -8,14 +8,12 @@ import {
   NavBack_BTN,
   NavSearch_BTN,
   NavDisplaySettings_BTN,
-  NavCreate_BTN,
   NavOpenSearch_BTNS,
 } from "@/src/components/FlashlistPage_NAV/parts";
 import { t } from "i18next";
 import { useState, useRef } from "react";
 import { TextInput } from "react-native";
-import { z_USE_myVocabsDisplaySettings } from "../../../hooks/zustand/displaySettings/z_USE_myVocabsDisplaySettings/z_USE_myVocabsDisplaySettings";
-import { z_USE_publicVocabDisplaySettings } from "../../../hooks/zustand/displaySettings/z_USE_publicVocabsDisplaySettings/z_USE_publicVocabsDisplaySettings";
+import { z_USE_publicVocabsDisplaySettings } from "../../../hooks/zustand/displaySettings/z_USE_publicVocabsDisplaySettings/z_USE_publicVocabsDisplaySettings";
 
 export function AllPublicVocabs_NAV({
   SHOW_listName = false,
@@ -30,7 +28,7 @@ export function AllPublicVocabs_NAV({
 }) {
   const [IS_searchOpen, SET_searchOpen] = useState(false);
   const search_REF = useRef<TextInput>(null);
-  const { z_publicVocabDisplay_SETTINGS } = z_USE_publicVocabDisplaySettings();
+  const { z_publicVocabDisplay_SETTINGS } = z_USE_publicVocabsDisplaySettings();
   const { langFilters } = z_publicVocabDisplay_SETTINGS;
 
   return (

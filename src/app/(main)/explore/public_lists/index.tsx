@@ -16,6 +16,8 @@ import PublicLists_FLASHLIST from "@/src/features_new/lists/components/flashlist
 import { ListFlatlist_FOOTER } from "@/src/features_new/lists/components/flashlists/components/ListFlatlist_FOOTER/ListFlatlist_FOOTER";
 import { z_USE_publicLists } from "@/src/features_new/lists/hooks/zustand/z_USE_publicLists/z_USE_myLists";
 import { PublicLists_NAV } from "@/src/features_new/lists/components/navs/PublicLists_NAV/PublicLists_NAV";
+import { Flashlist_HEADER } from "@/src/components/Flashlist_HEADER/Flashlist_HEADER";
+import { z_USE_publicListsDisplaySettings } from "@/src/features_new/lists/hooks/zustand/displaySettings/z_USE_publicListsDisplaySettings/z_USE_publicListsDisplaySettings";
 
 export default function PublicLists_PAGE() {
   const { modals } = USE_modalToggles(["displaySettings"]);
@@ -37,6 +39,8 @@ export default function PublicLists_PAGE() {
     targetList_ID: "",
   });
 
+  const { z_publicListDisplay_SETTINGS } = z_USE_publicListsDisplaySettings();
+
   return (
     <>
       <PublicLists_NAV
@@ -49,14 +53,17 @@ export default function PublicLists_PAGE() {
         IS_debouncing={IS_debouncing}
         handleScroll={handleScroll}
         Header={
-          <ListsFlatlist_HEADER
+          <Flashlist_HEADER
             IS_debouncing={IS_debouncing}
             debouncedSearch={debouncedSearch}
             search={search}
             loading_STATE={z_publicListsLoading_STATE}
             list_NAME={t("header.publicLists")}
             unpaginated_COUNT={z_publicListsUnpaginated_COUNT}
-            HAS_error={!!z_publicLists_ERROR}
+            appliedFilter_COUNT={
+              z_publicListDisplay_SETTINGS?.langFilters?.length || 0
+            }
+            type="public-lists"
           />
         }
         Footer={

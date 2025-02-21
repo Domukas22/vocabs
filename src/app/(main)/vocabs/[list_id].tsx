@@ -25,6 +25,8 @@ import {
   MyLists_NAV,
   MyOneList_NAV,
 } from "@/src/features_new/lists/components/navs";
+import { Flashlist_HEADER } from "@/src/components/Flashlist_HEADER/Flashlist_HEADER";
+import { z_USE_myVocabsDisplaySettings } from "@/src/features_new/vocabs/hooks/zustand/displaySettings/z_USE_myVocabsDisplaySettings/z_USE_myVocabsDisplaySettings";
 
 export default function SingleList_PAGE() {
   const { urlParamsList_ID } = USE_listIdInParams();
@@ -54,6 +56,8 @@ export default function SingleList_PAGE() {
     targetList_ID: urlParamsList_ID,
   });
 
+  const { z_myVocabDisplay_SETTINGS } = z_USE_myVocabsDisplaySettings();
+
   return (
     <>
       <MyOneList_NAV
@@ -70,14 +74,18 @@ export default function SingleList_PAGE() {
         IS_debouncing={IS_debouncing}
         handleScroll={handleScroll}
         Header={
-          <VocabFlashlist_HEADER
+          <Flashlist_HEADER
             IS_debouncing={IS_debouncing}
             debouncedSearch={debouncedSearch}
             search={search}
             loading_STATE={z_myVocabsLoading_STATE}
             list_NAME={list_NAME}
             unpaginated_COUNT={z_myVocabsUnpaginated_COUNT}
-            HAS_error={!!z_myVocabs_ERROR}
+            appliedFilter_COUNT={
+              (z_myVocabDisplay_SETTINGS?.langFilters?.length || 0) +
+              (z_myVocabDisplay_SETTINGS?.difficultyFilters?.length || 0)
+            }
+            type="my-vocabs"
           />
         }
         Footer={

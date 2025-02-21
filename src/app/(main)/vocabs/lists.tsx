@@ -24,6 +24,8 @@ import { z_USE_myLists } from "@/src/features_new/lists/hooks/zustand/z_USE_myLi
 import { ListFlatlist_FOOTER } from "@/src/features_new/lists/components/flashlists/components/ListFlatlist_FOOTER/ListFlatlist_FOOTER";
 
 import { MyLists_NAV } from "@/src/features_new/lists/components/navs";
+import { Flashlist_HEADER } from "@/src/components/Flashlist_HEADER/Flashlist_HEADER";
+import { z_USE_myListsDisplaySettings } from "@/src/features_new/lists/hooks/zustand/displaySettings/z_USE_myListsDisplaySettings/z_USE_myListsDisplaySettings";
 
 export default function MyLists_PAGE() {
   const { modals } = USE_modalToggles(["createList", "displaySettings"]);
@@ -37,6 +39,8 @@ export default function MyLists_PAGE() {
     z_myLists_ERROR,
     z_HAVE_myListsReachedEnd,
   } = z_USE_myLists();
+
+  const { z_myListDisplay_SETTINGS } = z_USE_myListsDisplaySettings();
 
   // Refetches on filter changes
   const { LOAD_more } = USE_controlMyListsFetch({
@@ -58,14 +62,17 @@ export default function MyLists_PAGE() {
         IS_debouncing={IS_debouncing}
         handleScroll={handleScroll}
         Header={
-          <ListsFlatlist_HEADER
+          <Flashlist_HEADER
             IS_debouncing={IS_debouncing}
             debouncedSearch={debouncedSearch}
             search={search}
             loading_STATE={z_myListsLoading_STATE}
             list_NAME={t("header.myLists")}
             unpaginated_COUNT={z_myListsUnpaginated_COUNT}
-            HAS_error={!!z_myLists_ERROR}
+            appliedFilter_COUNT={
+              z_myListDisplay_SETTINGS?.langFilters?.length || 0
+            }
+            type="my-lists"
           />
         }
         Footer={

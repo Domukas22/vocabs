@@ -18,6 +18,8 @@ import { t } from "i18next";
 import { VocabFlatlist_FOOTER } from "@/src/features_new/vocabs/components/flashlists/components/VocabFlatlist_FOOTER/VocabFlatlist_FOOTER";
 import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import { AllPublicVocabs_NAV } from "@/src/features_new/vocabs/components/navs/AllPublicVocabs_NAV/AllPublicVocabs_NAV";
+import { Flashlist_HEADER } from "@/src/components/Flashlist_HEADER/Flashlist_HEADER";
+import { z_USE_publicVocabsDisplaySettings } from "@/src/features_new/vocabs/hooks/zustand/displaySettings/z_USE_publicVocabsDisplaySettings/z_USE_publicVocabsDisplaySettings";
 
 export default function AllPublicVocabs_PAGE() {
   const { modals } = USE_modalToggles(["saveVocab", "displaySettings"]);
@@ -40,6 +42,8 @@ export default function AllPublicVocabs_PAGE() {
     targetList_ID: "",
   });
 
+  const { z_publicVocabDisplay_SETTINGS } = z_USE_publicVocabsDisplaySettings();
+
   return (
     <>
       <AllPublicVocabs_NAV
@@ -54,14 +58,17 @@ export default function AllPublicVocabs_PAGE() {
         IS_debouncing={IS_debouncing}
         handleScroll={handleScroll}
         Header={
-          <VocabFlashlist_HEADER
+          <Flashlist_HEADER
             IS_debouncing={IS_debouncing}
             debouncedSearch={debouncedSearch}
             search={search}
             loading_STATE={z_publicVocabsLoading_STATE}
             list_NAME={t("listName.allPublicVocabs")}
             unpaginated_COUNT={z_publicVocabsUnpaginated_COUNT}
-            HAS_error={!!z_publicVocabs_ERROR}
+            appliedFilter_COUNT={
+              z_publicVocabDisplay_SETTINGS?.langFilters?.length || 0
+            }
+            type="public-vocabs"
           />
         }
         Footer={
