@@ -500,12 +500,14 @@ export function ICON_download({
   color = "black",
   big = false,
   ...props
-}: { color?: "black" | "gray"; big?: boolean } & ViewProps) {
+}: { color?: "black" | "gray" | "primary"; big?: boolean } & ViewProps) {
   const fillColor =
     color === "gray"
-      ? MyColors.icon_gray
+      ? MyColors.icon_gray_light
       : color === "black"
       ? "black"
+      : color === "primary"
+      ? MyColors.icon_primary
       : "black";
 
   return (

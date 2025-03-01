@@ -10,7 +10,7 @@ import { useCallback, useEffect } from "react";
 
 import { USE_fetchPublicLists } from "./USE_fetchPublicLists/USE_fetchPublicLists";
 import { listFetch_TYPES } from "../../../functions/fetch/FETCH_lists/types";
-import { z_USE_publicLists } from "../../zustand/z_USE_publicLists/z_USE_myLists";
+import { z_USE_publicLists } from "../../zustand/z_USE_publicLists/z_USE_publicLists";
 import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 import { z_USE_publicListsDisplaySettings } from "../../zustand/displaySettings/z_USE_publicListsDisplaySettings/z_USE_publicListsDisplaySettings";
 
@@ -32,12 +32,14 @@ export default function USE_controlPublicListsFetch({
     z_INSERT_publicListsError,
     z_INSERT_fetchedLists,
     z_PREPARE_publicListsForFetch,
+    z_INSERT_collectedLangIds,
   } = z_USE_publicLists();
 
   const { FETCH_publicLists } = USE_fetchPublicLists({
     z_INSERT_publicListsError,
     z_INSERT_fetchedLists,
     z_PREPARE_publicListsForFetch,
+    z_INSERT_collectedLangIds,
   });
 
   const FETCH = useCallback(
@@ -51,6 +53,7 @@ export default function USE_controlPublicListsFetch({
         targetList_ID,
         langFilters,
         sortDirection,
+        sorting,
       });
     },
     [

@@ -19,6 +19,8 @@ export function VALIDATE_fetchListsArgs(args: FETCH_lists_ARGS) {
     amount,
     excludeIds,
     sorting,
+    SHOULD_filterByMarked,
+    difficulty_FILTERS,
   } = args;
 
   const err = (message: string) => {
@@ -31,6 +33,10 @@ export function VALIDATE_fetchListsArgs(args: FETCH_lists_ARGS) {
   if (!user_id) throw err("'user_id' was undefined");
   if (!list_TYPE) throw err("'list_TYPE' was undefined");
   if (!langFilters) throw err("'langFilters' was undefined");
+
+  if (typeof SHOULD_filterByMarked !== "boolean")
+    throw err("'SHOULD_filterByMarked' was not a boolean");
+  if (!difficulty_FILTERS) throw err("'difficulty_FILTERS' was undefined");
 
   if (!fetch_TYPE) throw err("'fetch_TYPE' was undefined");
   if (fetch_TYPE === "byTargetList" && !list_id)

@@ -99,7 +99,8 @@
     "filterVocabsByDifficulty1": "Hat \"schwierige\" Vokabeln",
     "filterVocabsByDifficulty2": "Hat \"mittlere\" Vokabeln",
     "filterVocabsByDifficulty3": "Hat \"einfache\" Vokabeln",
-    "filterVocabsByMarked": "Hat \"gemerkte\" Vokabeln"
+    "filterVocabsByMarked": "Hat \"gemerkte\" Vokabeln",
+    "sortBySavedCount": "Nach gespeichert Anzahl"
   },
   "pages": {
     "about": {

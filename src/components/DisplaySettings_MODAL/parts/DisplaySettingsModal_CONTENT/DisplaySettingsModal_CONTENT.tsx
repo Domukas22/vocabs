@@ -4,7 +4,10 @@
 
 import { The4Fetch_TYPES } from "@/src/types/general_TYPES";
 import { DisplaySettingsView_TYPES } from "../../type";
-import { MyListsDisplaySettings_CONTENT } from "./variations";
+import {
+  MyListsDisplaySettings_CONTENT,
+  PublicListsDisplaySettings_CONTENT,
+} from "./variations";
 
 export function DisplaySettingsModal_CONTENT({
   current_TAB,
@@ -16,6 +19,8 @@ export function DisplaySettingsModal_CONTENT({
   switch (type) {
     case "my-lists":
       return <MyListsDisplaySettings_CONTENT current_TAB={current_TAB} />;
+    case "public-lists":
+      return <PublicListsDisplaySettings_CONTENT current_TAB={current_TAB} />;
     default:
       return null;
   }

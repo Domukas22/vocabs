@@ -5,7 +5,8 @@
 import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
 
 export interface COLLECT_allMyListsLangIds_ARGS {
-  user_id: string;
+  type: "private" | "public";
+  user_id?: string;
   signal: AbortSignal;
 }
 
@@ -16,7 +17,7 @@ export type COLLECT_allMyListsLangIds_RAW_RESPONSE_TYPE =
   | null;
 
 export type COLLECT_allMyListsLangIds_RESPONSE_TYPE = {
-  allMyListsCollectedLang_IDs: string[];
+  collectedLang_IDs: string[];
 };
 
 export type CollectAllMyListLangIdsQuery_TYPE = PostgrestFilterBuilder<

@@ -15,12 +15,20 @@ import { VOCAB_PAGINATION } from "@/src/constants/globalVars";
 import DETERMINE_loadingState from "@/src/utils/DETERMINE_loadingState/DETERMINE_loadingState";
 import { SEND_internalError } from "@/src/utils";
 import { FETCH_lists } from "../../../../functions/fetch/FETCH_lists/FETCH_lists";
-import { listFetch_TYPES } from "../../../../functions/fetch/FETCH_lists/types";
+import {
+  listFetch_TYPES,
+  listSorting_TYPES,
+} from "../../../../functions/fetch/FETCH_lists/types";
 import {
   z_INSERT_publicListsError_TYPE,
   z_PREPARE_publicListsForFetch_TYPE,
-} from "../../../zustand/z_USE_publicLists/z_USE_myLists";
-import { z_INSERT_fetchedLists_TYPE } from "../../../zustand/z_USE_myLists/z_USE_myLists";
+} from "../../../zustand/z_USE_publicLists/z_USE_publicLists";
+import {
+  z_INSERT_collectedLangIds_TYPE,
+  z_INSERT_fetchedLists_TYPE,
+} from "../../../zustand/z_USE_myLists/z_USE_myLists";
+import { publicListsSorting_TYPE } from "../../../zustand/displaySettings/z_USE_publicListsDisplaySettings/z_USE_publicListsDisplaySettings";
+import { COLLECT_allListsLangIds } from "@/src/features_new/lists/functions/fetch/COLLECT_allListsLangIds/COLLECT_allListsLangIds";
 
 interface USE_fetchPublicLists_PROPS {
   search: string;
@@ -31,6 +39,7 @@ interface USE_fetchPublicLists_PROPS {
   langFilters: string[];
   sortDirection: "descending" | "ascending";
   targetList_ID?: string | undefined;
+  sorting: listSorting_TYPES;
 }
 
 const function_NAME = "USE_fetchPublicLists";
@@ -39,10 +48,12 @@ export function USE_fetchPublicLists({
   z_INSERT_publicListsError,
   z_INSERT_fetchedLists,
   z_PREPARE_publicListsForFetch,
+  z_INSERT_collectedLangIds,
 }: {
   z_INSERT_publicListsError: z_INSERT_publicListsError_TYPE;
   z_INSERT_fetchedLists: z_INSERT_fetchedLists_TYPE;
   z_PREPARE_publicListsForFetch: z_PREPARE_publicListsForFetch_TYPE;
+  z_INSERT_collectedLangIds: z_INSERT_collectedLangIds_TYPE;
 }) {
   const { START_newRequest } = USE_abortController();
 
@@ -57,6 +68,7 @@ export function USE_fetchPublicLists({
         langFilters = [],
         sortDirection = "descending",
         targetList_ID = "",
+        sorting = "date",
       } = args;
 
       // Create new fetch request, so that we could cancel it in case
@@ -66,13 +78,27 @@ export function USE_fetchPublicLists({
       const loading_STATE: loadingState_TYPES = DETERMINE_loadingState({
         search,
         loadMore,
-        difficultyFilters: [], // no filtering by difficulty for lists
+        difficultyFilters: [],
         langFilters,
       });
 
       z_PREPARE_publicListsForFetch({ loadMore, loading_STATE, fetch_TYPE });
 
       try {
+        // -------------------------------------------------
+        // First, fetch the collected lang ids
+        const { collectedLang_IDs } = await COLLECT_allListsLangIds({
+          type: "public",
+          signal: newController.signal,
+        });
+
+        if (!collectedLang_IDs)
+          throw new General_ERROR({
+            function_NAME,
+            message:
+              "'COLLECT_allMyListsLangIds' returned an undefined 'collectedLang_IDs' array, although it didn't throw an error",
+          });
+
         const { lists, unpaginated_COUNT } = await FETCH_lists({
           search,
           signal: newController.signal,
@@ -84,6 +110,9 @@ export function USE_fetchPublicLists({
           list_id: targetList_ID,
           langFilters,
           sortDirection,
+          difficulty_FILTERS: [],
+          SHOULD_filterByMarked: false,
+          sorting,
         });
 
         if (!lists)
@@ -104,6 +133,7 @@ export function USE_fetchPublicLists({
         // Also, don't throw any errors, because the only reason this will abort is if a new fetch request has started.
         if (newController.signal.aborted) return;
 
+        z_INSERT_collectedLangIds({ lang_IDs: collectedLang_IDs });
         z_INSERT_fetchedLists({ lists, unpaginated_COUNT, loadMore });
 
         // --------------------------------------------------

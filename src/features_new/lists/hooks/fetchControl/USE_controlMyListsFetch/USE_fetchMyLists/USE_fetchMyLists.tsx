@@ -25,7 +25,7 @@ import DETERMINE_loadingState from "@/src/utils/DETERMINE_loadingState/DETERMINE
 import { SEND_internalError } from "@/src/utils";
 import { FETCH_lists } from "../../../../functions/fetch/FETCH_lists/FETCH_lists";
 import { listFetch_TYPES } from "../../../../functions/fetch/FETCH_lists/types";
-import { COLLECT_allMyListsLangIds } from "@/src/features_new/lists/functions/fetch/COLLECT_allMyListsLangIds/COLLECT_allMyListsLangIds";
+import { COLLECT_allListsLangIds } from "@/src/features_new/lists/functions/fetch/COLLECT_allListsLangIds/COLLECT_allListsLangIds";
 import { myListsSorting_TYPE } from "../../../zustand/displaySettings/z_USE_myListsDisplaySettings/z_USE_myListsDisplaySettings";
 
 interface USE_fetchMyLists_PROPS {
@@ -80,7 +80,10 @@ export function USE_fetchMyLists({
       const loading_STATE: loadingState_TYPES = DETERMINE_loadingState({
         search,
         loadMore,
-        difficultyFilters: [],
+        difficultyFilters:
+          typeof SHOULD_filterByMarked === "boolean"
+            ? [...difficulty_FILTERS, 0] // adjust alter. we just want o make sure the marked vocab filter counts as a filter
+            : [...difficulty_FILTERS],
         langFilters,
       });
 
@@ -89,15 +92,17 @@ export function USE_fetchMyLists({
       try {
         // -------------------------------------------------
         // First, fetch the collected lang ids
-        const { allMyListsCollectedLang_IDs } = await COLLECT_allMyListsLangIds(
-          { user_id, signal: newController.signal }
-        );
+        const { collectedLang_IDs } = await COLLECT_allListsLangIds({
+          user_id,
+          signal: newController.signal,
+          type: "private",
+        });
 
-        if (!allMyListsCollectedLang_IDs)
+        if (!collectedLang_IDs)
           throw new General_ERROR({
             function_NAME,
             message:
-              "'COLLECT_allMyListsLangIds' returned an undefined 'allMyListsCollectedLang_IDs' array, although it didn't throw an error",
+              "'COLLECT_allMyListsLangIds' returned an undefined 'collectedLang_IDs' array, although it didn't throw an error",
           });
 
         // -------------------------------------------------
@@ -138,7 +143,7 @@ export function USE_fetchMyLists({
         if (newController.signal.aborted) return;
 
         // -------------------------------------------------
-        z_INSERT_collectedLangIds({ lang_IDs: allMyListsCollectedLang_IDs });
+        z_INSERT_collectedLangIds({ lang_IDs: collectedLang_IDs });
         z_INSERT_fetchedLists({ lists, unpaginated_COUNT, loadMore });
 
         // --------------------------------------------------
