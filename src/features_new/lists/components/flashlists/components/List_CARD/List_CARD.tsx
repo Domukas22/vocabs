@@ -34,7 +34,8 @@ export const List_CARD = React.memo(function List_CARD({
     diff_2 = 0,
     diff_3 = 0,
     marked = 0,
-  } = list.vocab_INFOS || {};
+    total = 0,
+  } = list.vocab_infos || {};
 
   return (
     <Big_BTN {...{ onPress, highlighted }}>
@@ -46,18 +47,16 @@ export const List_CARD = React.memo(function List_CARD({
         }}
       >
         <Styled_TEXT type="list_title">{list?.name}</Styled_TEXT>
-        {list?.description &&
-          list.vocab_count > 0 &&
-          list_TYPE === "public" && (
-            <Styled_TEXT type="label_small">{list?.description}</Styled_TEXT>
-          )}
+        {list?.description && total > 0 && list_TYPE === "public" && (
+          <Styled_TEXT type="label_small">{list?.description}</Styled_TEXT>
+        )}
 
-        {!list.vocab_count && (
+        {!total && (
           <Styled_TEXT type="label_small">{t("label.emptyList")}</Styled_TEXT>
         )}
       </View>
 
-      {list.vocab_count > 0 && (
+      {total > 0 && (
         <View
           style={{
             flexDirection: "row",
@@ -72,7 +71,7 @@ export const List_CARD = React.memo(function List_CARD({
             <ListBtnDifficulty_COUNTS {...{ diff_1, diff_2, diff_3, marked }} />
           ) : (
             <Styled_TEXT type="label_small" style={{ marginRight: "auto" }}>
-              {`${list.vocab_count} vocabs`}
+              {`${total} vocabs`}
             </Styled_TEXT>
           )}
 
@@ -90,8 +89,8 @@ export const List_CARD = React.memo(function List_CARD({
 
 function GET_totalVocabListCount(list: List_TYPE) {
   return (
-    (list.vocab_INFOS?.diff_1 || 0) +
-    (list.vocab_INFOS?.diff_2 || 0) +
-    (list.vocab_INFOS?.diff_3 || 0)
+    (list.vocab_infos?.diff_1 || 0) +
+    (list.vocab_infos?.diff_2 || 0) +
+    (list.vocab_infos?.diff_3 || 0)
   );
 }

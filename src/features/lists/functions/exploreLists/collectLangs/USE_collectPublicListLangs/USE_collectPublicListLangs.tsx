@@ -31,7 +31,7 @@ export function USE_collectPublicListLangs() {
         const uniqueLangIds = Array.from(
           new Set(
             data.flatMap((list) =>
-              list.collected_lang_ids ? list.collected_lang_ids.split(",") : []
+              list.collected_lang_ids ? list.collected_lang_ids : []
             )
           )
         );

@@ -2,7 +2,9 @@
 //
 //
 
-teciui banko sasaktia atsiust
+1. Create display settings for mylists / publicLists / myVocabs / publicVocabs
+2. Create vocab modal + function
+3. Update vocab modal + function
 
 Functions:
 
@@ -29,5 +31,6 @@ Functions:
 
 --> Fix general page
 
+--> Text input cuts off emoji top -> fix it
 // ------------------------------------
 --> Offer vocabs for a completed survey

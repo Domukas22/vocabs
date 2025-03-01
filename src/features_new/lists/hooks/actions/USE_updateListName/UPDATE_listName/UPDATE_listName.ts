@@ -4,7 +4,6 @@
 
 import { supabase } from "@/src/lib/supabase";
 import { General_ERROR } from "@/src/types/error_TYPES";
-import { FORMAT_rawLists } from "../../../../functions/fetch/FETCH_lists/helpers";
 import { List_TYPE } from "@/src/features_new/lists/types";
 
 export const function_NAME = "UPDATE_listName";
@@ -32,12 +31,11 @@ export async function UPDATE_listName(
 
   try {
     const { data: list, error } = await supabase
-      .from("lists")
+      .from("lists_extended")
       .update({ name: new_NAME, updated_at: new Date().toISOString() })
       .eq("id", list_id)
       .eq("user_id", user_id)
-      .is("vocabs.deleted_at", null)
-      .select(`*, vocabs(difficulty, is_marked), vocab_count: vocabs(count)`)
+      .select(`*`)
       .single();
 
     if (error)
@@ -47,9 +45,7 @@ export async function UPDATE_listName(
         errorToSpread: error,
       });
 
-    const { formated_LISTS } = FORMAT_rawLists([list]);
-
-    return { updated_LIST: formated_LISTS?.[0] };
+    return { updated_LIST: list };
   } catch (error: any) {
     throw new General_ERROR({
       function_NAME,

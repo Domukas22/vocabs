@@ -2,7 +2,7 @@
 //
 //
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Portal } from "@gorhom/portal";
 
 import {
@@ -25,6 +25,7 @@ import { ListFlatlist_FOOTER } from "@/src/features_new/lists/components/flashli
 import { MyLists_NAV } from "@/src/features_new/lists/components/navs";
 import { Flashlist_HEADER } from "@/src/components/Flashlist_HEADER/Flashlist_HEADER";
 import { z_USE_myListsDisplaySettings } from "@/src/features_new/lists/hooks/zustand/displaySettings/z_USE_myListsDisplaySettings/z_USE_myListsDisplaySettings";
+import { DisplaySettings_MODAL } from "@/src/components/DisplaySettings_MODAL/DisplaySettings_MODAL";
 
 export default function MyLists_PAGE() {
   const { modals } = USE_modalToggles(["createList", "displaySettings"]);
@@ -98,9 +99,11 @@ export default function MyLists_PAGE() {
             Keyboard.dismiss();
           }}
         />
-        <ListDisplaySettings_MODAL
+        <DisplaySettings_MODAL
           open={modals.displaySettings.IS_open}
           TOGGLE_open={() => modals.displaySettings.toggle()}
+          starting_TAB="filter"
+          type="my-lists"
         />
       </Portal>
     </>

@@ -10,9 +10,9 @@ import {
   PublicVocabsFilter_BULLETS,
 } from "./variations";
 import { memo, useMemo } from "react";
-import { flashlistHeader_TYPE } from "@/src/types/general_TYPES";
+import { The4Fetch_TYPES } from "@/src/types/general_TYPES";
 
-const Filter_BULLETS = memo(({ type }: { type?: flashlistHeader_TYPE }) => {
+const Filter_BULLETS = memo(({ type }: { type?: The4Fetch_TYPES }) => {
   const renderFilter = useMemo(() => {
     switch (type) {
       case "my-lists":

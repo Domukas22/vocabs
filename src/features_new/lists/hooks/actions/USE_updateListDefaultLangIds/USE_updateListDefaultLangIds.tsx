@@ -24,7 +24,6 @@ export function USE_updateListDefaultLangIds() {
   const _UPDATE_listDefaultLangIds = useCallback(
     async (
       list_ID: string,
-      new_NAME: string,
       newLang_IDs: string[],
       sideEffects: {
         onSuccess?: () => void;
@@ -36,7 +35,7 @@ export function USE_updateListDefaultLangIds() {
       try {
         // --------------------------------------------------
         // Check if item is already in action
-        if (IS_inAction("list", list_ID)) return;
+        if (IS_inAction("list", list_ID, "updating_default_lang_ids")) return;
 
         // --------------------------------------------------
         // Insert action
@@ -73,7 +72,7 @@ export function USE_updateListDefaultLangIds() {
         onFailure(err);
         SEND_internalError(err);
       } finally {
-        REMOVE_currentAction(list_ID);
+        REMOVE_currentAction(list_ID, "updating_default_lang_ids");
       }
     },
     []

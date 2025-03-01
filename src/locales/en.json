@@ -91,7 +91,10 @@
     "goToListOfVocab": "View the list",
     "restoreVocab": "Restore vocab",
     "saveVocab": "Save vocab",
-    "deleteVocabHard": "Delete forever"
+    "deleteVocabHard": "Delete forever",
+    "sortByVocabCount": "By vocab count",
+    "fewToMany": "Few --> Many",
+    "manyToFew": "Many --> Few"
   },
   "pages": {
     "about": {

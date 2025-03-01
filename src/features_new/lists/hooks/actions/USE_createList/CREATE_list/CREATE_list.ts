@@ -42,8 +42,6 @@ export async function CREATE_list(
         errorToSpread: listwithSameName_ERROR,
       });
 
-    console.log("count: ", count);
-
     // Is there altelast one list with this name?
     if (count)
       throw new FormInput_ERROR({

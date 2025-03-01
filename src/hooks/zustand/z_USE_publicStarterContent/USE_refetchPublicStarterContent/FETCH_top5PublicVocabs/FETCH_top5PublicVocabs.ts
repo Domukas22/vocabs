@@ -5,7 +5,6 @@
 import { General_ERROR } from "@/src/types/error_TYPES";
 import { supabase } from "@/src/lib/supabase";
 import { Vocab_TYPE } from "@/src/features_new/vocabs/types";
-import { FORMAT_rawVocabs } from "@/src/features_new/vocabs/functions/FETCH_vocabs/functions";
 
 export const function_NAME = "FETCH_top5PublicVocabs";
 
@@ -28,9 +27,7 @@ export async function FETCH_top5PublicVocabs(): Promise<{
         errorToSpread: error,
       });
 
-    const { formated_VOCABS } = FORMAT_rawVocabs(vocabs);
-
-    return { top5_VOCABS: formated_VOCABS };
+    return { top5_VOCABS: vocabs };
   } catch (error: any) {
     throw new General_ERROR({
       function_NAME: error?.function_NAME || function_NAME,

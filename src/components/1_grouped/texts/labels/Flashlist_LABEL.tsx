@@ -5,10 +5,7 @@
 import React, { useMemo } from "react";
 import { ActivityIndicator } from "react-native";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
-import {
-  flashlistHeader_TYPE,
-  loadingState_TYPES,
-} from "@/src/types/general_TYPES";
+import { The4Fetch_TYPES, loadingState_TYPES } from "@/src/types/general_TYPES";
 
 interface FlashlistLabel_PROPS {
   IS_debouncing: boolean;
@@ -17,7 +14,7 @@ interface FlashlistLabel_PROPS {
   appliedFiltersCount?: number;
   totalResult_COUNT: number;
   loading_STATE: loadingState_TYPES;
-  type: flashlistHeader_TYPE;
+  type: The4Fetch_TYPES;
 }
 
 export default function Flashlist_LABEL({

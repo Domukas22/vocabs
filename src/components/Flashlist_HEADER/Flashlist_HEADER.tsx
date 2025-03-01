@@ -5,14 +5,11 @@
 import { View, StyleSheet } from "react-native";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import Flashlist_LABEL from "@/src/components/1_grouped/texts/labels/Flashlist_LABEL";
-import {
-  flashlistHeader_TYPE,
-  loadingState_TYPES,
-} from "@/src/types/general_TYPES";
+import { The4Fetch_TYPES, loadingState_TYPES } from "@/src/types/general_TYPES";
 import Filter_BULLETS from "@/src/components/Filter_BULLETS/Filter_BULLETS";
 
 type Flashlist_HEADER_PROPS = {
-  type: flashlistHeader_TYPE;
+  type: The4Fetch_TYPES;
   search: string;
   list_NAME: string | undefined;
   loading_STATE: loadingState_TYPES;

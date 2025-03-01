@@ -39,7 +39,7 @@ export default function ChosenLangs_BLOCK({
   useEffect(() => {
     (async () => {
       const langs = await FETCH_langs({
-        lang_ids: default_lang_ids ? default_lang_ids.split(",") : [],
+        lang_ids: default_lang_ids ? default_lang_ids : [],
       });
       SET_selectedLangs(langs);
     })();

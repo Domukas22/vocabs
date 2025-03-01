@@ -16,7 +16,7 @@ export type loadingState_TYPES =
 export type Toast_TYPE = "success" | "error" | "warning";
 
 export type sortDirection_TYPE = "ascending" | "descending";
-export type flashlistHeader_TYPE =
+export type The4Fetch_TYPES =
   | "my-lists"
   | "my-vocabs"
   | "public-lists"

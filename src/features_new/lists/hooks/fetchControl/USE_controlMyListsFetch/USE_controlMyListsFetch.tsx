@@ -32,12 +32,14 @@ export default function USE_controlMyListsFetch({
     z_INSERT_myListsError,
     z_INSERT_fetchedLists,
     z_PREPARE_myListsForFetch,
+    z_INSERT_collectedLangIds,
   } = z_USE_myLists();
 
   const { FETCH_myLists } = USE_fetchMyLists({
     z_INSERT_myListsError,
     z_INSERT_fetchedLists,
     z_PREPARE_myListsForFetch,
+    z_INSERT_collectedLangIds,
   });
 
   const FETCH = useCallback(
@@ -51,6 +53,7 @@ export default function USE_controlMyListsFetch({
         targetList_ID,
         langFilters,
         sortDirection,
+        sorting,
       });
     },
     [

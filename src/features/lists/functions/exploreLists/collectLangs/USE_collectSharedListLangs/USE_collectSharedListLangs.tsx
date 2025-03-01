@@ -63,7 +63,7 @@ export function USE_collectSharedListLangs(user_id: string | undefined) {
         const uniqueLangIds = Array.from(
           new Set(
             data.flatMap((list) =>
-              list.collected_lang_ids ? list.collected_lang_ids.split(",") : []
+              list.collected_lang_ids ? list.collected_lang_ids : []
             )
           )
         );

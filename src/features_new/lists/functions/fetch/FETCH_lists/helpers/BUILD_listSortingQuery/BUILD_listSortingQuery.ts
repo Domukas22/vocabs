@@ -19,5 +19,11 @@ export function BUILD_listSortingQuery(
 
   const SHOULD_ascend = args?.sortDirection === "ascending";
 
-  return query.order("created_at", { ascending: SHOULD_ascend });
+  if (args?.sorting === "date") {
+    return query.order("created_at", { ascending: SHOULD_ascend });
+  }
+
+  if (args?.sorting === "vocab-count") {
+    return query.order("vocab_infos.total", { ascending: SHOULD_ascend });
+  }
 }

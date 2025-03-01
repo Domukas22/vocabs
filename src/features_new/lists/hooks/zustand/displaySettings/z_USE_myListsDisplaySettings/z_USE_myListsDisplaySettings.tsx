@@ -11,6 +11,7 @@ export type z_myListsDisplaySettings_PROPS = {
   sorting: myListsSorting_TYPE;
   sortDirection: sortDirection_TYPE;
   langFilters: string[];
+  allCollectedLang_IDs: string[];
 };
 
 interface z_USE_myListsDisplaySettings_PROPS {
@@ -19,8 +20,11 @@ interface z_USE_myListsDisplaySettings_PROPS {
     new_SETTINGS: Partial<z_myListsDisplaySettings_PROPS>
   ) => void;
 
-  z_REMOVE_langFilter: (toRemoveLang_ID: string) => void;
+  z_HANDLE_langFilter: (targetLang_ID: string) => void;
   z_GET_activeFilterCount: () => void;
+  z_SET_sorting: (sorting_TYPE: myListsSorting_TYPE) => void;
+  z_SET_sortDirection: (sortDirection_TYPE: sortDirection_TYPE) => void;
+  z_SET_allCollectedLangIds: (lang_IDs: string[]) => void;
 }
 
 export const z_USE_myListsDisplaySettings =
@@ -28,6 +32,7 @@ export const z_USE_myListsDisplaySettings =
     z_myListDisplay_SETTINGS: {
       sorting: "date",
       sortDirection: "descending",
+      allCollectedLang_IDs: [],
       langFilters: [],
     },
 
@@ -39,15 +44,44 @@ export const z_USE_myListsDisplaySettings =
         },
       }));
     },
-    z_REMOVE_langFilter: (toRemoveLang_ID) =>
+
+    z_HANDLE_langFilter: (targetLang_ID) =>
       set((state) => ({
         z_myListDisplay_SETTINGS: {
           ...state.z_myListDisplay_SETTINGS,
-          langFilters: state.z_myListDisplay_SETTINGS.langFilters.filter(
-            (lang_id) => lang_id !== toRemoveLang_ID
-          ),
+          langFilters: state.z_myListDisplay_SETTINGS.langFilters?.some(
+            (lang) => lang === targetLang_ID
+          )
+            ? state.z_myListDisplay_SETTINGS.langFilters.filter(
+                (lang_id) => lang_id !== targetLang_ID
+              )
+            : [...state.z_myListDisplay_SETTINGS.langFilters, targetLang_ID],
         },
       })),
+
     z_GET_activeFilterCount: () =>
       get().z_myListDisplay_SETTINGS?.langFilters?.length,
+
+    z_SET_sorting: (sorting_TYPE) =>
+      set((state) => ({
+        z_myListDisplay_SETTINGS: {
+          ...state.z_myListDisplay_SETTINGS,
+          sorting: sorting_TYPE,
+        },
+      })),
+
+    z_SET_sortDirection: (sortDirection_TYPE) =>
+      set((state) => ({
+        z_myListDisplay_SETTINGS: {
+          ...state.z_myListDisplay_SETTINGS,
+          sortDirection: sortDirection_TYPE,
+        },
+      })),
+    z_SET_allCollectedLangIds: (lang_IDs) =>
+      set((state) => ({
+        z_myListDisplay_SETTINGS: {
+          ...state.z_myListDisplay_SETTINGS,
+          allCollectedLang_IDs: lang_IDs,
+        },
+      })),
   }));

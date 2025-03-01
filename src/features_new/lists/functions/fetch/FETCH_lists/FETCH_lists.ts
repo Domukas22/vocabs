@@ -5,13 +5,12 @@
 import { FETCH_lists_ARGS, FETCH_lists_RESPONSE_TYPE } from "./types";
 
 import {
-  BUILD_supabaseQuery,
   FETCH_finalLists,
   FETCH_unpaginatedListCount,
-  FORMAT_rawLists,
   VALIDATE_fetchListsArgs,
 } from "./helpers";
 import { General_ERROR } from "@/src/types/error_TYPES";
+import { supabase } from "@/src/lib/supabase";
 
 export const function_NAME = "FETCH_lists";
 
@@ -23,7 +22,7 @@ export async function FETCH_lists(
     VALIDATE_fetchListsArgs(args);
 
     // Build the supabase query
-    let query = BUILD_supabaseQuery(args?.list_TYPE);
+    let query = supabase.from("lists_extended").select(`*`, { count: "exact" });
 
     // ---------------------------------------------------
     // Fetch the count BEFORE applying excluded
@@ -34,12 +33,8 @@ export async function FETCH_lists(
     const { lists } = await FETCH_finalLists(query, args);
 
     // ---------------------------------------------------
-    // Transform results into more digestable format
-    const { formated_LISTS } = FORMAT_rawLists(lists);
-
-    // ---------------------------------------------------
     // Return valid data if fetch was successful
-    return { lists: formated_LISTS, unpaginated_COUNT };
+    return { lists, unpaginated_COUNT };
     // ---------------------------------------------------
   } catch (error: any) {
     throw new General_ERROR({

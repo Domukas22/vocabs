@@ -8,14 +8,14 @@ import { BUILD_listFilterQuery } from "../BUILD_listFilterQuery/BUILD_listFilter
 import { BUILD_listPaginationQuery } from "../BUILD_listPaginationQuery/BUILD_listPaginationQuery";
 import { BUILD_listSortingQuery } from "../BUILD_listSortingQuery/BUILD_listSortingQuery";
 import { General_ERROR } from "@/src/types/error_TYPES";
-import { raw_List_TYPE } from "@/src/features_new/lists/types";
+import { List_TYPE } from "@/src/features_new/lists/types";
 
 const function_NAME = "FETCH_finalLists";
 
 export async function FETCH_finalLists(
   query: ListQuery_TYPE,
   args: FETCH_lists_ARGS
-): Promise<{ lists: raw_List_TYPE[] }> {
+): Promise<{ lists: List_TYPE[] }> {
   if (!query)
     throw new General_ERROR({
       message: "'query' was undefined",

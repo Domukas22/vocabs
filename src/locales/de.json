@@ -92,7 +92,10 @@
     "restoreVocab": "Wiederherstellen",
     "deletePermanently": "Endgültig löschen",
     "saveVocab": "Vokabel speichern",
-    "deleteVocabHard": "Endgültig löschen"
+    "deleteVocabHard": "Endgültig löschen",
+    "sortByVocabCount": "Nach Vokabel Anzahl",
+    "fewToMany": "Wenig --> Viel",
+    "manyToFew": "Viel --> Wenig"
   },
   "pages": {
     "about": {

@@ -2,7 +2,6 @@
 //
 //
 
-import { FORMAT_rawVocabs } from "@/src/features_new/vocabs/functions/FETCH_vocabs/functions";
 import { raw_Vocab_TYPE, Vocab_TYPE } from "@/src/features_new/vocabs/types";
 import { supabase } from "@/src/lib/supabase";
 import { General_ERROR } from "@/src/types/error_TYPES";
@@ -46,9 +45,7 @@ export async function MARK_vocab(
         errorToSpread: error,
       });
 
-    const { formated_VOCABS } = FORMAT_rawVocabs([vocab]);
-
-    return { updated_VOCAB: formated_VOCABS[0] };
+    return { updated_VOCAB: vocab };
   } catch (error: any) {
     throw new General_ERROR({
       function_NAME,

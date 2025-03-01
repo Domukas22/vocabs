@@ -5,7 +5,6 @@
 import { supabase } from "@/src/lib/supabase";
 import { General_ERROR } from "@/src/types/error_TYPES";
 import { List_TYPE } from "../../../types";
-import { FORMAT_rawLists } from "../FETCH_lists/helpers";
 import { itemVisibility_TYPE } from "@/src/types/general_TYPES";
 
 export const function_NAME = "FETCH_oneList";
@@ -36,21 +35,15 @@ export async function FETCH_oneList(
   try {
     const { data: list, error } = await (list_TYPE === "private"
       ? supabase
-          .from("lists")
-          .select(
-            `*, vocabs(difficulty, is_marked), vocab_count: vocabs(count)`
-          )
-          .is("vocabs.deleted_at", null)
+          .from("lists_extended")
+          .select(`*`)
           .eq("id", list_id)
           .eq("user_id", user_id)
           .eq("type", "private")
           .single()
       : supabase
-          .from("lists")
-          .select(
-            `*, vocabs(difficulty, is_marked), vocab_count: vocabs(count)`
-          )
-          .is("vocabs.deleted_at", null)
+          .from("lists_extended")
+          .select(`*`)
           .eq("id", list_id)
           .eq("type", "public")
           .single());
@@ -62,9 +55,7 @@ export async function FETCH_oneList(
         errorToSpread: error,
       });
 
-    const { formated_LISTS } = FORMAT_rawLists([list]);
-
-    return { list: formated_LISTS?.[0] };
+    return { list };
   } catch (error: any) {
     throw new General_ERROR({
       function_NAME,

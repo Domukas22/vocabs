@@ -33,7 +33,7 @@ import { USE_sync } from "@/src/hooks/USE_sync/USE_sync";
 import { Error_PROPS } from "@/src/types/error_TYPES";
 import Error_TEXT from "@/src/components/1_grouped/texts/Error_TEXT/Error_TEXT";
 import { USE_highlightBoolean } from "@/src/hooks/USE_highlightBoolean/USE_highlightBoolean";
-import { SelectUsers_MODAL } from "@/src/features/users/components";
+
 import { FETCH_listParticipants } from "@/src/features/users/functions";
 import { fetchListParticipants_ERRS } from "@/src/features/users/functions/fetch/FETCH_listParticipants/FETCH_listParticipants";
 import {
@@ -244,19 +244,6 @@ export function ListSettings_MODAL({
       <HowDoesSharingListWork_MODAL
         open={modals.listSharingInfo.IS_open}
         TOGGLE_modal={() => modals.listSharingInfo.set(false)}
-      />
-
-      <SelectUsers_MODAL
-        open={modals.selectListParticipants.IS_open}
-        TOGGLE_open={() => modals.selectListParticipants.set(false)}
-        list_id={z_myOneList?.id}
-        onUpdate={() => {
-          (async () =>
-            await FETCH_participants({
-              list_id: z_myOneList?.id,
-              owner_id: z_user?.id,
-            }))();
-        }}
       />
 
       <Confirmation_MODAL

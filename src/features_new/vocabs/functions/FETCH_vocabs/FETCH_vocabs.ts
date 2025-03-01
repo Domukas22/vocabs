@@ -12,7 +12,6 @@ import {
 import {
   FETCH_finalVocabs,
   FETCH_unpaginatedVocabCount,
-  FORMAT_rawVocabs,
   VALIDATE_fetchVocabArgs,
 } from "./functions";
 import { General_ERROR } from "@/src/types/error_TYPES";
@@ -46,12 +45,8 @@ export async function FETCH_vocabs(
     const { vocabs } = await FETCH_finalVocabs(query, args);
 
     // ---------------------------------------------------
-    // Transform results into more digestable format
-    const { formated_VOCABS } = FORMAT_rawVocabs(vocabs);
-
-    // ---------------------------------------------------
     // Return valid data if fetch was successful
-    return { vocabs: formated_VOCABS, unpaginated_COUNT };
+    return { vocabs, unpaginated_COUNT };
     // ---------------------------------------------------
   } catch (error: any) {
     throw new General_ERROR({

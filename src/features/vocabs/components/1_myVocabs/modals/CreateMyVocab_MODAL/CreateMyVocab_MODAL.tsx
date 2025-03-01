@@ -124,7 +124,7 @@ export function CreateMyVocab_MODAL({
     watch,
   } = useForm<CreateMyVocabData_PROPS>({
     defaultValues: {
-      translations: GET_defaultTranslations("en,de") || [],
+      translations: GET_defaultTranslations(["en", "de"]) || [],
       description: "",
       list: initial_LIST,
       difficulty: 3,

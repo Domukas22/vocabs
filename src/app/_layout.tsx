@@ -15,6 +15,7 @@ import { USE_navigateUser } from "../features/users/functions/general/hooks/USE_
 import Toast_CONTEXT from "../context/Toast_CONTEXT";
 import Page_WRAP from "../components/1_grouped/Page_WRAP/Page_WRAP";
 import { z_USE_user } from "../features_new/user/hooks/z_USE_user/z_USE_user";
+import USE_populateLangs from "../features_new/languages/hooks/USE_populateLangs/USE_populateLangs";
 
 export default function _layout() {
   return (
@@ -34,12 +35,14 @@ function Content() {
   const [fontsLoaded] = useFonts(loadFonts());
   const { navigate } = USE_navigateUser();
   const { z_user } = z_USE_user();
+  const { POPULATE_langs } = USE_populateLangs();
 
   // --------------------------------------------
   // Initial navigation
   useEffect(() => {
     const initializeApp = async () => {
       if (fontsLoaded) {
+        await POPULATE_langs();
         await navigate();
       }
     };

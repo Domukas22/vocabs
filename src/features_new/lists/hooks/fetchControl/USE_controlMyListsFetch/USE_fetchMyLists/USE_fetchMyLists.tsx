@@ -7,12 +7,16 @@
 //
 
 import { USE_abortController } from "@/src/hooks";
-import { loadingState_TYPES } from "@/src/types/general_TYPES";
+import {
+  loadingState_TYPES,
+  sortDirection_TYPE,
+} from "@/src/types/general_TYPES";
 import { useCallback } from "react";
 import { General_ERROR } from "@/src/types/error_TYPES";
 import { VOCAB_PAGINATION } from "@/src/constants/globalVars";
 
 import {
+  z_INSERT_collectedLangIds_TYPE,
   z_INSERT_fetchedLists_TYPE,
   z_INSERT_myListsError_TYPE,
   z_PREPARE_myListsForFetch_TYPE,
@@ -21,6 +25,8 @@ import DETERMINE_loadingState from "@/src/utils/DETERMINE_loadingState/DETERMINE
 import { SEND_internalError } from "@/src/utils";
 import { FETCH_lists } from "../../../../functions/fetch/FETCH_lists/FETCH_lists";
 import { listFetch_TYPES } from "../../../../functions/fetch/FETCH_lists/types";
+import { COLLECT_allMyListsLangIds } from "@/src/features_new/lists/functions/fetch/COLLECT_allMyListsLangIds/COLLECT_allMyListsLangIds";
+import { myListsSorting_TYPE } from "../../../zustand/displaySettings/z_USE_myListsDisplaySettings/z_USE_myListsDisplaySettings";
 
 interface USE_fetchMyLists_PROPS {
   search: string;
@@ -29,7 +35,8 @@ interface USE_fetchMyLists_PROPS {
   excludeIds: Set<string>;
   fetch_TYPE: listFetch_TYPES;
   langFilters: string[];
-  sortDirection: "descending" | "ascending";
+  sorting: myListsSorting_TYPE;
+  sortDirection: sortDirection_TYPE;
   targetList_ID?: string | undefined;
 }
 
@@ -39,10 +46,12 @@ export function USE_fetchMyLists({
   z_INSERT_myListsError,
   z_INSERT_fetchedLists,
   z_PREPARE_myListsForFetch,
+  z_INSERT_collectedLangIds,
 }: {
   z_INSERT_myListsError: z_INSERT_myListsError_TYPE;
   z_INSERT_fetchedLists: z_INSERT_fetchedLists_TYPE;
   z_PREPARE_myListsForFetch: z_PREPARE_myListsForFetch_TYPE;
+  z_INSERT_collectedLangIds: z_INSERT_collectedLangIds_TYPE;
 }) {
   const { START_newRequest } = USE_abortController();
 
@@ -57,6 +66,7 @@ export function USE_fetchMyLists({
         langFilters = [],
         sortDirection = "descending",
         targetList_ID = "",
+        sorting = "date",
       } = args;
 
       // Create new fetch request, so that we could cancel it in case
@@ -73,6 +83,21 @@ export function USE_fetchMyLists({
       z_PREPARE_myListsForFetch({ loadMore, loading_STATE, fetch_TYPE });
 
       try {
+        // -------------------------------------------------
+        // First, fetch the collected lang ids
+        const { allMyListsCollectedLang_IDs } = await COLLECT_allMyListsLangIds(
+          { user_id, signal: newController.signal }
+        );
+
+        if (!allMyListsCollectedLang_IDs)
+          throw new General_ERROR({
+            function_NAME,
+            message:
+              "'COLLECT_allMyListsLangIds' returned an undefined 'allMyListsCollectedLang_IDs' array, although it didn't throw an error",
+          });
+
+        // -------------------------------------------------
+        // Then fetch the lists themselves
         const { lists, unpaginated_COUNT } = await FETCH_lists({
           search,
           signal: newController.signal,
@@ -84,6 +109,7 @@ export function USE_fetchMyLists({
           list_id: targetList_ID,
           langFilters,
           sortDirection,
+          sorting,
         });
 
         if (!lists)
@@ -100,10 +126,13 @@ export function USE_fetchMyLists({
               "'FETCH_lists' returned an 'unpaginated_COUNT' that wasn't a number, although it didn't throw an error",
           });
 
+        // -------------------------------------------------
         // Do not update the reducer state if signal has been aborted (if fetch has been canceled).
         // Also, don't throw any errors, because the only reason this will abort is if a new fetch request has started.
         if (newController.signal.aborted) return;
 
+        // -------------------------------------------------
+        z_INSERT_collectedLangIds({ lang_IDs: allMyListsCollectedLang_IDs });
         z_INSERT_fetchedLists({ lists, unpaginated_COUNT, loadMore });
 
         // --------------------------------------------------

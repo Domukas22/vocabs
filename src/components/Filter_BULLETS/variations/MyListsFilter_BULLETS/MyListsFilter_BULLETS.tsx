@@ -6,7 +6,7 @@ import { z_USE_myListsDisplaySettings } from "@/src/features_new/lists/hooks/zus
 import { BulletLangFilter_BTN } from "../../parts";
 
 export function MyListsFilter_BULLETS() {
-  const { z_myListDisplay_SETTINGS, z_REMOVE_langFilter } =
+  const { z_myListDisplay_SETTINGS, z_HANDLE_langFilter } =
     z_USE_myListsDisplaySettings();
 
   const { langFilters = [] } = z_myListDisplay_SETTINGS;
@@ -16,7 +16,7 @@ export function MyListsFilter_BULLETS() {
       {langFilters.map((lang_id) => (
         <BulletLangFilter_BTN
           lang_id={lang_id}
-          REMOVE_lang={() => z_REMOVE_langFilter(lang_id)}
+          REMOVE_lang={() => z_HANDLE_langFilter(lang_id)}
           key={lang_id + "langFilter"}
         />
       ))}

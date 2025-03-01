@@ -28,6 +28,11 @@ export type z_INSERT_fetchedLists_TYPE = ({
   unpaginated_COUNT: number;
   loadMore: boolean;
 }) => void;
+export type z_INSERT_collectedLangIds_TYPE = ({
+  lang_IDs,
+}: {
+  lang_IDs: string[];
+}) => void;
 
 export type z_INSERT_myListsError_TYPE = (error: General_ERROR) => void;
 
@@ -35,6 +40,7 @@ export type z_INSERT_myListsError_TYPE = (error: General_ERROR) => void;
 
 type z_USE_myLists_PROPS = {
   z_myLists: List_TYPE[];
+  z_myListsCollectedLangIds: string[];
 
   z_myListsPrinted_IDS: Set<string>;
   z_myListsUnpaginated_COUNT: number;
@@ -58,11 +64,13 @@ type z_USE_myLists_PROPS = {
 
   z_PREPARE_myListsForFetch: z_PREPARE_myListsForFetch_TYPE;
   z_INSERT_fetchedLists: z_INSERT_fetchedLists_TYPE;
+  z_INSERT_collectedLangIds: z_INSERT_collectedLangIds_TYPE;
   z_INSERT_myListsError: z_INSERT_myListsError_TYPE;
 };
 
 export const z_USE_myLists = create<z_USE_myLists_PROPS>((set, get) => ({
   z_myLists: [],
+  z_myListsCollectedLangIds: [],
 
   z_myListsPrinted_IDS: new Set<string>(),
   z_HAVE_myListsReachedEnd: false,
@@ -156,6 +164,8 @@ export const z_USE_myLists = create<z_USE_myLists_PROPS>((set, get) => ({
       });
     }
   },
+  z_INSERT_collectedLangIds: ({ lang_IDs }) =>
+    set({ z_myListsCollectedLangIds: lang_IDs }),
   z_INSERT_myListsError: (error) =>
     set({
       z_myLists: [],

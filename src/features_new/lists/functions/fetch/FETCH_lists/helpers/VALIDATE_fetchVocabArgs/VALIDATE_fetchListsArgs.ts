@@ -16,9 +16,9 @@ export function VALIDATE_fetchListsArgs(args: FETCH_lists_ARGS) {
     list_id,
     langFilters,
     sortDirection,
-
     amount,
     excludeIds,
+    sorting,
   } = args;
 
   const err = (message: string) => {
@@ -36,6 +36,7 @@ export function VALIDATE_fetchListsArgs(args: FETCH_lists_ARGS) {
   if (fetch_TYPE === "byTargetList" && !list_id)
     throw err("'list_id' undefined");
 
+  if (!sorting) throw err("'sorting' was undefined");
   if (!sortDirection) throw err("'sortDirection' was undefined");
   if (sortDirection !== "ascending" && sortDirection !== "descending")
     err("'sortDirection' was neither ascending nor descending");

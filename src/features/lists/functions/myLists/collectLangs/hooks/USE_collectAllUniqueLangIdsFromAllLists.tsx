@@ -26,7 +26,7 @@ export default function USE_collectAllUniqueLangIdsFromAllLists(
       next: (updatedLists) => {
         // Collect all `collected_lang_ids` from the lists
         const allLangIds = updatedLists.flatMap((list) =>
-          list.collected_lang_ids ? list.collected_lang_ids.split(",") : []
+          list.collected_lang_ids ? list.collected_lang_ids : []
         );
 
         // Get unique language IDs
