@@ -24,6 +24,8 @@ export function BUILD_listSortingQuery(
   }
 
   if (args?.sorting === "vocab-count") {
-    return query.order("vocab_infos.total", { ascending: SHOULD_ascend });
+    return query.order("vocab_infos->>total", { ascending: !SHOULD_ascend });
   }
+
+  return query;
 }

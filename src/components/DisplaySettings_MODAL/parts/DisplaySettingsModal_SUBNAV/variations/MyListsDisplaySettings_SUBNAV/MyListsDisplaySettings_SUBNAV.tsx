@@ -20,8 +20,8 @@ export function MyListsDisplaySettings_SUBNAV({
     React.SetStateAction<DisplaySettingsView_TYPES>
   >;
 }) {
-  const { z_myListDisplay_SETTINGS } = z_USE_myListsDisplaySettings();
-  const activeFilter_COUNT = z_myListDisplay_SETTINGS?.langFilters?.length;
+  const { z_GET_activeFilterCount } = z_USE_myListsDisplaySettings();
+  const activeFilter_COUNT = z_GET_activeFilterCount() || 0;
 
   return (
     <DisplaySettings_SUBNAV>

@@ -95,7 +95,11 @@
     "deleteVocabHard": "Endgültig löschen",
     "sortByVocabCount": "Nach Vokabel Anzahl",
     "fewToMany": "Wenig --> Viel",
-    "manyToFew": "Viel --> Wenig"
+    "manyToFew": "Viel --> Wenig",
+    "filterVocabsByDifficulty1": "Hat \"schwierige\" Vokabeln",
+    "filterVocabsByDifficulty2": "Hat \"mittlere\" Vokabeln",
+    "filterVocabsByDifficulty3": "Hat \"einfache\" Vokabeln",
+    "filterVocabsByMarked": "Hat \"gemerkte\" Vokabeln"
   },
   "pages": {
     "about": {
@@ -205,7 +209,8 @@
     "recentLists": "Zuletzt verwendete Listen",
     "loadingPopularVocabs": "Beliebte Vokabeln werden geladen...",
     "mostPopularVocabs": "Die beliebtesten Vokabeln",
-    "loadingPopularLists": "Beliebte Listen werden geladen..."
+    "loadingPopularLists": "Beliebte Listen werden geladen...",
+    "otherFilters": "Andere Filter"
   },
   "modal": {
     "displaySettings": {
@@ -331,5 +336,8 @@
     "savedVocabs": "⭐ Gemerkte Vokabeln",
     "deletedVocabs": "🗑️ Gelöschte Vokabeln",
     "allPublicVocabs": "🔤 Alle öffentliche Vokabeln"
+  },
+  "filterBullet": {
+    "hasMarked": "Gemerkt"
   }
 }

@@ -15,6 +15,8 @@ import { COLLECT_allMyListsLangIds } from "@/src/features_new/lists/functions/fe
 import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 import { USE_abortController } from "@/src/hooks";
 import { z_USE_myLists } from "@/src/features_new/lists/hooks/zustand/z_USE_myLists/z_USE_myLists";
+import { supabase } from "@/src/lib/supabase";
+import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 
 export default function Index_PAGE() {
   const { z_IS_myStarterContentRefetching } = z_USE_myStarterContent();
@@ -23,6 +25,19 @@ export default function Index_PAGE() {
   useEffect(() => {
     REFETCH_myStarterContent(true);
   }, []);
+
+  //////////////////////////////////////////////////
+  // const { z_user } = z_USE_user();
+  // const fetch = async () => {
+  //   const { data } = await supabase
+  //     .from("lists_extended")
+  //     .select("name, vocab_infos")
+  //     .eq("user_id", z_user?.id || "")
+  //     .ilike("name", "%vocabs%")
+  //     .order("vocab_infos->>total", { ascending: false });
+
+  //   console.log(data);
+  // };
 
   return (
     <>
@@ -35,6 +50,7 @@ export default function Index_PAGE() {
           ) : null
         }
       />
+      {/* <Btn text="Fetch" onPress={fetch} /> */}
       <ScrollView style={{ backgroundColor: MyColors.fill_bg }}>
         <MyRecentLists_FLATLIST />
         <VocabPageBigMain_BTNS />

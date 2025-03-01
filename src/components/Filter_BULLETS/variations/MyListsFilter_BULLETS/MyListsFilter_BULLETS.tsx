@@ -3,13 +3,25 @@
 //
 
 import { z_USE_myListsDisplaySettings } from "@/src/features_new/lists/hooks/zustand/displaySettings/z_USE_myListsDisplaySettings/z_USE_myListsDisplaySettings";
-import { BulletLangFilter_BTN } from "../../parts";
+import {
+  BulletDifficultyFilter_BTN,
+  BulletLangFilter_BTN,
+  BulletMarkedFilter_BTN,
+} from "../../parts";
 
 export function MyListsFilter_BULLETS() {
-  const { z_myListDisplay_SETTINGS, z_HANDLE_langFilter } =
-    z_USE_myListsDisplaySettings();
+  const {
+    z_myListDisplay_SETTINGS,
+    z_HANDLE_langFilter,
+    z_HANDLE_difficultyFilter,
+    z_TOGGLE_filterByMarked,
+  } = z_USE_myListsDisplaySettings();
 
-  const { langFilters = [] } = z_myListDisplay_SETTINGS;
+  const {
+    langFilters = [],
+    SHOULD_filterByMarked = false,
+    difficulty_FILTERS = [],
+  } = z_myListDisplay_SETTINGS;
 
   return (
     <>
@@ -20,6 +32,18 @@ export function MyListsFilter_BULLETS() {
           key={lang_id + "langFilter"}
         />
       ))}
+      {difficulty_FILTERS.map((diff) => (
+        <BulletDifficultyFilter_BTN
+          difficulty={diff}
+          REMOVE_difficulty={() => z_HANDLE_difficultyFilter(diff)}
+          key={diff + "diffFilter"}
+        />
+      ))}
+      {SHOULD_filterByMarked ? (
+        <BulletMarkedFilter_BTN
+          REMOVE_markedFilter={() => z_TOGGLE_filterByMarked()}
+        />
+      ) : null}
     </>
   );
 }

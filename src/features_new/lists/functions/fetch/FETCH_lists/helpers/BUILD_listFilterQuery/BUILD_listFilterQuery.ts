@@ -20,6 +20,8 @@ export function BUILD_listFilterQuery(
     excludeIds = new Set(),
     fetch_TYPE = "all",
     langFilters = [],
+    difficulty_FILTERS = [],
+    SHOULD_filterByMarked = false,
   } = args;
 
   if (!query)
@@ -62,9 +64,19 @@ export function BUILD_listFilterQuery(
 
   // filter by lang
   if (langFilters?.length) {
-    query = query.or(
-      langFilters.map((lang) => `collected_lang_ids.ilike.%${lang}%`).join(",")
-    );
+    query = query.overlaps("collected_lang_ids", langFilters);
+  }
+
+  // filter by marked
+  if (SHOULD_filterByMarked) {
+    query = query.gt("vocab_infos->>marked", 0);
+  }
+
+  // filter by marked
+  if (difficulty_FILTERS.length) {
+    difficulty_FILTERS.forEach((diff) => {
+      query = query.gt(`vocab_infos->>diff_${diff}`, 0);
+    });
   }
 
   // Exclude lists that have already been printed

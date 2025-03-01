@@ -25,7 +25,13 @@ export default function USE_controlMyListsFetch({
 }) {
   const { z_myListDisplay_SETTINGS } = z_USE_myListsDisplaySettings();
   const { z_user } = z_USE_user();
-  const { langFilters, sortDirection, sorting } = z_myListDisplay_SETTINGS;
+  const {
+    langFilters,
+    sortDirection,
+    sorting,
+    SHOULD_filterByMarked,
+    difficulty_FILTERS,
+  } = z_myListDisplay_SETTINGS;
 
   const {
     z_myListsPrinted_IDS,
@@ -54,12 +60,16 @@ export default function USE_controlMyListsFetch({
         langFilters,
         sortDirection,
         sorting,
+        SHOULD_filterByMarked,
+        difficulty_FILTERS,
       });
     },
     [
       langFilters,
       sortDirection,
       sorting,
+      SHOULD_filterByMarked,
+      difficulty_FILTERS,
       z_user?.id,
       z_myListsPrinted_IDS,
       search,
@@ -69,7 +79,15 @@ export default function USE_controlMyListsFetch({
   // Refetch on search / sorting / filter / targetList_ID
   useEffect(() => {
     (async () => await FETCH())();
-  }, [search, langFilters, sortDirection, sorting, targetList_ID]);
+  }, [
+    search,
+    langFilters,
+    sortDirection,
+    sorting,
+    targetList_ID,
+    SHOULD_filterByMarked,
+    difficulty_FILTERS,
+  ]);
 
   const LOAD_more = useCallback(async () => {
     (async () => await FETCH(true))();

@@ -38,6 +38,8 @@ interface USE_fetchMyLists_PROPS {
   sorting: myListsSorting_TYPE;
   sortDirection: sortDirection_TYPE;
   targetList_ID?: string | undefined;
+  difficulty_FILTERS: (1 | 2 | 3)[];
+  SHOULD_filterByMarked: boolean;
 }
 
 const function_NAME = "USE_fetchMyLists";
@@ -67,6 +69,8 @@ export function USE_fetchMyLists({
         sortDirection = "descending",
         targetList_ID = "",
         sorting = "date",
+        SHOULD_filterByMarked = false,
+        difficulty_FILTERS = [],
       } = args;
 
       // Create new fetch request, so that we could cancel it in case
@@ -76,7 +80,7 @@ export function USE_fetchMyLists({
       const loading_STATE: loadingState_TYPES = DETERMINE_loadingState({
         search,
         loadMore,
-        difficultyFilters: [], // no filtering by difficulty for lists
+        difficultyFilters: [],
         langFilters,
       });
 
@@ -110,6 +114,8 @@ export function USE_fetchMyLists({
           langFilters,
           sortDirection,
           sorting,
+          SHOULD_filterByMarked,
+          difficulty_FILTERS,
         });
 
         if (!lists)

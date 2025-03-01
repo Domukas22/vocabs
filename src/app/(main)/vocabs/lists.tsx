@@ -40,7 +40,7 @@ export default function MyLists_PAGE() {
     z_HAVE_myListsReachedEnd,
   } = z_USE_myLists();
 
-  const { z_myListDisplay_SETTINGS } = z_USE_myListsDisplaySettings();
+  const { z_GET_activeFilterCount } = z_USE_myListsDisplaySettings();
 
   // Refetches on filter changes
   const { LOAD_more } = USE_controlMyListsFetch({
@@ -70,9 +70,7 @@ export default function MyLists_PAGE() {
             loading_STATE={z_myListsLoading_STATE}
             list_NAME={t("header.myLists")}
             unpaginated_COUNT={z_myListsUnpaginated_COUNT}
-            appliedFilter_COUNT={
-              z_myListDisplay_SETTINGS?.langFilters?.length || 0
-            }
+            appliedFilter_COUNT={z_GET_activeFilterCount() || 0}
             type="my-lists"
           />
         }

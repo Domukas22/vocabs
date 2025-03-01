@@ -79,10 +79,8 @@ export function BUILD_vocabFilterQuery(
   }
 
   // Filter by language (used as text search)
-  if (langFilters.length > 0) {
-    query = query.or(
-      langFilters.map((lang) => `lang_ids.ilike.%${lang}%`).join(",")
-    );
+  if (langFilters?.length) {
+    query = query.overlaps("lang_ids", langFilters);
   }
 
   // Filter by search

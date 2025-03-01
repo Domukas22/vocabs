@@ -94,7 +94,11 @@
     "deleteVocabHard": "Delete forever",
     "sortByVocabCount": "By vocab count",
     "fewToMany": "Few --> Many",
-    "manyToFew": "Many --> Few"
+    "manyToFew": "Many --> Few",
+    "filterVocabsByDifficulty1": "Has \"difficult\" vocabs",
+    "filterVocabsByDifficulty2": "Has \"medium\" vocabs",
+    "filterVocabsByDifficulty3": "Has \"easy\" vocabs",
+    "filterVocabsByMarked": "Has \"marked\" vocabs"
   },
   "pages": {
     "about": {
@@ -206,7 +210,8 @@
     "recentLists": "Recently used lists",
     "loadingPopularVocabs": "Loading popular vocabs...",
     "mostPopularVocabs": "Most popular vocabs",
-    "loadingPopularLists": "Loading popular lists..."
+    "loadingPopularLists": "Loading popular lists...",
+    "otherFilters": "Other filters"
   },
   "modal": {
     "displaySettings": {
@@ -332,5 +337,8 @@
     "allMyVocabs": "🅿️ All my vocabs",
     "savedVocabs": "⭐ Saved vocabs",
     "deletedVocabs": "🗑️ Deleted vocabs"
+  },
+  "filterBullet": {
+    "hasMarked": "Marked"
   }
 }

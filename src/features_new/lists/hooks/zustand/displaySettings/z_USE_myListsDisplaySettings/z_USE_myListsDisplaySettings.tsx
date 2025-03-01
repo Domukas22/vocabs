@@ -12,6 +12,8 @@ export type z_myListsDisplaySettings_PROPS = {
   sortDirection: sortDirection_TYPE;
   langFilters: string[];
   allCollectedLang_IDs: string[];
+  difficulty_FILTERS: (1 | 2 | 3)[];
+  SHOULD_filterByMarked: boolean;
 };
 
 interface z_USE_myListsDisplaySettings_PROPS {
@@ -21,10 +23,12 @@ interface z_USE_myListsDisplaySettings_PROPS {
   ) => void;
 
   z_HANDLE_langFilter: (targetLang_ID: string) => void;
-  z_GET_activeFilterCount: () => void;
+  z_HANDLE_difficultyFilter: (difficulty: 1 | 2 | 3) => void;
+  z_GET_activeFilterCount: () => number;
   z_SET_sorting: (sorting_TYPE: myListsSorting_TYPE) => void;
   z_SET_sortDirection: (sortDirection_TYPE: sortDirection_TYPE) => void;
   z_SET_allCollectedLangIds: (lang_IDs: string[]) => void;
+  z_TOGGLE_filterByMarked: () => void;
 }
 
 export const z_USE_myListsDisplaySettings =
@@ -34,6 +38,8 @@ export const z_USE_myListsDisplaySettings =
       sortDirection: "descending",
       allCollectedLang_IDs: [],
       langFilters: [],
+      difficulty_FILTERS: [],
+      SHOULD_filterByMarked: false,
     },
 
     z_SET_myListDisplaySettings: (new_SETTINGS) => {
@@ -59,8 +65,36 @@ export const z_USE_myListsDisplaySettings =
         },
       })),
 
+    z_HANDLE_difficultyFilter: (difficulty) =>
+      set((state) => ({
+        z_myListDisplay_SETTINGS: {
+          ...state.z_myListDisplay_SETTINGS,
+          difficulty_FILTERS:
+            state.z_myListDisplay_SETTINGS.difficulty_FILTERS?.some(
+              (diff) => diff === difficulty
+            )
+              ? state.z_myListDisplay_SETTINGS.difficulty_FILTERS.filter(
+                  (diff) => diff !== difficulty
+                )
+              : [
+                  ...state.z_myListDisplay_SETTINGS.difficulty_FILTERS,
+                  difficulty,
+                ],
+        },
+      })),
+    z_TOGGLE_filterByMarked: () =>
+      set((state) => ({
+        z_myListDisplay_SETTINGS: {
+          ...state.z_myListDisplay_SETTINGS,
+          SHOULD_filterByMarked:
+            !state.z_myListDisplay_SETTINGS.SHOULD_filterByMarked,
+        },
+      })),
+
     z_GET_activeFilterCount: () =>
-      get().z_myListDisplay_SETTINGS?.langFilters?.length,
+      get().z_myListDisplay_SETTINGS?.langFilters?.length +
+      get().z_myListDisplay_SETTINGS?.difficulty_FILTERS?.length +
+      (get().z_myListDisplay_SETTINGS?.SHOULD_filterByMarked ? 1 : 0),
 
     z_SET_sorting: (sorting_TYPE) =>
       set((state) => ({

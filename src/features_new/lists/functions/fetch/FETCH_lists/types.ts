@@ -21,6 +21,8 @@ export interface FETCH_lists_ARGS {
   amount: number;
   excludeIds: Set<string>;
   signal: AbortSignal;
+  difficulty_FILTERS: (1 | 2 | 3)[];
+  SHOULD_filterByMarked: boolean;
 }
 
 export type FETCH_lists_RESPONSE_TYPE = {
@@ -32,6 +34,6 @@ export type ListQuery_TYPE = PostgrestFilterBuilder<
   any,
   any,
   any[],
-  "lists",
+  "lists_extended",
   unknown
 >;

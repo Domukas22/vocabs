@@ -14,7 +14,7 @@ export function OldToNew_BTN({
 }) {
   return (
     <Btn
-      text={t("btn.newToOld")}
+      text={t("btn.oldToNew")}
       onPress={onPress}
       type={IS_active ? "active" : "simple"}
       text_STYLES={{ flex: 1 }}
