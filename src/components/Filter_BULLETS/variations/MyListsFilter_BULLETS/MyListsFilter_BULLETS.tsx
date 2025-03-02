@@ -11,38 +11,32 @@ import {
 
 export function MyListsFilter_BULLETS() {
   const {
-    z_myListDisplay_SETTINGS,
+    filters,
     z_HANDLE_langFilter,
     z_HANDLE_difficultyFilter,
-    z_TOGGLE_filterByMarked,
+    z_HANDLE_markedFilter,
   } = z_USE_myListsDisplaySettings();
 
-  const {
-    langFilters = [],
-    SHOULD_filterByMarked = false,
-    difficulty_FILTERS = [],
-  } = z_myListDisplay_SETTINGS;
+  const { langs = [], difficulties = [], byMarked = false } = filters;
 
   return (
     <>
-      {langFilters.map((lang_id) => (
+      {langs.map((lang_id) => (
         <BulletLangFilter_BTN
           lang_id={lang_id}
           REMOVE_lang={() => z_HANDLE_langFilter(lang_id)}
           key={lang_id + "langFilter"}
         />
       ))}
-      {difficulty_FILTERS.map((diff) => (
+      {difficulties.map((diff) => (
         <BulletDifficultyFilter_BTN
           difficulty={diff}
           REMOVE_difficulty={() => z_HANDLE_difficultyFilter(diff)}
           key={diff + "diffFilter"}
         />
       ))}
-      {SHOULD_filterByMarked ? (
-        <BulletMarkedFilter_BTN
-          REMOVE_markedFilter={() => z_TOGGLE_filterByMarked()}
-        />
+      {byMarked ? (
+        <BulletMarkedFilter_BTN REMOVE_markedFilter={z_HANDLE_markedFilter} />
       ) : null}
     </>
   );

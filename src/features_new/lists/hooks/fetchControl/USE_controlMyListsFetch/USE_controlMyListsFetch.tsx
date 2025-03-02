@@ -23,15 +23,8 @@ export default function USE_controlMyListsFetch({
   fetch_TYPE: listFetch_TYPES;
   targetList_ID: string;
 }) {
-  const { z_myListDisplay_SETTINGS } = z_USE_myListsDisplaySettings();
+  const { filters, sorting, sortDirection } = z_USE_myListsDisplaySettings();
   const { z_user } = z_USE_user();
-  const {
-    langFilters,
-    sortDirection,
-    sorting,
-    SHOULD_filterByMarked,
-    difficulty_FILTERS,
-  } = z_myListDisplay_SETTINGS;
 
   const {
     z_myListsPrinted_IDS,
@@ -57,37 +50,18 @@ export default function USE_controlMyListsFetch({
         excludeIds: loadMore ? z_myListsPrinted_IDS : new Set(),
         fetch_TYPE,
         targetList_ID,
-        langFilters,
         sortDirection,
         sorting,
-        SHOULD_filterByMarked,
-        difficulty_FILTERS,
+        filters,
       });
     },
-    [
-      langFilters,
-      sortDirection,
-      sorting,
-      SHOULD_filterByMarked,
-      difficulty_FILTERS,
-      z_user?.id,
-      z_myListsPrinted_IDS,
-      search,
-    ]
+    [filters, sortDirection, sorting, z_user?.id, z_myListsPrinted_IDS, search]
   );
 
   // Refetch on search / sorting / filter / targetList_ID
   useEffect(() => {
     (async () => await FETCH())();
-  }, [
-    search,
-    langFilters,
-    sortDirection,
-    sorting,
-    targetList_ID,
-    SHOULD_filterByMarked,
-    difficulty_FILTERS,
-  ]);
+  }, [search, filters, sortDirection, sorting, targetList_ID]);
 
   const LOAD_more = useCallback(async () => {
     (async () => await FETCH(true))();

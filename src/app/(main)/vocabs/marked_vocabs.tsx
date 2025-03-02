@@ -9,7 +9,7 @@ import {
   VocabFlashlist_HEADER,
 } from "@/src/features/vocabs/components";
 import { USE_debounceSearch, USE_showListHeaderTitle } from "@/src/hooks";
-import React from "react";
+import React, { useEffect } from "react";
 import { USE_modalToggles } from "@/src/hooks/index";
 import { Portal } from "@gorhom/portal";
 import { vocabFetch_TYPES } from "@/src/features_new/vocabs/functions/FETCH_vocabs/types";

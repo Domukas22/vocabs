@@ -99,7 +99,8 @@
     "filterVocabsByDifficulty2": "Has \"medium\" vocabs",
     "filterVocabsByDifficulty3": "Has \"easy\" vocabs",
     "filterVocabsByMarked": "Has \"marked\" vocabs",
-    "sortBySavedCount": "By saved count"
+    "sortBySavedCount": "By saved count",
+    "sortByMarked": "By marked"
   },
   "pages": {
     "about": {

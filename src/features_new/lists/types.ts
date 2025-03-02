@@ -27,3 +27,9 @@ export type List_TYPE = {
     marked: number;
   };
 };
+
+export type ListFilter_PROPS = {
+  langs: string[];
+  difficulties: (1 | 2 | 3)[];
+  byMarked: boolean;
+};

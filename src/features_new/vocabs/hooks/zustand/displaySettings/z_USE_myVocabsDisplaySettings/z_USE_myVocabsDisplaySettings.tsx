@@ -29,6 +29,12 @@ interface z_USE_myVocabsDisplaySettings_PROPS {
   z_REMOVE_langFilter: (toRemoveLang_ID: string) => void;
   z_REMOVE_difficultyFilter: (toRemove_DIFFICULTY: 1 | 2 | 3) => void;
   z_GET_activeFilterCount: () => void;
+
+  z_SET_sorting: (sorting_TYPE: myVocabsSorting_TYPE) => void;
+  z_SET_sortDirection: (sortDirection_TYPE: sortDirection_TYPE) => void;
+
+  z_HANDLE_langFilter: (targetLang_ID: string) => void;
+  z_HANDLE_difficultyFilter: (difficulty: 1 | 2 | 3) => void;
 }
 
 export const z_USE_myVocabsDisplaySettings =
@@ -78,4 +84,52 @@ export const z_USE_myVocabsDisplaySettings =
     z_GET_activeFilterCount: () =>
       get().z_myVocabDisplay_SETTINGS?.langFilters?.length +
       get().z_myVocabDisplay_SETTINGS?.difficultyFilters?.length,
+
+    z_SET_sorting: (sorting_TYPE) =>
+      set((state) => ({
+        z_myVocabDisplay_SETTINGS: {
+          ...state.z_myVocabDisplay_SETTINGS,
+          sorting: sorting_TYPE,
+        },
+      })),
+
+    z_SET_sortDirection: (sortDirection_TYPE) =>
+      set((state) => ({
+        z_myVocabDisplay_SETTINGS: {
+          ...state.z_myVocabDisplay_SETTINGS,
+          sortDirection: sortDirection_TYPE,
+        },
+      })),
+
+    z_HANDLE_langFilter: (targetLang_ID) =>
+      set((state) => ({
+        z_myVocabDisplay_SETTINGS: {
+          ...state.z_myVocabDisplay_SETTINGS,
+          langFilters: state.z_myVocabDisplay_SETTINGS.langFilters?.some(
+            (lang) => lang === targetLang_ID
+          )
+            ? state.z_myVocabDisplay_SETTINGS.langFilters.filter(
+                (lang_id) => lang_id !== targetLang_ID
+              )
+            : [...state.z_myVocabDisplay_SETTINGS.langFilters, targetLang_ID],
+        },
+      })),
+
+    z_HANDLE_difficultyFilter: (difficulty) =>
+      set((state) => ({
+        z_myVocabDisplay_SETTINGS: {
+          ...state.z_myVocabDisplay_SETTINGS,
+          difficulty_FILTERS:
+            state.z_myVocabDisplay_SETTINGS.difficultyFilters?.some(
+              (diff) => diff === difficulty
+            )
+              ? state.z_myVocabDisplay_SETTINGS.difficultyFilters.filter(
+                  (diff) => diff !== difficulty
+                )
+              : [
+                  ...state.z_myVocabDisplay_SETTINGS.difficultyFilters,
+                  difficulty,
+                ],
+        },
+      })),
   }));

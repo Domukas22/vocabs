@@ -22,3 +22,23 @@ export type The4Fetch_TYPES =
   | "public-lists"
   | "public-vocabs"
   | undefined;
+
+////////////////////////////////////////
+export type DiffFilter_TYPE = {
+  type: "diff";
+  val: 1 | 2 | 3;
+};
+export type LangFilter_TYPE = {
+  type: "lang";
+  val: string;
+};
+export type MarkedFilter_TYPE = {
+  type: "marked";
+};
+
+export type OneFilter_TYPE =
+  | DiffFilter_TYPE
+  | LangFilter_TYPE
+  | MarkedFilter_TYPE;
+
+export type Filters_TYPE = OneFilter_TYPE[];

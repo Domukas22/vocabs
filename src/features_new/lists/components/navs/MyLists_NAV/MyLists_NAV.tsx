@@ -31,8 +31,8 @@ export function MyLists_NAV({
 }) {
   const [IS_searchOpen, SET_searchOpen] = useState(false);
   const search_REF = useRef<TextInput>(null);
-  const { z_myListDisplay_SETTINGS } = z_USE_myListsDisplaySettings();
-  const { langFilters } = z_myListDisplay_SETTINGS;
+  const { filters } = z_USE_myListsDisplaySettings();
+  const { langs = [] } = filters;
 
   return (
     <FlashlistPage_NAV
@@ -46,7 +46,7 @@ export function MyLists_NAV({
             <NavSearch_BTN OPEN_search={() => SET_searchOpen(true)} />
             <NavDisplaySettings_BTN
               OPEN_displaySettings={OPEN_displaySettings}
-              activeFilter_COUNT={langFilters?.length}
+              activeFilter_COUNT={langs?.length}
             />
             <NavCreate_BTN OPEN_createModal={OPEN_createListModal} />
           </>

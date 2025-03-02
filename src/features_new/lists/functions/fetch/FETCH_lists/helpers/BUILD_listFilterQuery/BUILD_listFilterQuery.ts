@@ -19,9 +19,11 @@ export function BUILD_listFilterQuery(
     search = "",
     excludeIds = new Set(),
     fetch_TYPE = "all",
-    langFilters = [],
-    difficulty_FILTERS = [],
-    SHOULD_filterByMarked = false,
+    filters = {
+      byMarked: false,
+      difficulties: [],
+      langs: [],
+    },
   } = args;
 
   if (!query)
@@ -34,7 +36,7 @@ export function BUILD_listFilterQuery(
   query = query.eq("type", list_TYPE);
 
   // filter by user id if private
-  if (list_TYPE === "private") {
+  if (list_TYPE !== "public") {
     query = query.eq("user_id", user_id);
   }
 
@@ -51,32 +53,38 @@ export function BUILD_listFilterQuery(
       break;
   }
 
+  // ------------------------------------------------------
+  const { langs = [], difficulties = [], byMarked = false } = filters;
+
+  // // Apply difficulty filters
+  if (list_TYPE === "private" && difficulties.length > 0) {
+    difficulties.forEach((diff) => {
+      query = query.gt(`vocab_infos->>diff_${diff}`, 0);
+    });
+  }
+
+  // // Apply lang filters
+  if (langs.length > 0) {
+    query = query.overlaps("collected_lang_ids", langs);
+  }
+
+  // Apply marked filter
+  if (list_TYPE === "private" && byMarked) {
+    query = query.gt("vocab_infos->>marked", 0);
+  }
+
+  console.log(filters);
+  // ------------------------------------------------------
+
   // filter by search
   if (search) {
-    if (list_TYPE === "public") {
+    if (list_TYPE !== "private") {
       // search by name AND description if it's a public list fetch
       query = query.or(`name.ilike.%${search}%,description.ilike.%${search}%`);
     } else {
       // search by ONLY by name if it's a private list fetch
       query = query.or(`name.ilike.%${search}%`);
     }
-  }
-
-  // filter by lang
-  if (langFilters?.length) {
-    query = query.overlaps("collected_lang_ids", langFilters);
-  }
-
-  // filter by marked
-  if (SHOULD_filterByMarked) {
-    query = query.gt("vocab_infos->>marked", 0);
-  }
-
-  // filter by marked
-  if (difficulty_FILTERS.length) {
-    difficulty_FILTERS.forEach((diff) => {
-      query = query.gt(`vocab_infos->>diff_${diff}`, 0);
-    });
   }
 
   // Exclude lists that have already been printed

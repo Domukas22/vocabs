@@ -19,3 +19,5 @@ export { NEW_timestampWithTimeZone } from "./timestamps/NEW_timestampWithTimeZon
 
 export { REDUCE_collectedLangIds } from "./REDUCE_collectedLangIds/REDUCE_collectedLangIds";
 export { VIBRATE } from "./VIBRATE/VIBRATE";
+
+export { THROW_postgressError } from "./THROW_postgressError/THROW_postgressError";

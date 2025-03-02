@@ -9,3 +9,5 @@ export { SortByVocabCount_BTN } from "./SortByVocabCount_BTN/SortByVocabCount_BT
 export { FewToMany_BTN } from "./FewToMany_BTN/FewToMany_BTN";
 export { ManyToFew_BTN } from "./ManyToFew_BTN/ManyToFew_BTN";
 export { SortBySavedCount_BTN } from "./SortBySavedCount_BTN/SortBySavedCount_BTN";
+export { SortByMarked_BTN } from "./SortByMarked_BTN/SortByMarked_BTN";
+export { SortByDifficulty_BTN } from "./SortByDifficulty_BTN/SortByDifficulty_BTN";

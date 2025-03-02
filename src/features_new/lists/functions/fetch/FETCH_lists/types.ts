@@ -3,9 +3,15 @@
 //
 
 import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
-import { List_TYPE } from "../../../types";
-import { itemVisibility_TYPE } from "@/src/types/general_TYPES";
-import { myListsSorting_TYPE } from "../../../hooks/zustand/displaySettings/z_USE_myListsDisplaySettings/z_USE_myListsDisplaySettings";
+import { List_TYPE, ListFilter_PROPS } from "../../../types";
+import {
+  DiffFilter_TYPE,
+  Filters_TYPE,
+  itemVisibility_TYPE,
+  LangFilter_TYPE,
+  MarkedFilter_TYPE,
+} from "@/src/types/general_TYPES";
+import { MyListsSorting_TYPE } from "../../../hooks/zustand/displaySettings/z_USE_myListsDisplaySettings/z_USE_myListsDisplaySettings";
 
 export type listFetch_TYPES = "byTargetList" | "all";
 export type listSorting_TYPES = "date" | "vocab-count" | "saved-count";
@@ -16,14 +22,12 @@ export interface FETCH_lists_ARGS {
   list_id: string;
   list_TYPE: itemVisibility_TYPE;
   fetch_TYPE: listFetch_TYPES;
-  langFilters: string[];
   sorting: listSorting_TYPES;
   sortDirection: "ascending" | "descending";
   amount: number;
   excludeIds: Set<string>;
   signal: AbortSignal;
-  difficulty_FILTERS: (1 | 2 | 3)[];
-  SHOULD_filterByMarked: boolean;
+  filters: ListFilter_PROPS;
 }
 
 export type FETCH_lists_RESPONSE_TYPE = {

@@ -8,6 +8,7 @@
 
 import { USE_abortController } from "@/src/hooks";
 import {
+  Filters_TYPE,
   loadingState_TYPES,
   sortDirection_TYPE,
 } from "@/src/types/general_TYPES";
@@ -26,7 +27,9 @@ import { SEND_internalError } from "@/src/utils";
 import { FETCH_lists } from "../../../../functions/fetch/FETCH_lists/FETCH_lists";
 import { listFetch_TYPES } from "../../../../functions/fetch/FETCH_lists/types";
 import { COLLECT_allListsLangIds } from "@/src/features_new/lists/functions/fetch/COLLECT_allListsLangIds/COLLECT_allListsLangIds";
-import { myListsSorting_TYPE } from "../../../zustand/displaySettings/z_USE_myListsDisplaySettings/z_USE_myListsDisplaySettings";
+import { MyListsSorting_TYPE } from "../../../zustand/displaySettings/z_USE_myListsDisplaySettings/z_USE_myListsDisplaySettings";
+import { ListFilter_PROPS } from "@/src/features_new/lists/types";
+import { filter } from "lodash";
 
 interface USE_fetchMyLists_PROPS {
   search: string;
@@ -34,12 +37,10 @@ interface USE_fetchMyLists_PROPS {
   loadMore: boolean;
   excludeIds: Set<string>;
   fetch_TYPE: listFetch_TYPES;
-  langFilters: string[];
-  sorting: myListsSorting_TYPE;
+  sorting: MyListsSorting_TYPE;
   sortDirection: sortDirection_TYPE;
   targetList_ID?: string | undefined;
-  difficulty_FILTERS: (1 | 2 | 3)[];
-  SHOULD_filterByMarked: boolean;
+  filters: ListFilter_PROPS;
 }
 
 const function_NAME = "USE_fetchMyLists";
@@ -65,26 +66,29 @@ export function USE_fetchMyLists({
         loadMore = false,
         excludeIds = new Set(),
         fetch_TYPE = "all",
-        langFilters = [],
         sortDirection = "descending",
         targetList_ID = "",
         sorting = "date",
-        SHOULD_filterByMarked = false,
-        difficulty_FILTERS = [],
+        filters = {
+          byMarked: false,
+          difficulties: [],
+          langs: [],
+        },
       } = args;
 
       // Create new fetch request, so that we could cancel it in case
       // a new request was sent, and this one hasn't finished fetching
       const newController = START_newRequest();
 
+      const HAS_filters =
+        filters.difficulties.length > 0 ||
+        filters.langs.length > 0 ||
+        filters.byMarked;
+
       const loading_STATE: loadingState_TYPES = DETERMINE_loadingState({
         search,
         loadMore,
-        difficultyFilters:
-          typeof SHOULD_filterByMarked === "boolean"
-            ? [...difficulty_FILTERS, 0] // adjust alter. we just want o make sure the marked vocab filter counts as a filter
-            : [...difficulty_FILTERS],
-        langFilters,
+        HAS_filters,
       });
 
       z_PREPARE_myListsForFetch({ loadMore, loading_STATE, fetch_TYPE });
@@ -116,11 +120,9 @@ export function USE_fetchMyLists({
           list_TYPE: "private",
           excludeIds,
           list_id: targetList_ID,
-          langFilters,
           sortDirection,
           sorting,
-          SHOULD_filterByMarked,
-          difficulty_FILTERS,
+          filters,
         });
 
         if (!lists)

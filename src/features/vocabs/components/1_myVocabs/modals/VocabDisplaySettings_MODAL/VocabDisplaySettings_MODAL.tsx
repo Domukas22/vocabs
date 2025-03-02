@@ -77,7 +77,7 @@ export function VocabDisplaySettings_MODAL({
         }
       />
 
-      {/* <VocabDisplaySettings_SUBNAV
+      <VocabDisplaySettings_SUBNAV
         {...{ view, SET_view, activeFilter_COUNT }}
       />
       <Vocab_DUMMY {...{ view, z_vocabDisplay_SETTINGS }} />
@@ -135,7 +135,7 @@ export function VocabDisplaySettings_MODAL({
             HAS_difficulties,
           }}
         />
-      </ScrollView> */}
+      </ScrollView>
       <TwoBtn_BLOCK
         btnLeft={
           <Btn

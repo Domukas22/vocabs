@@ -14,13 +14,12 @@ export function VALIDATE_fetchListsArgs(args: FETCH_lists_ARGS) {
     list_TYPE,
     fetch_TYPE,
     list_id,
-    langFilters,
+
     sortDirection,
     amount,
     excludeIds,
     sorting,
-    SHOULD_filterByMarked,
-    difficulty_FILTERS,
+    filters,
   } = args;
 
   const err = (message: string) => {
@@ -32,11 +31,12 @@ export function VALIDATE_fetchListsArgs(args: FETCH_lists_ARGS) {
 
   if (!user_id) throw err("'user_id' was undefined");
   if (!list_TYPE) throw err("'list_TYPE' was undefined");
-  if (!langFilters) throw err("'langFilters' was undefined");
 
-  if (typeof SHOULD_filterByMarked !== "boolean")
-    throw err("'SHOULD_filterByMarked' was not a boolean");
-  if (!difficulty_FILTERS) throw err("'difficulty_FILTERS' was undefined");
+  if (!filters) throw err("'filters' was undefined");
+  if (typeof filters.byMarked !== "boolean")
+    throw err("'filters.byMarked' was not a boolean");
+  if (!filters.difficulties) throw err("'filters.difficulties' was undefined");
+  if (!filters.langs) throw err("'filters.langs' was undefined");
 
   if (!fetch_TYPE) throw err("'fetch_TYPE' was undefined");
   if (fetch_TYPE === "byTargetList" && !list_id)

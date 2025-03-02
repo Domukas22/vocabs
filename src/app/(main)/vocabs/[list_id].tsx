@@ -27,6 +27,7 @@ import {
 } from "@/src/features_new/lists/components/navs";
 import { Flashlist_HEADER } from "@/src/components/Flashlist_HEADER/Flashlist_HEADER";
 import { z_USE_myVocabsDisplaySettings } from "@/src/features_new/vocabs/hooks/zustand/displaySettings/z_USE_myVocabsDisplaySettings/z_USE_myVocabsDisplaySettings";
+import { DisplaySettings_MODAL } from "@/src/components/DisplaySettings_MODAL/DisplaySettings_MODAL";
 
 export default function SingleList_PAGE() {
   const { urlParamsList_ID } = USE_listIdInParams();
@@ -116,7 +117,9 @@ export default function SingleList_PAGE() {
           IS_open={modals.updateVocab.IS_open}
           CLOSE_modal={() => modals.updateVocab.set(false)}
         />
-        <VocabDisplaySettings_MODAL
+        <DisplaySettings_MODAL
+          starting_TAB="vocab-preview"
+          type="my-vocabs"
           open={modals.displaySettings.IS_open}
           TOGGLE_open={() => modals.displaySettings.set(false)}
         />
