@@ -57,7 +57,7 @@ export default function SingleList_PAGE() {
     targetList_ID: urlParamsList_ID,
   });
 
-  const { z_myVocabDisplay_SETTINGS } = z_USE_myVocabsDisplaySettings();
+  const { z_GET_activeFilterCount } = z_USE_myVocabsDisplaySettings();
 
   return (
     <>
@@ -82,10 +82,7 @@ export default function SingleList_PAGE() {
             loading_STATE={z_myVocabsLoading_STATE}
             list_NAME={list_NAME}
             unpaginated_COUNT={z_myVocabsUnpaginated_COUNT}
-            appliedFilter_COUNT={
-              (z_myVocabDisplay_SETTINGS?.langFilters?.length || 0) +
-              (z_myVocabDisplay_SETTINGS?.difficultyFilters?.length || 0)
-            }
+            appliedFilter_COUNT={z_GET_activeFilterCount() || 0}
             type="my-vocabs"
           />
         }

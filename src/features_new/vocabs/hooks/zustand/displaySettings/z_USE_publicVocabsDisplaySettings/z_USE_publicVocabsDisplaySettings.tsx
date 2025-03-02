@@ -25,7 +25,7 @@ interface z_USE_publicVocabsDisplaySettings_PROPS {
   z_SET_publicVocabDisplaySettings: (
     new_SETTINGS: Partial<z_publicVocabsDisplaySettings_PROPS>
   ) => void;
-  z_REMOVE_langFilter: (toRemoveLang_ID: string) => void;
+  z_HANDLE_langFilter: (toRemoveLang_ID: string) => void;
   z_GET_activeFilterCount: () => void;
 }
 
@@ -52,7 +52,7 @@ export const z_USE_publicVocabsDisplaySettings =
         },
       }));
     },
-    z_REMOVE_langFilter: (toRemoveLang_ID) =>
+    z_HANDLE_langFilter: (toRemoveLang_ID) =>
       set((state) => ({
         z_publicVocabDisplay_SETTINGS: {
           ...state.z_publicVocabDisplay_SETTINGS,

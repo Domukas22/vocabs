@@ -28,8 +28,7 @@ export function PublicLists_NAV({
 }) {
   const [IS_searchOpen, SET_searchOpen] = useState(false);
   const search_REF = useRef<TextInput>(null);
-  const { z_publicListDisplay_SETTINGS } = z_USE_publicListsDisplaySettings();
-  const { langFilters } = z_publicListDisplay_SETTINGS;
+  const { filters } = z_USE_publicListsDisplaySettings();
 
   return (
     <FlashlistPage_NAV
@@ -43,7 +42,7 @@ export function PublicLists_NAV({
             <NavSearch_BTN OPEN_search={() => SET_searchOpen(true)} />
             <NavDisplaySettings_BTN
               OPEN_displaySettings={OPEN_displaySettings}
-              activeFilter_COUNT={langFilters?.length}
+              activeFilter_COUNT={filters?.langs?.length}
             />
           </>
         ) : (

@@ -36,8 +36,8 @@ export function MyOneList_NAV({
 }) {
   const [IS_searchOpen, SET_searchOpen] = useState(false);
   const search_REF = useRef<TextInput>(null);
-  const { z_myVocabDisplay_SETTINGS } = z_USE_myVocabsDisplaySettings();
-  const { langFilters, difficultyFilters } = z_myVocabDisplay_SETTINGS;
+  const { z_GET_activeFilterCount } = z_USE_myVocabsDisplaySettings();
+
   const { list_NAME } = USE_getListName({ type: "private" });
 
   return (
@@ -50,9 +50,7 @@ export function MyOneList_NAV({
             <NavSearch_BTN OPEN_search={() => SET_searchOpen(true)} />
             <NavDisplaySettings_BTN
               OPEN_displaySettings={OPEN_displaySettings}
-              activeFilter_COUNT={
-                (langFilters?.length || 0) + (difficultyFilters?.length + 0)
-              }
+              activeFilter_COUNT={z_GET_activeFilterCount() || 0}
             />
             <NavCreate_BTN OPEN_createModal={OPEN_createVocabModal} />
           </>

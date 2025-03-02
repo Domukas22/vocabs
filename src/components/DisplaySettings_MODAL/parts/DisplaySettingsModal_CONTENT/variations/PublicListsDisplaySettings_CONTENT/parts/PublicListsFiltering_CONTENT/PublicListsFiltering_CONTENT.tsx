@@ -9,15 +9,16 @@ import { t } from "i18next";
 
 export function PublicListsFiltering_CONTENT() {
   const { z_publicListsCollectedLangIds } = z_USE_publicLists();
-  const { z_publicListDisplay_SETTINGS, z_HANDLE_langFilter } =
-    z_USE_publicListsDisplaySettings();
+  const { filters, z_HANDLE_langFilter } = z_USE_publicListsDisplaySettings();
+
+  const { langs = [] } = filters;
 
   return (
     <>
       <LanguagesBtn_BLOCK
         label={t("label.filterByLanguage")}
         allLang_IDs={z_publicListsCollectedLangIds}
-        activeLang_IDs={z_publicListDisplay_SETTINGS?.langFilters}
+        activeLang_IDs={langs}
         HANDLE_lang={(lang_ID) => z_HANDLE_langFilter(lang_ID)}
       />
     </>

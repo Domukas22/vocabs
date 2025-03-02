@@ -23,9 +23,9 @@ export default function USE_controlPublicListsFetch({
   fetch_TYPE: listFetch_TYPES;
   targetList_ID: string;
 }) {
-  const { z_publicListDisplay_SETTINGS } = z_USE_publicListsDisplaySettings();
+  const { filters, sorting, sortDirection } =
+    z_USE_publicListsDisplaySettings();
   const { z_user } = z_USE_user();
-  const { langFilters, sortDirection, sorting } = z_publicListDisplay_SETTINGS;
 
   const {
     z_publicListsPrinted_IDS,
@@ -51,13 +51,13 @@ export default function USE_controlPublicListsFetch({
         excludeIds: loadMore ? z_publicListsPrinted_IDS : new Set(),
         fetch_TYPE,
         targetList_ID,
-        langFilters,
+        filters,
         sortDirection,
         sorting,
       });
     },
     [
-      langFilters,
+      filters,
       sortDirection,
       sorting,
       z_user?.id,
@@ -69,7 +69,7 @@ export default function USE_controlPublicListsFetch({
   // Refetch on search / sorting / filter / targetList_ID
   useEffect(() => {
     (async () => await FETCH())();
-  }, [search, langFilters, sortDirection, sorting, targetList_ID]);
+  }, [search, filters, sortDirection, sorting, targetList_ID]);
 
   const LOAD_more = useCallback(async () => {
     (async () => await FETCH(true))();

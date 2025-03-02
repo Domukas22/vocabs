@@ -19,8 +19,11 @@ export function BUILD_vocabFilterQuery(
     list_id = "",
     search = "",
     excludeIds = new Set(),
-    difficultyFilters = [],
-    langFilters = [],
+    filters = {
+      byMarked: false,
+      difficulties: [],
+      langs: [],
+    },
   } = args;
 
   if (!query)
@@ -29,19 +32,9 @@ export function BUILD_vocabFilterQuery(
       function_NAME,
     });
 
-  // If fetching vocabs that belong to you
+  // Provide user_id if the vocabs are private
   if (list_TYPE === "private") {
-    // Filter by the user id
     query = query.filter("user_id", "eq", user_id);
-
-    // Filter by difficulty
-    if (difficultyFilters.length > 0) {
-      query = query.filter(
-        "difficulty",
-        "in",
-        `(${difficultyFilters.join(",")})`
-      );
-    }
   }
 
   query = query.eq("type", list_TYPE);
@@ -78,10 +71,24 @@ export function BUILD_vocabFilterQuery(
       query = query.filter("deleted_at", "is", null);
   }
 
-  // Filter by language (used as text search)
-  if (langFilters?.length) {
-    query = query.overlaps("lang_ids", langFilters);
+  // ------------------------------------------------------
+  const { langs = [], difficulties = [], byMarked = false } = filters;
+
+  // Apply difficuty filters
+  if (list_TYPE === "private" && difficulties.length > 0) {
+    query = query.in("difficulty", difficulties);
   }
+
+  // Apply lang filters
+  if (langs.length > 0) {
+    query = query.overlaps("lang_ids", langs);
+  }
+
+  // Apply marked filter
+  if (list_TYPE === "private" && byMarked) {
+    query = query.eq("is_marked", true);
+  }
+  // ------------------------------------------------------
 
   // Filter by search
   if (search) {

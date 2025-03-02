@@ -2,9 +2,12 @@
 //
 //
 
-import { Vocab_TYPE } from "@/src/features_new/vocabs/types";
+import {
+  Vocab_TYPE,
+  VocabFilter_PROPS,
+  VocabSorting_PROPS,
+} from "@/src/features_new/vocabs/types";
 import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
-import { Error_PROPS, General_ERROR } from "@/src/types/error_TYPES";
 import { itemVisibility_TYPE } from "@/src/types/general_TYPES";
 
 export type vocabFetch_TYPES = "byTargetList" | "all" | "deleted" | "marked";
@@ -18,10 +21,8 @@ export interface FETCH_myVocabs_ARG_TYPES {
   list_TYPE: itemVisibility_TYPE;
   excludeIds: Set<string>;
   fetch_TYPE: vocabFetch_TYPES;
-  difficultyFilters: (1 | 2 | 3)[];
-  langFilters: string[];
-  sortDirection: "ascending" | "descending";
-  sorting: "difficulty" | "date" | "shuffle";
+  sorting: VocabSorting_PROPS;
+  filters: VocabFilter_PROPS;
 }
 
 export type FETCH_myVocabs_RESPONSE_TYPE = {

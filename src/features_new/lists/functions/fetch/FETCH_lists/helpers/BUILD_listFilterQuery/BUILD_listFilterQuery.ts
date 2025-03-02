@@ -73,7 +73,6 @@ export function BUILD_listFilterQuery(
     query = query.gt("vocab_infos->>marked", 0);
   }
 
-  console.log(filters);
   // ------------------------------------------------------
 
   // filter by search

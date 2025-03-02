@@ -10,15 +10,16 @@ import { t } from "i18next";
 
 export function MyVocabsFiltering_CONTENT() {
   const { z_myOneList } = z_USE_myOneList();
-  const { z_myVocabDisplay_SETTINGS, z_HANDLE_langFilter } =
-    z_USE_myVocabsDisplaySettings();
+  const { filters, z_HANDLE_langFilter } = z_USE_myVocabsDisplaySettings();
+
+  const { langs = [], difficulties = [], byMarked = false } = filters;
 
   return (
     <>
       <LanguagesBtn_BLOCK
         label={t("label.filterByLanguage")}
         allLang_IDs={z_myOneList?.collected_lang_ids || []}
-        activeLang_IDs={z_myVocabDisplay_SETTINGS?.langFilters}
+        activeLang_IDs={langs}
         HANDLE_lang={(lang_ID) => z_HANDLE_langFilter(lang_ID)}
       />
     </>

@@ -17,16 +17,24 @@ export function BUILD_vocabSortingQuery(
       function_NAME,
     });
 
-  const sort_DIRECTION = args?.sortDirection === "ascending" ? "asc" : "desc";
+  const { direction = "descending", type = "date" } = args?.sorting;
+  const SHOULD_ascend = direction === "ascending";
 
-  switch (args?.sorting) {
-    case "difficulty":
-      return query.order("difficulty", {
-        ascending: sort_DIRECTION === "asc",
-      });
-    case "date":
-      return query.order("created_at", { ascending: sort_DIRECTION === "asc" });
-    default:
-      return query.order("created_at", { ascending: sort_DIRECTION === "asc" });
+  if (type === "date") {
+    return query.order("created_at", { ascending: SHOULD_ascend });
   }
+
+  if (type === "difficulty") {
+    return query.order("difficulty", { ascending: SHOULD_ascend });
+  }
+
+  if (type === "saved-count") {
+    return query.order("saved_count", { ascending: SHOULD_ascend });
+  }
+
+  if (type === "marked") {
+    return query.order("is_marked", { ascending: SHOULD_ascend });
+  }
+
+  return query;
 }

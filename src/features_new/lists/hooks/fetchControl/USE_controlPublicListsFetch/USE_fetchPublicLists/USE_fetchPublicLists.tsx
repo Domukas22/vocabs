@@ -29,6 +29,7 @@ import {
 } from "../../../zustand/z_USE_myLists/z_USE_myLists";
 import { publicListsSorting_TYPE } from "../../../zustand/displaySettings/z_USE_publicListsDisplaySettings/z_USE_publicListsDisplaySettings";
 import { COLLECT_allListsLangIds } from "@/src/features_new/lists/functions/fetch/COLLECT_allListsLangIds/COLLECT_allListsLangIds";
+import { ListFilter_PROPS } from "@/src/features_new/lists/types";
 
 interface USE_fetchPublicLists_PROPS {
   search: string;
@@ -36,10 +37,10 @@ interface USE_fetchPublicLists_PROPS {
   loadMore: boolean;
   excludeIds: Set<string>;
   fetch_TYPE: listFetch_TYPES;
-  langFilters: string[];
   sortDirection: "descending" | "ascending";
   targetList_ID?: string | undefined;
   sorting: listSorting_TYPES;
+  filters: ListFilter_PROPS;
 }
 
 const function_NAME = "USE_fetchPublicLists";
@@ -65,21 +66,29 @@ export function USE_fetchPublicLists({
         loadMore = false,
         excludeIds = new Set(),
         fetch_TYPE = "all",
-        langFilters = [],
         sortDirection = "descending",
         targetList_ID = "",
         sorting = "date",
+        filters = {
+          byMarked: false,
+          difficulties: [],
+          langs: [],
+        },
       } = args;
 
       // Create new fetch request, so that we could cancel it in case
       // a new request was sent, and this one hasn't finished fetching
       const newController = START_newRequest();
 
+      const HAS_filters =
+        filters.difficulties.length > 0 ||
+        filters.langs.length > 0 ||
+        filters.byMarked;
+
       const loading_STATE: loadingState_TYPES = DETERMINE_loadingState({
         search,
         loadMore,
-        difficultyFilters: [],
-        langFilters,
+        HAS_filters,
       });
 
       z_PREPARE_publicListsForFetch({ loadMore, loading_STATE, fetch_TYPE });
@@ -108,10 +117,8 @@ export function USE_fetchPublicLists({
           list_TYPE: "public",
           excludeIds,
           list_id: targetList_ID,
-          langFilters,
+          filters,
           sortDirection,
-          difficulty_FILTERS: [],
-          SHOULD_filterByMarked: false,
           sorting,
         });
 

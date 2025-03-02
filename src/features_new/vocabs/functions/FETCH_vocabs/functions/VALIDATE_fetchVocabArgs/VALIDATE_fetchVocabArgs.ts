@@ -12,9 +12,7 @@ export function VALIDATE_fetchVocabArgs(args: FETCH_myVocabs_ARG_TYPES) {
     fetch_TYPE,
     user_id,
     list_id,
-    langFilters,
-    difficultyFilters,
-    sortDirection,
+    filters,
     sorting,
     amount,
     excludeIds,
@@ -36,13 +34,16 @@ export function VALIDATE_fetchVocabArgs(args: FETCH_myVocabs_ARG_TYPES) {
   if (fetch_TYPE === "byTargetList" && !list_id)
     throw err("targetList_ID undefined");
 
-  if (!langFilters) throw err("Language filters undefined");
-  if (!difficultyFilters) throw err("Difficulty filters undefined");
-  if (!sortDirection) throw err("Sort direction undefined");
-  if (sortDirection !== "ascending" && sortDirection !== "descending")
-    err("'sortDirection' was neither ascending nor descending");
+  if (!filters) throw err("'filters' was undefined");
+  if (typeof filters.byMarked !== "boolean")
+    throw err("'filters.byMarked' was not a boolean");
+  if (!filters.difficulties) throw err("'filters.difficulties' was undefined");
+  if (!filters.langs) throw err("'filters.langs' was undefined");
 
-  if (!sorting) throw err("Sorting direction undefined");
+  if (!sorting) throw err("'sorting' was undefined");
+  if (!sorting.type) throw err("'sorting.type' was undefined");
+  if (!sorting.direction) throw err("'sorting.direction' was undefined");
+
   if (!excludeIds) throw err("Excluded ids undefined");
 
   if (typeof amount !== "number") throw err("Pagination amount undefined");

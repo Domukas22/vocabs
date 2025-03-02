@@ -18,18 +18,21 @@ import {
 } from "../../../zustand/z_USE_myVocabs/z_USE_myVocabs";
 import DETERMINE_loadingState from "@/src/utils/DETERMINE_loadingState/DETERMINE_loadingState";
 import { SEND_internalError } from "@/src/utils";
+import {
+  VocabFilter_PROPS,
+  VocabSorting_PROPS,
+} from "@/src/features_new/vocabs/types";
 
 interface USE_fetchMyVocabs_PROPS {
   search: string;
-  sorting: "date" | "difficulty" | "shuffle";
   user_id: string;
   loadMore: boolean;
   excludeIds: Set<string>;
   fetch_TYPE: vocabFetch_TYPES;
-  langFilters: string[];
-  sortDirection: "descending" | "ascending";
   targetList_ID?: string | undefined;
-  difficultyFilters: (1 | 2 | 3)[];
+
+  filters: VocabFilter_PROPS;
+  sorting: VocabSorting_PROPS;
 }
 
 const function_NAME = "USE_fetchMyVocabs";
@@ -49,26 +52,36 @@ export function USE_fetchMyVocabs({
     async (args: USE_fetchMyVocabs_PROPS): Promise<void> => {
       const {
         search = "",
-        sorting = "date",
         user_id = "",
         loadMore = false,
         excludeIds = new Set(),
         fetch_TYPE = "all",
-        langFilters = [],
-        sortDirection = "descending",
         targetList_ID = "",
-        difficultyFilters = [],
+
+        filters = {
+          byMarked: false,
+          difficulties: [],
+          langs: [],
+        },
+        sorting = {
+          type: "date",
+          direction: "descending",
+        },
       } = args;
 
       // Create new fetch request, so that we could cancel it in case
       // a new request was sent, and this one hasn't finished fetching
       const newController = START_newRequest();
 
+      const HAS_filters =
+        filters.difficulties.length > 0 ||
+        filters.langs.length > 0 ||
+        filters.byMarked;
+
       const loading_STATE: loadingState_TYPES = DETERMINE_loadingState({
         search,
         loadMore,
-        difficultyFilters,
-        langFilters,
+        HAS_filters,
       });
 
       z_PREPARE_myVocabsForFetch({ loadMore, loading_STATE, fetch_TYPE });
@@ -83,9 +96,7 @@ export function USE_fetchMyVocabs({
           list_TYPE: "private",
           excludeIds,
           list_id: targetList_ID,
-          difficultyFilters,
-          langFilters,
-          sortDirection,
+          filters,
           sorting,
         });
 

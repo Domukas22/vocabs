@@ -15,7 +15,6 @@ import {
   VALIDATE_fetchVocabArgs,
 } from "./functions";
 import { General_ERROR } from "@/src/types/error_TYPES";
-import { raw_Vocab_TYPE, Vocab_TYPE, VocabTr_TYPE } from "../../types";
 
 //////////////////////////////////////////////////////////////
 

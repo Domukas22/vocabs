@@ -2,12 +2,12 @@
 //
 //
 
-import { USE_zustand } from "@/src/hooks";
 import { useCallback, useEffect } from "react";
 import { vocabFetch_TYPES } from "../../../functions/FETCH_vocabs/types";
 import { USE_fetchMyVocabs } from "./USE_fetchMyVocabs/USE_fetchMyVocabs";
 import { z_USE_myVocabs } from "../../zustand/z_USE_myVocabs/z_USE_myVocabs";
 import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
+import { z_USE_myVocabsDisplaySettings } from "../../zustand/displaySettings/z_USE_myVocabsDisplaySettings/z_USE_myVocabsDisplaySettings";
 
 export default function USE_controlMyVocabsFetch({
   search = "",
@@ -18,11 +18,8 @@ export default function USE_controlMyVocabsFetch({
   fetch_TYPE: vocabFetch_TYPES;
   targetList_ID: string;
 }) {
-  const { z_vocabDisplay_SETTINGS } = USE_zustand();
+  const { filters, sorting } = z_USE_myVocabsDisplaySettings();
   const { z_user } = z_USE_user();
-
-  const { difficultyFilters, langFilters, sortDirection, sorting } =
-    z_vocabDisplay_SETTINGS;
 
   const {
     z_myVocabPrinted_IDS,
@@ -44,36 +41,19 @@ export default function USE_controlMyVocabsFetch({
         loadMore,
         fetch_TYPE,
         targetList_ID,
-        difficultyFilters,
-        langFilters,
-        sortDirection,
+        filters,
         sorting,
         user_id: z_user?.id || "",
         excludeIds: loadMore ? z_myVocabPrinted_IDS : new Set(),
       });
     },
-    [
-      difficultyFilters,
-      langFilters,
-      sortDirection,
-      sorting,
-      z_user?.id,
-      z_myVocabPrinted_IDS,
-      search,
-    ]
+    [filters, sorting, z_user?.id, z_myVocabPrinted_IDS, search]
   );
 
   // Refetch on search / sorting / filter / targetList_ID
   useEffect(() => {
     (async () => await FETCH())();
-  }, [
-    search,
-    difficultyFilters,
-    langFilters,
-    sortDirection,
-    sorting,
-    targetList_ID,
-  ]);
+  }, [search, filters, sorting, targetList_ID]);
 
   const LOAD_more = useCallback(async () => {
     (async () => await FETCH(true))();

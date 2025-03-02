@@ -18,7 +18,7 @@ import { z_USE_publicListsDisplaySettings } from "@/src/features_new/lists/hooks
 import { t } from "i18next";
 
 export function PublicListsSorting_CONTENT() {
-  const { z_publicListDisplay_SETTINGS, z_SET_sorting, z_SET_sortDirection } =
+  const { sorting, sortDirection, z_SET_sorting, z_SET_sortDirection } =
     z_USE_publicListsDisplaySettings();
 
   return (
@@ -26,63 +26,51 @@ export function PublicListsSorting_CONTENT() {
       <Block row={false}>
         <Label>{t("label.sortLists")}</Label>
         <SortByDate_BTN
-          IS_active={z_publicListDisplay_SETTINGS?.sorting === "date"}
+          IS_active={sorting === "date"}
           onPress={() => z_SET_sorting("date")}
         />
         <SortByVocabCount_BTN
-          IS_active={z_publicListDisplay_SETTINGS?.sorting === "vocab-count"}
+          IS_active={sorting === "vocab-count"}
           onPress={() => z_SET_sorting("vocab-count")}
         />
         <SortBySavedCount_BTN
-          IS_active={z_publicListDisplay_SETTINGS?.sorting === "saved-count"}
+          IS_active={sorting === "saved-count"}
           onPress={() => z_SET_sorting("saved-count")}
         />
       </Block>
 
       <Block>
         <Label>{t("label.sortDirection")}</Label>
-        {z_publicListDisplay_SETTINGS?.sorting === "date" ? (
+        {sorting === "date" ? (
           <>
             <NewToOld_BTN
-              IS_active={
-                z_publicListDisplay_SETTINGS?.sortDirection === "descending"
-              }
+              IS_active={sortDirection === "descending"}
               onPress={() => z_SET_sortDirection("descending")}
             />
             <OldToNew_BTN
-              IS_active={
-                z_publicListDisplay_SETTINGS?.sortDirection === "ascending"
-              }
+              IS_active={sortDirection === "ascending"}
               onPress={() => z_SET_sortDirection("ascending")}
             />
           </>
-        ) : z_publicListDisplay_SETTINGS?.sorting === "vocab-count" ? (
+        ) : sorting === "vocab-count" ? (
           <>
             <FewToMany_BTN
-              IS_active={
-                z_publicListDisplay_SETTINGS?.sortDirection === "descending"
-              }
+              IS_active={sortDirection === "descending"}
               onPress={() => z_SET_sortDirection("descending")}
             />
             <ManyToFew_BTN
-              IS_active={
-                z_publicListDisplay_SETTINGS?.sortDirection === "ascending"
-              }
+              IS_active={sortDirection === "ascending"}
               onPress={() => z_SET_sortDirection("ascending")}
             />
           </>
-        ) : z_publicListDisplay_SETTINGS?.sorting === "saved-count" ? (
+        ) : sorting === "saved-count" ? (
           <>
             <FewToMany_BTN
-              IS_active={
-                z_publicListDisplay_SETTINGS?.sortDirection === "descending"
-              }
+              IS_active={sortDirection === "descending"}
               onPress={() => z_SET_sortDirection("descending")}
             />
             <ManyToFew_BTN
-              IS_active={
-                z_publicListDisplay_SETTINGS?.sortDirection === "ascending"
-              }
+              IS_active={sortDirection === "ascending"}
               onPress={() => z_SET_sortDirection("ascending")}
             />
           </>

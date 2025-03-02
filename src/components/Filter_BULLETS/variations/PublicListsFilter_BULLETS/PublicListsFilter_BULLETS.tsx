@@ -6,14 +6,13 @@ import { z_USE_publicListsDisplaySettings } from "@/src/features_new/lists/hooks
 import { BulletLangFilter_BTN } from "../../parts";
 
 export function PublicListsFilter_BULLETS() {
-  const { z_publicListDisplay_SETTINGS, z_HANDLE_langFilter } =
-    z_USE_publicListsDisplaySettings();
+  const { filters, z_HANDLE_langFilter } = z_USE_publicListsDisplaySettings();
 
-  const { langFilters = [] } = z_publicListDisplay_SETTINGS;
+  const { langs = [] } = filters;
 
   return (
     <>
-      {langFilters.map((lang_id) => (
+      {langs.map((lang_id) => (
         <BulletLangFilter_BTN
           lang_id={lang_id}
           REMOVE_lang={() => z_HANDLE_langFilter(lang_id)}

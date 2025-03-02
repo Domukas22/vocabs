@@ -20,76 +20,66 @@ import { z_USE_myVocabsDisplaySettings } from "@/src/features_new/vocabs/hooks/z
 import { t } from "i18next";
 
 export function MyVocabsSorting_CONTENT() {
-  const { z_myVocabDisplay_SETTINGS, z_SET_sorting, z_SET_sortDirection } =
+  const { sorting, z_SET_sorting, z_SET_sortDirection } =
     z_USE_myVocabsDisplaySettings();
+
+  const { type = "date", direction = "descending" } = sorting;
 
   return (
     <>
       <Block row={false}>
         <Label>{t("label.sortLists")}</Label>
         <SortByDate_BTN
-          IS_active={z_myVocabDisplay_SETTINGS?.sorting === "date"}
+          IS_active={type === "date"}
           onPress={() => z_SET_sorting("date")}
         />
         <SortByMarked_BTN
-          IS_active={z_myVocabDisplay_SETTINGS?.sorting === "marked"}
+          IS_active={type === "marked"}
           onPress={() => z_SET_sorting("marked")}
         />
         <SortByDifficulty_BTN
-          IS_active={z_myVocabDisplay_SETTINGS?.sorting === "difficulty"}
+          IS_active={type === "difficulty"}
           onPress={() => z_SET_sorting("difficulty")}
         />
       </Block>
 
-      {/* <Block>
+      <Block>
         <Label>{t("label.sortDirection")}</Label>
-        {z_myVocabDisplay_SETTINGS?.sorting === "date" ? (
+        {type === "date" ? (
           <>
             <NewToOld_BTN
-              IS_active={
-                z_myVocabDisplay_SETTINGS?.sortDirection === "descending"
-              }
+              IS_active={direction === "descending"}
               onPress={() => z_SET_sortDirection("descending")}
             />
             <OldToNew_BTN
-              IS_active={
-                z_myVocabDisplay_SETTINGS?.sortDirection === "ascending"
-              }
+              IS_active={direction === "ascending"}
               onPress={() => z_SET_sortDirection("ascending")}
             />
           </>
-        ) : z_myVocabDisplay_SETTINGS?.sorting === "vocab-count" ? (
+        ) : type === "marked" ? (
           <>
             <FewToMany_BTN
-              IS_active={
-                z_myVocabDisplay_SETTINGS?.sortDirection === "descending"
-              }
+              IS_active={direction === "descending"}
               onPress={() => z_SET_sortDirection("descending")}
             />
             <ManyToFew_BTN
-              IS_active={
-                z_myVocabDisplay_SETTINGS?.sortDirection === "ascending"
-              }
+              IS_active={direction === "ascending"}
               onPress={() => z_SET_sortDirection("ascending")}
             />
           </>
-        ) : z_myVocabDisplay_SETTINGS?.sorting === "saved-count" ? (
+        ) : type === "difficulty" ? (
           <>
             <FewToMany_BTN
-              IS_active={
-                z_myVocabDisplay_SETTINGS?.sortDirection === "descending"
-              }
+              IS_active={direction === "descending"}
               onPress={() => z_SET_sortDirection("descending")}
             />
             <ManyToFew_BTN
-              IS_active={
-                z_myVocabDisplay_SETTINGS?.sortDirection === "ascending"
-              }
+              IS_active={direction === "ascending"}
               onPress={() => z_SET_sortDirection("ascending")}
             />
           </>
         ) : null}
-      </Block> */}
+      </Block>
     </>
   );
 }

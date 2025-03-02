@@ -6,7 +6,7 @@ import { z_USE_publicVocabsDisplaySettings } from "@/src/features_new/vocabs/hoo
 import { BulletLangFilter_BTN } from "../../parts";
 
 export function PublicVocabsFilter_BULLETS() {
-  const { z_publicVocabDisplay_SETTINGS, z_REMOVE_langFilter } =
+  const { z_publicVocabDisplay_SETTINGS, z_HANDLE_langFilter } =
     z_USE_publicVocabsDisplaySettings();
 
   const { langFilters = [] } = z_publicVocabDisplay_SETTINGS;
@@ -17,7 +17,7 @@ export function PublicVocabsFilter_BULLETS() {
         <BulletLangFilter_BTN
           key={lang_id}
           lang_id={lang_id}
-          REMOVE_lang={() => z_REMOVE_langFilter(lang_id)}
+          REMOVE_lang={() => z_HANDLE_langFilter(lang_id)}
         />
       ))}
     </>

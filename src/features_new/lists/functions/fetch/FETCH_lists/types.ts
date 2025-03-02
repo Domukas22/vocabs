@@ -10,6 +10,7 @@ import {
   itemVisibility_TYPE,
   LangFilter_TYPE,
   MarkedFilter_TYPE,
+  sortDirection_TYPE,
 } from "@/src/types/general_TYPES";
 import { MyListsSorting_TYPE } from "../../../hooks/zustand/displaySettings/z_USE_myListsDisplaySettings/z_USE_myListsDisplaySettings";
 
@@ -23,7 +24,7 @@ export interface FETCH_lists_ARGS {
   list_TYPE: itemVisibility_TYPE;
   fetch_TYPE: listFetch_TYPES;
   sorting: listSorting_TYPES;
-  sortDirection: "ascending" | "descending";
+  sortDirection: sortDirection_TYPE;
   amount: number;
   excludeIds: Set<string>;
   signal: AbortSignal;

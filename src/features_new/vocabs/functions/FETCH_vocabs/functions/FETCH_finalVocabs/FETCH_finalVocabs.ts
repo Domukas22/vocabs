@@ -2,7 +2,7 @@
 //
 //
 
-import { raw_Vocab_TYPE, Vocab_TYPE } from "@/src/features_new/vocabs/types";
+import { Vocab_TYPE } from "@/src/features_new/vocabs/types";
 import { VocabQuery_TYPE, FETCH_myVocabs_ARG_TYPES } from "../../types";
 import { BUILD_vocabFilterQuery } from "../BUILD_vocabFilterQuery/BUILD_vocabFilterQuery";
 import { BUILD_vocabPaginationQuery } from "../BUILD_vocabPaginationQuery/BUILD_vocabPaginationQuery";
