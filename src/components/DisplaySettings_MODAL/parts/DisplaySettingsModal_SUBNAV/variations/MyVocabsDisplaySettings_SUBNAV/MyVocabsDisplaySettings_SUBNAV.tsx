@@ -21,21 +21,18 @@ export function MyVocabsDisplaySettings_SUBNAV({
     React.SetStateAction<DisplaySettingsView_TYPES>
   >;
 }) {
-  const { z_myVocabDisplay_SETTINGS } = z_USE_myVocabsDisplaySettings();
-  const activeFilter_COUNT =
-    (z_myVocabDisplay_SETTINGS?.langFilters?.length || 0) +
-    (z_myVocabDisplay_SETTINGS?.difficultyFilters?.length || 0);
+  const { z_GET_activeFilterCount } = z_USE_myVocabsDisplaySettings();
 
   return (
     <DisplaySettings_SUBNAV>
       <DisplaySettingsSubnavVocabPreviewTab_BTN
         current_TAB={current_TAB}
-        SELECT_tab={() => SET_currentTab("filter")}
+        SELECT_tab={() => SET_currentTab("vocab-preview")}
       />
       <DisplaySettingsSubnavFilterTab_BTN
         current_TAB={current_TAB}
         SELECT_tab={() => SET_currentTab("filter")}
-        activeFilter_COUNT={activeFilter_COUNT}
+        activeFilter_COUNT={z_GET_activeFilterCount() || 0}
       />
       <DisplaySettingsSubnavSortTab_BTN
         current_TAB={current_TAB}

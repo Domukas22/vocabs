@@ -38,20 +38,16 @@ export function MyListsFiltering_CONTENT() {
       <Block>
         <Label>{t("label.otherFilters")}</Label>
         <Btn
-          text={t("btn.filterVocabsByMarked")}
+          text={t("btn.filterListsByMarkedVocabs")}
           iconRight={
-            byMarked ? (
-              <ICON_X big rotate color="green" />
-            ) : (
-              <ICON_markedStar active />
-            )
+            byMarked ? <ICON_X big rotate color="green" /> : <ICON_markedStar />
           }
           type={byMarked ? "active_green" : "simple"}
           text_STYLES={{ flex: 1 }}
           onPress={z_HANDLE_markedFilter}
         />
         <Btn
-          text={t("btn.filterVocabsByDifficulty1")}
+          text={t("btn.filterListsByVocabDifficulty1")}
           iconRight={
             difficulties?.includes(3) ? (
               <ICON_X big rotate color="difficulty_3" />
@@ -64,7 +60,7 @@ export function MyListsFiltering_CONTENT() {
           onPress={() => z_HANDLE_difficultyFilter(3)}
         />
         <Btn
-          text={t("btn.filterVocabsByDifficulty2")}
+          text={t("btn.filterListsByVocabDifficulty2")}
           iconRight={
             difficulties?.includes(2) ? (
               <ICON_X big rotate color="difficulty_2" />
@@ -77,7 +73,7 @@ export function MyListsFiltering_CONTENT() {
           onPress={() => z_HANDLE_difficultyFilter(2)}
         />
         <Btn
-          text={t("btn.filterVocabsByDifficulty3")}
+          text={t("btn.filterListsByVocabDifficulty3")}
           iconRight={
             difficulties?.includes(1) ? (
               <ICON_X big rotate color="difficulty_1" />

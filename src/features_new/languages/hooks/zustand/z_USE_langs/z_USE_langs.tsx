@@ -20,6 +20,8 @@ type z_USE_langs_PROPS = {
   z_INSERT_langsError: (error: General_ERROR) => void;
   z_SEARCH_langs: (search_VAL: string) => Lang_TYPE[];
   z_GET_langsByLangId: (lang_IDs: string[]) => Lang_TYPE[];
+
+  z_GET_oneLangById: (targetLang_ID: string) => Lang_TYPE | undefined;
 };
 
 export const z_USE_langs = create<z_USE_langs_PROPS>((set, get) => ({
@@ -58,4 +60,7 @@ export const z_USE_langs = create<z_USE_langs_PROPS>((set, get) => ({
     get().z_langs?.filter((lang) =>
       lang_IDs.some((lang_ID) => lang_ID === lang.lang_id)
     ),
+
+  z_GET_oneLangById: (targetLang_ID) =>
+    get().z_langs?.find((lang) => lang.lang_id === targetLang_ID),
 }));

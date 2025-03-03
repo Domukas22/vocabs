@@ -86,11 +86,3 @@ export const List_CARD = React.memo(function List_CARD({
     </Big_BTN>
   );
 });
-
-function GET_totalVocabListCount(list: List_TYPE) {
-  return (
-    (list.vocab_infos?.diff_1 || 0) +
-    (list.vocab_infos?.diff_2 || 0) +
-    (list.vocab_infos?.diff_3 || 0)
-  );
-}

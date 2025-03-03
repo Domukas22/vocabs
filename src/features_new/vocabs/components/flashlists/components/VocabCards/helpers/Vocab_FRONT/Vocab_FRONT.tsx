@@ -23,6 +23,7 @@ import { Pressable, StyleSheet, View } from "react-native";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import { itemVisibility_TYPE } from "@/src/types/general_TYPES";
 import { VocabTr_TYPE } from "@/src/features_new/vocabs/types";
+import { z_USE_myVocabsDisplaySettings } from "@/src/features_new/vocabs/hooks/zustand/displaySettings/z_USE_myVocabsDisplaySettings/z_USE_myVocabsDisplaySettings";
 
 interface VocabFront_PROPS {
   trs: VocabTr_TYPE[] | undefined;
@@ -45,9 +46,14 @@ const Vocab_FRONT = React.memo(function Vocab_FRONT({
   count = 0,
   list_TYPE = "public",
 }: VocabFront_PROPS) {
-  const { z_vocabDisplay_SETTINGS } = USE_zustand();
-  const { SHOW_description, SHOW_flags, SHOW_difficulty, frontTrLang_ID } =
-    z_vocabDisplay_SETTINGS;
+  const { appearance } = z_USE_myVocabsDisplaySettings();
+
+  const {
+    SHOW_description = false,
+    SHOW_difficulty = false,
+    SHOW_flags = false,
+    frontTrLang_ID = "en",
+  } = appearance;
 
   // Find the translation based on the selected language
   const front_TR = useMemo(() => {
@@ -112,7 +118,7 @@ const Vocab_FRONT = React.memo(function Vocab_FRONT({
                   {SHOW_difficulty && !!difficulty && (
                     <ICON_difficultyDot difficulty={difficulty} />
                   )}
-                  {IS_marked && <ICON_markedStar active={true} size="tiny" />}
+                  {IS_marked && <ICON_markedStar color="green" size="tiny" />}
                 </>
               )}
             </View>

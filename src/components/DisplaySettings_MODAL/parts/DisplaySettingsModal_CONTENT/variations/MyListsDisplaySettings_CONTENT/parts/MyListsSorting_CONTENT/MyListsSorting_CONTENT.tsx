@@ -25,11 +25,17 @@ export function MyListsSorting_CONTENT() {
         <Label>{t("label.sortLists")}</Label>
         <SortByDate_BTN
           IS_active={sorting === "date"}
-          onPress={() => z_SET_sorting("date")}
+          onPress={() => {
+            z_SET_sorting("date");
+            z_SET_sortDirection("descending");
+          }}
         />
         <SortByVocabCount_BTN
           IS_active={sorting === "vocab-count"}
-          onPress={() => z_SET_sorting("vocab-count")}
+          onPress={() => {
+            z_SET_sorting("vocab-count");
+            z_SET_sortDirection("ascending");
+          }}
         />
       </Block>
 
@@ -48,13 +54,13 @@ export function MyListsSorting_CONTENT() {
           </>
         ) : (
           <>
-            <FewToMany_BTN
-              IS_active={sortDirection === "descending"}
-              onPress={() => z_SET_sortDirection("descending")}
-            />
             <ManyToFew_BTN
               IS_active={sortDirection === "ascending"}
               onPress={() => z_SET_sortDirection("ascending")}
+            />
+            <FewToMany_BTN
+              IS_active={sortDirection === "descending"}
+              onPress={() => z_SET_sortDirection("descending")}
             />
           </>
         )}

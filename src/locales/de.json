@@ -37,9 +37,9 @@
     "create": "Erstellen",
     "sortByDifficulty": "Nach Schwerkeit",
     "sortByDate": "Nach Erstellungsdatum",
-    "easyToHard": "Einfach --> Schwer",
+    "easyToHard": "Einfach --> Schwierig",
     "newToOld": "Neu --> Alt",
-    "hardToEasy": "Schwer  --->  Einfach",
+    "hardToEasy": "Schwierig  -->  Einfach",
     "oldToNew": "Alt --> Neu",
     "done": "Fertig",
     "difficulty": {
@@ -96,12 +96,18 @@
     "sortByVocabCount": "Nach Vokabel Anzahl",
     "fewToMany": "Wenig --> Viel",
     "manyToFew": "Viel --> Wenig",
-    "filterVocabsByDifficulty1": "Hat \"schwierige\" Vokabeln",
-    "filterVocabsByDifficulty2": "Hat \"mittlere\" Vokabeln",
-    "filterVocabsByDifficulty3": "Hat \"einfache\" Vokabeln",
-    "filterVocabsByMarked": "Hat \"gemerkte\" Vokabeln",
+    "filterListsByVocabDifficulty1": "Hat \"schwierige\" Vokabeln",
+    "filterListsByVocabDifficulty2": "Hat \"mittlere\" Vokabeln",
+    "filterListsByVocabDifficulty3": "Hat \"einfache\" Vokabeln",
+    "filterListsByMarkedVocabs": "Hat \"gemerkte\" Vokabeln",
     "sortBySavedCount": "Nach gespeichert Anzahl",
-    "sortByMarked": "Nach gemerkt"
+    "sortByMarked": "Nach gemerkt",
+    "unmarkedToMarked": "Nicht gemerkt --> Gemerkt",
+    "markedToUnmarked": "Gemerkt --> Nicht gemerkt",
+    "filterVocabsByDifficulty3": "Schwierig",
+    "filterVocabsByDifficulty2": "Mittel",
+    "filterVocabsByDifficulty1": "Einfach",
+    "filterVocabsByMarked": "Gemerkt"
   },
   "pages": {
     "about": {
@@ -212,7 +218,8 @@
     "loadingPopularVocabs": "Beliebte Vokabeln werden geladen...",
     "mostPopularVocabs": "Die beliebtesten Vokabeln",
     "loadingPopularLists": "Beliebte Listen werden geladen...",
-    "otherFilters": "Andere Filter"
+    "otherFilters": "Andere Filter",
+    "difficultyFilters": "Nach Schwierigkeit filtern"
   },
   "modal": {
     "displaySettings": {

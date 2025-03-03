@@ -2,14 +2,10 @@
 //
 //
 
-import {
-  ICON_calendar,
-  ICON_markedStar,
-} from "@/src/components/1_grouped/icons/icons";
 import { t } from "i18next";
 import Btn from "../../Btn";
 
-export function SortByMarked_BTN({
+export function EasyToHard_BTN({
   IS_active = false,
   onPress = () => {},
 }: {
@@ -18,11 +14,9 @@ export function SortByMarked_BTN({
 }) {
   return (
     <Btn
-      text={t("btn.sortByMarked")}
-      iconRight={<ICON_markedStar color={IS_active ? "primary" : "gray"} />}
+      text={t("btn.easyToHard")}
       onPress={onPress}
       type={IS_active ? "active" : "simple"}
-      style={{ flex: 1 }}
       text_STYLES={{ flex: 1 }}
     />
   );

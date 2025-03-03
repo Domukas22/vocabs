@@ -37,7 +37,7 @@
     "sortByDate": "By date",
     "easyToHard": "Easy --> Hard",
     "newToOld": "New --> Old",
-    "hardToEasy": "Hard  --->  Easy",
+    "hardToEasy": "Hard  -->  Easy",
     "oldToNew": "Old --> New",
     "done": "Done",
     "difficulty": {
@@ -95,12 +95,18 @@
     "sortByVocabCount": "By vocab count",
     "fewToMany": "Few --> Many",
     "manyToFew": "Many --> Few",
-    "filterVocabsByDifficulty1": "Has \"difficult\" vocabs",
-    "filterVocabsByDifficulty2": "Has \"medium\" vocabs",
-    "filterVocabsByDifficulty3": "Has \"easy\" vocabs",
-    "filterVocabsByMarked": "Has \"marked\" vocabs",
+    "filterListsByVocabDifficulty1": "Has \"difficult\" vocabs",
+    "filterListsByVocabDifficulty2": "Has \"medium\" vocabs",
+    "filterListsByVocabDifficulty3": "Has \"easy\" vocabs",
+    "filterListsByMarkedVocabs": "Has \"marked\" vocabs",
     "sortBySavedCount": "By saved count",
-    "sortByMarked": "By marked"
+    "sortByMarked": "By marked",
+    "unmarkedToMarked": "Unmarked --> Marked",
+    "markedToUnmarked": "Marked --> Unmarked",
+    "filterVocabsByDifficulty3": "Hard",
+    "filterVocabsByDifficulty2": "Medium",
+    "filterVocabsByDifficulty1": "Easy",
+    "filterVocabsByMarked": "Marked"
   },
   "pages": {
     "about": {
@@ -213,7 +219,8 @@
     "loadingPopularVocabs": "Loading popular vocabs...",
     "mostPopularVocabs": "Most popular vocabs",
     "loadingPopularLists": "Loading popular lists...",
-    "otherFilters": "Other filters"
+    "otherFilters": "Other filters",
+    "difficultyFilters": "Filter by difficulty"
   },
   "modal": {
     "displaySettings": {

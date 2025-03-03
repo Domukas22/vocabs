@@ -4,15 +4,15 @@
 
 import Block from "@/src/components/1_grouped/blocks/Block/Block";
 import {
-  FewToMany_BTN,
-  ManyToFew_BTN,
+  EasyToHard_BTN,
+  HardToEasy_BTN,
+  MarkedToUnmarked_BTN,
   NewToOld_BTN,
   OldToNew_BTN,
   SortByDate_BTN,
   SortByDifficulty_BTN,
   SortByMarked_BTN,
-  SortBySavedCount_BTN,
-  SortByVocabCount_BTN,
+  UnmarkedToMarked_BTN,
 } from "@/src/components/1_grouped/buttons/Btn/variations";
 import Label from "@/src/components/1_grouped/texts/labels/Label/Label";
 import { z_USE_myVocabsDisplaySettings } from "@/src/features_new/vocabs/hooks/zustand/displaySettings/z_USE_myVocabsDisplaySettings/z_USE_myVocabsDisplaySettings";
@@ -31,15 +31,24 @@ export function MyVocabsSorting_CONTENT() {
         <Label>{t("label.sortLists")}</Label>
         <SortByDate_BTN
           IS_active={type === "date"}
-          onPress={() => z_SET_sorting("date")}
+          onPress={() => {
+            z_SET_sorting("date");
+            z_SET_sortDirection("descending");
+          }}
         />
         <SortByMarked_BTN
           IS_active={type === "marked"}
-          onPress={() => z_SET_sorting("marked")}
+          onPress={() => {
+            z_SET_sorting("marked");
+            z_SET_sortDirection("descending");
+          }}
         />
         <SortByDifficulty_BTN
           IS_active={type === "difficulty"}
-          onPress={() => z_SET_sorting("difficulty")}
+          onPress={() => {
+            z_SET_sorting("difficulty");
+            z_SET_sortDirection("descending");
+          }}
         />
       </Block>
 
@@ -58,22 +67,22 @@ export function MyVocabsSorting_CONTENT() {
           </>
         ) : type === "marked" ? (
           <>
-            <FewToMany_BTN
+            <MarkedToUnmarked_BTN
               IS_active={direction === "descending"}
               onPress={() => z_SET_sortDirection("descending")}
             />
-            <ManyToFew_BTN
+            <UnmarkedToMarked_BTN
               IS_active={direction === "ascending"}
               onPress={() => z_SET_sortDirection("ascending")}
             />
           </>
         ) : type === "difficulty" ? (
           <>
-            <FewToMany_BTN
+            <HardToEasy_BTN
               IS_active={direction === "descending"}
               onPress={() => z_SET_sortDirection("descending")}
             />
-            <ManyToFew_BTN
+            <EasyToHard_BTN
               IS_active={direction === "ascending"}
               onPress={() => z_SET_sortDirection("ascending")}
             />

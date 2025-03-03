@@ -42,7 +42,11 @@ export function ListBtnDifficulty_COUNTS({
       ) : null}
       {marked > 0 && (
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <ICON_markedStar style={{ marginRight: 3 }} active size="tiny" />
+          <ICON_markedStar
+            style={{ marginRight: 3 }}
+            color="green"
+            size="tiny"
+          />
           <View>
             <Styled_TEXT
               type="text_14_bold"

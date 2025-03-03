@@ -20,7 +20,7 @@ export function SortByDifficulty_BTN({
   return (
     <Btn
       text={t("btn.sortByDifficulty")}
-      iconRight={<ICON_difficultyDot difficulty={1} />}
+      iconRight={<ICON_difficultyDot difficulty={IS_active ? 0 : 1} />}
       onPress={onPress}
       type={IS_active ? "active" : "simple"}
       style={{ flex: 1 }}

@@ -48,6 +48,7 @@ export function DisplaySettings_MODAL({
         SET_currentTab={SET_currentTab}
       />
 
+      {/* TODO ==> The scrollview needs to be isidethe children themselves. The vocab dummy is not supposed to be inside the scrollview */}
       <ScrollView style={{ flex: 1, width: "100%" }}>
         <DisplaySettingsModal_CONTENT current_TAB={current_TAB} type={type} />
       </ScrollView>
