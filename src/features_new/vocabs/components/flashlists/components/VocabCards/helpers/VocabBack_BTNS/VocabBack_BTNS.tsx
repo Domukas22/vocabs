@@ -1,36 +1,29 @@
 //
 //
 
-import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
-import {
-  ICON_arrow,
-  ICON_markedStar,
-  ICON_delete,
-  ICON_difficultyDot,
-  ICON_edit,
-  ICON_restore,
-  ICON_X,
-} from "@/src/components/1_grouped/icons/icons";
-
 import { vocabFetch_TYPES } from "@/src/features_new/vocabs/functions/FETCH_vocabs/types";
 import { USE_toggle } from "@/src/hooks";
-import { useTranslation } from "react-i18next";
-import { View, ActivityIndicator } from "react-native";
-import VocabBackDifficultyEdit_BTNS from "../VocabBackDifficultyEdit_BTNS/VocabBackDifficultyEdit_BTNS";
+import { View } from "react-native";
 import React, { useMemo, memo } from "react";
-import { MyColors } from "@/src/constants/MyColors";
-import { useRouter } from "expo-router";
-import { z_USE_myOneList } from "@/src/features_new/lists/hooks/zustand/z_USE_myOneList/z_USE_myOneList";
 import { z_USE_currentActions } from "@/src/hooks/zustand/z_USE_currentActions/z_USE_currentActions";
 import { itemVisibility_TYPE } from "@/src/types/general_TYPES";
 import { Vocab_TYPE } from "@/src/features_new/vocabs/types";
-import { USE_markVocab } from "@/src/features_new/vocabs/hooks/actions/USE_markVocab/USE_markVocab";
-import { USE_updateVocabDifficulty } from "@/src/features_new/vocabs/hooks/actions/USE_updateVocabDifficulty/USE_updateVocabDifficulty";
-import { USE_softDeletevocab } from "@/src/features_new/vocabs/hooks/actions/USE_softDeletevocab/USE_softDeletevocab";
-import { USE_hardDeleteVocab } from "@/src/features_new/vocabs/hooks/actions/USE_hardDeleteVocab/USE_hardDeleteVocab";
-import { z_USE_publicOneList } from "@/src/features_new/lists/hooks/zustand/z_USE_publicOneList/z_USE_publicOneList";
-import { useRoute } from "@react-navigation/native";
-import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
+import { DeleteIcon_BTN } from "./parts/DeleteIcon_BTN/DeleteIcon_BTN";
+import { X_BTN } from "./parts/X_BTN/X_BTN";
+import { Restore_BTN } from "./parts/Restore_BTN/Restore_BTN";
+import { Copy_BTN } from "./parts/Copy_BTN/Copy_BTN";
+import { ToggleDifficulties_BTN } from "./parts/ToggleDifficulties_BTN/ToggleDifficulties_BTN";
+import { ToggleMarked_BTN } from "./parts/ToggleMarked_BTN/ToggleMarked_BTN";
+import { Delete_BTN } from "./parts/Delete_BTN/Delete_BTN";
+import { GoToMyOneList_BTN } from "./parts/GoToMyOneList_BTN/GoToMyOneList_BTN";
+import { GoToPublicOneList_BTN } from "./parts/GoToPublicOneList_BTN/GoToPublicOneList_BTN";
+import { Close_BTN } from "./parts/Close_BTN/Close_BTN";
+import { Edit_BTN } from "./parts/Edit_BTN/Edit_BTN";
+import { AllBtn_WRAP } from "./parts/AllBtn_WRAP/AllBtn_WRAP";
+import { InlineBtn_WRAP } from "./parts/InlineBtn_WRAP/InlineBtn_WRAP";
+import { DifficultyEdit_BTNS } from "./parts/DifficultyEdit_BTNS/DifficultyEdit_BTNS";
+
+// 🔴🔴TODO ==> finish refactoring buttons
 
 interface VocabBackBtns_PROPS {
   vocab: Vocab_TYPE;
@@ -47,275 +40,34 @@ const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
   vocab,
   list_TYPE,
   fetch_TYPE,
-
   OPEN_updateVocabModal = () => {},
-  OPEN_vocabCopyModal = () => {},
-
   TOGGLE_open = () => {},
-
-  GO_toListOfVocab = () => {},
 }: VocabBackBtns_PROPS) {
-  const { t } = useTranslation();
-  const router = useRouter();
-  const { z_user } = z_USE_user();
-
   const { z_currentActions, IS_inAction } = z_USE_currentActions();
-
-  const [SHOW_difficultyEdits, TOGGLE_difficultyEdits, SET_difficultyEdit] =
+  const [SHOW_difficultyEdits, TOGGLE_difficultyEdits] = USE_toggle(false);
+  const [SHOW_deleteConfirmation, TOGGLE_deleteConfirmation] =
     USE_toggle(false);
-
-  const { z_FETCH_myOneListById } = z_USE_myOneList();
-  const { z_FETCH_publicOneListById } = z_USE_publicOneList();
-
-  const { MARK_vocab } = USE_markVocab();
-  const { UPDATE_vocabDifficulty } = USE_updateVocabDifficulty();
-  const { SOFTDELETE_vocab } = USE_softDeletevocab();
-  const { HARDDELETE_vocab } = USE_hardDeleteVocab();
-
-  const [
-    SHOW_deleteConfirmation,
-    TOGGLE_deleteConfirmation,
-    SET_deleteConfirmation,
-  ] = USE_toggle(false);
-
-  const IS_updatingMarked = useMemo(
-    () => IS_inAction("vocab", vocab?.id, "updating_marked"),
-    [z_currentActions]
-  );
 
   const IS_deleting = useMemo(
     () => IS_inAction("vocab", vocab?.id, "deleting"),
     [z_currentActions]
   );
 
-  const IS_updatingDifficulty = useMemo(
-    () => IS_inAction("vocab", vocab?.id, "updating_difficulty"),
-    [z_currentActions]
-  );
-
-  const AllBtn_WRAP = memo(({ children }: { children: React.ReactNode }) => (
-    <View style={{ padding: 12, gap: 8 }}>{children}</View>
-  ));
-
-  const InlineBtn_WRAP = memo(({ children }: { children: React.ReactNode }) => (
-    <View style={{ flexDirection: "row", gap: 8 }}>{children}</View>
-  ));
-
-  const Edit_BTN = memo(() => (
-    <Btn
-      type="simple"
-      style={{ flex: 1 }}
-      onPress={() => OPEN_updateVocabModal()}
-      text={t("btn.editVocab")}
-      iconRight={<ICON_edit />}
-      text_STYLES={{ marginRight: "auto" }}
-    />
-  ));
-
-  const ToggleMarked_BTN = memo(() => {
-    return (
-      <Btn
-        type={vocab?.is_marked ? "active_green" : "simple"}
-        onPress={async () => {
-          await MARK_vocab(
-            vocab?.id,
-            vocab?.list_id,
-            !vocab?.is_marked,
-            fetch_TYPE === "byTargetList"
-          );
-        }} // Toggle spinning on press
-        stayPressed={IS_updatingMarked}
-        iconLeft={
-          <View style={{ width: 26, alignItems: "center" }}>
-            {IS_updatingMarked ? (
-              <ActivityIndicator
-                color={
-                  vocab?.is_marked ? MyColors.icon_green : MyColors.icon_gray
-                }
-              />
-            ) : (
-              <ICON_markedStar active={vocab?.is_marked} size="big" />
-            )}
-          </View>
-        }
-      />
-    );
-  });
-
-  const ToggleDifficulties_BTN = memo(() => (
-    <Btn
-      type="simple"
-      onPress={TOGGLE_difficultyEdits}
-      style={{ width: 56 }}
-      iconLeft={
-        IS_updatingDifficulty ? (
-          <ActivityIndicator color={MyColors.icon_gray} />
-        ) : (
-          <ICON_difficultyDot difficulty={vocab?.difficulty || 0} size="big" />
-        )
-      }
-    />
-  ));
-
-  const VocabDifficulty_BTNS = memo(() => (
-    <VocabBackDifficultyEdit_BTNS
-      active_DIFFICULTY={vocab?.difficulty || 0}
-      UPDATE_vocabDifficulty={async (new_DIFFICULY: 1 | 2 | 3) =>
-        await UPDATE_vocabDifficulty(
-          vocab?.id,
-          vocab?.difficulty,
-          new_DIFFICULY,
-          fetch_TYPE === "byTargetList"
-        )
-      }
-      TOGGLE_open={TOGGLE_difficultyEdits}
-      IS_updatingDifficulty={IS_updatingDifficulty}
-    />
-  ));
-
-  const Close_BTN = memo(() => (
-    <Btn
-      type="simple"
-      onPress={() => {
-        TOGGLE_open();
-        SET_difficultyEdit(false);
-      }}
-      style={{ flex: 1 }}
-      text={t("btn.close")}
-      iconRight={<ICON_X rotate big />}
-      text_STYLES={{ marginRight: "auto" }}
-    />
-  ));
-
-  const route = useRoute();
-  const GoToList_BTN = memo(() => (
-    <Btn
-      type="simple"
-      onPress={() => {
-        if (vocab?.list_id) {
-          list_TYPE === "private"
-            ? z_FETCH_myOneListById(
-                vocab?.list_id,
-                z_user?.id || "",
-                "private",
-                {}
-              )
-            : z_FETCH_publicOneListById(
-                vocab?.list_id,
-                z_user?.id || "",
-                "public",
-                {}
-              );
-
-          if (route.name === "index") {
-            router.push(
-              list_TYPE === "private"
-                ? `/(main)/vocabs/${vocab?.list_id}`
-                : `/(main)/explore/public_lists/${vocab?.list_id}`
-            );
-          } else {
-            router.replace(
-              list_TYPE === "private"
-                ? `/(main)/vocabs/${vocab?.list_id}`
-                : `/(main)/explore/public_lists/${vocab?.list_id}`
-            );
-          }
-        }
-      }}
-      text={t("btn.goToListOfVocab")}
-      iconRight={<ICON_arrow direction="right" />}
-      text_STYLES={{ marginRight: "auto" }}
-    />
-  ));
-
-  const Restore_BTN = memo(() => (
-    <Btn
-      type="simple"
-      onPress={() => {}}
-      text={t("btn.restoreVocab")}
-      iconRight={<ICON_restore />}
-      text_STYLES={{ marginRight: "auto", color: MyColors.text_green }}
-    />
-  ));
-
-  const DeleteForever_BTN = memo(() => (
-    <Btn
-      type="simple"
-      onPress={GO_toListOfVocab}
-      text={t("btn.deletePermanently")}
-      iconRight={<ICON_delete />}
-      text_STYLES={{ marginRight: "auto", color: MyColors.text_red }}
-    />
-  ));
-
-  const DeleteIcon_BTN = memo(() => (
-    <Btn
-      type="simple"
-      onPress={() => {
-        SET_deleteConfirmation(true);
-      }}
-      iconRight={<ICON_delete color="gray_light" />}
-    />
-  ));
-  const X_BTN = memo(({ onPress = () => {} }: { onPress: () => void }) => (
-    <Btn
-      type="simple"
-      onPress={onPress}
-      iconLeft={<ICON_X big rotate />}
-      style={{
-        borderTopRightRadius: 0,
-        borderBottomRightRadius: 0,
-        borderRightWidth: 0,
-      }}
-    />
-  ));
-  const Delete_BTN = memo(
-    ({
-      text = "Btn",
-      onPress = () => {},
-    }: {
-      text: string;
-      onPress: () => void;
-    }) => (
-      <Btn
-        type="delete"
-        onPress={onPress}
-        text={IS_deleting ? "" : text}
-        text_STYLES={{ marginRight: "auto" }}
-        stayPressed={IS_deleting}
-        style={[
-          { flex: 1 },
-          !IS_deleting && { borderTopLeftRadius: 0, borderBottomLeftRadius: 0 },
-        ]}
-        iconRight={
-          IS_deleting ? (
-            <ActivityIndicator color={MyColors.icon_red} />
-          ) : (
-            <ICON_delete />
-          )
-        }
-      />
-    )
-  );
-
-  const Copy_BTN = memo(() => (
-    <Btn
-      type="simple"
-      onPress={OPEN_vocabCopyModal}
-      text={t("btn.saveVocab")}
-      iconRight={<ICON_X color="green" big />}
-      text_STYLES={{ marginRight: "auto", color: MyColors.text_green }}
-    />
-  ));
-
   const MyVocab3Btn_WRAP = memo(() =>
     SHOW_difficultyEdits ? (
-      <VocabDifficulty_BTNS />
+      <DifficultyEdit_BTNS
+        TOGGLE_open={TOGGLE_difficultyEdits}
+        vocab={vocab}
+        SHOULD_updateListUpdatedAt={fetch_TYPE === "byTargetList"}
+      />
     ) : (
       <InlineBtn_WRAP>
-        <Edit_BTN />
-        <ToggleMarked_BTN />
-        <ToggleDifficulties_BTN />
+        <Edit_BTN onPress={() => OPEN_updateVocabModal()} />
+        <ToggleMarked_BTN vocab={vocab} SHOULD_updateListUpdatedAt />
+        <ToggleDifficulties_BTN
+          vocab={vocab}
+          onPress={TOGGLE_difficultyEdits}
+        />
       </InlineBtn_WRAP>
     )
   );
@@ -325,25 +77,18 @@ const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
       SHOW_deleteConfirmation ? (
         <View style={{ flexDirection: "row" }}>
           {!IS_deleting ? (
-            <X_BTN onPress={() => SET_deleteConfirmation(false)} />
+            <X_BTN onPress={() => TOGGLE_deleteConfirmation()} />
           ) : null}
-          <Delete_BTN
-            text={
-              deleteType === "soft"
-                ? t("btn.deleteVocab")
-                : t("btn.deleteVocabHard")
-            }
-            onPress={async () =>
-              deleteType === "hard"
-                ? await HARDDELETE_vocab(vocab?.id)
-                : await SOFTDELETE_vocab(vocab?.id, vocab?.list_id, true)
-            }
-          />
+          <Delete_BTN delete_TYPE={deleteType} vocab={vocab} />
         </View>
       ) : (
         <InlineBtn_WRAP>
-          <DeleteIcon_BTN />
-          <Close_BTN />
+          <DeleteIcon_BTN
+            onPress={() => {
+              TOGGLE_deleteConfirmation();
+            }}
+          />
+          <Close_BTN onPress={TOGGLE_open} />
         </InlineBtn_WRAP>
       )
   );
@@ -361,7 +106,8 @@ const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
       return (
         <AllBtn_WRAP>
           <MyVocab3Btn_WRAP />
-          <GoToList_BTN />
+
+          <GoToMyOneList_BTN vocab={vocab} />
           <CloseBtn_WRAP deleteType="soft" />
         </AllBtn_WRAP>
       );
@@ -369,7 +115,7 @@ const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
     if (fetch_TYPE === "deleted") {
       return (
         <AllBtn_WRAP>
-          <Restore_BTN />
+          <Restore_BTN onPress={() => {}} />
           <CloseBtn_WRAP deleteType="hard" />
         </AllBtn_WRAP>
       );
@@ -379,17 +125,17 @@ const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
     if (fetch_TYPE === "byTargetList") {
       return (
         <AllBtn_WRAP>
-          <Copy_BTN />
-          <Close_BTN />
+          <Copy_BTN onPress={() => {}} />
+          <Close_BTN onPress={TOGGLE_open} />
         </AllBtn_WRAP>
       );
     }
     if (fetch_TYPE === "all") {
       return (
         <AllBtn_WRAP>
-          <Copy_BTN />
-          <GoToList_BTN />
-          <Close_BTN />
+          <Copy_BTN onPress={() => {}} />
+          <GoToPublicOneList_BTN vocab={vocab} />
+          <Close_BTN onPress={TOGGLE_open} />
         </AllBtn_WRAP>
       );
     }

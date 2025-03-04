@@ -108,6 +108,8 @@ export function USE_fetchPublicLists({
               "'COLLECT_allMyListsLangIds' returned an undefined 'collectedLang_IDs' array, although it didn't throw an error",
           });
 
+        console.log(collectedLang_IDs);
+
         const { lists, unpaginated_COUNT } = await FETCH_lists({
           search,
           signal: newController.signal,

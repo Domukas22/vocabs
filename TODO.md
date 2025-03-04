@@ -3,7 +3,10 @@
 //
 
 1. Create a separate vocab card for private/public vocabs
-2. All vocab collected lang ids don't work for ALL-public-vocabs
+2. Create a 'COLLECT_allVocabsLangIds'
+3. Refactor my saved / my all / my deleted vocabs pages
+4. Refactor all public vocabs page
+5. Deleted vocabs should be sorted by
 
 ///////////////////
 

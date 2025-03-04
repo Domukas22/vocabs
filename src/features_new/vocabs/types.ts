@@ -13,6 +13,8 @@ export type VocabTr_TYPE = {
   highlights: number[];
 };
 
+export type VocabDiff_TYPE = 1 | 2 | 3;
+
 export type Vocab_TYPE = {
   id: string;
   user_id: string;
@@ -20,7 +22,7 @@ export type Vocab_TYPE = {
   type: itemVisibility_TYPE;
 
   is_marked: boolean;
-  difficulty: number;
+  difficulty: VocabDiff_TYPE;
   lang_ids: string[];
   trs: VocabTr_TYPE[];
 

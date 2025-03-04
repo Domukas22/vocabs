@@ -12,6 +12,8 @@ export function PublicVocabsFiltering_CONTENT() {
   const { z_publicOneList } = z_USE_publicOneList();
   const { filters, z_HANDLE_langFilter } = z_USE_publicVocabsDisplaySettings();
 
+  console.log(z_publicOneList);
+
   const { langs = [] } = filters;
 
   return (
