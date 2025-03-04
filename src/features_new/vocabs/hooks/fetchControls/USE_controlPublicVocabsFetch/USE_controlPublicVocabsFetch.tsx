@@ -7,6 +7,8 @@ import { useCallback, useEffect } from "react";
 import { USE_fetchPublicVocabs } from "./USE_fetchPublicVocabs/USE_fetchPublicVocabs";
 import { z_USE_publicVocabs } from "../../zustand/z_USE_publicVocabs/z_USE_publicVocabs";
 import { vocabFetch_TYPES } from "../../../functions/FETCH_vocabs/types";
+import { z_USE_myVocabsDisplaySettings } from "../../zustand/displaySettings/z_USE_myVocabsDisplaySettings/z_USE_myVocabsDisplaySettings";
+import { z_USE_publicVocabsDisplaySettings } from "../../zustand/displaySettings/z_USE_publicVocabsDisplaySettings/z_USE_publicVocabsDisplaySettings";
 
 export default function USE_controlPublicVocabsFetch({
   search = "",
@@ -17,9 +19,7 @@ export default function USE_controlPublicVocabsFetch({
   fetch_TYPE: vocabFetch_TYPES;
   targetList_ID: string;
 }) {
-  const { z_vocabDisplay_SETTINGS } = USE_zustand();
-
-  const { langFilters, sortDirection } = z_vocabDisplay_SETTINGS;
+  const { filters, sorting } = z_USE_publicVocabsDisplaySettings();
 
   const {
     z_publicVocabPrinted_IDS,
@@ -41,24 +41,18 @@ export default function USE_controlPublicVocabsFetch({
         loadMore,
         fetch_TYPE,
         targetList_ID,
-        langFilters,
-        sortDirection,
         excludeIds: loadMore ? z_publicVocabPrinted_IDS : new Set(),
+        filters,
+        sorting,
       });
     },
-    [
-      langFilters,
-      sortDirection,
-      z_publicVocabPrinted_IDS,
-      search,
-      targetList_ID,
-    ]
+    [sorting, filters, z_publicVocabPrinted_IDS, search, targetList_ID]
   );
 
   // Refetch on search / sorting / filter / targetList_ID
   useEffect(() => {
     (async () => await FETCH())();
-  }, [search, langFilters, sortDirection, targetList_ID]);
+  }, [search, filters, sorting, targetList_ID]);
 
   const LOAD_more = useCallback(async () => {
     (async () => await FETCH(true))();

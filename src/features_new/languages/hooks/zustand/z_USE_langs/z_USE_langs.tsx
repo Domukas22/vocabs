@@ -12,7 +12,7 @@ export type z_INSERT_langsError_TYPE = (error: General_ERROR) => void;
 //////////////////////////////////////////////////////////////
 
 type z_USE_langs_PROPS = {
-  z_langs: Lang_TYPE[];
+  z_langs: Record<string, Lang_TYPE>; // Now an object indexed by lang_id
   z_langsLoading_STATE: loadingState_TYPES;
   z_langs_ERROR?: General_ERROR;
 
@@ -20,24 +20,31 @@ type z_USE_langs_PROPS = {
   z_INSERT_langsError: (error: General_ERROR) => void;
   z_SEARCH_langs: (search_VAL: string) => Lang_TYPE[];
   z_GET_langsByLangId: (lang_IDs: string[]) => Lang_TYPE[];
-
   z_GET_oneLangById: (targetLang_ID: string) => Lang_TYPE | undefined;
 };
 
 export const z_USE_langs = create<z_USE_langs_PROPS>((set, get) => ({
-  z_langs: [],
+  z_langs: {}, // Now an object instead of an array/set
   z_langsLoading_STATE: "none",
   z_langs_ERROR: undefined,
 
-  z_INSERT_fetchedLangs: (langs) => set({ z_langs: langs }),
+  z_INSERT_fetchedLangs: (langs) =>
+    set({
+      z_langs: langs.reduce((acc, lang) => {
+        acc[lang.lang_id] = lang;
+        return acc;
+      }, {} as Record<string, Lang_TYPE>),
+    }),
+
   z_INSERT_langsError: (error) =>
     set({
-      z_langs: [],
+      z_langs: {},
       z_langsLoading_STATE: "error",
       z_langs_ERROR: error,
     }),
-  z_SEARCH_langs: (search_VAL: string) => {
-    const searched_LANGS = get().z_langs?.filter((lang) =>
+
+  z_SEARCH_langs: (search_VAL: string) =>
+    Object.values(get().z_langs).filter((lang) =>
       (
         [
           "lang_in_en",
@@ -53,14 +60,10 @@ export const z_USE_langs = create<z_USE_langs_PROPS>((set, get) => ({
           value.toLowerCase().includes(search_VAL.toLowerCase())
         );
       })
-    );
-    return searched_LANGS;
-  },
-  z_GET_langsByLangId: (lang_IDs) =>
-    get().z_langs?.filter((lang) =>
-      lang_IDs.some((lang_ID) => lang_ID === lang.lang_id)
     ),
 
-  z_GET_oneLangById: (targetLang_ID) =>
-    get().z_langs?.find((lang) => lang.lang_id === targetLang_ID),
+  z_GET_langsByLangId: (lang_IDs) =>
+    lang_IDs.map((id) => get().z_langs[id]).filter(Boolean) as Lang_TYPE[], // Fetch directly from object
+
+  z_GET_oneLangById: (targetLang_ID) => get().z_langs[targetLang_ID], // O(1) lookup
 }));

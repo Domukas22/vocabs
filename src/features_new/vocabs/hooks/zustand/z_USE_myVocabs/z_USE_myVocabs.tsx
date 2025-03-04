@@ -57,8 +57,6 @@ type z_USE_myVocabs_PROPS = {
   z_INSERT_myVocabsError: z_INSERT_myVocabsError_TYPE;
 };
 
-// z = Zustand
-// oL == One List
 export const z_USE_myVocabs = create<z_USE_myVocabs_PROPS>((set, get) => ({
   z_myVocabs: [],
   z_myVocabPrinted_IDS: new Set<string>(),

@@ -15,27 +15,22 @@ import { z_USE_myVocabsDisplaySettings } from "@/src/features_new/vocabs/hooks/z
 
 import { t } from "i18next";
 import { View } from "react-native";
-import { MyVocabCard_DUMMY, MyVocabCardFrontLangToggle_BLOCK } from "./parts";
+import {
+  PublicVocabCard_DUMMY,
+  PublicVocabCardFrontLangToggle_BLOCK,
+} from "./parts";
 import { DisplaySettingsModalContent_SCROLLVIEW } from "../../../../parts";
+import { z_USE_publicVocabsDisplaySettings } from "@/src/features_new/vocabs/hooks/zustand/displaySettings/z_USE_publicVocabsDisplaySettings/z_USE_publicVocabsDisplaySettings";
 
-export function MyVocabsCardPreview_CONTENT() {
-  const {
-    appearance,
-    z_TOGGLE_showDescription,
-    z_TOGGLE_showDifficulty,
-    z_TOGGLE_showFlags,
-  } = z_USE_myVocabsDisplaySettings();
+export function PublicVocabsCardPreview_CONTENT() {
+  const { appearance, z_TOGGLE_showDescription } =
+    z_USE_publicVocabsDisplaySettings();
 
-  const {
-    SHOW_description = false,
-    SHOW_difficulty = false,
-    SHOW_flags = false,
-    frontTrLang_ID = "en",
-  } = appearance;
+  const { SHOW_description = false } = appearance;
 
   return (
     <>
-      <MyVocabCard_DUMMY />
+      <PublicVocabCard_DUMMY />
       <DisplaySettingsModalContent_SCROLLVIEW>
         <Block>
           <Label>{t("label.vocabPreview")}</Label>
@@ -54,23 +49,10 @@ export function MyVocabsCardPreview_CONTENT() {
                 active={SHOW_description}
                 onPress={z_TOGGLE_showDescription}
               />
-              <Custom_TOGGLE
-                icon={<ICON_flag big lang={frontTrLang_ID} />}
-                text={t("toggle.showFlags")}
-                active={SHOW_flags}
-                onPress={z_TOGGLE_showFlags}
-              />
-              <Custom_TOGGLE
-                icon={<ICON_difficultyDot size="big" difficulty={3} />}
-                text={t("toggle.showDifficulty")}
-                active={SHOW_difficulty}
-                onPress={z_TOGGLE_showDifficulty}
-                last
-              />
             </View>
           </View>
         </Block>
-        <MyVocabCardFrontLangToggle_BLOCK />
+        <PublicVocabCardFrontLangToggle_BLOCK />
       </DisplaySettingsModalContent_SCROLLVIEW>
     </>
   );

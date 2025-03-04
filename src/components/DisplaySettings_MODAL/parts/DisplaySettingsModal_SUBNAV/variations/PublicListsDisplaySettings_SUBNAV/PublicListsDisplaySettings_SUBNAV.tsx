@@ -20,15 +20,14 @@ export function PublicListsDisplaySettings_SUBNAV({
     React.SetStateAction<DisplaySettingsView_TYPES>
   >;
 }) {
-  const { z_publicListDisplay_SETTINGS } = z_USE_publicListsDisplaySettings();
-  const activeFilter_COUNT = z_publicListDisplay_SETTINGS?.langFilters?.length;
+  const { z_GET_activeFilterCount } = z_USE_publicListsDisplaySettings();
 
   return (
     <DisplaySettings_SUBNAV>
       <DisplaySettingsSubnavFilterTab_BTN
         current_TAB={current_TAB}
         SELECT_tab={() => SET_currentTab("filter")}
-        activeFilter_COUNT={activeFilter_COUNT}
+        activeFilter_COUNT={z_GET_activeFilterCount() || 0}
       />
       <DisplaySettingsSubnavSortTab_BTN
         current_TAB={current_TAB}

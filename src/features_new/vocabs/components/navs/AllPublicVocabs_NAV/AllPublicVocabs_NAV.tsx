@@ -28,8 +28,7 @@ export function AllPublicVocabs_NAV({
 }) {
   const [IS_searchOpen, SET_searchOpen] = useState(false);
   const search_REF = useRef<TextInput>(null);
-  const { z_publicVocabDisplay_SETTINGS } = z_USE_publicVocabsDisplaySettings();
-  const { langFilters } = z_publicVocabDisplay_SETTINGS;
+  const { z_GET_activeFilterCount } = z_USE_publicVocabsDisplaySettings();
 
   return (
     <FlashlistPage_NAV
@@ -43,7 +42,7 @@ export function AllPublicVocabs_NAV({
             <NavSearch_BTN OPEN_search={() => SET_searchOpen(true)} />
             <NavDisplaySettings_BTN
               OPEN_displaySettings={OPEN_displaySettings}
-              activeFilter_COUNT={langFilters?.length}
+              activeFilter_COUNT={z_GET_activeFilterCount() || 0}
             />
           </>
         ) : (

@@ -55,7 +55,7 @@ export default function Btn({
       {text && (
         <Styled_TEXT
           type="text_18_regular"
-          style={[btnStyles[type].text, text_STYLES]}
+          style={[text_STYLES, btnStyles[type].text]}
         >
           {text}
         </Styled_TEXT>

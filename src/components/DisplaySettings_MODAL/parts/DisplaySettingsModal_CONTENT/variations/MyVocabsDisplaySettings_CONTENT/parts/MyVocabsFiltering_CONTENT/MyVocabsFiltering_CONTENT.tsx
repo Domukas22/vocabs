@@ -15,6 +15,7 @@ import { z_USE_myOneList } from "@/src/features_new/lists/hooks/zustand/z_USE_my
 import { z_USE_publicLists } from "@/src/features_new/lists/hooks/zustand/z_USE_publicLists/z_USE_publicLists";
 import { z_USE_myVocabsDisplaySettings } from "@/src/features_new/vocabs/hooks/zustand/displaySettings/z_USE_myVocabsDisplaySettings/z_USE_myVocabsDisplaySettings";
 import { t } from "i18next";
+import { DisplaySettingsModalContent_SCROLLVIEW } from "../../../../parts";
 
 export function MyVocabsFiltering_CONTENT() {
   const { z_myOneList } = z_USE_myOneList();
@@ -28,7 +29,7 @@ export function MyVocabsFiltering_CONTENT() {
   const { langs = [], difficulties = [], byMarked = false } = filters;
 
   return (
-    <>
+    <DisplaySettingsModalContent_SCROLLVIEW>
       <LanguagesBtn_BLOCK
         label={t("label.filterByLanguage")}
         allLang_IDs={z_myOneList?.collected_lang_ids || []}
@@ -93,6 +94,6 @@ export function MyVocabsFiltering_CONTENT() {
           onPress={z_HANDLE_markedFilter}
         />
       </Block>
-    </>
+    </DisplaySettingsModalContent_SCROLLVIEW>
   );
 }

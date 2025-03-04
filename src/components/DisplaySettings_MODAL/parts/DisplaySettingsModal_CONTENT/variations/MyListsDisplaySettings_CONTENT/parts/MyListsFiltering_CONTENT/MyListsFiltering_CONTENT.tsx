@@ -14,6 +14,7 @@ import { LanguagesBtn_BLOCK } from "@/src/components/LanguagesBtn_BLOCK/Language
 import { z_USE_myListsDisplaySettings } from "@/src/features_new/lists/hooks/zustand/displaySettings/z_USE_myListsDisplaySettings/z_USE_myListsDisplaySettings";
 import { z_USE_myLists } from "@/src/features_new/lists/hooks/zustand/z_USE_myLists/z_USE_myLists";
 import { t } from "i18next";
+import { DisplaySettingsModalContent_SCROLLVIEW } from "../../../../parts";
 
 export function MyListsFiltering_CONTENT() {
   const { z_myListsCollectedLangIds } = z_USE_myLists();
@@ -27,7 +28,7 @@ export function MyListsFiltering_CONTENT() {
   const { langs = [], difficulties = [], byMarked = false } = filters;
 
   return (
-    <>
+    <DisplaySettingsModalContent_SCROLLVIEW>
       <LanguagesBtn_BLOCK
         allLang_IDs={z_myListsCollectedLangIds}
         activeLang_IDs={langs}
@@ -86,6 +87,6 @@ export function MyListsFiltering_CONTENT() {
           onPress={() => z_HANDLE_difficultyFilter(1)}
         />
       </Block>
-    </>
+    </DisplaySettingsModalContent_SCROLLVIEW>
   );
 }

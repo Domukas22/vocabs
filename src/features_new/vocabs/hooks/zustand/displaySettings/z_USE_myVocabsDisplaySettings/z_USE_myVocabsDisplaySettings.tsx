@@ -23,17 +23,19 @@ interface z_USE_myVocabsDisplaySettings_PROPS {
 
   z_HANDLE_langFilter: (toRemoveLang_ID: string) => void;
   z_HANDLE_difficultyFilter: (toRemove_DIFFICULTY: 1 | 2 | 3) => void;
+  z_HANDLE_markedFilter: () => void;
+
   z_GET_activeFilterCount: () => number;
 
   z_SET_sorting: (sorting_TYPE: myVocabsSorting_TYPE) => void;
   z_SET_sortDirection: (sortDirection_TYPE: sortDirection_TYPE) => void;
-  z_HANDLE_markedFilter: () => void;
 
   z_TOGGLE_showDescription: () => void;
   z_TOGGLE_showFlags: () => void;
   z_TOGGLE_showDifficulty: () => void;
 
   z_SET_frontLangId: (newLang_ID: string) => void;
+  z_CLEAR_filters: () => void;
 }
 
 export const z_USE_myVocabsDisplaySettings =
@@ -54,6 +56,9 @@ export const z_USE_myVocabsDisplaySettings =
       SHOW_flags: true,
       SHOW_difficulty: true,
     },
+
+    z_CLEAR_filters: () =>
+      set({ filters: { byMarked: false, difficulties: [], langs: [] } }),
 
     z_GET_activeFilterCount: () =>
       get().filters?.langs?.length +

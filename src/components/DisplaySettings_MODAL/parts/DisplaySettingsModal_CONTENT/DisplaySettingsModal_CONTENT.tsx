@@ -8,6 +8,7 @@ import {
   MyListsDisplaySettings_CONTENT,
   MyVocabsDisplaySettings_CONTENT,
   PublicListsDisplaySettings_CONTENT,
+  PublicVocabsDisplaySettings_CONTENT,
 } from "./variations";
 
 export function DisplaySettingsModal_CONTENT({
@@ -24,6 +25,8 @@ export function DisplaySettingsModal_CONTENT({
       return <PublicListsDisplaySettings_CONTENT current_TAB={current_TAB} />;
     case "my-vocabs":
       return <MyVocabsDisplaySettings_CONTENT current_TAB={current_TAB} />;
+    case "public-vocabs":
+      return <PublicVocabsDisplaySettings_CONTENT current_TAB={current_TAB} />;
     default:
       return null;
   }

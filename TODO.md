@@ -2,9 +2,13 @@
 //
 //
 
-1. Create display settings for mylists / publicLists / myVocabs / publicVocabs
-2. Create vocab modal + function
-3. Update vocab modal + function
+1. Create a separate vocab card for private/public vocabs
+2. All vocab collected lang ids don't work for ALL-public-vocabs
+
+///////////////////
+
+1. Create vocab modal + function
+2. Update vocab modal + function
 
 Functions:
 

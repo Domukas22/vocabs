@@ -17,6 +17,7 @@ import { Portal } from "@gorhom/portal";
 import { PublicOneList_NAV } from "@/src/features_new/lists/components/navs";
 import { Flashlist_HEADER } from "@/src/components/Flashlist_HEADER/Flashlist_HEADER";
 import { z_USE_publicVocabsDisplaySettings } from "@/src/features_new/vocabs/hooks/zustand/displaySettings/z_USE_publicVocabsDisplaySettings/z_USE_publicVocabsDisplaySettings";
+import { DisplaySettings_MODAL } from "@/src/components/DisplaySettings_MODAL/DisplaySettings_MODAL";
 
 export default function PublicListVocabs_PAGE() {
   const { urlParamsList_ID } = USE_listIdInParams();
@@ -41,7 +42,7 @@ export default function PublicListVocabs_PAGE() {
     targetList_ID: urlParamsList_ID,
   });
 
-  const { z_publicVocabDisplay_SETTINGS } = z_USE_publicVocabsDisplaySettings();
+  const { z_GET_activeFilterCount } = z_USE_publicVocabsDisplaySettings();
 
   return (
     <>
@@ -63,9 +64,7 @@ export default function PublicListVocabs_PAGE() {
             loading_STATE={z_publicVocabsLoading_STATE}
             list_NAME={list_NAME}
             unpaginated_COUNT={z_publicVocabsUnpaginated_COUNT}
-            appliedFilter_COUNT={
-              z_publicVocabDisplay_SETTINGS?.langFilters?.length || 0
-            }
+            appliedFilter_COUNT={z_GET_activeFilterCount() || 0}
             type="public-vocabs"
           />
         }
@@ -85,6 +84,12 @@ export default function PublicListVocabs_PAGE() {
 
       {/* ------------------------------------------------------------------ MODALS ------------------------------------------------------------------ */}
       <Portal>
+        <DisplaySettings_MODAL
+          starting_TAB="vocab-preview"
+          type="public-vocabs"
+          open={modals.displaySettings.IS_open}
+          TOGGLE_open={() => modals.displaySettings.set(false)}
+        />
         {/* <SavePublicVocabToList_MODAL
         vocab={target_VOCAB}
         IS_open={modals.saveList.IS_open}
@@ -98,12 +103,7 @@ export default function PublicListVocabs_PAGE() {
         TOGGLE_open={() => modals.saveList.set(false)}
       />
 
-      <VocabDisplaySettings_MODAL
-        open={modals.displaySettings.IS_open}
-        TOGGLE_open={() => modals.displaySettings.set(false)}
-        collectedLang_IDS={collectedLangIds}
-        HAS_difficulties={false}
-      />
+    
       <CopyListAndVocabs_MODAL
         error={copyList_ERROR}
         IS_open={modals.saveList.IS_open}

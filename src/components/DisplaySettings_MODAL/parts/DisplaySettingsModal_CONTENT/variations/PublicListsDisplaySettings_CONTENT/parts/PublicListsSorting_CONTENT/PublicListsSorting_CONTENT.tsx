@@ -16,26 +16,36 @@ import Label from "@/src/components/1_grouped/texts/labels/Label/Label";
 import { z_USE_publicListsDisplaySettings } from "@/src/features_new/lists/hooks/zustand/displaySettings/z_USE_publicListsDisplaySettings/z_USE_publicListsDisplaySettings";
 
 import { t } from "i18next";
+import { DisplaySettingsModalContent_SCROLLVIEW } from "../../../../parts";
 
 export function PublicListsSorting_CONTENT() {
   const { sorting, sortDirection, z_SET_sorting, z_SET_sortDirection } =
     z_USE_publicListsDisplaySettings();
 
   return (
-    <>
+    <DisplaySettingsModalContent_SCROLLVIEW>
       <Block row={false}>
         <Label>{t("label.sortLists")}</Label>
         <SortByDate_BTN
           IS_active={sorting === "date"}
-          onPress={() => z_SET_sorting("date")}
+          onPress={() => {
+            z_SET_sorting("date");
+            z_SET_sortDirection("descending");
+          }}
         />
         <SortByVocabCount_BTN
           IS_active={sorting === "vocab-count"}
-          onPress={() => z_SET_sorting("vocab-count")}
+          onPress={() => {
+            z_SET_sorting("vocab-count");
+            z_SET_sortDirection("ascending");
+          }}
         />
         <SortBySavedCount_BTN
           IS_active={sorting === "saved-count"}
-          onPress={() => z_SET_sorting("saved-count")}
+          onPress={() => {
+            z_SET_sorting("saved-count");
+            z_SET_sortDirection("ascending");
+          }}
         />
       </Block>
 
@@ -54,28 +64,28 @@ export function PublicListsSorting_CONTENT() {
           </>
         ) : sorting === "vocab-count" ? (
           <>
-            <FewToMany_BTN
-              IS_active={sortDirection === "descending"}
-              onPress={() => z_SET_sortDirection("descending")}
-            />
             <ManyToFew_BTN
               IS_active={sortDirection === "ascending"}
               onPress={() => z_SET_sortDirection("ascending")}
+            />
+            <FewToMany_BTN
+              IS_active={sortDirection === "descending"}
+              onPress={() => z_SET_sortDirection("descending")}
             />
           </>
         ) : sorting === "saved-count" ? (
           <>
-            <FewToMany_BTN
-              IS_active={sortDirection === "descending"}
-              onPress={() => z_SET_sortDirection("descending")}
-            />
             <ManyToFew_BTN
               IS_active={sortDirection === "ascending"}
               onPress={() => z_SET_sortDirection("ascending")}
             />
+            <FewToMany_BTN
+              IS_active={sortDirection === "descending"}
+              onPress={() => z_SET_sortDirection("descending")}
+            />
           </>
         ) : null}
       </Block>
-    </>
+    </DisplaySettingsModalContent_SCROLLVIEW>
   );
 }

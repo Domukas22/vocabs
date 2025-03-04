@@ -57,7 +57,7 @@ export const z_USE_myOneList = create<z_USE_myOneList_PROPS>((set, get) => ({
         });
 
       // ----------------------------------------
-      // First, naviate back, then remove the one list state
+      // First, naviGate back, then remove the one list state
       onSuccess();
       set({ z_myOneList: list });
 

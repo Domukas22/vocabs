@@ -20,6 +20,7 @@ import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import { AllPublicVocabs_NAV } from "@/src/features_new/vocabs/components/navs/AllPublicVocabs_NAV/AllPublicVocabs_NAV";
 import { Flashlist_HEADER } from "@/src/components/Flashlist_HEADER/Flashlist_HEADER";
 import { z_USE_publicVocabsDisplaySettings } from "@/src/features_new/vocabs/hooks/zustand/displaySettings/z_USE_publicVocabsDisplaySettings/z_USE_publicVocabsDisplaySettings";
+import { DisplaySettings_MODAL } from "@/src/components/DisplaySettings_MODAL/DisplaySettings_MODAL";
 
 export default function AllPublicVocabs_PAGE() {
   const { modals } = USE_modalToggles(["saveVocab", "displaySettings"]);
@@ -42,7 +43,7 @@ export default function AllPublicVocabs_PAGE() {
     targetList_ID: "",
   });
 
-  const { z_publicVocabDisplay_SETTINGS } = z_USE_publicVocabsDisplaySettings();
+  const { z_GET_activeFilterCount } = z_USE_publicVocabsDisplaySettings();
 
   return (
     <>
@@ -65,9 +66,7 @@ export default function AllPublicVocabs_PAGE() {
             loading_STATE={z_publicVocabsLoading_STATE}
             list_NAME={t("listName.allPublicVocabs")}
             unpaginated_COUNT={z_publicVocabsUnpaginated_COUNT}
-            appliedFilter_COUNT={
-              z_publicVocabDisplay_SETTINGS?.langFilters?.length || 0
-            }
+            appliedFilter_COUNT={z_GET_activeFilterCount() || 0}
             type="public-vocabs"
           />
         }
@@ -86,7 +85,9 @@ export default function AllPublicVocabs_PAGE() {
       />
 
       <Portal>
-        <VocabDisplaySettings_MODAL
+        <DisplaySettings_MODAL
+          starting_TAB="vocab-preview"
+          type="public-vocabs"
           open={modals.displaySettings.IS_open}
           TOGGLE_open={() => modals.displaySettings.set(false)}
         />

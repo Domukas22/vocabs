@@ -15,6 +15,7 @@ import { z_USE_myVocabsDisplaySettings } from "@/src/features_new/vocabs/hooks/z
 import { useState, useRef } from "react";
 import { TextInput } from "react-native";
 import { USE_getListName } from "../../../hooks/USE_getListName/USE_getListName";
+import { z_USE_publicVocabsDisplaySettings } from "@/src/features_new/vocabs/hooks/zustand/displaySettings/z_USE_publicVocabsDisplaySettings/z_USE_publicVocabsDisplaySettings";
 
 export function PublicOneList_NAV({
   SHOW_listName = false,
@@ -31,8 +32,9 @@ export function PublicOneList_NAV({
 }) {
   const [IS_searchOpen, SET_searchOpen] = useState(false);
   const search_REF = useRef<TextInput>(null);
-  const { z_myVocabDisplay_SETTINGS } = z_USE_myVocabsDisplaySettings();
-  const { langFilters, difficultyFilters } = z_myVocabDisplay_SETTINGS;
+  const { z_GET_activeFilterCount, z_CLEAR_filters } =
+    z_USE_publicVocabsDisplaySettings();
+
   const { list_NAME } = USE_getListName({ type: "public" });
 
   return (
@@ -40,13 +42,11 @@ export function PublicOneList_NAV({
       <NavBtn_WRAP>
         {!IS_searchOpen ? (
           <>
-            <NavBack_BTN />
+            <NavBack_BTN extra_ACTION={() => z_CLEAR_filters()} />
             <NavSearch_BTN OPEN_search={() => SET_searchOpen(true)} />
             <NavDisplaySettings_BTN
               OPEN_displaySettings={OPEN_displaySettings}
-              activeFilter_COUNT={
-                (langFilters?.length || 0) + (difficultyFilters?.length + 0)
-              }
+              activeFilter_COUNT={z_GET_activeFilterCount() || 0}
             />
             <NavSavePublicList_BTN OPEN_saveListModal={OPEN_saveListModal} />
           </>

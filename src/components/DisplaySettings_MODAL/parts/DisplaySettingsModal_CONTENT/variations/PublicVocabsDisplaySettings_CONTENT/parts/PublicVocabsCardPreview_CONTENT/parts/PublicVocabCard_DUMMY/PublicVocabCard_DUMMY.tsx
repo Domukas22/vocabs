@@ -11,17 +11,13 @@ import Highlighted_TEXT from "@/src/components/1_grouped/texts/Highlighted_TEXT/
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import { USE_getOneTargetLang } from "@/src/features/languages/hooks";
 import { z_USE_myVocabsDisplaySettings } from "@/src/features_new/vocabs/hooks/zustand/displaySettings/z_USE_myVocabsDisplaySettings/z_USE_myVocabsDisplaySettings";
+import { z_USE_publicVocabsDisplaySettings } from "@/src/features_new/vocabs/hooks/zustand/displaySettings/z_USE_publicVocabsDisplaySettings/z_USE_publicVocabsDisplaySettings";
 import { StyleSheet, View } from "react-native";
 
-export function MyVocabCard_DUMMY() {
-  const { appearance } = z_USE_myVocabsDisplaySettings();
+export function PublicVocabCard_DUMMY() {
+  const { appearance } = z_USE_publicVocabsDisplaySettings();
 
-  const {
-    SHOW_description = false,
-    SHOW_difficulty = false,
-    SHOW_flags = false,
-    frontTrLang_ID = "en",
-  } = appearance;
+  const { SHOW_description = false, frontTrLang_ID = "en" } = appearance;
 
   const { target_LANG } = USE_getOneTargetLang({
     targetLang_ID: frontTrLang_ID,
@@ -44,16 +40,7 @@ export function MyVocabCard_DUMMY() {
         </Styled_TEXT>
 
         <View style={s.iconWrap}>
-          <ICON_flag
-            style={[!SHOW_flags && { opacity: 0.1 }]}
-            lang={frontTrLang_ID}
-            big
-          />
-          <ICON_difficultyDot
-            style={[!SHOW_difficulty && { opacity: 0.1 }]}
-            difficulty={3}
-            size="big"
-          />
+          <ICON_flag lang={frontTrLang_ID} big />
         </View>
       </View>
     </Block>

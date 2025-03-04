@@ -18,6 +18,7 @@ import Label from "@/src/components/1_grouped/texts/labels/Label/Label";
 import { z_USE_myVocabsDisplaySettings } from "@/src/features_new/vocabs/hooks/zustand/displaySettings/z_USE_myVocabsDisplaySettings/z_USE_myVocabsDisplaySettings";
 
 import { t } from "i18next";
+import { DisplaySettingsModalContent_SCROLLVIEW } from "../../../../parts";
 
 export function MyVocabsSorting_CONTENT() {
   const { sorting, z_SET_sorting, z_SET_sortDirection } =
@@ -26,7 +27,7 @@ export function MyVocabsSorting_CONTENT() {
   const { type = "date", direction = "descending" } = sorting;
 
   return (
-    <>
+    <DisplaySettingsModalContent_SCROLLVIEW>
       <Block row={false}>
         <Label>{t("label.sortLists")}</Label>
         <SortByDate_BTN
@@ -89,6 +90,6 @@ export function MyVocabsSorting_CONTENT() {
           </>
         ) : null}
       </Block>
-    </>
+    </DisplaySettingsModalContent_SCROLLVIEW>
   );
 }

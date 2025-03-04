@@ -36,7 +36,8 @@ export function MyOneList_NAV({
 }) {
   const [IS_searchOpen, SET_searchOpen] = useState(false);
   const search_REF = useRef<TextInput>(null);
-  const { z_GET_activeFilterCount } = z_USE_myVocabsDisplaySettings();
+  const { z_GET_activeFilterCount, z_CLEAR_filters } =
+    z_USE_myVocabsDisplaySettings();
 
   const { list_NAME } = USE_getListName({ type: "private" });
 
@@ -45,7 +46,7 @@ export function MyOneList_NAV({
       <NavBtn_WRAP>
         {!IS_searchOpen ? (
           <>
-            <NavBack_BTN />
+            <NavBack_BTN extra_ACTION={() => z_CLEAR_filters()} />
             <NavListSettings_BTN OPEN_listSettings={OPEN_listSettings} />
             <NavSearch_BTN OPEN_search={() => SET_searchOpen(true)} />
             <NavDisplaySettings_BTN

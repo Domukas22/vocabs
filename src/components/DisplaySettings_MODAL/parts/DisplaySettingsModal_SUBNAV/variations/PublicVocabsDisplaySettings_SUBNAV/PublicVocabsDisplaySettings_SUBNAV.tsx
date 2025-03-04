@@ -21,9 +21,7 @@ export function PublicVocabsDisplaySettings_SUBNAV({
     React.SetStateAction<DisplaySettingsView_TYPES>
   >;
 }) {
-  const { z_publicVocabDisplay_SETTINGS } = z_USE_publicVocabsDisplaySettings();
-  const activeFilter_COUNT =
-    z_publicVocabDisplay_SETTINGS?.langFilters?.length || 0;
+  const { z_GET_activeFilterCount } = z_USE_publicVocabsDisplaySettings();
 
   return (
     <DisplaySettings_SUBNAV>
@@ -34,7 +32,7 @@ export function PublicVocabsDisplaySettings_SUBNAV({
       <DisplaySettingsSubnavFilterTab_BTN
         current_TAB={current_TAB}
         SELECT_tab={() => SET_currentTab("filter")}
-        activeFilter_COUNT={activeFilter_COUNT}
+        activeFilter_COUNT={z_GET_activeFilterCount() || 0}
       />
       <DisplaySettingsSubnavSortTab_BTN
         current_TAB={current_TAB}
