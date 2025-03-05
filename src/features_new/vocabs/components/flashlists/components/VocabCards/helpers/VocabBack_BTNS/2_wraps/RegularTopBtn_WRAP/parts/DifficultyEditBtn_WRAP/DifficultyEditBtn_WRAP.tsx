@@ -14,7 +14,7 @@ import { z_USE_currentActions } from "@/src/hooks/zustand/z_USE_currentActions/z
 import { useCallback, useMemo } from "react";
 import { ActivityIndicator, View } from "react-native";
 
-export function DifficultyEdit_BTNS({
+export function DifficultyEditBtn_WRAP({
   vocab,
   SHOULD_updateListUpdatedAt = false,
   TOGGLE_open,

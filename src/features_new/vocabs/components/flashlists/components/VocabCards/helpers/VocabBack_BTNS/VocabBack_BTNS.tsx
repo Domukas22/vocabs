@@ -8,22 +8,23 @@ import React, { useMemo, memo } from "react";
 import { z_USE_currentActions } from "@/src/hooks/zustand/z_USE_currentActions/z_USE_currentActions";
 import { itemVisibility_TYPE } from "@/src/types/general_TYPES";
 import { Vocab_TYPE } from "@/src/features_new/vocabs/types";
-import { DeleteIcon_BTN } from "./parts/DeleteIcon_BTN/DeleteIcon_BTN";
-import { X_BTN } from "./parts/X_BTN/X_BTN";
-import { Restore_BTN } from "./parts/Restore_BTN/Restore_BTN";
-import { Copy_BTN } from "./parts/Copy_BTN/Copy_BTN";
-import { ToggleDifficulties_BTN } from "./parts/ToggleDifficulties_BTN/ToggleDifficulties_BTN";
-import { ToggleMarked_BTN } from "./parts/ToggleMarked_BTN/ToggleMarked_BTN";
-import { Delete_BTN } from "./parts/Delete_BTN/Delete_BTN";
-import { GoToMyOneList_BTN } from "./parts/GoToMyOneList_BTN/GoToMyOneList_BTN";
-import { GoToPublicOneList_BTN } from "./parts/GoToPublicOneList_BTN/GoToPublicOneList_BTN";
-import { Close_BTN } from "./parts/Close_BTN/Close_BTN";
-import { Edit_BTN } from "./parts/Edit_BTN/Edit_BTN";
-import { AllBtn_WRAP } from "./parts/AllBtn_WRAP/AllBtn_WRAP";
-import { InlineBtn_WRAP } from "./parts/InlineBtn_WRAP/InlineBtn_WRAP";
-import { DifficultyEdit_BTNS } from "./parts/DifficultyEdit_BTNS/DifficultyEdit_BTNS";
+import { DeleteIcon_BTN } from "./1_parts/DeleteIcon_BTN/DeleteIcon_BTN";
+import { X_BTN } from "./1_parts/X_BTN/X_BTN";
+import { Restore_BTN } from "./1_parts/Restore_BTN/Restore_BTN";
+import { Copy_BTN } from "./1_parts/Copy_BTN/Copy_BTN";
+import { ToggleDifficulties_BTN } from "./1_parts/ToggleDifficulties_BTN/ToggleDifficulties_BTN";
+import { ToggleMarked_BTN } from "./1_parts/ToggleMarked_BTN/ToggleMarked_BTN";
+import { Delete_BTN } from "./1_parts/Delete_BTN/Delete_BTN";
+import { GoToMyOneList_BTN } from "./1_parts/GoToMyOneList_BTN/GoToMyOneList_BTN";
+import { GoToPublicOneList_BTN } from "./1_parts/GoToPublicOneList_BTN/GoToPublicOneList_BTN";
+import { Close_BTN } from "./1_parts/Close_BTN/Close_BTN";
+import { Edit_BTN } from "./1_parts/Edit_BTN/Edit_BTN";
+import { AllBtn_WRAP } from "./1_parts/AllBtn_WRAP/AllBtn_WRAP";
+import { InlineBtn_WRAP } from "./1_parts/InlineBtn_WRAP/InlineBtn_WRAP";
+import { DifficultyEditBtn_WRAP } from "./2_wraps/RegularTopBtn_WRAP/parts/DifficultyEditBtn_WRAP/DifficultyEditBtn_WRAP";
+import { RegularTopBtn_WRAP } from "./2_wraps";
 
-// 🔴🔴TODO ==> finish refactoring buttons
+// 🔴🔴 TODO ==> finish MyListVocabCardBackBtn_WRAP
 
 interface VocabBackBtns_PROPS {
   vocab: Vocab_TYPE;
@@ -53,25 +54,6 @@ const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
     [z_currentActions]
   );
 
-  const MyVocab3Btn_WRAP = memo(() =>
-    SHOW_difficultyEdits ? (
-      <DifficultyEdit_BTNS
-        TOGGLE_open={TOGGLE_difficultyEdits}
-        vocab={vocab}
-        SHOULD_updateListUpdatedAt={fetch_TYPE === "byTargetList"}
-      />
-    ) : (
-      <InlineBtn_WRAP>
-        <Edit_BTN onPress={() => OPEN_updateVocabModal()} />
-        <ToggleMarked_BTN vocab={vocab} SHOULD_updateListUpdatedAt />
-        <ToggleDifficulties_BTN
-          vocab={vocab}
-          onPress={TOGGLE_difficultyEdits}
-        />
-      </InlineBtn_WRAP>
-    )
-  );
-
   const CloseBtn_WRAP = memo(
     ({ deleteType = "soft" }: { deleteType: "hard" | "soft" }) =>
       SHOW_deleteConfirmation ? (
@@ -97,7 +79,13 @@ const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
     if (fetch_TYPE === "byTargetList") {
       return (
         <AllBtn_WRAP>
-          <MyVocab3Btn_WRAP />
+          <RegularTopBtn_WRAP
+            vocab={vocab}
+            fetch_TYPE={fetch_TYPE}
+            OPEN_updateVocabModal={OPEN_updateVocabModal}
+            TOGGLE_difficultyEdits={TOGGLE_difficultyEdits}
+            SHOW_difficultyEdits={SHOW_difficultyEdits}
+          />
           <CloseBtn_WRAP deleteType="soft" />
         </AllBtn_WRAP>
       );
@@ -105,7 +93,13 @@ const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
     if (fetch_TYPE === "all" || fetch_TYPE === "marked") {
       return (
         <AllBtn_WRAP>
-          <MyVocab3Btn_WRAP />
+          <RegularTopBtn_WRAP
+            vocab={vocab}
+            fetch_TYPE={fetch_TYPE}
+            OPEN_updateVocabModal={OPEN_updateVocabModal}
+            TOGGLE_difficultyEdits={TOGGLE_difficultyEdits}
+            SHOW_difficultyEdits={SHOW_difficultyEdits}
+          />
 
           <GoToMyOneList_BTN vocab={vocab} />
           <CloseBtn_WRAP deleteType="soft" />
