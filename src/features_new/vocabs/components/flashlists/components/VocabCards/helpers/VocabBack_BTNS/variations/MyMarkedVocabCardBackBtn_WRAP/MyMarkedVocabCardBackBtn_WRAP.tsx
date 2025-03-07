@@ -3,7 +3,7 @@
 //
 
 import React, { memo } from "react";
-import { AllBtn_WRAP } from "../../1_parts";
+import { AllBtn_WRAP, GoToMyOneList_BTN } from "../../1_parts";
 import { RegularTopBtn_WRAP } from "../../2_wraps";
 import { Vocab_TYPE } from "@/src/features_new/vocabs/types";
 import { CloseBtn_WRAP } from "../../2_wraps/CloseBtn_WRAP/CloseBtn_WRAP";
@@ -18,7 +18,7 @@ type Props = {
   TOGGLE_vocabCard: () => void;
 };
 
-export const MyListVocabCardBackBtn_WRAP = memo(
+export const MyMarkedVocabCardBackBtn_WRAP = memo(
   ({
     vocab,
     SHOULD_showDeleteConfirmation = false,
@@ -32,11 +32,13 @@ export const MyListVocabCardBackBtn_WRAP = memo(
       <AllBtn_WRAP>
         <RegularTopBtn_WRAP
           vocab={vocab}
-          fetch_TYPE="byTargetList"
+          fetch_TYPE="marked"
           OPEN_updateVocabModal={OPEN_updateVocabModal}
           TOGGLE_difficultyEdits={TOGGLE_difficultyEdits}
           SHOW_difficultyEdits={SHOULD_showDifficultyEdits}
         />
+
+        <GoToMyOneList_BTN vocab={vocab} />
         <CloseBtn_WRAP
           SHOW_deleteConfirmation={SHOULD_showDeleteConfirmation}
           TOGGLE_deleteConfirmation={TOGGLE_deleteConfirmation}

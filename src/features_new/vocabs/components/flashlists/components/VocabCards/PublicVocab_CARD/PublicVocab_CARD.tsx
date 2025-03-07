@@ -70,7 +70,7 @@ export const PublicVocab_CARD = React.memo(function PublicVocab_CARD({
           />
 
           <VocabBack_BTNS
-            {...{ vocab, trs, fetch_TYPE, TOGGLE_open: toggle }}
+            {...{ vocab, trs, fetch_TYPE, TOGGLE_vocabCard: toggle }}
             list_TYPE="public"
             OPEN_vocabCopyModal={OPEN_vocabCopyModal}
           />

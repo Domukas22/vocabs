@@ -42,3 +42,5 @@ export type OneFilter_TYPE =
   | MarkedFilter_TYPE;
 
 export type Filters_TYPE = OneFilter_TYPE[];
+
+export type delete_TYPE = "soft" | "hard";

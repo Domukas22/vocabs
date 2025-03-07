@@ -74,7 +74,7 @@ export const Vocab_CARD = React.memo(function Vocab_CARD({
           />
 
           <VocabBack_BTNS
-            {...{ vocab, trs, list_TYPE, fetch_TYPE, TOGGLE_open: toggle }}
+            {...{ vocab, trs, list_TYPE, fetch_TYPE, TOGGLE_vocabCard: toggle }}
             OPEN_updateVocabModal={OPEN_updateVocabModal}
             OPEN_vocabCopyModal={OPEN_vocabCopyModal}
           />
