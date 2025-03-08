@@ -9,7 +9,7 @@ import { SEND_internalError } from "@/src/utils";
 
 const function_NAME = "USE_populateLangs";
 
-export default function USE_populateLangs() {
+export function USE_populateLangs() {
   const { z_INSERT_fetchedLangs } = z_USE_langs();
 
   const POPULATE_langs = async () => {

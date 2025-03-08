@@ -8,16 +8,16 @@ import { MyColors } from "@/src/constants/MyColors";
 import React from "react";
 import { Vocab_TYPE } from "@/src/features_new/vocabs/types";
 import { vocabFetch_TYPES } from "@/src/features_new/vocabs/functions/FETCH_vocabs/types";
-import { itemVisibility_TYPE } from "@/src/types/general_TYPES";
+import { privateOrPublic_TYPE } from "@/src/types/general_TYPES";
 
-const VocabBack_TEXT = React.memo(function VocabBack_TEXT({
+export const VocabBack_TEXT = React.memo(function VocabBack_TEXT({
   vocab,
   fetch_TYPE,
   list_TYPE,
 }: {
   vocab: Vocab_TYPE;
   fetch_TYPE: vocabFetch_TYPES;
-  list_TYPE: itemVisibility_TYPE;
+  list_TYPE: privateOrPublic_TYPE;
 }) {
   const ListName_COMP = React.memo(function ListName_COMP({
     list_NAME,
@@ -122,5 +122,3 @@ function _Wrapper({ children }: { children: React.ReactNode }) {
     </View>
   );
 }
-
-export default VocabBack_TEXT;

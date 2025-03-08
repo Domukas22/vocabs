@@ -12,7 +12,8 @@ import Label from "@/src/components/1_grouped/texts/labels/Label/Label";
 import {
   USE_getAppLangId,
   USE_getTargetLangs,
-} from "@/src/features/languages/hooks";
+} from "@/src/features_new/languages/hooks";
+
 import { z_USE_myOneList } from "@/src/features_new/lists/hooks/zustand/z_USE_myOneList/z_USE_myOneList";
 import { z_USE_myVocabsDisplaySettings } from "@/src/features_new/vocabs/hooks/zustand/displaySettings/z_USE_myVocabsDisplaySettings/z_USE_myVocabsDisplaySettings";
 import { t } from "i18next";

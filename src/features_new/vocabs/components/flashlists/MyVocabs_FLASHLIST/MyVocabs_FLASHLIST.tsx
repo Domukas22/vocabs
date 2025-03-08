@@ -10,7 +10,7 @@ import { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
 import { z_USE_myVocabs } from "../../../hooks/zustand/z_USE_myVocabs/z_USE_myVocabs";
 import { Vocab_TYPE } from "../../../types";
 import { z_USE_currentActions } from "@/src/hooks/zustand/z_USE_currentActions/z_USE_currentActions";
-import { Vocab_CARD } from "../components/VocabCards/Vocab_CARD/Vocab_CARD";
+import { Vocab_CARD } from "../_parts/Vocab_CARD/Vocab_CARD";
 
 export default function MyVocabs_FLASHLIST({
   IS_debouncing = false,

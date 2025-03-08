@@ -3,7 +3,7 @@
 //
 
 import {
-  itemVisibility_TYPE,
+  privateOrPublic_TYPE,
   sortDirection_TYPE,
 } from "@/src/types/general_TYPES";
 
@@ -19,7 +19,7 @@ export type Vocab_TYPE = {
   id: string;
   user_id: string;
   list_id: string;
-  type: itemVisibility_TYPE;
+  type: privateOrPublic_TYPE;
 
   is_marked: boolean;
   difficulty: VocabDiff_TYPE;

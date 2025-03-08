@@ -8,7 +8,7 @@ import { General_ERROR } from "@/src/types/error_TYPES";
 import { SEND_internalError } from "@/src/utils";
 import { FETCH_oneList } from "../../../functions/fetch/FETCH_oneList/FETCH_oneList";
 import { listFetch_TYPES } from "../../../functions/fetch/FETCH_lists/types";
-import { itemVisibility_TYPE } from "@/src/types/general_TYPES";
+import { privateOrPublic_TYPE } from "@/src/types/general_TYPES";
 
 type z_USE_publicOneList_PROPS = {
   z_publicOneList: List_TYPE | undefined;
@@ -19,7 +19,7 @@ type z_USE_publicOneList_PROPS = {
   z_FETCH_publicOneListById: (
     list_id: string,
     user_id: string,
-    list_TYPE: itemVisibility_TYPE,
+    list_TYPE: privateOrPublic_TYPE,
     sideEffects: {
       onSuccess?: () => void;
       onFailure?: (error: General_ERROR) => void;

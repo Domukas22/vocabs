@@ -5,14 +5,14 @@
 import { supabase } from "@/src/lib/supabase";
 import { General_ERROR } from "@/src/types/error_TYPES";
 import { List_TYPE } from "../../../types";
-import { itemVisibility_TYPE } from "@/src/types/general_TYPES";
+import { privateOrPublic_TYPE } from "@/src/types/general_TYPES";
 
 export const function_NAME = "FETCH_oneList";
 
 export async function FETCH_oneList(
   list_id: string,
   user_id: string,
-  list_TYPE: itemVisibility_TYPE
+  list_TYPE: privateOrPublic_TYPE
 ): Promise<{ list?: List_TYPE }> {
   if (!user_id)
     throw new General_ERROR({

@@ -7,7 +7,7 @@ import { List_TYPE, ListFilter_PROPS } from "../../../types";
 import {
   DiffFilter_TYPE,
   Filters_TYPE,
-  itemVisibility_TYPE,
+  privateOrPublic_TYPE,
   LangFilter_TYPE,
   MarkedFilter_TYPE,
   sortDirection_TYPE,
@@ -21,7 +21,7 @@ export interface FETCH_lists_ARGS {
   search: string;
   user_id: string;
   list_id: string;
-  list_TYPE: itemVisibility_TYPE;
+  list_TYPE: privateOrPublic_TYPE;
   fetch_TYPE: listFetch_TYPES;
   sorting: listSorting_TYPES;
   sortDirection: sortDirection_TYPE;

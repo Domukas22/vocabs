@@ -7,7 +7,6 @@ import { ICON_flag } from "@/src/components/1_grouped/icons/icons";
 import Highlighted_TEXT from "@/src/components/1_grouped/texts/Highlighted_TEXT/Highlighted_TEXT";
 import { StyleSheet } from "react-native";
 import { MyColors } from "@/src/constants/MyColors";
-import { VocabTr_TYPE } from "@/src/features/vocabs/types";
 import React from "react";
 import { Vocab_TYPE } from "@/src/features_new/vocabs/types";
 

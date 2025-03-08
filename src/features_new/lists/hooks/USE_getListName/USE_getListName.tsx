@@ -7,12 +7,12 @@ import { useMemo } from "react";
 
 import { z_USE_myOneList } from "../zustand/z_USE_myOneList/z_USE_myOneList";
 import { z_USE_publicOneList } from "../zustand/z_USE_publicOneList/z_USE_publicOneList";
-import { itemVisibility_TYPE } from "@/src/types/general_TYPES";
+import { privateOrPublic_TYPE } from "@/src/types/general_TYPES";
 
 export function USE_getListName({
   type = "private",
 }: {
-  type: itemVisibility_TYPE;
+  type: privateOrPublic_TYPE;
 }) {
   const { z_myOneList, z_IS_myOneListFetching } = z_USE_myOneList();
   const { z_publicOneList, z_IS_publicOneListFetching } = z_USE_publicOneList();

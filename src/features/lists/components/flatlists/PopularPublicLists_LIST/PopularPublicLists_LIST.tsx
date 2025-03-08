@@ -14,7 +14,7 @@ import { t } from "i18next";
 import { ActivityIndicator } from "react-native";
 import { MyColors } from "@/src/constants/MyColors";
 import { z_USE_publicStarterContent } from "@/src/hooks/zustand/z_USE_publicStarterContent/z_USE_publicStarterContent";
-import { Vocab_CARD } from "@/src/features/vocabs/vocabList/Vocabs_LIST/helpers";
+import { MyVocab_CARD } from "@/src/features/vocabs/vocabList/Vocabs_LIST/helpers";
 import { z_USE_publicOneList } from "@/src/features_new/lists/hooks/zustand/z_USE_publicOneList/z_USE_publicOneList";
 import { List_CARD } from "@/src/features_new/lists/components/flashlists/components/List_CARD/List_CARD";
 

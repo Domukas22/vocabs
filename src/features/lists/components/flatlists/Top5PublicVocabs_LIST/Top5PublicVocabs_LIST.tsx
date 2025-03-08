@@ -14,7 +14,7 @@ import { t } from "i18next";
 import { ActivityIndicator } from "react-native";
 import { MyColors } from "@/src/constants/MyColors";
 import { z_USE_publicStarterContent } from "@/src/hooks/zustand/z_USE_publicStarterContent/z_USE_publicStarterContent";
-import { Vocab_CARD } from "@/src/features_new/vocabs/components/flashlists/components/VocabCards/Vocab_CARD/Vocab_CARD";
+import { Vocab_CARD } from "@/src/features_new/vocabs/components/flashlists/_parts/VocabCards/MyVocab_CARD/Vocab_CARD";
 
 export const Top5PublicVocabs_LIST = function Top5PublicVocabs_LIST() {
   const router = useRouter();

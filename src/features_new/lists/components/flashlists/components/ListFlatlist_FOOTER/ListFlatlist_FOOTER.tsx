@@ -4,7 +4,7 @@
 
 import BottomAction_BLOCK from "@/src/components/1_grouped/blocks/BottomAction_BLOCK";
 import Error_BLOCK from "@/src/components/1_grouped/blocks/Error_BLOCK";
-import { VocabsSkeleton_BLOCK } from "@/src/features_new/vocabs/components/flashlists/components/VocabsSkeleton_BLOCK/VocabsSkeleton_BLOCK";
+import { VocabsSkeleton_BLOCK } from "@/src/features_new/vocabs/components/flashlists/_parts/VocabsSkeleton_BLOCK/VocabsSkeleton_BLOCK";
 import { General_ERROR } from "@/src/types/error_TYPES";
 import { loadingState_TYPES } from "@/src/types/general_TYPES";
 

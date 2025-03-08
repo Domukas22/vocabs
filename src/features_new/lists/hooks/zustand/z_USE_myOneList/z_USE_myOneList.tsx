@@ -7,7 +7,7 @@ import { List_TYPE } from "@/src/features_new/lists/types";
 import { General_ERROR } from "@/src/types/error_TYPES";
 import { SEND_internalError } from "@/src/utils";
 import { FETCH_oneList } from "../../../functions/fetch/FETCH_oneList/FETCH_oneList";
-import { itemVisibility_TYPE } from "@/src/types/general_TYPES";
+import { privateOrPublic_TYPE } from "@/src/types/general_TYPES";
 
 type z_USE_myOneList_PROPS = {
   z_myOneList: List_TYPE | undefined;
@@ -18,7 +18,7 @@ type z_USE_myOneList_PROPS = {
   z_FETCH_myOneListById: (
     list_id: string,
     user_id: string,
-    list_TYPE: itemVisibility_TYPE,
+    list_TYPE: privateOrPublic_TYPE,
     sideEffects: {
       onSuccess?: () => void;
       onFailure?: (error: General_ERROR) => void;

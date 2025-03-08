@@ -14,7 +14,7 @@ import Big_BTN from "@/src/components/1_grouped/buttons/Big_BTN/Big_BTN";
 import { ListBtn_FLAGS, ListBtnDifficulty_COUNTS } from "./helpers";
 import { View } from "react-native";
 import { List_TYPE } from "@/src/features_new/lists/types";
-import { itemVisibility_TYPE } from "@/src/types/general_TYPES";
+import { privateOrPublic_TYPE } from "@/src/types/general_TYPES";
 import { ICON_savedCount } from "@/src/components/1_grouped/icons/icons";
 
 export const List_CARD = React.memo(function List_CARD({
@@ -26,7 +26,7 @@ export const List_CARD = React.memo(function List_CARD({
   list: List_TYPE;
   highlighted?: boolean;
   onPress: () => void;
-  list_TYPE: itemVisibility_TYPE;
+  list_TYPE: privateOrPublic_TYPE;
 }) {
   const { t } = useTranslation();
   const {

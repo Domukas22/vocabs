@@ -12,7 +12,7 @@ import USE_controlPublicVocabsFetch from "@/src/features_new/vocabs/hooks/fetchC
 import { USE_listIdInParams } from "@/src/features/vocabs/vocabList/USE_listIdInParams/USE_listIdInParams";
 import { USE_getListName } from "@/src/features_new/lists/hooks/USE_getListName/USE_getListName";
 import PublicVocabs_FLASHLIST from "@/src/features_new/vocabs/components/flashlists/PublicVocabs_FLASHLIST/PublicVocabs_FLASHLIST";
-import { VocabFlatlist_FOOTER } from "@/src/features_new/vocabs/components/flashlists/components/VocabFlatlist_FOOTER/VocabFlatlist_FOOTER";
+import { VocabFlatlist_FOOTER } from "@/src/features_new/vocabs/components/flashlists/_parts/VocabFlatlist_FOOTER/VocabFlatlist_FOOTER";
 import { Portal } from "@gorhom/portal";
 import { PublicOneList_NAV } from "@/src/features_new/lists/components/navs";
 import { Flashlist_HEADER } from "@/src/components/Flashlist_HEADER/Flashlist_HEADER";

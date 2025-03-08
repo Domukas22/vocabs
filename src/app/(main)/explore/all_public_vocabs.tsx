@@ -15,7 +15,7 @@ import PublicVocabs_FLASHLIST from "@/src/features_new/vocabs/components/flashli
 import { z_USE_publicVocabs } from "@/src/features_new/vocabs/hooks/zustand/z_USE_publicVocabs/z_USE_publicVocabs";
 import USE_controlPublicVocabsFetch from "@/src/features_new/vocabs/hooks/fetchControls/USE_controlPublicVocabsFetch/USE_controlPublicVocabsFetch";
 import { t } from "i18next";
-import { VocabFlatlist_FOOTER } from "@/src/features_new/vocabs/components/flashlists/components/VocabFlatlist_FOOTER/VocabFlatlist_FOOTER";
+import { VocabFlatlist_FOOTER } from "@/src/features_new/vocabs/components/flashlists/_parts/VocabFlatlist_FOOTER/VocabFlatlist_FOOTER";
 import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import { AllPublicVocabs_NAV } from "@/src/features_new/vocabs/components/navs/AllPublicVocabs_NAV/AllPublicVocabs_NAV";
 import { Flashlist_HEADER } from "@/src/components/Flashlist_HEADER/Flashlist_HEADER";

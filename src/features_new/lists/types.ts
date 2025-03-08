@@ -2,14 +2,14 @@
 //
 //
 
-import { itemVisibility_TYPE } from "@/src/types/general_TYPES";
+import { privateOrPublic_TYPE } from "@/src/types/general_TYPES";
 
 export type List_TYPE = {
   id: string;
   user_id: string;
 
   name: string;
-  type: itemVisibility_TYPE;
+  type: privateOrPublic_TYPE;
 
   default_lang_ids: string[];
   collected_lang_ids: string[];

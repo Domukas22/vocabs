@@ -8,7 +8,7 @@ import {
   VocabSorting_PROPS,
 } from "@/src/features_new/vocabs/types";
 import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
-import { itemVisibility_TYPE } from "@/src/types/general_TYPES";
+import { privateOrPublic_TYPE } from "@/src/types/general_TYPES";
 
 export type vocabFetch_TYPES = "byTargetList" | "all" | "deleted" | "marked";
 
@@ -18,7 +18,7 @@ export interface FETCH_myVocabs_ARG_TYPES {
   amount: number;
   user_id: string;
   list_id: string;
-  list_TYPE: itemVisibility_TYPE;
+  list_TYPE: privateOrPublic_TYPE;
   excludeIds: Set<string>;
   fetch_TYPE: vocabFetch_TYPES;
   sorting: VocabSorting_PROPS;

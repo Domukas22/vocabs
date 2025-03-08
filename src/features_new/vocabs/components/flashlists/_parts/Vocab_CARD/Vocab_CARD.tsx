@@ -2,38 +2,37 @@
 //
 //
 
-import { MyColors } from "@/src/constants/MyColors";
+// 🔴🔴🔴 TODO ==> Finish refactoring Vocab_FRONT
+
 import { StyleSheet, View } from "react-native";
 import React, { useMemo } from "react";
 
-import { USE_toggle } from "@/src/hooks/USE_toggle/USE_toggle";
-
-import Vocab_FRONT from "../helpers/Vocab_FRONT/Vocab_FRONT";
-import { vocabFetch_TYPES } from "../../../../../functions/FETCH_vocabs/types";
-import VocabBack_BTNS from "../helpers/VocabBack_BTNS/VocabBack_BTNS";
-import VocabBack_TEXT from "../helpers/VocabBack_TEXT/VocabBack_TEXT";
-import { VocabBack_TRS } from "../helpers/VocabBack_TRS/VocabBack_TRS";
+import { MyColors } from "@/src/constants/MyColors";
 import { Vocab_TYPE } from "@/src/features_new/vocabs/types";
-import { itemVisibility_TYPE } from "@/src/types/general_TYPES";
+import { privateOrPublic_TYPE } from "@/src/types/general_TYPES";
+import { vocabFetch_TYPES } from "@/src/features_new/vocabs/functions/FETCH_vocabs/types";
+
+import { USE_toggle } from "@/src/hooks/USE_toggle/USE_toggle";
+import { Vocab_FRONT, Vocab_BACK } from "./_parts";
 
 interface VocabProps {
   vocab: Vocab_TYPE;
   highlighted?: boolean;
+  list_TYPE: privateOrPublic_TYPE;
   fetch_TYPE: vocabFetch_TYPES;
-
   OPEN_updateVocabModal?: () => void;
   OPEN_vocabCopyModal?: () => void;
 }
 
-export const PublicVocab_CARD = React.memo(function PublicVocab_CARD({
+export const Vocab_CARD = React.memo(function MyVocab_CARD({
+  list_TYPE,
   fetch_TYPE,
   vocab,
   highlighted = false,
+  OPEN_updateVocabModal = () => {},
   OPEN_vocabCopyModal = () => {},
 }: VocabProps) {
-  const trs = vocab?.trs || [];
-
-  const [open, toggle, set] = USE_toggle();
+  const [open, TOGGLE_vocabCard] = USE_toggle();
 
   const styles = useMemo(
     () => [
@@ -47,34 +46,23 @@ export const PublicVocab_CARD = React.memo(function PublicVocab_CARD({
 
   return (
     <View style={styles}>
-      {!open && (
+      {!open ? (
         <Vocab_FRONT
-          trs={trs || []}
-          difficulty={vocab?.difficulty || 0}
-          description={vocab?.description}
+          vocab={vocab}
           highlighted={highlighted}
-          TOGGLE_open={toggle}
-          IS_marked={vocab?.is_marked}
-          count={vocab?.saved_count}
-          list_TYPE={"public"}
+          list_TYPE={list_TYPE}
+          fetch_TYPE={fetch_TYPE}
+          TOGGLE_open={TOGGLE_vocabCard}
         />
-      )}
-
-      {open && (
-        <>
-          <VocabBack_TRS vocab={vocab} />
-          <VocabBack_TEXT
-            vocab={vocab}
-            fetch_TYPE={fetch_TYPE}
-            list_TYPE="public"
-          />
-
-          <VocabBack_BTNS
-            {...{ vocab, trs, fetch_TYPE, TOGGLE_vocabCard: toggle }}
-            list_TYPE="public"
-            OPEN_vocabCopyModal={OPEN_vocabCopyModal}
-          />
-        </>
+      ) : (
+        <Vocab_BACK
+          vocab={vocab}
+          fetch_TYPE={fetch_TYPE}
+          list_TYPE={list_TYPE}
+          TOGGLE_vocabCard={TOGGLE_vocabCard}
+          OPEN_updateVocabModal={OPEN_updateVocabModal}
+          OPEN_vocabCopyModal={OPEN_vocabCopyModal}
+        />
       )}
     </View>
   );
