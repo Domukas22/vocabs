@@ -30,11 +30,13 @@ export type z_INSERT_fetchedVocabs_TYPE = ({
 }) => void;
 
 export type z_INSERT_myVocabsError_TYPE = (error: General_ERROR) => void;
+export type z_SET_myVocabsCollectedLangIds_TYPE = (lang_ids: string[]) => void;
 //////////////////////////////////////////////////////////////////////////////////////////
 
 type z_USE_myVocabs_PROPS = {
   z_myVocabs: Vocab_TYPE[];
   z_myVocabPrinted_IDS: Set<string>;
+  z_myVocabsCollectedLang_IDS: string[];
 
   z_myVocabsFetch_TYPE: vocabFetch_TYPES;
 
@@ -55,11 +57,14 @@ type z_USE_myVocabs_PROPS = {
   z_PREPARE_myVocabsForFetch: z_PREPARE_myVocabsForFetch_TYPE;
   z_INSERT_fetchedVocabs: z_INSERT_fetchedVocabs_TYPE;
   z_INSERT_myVocabsError: z_INSERT_myVocabsError_TYPE;
+
+  z_SET_myVocabsCollectedLangIds: z_SET_myVocabsCollectedLangIds_TYPE;
 };
 
 export const z_USE_myVocabs = create<z_USE_myVocabs_PROPS>((set, get) => ({
   z_myVocabs: [],
   z_myVocabPrinted_IDS: new Set<string>(),
+  z_myVocabsCollectedLang_IDS: [],
 
   z_myVocabsFetch_TYPE: "all",
 
@@ -145,5 +150,10 @@ export const z_USE_myVocabs = create<z_USE_myVocabs_PROPS>((set, get) => ({
       z_myVocabs: [],
       z_myVocabsLoading_STATE: "error",
       z_myVocabs_ERROR: error,
+    }),
+
+  z_SET_myVocabsCollectedLangIds: (lang_ids = []) =>
+    set({
+      z_myVocabsCollectedLang_IDS: lang_ids,
     }),
 }));

@@ -1041,7 +1041,6 @@ export function ICON_savedCount({ count = 0 }: { count: number }) {
       style={{
         flexDirection: "row",
         alignItems: "center",
-        marginRight: 8,
       }}
     >
       <Styled_TEXT

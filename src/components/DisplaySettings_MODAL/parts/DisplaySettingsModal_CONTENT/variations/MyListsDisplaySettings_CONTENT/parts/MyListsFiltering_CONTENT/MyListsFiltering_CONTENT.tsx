@@ -41,7 +41,11 @@ export function MyListsFiltering_CONTENT() {
         <Btn
           text={t("btn.filterListsByMarkedVocabs")}
           iconRight={
-            byMarked ? <ICON_X big rotate color="green" /> : <ICON_markedStar />
+            byMarked ? (
+              <ICON_X big rotate color="green" />
+            ) : (
+              <ICON_markedStar color="green" />
+            )
           }
           type={byMarked ? "active_green" : "simple"}
           text_STYLES={{ flex: 1 }}

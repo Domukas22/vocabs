@@ -205,7 +205,7 @@
     "langaugesOfThisList": "All languages in this list",
     "vocabFrontLangExplanation1": "The selected language will be the one shown at the front of the vocab when it's closed.",
     "filterByLanguage": "Filter by language",
-    "missingTranslation": "Missing translation in ",
+    "missingTranslation": "Missing translation in",
     "noVocabsFound": "No vocabs found",
     "sortVocabs": "Sort vocabs",
     "username": "Username",
@@ -220,7 +220,9 @@
     "mostPopularVocabs": "Most popular vocabs",
     "loadingPopularLists": "Loading popular lists...",
     "otherFilters": "Other filters",
-    "difficultyFilters": "Filter by difficulty"
+    "difficultyFilters": "Filter by difficulty",
+    "vocabsSmall": "vocabs",
+    "1vocabSmall": "vocab"
   },
   "modal": {
     "displaySettings": {
@@ -349,5 +351,8 @@
   },
   "filterBullet": {
     "hasMarked": "Marked"
+  },
+  "title": {
+    "noListNameProvided": "No list name provided"
   }
 }

@@ -9,7 +9,7 @@ import {
 } from "@/src/components/1_grouped/icons/icons";
 import Highlighted_TEXT from "@/src/components/1_grouped/texts/Highlighted_TEXT/Highlighted_TEXT";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
-import { USE_getOneTargetLang } from "@/src/features/languages/hooks";
+import { USE_getOneTargetLang } from "@/src/features_new/languages/hooks";
 import { z_USE_myVocabsDisplaySettings } from "@/src/features_new/vocabs/hooks/zustand/displaySettings/z_USE_myVocabsDisplaySettings/z_USE_myVocabsDisplaySettings";
 import { z_USE_publicVocabsDisplaySettings } from "@/src/features_new/vocabs/hooks/zustand/displaySettings/z_USE_publicVocabsDisplaySettings/z_USE_publicVocabsDisplaySettings";
 import { StyleSheet, View } from "react-native";

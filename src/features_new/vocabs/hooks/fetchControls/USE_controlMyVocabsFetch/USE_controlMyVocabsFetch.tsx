@@ -8,6 +8,7 @@ import { USE_fetchMyVocabs } from "./USE_fetchMyVocabs/USE_fetchMyVocabs";
 import { z_USE_myVocabs } from "../../zustand/z_USE_myVocabs/z_USE_myVocabs";
 import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 import { z_USE_myVocabsDisplaySettings } from "../../zustand/displaySettings/z_USE_myVocabsDisplaySettings/z_USE_myVocabsDisplaySettings";
+import { USE_collectMyVocabsLangIds } from "./USE_collectMyVocabsLangIds/USE_collectMyVocabsLangIds";
 
 export default function USE_controlMyVocabsFetch({
   search = "",
@@ -26,12 +27,18 @@ export default function USE_controlMyVocabsFetch({
     z_INSERT_myVocabsError,
     z_INSERT_fetchedVocabs,
     z_PREPARE_myVocabsForFetch,
+    z_SET_myVocabsCollectedLangIds,
   } = z_USE_myVocabs();
 
   const { FETCH_myVocabs } = USE_fetchMyVocabs({
     z_INSERT_myVocabsError,
     z_INSERT_fetchedVocabs,
     z_PREPARE_myVocabsForFetch,
+  });
+
+  const { COLLECT_langIds } = USE_collectMyVocabsLangIds({
+    z_INSERT_myVocabsError,
+    z_SET_myVocabsCollectedLangIds,
   });
 
   const FETCH = useCallback(
@@ -55,9 +62,22 @@ export default function USE_controlMyVocabsFetch({
     (async () => await FETCH())();
   }, [search, filters, sorting, targetList_ID]);
 
+  // recalculate lang ids on targetList_ID change
+  useEffect(() => {
+    (async () => {
+      await COLLECT_langIds({
+        fetch_TYPE,
+        targetList_ID,
+        user_ID: z_user?.id || "",
+      });
+    })();
+  }, [targetList_ID]);
+
   const LOAD_more = useCallback(async () => {
     (async () => await FETCH(true))();
   }, [FETCH]);
 
   return { LOAD_more };
 }
+
+function COLLECT_vocabLangIds() {}

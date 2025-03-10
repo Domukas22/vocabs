@@ -17,10 +17,9 @@ import { z_USE_myVocabsDisplaySettings } from "../../../hooks/zustand/displaySet
 
 export function MySavedVocabs_NAV({
   search = "",
+  SHOW_listName = false,
   SET_search = () => {},
   OPEN_displaySettings = () => {},
-
-  SHOW_listName = false,
 }: {
   search: string;
   SHOW_listName: boolean;
@@ -29,8 +28,7 @@ export function MySavedVocabs_NAV({
 }) {
   const [IS_searchOpen, SET_searchOpen] = useState(false);
   const search_REF = useRef<TextInput>(null);
-  const { z_myVocabDisplay_SETTINGS } = z_USE_myVocabsDisplaySettings();
-  const { langFilters } = z_myVocabDisplay_SETTINGS;
+  const { z_GET_activeFilterCount } = z_USE_myVocabsDisplaySettings();
 
   return (
     <FlashlistPage_NAV
@@ -44,7 +42,7 @@ export function MySavedVocabs_NAV({
             <NavSearch_BTN OPEN_search={() => SET_searchOpen(true)} />
             <NavDisplaySettings_BTN
               OPEN_displaySettings={OPEN_displaySettings}
-              activeFilter_COUNT={langFilters?.length}
+              activeFilter_COUNT={z_GET_activeFilterCount() || 0}
             />
           </>
         ) : (

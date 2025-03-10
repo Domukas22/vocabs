@@ -2,17 +2,14 @@
 //
 //
 
-// import FlashlistPage_NAV from "@/src/components/1_grouped/headers/listPage/FlashlistPage_NAV";
 import {
   UpdateMyVocab_MODAL,
   VocabDisplaySettings_MODAL,
-  VocabFlashlist_HEADER,
 } from "@/src/features/vocabs/components";
 import { USE_debounceSearch, USE_showListHeaderTitle } from "@/src/hooks";
-import React, { useEffect } from "react";
+import React from "react";
 import { USE_modalToggles } from "@/src/hooks/index";
 import { Portal } from "@gorhom/portal";
-import { vocabFetch_TYPES } from "@/src/features_new/vocabs/functions/FETCH_vocabs/types";
 import MyVocabs_FLASHLIST from "@/src/features_new/vocabs/components/flashlists/MyVocabs_FLASHLIST/MyVocabs_FLASHLIST";
 import { ListSettings_MODAL } from "@/src/features/lists/components";
 import { z_USE_myVocabs } from "@/src/features_new/vocabs/hooks/zustand/z_USE_myVocabs/z_USE_myVocabs";
@@ -22,6 +19,7 @@ import { VocabFlatlist_FOOTER } from "@/src/features_new/vocabs/components/flash
 import { MySavedVocabs_NAV } from "@/src/features_new/vocabs/components/navs";
 import { Flashlist_HEADER } from "@/src/components/Flashlist_HEADER/Flashlist_HEADER";
 import { z_USE_myVocabsDisplaySettings } from "@/src/features_new/vocabs/hooks/zustand/displaySettings/z_USE_myVocabsDisplaySettings/z_USE_myVocabsDisplaySettings";
+import { DisplaySettings_MODAL } from "@/src/components/DisplaySettings_MODAL/DisplaySettings_MODAL";
 
 export default function SavedVocabs_PAGE() {
   const { modals } = USE_modalToggles([
@@ -41,7 +39,7 @@ export default function SavedVocabs_PAGE() {
     z_HAVE_myVocabsReachedEnd,
   } = z_USE_myVocabs();
 
-  const { z_myVocabDisplay_SETTINGS } = z_USE_myVocabsDisplaySettings();
+  const { z_GET_activeFilterCount } = z_USE_myVocabsDisplaySettings();
 
   // Refetches on filter changes
   const { LOAD_more } = USE_controlMyVocabsFetch({
@@ -70,10 +68,7 @@ export default function SavedVocabs_PAGE() {
             loading_STATE={z_myVocabsLoading_STATE}
             list_NAME={t("listName.savedVocabs")}
             unpaginated_COUNT={z_myVocabsUnpaginated_COUNT}
-            appliedFilter_COUNT={
-              (z_myVocabDisplay_SETTINGS?.langFilters?.length || 0) +
-              (z_myVocabDisplay_SETTINGS?.difficultyFilters?.length || 0)
-            }
+            appliedFilter_COUNT={z_GET_activeFilterCount() || 0}
             type="my-vocabs"
           />
         }
@@ -100,7 +95,9 @@ export default function SavedVocabs_PAGE() {
           IS_open={modals.updateVocab.IS_open}
           CLOSE_modal={() => modals.updateVocab.set(false)}
         />
-        <VocabDisplaySettings_MODAL
+        <DisplaySettings_MODAL
+          starting_TAB="vocab-preview"
+          type="my-vocabs"
           open={modals.displaySettings.IS_open}
           TOGGLE_open={() => modals.displaySettings.set(false)}
         />

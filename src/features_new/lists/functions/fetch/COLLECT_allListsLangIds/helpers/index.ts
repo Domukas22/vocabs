@@ -2,4 +2,4 @@
 //
 //
 
-export { FORMAT_rawColelctedLangIds } from "./FORMAT_rawColelctedLangIds/FORMAT_rawColelctedLangIds";
+export { FORMAT_rawColelctedLangIds } from "../../../../../../utils/FORMAT_rawColelctedLangIds/FORMAT_rawColelctedLangIds";

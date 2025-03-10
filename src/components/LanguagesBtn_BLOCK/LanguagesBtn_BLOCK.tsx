@@ -27,7 +27,7 @@ export function LanguagesBtn_BLOCK({
   const { z_GET_langsByLangId } = z_USE_langs();
   const langs = useMemo(() => z_GET_langsByLangId(allLang_IDs), [allLang_IDs]);
 
-  return (
+  return langs.length > 0 ? (
     <Block>
       <Label>{label}</Label>
       {langs?.map((lang, index) => {
@@ -53,5 +53,5 @@ export function LanguagesBtn_BLOCK({
         );
       })}
     </Block>
-  );
+  ) : null;
 }

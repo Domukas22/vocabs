@@ -58,7 +58,6 @@ export default function MyLists_FLASHLIST({
         <List_CARD
           key={item.id}
           list={item}
-          list_TYPE="private"
           onPress={() => {
             z_SET_myOneList(item);
             Keyboard.dismiss();

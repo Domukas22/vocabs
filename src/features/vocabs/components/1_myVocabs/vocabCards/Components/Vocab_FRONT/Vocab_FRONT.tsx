@@ -101,9 +101,9 @@ export default function Vocab_FRONT({
                 />
               ))}
             {SHOW_difficulty && !!difficulty && (
-              <ICON_difficultyDot difficulty={difficulty} big />
+              <ICON_difficultyDot difficulty={difficulty} size="big" />
             )}
-            {IS_marked && <ICON_markedStar active={true} />}
+            {IS_marked && <ICON_markedStar color="green" />}
           </View>
         )}
       </View>

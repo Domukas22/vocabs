@@ -5,24 +5,19 @@
 import React from "react";
 import { View } from "react-native";
 import SingleVocabDifficulty_COUNT from "./SingleVocabDifficulty_COUNT/SingleVocabDifficulty_COUNT";
-import {
-  ICON_markedStar,
-  ICON_star,
-} from "@/src/components/1_grouped/icons/icons";
+import { ICON_markedStar } from "@/src/components/1_grouped/icons/icons";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
+import { List_TYPE } from "@/src/features_new/lists/types";
 
-export function ListBtnDifficulty_COUNTS({
-  diff_1 = 0,
-  diff_2 = 0,
-  diff_3 = 0,
-  marked = 0,
-}: {
-  diff_1: number;
-  diff_2: number;
-  diff_3: number;
-  marked: number;
-}) {
+export function ListCardBottom_DIFFICULTIES({ list }: { list: List_TYPE }) {
+  const {
+    diff_1 = 0,
+    diff_2 = 0,
+    diff_3 = 0,
+    marked = 0,
+  } = list?.vocab_infos || {};
+
   return (
     <View
       style={{

@@ -49,7 +49,6 @@ export const PopularPublicLists_LIST = function PopularPublicLists_LIST() {
         <List_CARD
           key={list.id}
           list={list}
-          list_TYPE="public"
           onPress={() => {
             z_SET_publicOneList(list);
             router.push(`/(main)/explore/public_lists/${list.id}`);

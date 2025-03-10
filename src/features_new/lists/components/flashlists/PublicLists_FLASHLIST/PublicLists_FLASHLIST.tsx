@@ -16,7 +16,6 @@ import { useRouter } from "expo-router";
 
 import { z_USE_publicOneList } from "@/src/features_new/lists/hooks/zustand/z_USE_publicOneList/z_USE_publicOneList";
 import { List_CARD } from "../components/List_CARD/List_CARD";
-import { z_USE_currentActions } from "@/src/hooks/zustand/z_USE_currentActions/z_USE_currentActions";
 import { z_USE_publicLists } from "../../../hooks/zustand/z_USE_publicLists/z_USE_publicLists";
 
 export default function PublicLists_FLASHLIST({
@@ -59,7 +58,6 @@ export default function PublicLists_FLASHLIST({
         <List_CARD
           key={item.id}
           list={item}
-          list_TYPE="public"
           onPress={() => {
             z_SET_publicOneList(item);
             Keyboard.dismiss();

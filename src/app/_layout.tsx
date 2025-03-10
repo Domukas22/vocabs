@@ -15,7 +15,7 @@ import { USE_navigateUser } from "../features/users/functions/general/hooks/USE_
 import Toast_CONTEXT from "../context/Toast_CONTEXT";
 import Page_WRAP from "../components/1_grouped/Page_WRAP/Page_WRAP";
 import { z_USE_user } from "../features_new/user/hooks/z_USE_user/z_USE_user";
-import USE_populateLangs from "../features_new/languages/hooks/USE_populateLangs/USE_populateLangs";
+import { USE_populateLangs } from "../features_new/languages/hooks";
 
 export default function _layout() {
   return (

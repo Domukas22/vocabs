@@ -21,6 +21,7 @@ import React from "react";
 import { MyDeletedVocabs_NAV } from "@/src/features_new/vocabs/components/navs";
 import { Flashlist_HEADER } from "@/src/components/Flashlist_HEADER/Flashlist_HEADER";
 import { z_USE_myVocabsDisplaySettings } from "@/src/features_new/vocabs/hooks/zustand/displaySettings/z_USE_myVocabsDisplaySettings/z_USE_myVocabsDisplaySettings";
+import { DisplaySettings_MODAL } from "@/src/components/DisplaySettings_MODAL/DisplaySettings_MODAL";
 
 export default function DeletedVocabs_PAGE() {
   const { modals } = USE_modalToggles([
@@ -47,7 +48,7 @@ export default function DeletedVocabs_PAGE() {
     targetList_ID: "",
   });
 
-  const { z_myVocabDisplay_SETTINGS } = z_USE_myVocabsDisplaySettings();
+  const { z_GET_activeFilterCount } = z_USE_myVocabsDisplaySettings();
 
   return (
     <>
@@ -68,10 +69,7 @@ export default function DeletedVocabs_PAGE() {
             loading_STATE={z_myVocabsLoading_STATE}
             list_NAME={t("listName.deletedVocabs")}
             unpaginated_COUNT={z_myVocabsUnpaginated_COUNT}
-            appliedFilter_COUNT={
-              (z_myVocabDisplay_SETTINGS?.langFilters?.length || 0) +
-              (z_myVocabDisplay_SETTINGS?.difficultyFilters?.length || 0)
-            }
+            appliedFilter_COUNT={z_GET_activeFilterCount() || 0}
             type="my-vocabs"
           />
         }
@@ -98,7 +96,9 @@ export default function DeletedVocabs_PAGE() {
           IS_open={modals.listSettings.IS_open}
           CLOSE_modal={() => modals.listSettings.set(false)}
         />
-        <VocabDisplaySettings_MODAL
+        <DisplaySettings_MODAL
+          starting_TAB="vocab-preview"
+          type="my-vocabs"
           open={modals.displaySettings.IS_open}
           TOGGLE_open={() => modals.displaySettings.set(false)}
         />

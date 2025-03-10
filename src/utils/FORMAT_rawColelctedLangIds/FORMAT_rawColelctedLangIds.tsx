@@ -2,10 +2,12 @@
 //
 //
 
-import { COLLECT_allMyListsLangIds_RAW_RESPONSE_TYPE } from "../../types";
-
 export function FORMAT_rawColelctedLangIds(
-  rawLang_IDs: COLLECT_allMyListsLangIds_RAW_RESPONSE_TYPE
+  rawLang_IDs:
+    | {
+        collected_lang_ids: string[];
+      }[]
+    | null
 ): {
   lang_IDs: string[];
 } {

@@ -2,8 +2,6 @@
 //
 //
 
-// 🔴🔴🔴 TODO ==> Finish refactoring Vocab_FRONT
-
 import { StyleSheet, View } from "react-native";
 import React, { useMemo } from "react";
 
@@ -17,17 +15,17 @@ import { Vocab_FRONT, Vocab_BACK } from "./_parts";
 
 interface VocabProps {
   vocab: Vocab_TYPE;
-  highlighted?: boolean;
   list_TYPE: privateOrPublic_TYPE;
   fetch_TYPE: vocabFetch_TYPES;
+  highlighted?: boolean;
   OPEN_updateVocabModal?: () => void;
   OPEN_vocabCopyModal?: () => void;
 }
 
 export const Vocab_CARD = React.memo(function MyVocab_CARD({
+  vocab,
   list_TYPE,
   fetch_TYPE,
-  vocab,
   highlighted = false,
   OPEN_updateVocabModal = () => {},
   OPEN_vocabCopyModal = () => {},
@@ -50,9 +48,8 @@ export const Vocab_CARD = React.memo(function MyVocab_CARD({
         <Vocab_FRONT
           vocab={vocab}
           highlighted={highlighted}
-          list_TYPE={list_TYPE}
-          fetch_TYPE={fetch_TYPE}
           TOGGLE_open={TOGGLE_vocabCard}
+          list_TYPE={list_TYPE}
         />
       ) : (
         <Vocab_BACK

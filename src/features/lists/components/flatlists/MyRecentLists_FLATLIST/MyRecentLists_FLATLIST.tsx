@@ -45,7 +45,6 @@ export const MyRecentLists_FLATLIST = function RecentlyUsedPrivateLists_LIST() {
       <Label>{t("label.recentLists")}</Label>
       {z_myStarterTop4Lists?.map((list) => (
         <List_CARD
-          list_TYPE="private"
           key={list.id}
           list={list}
           highlighted={false}

@@ -16,18 +16,19 @@ import {
 
 import { z_USE_myOneList } from "@/src/features_new/lists/hooks/zustand/z_USE_myOneList/z_USE_myOneList";
 import { z_USE_myVocabsDisplaySettings } from "@/src/features_new/vocabs/hooks/zustand/displaySettings/z_USE_myVocabsDisplaySettings/z_USE_myVocabsDisplaySettings";
+import { z_USE_myVocabs } from "@/src/features_new/vocabs/hooks/zustand/z_USE_myVocabs/z_USE_myVocabs";
 import { t } from "i18next";
 import { ScrollView, View } from "react-native";
 
 export function MyVocabCardFrontLangToggle_BLOCK() {
   const { appearance, z_SET_frontLangId } = z_USE_myVocabsDisplaySettings();
-  const { z_myOneList } = z_USE_myOneList();
+  const { z_myVocabsCollectedLang_IDS = [] } = z_USE_myVocabs();
   const { appLang_ID } = USE_getAppLangId();
 
   const { frontTrLang_ID = "en" } = appearance;
 
   const { target_LANGS } = USE_getTargetLangs({
-    targetLang_IDS: z_myOneList?.collected_lang_ids || [],
+    targetLang_IDS: z_myVocabsCollectedLang_IDS,
   });
 
   return (
