@@ -34,126 +34,124 @@ export type z_SET_myVocabsCollectedLangIds_TYPE = (lang_ids: string[]) => void;
 //////////////////////////////////////////////////////////////////////////////////////////
 
 type z_USE_myVocabs_PROPS = {
-  z_myVocabs: Vocab_TYPE[];
-  z_myVocabPrinted_IDS: Set<string>;
-  z_myVocabsCollectedLang_IDS: string[];
+  z_vocabs: Vocab_TYPE[];
+  z_printed_IDS: Set<string>;
+  z_lang_IDS: string[];
 
-  z_myVocabsFetch_TYPE: vocabFetch_TYPES;
+  z_fetch_TYPE: vocabFetch_TYPES;
 
-  z_myVocabsUnpaginated_COUNT: number;
-  z_HAVE_myVocabsReachedEnd: boolean;
+  z_unpaginated_COUNT: number;
+  z_HAS_reachedEnd: boolean;
 
-  z_myVocabsLoading_STATE: loadingState_TYPES;
-  z_myVocabs_ERROR?: General_ERROR;
+  z_loading_STATE: loadingState_TYPES;
+  z_error?: General_ERROR;
 
-  z_myVocabsHighlighted_ID: string;
-  z_myVocabsHighlightTimeoutID: any;
+  z_highlighted_ID: string;
+  z_highlightTimeoutID: any;
 
   z_HIGHLIGHT_myVocab: (vocab_ID: string) => void;
-  z_UPDATE_vocabInMyVocabsList: (target_VOCAB: Vocab_TYPE) => void;
-  z_PREPEND_vocabToMyVocabsList: (new_VOCAB: Vocab_TYPE) => void;
-  z_REMOVE_vocabFromMyVocabsList: (vocab_ID: string) => void;
+  z_UPDATE_vocab: (target_VOCAB: Vocab_TYPE) => void;
+  z_PREPEND_vocab: (new_VOCAB: Vocab_TYPE) => void;
+  z_REMOVE_vocab: (vocab_ID: string) => void;
 
-  z_PREPARE_myVocabsForFetch: z_PREPARE_myVocabsForFetch_TYPE;
-  z_INSERT_fetchedVocabs: z_INSERT_fetchedVocabs_TYPE;
-  z_INSERT_myVocabsError: z_INSERT_myVocabsError_TYPE;
+  z_PREPARE_vocabsFetch: z_PREPARE_myVocabsForFetch_TYPE;
+  z_APPEND_vocabs: z_INSERT_fetchedVocabs_TYPE;
+  z_SET_error: z_INSERT_myVocabsError_TYPE;
 
-  z_SET_myVocabsCollectedLangIds: z_SET_myVocabsCollectedLangIds_TYPE;
+  z_SET_langIds: z_SET_myVocabsCollectedLangIds_TYPE;
 };
 
 export const z_USE_myVocabs = create<z_USE_myVocabs_PROPS>((set, get) => ({
-  z_myVocabs: [],
-  z_myVocabPrinted_IDS: new Set<string>(),
-  z_myVocabsCollectedLang_IDS: [],
+  z_vocabs: [],
+  z_printed_IDS: new Set<string>(),
+  z_lang_IDS: [],
 
-  z_myVocabsFetch_TYPE: "all",
+  z_fetch_TYPE: "all",
 
-  z_HAVE_myVocabsReachedEnd: false,
-  z_myVocabsUnpaginated_COUNT: 0,
+  z_HAS_reachedEnd: false,
+  z_unpaginated_COUNT: 0,
 
-  z_myVocabsLoading_STATE: "none",
-  z_myVocabs_ERROR: undefined,
+  z_loading_STATE: "none",
+  z_error: undefined,
 
-  z_myVocabsHighlighted_ID: "",
-  z_myVocabsHighlightTimeoutID: "", // This will hold the reference to the timeout
+  z_highlighted_ID: "",
+  z_highlightTimeoutID: "", // This will hold the reference to the timeout
 
   z_HIGHLIGHT_myVocab: (vocab_ID: string) => {
-    const currentTimeoutID = get().z_myVocabsHighlightTimeoutID;
+    const currentTimeoutID = get().z_highlightTimeoutID;
     // If there is a previous timeout, clear it
     if (currentTimeoutID) {
       clearTimeout(currentTimeoutID);
     }
 
     // Set the new highlighted vocab ID
-    set({ z_myVocabsHighlighted_ID: vocab_ID });
+    set({ z_highlighted_ID: vocab_ID });
 
     // Set a new timeout to reset the highlighted vocab ID after 5 seconds
     const timeoutID = setTimeout(() => {
-      set({ z_myVocabsHighlighted_ID: "" });
+      set({ z_highlighted_ID: "" });
     }, 5000);
 
     // Save the timeout reference in the state to clear it if needed
-    set({ z_myVocabsHighlightTimeoutID: timeoutID });
+    set({ z_highlightTimeoutID: timeoutID });
   },
-  z_UPDATE_vocabInMyVocabsList: (updated_VOCAB) =>
+  z_UPDATE_vocab: (updated_VOCAB) =>
     set((state) => ({
-      z_myVocabs: [...state.z_myVocabs].map((existing_VOCAB) =>
+      z_vocabs: [...state.z_vocabs].map((existing_VOCAB) =>
         existing_VOCAB.id === updated_VOCAB.id ? updated_VOCAB : existing_VOCAB
       ),
     })),
-  z_REMOVE_vocabFromMyVocabsList: (vocab_ID) =>
+  z_REMOVE_vocab: (vocab_ID) =>
     set((state) => ({
-      z_myVocabs: [...state.z_myVocabs].filter((x) => x.id !== vocab_ID),
-      z_myVocabsUnpaginated_COUNT: state.z_myVocabsUnpaginated_COUNT - 1,
+      z_vocabs: [...state.z_vocabs].filter((x) => x.id !== vocab_ID),
+      z_unpaginated_COUNT: state.z_unpaginated_COUNT - 1,
     })),
-  z_PREPEND_vocabToMyVocabsList: (new_VOCAB) =>
+  z_PREPEND_vocab: (new_VOCAB) =>
     set((state) => ({
-      z_myVocabs: [new_VOCAB, ...state.z_myVocabs],
-      z_myVocabsUnpaginated_COUNT: state.z_myVocabsUnpaginated_COUNT + 1,
+      z_vocabs: [new_VOCAB, ...state.z_vocabs],
+      z_unpaginated_COUNT: state.z_unpaginated_COUNT + 1,
     })),
 
-  z_PREPARE_myVocabsForFetch: ({ loadMore, loading_STATE, fetch_TYPE }) => {
+  z_PREPARE_vocabsFetch: ({ loadMore, loading_STATE, fetch_TYPE }) => {
     set({
-      z_myVocabs_ERROR: undefined,
-      z_myVocabsLoading_STATE: loading_STATE,
-      z_myVocabsFetch_TYPE: fetch_TYPE,
+      z_error: undefined,
+      z_loading_STATE: loading_STATE,
+      z_fetch_TYPE: fetch_TYPE,
     });
-    if (!loadMore) set({ z_myVocabs: [] });
+    if (!loadMore) set({ z_vocabs: [] });
   },
 
-  z_INSERT_fetchedVocabs: ({ vocabs, unpaginated_COUNT, loadMore }) => {
+  z_APPEND_vocabs: ({ vocabs, unpaginated_COUNT, loadMore }) => {
     if (loadMore) {
-      const withNewlyAppendedVocab_ARR = [...get().z_myVocabs, ...vocabs];
+      const withNewlyAppendedVocab_ARR = [...get().z_vocabs, ...vocabs];
       set({
-        z_myVocabs: withNewlyAppendedVocab_ARR,
-        z_myVocabsUnpaginated_COUNT: unpaginated_COUNT,
-        z_myVocabPrinted_IDS: new Set(
-          withNewlyAppendedVocab_ARR.map((x) => x.id)
-        ),
-        z_HAVE_myVocabsReachedEnd:
+        z_vocabs: withNewlyAppendedVocab_ARR,
+        z_unpaginated_COUNT: unpaginated_COUNT,
+        z_printed_IDS: new Set(withNewlyAppendedVocab_ARR.map((x) => x.id)),
+        z_HAS_reachedEnd:
           withNewlyAppendedVocab_ARR.length >= unpaginated_COUNT,
 
-        z_myVocabsLoading_STATE: "none",
+        z_loading_STATE: "none",
       });
     } else {
       set({
-        z_myVocabs: vocabs,
-        z_myVocabsUnpaginated_COUNT: unpaginated_COUNT,
-        z_myVocabPrinted_IDS: new Set(vocabs.map((v) => v.id)),
-        z_HAVE_myVocabsReachedEnd: vocabs.length >= unpaginated_COUNT,
-        z_myVocabsLoading_STATE: "none",
+        z_vocabs: vocabs,
+        z_unpaginated_COUNT: unpaginated_COUNT,
+        z_printed_IDS: new Set(vocabs.map((v) => v.id)),
+        z_HAS_reachedEnd: vocabs.length >= unpaginated_COUNT,
+        z_loading_STATE: "none",
       });
     }
   },
-  z_INSERT_myVocabsError: (error) =>
+  z_SET_error: (error) =>
     set({
-      z_myVocabs: [],
-      z_myVocabsLoading_STATE: "error",
-      z_myVocabs_ERROR: error,
+      z_vocabs: [],
+      z_loading_STATE: "error",
+      z_error: error,
     }),
 
-  z_SET_myVocabsCollectedLangIds: (lang_ids = []) =>
+  z_SET_langIds: (lang_ids = []) =>
     set({
-      z_myVocabsCollectedLang_IDS: lang_ids,
+      z_lang_IDS: lang_ids,
     }),
 }));

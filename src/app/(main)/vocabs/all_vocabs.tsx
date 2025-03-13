@@ -36,10 +36,10 @@ export default function AllVocabs_PAGE() {
     USE_debounceSearch();
 
   const {
-    z_myVocabsLoading_STATE,
-    z_myVocabsUnpaginated_COUNT,
-    z_myVocabs_ERROR,
-    z_HAVE_myVocabsReachedEnd,
+    z_loading_STATE: z_myVocabsLoading_STATE,
+    z_unpaginated_COUNT: z_myVocabsUnpaginated_COUNT,
+    z_error: z_myVocabs_ERROR,
+    z_HAS_reachedEnd: z_HAVE_myVocabsReachedEnd,
   } = z_USE_myVocabs();
 
   // Refetches on filter changes

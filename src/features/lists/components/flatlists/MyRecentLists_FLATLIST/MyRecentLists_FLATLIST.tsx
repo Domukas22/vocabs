@@ -17,6 +17,7 @@ import { MyColors } from "@/src/constants/MyColors";
 import { USE_routerPush } from "@/src/hooks";
 import { List_CARD } from "@/src/features_new/lists/components/flashlists/components/List_CARD/List_CARD";
 import { z_USE_myOneList } from "@/src/features_new/lists/hooks/zustand/z_USE_myOneList/z_USE_myOneList";
+import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 
 export const MyRecentLists_FLATLIST = function RecentlyUsedPrivateLists_LIST() {
   const { PUSH_router } = USE_routerPush();
@@ -42,7 +43,8 @@ export const MyRecentLists_FLATLIST = function RecentlyUsedPrivateLists_LIST() {
 
   return (
     <Block styles={{ gap: 12 }}>
-      <Label>{t("label.recentLists")}</Label>
+      <Styled_TEXT type="text_22_bold">{t("label.myLists")}</Styled_TEXT>
+      {/* <Label>{t("label.recentLists")}</Label> */}
       {z_myStarterTop4Lists?.map((list) => (
         <List_CARD
           key={list.id}
@@ -56,7 +58,10 @@ export const MyRecentLists_FLATLIST = function RecentlyUsedPrivateLists_LIST() {
       ))}
 
       <Btn
-        text={`See all ${z_myStarterTotalListCount} lists`}
+        // text={`See all ${z_myStarterTotalListCount} lists`}
+        text={`${t("btn.seeAllMyLists_PRE")} ${z_myStarterTotalListCount} ${t(
+          "btn.seeAllMyLists_POST"
+        )}`}
         iconRight={<ICON_arrow direction="right" />}
         text_STYLES={{ flex: 1 }}
         onPress={() => PUSH_router("my-lists")}

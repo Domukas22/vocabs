@@ -25,13 +25,13 @@ type props = {
 const function_NAME = "USE_collectMyVocabsLangIds";
 
 export function USE_collectMyVocabsLangIds({
-  z_SET_myVocabsCollectedLangIds = () => {},
-  z_INSERT_myVocabsError = () => {},
+  z_SET_langIds = () => {},
+  z_SET_error = () => {},
 }: {
-  z_SET_myVocabsCollectedLangIds: (lang_ids: string[]) => void;
-  z_INSERT_myVocabsError: z_INSERT_myVocabsError_TYPE;
+  z_SET_langIds: (lang_ids: string[]) => void;
+  z_SET_error: z_INSERT_myVocabsError_TYPE;
 }) {
-  const COLLECT_langIds = useCallback(
+  const RECOLLECT_langIds = useCallback(
     async (args: props): Promise<void> => {
       try {
         const { lang_IDs } = await COLLECT_myVocabLangIds(args);
@@ -43,7 +43,7 @@ export function USE_collectMyVocabsLangIds({
               "'COLLECT_myVocabLangIds' returned an undefined 'lang_IDs' array, although it didn't throw an error",
           });
 
-        z_SET_myVocabsCollectedLangIds(lang_IDs);
+        z_SET_langIds(lang_IDs);
 
         // --------------------------------------------------
       } catch (error: any) {
@@ -54,12 +54,12 @@ export function USE_collectMyVocabsLangIds({
           errorToSpread: error,
         });
 
-        z_INSERT_myVocabsError(err);
+        z_SET_error(err);
         SEND_internalError(err);
       }
     },
-    [DETERMINE_loadingState, z_INSERT_myVocabsError]
+    [DETERMINE_loadingState, z_SET_error]
   );
 
-  return { COLLECT_langIds };
+  return { RECOLLECT_langIds };
 }

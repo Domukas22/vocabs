@@ -15,6 +15,7 @@ import { ActivityIndicator } from "react-native";
 import { MyColors } from "@/src/constants/MyColors";
 import { z_USE_publicStarterContent } from "@/src/hooks/zustand/z_USE_publicStarterContent/z_USE_publicStarterContent";
 import { Vocab_CARD } from "@/src/features_new/vocabs/components/flashlists/_parts/Vocab_CARD/Vocab_CARD";
+import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 
 export const Top5PublicVocabs_LIST = function Top5PublicVocabs_LIST() {
   const router = useRouter();
@@ -41,7 +42,9 @@ export const Top5PublicVocabs_LIST = function Top5PublicVocabs_LIST() {
 
   return (
     <Block styles={{ gap: 12 }}>
-      <Label>{t("label.mostPopularVocabs")}</Label>
+      <Styled_TEXT type="text_22_bold">
+        {t("label.mostPopularVocabs")}
+      </Styled_TEXT>
       {z_publicStarterTop5Vocabs?.map((vocab) => (
         <Vocab_CARD
           key={vocab?.id}
@@ -52,7 +55,11 @@ export const Top5PublicVocabs_LIST = function Top5PublicVocabs_LIST() {
       ))}
 
       <Btn
-        text={`See all ${z_publicStarterTotalVocabCount} public vocabs`}
+        text={`${t(
+          "btn.seeAllPublicVocabs_PRE"
+        )} ${z_publicStarterTotalVocabCount} ${t(
+          "btn.seeAllPublicVocabs_POST"
+        )}`}
         iconRight={<ICON_arrow direction="right" />}
         text_STYLES={{ flex: 1 }}
         onPress={() => {

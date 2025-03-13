@@ -16,6 +16,9 @@ import { USE_toast } from "@/src/hooks/USE_toast/USE_toast";
 import { t } from "i18next";
 import { USE_updateListUpdatedAt } from "@/src/features_new/lists/hooks/actions/USE_updateListUpdatedAt/ USE_updateListUpdatedAt";
 import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
+import { USE_collectMyVocabsLangIds } from "../../fetchControls/USE_controlMyVocabsFetch/USE_collectMyVocabsLangIds/USE_collectMyVocabsLangIds";
+
+// 🔴🔴🔴TODO ===> Implementthe " await RECOLLECT_langIds" into other functions as well
 
 const function_NAME = "USE_softDeletevocab";
 
@@ -28,12 +31,23 @@ export function USE_softDeletevocab() {
   const { UPDATE_listDefaultLangIds } = USE_recollectListLangIds();
 
   const { REFETCH_myStarterContent } = USE_refetchStarterContent();
-  const { z_REMOVE_vocabFromMyVocabsList } = z_USE_myVocabs();
+  const {
+    z_REMOVE_vocab: z_REMOVE_vocabFromMyVocabsList,
+    z_SET_error,
+
+    z_SET_langIds,
+    z_fetch_TYPE,
+  } = z_USE_myVocabs();
   const { z_REMOVE_listFromMyLists } = z_USE_myLists();
   const { REFECH_andReplaceMyListInLists } =
     USE_refetchAndReplaceMyListInAllLists();
   const { UPDATE_listUpdatedAt = () => {} } = USE_updateListUpdatedAt();
   const { TOAST } = USE_toast();
+
+  const { RECOLLECT_langIds } = USE_collectMyVocabsLangIds({
+    z_SET_error,
+    z_SET_langIds,
+  });
 
   const _SOFTDELETE_vocab = useCallback(
     async (
@@ -69,6 +83,12 @@ export function USE_softDeletevocab() {
 
         // Update starter page
         await REFETCH_myStarterContent();
+
+        await RECOLLECT_langIds({
+          fetch_TYPE: z_fetch_TYPE,
+          targetList_ID: list_ID,
+          user_ID: z_user?.id || "",
+        });
 
         // Update UI
         z_REMOVE_vocabFromMyVocabsList(vocab_ID);

@@ -17,28 +17,31 @@ export default function USE_controlMyVocabsFetch({
 }: {
   search: string;
   fetch_TYPE: vocabFetch_TYPES;
-  targetList_ID: string;
+  targetList_ID?: string;
 }) {
   const { filters, sorting } = z_USE_myVocabsDisplaySettings();
   const { z_user } = z_USE_user();
 
   const {
-    z_myVocabPrinted_IDS,
-    z_INSERT_myVocabsError,
-    z_INSERT_fetchedVocabs,
-    z_PREPARE_myVocabsForFetch,
-    z_SET_myVocabsCollectedLangIds,
+    z_lang_IDS,
+    z_printed_IDS,
+    z_SET_error,
+    z_APPEND_vocabs,
+    z_PREPARE_vocabsFetch,
+    z_SET_langIds,
   } = z_USE_myVocabs();
 
+  console.log("z_lang_IDS: ", z_lang_IDS);
+
   const { FETCH_myVocabs } = USE_fetchMyVocabs({
-    z_INSERT_myVocabsError,
-    z_INSERT_fetchedVocabs,
-    z_PREPARE_myVocabsForFetch,
+    z_SET_error,
+    z_APPEND_vocabs,
+    z_PREPARE_vocabsFetch,
   });
 
-  const { COLLECT_langIds } = USE_collectMyVocabsLangIds({
-    z_INSERT_myVocabsError,
-    z_SET_myVocabsCollectedLangIds,
+  const { RECOLLECT_langIds } = USE_collectMyVocabsLangIds({
+    z_SET_error,
+    z_SET_langIds,
   });
 
   const FETCH = useCallback(
@@ -51,10 +54,10 @@ export default function USE_controlMyVocabsFetch({
         filters,
         sorting,
         user_id: z_user?.id || "",
-        excludeIds: loadMore ? z_myVocabPrinted_IDS : new Set(),
+        excludeIds: loadMore ? z_printed_IDS : new Set(),
       });
     },
-    [filters, sorting, z_user?.id, z_myVocabPrinted_IDS, search]
+    [filters, sorting, z_user?.id, z_printed_IDS, search]
   );
 
   // Refetch on search / sorting / filter / targetList_ID
@@ -65,7 +68,7 @@ export default function USE_controlMyVocabsFetch({
   // recalculate lang ids on targetList_ID change
   useEffect(() => {
     (async () => {
-      await COLLECT_langIds({
+      await RECOLLECT_langIds({
         fetch_TYPE,
         targetList_ID,
         user_ID: z_user?.id || "",
@@ -79,5 +82,3 @@ export default function USE_controlMyVocabsFetch({
 
   return { LOAD_more };
 }
-
-function COLLECT_vocabLangIds() {}

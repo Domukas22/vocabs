@@ -19,7 +19,7 @@ import { MarkedFilter_BTN, MyVocabsDifficultyBtn_BLOCK } from "./_parts";
 import { z_USE_myVocabs } from "@/src/features_new/vocabs/hooks/zustand/z_USE_myVocabs/z_USE_myVocabs";
 
 export function MyVocabsFiltering_CONTENT() {
-  const { z_myVocabsCollectedLang_IDS = [] } = z_USE_myVocabs();
+  const { z_lang_IDS: z_myVocabsCollectedLang_IDS = [] } = z_USE_myVocabs();
   const {
     filters,
     z_HANDLE_langFilter,

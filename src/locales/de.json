@@ -107,7 +107,13 @@
     "filterVocabsByDifficulty3": "Schwierig",
     "filterVocabsByDifficulty2": "Mittel",
     "filterVocabsByDifficulty1": "Einfach",
-    "filterVocabsByMarked": "Gemerkt"
+    "filterVocabsByMarked": "Gemerkt",
+    "seeAllMyLists_PRE": "Alle",
+    "seeAllMyLists_POST": "Listen sehen",
+    "seeAllPublicLists_PRE": "Alle",
+    "seeAllPublicLists_POST": "öffentliche Listen sehen",
+    "seeAllPublicVocabs_PRE": "Alle",
+    "seeAllPublicVocabs_POST": "öffentliche Vokabeln sehen"
   },
   "pages": {
     "about": {
@@ -221,7 +227,10 @@
     "otherFilters": "Andere Filter",
     "difficultyFilters": "Nach Schwierigkeit filtern",
     "vocabsSmall": "Vokabeln",
-    "1vocabSmall": "Vokabel"
+    "1vocabSmall": "Vokabel",
+    "myLists": "Meine Listen",
+    "myVocabs": "Meine Vokabeln",
+    "mostPopularLists": "Die beliebtesten Listen"
   },
   "modal": {
     "displaySettings": {

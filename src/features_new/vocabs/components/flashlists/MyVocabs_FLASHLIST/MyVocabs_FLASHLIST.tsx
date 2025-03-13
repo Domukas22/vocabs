@@ -29,11 +29,11 @@ export default function MyVocabs_FLASHLIST({
   const { z_currentActions } = z_USE_currentActions();
 
   const {
-    z_myVocabs,
-    z_myVocabsFetch_TYPE,
-    z_myVocabsLoading_STATE,
-    z_myVocabs_ERROR: error,
-    z_myVocabsHighlighted_ID,
+    z_vocabs: z_myVocabs,
+    z_fetch_TYPE: z_myVocabsFetch_TYPE,
+    z_loading_STATE: z_myVocabsLoading_STATE,
+    z_error: error,
+    z_highlighted_ID: z_myVocabsHighlighted_ID,
   } = z_USE_myVocabs();
 
   const data = useMemo(

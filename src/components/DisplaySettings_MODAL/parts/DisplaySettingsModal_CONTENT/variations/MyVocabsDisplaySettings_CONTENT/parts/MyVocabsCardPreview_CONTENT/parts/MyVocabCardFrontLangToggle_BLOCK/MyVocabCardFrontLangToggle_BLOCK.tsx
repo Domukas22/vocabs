@@ -22,7 +22,7 @@ import { ScrollView, View } from "react-native";
 
 export function MyVocabCardFrontLangToggle_BLOCK() {
   const { appearance, z_SET_frontLangId } = z_USE_myVocabsDisplaySettings();
-  const { z_myVocabsCollectedLang_IDS = [] } = z_USE_myVocabs();
+  const { z_lang_IDS: z_myVocabsCollectedLang_IDS = [] } = z_USE_myVocabs();
   const { appLang_ID } = USE_getAppLangId();
 
   const { frontTrLang_ID = "en" } = appearance;

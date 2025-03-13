@@ -17,45 +17,45 @@ type props = {
   SHOULD_updateListUpdatedAt: boolean;
 };
 
-export const ToggleMarked_BTN = memo(
-  ({ vocab, SHOULD_updateListUpdatedAt = false }: props) => {
-    const { MARK_vocab } = USE_markVocab();
-    const { z_currentActions, IS_inAction } = z_USE_currentActions();
+export const ToggleMarked_BTN = memo((props: props) => {
+  const { vocab, SHOULD_updateListUpdatedAt = false } = props;
 
-    const IS_updatingMarked = useMemo(
-      () => IS_inAction("vocab", vocab?.id, "updating_marked"),
-      [z_currentActions]
-    );
+  const { MARK_vocab } = USE_markVocab();
+  const { z_currentActions, IS_inAction } = z_USE_currentActions();
 
-    return (
-      <Btn
-        type={vocab?.is_marked ? "active_green" : "simple"}
-        onPress={async () => {
-          await MARK_vocab(
-            vocab?.id,
-            vocab?.list_id || "",
-            !vocab?.is_marked,
-            SHOULD_updateListUpdatedAt
-          );
-        }} // Toggle spinning on press
-        stayPressed={IS_updatingMarked}
-        iconLeft={
-          <View style={{ width: 26, alignItems: "center" }}>
-            {IS_updatingMarked ? (
-              <ActivityIndicator
-                color={
-                  vocab?.is_marked ? MyColors.icon_green : MyColors.icon_gray
-                }
-              />
-            ) : (
-              <ICON_markedStar
-                color={vocab?.is_marked ? "green" : "gray"}
-                size="big"
-              />
-            )}
-          </View>
-        }
-      />
-    );
-  }
-);
+  const IS_updatingMarked = useMemo(
+    () => IS_inAction("vocab", vocab?.id, "updating_marked"),
+    [z_currentActions]
+  );
+
+  return (
+    <Btn
+      type={vocab?.is_marked ? "active_green" : "simple"}
+      onPress={async () => {
+        await MARK_vocab(
+          vocab?.id,
+          vocab?.list_id || "",
+          !vocab?.is_marked,
+          SHOULD_updateListUpdatedAt
+        );
+      }} // Toggle spinning on press
+      stayPressed={IS_updatingMarked}
+      iconLeft={
+        <View style={{ width: 26, alignItems: "center" }}>
+          {IS_updatingMarked ? (
+            <ActivityIndicator
+              color={
+                vocab?.is_marked ? MyColors.icon_green : MyColors.icon_gray
+              }
+            />
+          ) : (
+            <ICON_markedStar
+              color={vocab?.is_marked ? "green" : "gray"}
+              size="big"
+            />
+          )}
+        </View>
+      }
+    />
+  );
+});

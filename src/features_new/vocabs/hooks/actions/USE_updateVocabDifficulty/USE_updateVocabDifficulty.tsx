@@ -28,7 +28,8 @@ export function USE_updateVocabDifficulty() {
   } = z_USE_currentActions();
 
   const { UPDATE_listUpdatedAt = () => {} } = USE_updateListUpdatedAt();
-  const { z_UPDATE_vocabInMyVocabsList = () => {} } = z_USE_myVocabs();
+  const { z_UPDATE_vocab: z_UPDATE_vocabInMyVocabsList = () => {} } =
+    z_USE_myVocabs();
 
   const { REFECH_andReplaceMyListInLists = () => {} } =
     USE_refetchAndReplaceMyListInAllLists();

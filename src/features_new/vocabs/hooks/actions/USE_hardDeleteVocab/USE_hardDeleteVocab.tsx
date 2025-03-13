@@ -23,7 +23,7 @@ export function USE_hardDeleteVocab() {
     z_USE_currentActions();
 
   const { REFETCH_myStarterContent } = USE_refetchStarterContent();
-  const { z_REMOVE_vocabFromMyVocabsList } = z_USE_myVocabs();
+  const { z_REMOVE_vocab: z_REMOVE_vocabFromMyVocabsList } = z_USE_myVocabs();
   const { TOAST } = USE_toast();
 
   const _HARDDELETE_vocab = useCallback(async (vocab_ID: string) => {

@@ -36,21 +36,10 @@ export default function Index_PAGE() {
   //     .ilike("name", "%vocabs%")
   //     .order("vocab_infos->>total", { ascending: false });
 
-  //   console.log(data);
   // };
 
   return (
     <>
-      <Header
-        title="My vocabs"
-        big={true}
-        btnRight={
-          z_IS_myStarterContentRefetching ? (
-            <ActivityIndicator color={MyColors.icon_gray} />
-          ) : null
-        }
-      />
-      {/* <Btn text="Fetch" onPress={fetch} /> */}
       <ScrollView style={{ backgroundColor: MyColors.fill_bg }}>
         <MyRecentLists_FLATLIST />
         <VocabPageBigMain_BTNS />

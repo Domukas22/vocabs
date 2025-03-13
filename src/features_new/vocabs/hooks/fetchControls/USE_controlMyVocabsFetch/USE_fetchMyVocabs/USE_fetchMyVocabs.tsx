@@ -38,13 +38,13 @@ interface USE_fetchMyVocabs_PROPS {
 const function_NAME = "USE_fetchMyVocabs";
 
 export function USE_fetchMyVocabs({
-  z_INSERT_myVocabsError,
-  z_INSERT_fetchedVocabs,
-  z_PREPARE_myVocabsForFetch,
+  z_SET_error: z_INSERT_myVocabsError,
+  z_APPEND_vocabs: z_INSERT_fetchedVocabs,
+  z_PREPARE_vocabsFetch: z_PREPARE_myVocabsForFetch,
 }: {
-  z_INSERT_myVocabsError: z_INSERT_myVocabsError_TYPE;
-  z_INSERT_fetchedVocabs: z_INSERT_fetchedVocabs_TYPE;
-  z_PREPARE_myVocabsForFetch: z_PREPARE_myVocabsForFetch_TYPE;
+  z_SET_error: z_INSERT_myVocabsError_TYPE;
+  z_APPEND_vocabs: z_INSERT_fetchedVocabs_TYPE;
+  z_PREPARE_vocabsFetch: z_PREPARE_myVocabsForFetch_TYPE;
 }) {
   const { START_newRequest } = USE_abortController();
 

@@ -49,7 +49,7 @@ export const Vocab_CARD = React.memo(function MyVocab_CARD({
           vocab={vocab}
           highlighted={highlighted}
           TOGGLE_open={TOGGLE_vocabCard}
-          list_TYPE={list_TYPE}
+         
         />
       ) : (
         <Vocab_BACK

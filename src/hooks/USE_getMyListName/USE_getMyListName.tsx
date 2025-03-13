@@ -7,8 +7,7 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 export function USE_getMyListName() {
-  const { z_myList: list, z_myVocabsLoading_STATE: loading_STATE } =
-    z_USE_myVocabs();
+  const { z_myList: list, z_loading_STATE: loading_STATE } = z_USE_myVocabs();
 
   const { t } = useTranslation();
 

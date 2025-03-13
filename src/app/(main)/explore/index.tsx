@@ -15,6 +15,7 @@ import { t } from "i18next";
 import { Top5PublicVocabs_LIST } from "@/src/features/lists/components/flatlists/Top5PublicVocabs_LIST/Top5PublicVocabs_LIST";
 import { ScrollView } from "react-native-gesture-handler";
 import { PopularPublicLists_LIST } from "@/src/features/lists/components/flatlists/PopularPublicLists_LIST/PopularPublicLists_LIST";
+import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 
 export default function Explore_PAGE() {
   const { z_IS_publicStarterContentRefetching } = z_USE_publicStarterContent();
@@ -26,15 +27,6 @@ export default function Explore_PAGE() {
 
   return (
     <>
-      <Header
-        title={t("header.exploreTab")}
-        big={true}
-        btnRight={
-          z_IS_publicStarterContentRefetching ? (
-            <ActivityIndicator color={MyColors.icon_gray} />
-          ) : null
-        }
-      />
       <ScrollView style={{ backgroundColor: MyColors.fill_bg }}>
         <MainExploreTab_LINKS />
         <View style={{}}>
@@ -67,8 +59,11 @@ function MainExploreTab_LINKS() {
         gap: 12,
         backgroundColor: MyColors.fill_bg,
         flex: 1,
+        borderBottomColor: MyColors.border_white_005,
+        borderBottomWidth: 1,
       }}
     >
+      <Styled_TEXT type="text_22_bold">{t("header.exploreTab")}</Styled_TEXT>
       <BigPage_BTN
         IS_loading={z_IS_publicStarterContentRefetching}
         title="⭐ Public lists"

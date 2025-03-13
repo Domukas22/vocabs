@@ -16,6 +16,7 @@ import USE_refetchStarterContent from "@/src/hooks/zustand/z_USE_myStarterConten
 import USE_refetchAndReplaceMyListInAllLists from "@/src/features_new/lists/hooks/actions/USE_refetchAndReplaceMyListInAllLists/USE_refetchAndReplaceMyListInAllLists";
 import { USE_updateListUpdatedAt } from "@/src/features_new/lists/hooks/actions/USE_updateListUpdatedAt/ USE_updateListUpdatedAt";
 import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
+import { z_USE_markedVocabs } from "../../zustand/z_USE_markedVocabs/z_USE_markedVocabs";
 
 const function_NAME = "USE_markVocab";
 
@@ -28,7 +29,10 @@ export function USE_markVocab() {
     REMOVE_currentAction = () => {},
   } = z_USE_currentActions();
 
-  const { z_UPDATE_vocabInMyVocabsList = () => {} } = z_USE_myVocabs();
+  const { z_UPDATE_vocab: z_UPDATE_vocabInMyVocabsList = () => {} } =
+    z_USE_myVocabs();
+  const { z_REPLACE_vocab } = z_USE_markedVocabs();
+
   const { REFETCH_myStarterContent = () => {} } = USE_refetchStarterContent();
   const { REFECH_andReplaceMyListInLists = () => {} } =
     USE_refetchAndReplaceMyListInAllLists();
@@ -80,6 +84,7 @@ export function USE_markVocab() {
 
         // Update UI
         z_UPDATE_vocabInMyVocabsList(updated_VOCAB);
+        z_REPLACE_vocab(updated_VOCAB);
 
         // Provide sensory user feedback
         const toast_MSG = IS_marked

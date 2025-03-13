@@ -17,6 +17,7 @@ import { z_USE_publicStarterContent } from "@/src/hooks/zustand/z_USE_publicStar
 import { MyVocab_CARD } from "@/src/features/vocabs/vocabList/Vocabs_LIST/helpers";
 import { z_USE_publicOneList } from "@/src/features_new/lists/hooks/zustand/z_USE_publicOneList/z_USE_publicOneList";
 import { List_CARD } from "@/src/features_new/lists/components/flashlists/components/List_CARD/List_CARD";
+import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 
 export const PopularPublicLists_LIST = function PopularPublicLists_LIST() {
   const router = useRouter();
@@ -44,7 +45,9 @@ export const PopularPublicLists_LIST = function PopularPublicLists_LIST() {
 
   return (
     <Block styles={{ gap: 12 }}>
-      <Label>{t("label.mostPopularVocabs")}</Label>
+      <Styled_TEXT type="text_22_bold">
+        {t("label.mostPopularLists")}
+      </Styled_TEXT>
       {z_publicStarterTop5Lists?.map((list) => (
         <List_CARD
           key={list.id}
@@ -57,7 +60,9 @@ export const PopularPublicLists_LIST = function PopularPublicLists_LIST() {
       ))}
 
       <Btn
-        text={`See all ${z_publicStarterTotalListCount} public lists`}
+        text={`${t(
+          "btn.seeAllPublicLists_PRE"
+        )} ${z_publicStarterTotalListCount} ${t("btn.seeAllPublicLists_POST")}`}
         iconRight={<ICON_arrow direction="right" />}
         text_STYLES={{ flex: 1 }}
         onPress={() => {

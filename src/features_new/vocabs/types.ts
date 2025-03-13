@@ -46,6 +46,13 @@ export type VocabFilter_PROPS = {
   byMarked: boolean;
 };
 
+/////////////////////////////////
+export type MarkedVocabFilter_PROPS = {
+  langs: string[];
+  difficulties: (1 | 2 | 3)[];
+};
+/////////////////////////////////
+
 export type vocabSorting_TYPES =
   | "date"
   | "difficulty"

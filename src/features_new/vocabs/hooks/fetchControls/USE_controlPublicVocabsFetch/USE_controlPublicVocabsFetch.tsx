@@ -9,6 +9,13 @@ import { z_USE_publicVocabs } from "../../zustand/z_USE_publicVocabs/z_USE_publi
 import { vocabFetch_TYPES } from "../../../functions/FETCH_vocabs/types";
 import { z_USE_myVocabsDisplaySettings } from "../../zustand/displaySettings/z_USE_myVocabsDisplaySettings/z_USE_myVocabsDisplaySettings";
 import { z_USE_publicVocabsDisplaySettings } from "../../zustand/displaySettings/z_USE_publicVocabsDisplaySettings/z_USE_publicVocabsDisplaySettings";
+import { COLLECT_allPublicVocabLangIds } from "../../../functions/COLLECT_allPublicVocabLangIds/COLLECT_allPublicVocabLangIds";
+
+// 🔴🔴 TODO ==> Smoothen out the language collection process.
+// If vocabs are fetched by list, then just use the collected_lang_ids of the list
+// For all public vocabs --> use the materialized view
+//
+// ----> Perhaps re-think the fetching? re-think the separate fetches, like public lists, my lists, my vocabs, marked vocabs etc.
 
 export default function USE_controlPublicVocabsFetch({
   search = "",
@@ -53,6 +60,10 @@ export default function USE_controlPublicVocabsFetch({
   useEffect(() => {
     (async () => await FETCH())();
   }, [search, filters, sorting, targetList_ID]);
+
+  useEffect(() => {
+    (async () => await COLLECT_allPublicVocabLangIds())();
+  }, [targetList_ID]);
 
   const LOAD_more = useCallback(async () => {
     (async () => await FETCH(true))();

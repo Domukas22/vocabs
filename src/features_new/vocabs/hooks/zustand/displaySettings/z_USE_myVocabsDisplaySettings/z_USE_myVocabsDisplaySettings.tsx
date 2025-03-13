@@ -5,6 +5,18 @@
 import { VocabFilter_PROPS } from "@/src/features_new/vocabs/types";
 import { sortDirection_TYPE } from "@/src/types/general_TYPES";
 import { create } from "zustand";
+import {
+  GET_activeFilterCount,
+  SET_sorting,
+  SET_sortDirection,
+  HANDLE_markedFilter,
+  TOGGLE_showDescription,
+  TOGGLE_showFlags,
+  TOGGLE_showDifficulty,
+  SET_frontLangId,
+  HANDLE_langFilter,
+  HANDLE_difficultyFilter,
+} from "../_helpers";
 
 export type myVocabsSorting_TYPE = "difficulty" | "date" | "marked";
 
@@ -60,103 +72,22 @@ export const z_USE_myVocabsDisplaySettings =
     z_CLEAR_filters: () =>
       set({ filters: { byMarked: false, difficulties: [], langs: [] } }),
 
-    z_GET_activeFilterCount: () =>
-      get().filters?.langs?.length +
-      get().filters?.difficulties?.length +
-      (get().filters?.byMarked ? 1 : 0),
+    z_GET_activeFilterCount: () => GET_activeFilterCount(get()),
 
-    z_SET_sorting: (sorting_TYPE) =>
-      set((state) => ({
-        sorting: {
-          ...state.sorting,
-          type: sorting_TYPE,
-        },
-      })),
+    z_SET_sorting: (sorting_TYPE) => set(SET_sorting(sorting_TYPE)),
 
     z_SET_sortDirection: (sortDirection_TYPE) =>
-      set((state) => ({
-        sorting: {
-          ...state.sorting,
-          direction: sortDirection_TYPE,
-        },
-      })),
+      set(SET_sortDirection(sortDirection_TYPE)),
 
-    z_HANDLE_markedFilter: () =>
-      set((state) => ({
-        filters: { ...state.filters, byMarked: !state.filters.byMarked },
-      })),
+    z_HANDLE_markedFilter: () => set(HANDLE_markedFilter()),
+    z_TOGGLE_showDescription: () => set(TOGGLE_showDescription()),
+    z_TOGGLE_showFlags: () => set(TOGGLE_showFlags()),
+    z_TOGGLE_showDifficulty: () => set(TOGGLE_showDifficulty()),
 
-    z_TOGGLE_showDescription: () =>
-      set((state) => ({
-        appearance: {
-          ...state.appearance,
-          SHOW_description: !state.appearance.SHOW_description,
-        },
-      })),
-
-    z_TOGGLE_showFlags: () =>
-      set((state) => ({
-        appearance: {
-          ...state.appearance,
-          SHOW_flags: !state.appearance.SHOW_flags,
-        },
-      })),
-
-    z_TOGGLE_showDifficulty: () =>
-      set((state) => ({
-        appearance: {
-          ...state.appearance,
-          SHOW_difficulty: !state.appearance.SHOW_difficulty,
-        },
-      })),
-
-    z_SET_frontLangId: (newLang_ID) =>
-      set((state) => ({
-        appearance: {
-          ...state.appearance,
-          frontTrLang_ID: newLang_ID,
-        },
-      })),
+    z_SET_frontLangId: (newLang_ID) => set(SET_frontLangId(newLang_ID)),
 
     z_HANDLE_langFilter: (targetLang_ID) =>
-      set((state) => {
-        const IS_langAlreadyApplied =
-          state.filters.langs.includes(targetLang_ID);
+      set(HANDLE_langFilter(targetLang_ID)),
 
-        if (IS_langAlreadyApplied) {
-          const new_LANGS = [...state.filters.langs].filter(
-            (lang) => lang !== targetLang_ID
-          );
-
-          return { filters: { ...state.filters, langs: new_LANGS } };
-        }
-
-        return {
-          filters: {
-            ...state.filters,
-            langs: [targetLang_ID, ...state.filters.langs],
-          },
-        };
-      }),
-
-    z_HANDLE_difficultyFilter: (diff) =>
-      set((state) => {
-        const IS_diffAlreadyApplied = state.filters.difficulties.includes(diff);
-
-        if (IS_diffAlreadyApplied) {
-          const new_DIFFICULTIES = [...state.filters.difficulties].filter(
-            (d) => d !== diff
-          );
-          return {
-            filters: { ...state.filters, difficulties: new_DIFFICULTIES },
-          };
-        }
-
-        return {
-          filters: {
-            ...state.filters,
-            difficulties: [diff, ...state.filters.difficulties],
-          },
-        };
-      }),
+    z_HANDLE_difficultyFilter: (diff) => set(HANDLE_difficultyFilter(diff)),
   }));

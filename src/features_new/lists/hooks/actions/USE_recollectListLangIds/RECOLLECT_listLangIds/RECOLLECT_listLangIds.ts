@@ -43,12 +43,12 @@ export async function RECOLLECT_listLangIds(
       });
 
     // Convert lang ids into a string, example: "en, de, lt"
-    const listLang_IDs = REDUCE_collectedLangIds(collectedLang_IDs);
+    const collected_lang_ids = REDUCE_collectedLangIds(collectedLang_IDs);
 
     // Update the list
     const { data: list, error } = await supabase
       .from("lists_extended")
-      .update({ collected_lang_ids: listLang_IDs })
+      .update({ collected_lang_ids })
       .eq("id", list_id)
       .eq("user_id", user_id)
       .select(`*`)
