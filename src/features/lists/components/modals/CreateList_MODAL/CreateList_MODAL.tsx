@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, Keyboard } from "react-native";
 import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import StyledText_INPUT from "@/src/components/1_grouped/inputs/StyledText_INPUT/StyledText_INPUT";
@@ -56,6 +56,7 @@ export function CreateList_MODAL({
     const { name } = data;
     await CREATE_list(name, () => {
       CLOSE_modal();
+      Keyboard.dismiss();
       reset();
     });
   };

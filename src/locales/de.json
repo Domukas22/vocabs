@@ -230,7 +230,8 @@
     "1vocabSmall": "Vokabel",
     "myLists": "Meine Listen",
     "myVocabs": "Meine Vokabeln",
-    "mostPopularLists": "Die beliebtesten Listen"
+    "mostPopularLists": "Die beliebtesten Listen",
+    "resetVocabDifficultiesInAList": "Die Schwierigkeit jedes Vokabulars in dieser Liste auf \"Schwer\" zurücksetzen"
   },
   "modal": {
     "displaySettings": {
@@ -334,7 +335,9 @@
     "vocabDeletedForever": "Vokabel für immer gelöscht",
     "vocabSoftDeleted": "Vokabel gelöscht",
     "vocabDifficultyUpdated": "Vokabelschwierigkeit aktualisiert",
-    "listCreated": "Liste erstellt"
+    "listCreated": "Liste erstellt",
+    "listDeleted": "Liste gelöscht",
+    "listRenamed": "List umbenannt"
   },
   "emptyText": {
     "noLangsSelected": "Keine Sprachen ausgewählt"
@@ -343,7 +346,8 @@
     "provideAListName": "Bitte einen Listenname eingeben",
     "listNameTaken": "Du hast bereits eine Liste mit dieser Name",
     "noListSelected": "Keine Liste ausgewählt",
-    "correctErrorsAbove": "Bitte korrigieren Sie die oben genannten Fehler"
+    "correctErrorsAbove": "Bitte korrigieren Sie die oben genannten Fehler",
+    "listNameExists": "Du hast bereits eine Liste namens"
   },
   "undertext": {
     "shared": "Geteilt"
@@ -362,5 +366,10 @@
   },
   "title": {
     "noListNameProvided": "Keine Listenname angegeben"
+  },
+  "confirmation": {
+    "paragraph": {
+      "deleteList": "Wenn du diese Liste löschst, werden auch alle Vokabeln in dieser Liste gelöscht."
+    }
   }
 }

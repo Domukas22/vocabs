@@ -9,7 +9,7 @@ export type listAction_TYPE = {
   item_ID: string;
   item_ACTION:
     | "deleting"
-    | "updating_name"
+    | "renaming"
     | "resetting_difficulties"
     | "updating_default_lang_ids"
     | "updating_updated_at"

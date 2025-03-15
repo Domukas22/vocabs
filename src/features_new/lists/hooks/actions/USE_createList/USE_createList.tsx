@@ -3,7 +3,7 @@
 //
 
 import { FormInput_ERROR, General_ERROR } from "@/src/types/error_TYPES";
-import { SEND_internalError, VIBRATE } from "@/src/utils";
+import { IS_aFormInputError, SEND_internalError, VIBRATE } from "@/src/utils";
 import { useCallback, useState } from "react";
 import { CREATE_list } from "./CREATE_list/CREATE_list";
 import { z_USE_myLists } from "../../zustand/z_USE_myLists/z_USE_myLists";
@@ -20,7 +20,6 @@ export function USE_createList() {
   const { z_user } = z_USE_user();
 
   const { z_PREPEND_listToMyLists, z_HIGHLIGHT_myList } = z_USE_myLists();
-
   const { REFETCH_myStarterContent = () => {} } = USE_refetchStarterContent();
 
   const [IS_creatingList, SET_isCreatingList] = useState(false);
@@ -74,7 +73,7 @@ export function USE_createList() {
         onSuccess();
         // -----------------------------
       } catch (error: any) {
-        if (Object.hasOwn(error, "falsyForm_INPUTS")) {
+        if (IS_aFormInputError(error)) {
           SET_createListError(error);
           return;
         }

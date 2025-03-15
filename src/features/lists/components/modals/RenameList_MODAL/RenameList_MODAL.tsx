@@ -2,11 +2,10 @@
 //
 //
 
-import List_MODEL from "@/src/db/models/List_MODEL";
 import { useTranslation } from "react-i18next";
 import { Controller, useForm } from "react-hook-form";
-import { useEffect, useRef, useState } from "react";
-import { ActivityIndicator, TextInput } from "react-native";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ActivityIndicator, Keyboard, TextInput } from "react-native";
 
 import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import Label from "@/src/components/1_grouped/texts/labels/Label/Label";
@@ -15,32 +14,26 @@ import Small_MODAL from "@/src/components/1_grouped/modals/Small_MODAL/Small_MOD
 
 import StyledText_INPUT from "@/src/components/1_grouped/inputs/StyledText_INPUT/StyledText_INPUT";
 
-import {
-  RenameList_ARGS,
-  RenameList_DATA,
-  RenameListError_PROPS,
-} from "../../../functions/myLists/rename/types";
-import { USE_async } from "@/src/hooks";
-import { RENAME_list } from "../../../functions";
-import { renameList_ERRS } from "../../../functions/myLists/rename/RENAME_list";
-import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
+import { z_USE_myOneList } from "@/src/features_new/lists/hooks/zustand/z_USE_myOneList/z_USE_myOneList";
+import { USE_renameList } from "@/src/features_new/lists/hooks/actions/USE_renameList/USE_renameList";
+import { z_USE_currentActions } from "@/src/hooks/zustand/z_USE_currentActions/z_USE_currentActions";
 
 interface LogoutConfirmationModal_PROPS {
-  list: List_MODEL | undefined;
   IS_open: boolean;
   CLOSE_modal: () => void;
-  onSuccess?: () => void;
+  HIGHLIGHT_listName: () => void;
 }
 
 export function RenameList_MODAL({
-  list,
   IS_open = false,
   CLOSE_modal = () => {},
-  onSuccess = () => {},
+  HIGHLIGHT_listName = () => {},
 }: LogoutConfirmationModal_PROPS) {
   const _ref = useRef<TextInput>(null);
+
+  const { z_myOneList } = z_USE_myOneList();
   const { t } = useTranslation();
-  const { z_user } = z_USE_user();
+
   const [isFocused, setIsFocused] = useState(false);
   const [invalidAttempts, setInvalidAttempts] = useState(0);
 
@@ -52,44 +45,31 @@ export function RenameList_MODAL({
     handleSubmit,
   } = useForm({
     defaultValues: {
-      name: list?.name || "INSERT LIST NAME",
+      name: z_myOneList?.name || "INSERT z_myOneList NAME",
     },
   });
 
-  const {
-    loading,
-    error,
-    execute,
-    RESET_errors: RESET_backendErrors,
-  } = USE_async<RenameList_ARGS, RenameList_DATA, RenameListError_PROPS>({
-    fn_NAME: "RENAME_list",
-    fn: RENAME_list,
-    onSuccess,
-    defaultErr_MSG: renameList_ERRS.user.defaultmessage,
-  });
+  const { RENAME_list, IS_renamingList, renameList_ERROR, RESET_hookError } =
+    USE_renameList();
 
   useEffect(() => {
     if (IS_open) {
       _ref.current?.focus();
     }
-    RESET_form({ name: list?.name || "" });
-    RESET_backendErrors();
-
+    RESET_form({ name: z_myOneList?.name || "" });
     setInvalidAttempts(0);
   }, [IS_open]);
 
-  useEffect(() => {
-    error?.falsyForm_INPUTS?.forEach((err) => {
-      setError(err.input_NAME, {
-        type: "manual",
-        message: err.message,
-      });
-    });
-  }, [error]);
-
   const rename = async (data: { name: string }) => {
     const { name } = data;
-    await execute({ new_NAME: name, list, user: z_user });
+
+    await RENAME_list(z_myOneList?.id || "", name, {
+      onSuccess: () => {
+        CLOSE_modal();
+        Keyboard.dismiss();
+        HIGHLIGHT_listName();
+      },
+    });
   };
 
   return (
@@ -102,67 +82,63 @@ export function RenameList_MODAL({
           text={t("btn.cancel")}
           onPress={CLOSE_modal}
           type="simple"
-          style={error?.error_TYPE === "internal" && { flex: 1 }}
+          style={{ flex: renameList_ERROR ? 1 : 0 }}
         />
       }
       btnRight={
-        error?.error_TYPE !== "internal" && (
+        !renameList_ERROR ? (
           <Btn
-            text={!loading ? t("btn.confirmListRename") : ""}
-            iconRight={loading ? <ActivityIndicator color="black" /> : null}
+            text={!IS_renamingList ? t("btn.confirmListRename") : ""}
+            iconRight={
+              IS_renamingList ? <ActivityIndicator color="black" /> : null
+            }
             onPress={handleSubmit(rename)}
             type="action"
             style={{ flex: 1 }}
           />
-        )
+        ) : null
       }
     >
       <Label>{t("label.editListName")}</Label>
       <Controller
         name="name"
         control={control}
-        rules={
-          {
-            // required: {
-            //   value: true,
-            //   message: t("error.provideAListName"),
-            // },
-            // validate: {
-            //   uniqueName: async (value) => {
-            //     const IS_theSameName = value === list?.name;
-            //     if (IS_theSameName) return true;
-            //     const IS_listNameTaken =
-            //       await z_user?.DOES_userHaveListWithThisName(value);
-            //     if (IS_listNameTaken) {
-            //       setInvalidAttempts((p) => p + 1);
-            //       return t("error.listNameTaken");
-            //     }
-            //     return true;
-            //   },
-            // },
-          }
-        }
+        rules={{
+          required: {
+            value: true,
+            message: t("error.provideAListName"),
+          },
+        }}
         render={({ field: { onChange, value }, fieldState: { error } }) => (
           <StyledText_INPUT
             {...{
               _ref,
-              HAS_error: error,
               value,
               isFocused,
               setIsFocused,
             }}
+            HAS_error={!!error || !!renameList_ERROR}
             isSubmitted={isSubmitted && invalidAttempts > 0}
             SET_value={(val) => {
               onChange(val);
-              RESET_backendErrors();
+              RESET_hookError();
             }}
           />
         )}
       />
+      {/* Error message from the from hook*/}
       {errors.name && <Error_TEXT text={errors.name.message} />}
-      {error && error?.error_TYPE !== "form_input" && (
-        <Error_TEXT text={error.user_MSG} />
-      )}
+
+      {/* Error message from the db*/}
+      {renameList_ERROR ? (
+        <Error_TEXT
+          text={
+            renameList_ERROR?.falsyForm_INPUTS?.[0]?.message ||
+            renameList_ERROR?.user_MSG ||
+            "Something went wrong"
+          }
+        />
+      ) : null}
     </Small_MODAL>
   );
 }

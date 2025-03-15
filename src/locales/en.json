@@ -231,7 +231,8 @@
     "1vocabSmall": "vocab",
     "myLists": "My lists",
     "myVocabs": "My Vocabs",
-    "mostPopularLists": "Most popular lists"
+    "mostPopularLists": "Most popular lists",
+    "resetVocabDifficultiesInAList": "Reset the difficulty of each vocab in this to \"Difficult\""
   },
   "modal": {
     "displaySettings": {
@@ -335,7 +336,9 @@
     "vocabDeletedForever": "Vocab deleted forever",
     "vocabSoftDeleted": "Vocab deleted",
     "vocabDifficultyUpdated": "Vocab difficulty updated",
-    "listCreated": "List created"
+    "listCreated": "List created",
+    "listDeleted": "List deleted",
+    "listRenamed": "List renamed"
   },
   "emptyText": {
     "noLangsSelected": "No languages selected"
@@ -344,7 +347,8 @@
     "provideAListName": "Please provide a list name",
     "listNameTaken": "You already have a list with this name",
     "noListSelected": "No list selected",
-    "correctErrorsAbove": "Please correct the errors above"
+    "correctErrorsAbove": "Please correct the errors above",
+    "listNameExists": "You already have a list named"
   },
   "undertext": {
     "shared": "Shared"
@@ -363,5 +367,10 @@
   },
   "title": {
     "noListNameProvided": "No list name provided"
+  },
+  "confirmation": {
+    "paragraph": {
+      "deleteList": "If you delete this list, all vocabs in this list will also be deleted."
+    }
   }
 }

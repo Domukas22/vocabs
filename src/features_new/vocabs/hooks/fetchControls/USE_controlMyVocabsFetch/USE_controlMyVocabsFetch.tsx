@@ -31,8 +31,6 @@ export default function USE_controlMyVocabsFetch({
     z_SET_langIds,
   } = z_USE_myVocabs();
 
-  console.log("z_lang_IDS: ", z_lang_IDS);
-
   const { FETCH_myVocabs } = USE_fetchMyVocabs({
     z_SET_error,
     z_APPEND_vocabs,

@@ -3,13 +3,11 @@
 //
 
 import React from "react";
-// import FlashlistPage_NAV from "@/src/components/1_grouped/headers/listPage/FlashlistPage_NAV";
-import { ListSettings_MODAL } from "@/src/features/lists/components";
 import {
-  UpdateMyVocab_MODAL,
-  VocabDisplaySettings_MODAL,
-  VocabFlashlist_HEADER,
-} from "@/src/features/vocabs/components";
+  DeleteList_MODAL,
+  ListSettings_MODAL,
+} from "@/src/features/lists/components";
+import { UpdateMyVocab_MODAL } from "@/src/features/vocabs/components";
 
 import { USE_debounceSearch, USE_showListHeaderTitle } from "@/src/hooks";
 import { CreateMyVocab_MODAL } from "@/src/features/vocabs/components/1_myVocabs/modals/CreateMyVocab_MODAL/CreateMyVocab_MODAL";
@@ -21,10 +19,7 @@ import { z_USE_myVocabs } from "@/src/features_new/vocabs/hooks/zustand/z_USE_my
 import { USE_listIdInParams } from "@/src/features/vocabs/vocabList/USE_listIdInParams/USE_listIdInParams";
 import { VocabFlatlist_FOOTER } from "@/src/features_new/vocabs/components/flashlists/_parts/VocabFlatlist_FOOTER/VocabFlatlist_FOOTER";
 import USE_controlMyVocabsFetch from "@/src/features_new/vocabs/hooks/fetchControls/USE_controlMyVocabsFetch/USE_controlMyVocabsFetch";
-import {
-  MyLists_NAV,
-  MyOneList_NAV,
-} from "@/src/features_new/lists/components/navs";
+import { MyOneList_NAV } from "@/src/features_new/lists/components/navs";
 import { Flashlist_HEADER } from "@/src/components/Flashlist_HEADER/Flashlist_HEADER";
 import { z_USE_myVocabsDisplaySettings } from "@/src/features_new/vocabs/hooks/zustand/displaySettings/z_USE_myVocabsDisplaySettings/z_USE_myVocabsDisplaySettings";
 import { DisplaySettings_MODAL } from "@/src/components/DisplaySettings_MODAL/DisplaySettings_MODAL";
@@ -37,6 +32,7 @@ export default function SingleList_PAGE() {
     "updateVocab",
     "listSettings",
     "displaySettings",
+    "deleteList",
   ]);
 
   const { showTitle, handleScroll } = USE_showListHeaderTitle();
@@ -106,6 +102,7 @@ export default function SingleList_PAGE() {
           IS_open={modals.createVocab.IS_open}
           CLOSE_modal={() => modals.createVocab.set(false)}
         />
+
         <ListSettings_MODAL
           IS_open={modals.listSettings.IS_open}
           CLOSE_modal={() => modals.listSettings.set(false)}

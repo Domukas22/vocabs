@@ -5,6 +5,7 @@
 import { List_TYPE } from "@/src/features_new/lists/types";
 import { supabase } from "@/src/lib/supabase";
 import { FormInput_ERROR, General_ERROR } from "@/src/types/error_TYPES";
+import { IS_aFormInputError } from "@/src/utils";
 import { t } from "i18next";
 
 export const function_NAME = "CREATE_list";
@@ -31,7 +32,7 @@ export async function CREATE_list(
     const { count, error: listwithSameName_ERROR } = await supabase
       .from("lists")
       .select("*", { count: "exact", head: true })
-      .eq("name", list_NAME)
+      .ilike("name", list_NAME)
       .eq("user_id", user_id)
       .eq("type", "private");
 
@@ -71,7 +72,7 @@ export async function CREATE_list(
 
     // Then delete the list
   } catch (error: any) {
-    if (Object.hasOwn(error, "falsyForm_INPUTS")) throw error;
+    if (IS_aFormInputError(error)) throw error;
 
     throw new General_ERROR({
       function_NAME,

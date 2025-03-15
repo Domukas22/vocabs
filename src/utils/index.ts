@@ -22,3 +22,5 @@ export { VIBRATE } from "./VIBRATE/VIBRATE";
 
 export { THROW_postgressError } from "./THROW_postgressError/THROW_postgressError";
 export { FORMAT_rawColelctedLangIds } from "./FORMAT_rawColelctedLangIds/FORMAT_rawColelctedLangIds";
+
+export { IS_aFormInputError } from "./IS_aFormInputError/IS_aFormInputError";

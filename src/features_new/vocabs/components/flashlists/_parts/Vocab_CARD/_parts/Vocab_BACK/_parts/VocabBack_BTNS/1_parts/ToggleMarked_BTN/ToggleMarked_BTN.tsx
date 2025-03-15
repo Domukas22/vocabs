@@ -25,7 +25,7 @@ export const ToggleMarked_BTN = memo((props: props) => {
 
   const IS_updatingMarked = useMemo(
     () => IS_inAction("vocab", vocab?.id, "updating_marked"),
-    [z_currentActions]
+    [z_currentActions, vocab?.id]
   );
 
   return (
