@@ -52,12 +52,13 @@ export function USE_deleteList() {
         // Proceed to delete
         await DELETE_list(list_ID, z_user?.id || "");
 
+        // Update starter page
+        await REFETCH_myStarterContent();
+
         z_REMOVE_listFromMyLists(list_ID);
         onSuccess();
         z_RESET_myOneList();
 
-        // Update starter page
-        await REFETCH_myStarterContent();
         // update user vocab count
 
         // Provide sensory user feedback

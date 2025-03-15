@@ -47,7 +47,7 @@ export default function SingleList_PAGE() {
   } = z_USE_myVocabs();
 
   // Refetches on filter changes
-  const { LOAD_more } = USE_controlMyVocabsFetch({
+  const { LOAD_more, refetch } = USE_controlMyVocabsFetch({
     search: debouncedSearch,
     fetch_TYPE: "byTargetList",
     targetList_ID: urlParamsList_ID,
@@ -106,6 +106,7 @@ export default function SingleList_PAGE() {
         <ListSettings_MODAL
           IS_open={modals.listSettings.IS_open}
           CLOSE_modal={() => modals.listSettings.set(false)}
+          refetch={refetch}
         />
         <UpdateMyVocab_MODAL
           IS_open={modals.updateVocab.IS_open}

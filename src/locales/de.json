@@ -337,7 +337,8 @@
     "vocabDifficultyUpdated": "Vokabelschwierigkeit aktualisiert",
     "listCreated": "Liste erstellt",
     "listDeleted": "Liste gelöscht",
-    "listRenamed": "List umbenannt"
+    "listRenamed": "List umbenannt",
+    "vocabDifficultiesOfAListReset": "Vokabelschwierigkeiten zurückgesetzt"
   },
   "emptyText": {
     "noLangsSelected": "Keine Sprachen ausgewählt"
@@ -369,7 +370,8 @@
   },
   "confirmation": {
     "paragraph": {
-      "deleteList": "Wenn du diese Liste löschst, werden auch alle Vokabeln in dieser Liste gelöscht."
+      "deleteList": "Wenn du diese Liste löschst, werden auch alle Vokabeln in dieser Liste gelöscht.",
+      "resetAllVocabDifficultiesInAList": "Die Schwierigkeit aller Vokabeln in dieser Liste wird auf \"Schwer\" zurückgesetzt."
     }
   }
 }

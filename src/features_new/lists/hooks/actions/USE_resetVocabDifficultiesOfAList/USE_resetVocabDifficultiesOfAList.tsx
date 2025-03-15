@@ -2,45 +2,56 @@
 //
 //
 
-import { z_USE_currentActions } from "@/src/hooks/zustand/z_USE_currentActions/z_USE_currentActions";
 import { General_ERROR } from "@/src/types/error_TYPES";
-import { SEND_internalError } from "@/src/utils";
-import { useCallback } from "react";
+import { SEND_internalError, VIBRATE } from "@/src/utils";
+import { useCallback, useState } from "react";
 import { RESET_allDifficultiesOfAList } from "./RESET_allDifficultiesOfAList/RESET_allDifficultiesOfAList";
 import { z_USE_myOneList } from "../../zustand/z_USE_myOneList/z_USE_myOneList";
 import { z_USE_myLists } from "../../zustand/z_USE_myLists/z_USE_myLists";
 import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
+import { t } from "i18next";
+import { USE_toast } from "@/src/hooks/USE_toast/USE_toast";
+import USE_refetchStarterContent from "@/src/hooks/zustand/z_USE_myStarterContent/USE_refetchStarterContent/USE_refetchStarterContent";
 
 const function_NAME = "USE_resetVocabDifficultiesOfAList";
 
 export function USE_resetVocabDifficultiesOfAList() {
   const { z_user } = z_USE_user();
 
-  const { IS_inAction, ADD_currentAction, REMOVE_currentAction } =
-    z_USE_currentActions();
+  const [IS_resettingAllListDifficulties, SET_isResettingAllListDifficulties] =
+    useState(false);
+  const [resetAllListDifficulties_ERROR, SET_resetAllListDifficulties] =
+    useState<General_ERROR | undefined>();
+
+  const RESET_hookError = useCallback(
+    () => SET_resetAllListDifficulties(undefined),
+    [SET_resetAllListDifficulties]
+  );
 
   const { z_SET_myOneList } = z_USE_myOneList();
   const { z_UPDATE_listInMyLists } = z_USE_myLists();
 
+  const { TOAST } = USE_toast();
+
+  const { REFETCH_myStarterContent } = USE_refetchStarterContent();
+
   const _RESET_allDifficultiesOfAList = useCallback(
     async (
       list_ID: string,
-      new_NAME: string,
       sideEffects: {
         onSuccess?: () => void;
-        onFailure?: (error: General_ERROR) => void;
       }
     ) => {
-      const { onSuccess = () => {}, onFailure = () => {} } = sideEffects;
+      const { onSuccess = () => {} } = sideEffects;
 
       try {
         // --------------------------------------------------
         // Check if item is already in action
-        if (IS_inAction("list", list_ID, "resetting_difficulties")) return;
 
-        // --------------------------------------------------
-        // Insert action
-        ADD_currentAction("list", list_ID, "resetting_difficulties");
+        if (IS_resettingAllListDifficulties) return;
+
+        SET_isResettingAllListDifficulties(true);
+        RESET_hookError();
 
         // --------------------------------------------------
         // Proceed to reset vocab difficulties
@@ -62,6 +73,13 @@ export function USE_resetVocabDifficultiesOfAList() {
         // refetch current private vocabs
 
         onSuccess();
+
+        TOAST("success", t("notification.vocabDifficultiesOfAListReset"));
+        VIBRATE("soft");
+
+        // Update starter page
+        await REFETCH_myStarterContent();
+
         // -----------------------------
       } catch (error: any) {
         const err = new General_ERROR({
@@ -70,14 +88,18 @@ export function USE_resetVocabDifficultiesOfAList() {
           errorToSpread: error,
         });
 
-        onFailure(err);
+        SET_resetAllListDifficulties(err);
         SEND_internalError(err);
       } finally {
-        REMOVE_currentAction(list_ID, "resetting_difficulties");
+        SET_isResettingAllListDifficulties(false);
       }
     },
     []
   );
 
-  return { RESET_allDifficultiesOfAList: _RESET_allDifficultiesOfAList };
+  return {
+    RESET_allDifficultiesOfAList: _RESET_allDifficultiesOfAList,
+    IS_resettingAllListDifficulties,
+    resetAllListDifficulties_ERROR,
+  };
 }

@@ -338,7 +338,8 @@
     "vocabDifficultyUpdated": "Vocab difficulty updated",
     "listCreated": "List created",
     "listDeleted": "List deleted",
-    "listRenamed": "List renamed"
+    "listRenamed": "List renamed",
+    "vocabDifficultiesOfAListReset": "Vocab difficulties reset"
   },
   "emptyText": {
     "noLangsSelected": "No languages selected"
@@ -370,7 +371,8 @@
   },
   "confirmation": {
     "paragraph": {
-      "deleteList": "If you delete this list, all vocabs in this list will also be deleted."
+      "deleteList": "If you delete this list, all vocabs in this list will also be deleted.",
+      "resetAllVocabDifficultiesInAList": "This will reset the vocab difficulty of all vocabs in this list to \"Difficult\"."
     }
   }
 }

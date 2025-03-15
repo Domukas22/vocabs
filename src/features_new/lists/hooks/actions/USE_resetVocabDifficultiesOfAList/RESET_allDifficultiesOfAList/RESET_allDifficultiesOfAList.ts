@@ -38,7 +38,7 @@ export async function RESET_allDifficultiesOfAList(
       });
 
     const { data: updated_LIST, error: listUpdate_ERROR } = await supabase
-      .from("lists")
+      .from("lists_extended")
       .update({ updated_at: new Date().toISOString() })
       .eq("id", list_id)
       .eq("user_id", user_id)

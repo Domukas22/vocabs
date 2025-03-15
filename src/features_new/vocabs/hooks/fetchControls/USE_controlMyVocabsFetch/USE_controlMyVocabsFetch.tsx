@@ -78,5 +78,9 @@ export default function USE_controlMyVocabsFetch({
     (async () => await FETCH(true))();
   }, [FETCH]);
 
-  return { LOAD_more };
+  const refetch = useCallback(async () => {
+    (async () => await FETCH())();
+  }, []);
+
+  return { LOAD_more, refetch };
 }

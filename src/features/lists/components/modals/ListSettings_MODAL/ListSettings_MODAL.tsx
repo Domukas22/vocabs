@@ -35,26 +35,27 @@ import { z_USE_myOneList } from "@/src/features_new/lists/hooks/zustand/z_USE_my
 import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 import { Portal } from "@gorhom/portal";
 import { RenameList_MODAL } from "../RenameList_MODAL/RenameList_MODAL";
+import { ResetAllListVocabDifficulties_MODAL } from "../ResetAllListVocabDifficulties_MODAL/ResetAllListVocabDifficulties_MODAL";
 
 interface ListSettingsModal_PROPS {
   IS_open: boolean;
   CLOSE_modal: () => void;
+  refetch: () => void;
 }
 
 export function ListSettings_MODAL({
   IS_open = false,
   CLOSE_modal = () => {},
+  refetch = () => {},
 }: ListSettingsModal_PROPS) {
   const { t } = useTranslation();
-  const { z_user } = z_USE_user();
-  const toast = useToast();
-  const router = useRouter();
   const { z_myOneList } = z_USE_myOneList();
 
   const { modals } = USE_modalToggles([
     "deleteList",
     "selectLangs",
     "renameList",
+    "resetDifficulties",
   ]);
 
   const {
@@ -114,7 +115,7 @@ export function ListSettings_MODAL({
           <Label>{t("label.resetVocabDifficultiesInAList")}</Label>
           <Btn
             text="Reset all vocabs"
-            onPress={() => {}}
+            onPress={() => modals.resetDifficulties.set(true)}
             iconRight={<ICON_difficultyDot difficulty={3} />}
             text_STYLES={{ marginRight: "auto" }}
           />
@@ -156,6 +157,11 @@ export function ListSettings_MODAL({
         IS_open={modals.renameList.IS_open}
         CLOSE_modal={() => modals.renameList.set(false)}
         HIGHLIGHT_listName={HIGHLIGHT_listName}
+      />
+      <ResetAllListVocabDifficulties_MODAL
+        IS_open={modals.resetDifficulties.IS_open}
+        CLOSE_modal={() => modals.resetDifficulties.set(false)}
+        refetch={refetch}
       />
 
       <DeleteList_MODAL

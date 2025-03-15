@@ -8,35 +8,29 @@ import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import { MyColors } from "@/src/constants/MyColors";
 import { z_USE_myOneList } from "@/src/features_new/lists/hooks/zustand/z_USE_myOneList/z_USE_myOneList";
-import { useMemo } from "react";
-import { z_USE_currentActions } from "@/src/hooks/zustand/z_USE_currentActions/z_USE_currentActions";
 import { ActivityIndicator } from "react-native";
-import { USE_deleteList } from "@/src/features_new/lists/hooks/actions/USE_deleteList/USE_deleteList";
-import { useRouter } from "expo-router";
+import { USE_resetVocabDifficultiesOfAList } from "@/src/features_new/lists/hooks/actions/USE_resetVocabDifficultiesOfAList/USE_resetVocabDifficultiesOfAList";
+import Error_TEXT from "@/src/components/1_grouped/texts/Error_TEXT/Error_TEXT";
 
-// TODO --> Finish deleting list function
-
-interface DeleteListModal_PROPS {
+interface props {
   IS_open: boolean;
   CLOSE_modal: () => void;
+  refetch: () => void;
 }
 
-export function DeleteList_MODAL({
+export function ResetAllListVocabDifficulties_MODAL({
   IS_open = false,
   CLOSE_modal = () => {},
-}: DeleteListModal_PROPS) {
+  refetch = () => {},
+}: props) {
   const { t } = useTranslation();
   const { z_myOneList } = z_USE_myOneList();
 
-  const { z_currentActions, IS_inAction } = z_USE_currentActions();
-
-  const IS_deletingList = useMemo(
-    () => IS_inAction("list", z_myOneList?.id || "", "deleting"),
-    [z_currentActions, z_myOneList?.id]
-  );
-
-  const { DELETE_list } = USE_deleteList();
-  const router = useRouter();
+  const {
+    RESET_allDifficultiesOfAList,
+    IS_resettingAllListDifficulties,
+    resetAllListDifficulties_ERROR,
+  } = USE_resetVocabDifficultiesOfAList();
 
   return (
     <Small_MODAL
@@ -51,22 +45,23 @@ export function DeleteList_MODAL({
           text={t("btn.cancel")}
           onPress={() => {
             CLOSE_modal();
-            router.back();
           }}
           type="simple"
         />
       }
       btnRight={
         <Btn
-          text={!IS_deletingList ? t("btn.confirmDelete") : ""}
+          text={!IS_resettingAllListDifficulties ? t("btn.confirmDelete") : ""}
           iconRight={
-            IS_deletingList ? <ActivityIndicator color="black" /> : null
+            IS_resettingAllListDifficulties ? (
+              <ActivityIndicator color="black" />
+            ) : null
           }
           onPress={() =>
-            DELETE_list(z_myOneList?.id || "", {
+            RESET_allDifficultiesOfAList(z_myOneList?.id || "", {
               onSuccess: () => {
                 CLOSE_modal();
-                router.back();
+                refetch();
               },
             })
           }
@@ -76,8 +71,15 @@ export function DeleteList_MODAL({
       }
     >
       <Styled_TEXT style={{ color: MyColors.text_yellow }}>
-        {t("confirmation.paragraph.deleteList")}
+        {t("confirmation.paragraph.resetAllVocabDifficultiesInAList")}
       </Styled_TEXT>
+      {resetAllListDifficulties_ERROR ? (
+        <Error_TEXT
+          text={
+            resetAllListDifficulties_ERROR?.user_MSG || "Something went wrong"
+          }
+        />
+      ) : null}
     </Small_MODAL>
   );
 }

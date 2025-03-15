@@ -39,7 +39,7 @@ export function MyVocabsFiltering_CONTENT() {
       />
       <MyVocabsDifficultyBtn_BLOCK
         difficulties={difficulties}
-        HANDLE_difficulty={(diff) => () => z_HANDLE_difficultyFilter(diff)}
+        HANDLE_difficulty={(diff) => z_HANDLE_difficultyFilter(diff)}
       />
       <Block>
         <Label>{t("label.otherFilters")}</Label>
