@@ -14,6 +14,7 @@ import USE_refetchStarterContent from "@/src/hooks/zustand/z_USE_myStarterConten
 import { USE_toast } from "@/src/hooks/USE_toast/USE_toast";
 import { t } from "i18next";
 import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
+import { USE_collectMyVocabsLangIds } from "../../fetchControls/USE_controlMyVocabsFetch/USE_collectMyVocabsLangIds/USE_collectMyVocabsLangIds";
 
 const function_NAME = "USE_hardDeleteVocab";
 
@@ -23,8 +24,18 @@ export function USE_hardDeleteVocab() {
     z_USE_currentActions();
 
   const { REFETCH_myStarterContent } = USE_refetchStarterContent();
-  const { z_REMOVE_vocab: z_REMOVE_vocabFromMyVocabsList } = z_USE_myVocabs();
+  const {
+    z_REMOVE_vocab: z_REMOVE_vocabFromMyVocabsList,
+    z_SET_error,
+    z_SET_langIds,
+    z_fetch_TYPE,
+  } = z_USE_myVocabs();
   const { TOAST } = USE_toast();
+
+  const { RECOLLECT_langIds } = USE_collectMyVocabsLangIds({
+    z_SET_error,
+    z_SET_langIds,
+  });
 
   const _HARDDELETE_vocab = useCallback(async (vocab_ID: string) => {
     try {
@@ -46,6 +57,12 @@ export function USE_hardDeleteVocab() {
 
       // Update UI
       z_REMOVE_vocabFromMyVocabsList(vocab_ID);
+
+      await RECOLLECT_langIds({
+        fetch_TYPE: "deleted",
+        targetList_ID: "",
+        user_ID: z_user?.id || "",
+      });
 
       // Provide sensory user feedback
       TOAST("success", t("notification.vocabDeletedForever"));

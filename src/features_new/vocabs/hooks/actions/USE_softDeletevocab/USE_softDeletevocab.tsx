@@ -18,9 +18,9 @@ import { USE_updateListUpdatedAt } from "@/src/features_new/lists/hooks/actions/
 import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 import { USE_collectMyVocabsLangIds } from "../../fetchControls/USE_controlMyVocabsFetch/USE_collectMyVocabsLangIds/USE_collectMyVocabsLangIds";
 
-// 🔴🔴🔴TODO ===> Implementthe " await RECOLLECT_langIds" into other functions as well
+// 🔴🔴🔴 TODO ===> Implement the "await RECOLLECT_langIds" into other functions as well
 
-const function_NAME = "USE_softDeletevocab";
+const function_NAME = "USE_softDeletZevocab";
 
 export function USE_softDeletevocab() {
   const { z_user } = z_USE_user();

@@ -2,11 +2,9 @@
 //
 //
 
-1. Create a separate vocab card for private/public vocabs
-2. Create a 'COLLECT_allVocabsLangIds'
-3. Refactor my saved / my all / my deleted vocabs pages
-4. Refactor all public vocabs page
-5. Deleted vocabs should be sorted by
+- Inside hooks like "USE_softDeleteVocabs", use multiple try/catch block for separarte functions. Deleting the vocab is one fucntion. then updating the ui is a nother separate function.
+
+5. Deleted vocabs should be sorted by delete date
 
 ///////////////////
 
