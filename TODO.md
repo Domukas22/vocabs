@@ -2,8 +2,6 @@
 //
 //
 
-- 🟢🟢 NEXT --> Inside the list settings, fix the "Languages" modal.
-
 - Inside hooks like "USE_softDeleteVocabs", use multiple try/catch block for separarte functions. Deleting the vocab is one fucntion. then updating the ui is a nother separate function.
 
 5. Deleted vocabs should be sorted by delete date
@@ -38,6 +36,5 @@ Functions:
 
 --> Fix general page
 
---> Text input cuts off emoji top -> fix it
 // ------------------------------------
 --> Offer vocabs for a completed survey

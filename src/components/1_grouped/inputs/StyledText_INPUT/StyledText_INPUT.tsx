@@ -78,7 +78,7 @@ export default function StyledText_INPUT({
 
 const s = StyleSheet.create({
   textInput: {
-    height: 50,
+    height: 54,
     paddingHorizontal: 16,
     paddingVertical: 12,
 
