@@ -9,68 +9,58 @@ import { ActivityIndicator } from "react-native";
 import { SelectedLang_SCROLLER } from "../SelectedLang_SCROLLER/SelectedLang_SCROLLER";
 import Language_MODEL from "@/src/db/models/Language_MODEL";
 import { useMemo } from "react";
+import { Lang_TYPE } from "@/src/features_new/languages/types";
+import { USE_getTargetLangs } from "@/src/features_new/languages/hooks";
 
 interface LangModalFooter_PROPS {
-  selected_LANGS: Language_MODEL[] | undefined;
-  IS_inAction?: boolean | undefined;
+  selectedLang_IDS: string[];
+  loading?: boolean | undefined;
   cancel: () => void;
   submit: () => Promise<void>;
-  SELECT_lang: (l: Language_MODEL) => void;
-  SUBMIT_langIds: (lang_ids: string[]) => void;
+  SELECT_lang: (lang_id: string) => void;
 }
 
 export function LangModal_FOOTER({
-  selected_LANGS,
-  IS_inAction,
-  cancel,
+  selectedLang_IDS = [],
+
+  loading = false,
+  cancel = () => {},
   submit = async () => {},
-  SELECT_lang,
-  SUBMIT_langIds,
+  SELECT_lang = () => {},
 }: LangModalFooter_PROPS) {
   const appLang = useMemo(() => i18next.language, []);
+
+  const { target_LANGS: selected_LANGS } = USE_getTargetLangs({
+    targetLang_IDS: selectedLang_IDS,
+  });
+
+  const text = useMemo(() => {
+    if (loading) return "";
+    if (appLang === "en") return `Select ${selected_LANGS?.length} languages`;
+    if (appLang === "de") return `${selected_LANGS?.length} Sprachen wählen`;
+    return t("btn.selectLangs");
+  }, [loading, appLang, selected_LANGS]);
+
   return (
     <TwoBtn_BLOCK
       contentAbove={
         <SelectedLang_SCROLLER
-          {...{ selected_LANGS }}
+          selected_LANGS={selected_LANGS}
           REMOVE_lang={SELECT_lang}
         />
       }
-      btnLeft={
-        <Btn
-          text={t("btn.cancel")}
-          onPress={() => {
-            if (!IS_inAction) cancel();
-          }}
-        />
-      }
+      btnLeft={<Btn text={t("btn.cancel")} onPress={cancel} />}
       btnRight={
-        appLang === "en" ? (
-          <Btn
-            text={
-              !IS_inAction ? `Select ${selected_LANGS?.length} languages` : ""
-            }
-            onPress={async () => {
-              await submit();
-            }}
-            iconRight={IS_inAction ? <ActivityIndicator color="black" /> : null}
-            type="action"
-            style={{ flex: 1 }}
-          />
-        ) : (
-          <Btn
-            text={
-              !IS_inAction ? `${selected_LANGS?.length} Sprachen wählen` : ""
-            }
-            onPress={async () => {
-              if (!IS_inAction) await submit();
-            }}
-            iconRight={IS_inAction ? <ActivityIndicator color="black" /> : null}
-            type="action"
-            stayPressed={IS_inAction}
-            style={{ flex: 1 }}
-          />
-        )
+        <Btn
+          text={text}
+          onPress={async () => {
+            if (!loading) await submit();
+          }}
+          iconRight={loading ? <ActivityIndicator color="black" /> : null}
+          type="action"
+          stayPressed={loading}
+          style={{ flex: 1 }}
+        />
       }
     />
   );

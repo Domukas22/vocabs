@@ -24,7 +24,8 @@
     "noListFound": "No list found",
     "myLists": "My lists",
     "publicLists": "⭐ Public lists",
-    "exploreTab": "Explore lists and vocabs"
+    "exploreTab": "Explore lists and vocabs",
+    "resetListVocabDifficulties": "Reset difficulties?"
   },
   "blockLabels": {
     "uiLang": "App language"
@@ -112,7 +113,8 @@
     "seeAllPublicLists_PRE": "See all",
     "seeAllPublicLists_POST": "public lists",
     "seeAllPublicVocabs_PRE": "See all",
-    "seeAllPublicVocabs_POST": "public vocabs"
+    "seeAllPublicVocabs_POST": "public vocabs",
+    "resetAllVocabDifficultiesOfAList": "Reset vocab difficulties"
   },
   "pages": {
     "about": {
@@ -232,7 +234,10 @@
     "myLists": "My lists",
     "myVocabs": "My Vocabs",
     "mostPopularLists": "Most popular lists",
-    "resetVocabDifficultiesInAList": "Reset the difficulty of each vocab in this to \"Difficult\""
+    "resetVocabDifficultiesInAList": "Reset the difficulty of each vocab in this to \"Difficult\"",
+    "allLanguages": "All languages",
+    "selectedLanguages": "Selected languages",
+    "searchResultCount": "search results for"
   },
   "modal": {
     "displaySettings": {
@@ -339,7 +344,9 @@
     "listCreated": "List created",
     "listDeleted": "List deleted",
     "listRenamed": "List renamed",
-    "vocabDifficultiesOfAListReset": "Vocab difficulties reset"
+    "vocabDifficultiesOfAListReset": "Vocab difficulties reset",
+    "listDefaultLangIdsUpdated": "Updated default languages",
+    "oneDefaultListLangRemoved": "Language removed"
   },
   "emptyText": {
     "noLangsSelected": "No languages selected"

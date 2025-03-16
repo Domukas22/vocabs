@@ -2,44 +2,45 @@
 //
 //
 
-import { z_USE_currentActions } from "@/src/hooks/zustand/z_USE_currentActions/z_USE_currentActions";
-import { FormInput_ERROR, General_ERROR } from "@/src/types/error_TYPES";
+import { General_ERROR } from "@/src/types/error_TYPES";
 import { SEND_internalError } from "@/src/utils";
 import { useCallback } from "react";
-import { UPDATE_listDefaultLangIds } from "./UPDATE_listDefaultLangIds/UPDATE_listDefaultLangIds";
-import { z_USE_myOneList } from "../../zustand/z_USE_myOneList/z_USE_myOneList";
-import { z_USE_myLists } from "../../zustand/z_USE_myLists/z_USE_myLists";
+import { UPDATE_listDefaultLangIds } from "../_UPDATE_listDefaultLangIds/UPDATE_listDefaultLangIds";
+import { z_USE_myOneList } from "../../../zustand/z_USE_myOneList/z_USE_myOneList";
+import { z_USE_myLists } from "../../../zustand/z_USE_myLists/z_USE_myLists";
 import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
+import { USE_error, USE_loading, USE_successFeedback } from "@/src/hooks";
+import USE_refetchStarterContent from "@/src/hooks/zustand/z_USE_myStarterContent/USE_refetchStarterContent/USE_refetchStarterContent";
+import { t } from "i18next";
 
 const function_NAME = "USE_updateListDefaultLangIds";
 
 export function USE_updateListDefaultLangIds() {
   const { z_user } = z_USE_user();
-  const { IS_inAction, ADD_currentAction, REMOVE_currentAction } =
-    z_USE_currentActions();
 
   const { z_SET_myOneList } = z_USE_myOneList();
   const { z_UPDATE_listInMyLists } = z_USE_myLists();
+
+  const { loading, SET_loading } = USE_loading();
+  const { error, SET_error, RESET_error } = USE_error<General_ERROR>();
+
+  const { REFETCH_myStarterContent } = USE_refetchStarterContent();
+
+  const { celebrate } = USE_successFeedback();
 
   const _UPDATE_listDefaultLangIds = useCallback(
     async (
       list_ID: string,
       newLang_IDs: string[],
-      sideEffects: {
-        onSuccess?: () => void;
-        onFailure?: (error: General_ERROR | FormInput_ERROR) => void;
-      }
+      sideEffects: { onSuccess?: () => void }
     ) => {
-      const { onSuccess = () => {}, onFailure = () => {} } = sideEffects;
+      const { onSuccess = () => {} } = sideEffects;
 
       try {
         // --------------------------------------------------
-        // Check if item is already in action
-        if (IS_inAction("list", list_ID, "updating_default_lang_ids")) return;
-
-        // --------------------------------------------------
-        // Insert action
-        ADD_currentAction("list", list_ID, "updating_default_lang_ids");
+        if (loading) return;
+        SET_loading(true);
+        RESET_error();
 
         // --------------------------------------------------
         // Proceed to update
@@ -57,10 +58,12 @@ export function USE_updateListDefaultLangIds() {
           });
 
         z_SET_myOneList(updated_LIST);
-        z_UPDATE_listInMyLists(updated_LIST);
-        // refetch starter page state
-
         onSuccess();
+
+        celebrate(t("notification.listDefaultLangIdsUpdated"));
+
+        // Update starter page
+        await REFETCH_myStarterContent();
         // -----------------------------
       } catch (error: any) {
         const err = new General_ERROR({
@@ -69,14 +72,19 @@ export function USE_updateListDefaultLangIds() {
           errorToSpread: error,
         });
 
-        onFailure(err);
+        SET_error(err);
         SEND_internalError(err);
       } finally {
-        REMOVE_currentAction(list_ID, "updating_default_lang_ids");
+        SET_loading(false);
       }
     },
     []
   );
 
-  return { UPDATE_listDefaultLangIds: _UPDATE_listDefaultLangIds };
+  return {
+    UPDATE_listDefaultLangIds: _UPDATE_listDefaultLangIds,
+    error,
+    loading,
+    RESET_error,
+  };
 }

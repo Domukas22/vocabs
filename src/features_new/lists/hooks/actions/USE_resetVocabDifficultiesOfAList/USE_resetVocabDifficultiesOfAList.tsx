@@ -18,10 +18,10 @@ const function_NAME = "USE_resetVocabDifficultiesOfAList";
 export function USE_resetVocabDifficultiesOfAList() {
   const { z_user } = z_USE_user();
 
-  const [IS_resettingAllListDifficulties, SET_isResettingAllListDifficulties] =
-    useState(false);
-  const [resetAllListDifficulties_ERROR, SET_resetAllListDifficulties] =
-    useState<General_ERROR | undefined>();
+  const [loading, SET_isResettingAllListDifficulties] = useState(false);
+  const [error, SET_resetAllListDifficulties] = useState<
+    General_ERROR | undefined
+  >();
 
   const RESET_hookError = useCallback(
     () => SET_resetAllListDifficulties(undefined),
@@ -48,7 +48,7 @@ export function USE_resetVocabDifficultiesOfAList() {
         // --------------------------------------------------
         // Check if item is already in action
 
-        if (IS_resettingAllListDifficulties) return;
+        if (loading) return;
 
         SET_isResettingAllListDifficulties(true);
         RESET_hookError();
@@ -69,9 +69,6 @@ export function USE_resetVocabDifficultiesOfAList() {
 
         z_SET_myOneList(updated_LIST);
         z_UPDATE_listInMyLists(updated_LIST);
-        // refetch starter page state
-        // refetch current private vocabs
-
         onSuccess();
 
         TOAST("success", t("notification.vocabDifficultiesOfAListReset"));
@@ -99,7 +96,7 @@ export function USE_resetVocabDifficultiesOfAList() {
 
   return {
     RESET_allDifficultiesOfAList: _RESET_allDifficultiesOfAList,
-    IS_resettingAllListDifficulties,
-    resetAllListDifficulties_ERROR,
+    loading: loading,
+    db_ERROR: error,
   };
 }

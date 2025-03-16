@@ -30,10 +30,11 @@ export async function UPDATE_listDefaultLangIds(
     });
 
   try {
+    console.log("INCOMING: ", newLang_IDs);
     const { data: list, error } = await supabase
       .from("lists_extended")
       .update({
-        default_lang_ids: newLang_IDs?.join(","),
+        default_lang_ids: newLang_IDs,
         updated_at: new Date().toISOString(),
       })
       .eq("id", list_id)

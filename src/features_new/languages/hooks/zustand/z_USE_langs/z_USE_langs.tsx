@@ -62,7 +62,7 @@ export const z_USE_langs = create<z_USE_langs_PROPS>((set, get) => ({
       })
     ),
 
-  z_GET_langsByLangId: (lang_IDs) =>
+  z_GET_langsByLangId: (lang_IDs = []) =>
     lang_IDs.map((id) => get().z_langs[id]).filter(Boolean) as Lang_TYPE[], // Fetch directly from object
 
   z_GET_oneLangById: (targetLang_ID) => get().z_langs[targetLang_ID], // O(1) lookup

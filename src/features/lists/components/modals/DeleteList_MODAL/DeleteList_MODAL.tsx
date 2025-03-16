@@ -47,14 +47,7 @@ export function DeleteList_MODAL({
         CLOSE_modal();
       }}
       btnLeft={
-        <Btn
-          text={t("btn.cancel")}
-          onPress={() => {
-            CLOSE_modal();
-            router.back();
-          }}
-          type="simple"
-        />
+        <Btn text={t("btn.cancel")} onPress={CLOSE_modal} type="simple" />
       }
       btnRight={
         <Btn

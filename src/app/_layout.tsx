@@ -16,17 +16,21 @@ import Toast_CONTEXT from "../context/Toast_CONTEXT";
 import Page_WRAP from "../components/1_grouped/Page_WRAP/Page_WRAP";
 import { z_USE_user } from "../features_new/user/hooks/z_USE_user/z_USE_user";
 import { USE_populateLangs } from "../features_new/languages/hooks";
+import { MyColors } from "../constants/MyColors";
+import { SafeAreaView } from "react-native";
 
 export default function _layout() {
   return (
     <Auth_PROVIDER>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <Toast_CONTEXT>
-          <PortalProvider>
-            <Content />
-          </PortalProvider>
-        </Toast_CONTEXT>
-      </GestureHandlerRootView>
+      <Toast_CONTEXT>
+        <SafeAreaView style={{ backgroundColor: MyColors.fill_bg, flex: 1 }}>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <PortalProvider>
+              <Content />
+            </PortalProvider>
+          </GestureHandlerRootView>
+        </SafeAreaView>
+      </Toast_CONTEXT>
     </Auth_PROVIDER>
   );
 }

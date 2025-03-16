@@ -33,6 +33,7 @@ const s = StyleSheet.create({
     flexDirection: "row",
     gap: 6,
     position: "relative",
+
     // overflow: "hidden",
   },
   btnTiny: {

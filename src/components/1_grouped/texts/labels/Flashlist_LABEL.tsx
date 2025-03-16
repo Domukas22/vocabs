@@ -6,6 +6,7 @@ import React, { useMemo } from "react";
 import { ActivityIndicator } from "react-native";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import { The4Fetch_TYPES, loadingState_TYPES } from "@/src/types/general_TYPES";
+import { t } from "i18next";
 
 interface FlashlistLabel_PROPS {
   IS_debouncing: boolean;
@@ -94,7 +95,9 @@ export default function Flashlist_LABEL({
           return `Browse through ${totalResult_COUNT || 0} ${target}`;
         }
         if (debouncedSearch && !appliedFiltersCount) {
-          return `${totalResult_COUNT} search results for '${debouncedSearch}'`;
+          return `${totalResult_COUNT} ${t(
+            "label.searchResultCount"
+          )} '${debouncedSearch}'`;
         }
         if (!debouncedSearch && appliedFiltersCount) {
           return `${totalResult_COUNT} filtered results`;

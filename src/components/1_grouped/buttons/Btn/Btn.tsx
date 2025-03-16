@@ -39,7 +39,7 @@ export default function Btn({
 }: Btn) {
   return (
     <Pressable
-      onPress={onPress && onPress}
+      onPress={onPress && !stayPressed ? onPress : null}
       style={({ pressed }) => [
         btnStyles.default,
         blurAndDisable && { pointerEvents: "none" },

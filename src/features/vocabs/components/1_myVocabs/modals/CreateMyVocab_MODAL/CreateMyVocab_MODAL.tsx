@@ -229,8 +229,10 @@ export function CreateMyVocab_MODAL({
         {/* ------------------------------ MODALS ------------------------------  */}
         <SelectMultipleLanguages_MODAL
           open={modals.selectList.IS_open}
-          TOGGLE_open={() => modals.selectLangs.set(false)}
-          lang_ids={getValues("translations")?.map((tr) => tr.lang_id) || []}
+          CLOSE_modal={() => modals.selectLangs.set(false)}
+          initialLang_IDS={
+            getValues("translations")?.map((tr) => tr.lang_id) || []
+          }
           SUBMIT_langIds={(lang_ids: string[]) => {
             HANLDE_selectedLangs({
               newLang_IDS: lang_ids,

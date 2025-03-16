@@ -28,13 +28,13 @@ export function ResetAllListVocabDifficulties_MODAL({
 
   const {
     RESET_allDifficultiesOfAList,
-    IS_resettingAllListDifficulties,
-    resetAllListDifficulties_ERROR,
+    loading: IS_resettingAllListDifficulties,
+    db_ERROR: resetAllListDifficulties_ERROR,
   } = USE_resetVocabDifficultiesOfAList();
 
   return (
     <Small_MODAL
-      title={t("header.deleteList")}
+      title={t("header.resetListVocabDifficulties")}
       IS_open={IS_open}
       TOGGLE_modal={() => {
         // RESET_error();

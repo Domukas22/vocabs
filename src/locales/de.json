@@ -26,7 +26,8 @@
     "noListFound": "Keine Liste gefunden",
     "myLists": "Meine Listen",
     "publicLists": "⭐ Öffentliche Listen",
-    "exploreTab": "Erkunde Listen und Vokabeln"
+    "exploreTab": "Erkunde Listen und Vokabeln",
+    "resetListVocabDifficulties": "Schwierigkeiten zurücksetzen?"
   },
   "blockLabels": {
     "uiLang": "App Sprache"
@@ -113,7 +114,8 @@
     "seeAllPublicLists_PRE": "Alle",
     "seeAllPublicLists_POST": "öffentliche Listen sehen",
     "seeAllPublicVocabs_PRE": "Alle",
-    "seeAllPublicVocabs_POST": "öffentliche Vokabeln sehen"
+    "seeAllPublicVocabs_POST": "öffentliche Vokabeln sehen",
+    "resetAllVocabDifficultiesOfAList": "Vokabel Schwierigkeiten zurücksetzten"
   },
   "pages": {
     "about": {
@@ -231,7 +233,10 @@
     "myLists": "Meine Listen",
     "myVocabs": "Meine Vokabeln",
     "mostPopularLists": "Die beliebtesten Listen",
-    "resetVocabDifficultiesInAList": "Die Schwierigkeit jedes Vokabulars in dieser Liste auf \"Schwer\" zurücksetzen"
+    "resetVocabDifficultiesInAList": "Die Schwierigkeit jedes Vokabulars in dieser Liste auf \"Schwer\" zurücksetzen",
+    "allLanguages": "Alle Sprachen",
+    "selectedLanguages": "Ausgewählte Sprachen",
+    "searchResultCount": "Suchergebnisse für"
   },
   "modal": {
     "displaySettings": {
@@ -338,7 +343,9 @@
     "listCreated": "Liste erstellt",
     "listDeleted": "Liste gelöscht",
     "listRenamed": "List umbenannt",
-    "vocabDifficultiesOfAListReset": "Vokabelschwierigkeiten zurückgesetzt"
+    "vocabDifficultiesOfAListReset": "Vokabelschwierigkeiten zurückgesetzt",
+    "listDefaultLangIdsUpdated": "Standartmäßige Sprachen aktualisiert",
+    "oneDefaultListLangRemoved": "Sprache entfernt"
   },
   "emptyText": {
     "noLangsSelected": "Keine Sprachen ausgewählt"

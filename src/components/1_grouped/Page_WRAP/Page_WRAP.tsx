@@ -16,25 +16,13 @@ export default function Page_WRAP({
   paddingTop?: boolean;
 }) {
   return (
-    <SafeAreaView
-      style={s.MainScreen_VIEW}
-      // edges={["top", "left", "right", "bottom"]}
-    >
-      <View style={[s.view, paddingTop && { paddingTop: HEADER_MARGIN || 68 }]}>
-        {children}
-      </View>
-    </SafeAreaView>
+    <View style={[s.view, paddingTop && { paddingTop: HEADER_MARGIN || 68 }]}>
+      {children}
+    </View>
   );
 }
 
 const s = StyleSheet.create({
-  MainScreen_VIEW: {
-    backgroundColor: MyColors.fill_bg,
-    flex: 1,
-    paddingBottom: 0,
-    paddingVertical: 0,
-    alignItems: "center",
-  },
   view: {
     maxWidth: 700,
     width: "100%",

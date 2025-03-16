@@ -5,37 +5,18 @@
 import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import TwoBtn_BLOCK from "@/src/components/1_grouped/blocks/TwoBtn_BLOCK/TwoBtn_BLOCK";
 import Header from "@/src/components/1_grouped/headers/regular/Header";
-import { ICON_flag, ICON_X } from "@/src/components/1_grouped/icons/icons";
+import { ICON_X } from "@/src/components/1_grouped/icons/icons";
 
 import SearchBar from "@/src/components/1_grouped/inputs/SearchBar/SearchBar";
 import Subheader from "@/src/components/1_grouped/subheader/Subheader";
 
-import { MyColors } from "@/src/constants/MyColors";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import {
-  Modal,
-  SafeAreaView,
-  ScrollView,
-  Image,
-  View,
-  FlatList,
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
-import languages from "@/src/constants/languages";
-
-import Block from "@/src/components/1_grouped/blocks/Block/Block";
+import React, { useMemo, useState } from "react";
+import { ScrollView, KeyboardAvoidingView, Platform } from "react-native";
 
 import Styled_FLASHLIST from "@/src/components/3_other/Styled_FLASHLIST/Styled_FLASHLIST";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
 import Big_MODAL from "@/src/components/1_grouped/modals/Big_MODAL/Big_MODAL";
-import {
-  DEFAULT_TAG_SUGGESTIONS,
-  maxVocabTranslations,
-  minVocabTranslations,
-} from "@/src/constants/globalVars";
 
 interface SelectLanguagesModal_PROPS {
   open: boolean;

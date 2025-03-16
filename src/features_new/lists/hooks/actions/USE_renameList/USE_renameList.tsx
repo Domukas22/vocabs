@@ -2,25 +2,23 @@
 //
 //
 
-import { z_USE_currentActions } from "@/src/hooks/zustand/z_USE_currentActions/z_USE_currentActions";
 import { FormInput_ERROR, General_ERROR } from "@/src/types/error_TYPES";
-import { IS_aFormInputError, SEND_internalError, VIBRATE } from "@/src/utils";
+import { IS_aFormInputError, SEND_internalError } from "@/src/utils";
 import { useCallback, useState } from "react";
 import { t } from "i18next";
 import { RENAME_list } from "./RENAME_list/RENAME_list";
 import { z_USE_myOneList } from "../../zustand/z_USE_myOneList/z_USE_myOneList";
 import { z_USE_myLists } from "../../zustand/z_USE_myLists/z_USE_myLists";
 import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
-import { USE_toast } from "@/src/hooks/USE_toast/USE_toast";
-import { USE_updateListUpdatedAt } from "../USE_updateListUpdatedAt/ USE_updateListUpdatedAt";
 import USE_refetchStarterContent from "@/src/hooks/zustand/z_USE_myStarterContent/USE_refetchStarterContent/USE_refetchStarterContent";
+import { USE_successFeedback } from "@/src/hooks";
 
 const function_NAME = "USE_renameList";
 
 export function USE_renameList() {
   const { z_user } = z_USE_user();
 
-  const { TOAST } = USE_toast();
+  const { celebrate } = USE_successFeedback();
 
   const { z_SET_myOneList, z_HIGHLIGHT_myOneListName } = z_USE_myOneList();
   const { z_UPDATE_listInMyLists } = z_USE_myLists();
@@ -87,8 +85,7 @@ export function USE_renameList() {
         // refetch starter page state
 
         onSuccess();
-        TOAST("success", t("notification.listRenamed"));
-        VIBRATE("soft");
+        celebrate(t("notification.listRenamed"));
 
         // Update starter page
         await REFETCH_myStarterContent();

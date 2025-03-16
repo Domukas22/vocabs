@@ -59,50 +59,48 @@ export default function Small_MODAL(props: SimpleModal_PROPS) {
           { backgroundColor: MyColors.fill_bg_dark_seethrough },
         ]}
       >
-        <SafeAreaView style={styles.safeAreaView}>
-          {/* KeyboardAvoidingView helps adjust when keyboard is shown */}
-          <KeyboardAvoidingView
-            style={styles.keyboardAvoidingView}
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            // keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0} // Adjust offset for iOS
-          >
-            <View style={styles.greyBox}>
-              <View style={styles.header}>
-                <Styled_TEXT type="text_22_bold" style={{ flex: 1 }}>
-                  {title}
+        {/* KeyboardAvoidingView helps adjust when keyboard is shown */}
+        <KeyboardAvoidingView
+          style={styles.keyboardAvoidingView}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          // keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0} // Adjust offset for iOS
+        >
+          <View style={styles.greyBox}>
+            <View style={styles.header}>
+              <Styled_TEXT type="text_22_bold" style={{ flex: 1 }}>
+                {title}
+              </Styled_TEXT>
+              <Btn
+                type="seethrough"
+                iconLeft={<ICON_X big={true} rotate={true} />}
+                onPress={TOGGLE_simpleModal}
+                style={{ borderRadius: 100 }}
+              />
+            </View>
+
+            {/* Modal content */}
+            {children && <View style={styles.content}>{children}</View>}
+
+            <View style={styles.footer}>
+              {!btnLeft && !btnRight && (
+                <Styled_TEXT type="label_small">
+                  use "btnLeft" or "btnRight" properties to insert buttons
                 </Styled_TEXT>
-                <Btn
-                  type="seethrough"
-                  iconLeft={<ICON_X big={true} rotate={true} />}
-                  onPress={TOGGLE_simpleModal}
-                  style={{ borderRadius: 100 }}
-                />
-              </View>
+              )}
 
-              {/* Modal content */}
-              {children && <View style={styles.content}>{children}</View>}
-
-              <View style={styles.footer}>
-                {!btnLeft && !btnRight && (
-                  <Styled_TEXT type="label_small">
-                    use "btnLeft" or "btnRight" properties to insert buttons
-                  </Styled_TEXT>
-                )}
-
-                {btnUpper && btnUpper}
-                <View
-                  style={{
-                    flexDirection: "row",
-                    gap: 8,
-                  }}
-                >
-                  {btnLeft && btnLeft}
-                  {btnRight && btnRight}
-                </View>
+              {btnUpper && btnUpper}
+              <View
+                style={{
+                  flexDirection: "row",
+                  gap: 8,
+                }}
+              >
+                {btnLeft && btnLeft}
+                {btnRight && btnRight}
               </View>
             </View>
-          </KeyboardAvoidingView>
-        </SafeAreaView>
+          </View>
+        </KeyboardAvoidingView>
       </BlurView>
     </View>
   );

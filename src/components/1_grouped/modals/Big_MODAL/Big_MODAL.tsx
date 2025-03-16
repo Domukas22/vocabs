@@ -4,7 +4,7 @@
 
 import { MyColors } from "@/src/constants/MyColors";
 import React from "react";
-import { SafeAreaView, View } from "react-native";
+import { View } from "react-native";
 
 interface bigModal_PROPS {
   children: React.ReactNode;
@@ -23,19 +23,10 @@ export default function Big_MODAL({ children, open, z }: bigModal_PROPS) {
         bottom: 0,
         zIndex: z || 20,
         display: open ? "flex" : "none",
+        backgroundColor: MyColors.fill_bg,
       }}
     >
-      <SafeAreaView
-        style={{
-          backgroundColor: MyColors.fill_bg,
-          flex: 1,
-
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        {open ? children : null}
-      </SafeAreaView>
+      {open ? children : null}
     </View>
   );
 }

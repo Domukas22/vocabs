@@ -3,7 +3,7 @@
 //
 
 import Block from "@/src/components/1_grouped/blocks/Block/Block";
-import ChosenLangs_BLOCK from "@/src/components/1_grouped/blocks/ChosenLangs_BLOCK/ChosenLangs_BLOCK";
+import ChosenListLangs_BLOCK from "@/src/components/1_grouped/blocks/ChosenListLangs_BLOCK/ChosenListLangs_BLOCK";
 import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import Header from "@/src/components/1_grouped/headers/regular/Header";
 import {
@@ -13,15 +13,12 @@ import {
 import Big_MODAL from "@/src/components/1_grouped/modals/Big_MODAL/Big_MODAL";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 
-import React from "react";
+import React, { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { ScrollView, View } from "react-native";
 
 import TwoBtn_BLOCK from "@/src/components/1_grouped/blocks/TwoBtn_BLOCK/TwoBtn_BLOCK";
 import Dropdown_BLOCK from "@/src/components/1_grouped/blocks/Dropdown_BLOCK/Dropdown_BLOCK";
-
-import { useToast } from "react-native-toast-notifications";
-import { useRouter } from "expo-router";
 
 import { MyColors } from "@/src/constants/MyColors";
 import Label from "@/src/components/1_grouped/texts/labels/Label/Label";
@@ -32,10 +29,9 @@ import { DeleteList_MODAL } from "../DeleteList_MODAL/DeleteList_MODAL";
 import { SelectMultipleLanguages_MODAL } from "@/src/features/languages/components";
 import { USE_modalToggles } from "@/src/hooks/index";
 import { z_USE_myOneList } from "@/src/features_new/lists/hooks/zustand/z_USE_myOneList/z_USE_myOneList";
-import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
-import { Portal } from "@gorhom/portal";
 import { RenameList_MODAL } from "../RenameList_MODAL/RenameList_MODAL";
 import { ResetAllListVocabDifficulties_MODAL } from "../ResetAllListVocabDifficulties_MODAL/ResetAllListVocabDifficulties_MODAL";
+import { USE_updateListDefaultLangIds } from "@/src/features_new/lists/hooks/actions/updateDefaultLangs/USE_updateListDefaultLangIds/USE_updateListDefaultLangIds";
 
 interface ListSettingsModal_PROPS {
   IS_open: boolean;
@@ -103,21 +99,17 @@ export function ListSettings_MODAL({
           <Btn text="Edit" onPress={() => modals.renameList.set(true)} />
         </Block>
 
-        <ChosenLangs_BLOCK
-          label={t("label.defaultVocabLangs")}
-          default_lang_ids={z_myOneList?.default_lang_ids || []}
-          toggle={() => modals.selectLangs.set(true)}
-          REMOVE_lang={async (targetLang_ID: string) => {}}
-          // error={}
+        <ChosenListLangs_BLOCK
+          OPEN_selectLanguagesModal={() => modals.selectLangs.set(true)}
         />
 
         <Block>
           <Label>{t("label.resetVocabDifficultiesInAList")}</Label>
           <Btn
-            text="Reset all vocabs"
+            text={t("btn.resetAllVocabDifficultiesOfAList")}
             onPress={() => modals.resetDifficulties.set(true)}
             iconRight={<ICON_difficultyDot difficulty={3} />}
-            text_STYLES={{ marginRight: "auto" }}
+            text_STYLES={{ flex: 1 }}
           />
         </Block>
         {/* -------------------------------------------------------------------------------------------------- */}
@@ -146,11 +138,9 @@ export function ListSettings_MODAL({
       />
 
       {/* ------------------------------ MODALS ------------------------------  */}
-      <SelectMultipleLanguages_MODAL
+      <SelectListLangs_MODAL
         open={modals.selectLangs.IS_open}
-        TOGGLE_open={() => modals.selectLangs.set(false)}
-        lang_ids={z_myOneList?.default_lang_ids || []}
-        SUBMIT_langIds={() => {}}
+        CLOSE_modal={() => modals.selectLangs.set(false)}
       />
 
       <RenameList_MODAL
@@ -169,5 +159,40 @@ export function ListSettings_MODAL({
         CLOSE_modal={() => modals.deleteList.set(false)}
       />
     </Big_MODAL>
+  );
+}
+
+function SelectListLangs_MODAL({
+  open = false,
+  CLOSE_modal = () => {},
+}: {
+  open: boolean;
+  CLOSE_modal: () => void;
+}) {
+  const { UPDATE_listDefaultLangIds, loading, error } =
+    USE_updateListDefaultLangIds();
+
+  const { z_myOneList } = z_USE_myOneList();
+
+  const SUBMIT_langIds = useCallback(
+    async (lang_ids: string[]) => {
+      await UPDATE_listDefaultLangIds(z_myOneList?.id || "", lang_ids, {
+        onSuccess: CLOSE_modal,
+      });
+    },
+    [UPDATE_listDefaultLangIds, z_myOneList, CLOSE_modal]
+  );
+
+  return (
+    <SelectMultipleLanguages_MODAL
+      open={open}
+      CLOSE_modal={() => {
+        if (!loading) CLOSE_modal();
+      }}
+      initialLang_IDS={z_myOneList?.default_lang_ids || []}
+      loading={loading}
+      error={error}
+      SUBMIT_langIds={SUBMIT_langIds}
+    />
   );
 }
