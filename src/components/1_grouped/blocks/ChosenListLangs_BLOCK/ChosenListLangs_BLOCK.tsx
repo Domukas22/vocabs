@@ -34,7 +34,7 @@ export default function ChosenListLangs_BLOCK({
   const { z_myOneList } = z_USE_myOneList();
 
   const { target_LANGS: selected_LANGS } = USE_getTargetLangs({
-    targetLang_IDS: z_myOneList?.collected_lang_ids || [],
+    targetLang_IDS: z_myOneList?.default_lang_ids || [],
   });
 
   const {
@@ -72,13 +72,11 @@ export default function ChosenListLangs_BLOCK({
             text_STYLES={{ flex: 1 }}
             stayPressed={IS_beingRemoved}
             onPress={async () =>
-              !loading
-                ? await REMOVE_oneDefaultListLangId(
-                    z_myOneList?.id || "",
-                    lang?.lang_id || "",
-                    {}
-                  )
-                : null
+              await REMOVE_oneDefaultListLangId(
+                z_myOneList?.id || "",
+                lang?.lang_id || "",
+                {}
+              )
             }
           />
         );

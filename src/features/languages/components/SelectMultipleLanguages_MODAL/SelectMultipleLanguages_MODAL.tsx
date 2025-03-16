@@ -2,7 +2,7 @@
 //
 //
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { KeyboardAvoidingView, Platform } from "react-native";
 
 import Big_MODAL from "@/src/components/1_grouped/modals/Big_MODAL/Big_MODAL";
@@ -42,12 +42,17 @@ export function SelectMultipleLanguages_MODAL({
   const [selectedLang_IDS, SET_selectedLangIds] =
     useState<string[]>(initialLang_IDS);
 
+  useEffect(() => {
+    SET_selectedLangIds(initialLang_IDS);
+  }, [initialLang_IDS]);
+
   const SELECT_lang = useCallback((lang_id: string) => {
     SET_selectedLangIds((prev) =>
       prev.includes(lang_id)
         ? prev.filter((id) => id !== lang_id)
         : [...prev, lang_id]
     );
+    SET_search("");
   }, []);
 
   const cancel = () => {

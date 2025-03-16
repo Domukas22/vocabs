@@ -15,6 +15,8 @@ import { UPDATE_listDefaultLangIds } from "../_UPDATE_listDefaultLangIds/UPDATE_
 
 const function_NAME = "USE_removeOneDefaultListLangId";
 
+// 🔴🔴 TODO --> removing one language doesnt work for some reason. Find the bug, inspect the removal function itself.
+
 export function USE_removeOneDefaultListLangId() {
   const { loading, SET_loading } = USE_loading();
   const { error, SET_error, RESET_error } = USE_error<General_ERROR>();
@@ -42,12 +44,9 @@ export function USE_removeOneDefaultListLangId() {
         SET_currentlyBeingRemovedLangId(lang_ID);
 
         const newLangs =
-          z_myOneList?.collected_lang_ids?.filter(
+          z_myOneList?.default_lang_ids?.filter(
             (lang_id) => lang_id !== lang_ID
           ) || [];
-
-        console.log("OLD: ", z_myOneList?.collected_lang_ids);
-        console.log("NEW: ", newLangs);
 
         // --------------------------------------------------
         // Proceed to update
@@ -57,7 +56,7 @@ export function USE_removeOneDefaultListLangId() {
           newLangs
         );
 
-        console.log("in the list: ", updated_LIST?.collected_lang_ids);
+        console.log("in the list: ", updated_LIST?.default_lang_ids);
 
         if (!updated_LIST)
           throw new General_ERROR({
@@ -88,7 +87,7 @@ export function USE_removeOneDefaultListLangId() {
         SET_currentlyBeingRemovedLangId("");
       }
     },
-    []
+    [z_myOneList, loading]
   );
 
   return {
