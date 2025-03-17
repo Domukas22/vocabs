@@ -5,21 +5,18 @@
 import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import Header from "@/src/components/1_grouped/headers/regular/Header";
 import { ICON_X } from "@/src/components/1_grouped/icons/icons";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Keyboard, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useTranslation } from "react-i18next";
 
 import Big_MODAL from "@/src/components/1_grouped/modals/Big_MODAL/Big_MODAL";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 
 import Language_MODEL from "@/src/db/models/Language_MODEL";
-import Vocab_MODEL from "@/src/db/models/Vocab_MODEL";
 
 import { SelectMyList_MODAL } from "@/src/features/lists/components";
-import { USE_collectListLangs } from "@/src/features/lists/functions";
 import {
-  USE_createVocab,
   GET_defaultTranslations,
   HANLDE_selectedLangs,
   HANLDE_selectedHighlights,
@@ -38,12 +35,12 @@ import { SelectMultipleLanguages_MODAL } from "@/src/features/languages/componen
 import { USE_modalToggles } from "@/src/hooks/index";
 import List_MODEL from "@/src/db/models/List_MODEL";
 import { FETCH_langs } from "@/src/features/languages/functions/fetch/FETCH_langs/FETCH_langs";
-import { z_USE_myVocabs } from "@/src/features_new/vocabs/hooks/zustand/z_USE_myVocabs/z_USE_myVocabs";
 import { VocabTr_TYPE } from "@/src/features_new/vocabs/types";
-import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 import { z_USE_myOneList } from "@/src/features_new/lists/hooks/zustand/z_USE_myOneList/z_USE_myOneList";
 import { USE_createOneVocab } from "@/src/features_new/vocabs/hooks/actions/USE_createOneVocab/USE_createOneVocab";
 import { List_TYPE } from "@/src/features_new/lists/types";
+import { USE_getTargetLangs } from "@/src/features_new/languages/hooks";
+import { Lang_TYPE } from "@/src/features_new/languages/types";
 
 interface CreateMyVocabModal_PROPS {
   IS_open: boolean;
@@ -57,25 +54,22 @@ export type CreateMyVocabData_PROPS = {
   translations: VocabTr_TYPE[];
 };
 
-// 🔴🔴 TODO --> colelct list langs after creating vocab
+// 🔴🔴 TODO -->
+// -- Langs dont reset after toggling modal
+// -- Langs dont reset after adjusting default list lang ids
+// -- Collect list langs after creating vocab
 
 export function CreateMyVocab_MODAL({
   IS_open,
   CLOSE_modal,
 }: CreateMyVocabModal_PROPS) {
   const { t } = useTranslation();
-
   const { z_myOneList } = z_USE_myOneList();
-
   const { modals } = USE_modalToggles([
     "selectLangs",
     "selectHighlights",
     "selectList",
   ]);
-
-  const [target_TR, SET_targetTr] = useState<VocabTr_TYPE | undefined>(
-    undefined
-  );
 
   const { CREATE_vocab, IS_creatingVocab, createVocab_ERROR } =
     USE_createOneVocab();
@@ -98,6 +92,10 @@ export function CreateMyVocab_MODAL({
     );
   };
 
+  // ---------------------------------------------------
+
+  const { myOneListDefaultVocab_TRS } = USE_myOneListDefaultTrs();
+
   const {
     control,
     handleSubmit,
@@ -106,11 +104,9 @@ export function CreateMyVocab_MODAL({
     reset,
     clearErrors,
     trigger,
-    formState: { errors },
-    watch,
   } = useForm<CreateMyVocabData_PROPS>({
     defaultValues: {
-      translations: GET_defaultTranslations(["en", "de"]) || [],
+      translations: myOneListDefaultVocab_TRS,
       description: "",
       list: z_myOneList,
       difficulty: 3,
@@ -120,37 +116,40 @@ export function CreateMyVocab_MODAL({
     mode: "onSubmit",
   });
 
-  const form_TRS = getValues("translations") || [];
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "translations",
+  });
+
   const submit = (data: CreateMyVocabData_PROPS) => create(data);
-  const formValues = watch();
 
-  useEffect(() => {
-    // RESET_dbError();
-  }, [formValues]);
+  useEffect(() => reset(), [IS_open, myOneListDefaultVocab_TRS]);
 
-  useEffect(() => {
-    if (IS_open)
-      setValue("translations", GET_defaultTranslations(["en", "de"]) || []);
-    setValue("list", z_myOneList);
-  }, [IS_open]);
+  // ------------------------------------------------------
+  // Langs / translations
 
-  const [selected_LANGS, SET_selectedLangs] = useState<Language_MODEL[]>([]);
+  // useEffect(
+  //   () => setValue("translations", myOneListDefaultVocab_TRS),
+  //   [myOneListDefaultVocab_TRS]
+  // );
 
-  useEffect(() => {
-    const fetchSelectedLangs = async () => {
-      const langs = await FETCH_langs({
-        lang_ids: getValues("translations")?.map((tr) => tr.lang_id),
-      });
-      SET_selectedLangs(langs);
-    };
+  const [target_TR, SET_targetTr] = useState<VocabTr_TYPE | undefined>();
 
-    fetchSelectedLangs();
-  }, [getValues("translations")]);
-
-  const target_LANG = useMemo(
-    () => selected_LANGS.find((l) => l.lang_id === target_TR?.lang_id),
-    [selected_LANGS, target_TR]
+  const REMOVE_lang = useCallback(
+    (toRemoveLang_ID: string) => {
+      const index = fields.findIndex((tr) => tr.lang_id === toRemoveLang_ID);
+      if (index !== -1) {
+        remove(index);
+      }
+      trigger("translations");
+    },
+    [fields, remove, trigger]
   );
+
+  // useEffect(() => {
+  //   console.log(getValues("translations")?.map((x) => x.lang_id));
+  // }, [getValues("translations")]);
+  // -------------------------------------
 
   return (
     <Big_MODAL {...{ open: IS_open }}>
@@ -181,13 +180,14 @@ export function CreateMyVocab_MODAL({
           {/* ------------------------------ INPUTS ------------------------------  */}
 
           <ChosenLangs_CONTROLLER
-            {...{ control, trigger }}
-            TOGGLE_langModal={() => modals.selectLangs.set(false)}
+            control={control}
+            OPEN_langModal={() => modals.selectLangs.set(true)}
+            REMOVE_lang={REMOVE_lang}
           />
 
           <TrInput_CONTROLLERS
-            {...{ control, selected_LANGS }}
-            trs={form_TRS}
+            control={control}
+            trs={getValues("translations")}
             diff={getValues("difficulty")}
             OPEN_highlights={(tr: VocabTr_TYPE) => {
               SET_targetTr(tr);
@@ -204,8 +204,8 @@ export function CreateMyVocab_MODAL({
         </KeyboardAwareScrollView>
 
         <CreateMyVocab_FOOTER
-          {...{ IS_creatingVocab }}
-          db_ERROR={createVocab_ERROR}
+          IS_creatingVocab={IS_creatingVocab}
+          dbError_MSG={createVocab_ERROR?.user_MSG}
           submit={handleSubmit(submit)}
           CANCEL_creation={() => {
             CLOSE_modal();
@@ -215,7 +215,7 @@ export function CreateMyVocab_MODAL({
 
         {/* ------------------------------ MODALS ------------------------------  */}
         <SelectMultipleLanguages_MODAL
-          open={modals.selectList.IS_open}
+          open={modals.selectLangs.IS_open}
           CLOSE_modal={() => modals.selectLangs.set(false)}
           initialLang_IDS={
             getValues("translations")?.map((tr) => tr.lang_id) || []
@@ -223,33 +223,30 @@ export function CreateMyVocab_MODAL({
           SUBMIT_langIds={(lang_ids: string[]) => {
             HANLDE_selectedLangs({
               newLang_IDS: lang_ids,
-              current_TRS: form_TRS,
+              current_TRS: getValues("translations"),
               SET_trs: (updated_TRS: VocabTr_TYPE[]) => {
-                setValue("translations", updated_TRS);
-                if (updated_TRS.length) {
-                  clearErrors("translations");
-                }
+                reset({ translations: updated_TRS });
               },
             });
+            modals.selectLangs.set(false);
           }}
-          IS_inAction={false}
+          loading={IS_creatingVocab}
         />
 
         <TrHighlights_MODAL
           open={modals.selectList.IS_open}
           tr={target_TR}
-          target_LANG={target_LANG}
           diff={getValues("difficulty")}
           TOGGLE_open={() => modals.selectHighlights.set(false)}
           SET_trs={(trs: VocabTr_TYPE[]) => {
             setValue("translations", trs);
           }}
-          SUBMIT_highlights={({ lang_id, highlights }) =>
+          SUBMIT_highlights={(highlights) =>
             // modifies highlgiths of a specific translation based on lang_id
             HANLDE_selectedHighlights({
               new_HIGHLIGHTS: highlights,
-              lang_id,
-              current_TRS: form_TRS,
+              lang_id: target_TR?.lang_id || "",
+              current_TRS: getValues("translations"),
               SET_trs: (updated_TRS: VocabTr_TYPE[]) =>
                 setValue("translations", updated_TRS),
             })
@@ -275,4 +272,18 @@ export function CreateMyVocab_MODAL({
       </View>
     </Big_MODAL>
   );
+}
+
+function USE_updateFormDefaultLangsOnListUpdate({
+  onUpdate = (lang_ids: string[]) => {},
+}) {}
+
+function USE_myOneListDefaultTrs() {
+  const { z_myOneList } = z_USE_myOneList();
+  const myOneListDefaultVocab_TRS = useMemo(
+    () =>
+      GET_defaultTranslations(z_myOneList?.default_lang_ids || ["en", "de"]),
+    [z_myOneList]
+  );
+  return { myOneListDefaultVocab_TRS };
 }

@@ -11,15 +11,18 @@ import { ICON_flag, ICON_X } from "@/src/components/1_grouped/icons/icons";
 import TinyBtnScroll_BLOCK from "@/src/components/1_grouped/blocks/TinyBtnScroll_BLOCK/TinyBtnScroll_BLOCK";
 import { View } from "react-native";
 import { MyColors } from "@/src/constants/MyColors";
+import { CreateMyVocabData_PROPS } from "../../../modals/CreateMyVocab_MODAL/CreateMyVocab_MODAL";
 
 interface ChosenLangsController_PROPS {
-  control: Control<PublicVocabData_PROPs, any>;
-  TOGGLE_langModal: () => void;
+  control: Control<CreateMyVocabData_PROPS, any>;
+  OPEN_langModal: () => void;
+  REMOVE_lang: (toRemoveLang_ID: string) => void;
 }
 
 export function ChosenLangs_CONTROLLER({
   control,
-  TOGGLE_langModal,
+  OPEN_langModal,
+  REMOVE_lang = () => {},
 }: ChosenLangsController_PROPS) {
   return (
     <Controller
@@ -44,7 +47,7 @@ export function ChosenLangs_CONTROLLER({
                 <Btn
                   iconLeft={<ICON_X />}
                   text={t("btn.selectLangs")}
-                  onPress={TOGGLE_langModal}
+                  onPress={OPEN_langModal}
                   tiny={true}
                   style={{ marginRight: 24 }}
                 />
@@ -57,13 +60,7 @@ export function ChosenLangs_CONTROLLER({
                     iconLeft={<ICON_flag lang={tr?.lang_id} />}
                     text={tr?.lang_id?.toUpperCase()}
                     iconRight={<ICON_X color="primary" rotate={true} />}
-                    onPress={() =>
-                      HANDLE_langRemoval({
-                        lang_id: tr?.lang_id,
-                        current_TRS: value,
-                        SET_trs: onChange,
-                      })
-                    }
+                    onPress={() => REMOVE_lang(tr?.lang_id)}
                     type="active"
                     tiny={true}
                     style={{ marginRight: 8 }}

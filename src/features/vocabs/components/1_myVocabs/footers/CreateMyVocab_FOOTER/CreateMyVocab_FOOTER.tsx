@@ -4,27 +4,27 @@
 
 import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import TwoBtn_BLOCK from "@/src/components/1_grouped/blocks/TwoBtn_BLOCK/TwoBtn_BLOCK";
-import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import { t } from "i18next";
 import { View, ActivityIndicator } from "react-native";
+import Error_TEXT from "@/src/components/1_grouped/texts/Error_TEXT/Error_TEXT";
 
 interface CreateMyVocabFooter_PROPS {
   IS_creatingVocab: boolean;
-  db_ERROR: string | null;
+  dbError_MSG: string | undefined;
   CANCEL_creation: () => void;
   submit: () => void;
 }
 
 export function CreateMyVocab_FOOTER({
   IS_creatingVocab,
-  db_ERROR,
+  dbError_MSG = "",
   submit,
   CANCEL_creation,
 }: CreateMyVocabFooter_PROPS) {
   return (
     <TwoBtn_BLOCK
       contentAbove={
-        db_ERROR && (
+        dbError_MSG && (
           <View
             style={{
               paddingTop: 8,
@@ -32,7 +32,7 @@ export function CreateMyVocab_FOOTER({
               width: "100%",
             }}
           >
-            <Styled_TEXT type="text_error">{db_ERROR}</Styled_TEXT>
+            <Error_TEXT text={dbError_MSG} />
           </View>
         )
       }

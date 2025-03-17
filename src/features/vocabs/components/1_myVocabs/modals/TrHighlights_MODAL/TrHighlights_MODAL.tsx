@@ -9,7 +9,6 @@ import { ScrollView, View } from "react-native";
 import Header from "@/src/components/1_grouped/headers/regular/Header";
 import TwoBtn_BLOCK from "@/src/components/1_grouped/blocks/TwoBtn_BLOCK/TwoBtn_BLOCK";
 import Label from "@/src/components/1_grouped/texts/labels/Label/Label";
-import { VocabTr_TYPE } from "@/src/features/vocabs/types";
 import Language_MODEL from "@/src/db/models/Language_MODEL";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
@@ -18,26 +17,20 @@ import Big_MODAL from "@/src/components/1_grouped/modals/Big_MODAL/Big_MODAL";
 import Subheader from "@/src/components/1_grouped/subheader/Subheader";
 import GET_letterBtns from "./GET_letterBtns/GET_letterBtns";
 import GET_wordBtns from "./GET_wordBtns/GET_wordBtns";
+import { USE_getOneTargetLang } from "@/src/features_new/languages/hooks";
+import { VocabTr_TYPE } from "@/src/features_new/vocabs/types";
 
 interface TrHighlightsModal_PROPS {
   open: boolean;
   tr: VocabTr_TYPE | undefined;
-  target_LANG: Language_MODEL | undefined;
   diff: 0 | 1 | 2 | 3;
   TOGGLE_open: () => void;
   SET_trs: (trs: VocabTr_TYPE[]) => void;
-  SUBMIT_highlights: ({
-    lang_id,
-    highlights,
-  }: {
-    lang_id: string;
-    highlights: number[];
-  }) => void;
+  SUBMIT_highlights: (highlights: number[]) => void;
 }
 
 export function TrHighlights_MODAL({
   open,
-  target_LANG,
   tr,
   diff,
   TOGGLE_open,
@@ -46,12 +39,16 @@ export function TrHighlights_MODAL({
   const { t } = useTranslation();
   const appLang = useMemo(() => i18next.language, []);
 
+  const { target_LANG } = USE_getOneTargetLang({
+    targetLang_ID: tr?.lang_id || "",
+  });
+
   const [highlights, SET_highlights] = useState(
     tr?.highlights.map(Number) || []
   );
 
   function submit() {
-    SUBMIT_highlights({ lang_id: target_LANG?.lang_id || "", highlights });
+    SUBMIT_highlights(highlights);
 
     TOGGLE_open();
   }

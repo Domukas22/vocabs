@@ -18,11 +18,12 @@ import i18next from "i18next";
 import StyledText_INPUT from "@/src/components/1_grouped/inputs/StyledText_INPUT/StyledText_INPUT";
 
 import { FieldError } from "react-hook-form";
-import { VocabTr_TYPE } from "@/src/features/vocabs/types";
+import { Lang_TYPE } from "@/src/features_new/languages/types";
+import { VocabTr_TYPE } from "@/src/features_new/vocabs/types";
 
 interface VocabTranslationInputs_PROPS {
   tr: VocabTr_TYPE;
-  lang: Language_MODEL | undefined;
+  lang: Lang_TYPE | undefined;
   diff: 0 | 1 | 2 | 3;
   OPEN_highlights: (tr: VocabTr_TYPE) => void;
   error: FieldError | undefined;

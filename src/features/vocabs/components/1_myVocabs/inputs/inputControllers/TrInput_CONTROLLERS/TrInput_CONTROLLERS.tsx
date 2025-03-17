@@ -5,15 +5,16 @@
 import { MAX_TRANSLATION_LENGTH } from "@/src/constants/globalVars";
 import { TrInput_BLOCK } from "../../inputBlocks/TrInput_BLOCK/TrInput_BLOCK";
 import { Control, Controller } from "react-hook-form";
-import { VocabTr_TYPE } from "@/src/features/vocabs/types";
 import Language_MODEL from "@/src/db/models/Language_MODEL";
 import { CreateMyVocabData_PROPS } from "../../../modals/CreateMyVocab_MODAL/CreateMyVocab_MODAL";
+import { Lang_TYPE } from "@/src/features_new/languages/types";
+import { VocabTr_TYPE } from "@/src/features_new/vocabs/types";
+import { USE_getTargetLangs } from "@/src/features_new/languages/hooks";
 
 interface TrInputController_PROPS {
   trs: VocabTr_TYPE[] | undefined;
   diff: 1 | 2 | 3 | undefined;
   control: Control<CreateMyVocabData_PROPS, any>;
-  selected_LANGS: Language_MODEL[] | undefined;
   OPEN_highlights: (tr: VocabTr_TYPE) => void;
 }
 
@@ -21,9 +22,13 @@ export function TrInput_CONTROLLERS({
   trs,
   diff,
   control,
-  selected_LANGS,
+
   OPEN_highlights,
 }: TrInputController_PROPS) {
+  const { target_LANGS: target_LANGS } = USE_getTargetLangs({
+    targetLang_IDS: trs?.map((tr) => tr.lang_id) || [],
+  });
+
   return trs?.map((tr, index) => (
     <Controller
       key={tr?.lang_id + "controller"}
@@ -48,8 +53,8 @@ export function TrInput_CONTROLLERS({
           <TrInput_BLOCK
             key={tr?.lang_id + "langBlock"}
             lang={
-              selected_LANGS
-                ? selected_LANGS?.find((lang) => lang.lang_id === tr.lang_id)
+              target_LANGS
+                ? target_LANGS?.find((lang) => lang.lang_id === tr.lang_id)
                 : undefined
             }
             {...{

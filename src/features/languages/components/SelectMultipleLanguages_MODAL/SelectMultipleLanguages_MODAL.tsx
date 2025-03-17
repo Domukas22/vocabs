@@ -26,7 +26,7 @@ interface SelectLanguagesModal_PROPS {
   loading?: boolean;
   initialLang_IDS?: string[] | undefined;
   CLOSE_modal: () => void;
-  SUBMIT_langIds: (lang_ids: string[]) => Promise<void>;
+  SUBMIT_langIds: (lang_ids: string[]) => void;
 }
 
 export function SelectMultipleLanguages_MODAL({
@@ -60,7 +60,7 @@ export function SelectMultipleLanguages_MODAL({
     SET_search("");
   };
 
-  const submit = async () => await SUBMIT_langIds(selectedLang_IDS);
+  const submit = () => SUBMIT_langIds(selectedLang_IDS);
 
   return (
     <Big_MODAL {...{ open }}>
