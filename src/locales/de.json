@@ -345,7 +345,8 @@
     "listRenamed": "List umbenannt",
     "vocabDifficultiesOfAListReset": "Vokabelschwierigkeiten zurückgesetzt",
     "listDefaultLangIdsUpdated": "Standartmäßige Sprachen aktualisiert",
-    "oneDefaultListLangRemoved": "Sprache entfernt"
+    "oneDefaultListLangRemoved": "Sprache entfernt",
+    "oneVocabCreated": "Vokabel erstellt"
   },
   "emptyText": {
     "noLangsSelected": "Keine Sprachen ausgewählt"

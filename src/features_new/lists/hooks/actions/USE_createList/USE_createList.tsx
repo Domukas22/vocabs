@@ -3,7 +3,11 @@
 //
 
 import { FormInput_ERROR, General_ERROR } from "@/src/types/error_TYPES";
-import { IS_aFormInputError, SEND_internalError, VIBRATE } from "@/src/utils";
+import {
+  HANDLE_formInputError,
+  SEND_internalError,
+  VIBRATE,
+} from "@/src/utils";
 import { useCallback, useState } from "react";
 import { CREATE_list } from "./CREATE_list/CREATE_list";
 import { z_USE_myLists } from "../../zustand/z_USE_myLists/z_USE_myLists";
@@ -73,7 +77,7 @@ export function USE_createList() {
         onSuccess();
         // -----------------------------
       } catch (error: any) {
-        if (IS_aFormInputError(error)) {
+        if (HANDLE_formInputError(error)) {
           SET_createListError(error);
           return;
         }

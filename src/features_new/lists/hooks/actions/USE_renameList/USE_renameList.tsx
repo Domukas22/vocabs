@@ -3,7 +3,7 @@
 //
 
 import { FormInput_ERROR, General_ERROR } from "@/src/types/error_TYPES";
-import { IS_aFormInputError, SEND_internalError } from "@/src/utils";
+import { HANDLE_formInputError, SEND_internalError } from "@/src/utils";
 import { useCallback, useState } from "react";
 import { t } from "i18next";
 import { RENAME_list } from "./RENAME_list/RENAME_list";
@@ -11,14 +11,14 @@ import { z_USE_myOneList } from "../../zustand/z_USE_myOneList/z_USE_myOneList";
 import { z_USE_myLists } from "../../zustand/z_USE_myLists/z_USE_myLists";
 import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 import USE_refetchStarterContent from "@/src/hooks/zustand/z_USE_myStarterContent/USE_refetchStarterContent/USE_refetchStarterContent";
-import { USE_successFeedback } from "@/src/hooks";
+import { USE_celebrate } from "@/src/hooks";
 
 const function_NAME = "USE_renameList";
 
 export function USE_renameList() {
   const { z_user } = z_USE_user();
 
-  const { celebrate } = USE_successFeedback();
+  const { celebrate } = USE_celebrate();
 
   const { z_SET_myOneList, z_HIGHLIGHT_myOneListName } = z_USE_myOneList();
   const { z_UPDATE_listInMyLists } = z_USE_myLists();
@@ -91,7 +91,7 @@ export function USE_renameList() {
         await REFETCH_myStarterContent();
         // -----------------------------
       } catch (error: any) {
-        if (IS_aFormInputError(error)) {
+        if (HANDLE_formInputError(error)) {
           SET_renameListError(error);
           return;
         }

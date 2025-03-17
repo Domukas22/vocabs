@@ -4,6 +4,8 @@
 
 - Inside hooks like "USE_softDeleteVocabs", use multiple try/catch block for separarte functions. Deleting the vocab is one fucntion. then updating the ui is a nother separate function.
 
+- Remove all cases like this --- z_user?.id || "" ---, instead, do ----user_id: string | undefined ----
+
 5. Deleted vocabs should be sorted by delete date
 
 ///////////////////

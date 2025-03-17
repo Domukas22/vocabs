@@ -6,7 +6,7 @@ import { supabase } from "@/src/lib/supabase";
 import { FormInput_ERROR, General_ERROR } from "@/src/types/error_TYPES";
 import { List_TYPE } from "@/src/features_new/lists/types";
 import { t } from "i18next";
-import { IS_aFormInputError } from "@/src/utils";
+import { HANDLE_formInputError } from "@/src/utils";
 
 export const function_NAME = "RENAME_list";
 
@@ -75,7 +75,7 @@ export async function RENAME_list(
 
     return { updated_LIST: list };
   } catch (error: any) {
-    if (IS_aFormInputError(error)) throw error;
+    HANDLE_formInputError(error);
     throw new General_ERROR({
       function_NAME,
       message: error.message,

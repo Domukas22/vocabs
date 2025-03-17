@@ -346,7 +346,8 @@
     "listRenamed": "List renamed",
     "vocabDifficultiesOfAListReset": "Vocab difficulties reset",
     "listDefaultLangIdsUpdated": "Updated default languages",
-    "oneDefaultListLangRemoved": "Language removed"
+    "oneDefaultListLangRemoved": "Language removed",
+    "oneVocabCreated": "Vocab created"
   },
   "emptyText": {
     "noLangsSelected": "No languages selected"

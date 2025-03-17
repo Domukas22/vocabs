@@ -5,7 +5,7 @@
 import { List_TYPE } from "@/src/features_new/lists/types";
 import { supabase } from "@/src/lib/supabase";
 import { FormInput_ERROR, General_ERROR } from "@/src/types/error_TYPES";
-import { IS_aFormInputError } from "@/src/utils";
+import { HANDLE_formInputError } from "@/src/utils";
 import { t } from "i18next";
 
 export const function_NAME = "CREATE_list";
@@ -72,7 +72,7 @@ export async function CREATE_list(
 
     // Then delete the list
   } catch (error: any) {
-    if (IS_aFormInputError(error)) throw error;
+    HANDLE_formInputError(error);
 
     throw new General_ERROR({
       function_NAME,

@@ -6,7 +6,7 @@ import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import Header from "@/src/components/1_grouped/headers/regular/Header";
 import { ICON_X } from "@/src/components/1_grouped/icons/icons";
 import React, { useEffect, useMemo, useState } from "react";
-import { View } from "react-native";
+import { Keyboard, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useTranslation } from "react-i18next";
 
@@ -42,23 +42,26 @@ import { z_USE_myVocabs } from "@/src/features_new/vocabs/hooks/zustand/z_USE_my
 import { VocabTr_TYPE } from "@/src/features_new/vocabs/types";
 import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 import { z_USE_myOneList } from "@/src/features_new/lists/hooks/zustand/z_USE_myOneList/z_USE_myOneList";
+import { USE_createOneVocab } from "@/src/features_new/vocabs/hooks/actions/USE_createOneVocab/USE_createOneVocab";
+import { List_TYPE } from "@/src/features_new/lists/types";
 
 interface CreateMyVocabModal_PROPS {
   IS_open: boolean;
-
   CLOSE_modal: () => void;
 }
 
 export type CreateMyVocabData_PROPS = {
-  list: List_MODEL | undefined;
+  list: List_TYPE | undefined;
   difficulty: 1 | 2 | 3;
   description: string;
   translations: VocabTr_TYPE[];
 };
 
+// 🔴🔴 TODO --> colelct list langs after creating vocab
+
 export function CreateMyVocab_MODAL({
   IS_open,
-  CLOSE_modal: TOGGLE_vocabModal,
+  CLOSE_modal,
 }: CreateMyVocabModal_PROPS) {
   const { t } = useTranslation();
 
@@ -73,44 +76,26 @@ export function CreateMyVocab_MODAL({
   const [target_TR, SET_targetTr] = useState<VocabTr_TYPE | undefined>(
     undefined
   );
-  const { z_user } = z_USE_user();
 
-  const { CREATE_vocab, IS_creatingVocab, db_ERROR, RESET_dbError } =
-    USE_createVocab();
-  const {
-    COLLECT_langs,
-    IS_collectingLangs,
-    collectLangs_ERROR,
-    RESET_collectLangsError,
-  } = USE_collectListLangs();
-
-  const collectLangs = async (list_id: string) => {
-    const updated_LIST = await COLLECT_langs({
-      list_id,
-    });
-    if (!updated_LIST.success) {
-      console.error(updated_LIST.msg); // Log internal message for debugging.
-    }
-  };
+  const { CREATE_vocab, IS_creatingVocab, createVocab_ERROR } =
+    USE_createOneVocab();
 
   const create = async (data: CreateMyVocabData_PROPS) => {
     const { list, description, difficulty, translations } = data;
-    const result = await CREATE_vocab({
-      user: z_user,
-      list_id: list?.id,
-      difficulty,
-      description,
-      translations,
-      onSuccess: (new_VOCAB: Vocab_MODEL) => {
-        // onSuccess(new_VOCAB);
-        // collectLangs(new_VOCAB.list_id || "");
-        // reset();
+    await CREATE_vocab(
+      {
+        list_id: list?.id,
+        description,
+        trs: translations,
+        is_marked: false,
+        difficulty,
       },
-    });
-
-    if (!result.success) {
-      console.error(result.msg);
-    }
+      () => {
+        CLOSE_modal();
+        Keyboard.dismiss();
+        reset();
+      }
+    );
   };
 
   const {
@@ -127,7 +112,7 @@ export function CreateMyVocab_MODAL({
     defaultValues: {
       translations: GET_defaultTranslations(["en", "de"]) || [],
       description: "",
-      list: initial_LIST,
+      list: z_myOneList,
       difficulty: 3,
     },
     criteriaMode: "all",
@@ -140,13 +125,13 @@ export function CreateMyVocab_MODAL({
   const formValues = watch();
 
   useEffect(() => {
-    RESET_dbError();
+    // RESET_dbError();
   }, [formValues]);
 
   useEffect(() => {
     if (IS_open)
-      setValue("translations", GET_defaultTranslations("en,de") || []);
-    setValue("list", initial_LIST);
+      setValue("translations", GET_defaultTranslations(["en", "de"]) || []);
+    setValue("list", z_myOneList);
   }, [IS_open]);
 
   const [selected_LANGS, SET_selectedLangs] = useState<Language_MODEL[]>([]);
@@ -178,7 +163,7 @@ export function CreateMyVocab_MODAL({
               type="seethrough"
               iconLeft={<ICON_X big={true} rotate={true} />}
               onPress={() => {
-                TOGGLE_vocabModal();
+                CLOSE_modal();
                 reset();
               }}
               style={{ borderRadius: 100 }}
@@ -219,10 +204,11 @@ export function CreateMyVocab_MODAL({
         </KeyboardAwareScrollView>
 
         <CreateMyVocab_FOOTER
-          {...{ IS_creatingVocab, db_ERROR }}
+          {...{ IS_creatingVocab }}
+          db_ERROR={createVocab_ERROR}
           submit={handleSubmit(submit)}
           CANCEL_creation={() => {
-            TOGGLE_vocabModal();
+            CLOSE_modal();
             reset();
           }}
         />
@@ -275,7 +261,7 @@ export function CreateMyVocab_MODAL({
           title="Select a list of yours"
           submit_ACTION={(list: List_MODEL) => {
             if (list) {
-              setValue("list", list);
+              setValue("list", z_myOneList);
               clearErrors("list");
               modals.selectList.set(false);
             }

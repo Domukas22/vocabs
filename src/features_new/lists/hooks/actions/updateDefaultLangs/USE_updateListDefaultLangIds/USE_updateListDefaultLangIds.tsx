@@ -9,7 +9,7 @@ import { UPDATE_listDefaultLangIds } from "../_UPDATE_listDefaultLangIds/UPDATE_
 import { z_USE_myOneList } from "../../../zustand/z_USE_myOneList/z_USE_myOneList";
 import { z_USE_myLists } from "../../../zustand/z_USE_myLists/z_USE_myLists";
 import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
-import { USE_error, USE_loading, USE_successFeedback } from "@/src/hooks";
+import { USE_error, USE_loading, USE_celebrate } from "@/src/hooks";
 import USE_refetchStarterContent from "@/src/hooks/zustand/z_USE_myStarterContent/USE_refetchStarterContent/USE_refetchStarterContent";
 import { t } from "i18next";
 
@@ -26,7 +26,7 @@ export function USE_updateListDefaultLangIds() {
 
   const { REFETCH_myStarterContent } = USE_refetchStarterContent();
 
-  const { celebrate } = USE_successFeedback();
+  const { celebrate } = USE_celebrate();
 
   const _UPDATE_listDefaultLangIds = useCallback(
     async (

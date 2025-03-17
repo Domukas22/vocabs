@@ -26,4 +26,4 @@ export { USE_getPublicListName } from "./USE_getPublicListName/USE_getPublicList
 
 export { USE_error } from "./USE_error/USE_error";
 export { USE_loading } from "./USE_loading/USE_loading";
-export { USE_successFeedback } from "./USE_successFeedback/USE_successFeedback";
+export { USE_celebrate } from "./USE_celebrate/USE_celebrate";
