@@ -2,7 +2,6 @@
 //
 //
 
-import { raw_Vocab_TYPE } from "@/src/features_new/vocabs/types";
 import { FETCH_lists_ARGS, ListQuery_TYPE } from "../../types";
 import { BUILD_listFilterQuery } from "../BUILD_listFilterQuery/BUILD_listFilterQuery";
 import { BUILD_listPaginationQuery } from "../BUILD_listPaginationQuery/BUILD_listPaginationQuery";

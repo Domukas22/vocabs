@@ -48,15 +48,13 @@ interface CreateMyVocabModal_PROPS {
 }
 
 export type CreateMyVocabData_PROPS = {
-  list: List_TYPE | undefined;
+  list: { id: string; name: string };
   difficulty: 1 | 2 | 3;
   description: string;
   translations: VocabTr_TYPE[];
 };
 
 // 🔴🔴 TODO -->
-// -- Langs dont reset after toggling modal
-// -- Langs dont reset after adjusting default list lang ids
 // -- Collect list langs after creating vocab
 
 export function CreateMyVocab_MODAL({
@@ -74,24 +72,6 @@ export function CreateMyVocab_MODAL({
   const { CREATE_vocab, IS_creatingVocab, createVocab_ERROR } =
     USE_createOneVocab();
 
-  const create = async (data: CreateMyVocabData_PROPS) => {
-    const { list, description, difficulty, translations } = data;
-    await CREATE_vocab(
-      {
-        list_id: list?.id,
-        description,
-        trs: translations,
-        is_marked: false,
-        difficulty,
-      },
-      () => {
-        CLOSE_modal();
-        Keyboard.dismiss();
-        reset();
-      }
-    );
-  };
-
   // ---------------------------------------------------
 
   const { myOneListDefaultVocab_TRS } = USE_myOneListDefaultTrs();
@@ -108,7 +88,7 @@ export function CreateMyVocab_MODAL({
     defaultValues: {
       translations: myOneListDefaultVocab_TRS,
       description: "",
-      list: z_myOneList,
+      list: { id: z_myOneList?.id, name: z_myOneList?.name },
       difficulty: 3,
     },
     criteriaMode: "all",
@@ -116,40 +96,60 @@ export function CreateMyVocab_MODAL({
     mode: "onSubmit",
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const close = useCallback(() => {
+    reset({
+      translations: myOneListDefaultVocab_TRS, // Ensure translations reset properly
+      description: "",
+      list: { id: z_myOneList?.id, name: z_myOneList?.name },
+      difficulty: 3,
+    });
+    CLOSE_modal();
+    Keyboard.dismiss();
+  }, [reset, myOneListDefaultVocab_TRS, z_myOneList]);
+
+  useEffect(() => {
+    reset({
+      translations: myOneListDefaultVocab_TRS,
+    });
+  }, [myOneListDefaultVocab_TRS]);
+
+  const create = async (data: CreateMyVocabData_PROPS) => {
+    const { list, description, difficulty, translations } = data;
+    await CREATE_vocab(
+      {
+        list_id: list?.id,
+        description,
+        trs: translations,
+        is_marked: false,
+        difficulty,
+      },
+      () => close()
+    );
+  };
+
+  const {
+    fields: trs,
+    append,
+    remove,
+  } = useFieldArray({
     control,
     name: "translations",
   });
 
   const submit = (data: CreateMyVocabData_PROPS) => create(data);
 
-  useEffect(() => reset(), [IS_open, myOneListDefaultVocab_TRS]);
-
-  // ------------------------------------------------------
-  // Langs / translations
-
-  // useEffect(
-  //   () => setValue("translations", myOneListDefaultVocab_TRS),
-  //   [myOneListDefaultVocab_TRS]
-  // );
-
   const [target_TR, SET_targetTr] = useState<VocabTr_TYPE | undefined>();
 
   const REMOVE_lang = useCallback(
     (toRemoveLang_ID: string) => {
-      const index = fields.findIndex((tr) => tr.lang_id === toRemoveLang_ID);
+      const index = trs.findIndex((tr) => tr.lang_id === toRemoveLang_ID);
       if (index !== -1) {
         remove(index);
       }
       trigger("translations");
     },
-    [fields, remove, trigger]
+    [trs, remove, trigger]
   );
-
-  // useEffect(() => {
-  //   console.log(getValues("translations")?.map((x) => x.lang_id));
-  // }, [getValues("translations")]);
-  // -------------------------------------
 
   return (
     <Big_MODAL {...{ open: IS_open }}>
@@ -161,10 +161,7 @@ export function CreateMyVocab_MODAL({
             <Btn
               type="seethrough"
               iconLeft={<ICON_X big={true} rotate={true} />}
-              onPress={() => {
-                CLOSE_modal();
-                reset();
-              }}
+              onPress={() => close()}
               style={{ borderRadius: 100 }}
             />
           }
@@ -207,10 +204,7 @@ export function CreateMyVocab_MODAL({
           IS_creatingVocab={IS_creatingVocab}
           dbError_MSG={createVocab_ERROR?.user_MSG}
           submit={handleSubmit(submit)}
-          CANCEL_creation={() => {
-            CLOSE_modal();
-            reset();
-          }}
+          CANCEL_creation={close}
         />
 
         {/* ------------------------------ MODALS ------------------------------  */}
@@ -258,7 +252,7 @@ export function CreateMyVocab_MODAL({
           title="Select a list of yours"
           submit_ACTION={(list: List_MODEL) => {
             if (list) {
-              setValue("list", z_myOneList);
+              setValue("list", { id: list?.id, name: list?.name });
               clearErrors("list");
               modals.selectList.set(false);
             }
@@ -267,16 +261,12 @@ export function CreateMyVocab_MODAL({
             modals.selectList.set(false);
           }}
           IS_inAction={IS_creatingVocab}
-          selected_LIST={getValues("list")}
+          initial_LIST={getValues("list")}
         />
       </View>
     </Big_MODAL>
   );
 }
-
-function USE_updateFormDefaultLangsOnListUpdate({
-  onUpdate = (lang_ids: string[]) => {},
-}) {}
 
 function USE_myOneListDefaultTrs() {
   const { z_myOneList } = z_USE_myOneList();

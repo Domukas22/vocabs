@@ -56,8 +56,6 @@ export function USE_removeOneDefaultListLangId() {
           newLangs
         );
 
-        console.log("in the list: ", updated_LIST?.default_lang_ids);
-
         if (!updated_LIST)
           throw new General_ERROR({
             function_NAME,

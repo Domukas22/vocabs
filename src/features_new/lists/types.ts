@@ -33,3 +33,8 @@ export type ListFilter_PROPS = {
   difficulties: (1 | 2 | 3)[];
   byMarked: boolean;
 };
+
+export type TinyList_TYPE = {
+  id: string;
+  name: string;
+};

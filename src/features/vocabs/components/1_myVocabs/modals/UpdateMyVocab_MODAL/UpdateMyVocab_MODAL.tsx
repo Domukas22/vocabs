@@ -294,7 +294,7 @@ export function UpdateMyVocab_MODAL({
             modals.selectList.set(false);
           }}
           IS_inAction={false}
-          selected_LIST={getValues("list")}
+          initial_LIST={getValues("list")}
         />
       </View>
     </Big_MODAL>

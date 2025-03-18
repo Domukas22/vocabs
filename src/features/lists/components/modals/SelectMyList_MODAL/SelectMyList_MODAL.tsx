@@ -28,12 +28,15 @@ import { t } from "i18next";
 import List_MODEL from "@/src/db/models/List_MODEL";
 import { CreateList_MODAL } from "../CreateList_MODAL/CreateList_MODAL";
 import EmptyFlatlist_BOTTOM from "@/src/components/3_other/EmptyFlatlist_BOTTOM/EmptyFlatlist_BOTTOM";
+import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
+import USE_controlMyTinyListsFetch from "@/src/features_new/lists/hooks/fetchControl/USE_controlMyListsFetch copy/USE_controlMyTinyListsFetch";
+import { TinyList_TYPE } from "@/src/features_new/lists/types";
 
 interface SelectListModal_PROPS {
   open: boolean;
   title: string;
-  selected_LIST?: List_MODEL | undefined;
-  submit_ACTION: (list: List_MODEL) => void;
+  initial_LIST?: List_MODEL | undefined;
+  submit_ACTION: (list: TinyList_TYPE) => void;
   cancel_ACTION: () => void;
   IS_inAction: boolean;
 }
@@ -41,24 +44,30 @@ interface SelectListModal_PROPS {
 export function SelectMyList_MODAL({
   open,
   title = "INTERT MODAL TITLE",
-  selected_LIST,
+  initial_LIST,
   submit_ACTION,
   cancel_ACTION,
   IS_inAction,
 }: SelectListModal_PROPS) {
   const { t } = useTranslation();
-  const { user } = USE_auth();
-  const [SHOW_createListModal, TOGGLE_createListModal] = USE_toggle(false);
+  const { z_user } = z_USE_user();
 
-  const [selectedModal_LIST, SET_selectedModalList] = useState<
-    List_MODEL | undefined
-  >(selected_LIST);
+  const [SHOW_createListModal, TOGGLE_createListModal] = USE_toggle(false);
+  const [selected_LIST, SET_selectedList] = useState<TinyList_TYPE | undefined>(
+    initial_LIST
+  );
 
   const [search, SET_search] = useState("");
+  useEffect(() => SET_selectedList(initial_LIST), [open]);
 
-  useEffect(() => {
-    SET_selectedModalList(selected_LIST);
-  }, [open]);
+  const {
+    LOAD_more,
+    HAS_reachedEnd,
+    error,
+    loading_STATE,
+    tiny_LISTS,
+    unpaginated_COUNT,
+  } = USE_controlMyTinyListsFetch({ search });
 
   return (
     <Big_MODAL open={open}>
@@ -86,12 +95,10 @@ export function SelectMyList_MODAL({
         </Subheader>
 
         <MyLists_FLATLIST
-          user_id={user?.id || ""}
-          {...{
-            TOGGLE_createListModal,
-            selectedModal_LIST,
-            SET_selectedModalList,
-          }}
+          lists={tiny_LISTS}
+          selected_LIST={selected_LIST}
+          SELECT_list={(list) => SET_selectedList(list)}
+          TOGGLE_createListModal={TOGGLE_createListModal}
         />
 
         <TwoBtn_BLOCK
@@ -105,8 +112,7 @@ export function SelectMyList_MODAL({
                 IS_inAction ? <ActivityIndicator color="black" /> : null
               }
               onPress={() => {
-                if (!IS_inAction && selectedModal_LIST)
-                  submit_ACTION(selectedModal_LIST);
+                if (!IS_inAction && selected_LIST) submit_ACTION(selected_LIST);
               }}
               type="action"
               style={{ flex: 1, marginTop: "auto" }}
@@ -116,13 +122,8 @@ export function SelectMyList_MODAL({
         />
       </KeyboardAvoidingView>
       <CreateList_MODAL
-        user={user}
         IS_open={SHOW_createListModal}
-        currentList_NAMES={[]}
         CLOSE_modal={() => TOGGLE_createListModal()}
-        onSuccess={(list: List_MODEL) => {
-          SET_selectedModalList(list);
-        }}
       />
     </Big_MODAL>
   );
@@ -130,15 +131,15 @@ export function SelectMyList_MODAL({
 
 export default function MyLists_FLATLIST({
   TOGGLE_createListModal,
-  selectedModal_LIST,
-  SET_selectedModalList,
+  selected_LIST,
+  SELECT_list = () => {},
+  lists = [],
 }: {
+  lists: TinyList_TYPE[];
+  selected_LIST: TinyList_TYPE | undefined;
+  SELECT_list: (list: TinyList_TYPE) => void;
   TOGGLE_createListModal: () => void;
-  selectedModal_LIST: List_MODEL | undefined;
-  SET_selectedModalList: React.Dispatch<React.SetStateAction<List_MODEL>>;
 }) {
-  const { lists } = USE_observeMyList();
-
   if (lists && lists.length > 0) {
     return (
       <FlatList
@@ -153,26 +154,23 @@ export default function MyLists_FLATLIST({
             style={{ flex: 1 }}
           />
         }
-        renderItem={({ item }: { item: List_MODEL }) => (
-          <Btn
-            key={item.id + "list btn" + item.name}
-            text={item.name}
-            iconRight={
-              item.id === selectedModal_LIST?.id && (
-                <ICON_checkMark color="primary" />
-              )
-            }
-            onPress={() => {
-              SET_selectedModalList(item);
-            }}
-            type={item.id === selectedModal_LIST?.id ? "active" : "simple"}
-            style={[
-              { flex: 1, marginBottom: 8 },
-              item.id !== selectedModal_LIST?.id && { paddingRight: 40 },
-            ]}
-            text_STYLES={{ flex: 1 }}
-          />
-        )}
+        renderItem={({ item: list }: { item: TinyList_TYPE }) => {
+          const IS_selected = selected_LIST?.id === list.id;
+          return (
+            <Btn
+              key={list.id + "list btn" + list.name}
+              text={list.name}
+              iconRight={IS_selected && <ICON_checkMark color="primary" />}
+              onPress={() => SELECT_list(list)}
+              type={IS_selected ? "active" : "simple"}
+              style={[
+                { flex: 1, marginBottom: 8 },
+                IS_selected && { paddingRight: 40 },
+              ]}
+              text_STYLES={{ flex: 1 }}
+            />
+          );
+        }}
         keyExtractor={(item) => item.id + "list btn" + item.name}
         style={{ padding: 12, flex: 1 }}
       />
