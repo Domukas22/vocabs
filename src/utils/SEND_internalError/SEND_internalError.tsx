@@ -12,6 +12,7 @@ const GET_readableDateNow = () =>
 export async function SEND_internalError(error: General_ERROR) {
   console.warn("------------------------------------------------");
   console.error(`🔴 ${error.function_NAME} => ${error.message}`);
+  console.error(error.stack);
 
   // Integrate Sentry here for logging
   // Sentry.captureException(new Error(internalError_MSG));

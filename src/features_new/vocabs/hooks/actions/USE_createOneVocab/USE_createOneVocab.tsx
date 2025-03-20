@@ -63,7 +63,7 @@ export function USE_createOneVocab() {
 
         await RECOLLECT_langIds({
           fetch_TYPE: z_fetch_TYPE,
-          targetList_ID: "",
+          targetList_ID: new_VOCAB?.list_id,
           user_ID: z_user?.id || "",
         });
 
@@ -84,7 +84,7 @@ export function USE_createOneVocab() {
         SET_createVocabError(err);
         SEND_internalError(err);
       } finally {
-        SET_isCreatingVocab(true);
+        SET_isCreatingVocab(false);
       }
     },
     [IS_creatingVocab]

@@ -38,9 +38,10 @@ import { FETCH_langs } from "@/src/features/languages/functions/fetch/FETCH_lang
 import { VocabTr_TYPE } from "@/src/features_new/vocabs/types";
 import { z_USE_myOneList } from "@/src/features_new/lists/hooks/zustand/z_USE_myOneList/z_USE_myOneList";
 import { USE_createOneVocab } from "@/src/features_new/vocabs/hooks/actions/USE_createOneVocab/USE_createOneVocab";
-import { List_TYPE } from "@/src/features_new/lists/types";
+import { List_TYPE, TinyList_TYPE } from "@/src/features_new/lists/types";
 import { USE_getTargetLangs } from "@/src/features_new/languages/hooks";
 import { Lang_TYPE } from "@/src/features_new/languages/types";
+import { set } from "lodash";
 
 interface CreateMyVocabModal_PROPS {
   IS_open: boolean;
@@ -108,9 +109,12 @@ export function CreateMyVocab_MODAL({
   }, [reset, myOneListDefaultVocab_TRS, z_myOneList]);
 
   useEffect(() => {
-    reset({
-      translations: myOneListDefaultVocab_TRS,
-    });
+    setValue("list.id", z_myOneList?.id || "");
+    setValue("list.name", z_myOneList?.name || "");
+  }, [z_myOneList]);
+
+  useEffect(() => {
+    setValue("translations", myOneListDefaultVocab_TRS);
   }, [myOneListDefaultVocab_TRS]);
 
   const create = async (data: CreateMyVocabData_PROPS) => {
@@ -228,7 +232,7 @@ export function CreateMyVocab_MODAL({
         />
 
         <TrHighlights_MODAL
-          open={modals.selectList.IS_open}
+          open={modals.selectHighlights.IS_open}
           tr={target_TR}
           diff={getValues("difficulty")}
           TOGGLE_open={() => modals.selectHighlights.set(false)}
@@ -250,11 +254,12 @@ export function CreateMyVocab_MODAL({
         <SelectMyList_MODAL
           open={modals.selectList.IS_open}
           title="Select a list of yours"
-          submit_ACTION={(list: List_MODEL) => {
+          submit_ACTION={(list: TinyList_TYPE) => {
             if (list) {
               setValue("list", { id: list?.id, name: list?.name });
               clearErrors("list");
               modals.selectList.set(false);
+              ``;
             }
           }}
           cancel_ACTION={() => {

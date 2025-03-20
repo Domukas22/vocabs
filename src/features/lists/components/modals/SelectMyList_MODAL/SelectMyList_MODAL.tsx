@@ -16,6 +16,7 @@ import {
   FlatList,
   KeyboardAvoidingView,
   Platform,
+  View,
 } from "react-native";
 
 import { useTranslation } from "react-i18next";
@@ -31,11 +32,17 @@ import EmptyFlatlist_BOTTOM from "@/src/components/3_other/EmptyFlatlist_BOTTOM/
 import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 import USE_controlMyTinyListsFetch from "@/src/features_new/lists/hooks/fetchControl/USE_controlMyListsFetch copy/USE_controlMyTinyListsFetch";
 import { TinyList_TYPE } from "@/src/features_new/lists/types";
+import { Flashlist_HEADER } from "@/src/components/Flashlist_HEADER/Flashlist_HEADER";
+import { USE_debounceSearch } from "@/src/hooks";
+import { ListFlatlist_FOOTER } from "@/src/features_new/lists/components/flashlists/components/ListFlatlist_FOOTER/ListFlatlist_FOOTER";
+import Styled_FLASHLIST from "@/src/components/3_other/Styled_FLASHLIST/Styled_FLASHLIST";
+import { General_ERROR } from "@/src/types/error_TYPES";
+import { loadingState_TYPES } from "@/src/types/general_TYPES";
 
 interface SelectListModal_PROPS {
   open: boolean;
   title: string;
-  initial_LIST?: List_MODEL | undefined;
+  initial_LIST?: { id: string; name: string };
   submit_ACTION: (list: TinyList_TYPE) => void;
   cancel_ACTION: () => void;
   IS_inAction: boolean;
@@ -57,7 +64,10 @@ export function SelectMyList_MODAL({
     initial_LIST
   );
 
-  const [search, SET_search] = useState("");
+  // ------------------------------------------------------
+
+  const { search, debouncedSearch, IS_debouncing, SET_search, RESET_search } =
+    USE_debounceSearch();
   useEffect(() => SET_selectedList(initial_LIST), [open]);
 
   const {
@@ -93,17 +103,52 @@ export function SelectMyList_MODAL({
             SET_value={(val: string) => SET_search(val)}
           />
         </Subheader>
-
-        <MyLists_FLATLIST
-          lists={tiny_LISTS}
-          selected_LIST={selected_LIST}
-          SELECT_list={(list) => SET_selectedList(list)}
-          TOGGLE_createListModal={TOGGLE_createListModal}
-        />
-
+        <View style={{ flex: 1 }}>
+          <MyLists_FLATLIST
+            lists={tiny_LISTS}
+            selected_LIST={selected_LIST}
+            SELECT_list={(list) => SET_selectedList(list)}
+            TOGGLE_createListModal={TOGGLE_createListModal}
+            Header={
+              <Flashlist_HEADER
+                IS_debouncing={IS_debouncing}
+                debouncedSearch={debouncedSearch}
+                search={search}
+                loading_STATE={loading_STATE}
+                list_NAME={""}
+                unpaginated_COUNT={unpaginated_COUNT}
+                appliedFilter_COUNT={0}
+                type="my-lists"
+              />
+            }
+            Footer={
+              <ListFlatlist_FOOTER
+                LOAD_more={LOAD_more}
+                OPEN_createVocabModal={TOGGLE_createListModal}
+                RESET_search={RESET_search}
+                unpaginated_COUNT={unpaginated_COUNT}
+                HAS_reachedEnd={HAS_reachedEnd}
+                IS_debouncing={IS_debouncing}
+                loading_STATE={loading_STATE}
+                debouncedSearch={debouncedSearch}
+                error={error}
+              />
+            }
+            IS_debouncing={IS_debouncing}
+            error={error}
+            loading_STATE={loading_STATE}
+          />
+        </View>
         <TwoBtn_BLOCK
           btnLeft={
-            <Btn text={t("btn.cancel")} onPress={cancel_ACTION} type="simple" />
+            <Btn
+              text={t("btn.cancel")}
+              onPress={() => {
+                RESET_search();
+                cancel_ACTION();
+              }}
+              type="simple"
+            />
           }
           btnRight={
             <Btn
@@ -112,7 +157,10 @@ export function SelectMyList_MODAL({
                 IS_inAction ? <ActivityIndicator color="black" /> : null
               }
               onPress={() => {
-                if (!IS_inAction && selected_LIST) submit_ACTION(selected_LIST);
+                if (!IS_inAction && selected_LIST) {
+                  submit_ACTION(selected_LIST);
+                  RESET_search();
+                }
               }}
               type="action"
               style={{ flex: 1, marginTop: "auto" }}
@@ -134,26 +182,47 @@ export default function MyLists_FLATLIST({
   selected_LIST,
   SELECT_list = () => {},
   lists = [],
+  Header,
+  Footer,
+  IS_debouncing,
+  error,
+  loading_STATE,
 }: {
   lists: TinyList_TYPE[];
   selected_LIST: TinyList_TYPE | undefined;
   SELECT_list: (list: TinyList_TYPE) => void;
   TOGGLE_createListModal: () => void;
+  Header: React.JSX.Element;
+  Footer: React.JSX.Element;
+  IS_debouncing: boolean;
+  error: General_ERROR | undefined;
+  loading_STATE: loadingState_TYPES;
 }) {
   if (lists && lists.length > 0) {
     return (
-      <FlatList
-        data={lists}
-        keyboardShouldPersistTaps="always"
-        ListFooterComponent={
-          <Btn
-            iconLeft={<ICON_X color="primary" />}
-            text={t("btn.createList")}
-            onPress={TOGGLE_createListModal}
-            type="seethrough_primary"
-            style={{ flex: 1 }}
-          />
+      <Styled_FLASHLIST
+        data={
+          IS_debouncing ||
+          error ||
+          (loading_STATE !== "none" &&
+            loading_STATE !== "error" &&
+            loading_STATE !== "loading_more")
+            ? []
+            : lists || []
         }
+        gap={8}
+        keyboardShouldPersistTaps="always"
+        ListHeaderComponent={Header}
+        ListFooterComponent={Footer}
+        // ListFooterComponent={
+        //   <Btn
+        //     iconLeft={<ICON_X color="primary" />}
+        //     text={t("btn.createList")}
+        //     onPress={TOGGLE_createListModal}
+        //     type="seethrough_primary"
+        //     style={{ flex: 1 }}
+        //   />
+        // }
         renderItem={({ item: list }: { item: TinyList_TYPE }) => {
           const IS_selected = selected_LIST?.id === list.id;
           return (
@@ -163,16 +232,13 @@ export default function MyLists_FLATLIST({
               iconRight={IS_selected && <ICON_checkMark color="primary" />}
               onPress={() => SELECT_list(list)}
               type={IS_selected ? "active" : "simple"}
-              style={[
-                { flex: 1, marginBottom: 8 },
-                IS_selected && { paddingRight: 40 },
-              ]}
+              style={[IS_selected && { paddingRight: 40 }]}
               text_STYLES={{ flex: 1 }}
             />
           );
         }}
         keyExtractor={(item) => item.id + "list btn" + item.name}
-        style={{ padding: 12, flex: 1 }}
+        extraData={[lists]}
       />
     );
   }

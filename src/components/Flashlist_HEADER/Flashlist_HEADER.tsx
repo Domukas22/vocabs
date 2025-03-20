@@ -30,23 +30,22 @@ export function Flashlist_HEADER({
   appliedFilter_COUNT = 0,
 }: Flashlist_HEADER_PROPS) {
   return (
-    <View
-      style={{
-        paddingTop: 6,
-        paddingBottom: 16,
-      }}
-    >
+    <View>
       <View>
-        <Styled_TEXT type="text_20_bold">{list_NAME}</Styled_TEXT>
-        <Flashlist_LABEL
-          appliedFiltersCount={appliedFilter_COUNT}
-          type={type}
-          totalResult_COUNT={unpaginated_COUNT || 0}
-          debouncedSearch={debouncedSearch}
-          IS_debouncing={IS_debouncing}
-          loading_STATE={loading_STATE}
-          search={search}
-        />
+        {list_NAME ? (
+          <Styled_TEXT type="text_20_bold">{list_NAME}</Styled_TEXT>
+        ) : null}
+        <View style={{ paddingTop: 6, paddingBottom: 12 }}>
+          <Flashlist_LABEL
+            appliedFiltersCount={appliedFilter_COUNT}
+            type={type}
+            totalResult_COUNT={unpaginated_COUNT || 0}
+            debouncedSearch={debouncedSearch}
+            IS_debouncing={IS_debouncing}
+            loading_STATE={loading_STATE}
+            search={search}
+          />
+        </View>
       </View>
 
       {appliedFilter_COUNT > 0 && <Filter_BULLETS type={type} />}
