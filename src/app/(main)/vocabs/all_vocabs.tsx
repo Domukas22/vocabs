@@ -11,7 +11,7 @@ import {
 import { USE_debounceSearch, USE_showListHeaderTitle } from "@/src/hooks";
 
 import React from "react";
-import { CreateMyVocab_MODAL } from "@/src/features/vocabs/components/1_myVocabs/modals/CreateMyVocab_MODAL/CreateMyVocab_MODAL";
+import { CreateMyVocab_MODAL } from "@/src/features_new/vocabs/components/modals/CreateMyVocab_MODAL/CreateMyVocab_MODAL";
 import { USE_modalToggles } from "@/src/hooks/index";
 import { Portal } from "@gorhom/portal";
 import MyVocabs_FLASHLIST from "@/src/features_new/vocabs/components/flashlists/MyVocabs_FLASHLIST/MyVocabs_FLASHLIST";

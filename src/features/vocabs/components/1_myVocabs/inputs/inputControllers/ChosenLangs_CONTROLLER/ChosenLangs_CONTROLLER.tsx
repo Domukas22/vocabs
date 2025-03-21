@@ -11,7 +11,7 @@ import { ICON_flag, ICON_X } from "@/src/components/1_grouped/icons/icons";
 import TinyBtnScroll_BLOCK from "@/src/components/1_grouped/blocks/TinyBtnScroll_BLOCK/TinyBtnScroll_BLOCK";
 import { View } from "react-native";
 import { MyColors } from "@/src/constants/MyColors";
-import { CreateMyVocabData_PROPS } from "../../../modals/CreateMyVocab_MODAL/CreateMyVocab_MODAL";
+import { CreateMyVocabData_PROPS } from "../../../../../../../features_new/vocabs/components/modals/CreateMyVocab_MODAL/CreateMyVocab_MODAL";
 
 interface ChosenLangsController_PROPS {
   control: Control<CreateMyVocabData_PROPS, any>;

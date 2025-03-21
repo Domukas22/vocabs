@@ -13,8 +13,6 @@ import { useTranslation } from "react-i18next";
 import Big_MODAL from "@/src/components/1_grouped/modals/Big_MODAL/Big_MODAL";
 import { useFieldArray, useForm } from "react-hook-form";
 
-import Language_MODEL from "@/src/db/models/Language_MODEL";
-
 import { SelectMyList_MODAL } from "@/src/features/lists/components";
 import {
   GET_defaultTranslations,
@@ -22,26 +20,21 @@ import {
   HANLDE_selectedHighlights,
 } from "@/src/features/vocabs/functions";
 
-import { CreateMyVocab_FOOTER } from "../../footers/CreateMyVocab_FOOTER/CreateMyVocab_FOOTER";
+import { CreateMyVocab_FOOTER } from "../../../../../features/vocabs/components/1_myVocabs/footers/CreateMyVocab_FOOTER/CreateMyVocab_FOOTER";
 import {
   ChosenLangs_CONTROLLER,
   TrInput_CONTROLLERS,
   Description_CONTROLER,
   Difficulty_CONTROLLER,
   List_CONTROLLER,
-} from "../../inputs/inputControllers";
-import { TrHighlights_MODAL } from "../TrHighlights_MODAL/TrHighlights_MODAL";
+} from "../../../../../features/vocabs/components/1_myVocabs/inputs/inputControllers";
+import { TrHighlights_MODAL } from "../../../../../features/vocabs/components/1_myVocabs/modals/TrHighlights_MODAL/TrHighlights_MODAL";
 import { SelectMultipleLanguages_MODAL } from "@/src/features/languages/components";
 import { USE_modalToggles } from "@/src/hooks/index";
-import List_MODEL from "@/src/db/models/List_MODEL";
-import { FETCH_langs } from "@/src/features/languages/functions/fetch/FETCH_langs/FETCH_langs";
 import { VocabTr_TYPE } from "@/src/features_new/vocabs/types";
 import { z_USE_myOneList } from "@/src/features_new/lists/hooks/zustand/z_USE_myOneList/z_USE_myOneList";
-import { USE_createOneVocab } from "@/src/features_new/vocabs/hooks/actions/USE_createOneVocab/USE_createOneVocab";
-import { List_TYPE, TinyList_TYPE } from "@/src/features_new/lists/types";
-import { USE_getTargetLangs } from "@/src/features_new/languages/hooks";
-import { Lang_TYPE } from "@/src/features_new/languages/types";
-import { set } from "lodash";
+import { USE_upsertOneVocab } from "@/src/features_new/vocabs/hooks/actions/USE_upsertOneVocab/USE_upsertOneVocab";
+import { TinyList_TYPE } from "@/src/features_new/lists/types";
 
 interface CreateMyVocabModal_PROPS {
   IS_open: boolean;
@@ -70,8 +63,8 @@ export function CreateMyVocab_MODAL({
     "selectList",
   ]);
 
-  const { CREATE_vocab, IS_creatingVocab, createVocab_ERROR } =
-    USE_createOneVocab();
+  const { UPSERT_oneVocab, IS_creatingVocab, createVocab_ERROR } =
+    USE_upsertOneVocab({ type: "create" });
 
   // ---------------------------------------------------
 
@@ -108,18 +101,20 @@ export function CreateMyVocab_MODAL({
     Keyboard.dismiss();
   }, [reset, myOneListDefaultVocab_TRS, z_myOneList]);
 
+  // update list content in case list changes
   useEffect(() => {
     setValue("list.id", z_myOneList?.id || "");
     setValue("list.name", z_myOneList?.name || "");
   }, [z_myOneList]);
 
+  // update translations in case default list ids change
   useEffect(() => {
     setValue("translations", myOneListDefaultVocab_TRS);
   }, [myOneListDefaultVocab_TRS]);
 
   const create = async (data: CreateMyVocabData_PROPS) => {
     const { list, description, difficulty, translations } = data;
-    await CREATE_vocab(
+    await UPSERT_oneVocab(
       {
         list_id: list?.id,
         description,

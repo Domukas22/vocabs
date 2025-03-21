@@ -7,10 +7,9 @@ import {
   DeleteList_MODAL,
   ListSettings_MODAL,
 } from "@/src/features/lists/components";
-import { UpdateMyVocab_MODAL } from "@/src/features/vocabs/components";
 
 import { USE_debounceSearch, USE_showListHeaderTitle } from "@/src/hooks";
-import { CreateMyVocab_MODAL } from "@/src/features/vocabs/components/1_myVocabs/modals/CreateMyVocab_MODAL/CreateMyVocab_MODAL";
+import { CreateMyVocab_MODAL } from "@/src/features_new/vocabs/components/modals/CreateMyVocab_MODAL/CreateMyVocab_MODAL";
 import { Portal } from "@gorhom/portal";
 import { USE_modalToggles } from "@/src/hooks/index";
 import MyVocabs_FLASHLIST from "@/src/features_new/vocabs/components/flashlists/MyVocabs_FLASHLIST/MyVocabs_FLASHLIST";
@@ -23,6 +22,7 @@ import { MyOneList_NAV } from "@/src/features_new/lists/components/navs";
 import { Flashlist_HEADER } from "@/src/components/Flashlist_HEADER/Flashlist_HEADER";
 import { z_USE_myVocabsDisplaySettings } from "@/src/features_new/vocabs/hooks/zustand/displaySettings/z_USE_myVocabsDisplaySettings/z_USE_myVocabsDisplaySettings";
 import { DisplaySettings_MODAL } from "@/src/components/DisplaySettings_MODAL/DisplaySettings_MODAL";
+import { UpdateMyVocab_MODAL } from "@/src/features_new/vocabs/components/modals/UpdateMyVocab_MODAL/UpdateMyVocab_MODAL";
 
 export default function SingleList_PAGE() {
   const { urlParamsList_ID } = USE_listIdInParams();

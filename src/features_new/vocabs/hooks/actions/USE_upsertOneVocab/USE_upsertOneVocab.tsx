@@ -11,19 +11,29 @@ import { t } from "i18next";
 import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 import { USE_collectMyVocabsLangIds } from "../../fetchControls/USE_controlMyVocabsFetch/USE_collectMyVocabsLangIds/USE_collectMyVocabsLangIds";
 import {
-  CREATE_oneVocab,
-  CreateVocabUserContent_PROPS,
-} from "./CREATE_oneVocab/CREATE_oneVocab";
+  UPSERT_oneVocab,
+  UpsertVocabUserContent_PROPS,
+} from "./UPSERT_oneVocab/UPSERT_oneVocab";
 import { USE_celebrate } from "@/src/hooks";
 
-const function_NAME = "USE_createOneVocab";
+const function_NAME = "UPSERT_oneVocab";
 
-export function USE_createOneVocab() {
+export function USE_upsertOneVocab({
+  type = "create",
+}: {
+  type: "update" | "create";
+}) {
   const { z_user } = z_USE_user();
 
   const { REFETCH_myStarterContent } = USE_refetchStarterContent();
-  const { z_PREPEND_vocab, z_SET_error, z_SET_langIds, z_fetch_TYPE } =
-    z_USE_myVocabs();
+  const {
+    z_PREPEND_vocab,
+    z_SET_error,
+    z_SET_langIds,
+    z_fetch_TYPE,
+    z_UPDATE_vocab,
+    z_HIGHLIGHT_myVocab,
+  } = z_USE_myVocabs();
 
   const { RECOLLECT_langIds } = USE_collectMyVocabsLangIds({
     z_SET_error,
@@ -37,9 +47,9 @@ export function USE_createOneVocab() {
     General_ERROR | FormInput_ERROR | undefined
   >();
 
-  const _CREATE_vocab = useCallback(
+  const _UPSERT_oneVocab = useCallback(
     async (
-      vocab_CONTENT: CreateVocabUserContent_PROPS,
+      vocab_CONTENT: UpsertVocabUserContent_PROPS,
       onSuccess: () => void
     ) => {
       try {
@@ -49,7 +59,7 @@ export function USE_createOneVocab() {
 
         // --------------------------------------------------
         // Proceed to create vocab
-        const { new_VOCAB } = await CREATE_oneVocab({
+        const { new_VOCAB } = await UPSERT_oneVocab({
           ...vocab_CONTENT,
           user_id: z_user?.id,
         });
@@ -59,7 +69,9 @@ export function USE_createOneVocab() {
         await REFETCH_myStarterContent();
 
         // Update UI
-        z_PREPEND_vocab(new_VOCAB);
+        type === "create"
+          ? z_PREPEND_vocab(new_VOCAB)
+          : z_UPDATE_vocab(new_VOCAB);
 
         await RECOLLECT_langIds({
           fetch_TYPE: z_fetch_TYPE,
@@ -68,7 +80,13 @@ export function USE_createOneVocab() {
         });
 
         // Provide sensory user feedback
-        celebrate(t("notification.oneVocabCreated"));
+        celebrate(
+          type === "create"
+            ? t("notification.oneVocabCreated")
+            : t("notification.oneVocabUpdate")
+        );
+
+        z_HIGHLIGHT_myVocab(new_VOCAB?.id);
 
         onSuccess();
         // -----------------------------
@@ -90,5 +108,9 @@ export function USE_createOneVocab() {
     [IS_creatingVocab]
   );
 
-  return { CREATE_vocab: _CREATE_vocab, IS_creatingVocab, createVocab_ERROR };
+  return {
+    UPSERT_oneVocab: _UPSERT_oneVocab,
+    IS_creatingVocab,
+    createVocab_ERROR,
+  };
 }

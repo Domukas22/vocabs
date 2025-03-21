@@ -6,11 +6,11 @@ import { Vocab_TYPE, VocabTr_TYPE } from "@/src/features_new/vocabs/types";
 import { supabase } from "@/src/lib/supabase";
 import { FormInput_ERROR, General_ERROR } from "@/src/types/error_TYPES";
 
-export type CreateVocabDefault_PROPS = {
+export type UpsertVocabDefault_PROPS = {
   user_id: string | undefined;
 };
 
-export type CreateVocabUserContent_PROPS = {
+export type UpsertVocabUserContent_PROPS = {
   list_id: string | undefined;
   trs: VocabTr_TYPE[];
   description: string;
@@ -18,13 +18,15 @@ export type CreateVocabUserContent_PROPS = {
   difficulty: 1 | 2 | 3;
 };
 
-export type CreateVocab_PROPS = CreateVocabDefault_PROPS &
-  CreateVocabUserContent_PROPS;
+export type UpsertVocab_PROPS = UpsertVocabDefault_PROPS &
+  UpsertVocabUserContent_PROPS;
 
-export const function_NAME = "CREATE_oneVocab";
+// 🔴🔴 TODO ==> the .upsert always creates, but doesn't update
 
-export async function CREATE_oneVocab(
-  props: CreateVocab_PROPS
+export const function_NAME = "UPSERT_oneVocab";
+
+export async function UPSERT_oneVocab(
+  props: UpsertVocab_PROPS
 ): Promise<{ new_VOCAB: Vocab_TYPE }> {
   const {
     description = "",
@@ -84,7 +86,7 @@ export async function CREATE_oneVocab(
   try {
     const { data: new_VOCAB, error } = await supabase
       .from("vocabs")
-      .insert({
+      .upsert({
         saved_count: 0,
         type: "private",
         lang_ids: trs.map((tr) => tr.lang_id),

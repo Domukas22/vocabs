@@ -27,7 +27,8 @@
     "myLists": "Meine Listen",
     "publicLists": "⭐ Öffentliche Listen",
     "exploreTab": "Erkunde Listen und Vokabeln",
-    "resetListVocabDifficulties": "Schwierigkeiten zurücksetzen?"
+    "resetListVocabDifficulties": "Schwierigkeiten zurücksetzen?",
+    "updateVocab": "Vokabel bearbeiten"
   },
   "blockLabels": {
     "uiLang": "App Sprache"
@@ -346,7 +347,8 @@
     "vocabDifficultiesOfAListReset": "Vokabelschwierigkeiten zurückgesetzt",
     "listDefaultLangIdsUpdated": "Standartmäßige Sprachen aktualisiert",
     "oneDefaultListLangRemoved": "Sprache entfernt",
-    "oneVocabCreated": "Vokabel erstellt"
+    "oneVocabCreated": "Vokabel erstellt",
+    "oneVocabUpdate": "Vokabel bearbeitet"
   },
   "emptyText": {
     "noLangsSelected": "Keine Sprachen ausgewählt"

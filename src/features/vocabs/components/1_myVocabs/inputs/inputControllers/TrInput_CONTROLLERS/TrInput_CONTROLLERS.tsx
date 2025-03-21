@@ -6,7 +6,7 @@ import { MAX_TRANSLATION_LENGTH } from "@/src/constants/globalVars";
 import { TrInput_BLOCK } from "../../inputBlocks/TrInput_BLOCK/TrInput_BLOCK";
 import { Control, Controller } from "react-hook-form";
 import Language_MODEL from "@/src/db/models/Language_MODEL";
-import { CreateMyVocabData_PROPS } from "../../../modals/CreateMyVocab_MODAL/CreateMyVocab_MODAL";
+import { CreateMyVocabData_PROPS } from "../../../../../../../features_new/vocabs/components/modals/CreateMyVocab_MODAL/CreateMyVocab_MODAL";
 import { Lang_TYPE } from "@/src/features_new/languages/types";
 import { VocabTr_TYPE } from "@/src/features_new/vocabs/types";
 import { USE_getTargetLangs } from "@/src/features_new/languages/hooks";

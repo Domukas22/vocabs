@@ -28,11 +28,10 @@ export { List_CONTROLLER } from "./1_myVocabs/inputs/inputControllers/List_CONTR
 export { TrInput_CONTROLLERS } from "./1_myVocabs/inputs/inputControllers/TrInput_CONTROLLERS/TrInput_CONTROLLERS";
 
 // modals
-export { CreateMyVocab_MODAL as CreateVocab_MODAL } from "./1_myVocabs/modals/CreateMyVocab_MODAL/CreateMyVocab_MODAL";
+export { CreateMyVocab_MODAL as CreateVocab_MODAL } from "../../../features_new/vocabs/components/modals/CreateMyVocab_MODAL/CreateMyVocab_MODAL";
 export { DeleteVocab_MODAL } from "./1_myVocabs/modals/DeleteVocab_MODAL/DeleteVocab_MODAL";
 export { VocabDisplaySettings_MODAL } from "./1_myVocabs/modals/VocabDisplaySettings_MODAL/VocabDisplaySettings_MODAL";
 export { TrHighlights_MODAL } from "./1_myVocabs/modals/TrHighlights_MODAL/TrHighlights_MODAL";
-export { UpdateMyVocab_MODAL } from "./1_myVocabs/modals/UpdateMyVocab_MODAL/UpdateMyVocab_MODAL";
 
 // vocab cards
 export { Deleted_VOCAB } from "./1_myVocabs/vocabCards/Deleted_VOCAB/Deleted_VOCAB";
