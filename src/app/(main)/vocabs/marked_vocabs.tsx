@@ -2,7 +2,6 @@
 //
 //
 
-import { UpdateMyVocab_MODAL } from "@/src/features/vocabs/components";
 import { USE_debounceSearch, USE_showListHeaderTitle } from "@/src/hooks";
 import React from "react";
 import { USE_modalToggles } from "@/src/hooks/index";
@@ -21,6 +20,8 @@ import MarkedVocabs_FLASHLIST from "@/src/features_new/vocabs/components/flashli
 import { z_USE_myVocabsDisplaySettings } from "@/src/features_new/vocabs/hooks/zustand/displaySettings/z_USE_myVocabsDisplaySettings/z_USE_myVocabsDisplaySettings";
 import { z_USE_myVocabs } from "@/src/features_new/vocabs/hooks/zustand/z_USE_myVocabs/z_USE_myVocabs";
 import USE_controlMyVocabsFetch from "@/src/features_new/vocabs/hooks/fetchControls/USE_controlMyVocabsFetch/USE_controlMyVocabsFetch";
+import { UpdateMyVocab_MODAL } from "@/src/features_new/vocabs/components/modals/UpdateMyVocab_MODAL/UpdateMyVocab_MODAL";
+import { USE_vocabs } from "@/src/features_new/vocabs/hooks/USE_vocabs/USE_vocabs";
 
 export default function SavedVocabs_PAGE() {
   const { modals } = USE_modalToggles([
@@ -33,16 +34,23 @@ export default function SavedVocabs_PAGE() {
   const { search, debouncedSearch, IS_debouncing, SET_search, RESET_search } =
     USE_debounceSearch();
 
-  const { z_loading_STATE, z_unpaginated_COUNT, z_error, z_HAS_reachedEnd } =
-    z_USE_myVocabs();
+  const {
+    error,
+    vocabs,
+    lang_IDS,
+    loading_STATE,
+    highlighted_ID,
+    HAS_reachedEnd,
+    unpaginated_COUNT,
+    refetch,
+    LOAD_more,
+  } = USE_vocabs({
+    fetch_TYPE: "marked",
+    IS_private: true,
+    search,
+  });
 
   const { z_GET_activeFilterCount } = z_USE_myVocabsDisplaySettings();
-
-  // Refetches on filter changes
-  const { LOAD_more } = USE_controlMyVocabsFetch({
-    fetch_TYPE: "marked",
-    search: debouncedSearch,
-  });
 
   return (
     <>
@@ -56,14 +64,19 @@ export default function SavedVocabs_PAGE() {
         OPEN_updateVocabModal={() => modals.updateVocab.set(true)}
         IS_debouncing={IS_debouncing}
         handleScroll={handleScroll}
+        vocabs={vocabs}
+        fetch_TYPE={"marked"}
+        loading_STATE={loading_STATE}
+        error={error}
+        highlighted_ID={highlighted_ID}
         Header={
           <Flashlist_HEADER
             IS_debouncing={IS_debouncing}
             debouncedSearch={debouncedSearch}
             search={search}
-            loading_STATE={z_loading_STATE}
+            loading_STATE={loading_STATE}
             list_NAME={t("listName.savedVocabs")}
-            unpaginated_COUNT={z_unpaginated_COUNT}
+            unpaginated_COUNT={unpaginated_COUNT}
             appliedFilter_COUNT={z_GET_activeFilterCount() || 0}
             type="my-vocabs"
           />
@@ -72,12 +85,12 @@ export default function SavedVocabs_PAGE() {
           <VocabFlatlist_FOOTER
             LOAD_more={LOAD_more}
             RESET_search={RESET_search}
-            unpaginated_COUNT={z_unpaginated_COUNT}
-            HAS_reachedEnd={z_HAS_reachedEnd}
+            unpaginated_COUNT={unpaginated_COUNT}
+            HAS_reachedEnd={HAS_reachedEnd}
             IS_debouncing={IS_debouncing}
-            loading_STATE={z_loading_STATE}
+            loading_STATE={loading_STATE}
             debouncedSearch={debouncedSearch}
-            error={z_error}
+            error={error}
           />
         }
       />
@@ -86,6 +99,7 @@ export default function SavedVocabs_PAGE() {
         <ListSettings_MODAL
           IS_open={modals.listSettings.IS_open}
           CLOSE_modal={() => modals.listSettings.set(false)}
+          refetch={refetch}
         />
         <UpdateMyVocab_MODAL
           IS_open={modals.updateVocab.IS_open}

@@ -2,7 +2,7 @@
 //
 //
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   DeleteList_MODAL,
   ListSettings_MODAL,
@@ -23,6 +23,10 @@ import { Flashlist_HEADER } from "@/src/components/Flashlist_HEADER/Flashlist_HE
 import { z_USE_myVocabsDisplaySettings } from "@/src/features_new/vocabs/hooks/zustand/displaySettings/z_USE_myVocabsDisplaySettings/z_USE_myVocabsDisplaySettings";
 import { DisplaySettings_MODAL } from "@/src/components/DisplaySettings_MODAL/DisplaySettings_MODAL";
 import { UpdateMyVocab_MODAL } from "@/src/features_new/vocabs/components/modals/UpdateMyVocab_MODAL/UpdateMyVocab_MODAL";
+import { USE_vocabs } from "@/src/features_new/vocabs/hooks/USE_vocabs/USE_vocabs";
+import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
+import { Global_EVENTS } from "@/src/mitt/mitt";
+import { Vocab_TYPE } from "@/src/features_new/vocabs/types";
 
 export default function SingleList_PAGE() {
   const { urlParamsList_ID } = USE_listIdInParams();
@@ -40,16 +44,19 @@ export default function SingleList_PAGE() {
     USE_debounceSearch();
 
   const {
-    z_loading_STATE: z_myVocabsLoading_STATE,
-    z_unpaginated_COUNT: z_myVocabsUnpaginated_COUNT,
-    z_error: z_myVocabs_ERROR,
-    z_HAS_reachedEnd: z_HAVE_myVocabsReachedEnd,
-  } = z_USE_myVocabs();
-
-  // Refetches on filter changes
-  const { LOAD_more, refetch } = USE_controlMyVocabsFetch({
-    search: debouncedSearch,
+    error,
+    vocabs,
+    lang_IDS,
+    loading_STATE,
+    highlighted_ID,
+    HAS_reachedEnd,
+    unpaginated_COUNT,
+    refetch,
+    LOAD_more,
+  } = USE_vocabs({
     fetch_TYPE: "byTargetList",
+    IS_private: true,
+    search,
     targetList_ID: urlParamsList_ID,
   });
 
@@ -70,14 +77,19 @@ export default function SingleList_PAGE() {
         OPEN_updateVocabModal={() => modals.updateVocab.set(true)}
         IS_debouncing={IS_debouncing}
         handleScroll={handleScroll}
+        vocabs={vocabs}
+        fetch_TYPE={"byTargetList"}
+        loading_STATE={loading_STATE}
+        error={error}
+        highlighted_ID={highlighted_ID || ""}
         Header={
           <Flashlist_HEADER
             IS_debouncing={IS_debouncing}
             debouncedSearch={debouncedSearch}
             search={search}
-            loading_STATE={z_myVocabsLoading_STATE}
+            loading_STATE={loading_STATE}
             list_NAME={list_NAME}
-            unpaginated_COUNT={z_myVocabsUnpaginated_COUNT}
+            unpaginated_COUNT={unpaginated_COUNT}
             appliedFilter_COUNT={z_GET_activeFilterCount() || 0}
             type="my-vocabs"
           />
@@ -87,12 +99,12 @@ export default function SingleList_PAGE() {
             LOAD_more={LOAD_more}
             OPEN_createVocabModal={() => modals.createVocab.set(true)}
             RESET_search={RESET_search}
-            unpaginated_COUNT={z_myVocabsUnpaginated_COUNT}
-            HAS_reachedEnd={z_HAVE_myVocabsReachedEnd}
+            unpaginated_COUNT={unpaginated_COUNT}
+            HAS_reachedEnd={HAS_reachedEnd}
             IS_debouncing={IS_debouncing}
-            loading_STATE={z_myVocabsLoading_STATE}
+            loading_STATE={loading_STATE}
             debouncedSearch={debouncedSearch}
-            error={z_myVocabs_ERROR}
+            error={error}
           />
         }
       />

@@ -17,6 +17,7 @@ import USE_refetchAndReplaceMyListInAllLists from "@/src/features_new/lists/hook
 import { USE_updateListUpdatedAt } from "@/src/features_new/lists/hooks/actions/USE_updateListUpdatedAt/ USE_updateListUpdatedAt";
 import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 import { z_USE_markedVocabs } from "../../zustand/z_USE_markedVocabs/z_USE_markedVocabs";
+import { Global_EVENTS } from "@/src/mitt/mitt";
 
 const function_NAME = "USE_markVocab";
 
@@ -90,6 +91,7 @@ export function USE_markVocab() {
         const toast_MSG = IS_marked
           ? t("notification.vocabMarked")
           : t("notification.vocabUnmarked");
+        Global_EVENTS.emit("vocabUpdated", updated_VOCAB);
         TOAST("success", toast_MSG);
         VIBRATE("soft");
 

@@ -9,9 +9,15 @@ import { loadingState_TYPES } from "@/src/types/general_TYPES";
 import { General_ERROR } from "@/src/types/error_TYPES";
 import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 import { z_USE_myVocabsDisplaySettings } from "../zustand/displaySettings/z_USE_myVocabsDisplaySettings/z_USE_myVocabsDisplaySettings";
-import DETERMINE_loadingState from "@/src/utils/DETERMINE_loadingState/DETERMINE_loadingState";
-import { USE_handleVocabFetch } from "./USE_handleVocabFetch/USE_handleVocabFetch";
 import { USE_collectMyVocabsLangIds } from "../fetchControls/USE_controlMyVocabsFetch/USE_collectMyVocabsLangIds/USE_collectMyVocabsLangIds";
+import {
+  USE_deleteVocabInTheUi,
+  USE_createVocabInTheUi,
+  USE_getVocabUiUpdateFunctions,
+  USE_updateVocabInTheUi,
+} from "./helpers";
+import { USE_handleVocabFetch } from "./helpers/USE_handleVocabFetch/USE_handleVocabFetch";
+import { USE_highlighedId } from "@/src/hooks";
 
 export function USE_vocabs({
   search = "",
@@ -39,7 +45,7 @@ export function USE_vocabs({
   const [loading_STATE, SET_loadingState] =
     useState<loadingState_TYPES>("none");
   const [error, SET_error] = useState<General_ERROR>();
-  const [highlighted_ID, SET_highlightedID] = useState<string>("");
+  const { highlight, highlighted_ID } = USE_highlighedId();
 
   // -------------------------------------------------
 
@@ -135,6 +141,27 @@ export function USE_vocabs({
     (async () => await _FETCH_vocabs())();
   }, []);
 
+  // -------------------------------------------------
+
+  // import helper functions
+  const {
+    CREATE_oneVocabInTheUi,
+    DELETE_oneVocabInTheUi,
+    UPDATE_oneVocabInTheUi,
+  } = USE_getVocabUiUpdateFunctions({
+    vocabs,
+    SET_vocabs,
+    SET_unpaginatedCount,
+    highlight,
+  });
+
+  // multiple useEffects for each update type
+  USE_updateVocabInTheUi({ UPDATE_oneVocabInTheUi });
+  USE_createVocabInTheUi({ CREATE_oneVocabInTheUi });
+  USE_deleteVocabInTheUi({ DELETE_oneVocabInTheUi });
+
+  // -------------------------------------------------
+
   return {
     vocabs,
     lang_IDS,
@@ -147,3 +174,7 @@ export function USE_vocabs({
     refetch,
   };
 }
+
+///////////////////////////////////////////////
+///////////////////////////////////////////////
+///////////////////////////////////////////////

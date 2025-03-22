@@ -16,8 +16,8 @@ import {
   VocabFilter_PROPS,
   VocabSorting_PROPS,
 } from "@/src/features_new/vocabs/types";
-import { vocabFetch_TYPES } from "../../../functions/FETCH_vocabs/types";
-import { FETCH_vocabs } from "../../../functions/FETCH_vocabs/FETCH_vocabs";
+import { vocabFetch_TYPES } from "@/src/features_new/vocabs/functions/FETCH_vocabs/types";
+import { FETCH_vocabs } from "@/src/features_new/vocabs/functions/FETCH_vocabs/FETCH_vocabs";
 
 interface USE_handleVocabFetch_PROPS {
   SET_error: (error: General_ERROR) => void;
@@ -39,6 +39,8 @@ interface USE_fetchMyVocabs_PROPS {
 
   filters: VocabFilter_PROPS;
   sorting: VocabSorting_PROPS;
+
+  IS_private: boolean;
 }
 
 const function_NAME = "USE_handleVocabFetch";
@@ -50,7 +52,7 @@ export function USE_handleVocabFetch({
 }: USE_handleVocabFetch_PROPS) {
   const { START_newRequest } = USE_abortController();
 
-  const FETCH_myVocabs = useCallback(
+  const _FETCH_vocabs = useCallback(
     async (args: USE_fetchMyVocabs_PROPS): Promise<void> => {
       const {
         search = "",
@@ -69,6 +71,8 @@ export function USE_handleVocabFetch({
           type: "date",
           direction: "descending",
         },
+
+        IS_private = true,
       } = args;
 
       // Create new fetch request, so that we could cancel it in case
@@ -95,7 +99,7 @@ export function USE_handleVocabFetch({
           amount: VOCAB_PAGINATION,
           user_id,
           fetch_TYPE,
-          list_TYPE: "private",
+          list_TYPE: IS_private ? "private" : "public",
           excludeIds,
           list_id: targetList_ID,
           filters,
@@ -144,5 +148,5 @@ export function USE_handleVocabFetch({
     ]
   );
 
-  return { FETCH_myVocabs };
+  return { FETCH_vocabs: _FETCH_vocabs };
 }

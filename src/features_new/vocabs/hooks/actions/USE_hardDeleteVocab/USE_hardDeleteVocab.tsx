@@ -15,6 +15,7 @@ import { USE_toast } from "@/src/hooks/USE_toast/USE_toast";
 import { t } from "i18next";
 import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 import { USE_collectMyVocabsLangIds } from "../../fetchControls/USE_controlMyVocabsFetch/USE_collectMyVocabsLangIds/USE_collectMyVocabsLangIds";
+import { Global_EVENTS } from "@/src/mitt/mitt";
 
 const function_NAME = "USE_hardDeleteVocab";
 
@@ -56,7 +57,7 @@ export function USE_hardDeleteVocab() {
       await REFETCH_myStarterContent();
 
       // Update UI
-      z_REMOVE_vocabFromMyVocabsList(vocab_ID);
+      Global_EVENTS.emit("vocabDeleted", vocab_ID);
 
       await RECOLLECT_langIds({
         fetch_TYPE: "deleted",

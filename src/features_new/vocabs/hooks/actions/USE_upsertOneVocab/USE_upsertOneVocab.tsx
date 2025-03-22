@@ -17,6 +17,7 @@ import {
 import { USE_celebrate } from "@/src/hooks";
 import { USE_updateListUpdatedAt } from "@/src/features_new/lists/hooks/actions/USE_updateListUpdatedAt/ USE_updateListUpdatedAt";
 import { USE_recollectListLangIds } from "@/src/features_new/lists/hooks/actions/USE_recollectListLangIds/USE_recollectListLangIds";
+import { Global_EVENTS } from "@/src/mitt/mitt";
 
 const function_NAME = "UPSERT_oneVocab";
 
@@ -30,14 +31,8 @@ export function USE_upsertOneVocab({
   const { REFETCH_myStarterContent } = USE_refetchStarterContent();
   const { UPDATE_listUpdatedAt } = USE_updateListUpdatedAt();
 
-  const {
-    z_PREPEND_vocab,
-    z_SET_error,
-    z_SET_langIds,
-    z_fetch_TYPE,
-    z_UPDATE_vocab,
-    z_HIGHLIGHT_myVocab,
-  } = z_USE_myVocabs();
+  const { z_SET_error, z_SET_langIds, z_fetch_TYPE, z_HIGHLIGHT_myVocab } =
+    z_USE_myVocabs();
 
   const { RECOLLECT_langIds } = USE_collectMyVocabsLangIds({
     z_SET_error,
@@ -83,10 +78,10 @@ export function USE_upsertOneVocab({
         // Update starter page
         await REFETCH_myStarterContent();
 
-        // Update UI
-        type === "create"
-          ? z_PREPEND_vocab(new_VOCAB)
-          : z_UPDATE_vocab(new_VOCAB);
+        Global_EVENTS.emit(
+          type === "create" ? "vocabCreated" : "vocabUpdated",
+          new_VOCAB
+        );
 
         // Provide sensory user feedback
         celebrate(
