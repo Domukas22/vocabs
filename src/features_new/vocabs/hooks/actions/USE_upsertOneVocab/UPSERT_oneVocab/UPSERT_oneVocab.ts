@@ -11,6 +11,7 @@ export type UpsertVocabDefault_PROPS = {
 };
 
 export type UpsertVocabUserContent_PROPS = {
+  id?: string; // must be provided for update, not for creation
   list_id: string | undefined;
   trs: VocabTr_TYPE[];
   description: string;
@@ -29,6 +30,7 @@ export async function UPSERT_oneVocab(
   props: UpsertVocab_PROPS
 ): Promise<{ new_VOCAB: Vocab_TYPE }> {
   const {
+    id = undefined, // `id` is used for updates, but not required for creation
     description = "",
     is_marked,
     list_id,
@@ -87,6 +89,7 @@ export async function UPSERT_oneVocab(
     const { data: new_VOCAB, error } = await supabase
       .from("vocabs")
       .upsert({
+        id: id || undefined, // Ensure 'id' is explicitly undefined if not provided
         saved_count: 0,
         type: "private",
         lang_ids: trs.map((tr) => tr.lang_id),

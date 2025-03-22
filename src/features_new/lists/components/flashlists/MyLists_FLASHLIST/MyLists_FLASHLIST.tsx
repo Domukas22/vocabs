@@ -17,6 +17,7 @@ import { useRouter } from "expo-router";
 
 import { z_USE_myOneList } from "@/src/features_new/lists/hooks/zustand/z_USE_myOneList/z_USE_myOneList";
 import { List_CARD } from "../components/List_CARD/List_CARD";
+import { z_USE_myVocabs } from "@/src/features_new/vocabs/hooks/zustand/z_USE_myVocabs/z_USE_myVocabs";
 
 export default function MyLists_FLASHLIST({
   IS_debouncing = false,
@@ -60,6 +61,7 @@ export default function MyLists_FLASHLIST({
           list={item}
           onPress={() => {
             z_SET_myOneList(item);
+
             Keyboard.dismiss();
             router.push(`/(main)/vocabs/${item.id}`);
           }}

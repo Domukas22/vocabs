@@ -254,7 +254,6 @@ export function CreateMyVocab_MODAL({
               setValue("list", { id: list?.id, name: list?.name });
               clearErrors("list");
               modals.selectList.set(false);
-              ``;
             }
           }}
           cancel_ACTION={() => {

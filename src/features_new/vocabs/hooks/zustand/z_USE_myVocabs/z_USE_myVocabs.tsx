@@ -31,9 +31,20 @@ export type z_INSERT_fetchedVocabs_TYPE = ({
 
 export type z_INSERT_myVocabsError_TYPE = (error: General_ERROR) => void;
 export type z_SET_myVocabsCollectedLangIds_TYPE = (lang_ids: string[]) => void;
+export type z_SET_myVocabsTargetList_TYPE = (params: {
+  id: string;
+  name: string;
+}) => void;
+
 //////////////////////////////////////////////////////////////////////////////////////////
 
 type z_USE_myVocabs_PROPS = {
+  z_target_LIST:
+    | {
+        id: string;
+        name: string;
+      }
+    | undefined;
   z_vocabs: Vocab_TYPE[];
   z_printed_IDS: Set<string>;
   z_lang_IDS: string[];
@@ -59,9 +70,11 @@ type z_USE_myVocabs_PROPS = {
   z_SET_error: z_INSERT_myVocabsError_TYPE;
 
   z_SET_langIds: z_SET_myVocabsCollectedLangIds_TYPE;
+  z_SET_targetList: z_SET_myVocabsTargetList_TYPE;
 };
 
 export const z_USE_myVocabs = create<z_USE_myVocabs_PROPS>((set, get) => ({
+  z_target_LIST: undefined,
   z_vocabs: [],
   z_printed_IDS: new Set<string>(),
   z_lang_IDS: [],
@@ -153,5 +166,10 @@ export const z_USE_myVocabs = create<z_USE_myVocabs_PROPS>((set, get) => ({
   z_SET_langIds: (lang_ids = []) =>
     set({
       z_lang_IDS: lang_ids,
+    }),
+
+  z_SET_targetList: (props = { id: "", name: "" }) =>
+    set({
+      z_target_LIST: props,
     }),
 }));

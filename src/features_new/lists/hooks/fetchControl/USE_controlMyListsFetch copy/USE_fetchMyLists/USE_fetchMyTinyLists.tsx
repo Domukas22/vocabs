@@ -69,8 +69,6 @@ export function USE_fetchMyTinyLists() {
           HAS_filters: false,
         });
 
-        console.log(excluded_IDS);
-
         SET_loadingState(_loading_STATE);
         SET_error(undefined);
         if (!loadMore) SET_tinyLists([]);

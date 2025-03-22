@@ -57,7 +57,7 @@ export async function CREATE_list(
 
     const { data: new_LIST, error } = await supabase
       .from("lists")
-      .insert({ user_id, name: list_NAME })
+      .insert({ user_id, name: list_NAME, default_lang_ids: ["en", "de"] })
       .select(`*, vocabs(difficulty, is_marked), vocab_count: vocabs(count)`)
       .single();
 

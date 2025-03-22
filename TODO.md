@@ -2,6 +2,9 @@
 //
 //
 
+-- 🔴🔴 Next up: Instead of having multiple differnt zustand stores, create regular react hooks which get updated
+// with a pub-sub system upon adding new items into the Global actions zustand store.
+
 - Inside hooks like "USE_softDeleteVocabs", use multiple try/catch block for separarte functions. Deleting the vocab is one fucntion. then updating the ui is a nother separate function.
 
 - Remove all cases like this --- z_user?.id || "" ---, instead, do ----user_id: string | undefined ----

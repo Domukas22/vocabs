@@ -41,7 +41,8 @@ interface CreateMyVocabModal_PROPS {
   CLOSE_modal: () => void;
 }
 
-export type CreateMyVocabData_PROPS = {
+export type UpdateMyVocabData_PROPS = {
+  id: string;
   list: { id: string; name: string };
   difficulty: 1 | 2 | 3;
   description: string;
@@ -77,8 +78,9 @@ export function UpdateMyVocab_MODAL({
     reset,
     clearErrors,
     trigger,
-  } = useForm<CreateMyVocabData_PROPS>({
+  } = useForm<UpdateMyVocabData_PROPS>({
     defaultValues: {
+      id: z_myOneVocab?.id,
       translations: z_myOneVocab?.trs,
       description: z_myOneVocab?.description || "",
       list: z_myOneVocab?.list,
@@ -91,6 +93,7 @@ export function UpdateMyVocab_MODAL({
 
   const close = useCallback(() => {
     reset({
+      id: z_myOneVocab?.id,
       translations: z_myOneVocab?.trs || [],
       list: z_myOneVocab?.list,
       difficulty: z_myOneVocab?.difficulty || 3,
@@ -103,18 +106,20 @@ export function UpdateMyVocab_MODAL({
   // update content each time the oneVocab updates
   useEffect(() => {
     reset({
+      id: z_myOneVocab?.id,
       translations: z_myOneVocab?.trs || [],
       list: z_myOneVocab?.list,
       difficulty: z_myOneVocab?.difficulty || 3,
       description: z_myOneVocab?.description || "",
     });
-    console.log(z_myOneVocab);
   }, [z_myOneVocab]);
 
-  const create = async (data: CreateMyVocabData_PROPS) => {
-    const { list, description, difficulty, translations } = data;
+  const update = async (data: UpdateMyVocabData_PROPS) => {
+    const { id, list, description, difficulty, translations } = data;
+
     await UPSERT_oneVocab(
       {
+        id,
         list_id: list?.id,
         description,
         trs: translations,
@@ -134,7 +139,7 @@ export function UpdateMyVocab_MODAL({
     name: "translations",
   });
 
-  const submit = (data: CreateMyVocabData_PROPS) => create(data);
+  const submit = (data: UpdateMyVocabData_PROPS) => update(data);
 
   const [target_TR, SET_targetTr] = useState<VocabTr_TYPE | undefined>();
 

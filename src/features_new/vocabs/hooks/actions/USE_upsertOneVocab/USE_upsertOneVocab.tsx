@@ -15,6 +15,8 @@ import {
   UpsertVocabUserContent_PROPS,
 } from "./UPSERT_oneVocab/UPSERT_oneVocab";
 import { USE_celebrate } from "@/src/hooks";
+import { USE_updateListUpdatedAt } from "@/src/features_new/lists/hooks/actions/USE_updateListUpdatedAt/ USE_updateListUpdatedAt";
+import { USE_recollectListLangIds } from "@/src/features_new/lists/hooks/actions/USE_recollectListLangIds/USE_recollectListLangIds";
 
 const function_NAME = "UPSERT_oneVocab";
 
@@ -26,6 +28,8 @@ export function USE_upsertOneVocab({
   const { z_user } = z_USE_user();
 
   const { REFETCH_myStarterContent } = USE_refetchStarterContent();
+  const { UPDATE_listUpdatedAt } = USE_updateListUpdatedAt();
+
   const {
     z_PREPEND_vocab,
     z_SET_error,
@@ -46,6 +50,7 @@ export function USE_upsertOneVocab({
   const [createVocab_ERROR, SET_createVocabError] = useState<
     General_ERROR | FormInput_ERROR | undefined
   >();
+  const { RECOLLECT_listCollectedLangIds } = USE_recollectListLangIds();
 
   const _UPSERT_oneVocab = useCallback(
     async (
@@ -65,6 +70,16 @@ export function USE_upsertOneVocab({
         });
 
         // --------------------------------------------------
+
+        await RECOLLECT_listCollectedLangIds(new_VOCAB?.list_id);
+        // await UPDATE_listUpdatedAt(new_VOCAB?.list_id);
+
+        await RECOLLECT_langIds({
+          fetch_TYPE: z_fetch_TYPE,
+          targetList_ID: new_VOCAB?.list_id,
+          user_ID: z_user?.id || "",
+        });
+
         // Update starter page
         await REFETCH_myStarterContent();
 
@@ -72,12 +87,6 @@ export function USE_upsertOneVocab({
         type === "create"
           ? z_PREPEND_vocab(new_VOCAB)
           : z_UPDATE_vocab(new_VOCAB);
-
-        await RECOLLECT_langIds({
-          fetch_TYPE: z_fetch_TYPE,
-          targetList_ID: new_VOCAB?.list_id,
-          user_ID: z_user?.id || "",
-        });
 
         // Provide sensory user feedback
         celebrate(

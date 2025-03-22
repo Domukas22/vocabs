@@ -28,7 +28,8 @@ export function USE_softDeletevocab() {
   const { IS_inAction, ADD_currentAction, REMOVE_currentAction } =
     z_USE_currentActions();
 
-  const { UPDATE_listDefaultLangIds } = USE_recollectListLangIds();
+  const { RECOLLECT_listCollectedLangIds: UPDATE_listDefaultLangIds } =
+    USE_recollectListLangIds();
 
   const { REFETCH_myStarterContent } = USE_refetchStarterContent();
   const {
