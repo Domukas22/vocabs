@@ -7,6 +7,8 @@ import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import { ActivityIndicator } from "react-native";
 import Error_TEXT from "@/src/components/1_grouped/texts/Error_TEXT/Error_TEXT";
 
+// 🔴🔴 TODO ==> Finish this modal and implement copying function
+
 interface DeleteVocabModal_PROPS {
   error: string | null;
   IS_open: boolean;

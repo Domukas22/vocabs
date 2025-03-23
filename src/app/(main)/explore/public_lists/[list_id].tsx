@@ -4,7 +4,6 @@
 
 import React from "react";
 // import FlashlistPage_NAV from "@/src/components/1_grouped/headers/listPage/FlashlistPage_NAV";
-import { VocabFlashlist_HEADER } from "@/src/features/vocabs/components";
 import { USE_showListHeaderTitle, USE_debounceSearch } from "@/src/hooks";
 import { USE_modalToggles } from "@/src/hooks/index";
 import { z_USE_publicVocabs } from "@/src/features_new/vocabs/hooks/zustand/z_USE_publicVocabs/z_USE_publicVocabs";
@@ -18,6 +17,7 @@ import { PublicOneList_NAV } from "@/src/features_new/lists/components/navs";
 import { Flashlist_HEADER } from "@/src/components/Flashlist_HEADER/Flashlist_HEADER";
 import { z_USE_publicVocabsDisplaySettings } from "@/src/features_new/vocabs/hooks/zustand/displaySettings/z_USE_publicVocabsDisplaySettings/z_USE_publicVocabsDisplaySettings";
 import { DisplaySettings_MODAL } from "@/src/components/DisplaySettings_MODAL/DisplaySettings_MODAL";
+import { CopyListAndVocabs_MODAL } from "@/src/features/lists/components";
 
 export default function PublicListVocabs_PAGE() {
   const { urlParamsList_ID } = USE_listIdInParams();
@@ -102,16 +102,16 @@ export default function PublicListVocabs_PAGE() {
         }}
         TOGGLE_open={() => modals.saveList.set(false)}
       />
+*/}
 
-    
-      <CopyListAndVocabs_MODAL
-        error={copyList_ERROR}
-        IS_open={modals.saveList.IS_open}
-        IS_copying={IS_copyingList}
-        copy={copy}
-        RESET_error={RESET_copyListError}
-        CLOSE_modal={() => modals.saveList.set(false)}
-      /> */}
+        <CopyListAndVocabs_MODAL
+          error={copyList_ERROR}
+          IS_open={modals.saveList.IS_open}
+          IS_copying={IS_copyingList}
+          copy={copy}
+          RESET_error={RESET_copyListError}
+          CLOSE_modal={() => modals.saveList.set(false)}
+        />
       </Portal>
     </>
   );

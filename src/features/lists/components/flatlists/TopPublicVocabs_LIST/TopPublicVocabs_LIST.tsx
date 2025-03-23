@@ -13,20 +13,23 @@ import React from "react";
 import { t } from "i18next";
 import { ActivityIndicator } from "react-native";
 import { MyColors } from "@/src/constants/MyColors";
-import { z_USE_publicStarterContent } from "@/src/hooks/zustand/z_USE_publicStarterContent/z_USE_publicStarterContent";
 import { Vocab_CARD } from "@/src/features_new/vocabs/components/flashlists/_parts/Vocab_CARD/Vocab_CARD";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
+import { starterContentLoading_TYPE } from "@/src/types/general_TYPES";
+import { Vocab_TYPE } from "@/src/features_new/vocabs/types";
 
-export const Top5PublicVocabs_LIST = function Top5PublicVocabs_LIST() {
+export function TopPublicVocabs_LIST({
+  top_VOCABS = [],
+  totalVocab_COUNT = 0,
+  loading = "initial",
+}: {
+  top_VOCABS: Vocab_TYPE[];
+  totalVocab_COUNT: number;
+  loading: starterContentLoading_TYPE;
+}) {
   const router = useRouter();
 
-  const {
-    z_IS_publicStarterInitialFetchDone,
-    z_publicStarterTop5Vocabs,
-    z_publicStarterTotalVocabCount,
-  } = z_USE_publicStarterContent();
-
-  if (!z_IS_publicStarterInitialFetchDone)
+  if (loading === "initial")
     return (
       <Block styles={{ gap: 12 }}>
         <Label icon={<ActivityIndicator color={MyColors.icon_gray} />}>
@@ -45,7 +48,7 @@ export const Top5PublicVocabs_LIST = function Top5PublicVocabs_LIST() {
       <Styled_TEXT type="text_22_bold">
         {t("label.mostPopularVocabs")}
       </Styled_TEXT>
-      {z_publicStarterTop5Vocabs?.map((vocab) => (
+      {top_VOCABS?.map((vocab) => (
         <Vocab_CARD
           key={vocab?.id}
           vocab={vocab}
@@ -55,9 +58,7 @@ export const Top5PublicVocabs_LIST = function Top5PublicVocabs_LIST() {
       ))}
 
       <Btn
-        text={`${t(
-          "btn.seeAllPublicVocabs_PRE"
-        )} ${z_publicStarterTotalVocabCount} ${t(
+        text={`${t("btn.seeAllPublicVocabs_PRE")} ${totalVocab_COUNT} ${t(
           "btn.seeAllPublicVocabs_POST"
         )}`}
         iconRight={<ICON_arrow direction="right" />}
@@ -68,4 +69,4 @@ export const Top5PublicVocabs_LIST = function Top5PublicVocabs_LIST() {
       />
     </Block>
   );
-};
+}

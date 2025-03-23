@@ -55,7 +55,6 @@ export function USE_updateListDefaultLangIds() {
         List_EVENTS.emit("updated", updated_LIST);
 
         onSuccess();
-
         celebrate(t("notification.listDefaultLangIdsUpdated"));
 
         // -----------------------------

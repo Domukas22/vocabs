@@ -96,14 +96,15 @@ export const VocabBack_BTNS = React.memo(function VocabBack_BTNS({
         return (
           <PublicListVocabCardBackBtn_WRAP
             TOGGLE_vocabCard={TOGGLE_vocabCard}
-            COPY_vocab={() => {}}
+            OPEN_vocabCopyModal={OPEN_vocabCopyModal}
+            vocab={vocab}
           />
         );
       case "all":
         return (
           <PublicVocabCardBackBtn_WRAP
             vocab={vocab}
-            COPY_vocab={() => {}}
+            OPEN_vocabCopyModal={OPEN_vocabCopyModal}
             TOGGLE_vocabCard={TOGGLE_vocabCard}
           />
         );

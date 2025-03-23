@@ -8,7 +8,7 @@ import { ScrollView } from "react-native";
 import { MyRecentLists_FLATLIST } from "@/src/features/lists/components";
 import { MyColors } from "@/src/constants/MyColors";
 import { VocabPageBigMain_BTNS } from "@/src/components/2_byPage/myVocabs";
-import { USE_myStarterContent } from "@/src/hooks/USE_myStarterContent/USE_myStarterContent";
+import { USE_myStarterContent } from "@/src/hooks/starterContent/USE_myStarterContent/USE_myStarterContent";
 
 export default function Index_PAGE() {
   const {

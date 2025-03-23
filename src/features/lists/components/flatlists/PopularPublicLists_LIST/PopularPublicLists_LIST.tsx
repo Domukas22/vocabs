@@ -14,22 +14,25 @@ import { t } from "i18next";
 import { ActivityIndicator } from "react-native";
 import { MyColors } from "@/src/constants/MyColors";
 import { z_USE_publicStarterContent } from "@/src/hooks/zustand/z_USE_publicStarterContent/z_USE_publicStarterContent";
-import { MyVocab_CARD } from "@/src/features/vocabs/vocabList/Vocabs_LIST/helpers";
 import { z_USE_publicOneList } from "@/src/features_new/lists/hooks/zustand/z_USE_publicOneList/z_USE_publicOneList";
 import { List_CARD } from "@/src/features_new/lists/components/flashlists/components/List_CARD/List_CARD";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
+import { List_TYPE } from "@/src/features_new/lists/types";
+import { starterContentLoading_TYPE } from "@/src/types/general_TYPES";
 
-export const PopularPublicLists_LIST = function PopularPublicLists_LIST() {
+export function PopularPublicLists_LIST({
+  top_LISTS = [],
+  totalList_COUNT = 0,
+  loading = "initial",
+}: {
+  top_LISTS: List_TYPE[];
+  totalList_COUNT: number;
+  loading: starterContentLoading_TYPE;
+}) {
   const router = useRouter();
   const { z_SET_publicOneList } = z_USE_publicOneList();
 
-  const {
-    z_IS_publicStarterInitialFetchDone,
-    z_publicStarterTop5Lists,
-    z_publicStarterTotalListCount,
-  } = z_USE_publicStarterContent();
-
-  if (!z_IS_publicStarterInitialFetchDone)
+  if (loading === "initial")
     return (
       <Block styles={{ gap: 12 }}>
         <Label icon={<ActivityIndicator color={MyColors.icon_gray} />}>
@@ -48,7 +51,7 @@ export const PopularPublicLists_LIST = function PopularPublicLists_LIST() {
       <Styled_TEXT type="text_22_bold">
         {t("label.mostPopularLists")}
       </Styled_TEXT>
-      {z_publicStarterTop5Lists?.map((list) => (
+      {top_LISTS?.map((list) => (
         <List_CARD
           key={list.id}
           list={list}
@@ -60,9 +63,9 @@ export const PopularPublicLists_LIST = function PopularPublicLists_LIST() {
       ))}
 
       <Btn
-        text={`${t(
-          "btn.seeAllPublicLists_PRE"
-        )} ${z_publicStarterTotalListCount} ${t("btn.seeAllPublicLists_POST")}`}
+        text={`${t("btn.seeAllPublicLists_PRE")} ${totalList_COUNT} ${t(
+          "btn.seeAllPublicLists_POST"
+        )}`}
         iconRight={<ICON_arrow direction="right" />}
         text_STYLES={{ flex: 1 }}
         onPress={() => {
@@ -71,4 +74,4 @@ export const PopularPublicLists_LIST = function PopularPublicLists_LIST() {
       />
     </Block>
   );
-};
+}
