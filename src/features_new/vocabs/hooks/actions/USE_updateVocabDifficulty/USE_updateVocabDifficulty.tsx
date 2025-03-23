@@ -15,7 +15,7 @@ import USE_refetchStarterContent from "@/src/hooks/zustand/z_USE_myStarterConten
 import { USE_toast } from "@/src/hooks/USE_toast/USE_toast";
 import { t } from "i18next";
 import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
-import { Global_EVENTS } from "@/src/mitt/mitt";
+import { Vocab_EVENTS } from "@/src/mitt/mitt";
 
 const function_NAME = "USE_updateVocabDifficulty";
 
@@ -86,8 +86,10 @@ export function USE_updateVocabDifficulty() {
         // Update starter page
         await REFETCH_myStarterContent();
 
-        Global_EVENTS.emit("vocabUpdated", updated_VOCAB);
-
+        Vocab_EVENTS.emit("updated", {
+          vocab: updated_VOCAB,
+          type: "difficulty",
+        });
         // Provide sensory user feedback
         TOAST("success", t("notification.vocabDifficultyUpdated"));
         VIBRATE("soft");

@@ -2,37 +2,35 @@
 //
 //
 
-//
-//
-//
-
 import { USE_abortController } from "@/src/hooks";
-import {
-  Filters_TYPE,
-  loadingState_TYPES,
-  sortDirection_TYPE,
-} from "@/src/types/general_TYPES";
+import { loadingState_TYPES } from "@/src/types/general_TYPES";
 import { useCallback } from "react";
-import { General_ERROR } from "@/src/types/error_TYPES";
-import { VOCAB_PAGINATION } from "@/src/constants/globalVars";
 
-import {
-  z_INSERT_collectedLangIds_TYPE,
-  z_INSERT_fetchedLists_TYPE,
-  z_INSERT_myListsError_TYPE,
-  z_PREPARE_myListsForFetch_TYPE,
-} from "../../../zustand/z_USE_myLists/z_USE_myLists";
+import { General_ERROR } from "@/src/types/error_TYPES";
+
+import { VOCAB_PAGINATION } from "@/src/constants/globalVars";
 import DETERMINE_loadingState from "@/src/utils/DETERMINE_loadingState/DETERMINE_loadingState";
 import { SEND_internalError } from "@/src/utils";
-import { FETCH_lists } from "../../../../functions/fetch/FETCH_lists/FETCH_lists";
-import { listFetch_TYPES } from "../../../../functions/fetch/FETCH_lists/types";
-import { COLLECT_allListsLangIds } from "@/src/features_new/lists/functions/fetch/COLLECT_allListsLangIds/COLLECT_allListsLangIds";
-import { MyListsSorting_TYPE } from "../../../zustand/displaySettings/z_USE_myListsDisplaySettings/z_USE_myListsDisplaySettings";
+import { FETCH_vocabs } from "@/src/features_new/vocabs/functions/FETCH_vocabs/FETCH_vocabs";
 import {
+  List_TYPE,
   ListFilter_PROPS,
   ListSorting_PROPS,
 } from "@/src/features_new/lists/types";
-import { filter } from "lodash";
+import { listFetch_TYPES } from "@/src/features_new/lists/functions/fetch/FETCH_lists/types";
+import { FETCH_lists } from "@/src/features_new/lists/functions/fetch/FETCH_lists/FETCH_lists";
+import { COLLECT_allListsLangIds } from "@/src/features_new/lists/functions/fetch/COLLECT_allListsLangIds/COLLECT_allListsLangIds";
+
+interface USE_handleListsFetch_PROPS {
+  SET_error: (error: General_ERROR) => void;
+  APPEND_content: (
+    lists: List_TYPE[],
+    unpaginated_COUNT: number,
+    loadMore: boolean
+  ) => void;
+  PREPARE_fetch: (_loading_STATE: loadingState_TYPES) => void;
+  INSERT_collectedLangIds: (lang_ids: string[]) => void;
+}
 
 interface USE_fetchMyLists_PROPS {
   search: string;
@@ -48,22 +46,17 @@ interface USE_fetchMyLists_PROPS {
   IS_private: boolean;
 }
 
-const function_NAME = "USE_fetchMyLists";
+const function_NAME = "USE_handleListsFetch";
 
-export function USE_fetchMyLists({
-  z_INSERT_myListsError,
-  z_INSERT_fetchedLists,
-  z_PREPARE_myListsForFetch,
-  z_INSERT_collectedLangIds,
-}: {
-  z_INSERT_myListsError: z_INSERT_myListsError_TYPE;
-  z_INSERT_fetchedLists: z_INSERT_fetchedLists_TYPE;
-  z_PREPARE_myListsForFetch: z_PREPARE_myListsForFetch_TYPE;
-  z_INSERT_collectedLangIds: z_INSERT_collectedLangIds_TYPE;
-}) {
+export function USE_handleListsFetch({
+  SET_error,
+  APPEND_content,
+  PREPARE_fetch,
+  INSERT_collectedLangIds,
+}: USE_handleListsFetch_PROPS) {
   const { START_newRequest } = USE_abortController();
 
-  const FETCH_myLists = useCallback(
+  const _FETCH_lists = useCallback(
     async (args: USE_fetchMyLists_PROPS): Promise<void> => {
       const {
         search = "",
@@ -71,14 +64,16 @@ export function USE_fetchMyLists({
         loadMore = false,
         excludeIds = new Set(),
         fetch_TYPE = "all",
-        sorting = { type: "date", direction: "descending" },
-
         targetList_ID = "",
 
         filters = {
           byMarked: false,
           difficulties: [],
           langs: [],
+        },
+        sorting = {
+          type: "date",
+          direction: "descending",
         },
 
         IS_private = true,
@@ -99,7 +94,7 @@ export function USE_fetchMyLists({
         HAS_filters,
       });
 
-      z_PREPARE_myListsForFetch({ loadMore, loading_STATE, fetch_TYPE });
+      PREPARE_fetch(loading_STATE);
 
       try {
         // -------------------------------------------------
@@ -117,20 +112,17 @@ export function USE_fetchMyLists({
               "'COLLECT_allMyListsLangIds' returned an undefined 'collectedLang_IDs' array, although it didn't throw an error",
           });
 
-        // -------------------------------------------------
-        // Then fetch the lists themselves
         const { lists, unpaginated_COUNT } = await FETCH_lists({
           search,
           signal: newController.signal,
           amount: VOCAB_PAGINATION,
           user_id,
           fetch_TYPE,
-          list_TYPE: "private",
+          list_TYPE: IS_private ? "private" : "public",
           excludeIds,
           list_id: targetList_ID,
-          sortDirection,
-          sorting,
           filters,
+          sorting,
         });
 
         if (!lists)
@@ -147,14 +139,12 @@ export function USE_fetchMyLists({
               "'FETCH_lists' returned an 'unpaginated_COUNT' that wasn't a number, although it didn't throw an error",
           });
 
-        // -------------------------------------------------
         // Do not update the reducer state if signal has been aborted (if fetch has been canceled).
         // Also, don't throw any errors, because the only reason this will abort is if a new fetch request has started.
         if (newController.signal.aborted) return;
 
-        // -------------------------------------------------
-        z_INSERT_collectedLangIds({ lang_IDs: collectedLang_IDs });
-        z_INSERT_fetchedLists({ lists, unpaginated_COUNT, loadMore });
+        INSERT_collectedLangIds(collectedLang_IDs);
+        APPEND_content(lists, unpaginated_COUNT, loadMore);
 
         // --------------------------------------------------
       } catch (error: any) {
@@ -165,18 +155,19 @@ export function USE_fetchMyLists({
           errorToSpread: error,
         });
 
-        z_INSERT_myListsError(err);
+        SET_error(err);
         SEND_internalError(err);
       }
     },
     [
       DETERMINE_loadingState,
-      z_INSERT_myListsError,
-      z_INSERT_fetchedLists,
-      z_PREPARE_myListsForFetch,
+      SET_error,
+      APPEND_content,
+      PREPARE_fetch,
       START_newRequest,
+      INSERT_collectedLangIds,
     ]
   );
 
-  return { FETCH_myLists };
+  return { FETCH_lists: _FETCH_lists };
 }

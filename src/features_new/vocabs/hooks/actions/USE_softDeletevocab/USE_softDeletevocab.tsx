@@ -17,7 +17,7 @@ import { t } from "i18next";
 import { USE_updateListUpdatedAt } from "@/src/features_new/lists/hooks/actions/USE_updateListUpdatedAt/ USE_updateListUpdatedAt";
 import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 import { USE_collectMyVocabsLangIds } from "../../fetchControls/USE_controlMyVocabsFetch/USE_collectMyVocabsLangIds/USE_collectMyVocabsLangIds";
-import { Global_EVENTS } from "@/src/mitt/mitt";
+import { Vocab_EVENTS } from "@/src/mitt/mitt";
 
 // 🔴🔴🔴 TODO ===> Implement the "await RECOLLECT_langIds" into other functions as well
 
@@ -93,7 +93,7 @@ export function USE_softDeletevocab() {
         });
 
         // Update UI
-        Global_EVENTS.emit("vocabDeleted", vocab_ID);
+        Vocab_EVENTS.emit("deleted", { vocab_ID, list_ID });
 
         // Provide sensory user feedback
         TOAST("success", t("notification.vocabSoftDeleted"));

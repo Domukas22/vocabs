@@ -15,7 +15,8 @@ export function VALIDATE_fetchListsArgs(args: FETCH_lists_ARGS) {
     fetch_TYPE,
     list_id,
 
-    sortDirection,
+    sorting: { direction, type },
+
     amount,
     excludeIds,
     sorting,
@@ -43,8 +44,9 @@ export function VALIDATE_fetchListsArgs(args: FETCH_lists_ARGS) {
     throw err("'list_id' undefined");
 
   if (!sorting) throw err("'sorting' was undefined");
-  if (!sortDirection) throw err("'sortDirection' was undefined");
-  if (sortDirection !== "ascending" && sortDirection !== "descending")
+  if (!type) throw err("'sorting.type' was undefined");
+  if (!direction) throw err("'sorting.direction' was undefined");
+  if (direction !== "ascending" && direction !== "descending")
     err("'sortDirection' was neither ascending nor descending");
 
   if (!excludeIds) throw err("'excludeIds' was undefined");

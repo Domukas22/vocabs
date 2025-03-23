@@ -26,6 +26,11 @@ import { MyLists_NAV } from "@/src/features_new/lists/components/navs";
 import { Flashlist_HEADER } from "@/src/components/Flashlist_HEADER/Flashlist_HEADER";
 import { z_USE_myListsDisplaySettings } from "@/src/features_new/lists/hooks/zustand/displaySettings/z_USE_myListsDisplaySettings/z_USE_myListsDisplaySettings";
 import { DisplaySettings_MODAL } from "@/src/components/DisplaySettings_MODAL/DisplaySettings_MODAL";
+import { USE_lists } from "@/src/features_new/lists/hooks/USE_lists/USE_lists";
+import { listFetch_TYPES } from "@/src/features_new/lists/functions/fetch/FETCH_lists/types";
+import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
+
+const fetch_TYPE: listFetch_TYPES = "all";
 
 export default function MyLists_PAGE() {
   const { modals } = USE_modalToggles(["createList", "displaySettings"]);
@@ -33,22 +38,29 @@ export default function MyLists_PAGE() {
   const { search, debouncedSearch, IS_debouncing, SET_search, RESET_search } =
     USE_debounceSearch();
 
+  const { filters, sorting, z_GET_activeFilterCount } =
+    z_USE_myListsDisplaySettings();
+  const { z_user } = z_USE_user();
+
   const {
-    z_myListsLoading_STATE,
-    z_myListsUnpaginated_COUNT,
-    z_myLists_ERROR,
-    z_HAVE_myListsReachedEnd,
-  } = z_USE_myLists();
+    error,
+    lists,
+    lang_IDS,
+    loading_STATE,
+    highlighted_ID,
+    HAS_reachedEnd,
+    unpaginated_COUNT,
 
-  const { z_GET_activeFilterCount } = z_USE_myListsDisplaySettings();
-
-  // Refetches on filter changes
-  const { LOAD_more } = USE_controlMyListsFetch({
-    search: debouncedSearch,
-    fetch_TYPE: "all",
+    LOAD_more,
+  } = USE_lists({
+    fetch_TYPE,
+    IS_private: true,
+    search,
     targetList_ID: "",
+    filters,
+    sorting,
+    user: z_user,
   });
-
   return (
     <>
       <MyLists_NAV
@@ -62,14 +74,19 @@ export default function MyLists_PAGE() {
       <MyLists_FLASHLIST
         IS_debouncing={IS_debouncing}
         handleScroll={handleScroll}
+        lists={lists}
+        fetch_TYPE={fetch_TYPE}
+        loading_STATE={loading_STATE}
+        error={error}
+        highlighted_ID={highlighted_ID || ""}
         Header={
           <Flashlist_HEADER
             IS_debouncing={IS_debouncing}
             debouncedSearch={debouncedSearch}
             search={search}
-            loading_STATE={z_myListsLoading_STATE}
+            loading_STATE={loading_STATE}
             list_NAME={t("header.myLists")}
-            unpaginated_COUNT={z_myListsUnpaginated_COUNT}
+            unpaginated_COUNT={unpaginated_COUNT}
             appliedFilter_COUNT={z_GET_activeFilterCount() || 0}
             type="my-lists"
           />
@@ -79,12 +96,12 @@ export default function MyLists_PAGE() {
             LOAD_more={LOAD_more}
             OPEN_createVocabModal={() => modals.createList.set(true)}
             RESET_search={RESET_search}
-            unpaginated_COUNT={z_myListsUnpaginated_COUNT}
-            HAS_reachedEnd={z_HAVE_myListsReachedEnd}
+            unpaginated_COUNT={unpaginated_COUNT}
+            HAS_reachedEnd={HAS_reachedEnd}
             IS_debouncing={IS_debouncing}
-            loading_STATE={z_myListsLoading_STATE}
+            loading_STATE={loading_STATE}
             debouncedSearch={debouncedSearch}
-            error={z_myLists_ERROR}
+            error={error}
           />
         }
       />

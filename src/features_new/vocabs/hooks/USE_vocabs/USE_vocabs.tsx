@@ -3,36 +3,48 @@
 //
 
 import { useCallback, useEffect, useState } from "react";
-import { Vocab_TYPE } from "../../types";
+import { Vocab_TYPE, VocabFilter_PROPS } from "../../types";
 import { vocabFetch_TYPES } from "../../functions/FETCH_vocabs/types";
-import { loadingState_TYPES } from "@/src/types/general_TYPES";
+import {
+  loadingState_TYPES,
+  sortDirection_TYPE,
+} from "@/src/types/general_TYPES";
 import { General_ERROR } from "@/src/types/error_TYPES";
 import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
-import { z_USE_myVocabsDisplaySettings } from "../zustand/displaySettings/z_USE_myVocabsDisplaySettings/z_USE_myVocabsDisplaySettings";
-import { USE_collectMyVocabsLangIds } from "../fetchControls/USE_controlMyVocabsFetch/USE_collectMyVocabsLangIds/USE_collectMyVocabsLangIds";
 import {
-  USE_deleteVocabInTheUi,
-  USE_createVocabInTheUi,
-  USE_getVocabUiUpdateFunctions,
-  USE_updateVocabInTheUi,
-} from "./helpers";
+  myVocabsSorting_TYPE,
+  z_USE_myVocabsDisplaySettings,
+} from "../zustand/displaySettings/z_USE_myVocabsDisplaySettings/z_USE_myVocabsDisplaySettings";
+import { USE_collectMyVocabsLangIds } from "../fetchControls/USE_controlMyVocabsFetch/USE_collectMyVocabsLangIds/USE_collectMyVocabsLangIds";
 import { USE_handleVocabFetch } from "./helpers/USE_handleVocabFetch/USE_handleVocabFetch";
 import { USE_highlighedId } from "@/src/hooks";
+import { USE_handleSideEffects } from "./helpers/USE_handleSideEffects/USE_handleSideEffects";
+import { User_TYPE } from "@/src/features_new/user/types";
 
 export function USE_vocabs({
   search = "",
   fetch_TYPE = "all",
   targetList_ID = "",
   IS_private = false,
+  filters = {
+    byMarked: false,
+    difficulties: [],
+    langs: [],
+  },
+  sorting = { direction: "descending", type: "date" },
+  user,
 }: {
   search: string;
   fetch_TYPE: vocabFetch_TYPES;
   targetList_ID?: string;
   IS_private: boolean;
+  filters: VocabFilter_PROPS;
+  sorting: {
+    type: myVocabsSorting_TYPE;
+    direction: sortDirection_TYPE;
+  };
+  user: User_TYPE | undefined;
 }) {
-  const { filters, sorting } = z_USE_myVocabsDisplaySettings();
-  const { z_user } = z_USE_user();
-
   // -------------------------------------
 
   const [vocabs, SET_vocabs] = useState<Vocab_TYPE[]>([]);
@@ -61,7 +73,7 @@ export function USE_vocabs({
       SET_error(undefined);
       SET_loadingState(_loading_STATE);
     },
-    [SET_error, SET_loadingState, loading_STATE]
+    [SET_error, SET_loadingState]
   );
 
   const APPEND_vocabs = useCallback(
@@ -107,12 +119,12 @@ export function USE_vocabs({
         targetList_ID,
         filters,
         sorting,
-        user_id: z_user?.id || "",
+        user_id: user?.id || "",
         excludeIds: loadMore ? printed_IDS : new Set(),
         IS_private,
       });
     },
-    [filters, sorting, z_user?.id, printed_IDS, search]
+    [filters, sorting, user?.id, printed_IDS, search]
   );
 
   ///////////
@@ -128,7 +140,7 @@ export function USE_vocabs({
       await RECOLLECT_langIds({
         fetch_TYPE,
         targetList_ID,
-        user_ID: z_user?.id || "",
+        user_ID: user?.id || "",
       });
     })();
   }, [targetList_ID]);
@@ -143,22 +155,12 @@ export function USE_vocabs({
 
   // -------------------------------------------------
 
-  // import helper functions
-  const {
-    CREATE_oneVocabInTheUi,
-    DELETE_oneVocabInTheUi,
-    UPDATE_oneVocabInTheUi,
-  } = USE_getVocabUiUpdateFunctions({
+  USE_handleSideEffects({
     vocabs,
+    highlight,
     SET_vocabs,
     SET_unpaginatedCount,
-    highlight,
   });
-
-  // multiple useEffects for each update type
-  USE_updateVocabInTheUi({ UPDATE_oneVocabInTheUi });
-  USE_createVocabInTheUi({ CREATE_oneVocabInTheUi });
-  USE_deleteVocabInTheUi({ DELETE_oneVocabInTheUi });
 
   // -------------------------------------------------
 

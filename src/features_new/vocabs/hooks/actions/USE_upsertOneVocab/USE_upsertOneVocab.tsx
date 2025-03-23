@@ -17,7 +17,7 @@ import {
 import { USE_celebrate } from "@/src/hooks";
 import { USE_updateListUpdatedAt } from "@/src/features_new/lists/hooks/actions/USE_updateListUpdatedAt/ USE_updateListUpdatedAt";
 import { USE_recollectListLangIds } from "@/src/features_new/lists/hooks/actions/USE_recollectListLangIds/USE_recollectListLangIds";
-import { Global_EVENTS } from "@/src/mitt/mitt";
+import { Vocab_EVENTS } from "@/src/mitt/mitt";
 
 const function_NAME = "UPSERT_oneVocab";
 
@@ -78,10 +78,16 @@ export function USE_upsertOneVocab({
         // Update starter page
         await REFETCH_myStarterContent();
 
-        Global_EVENTS.emit(
-          type === "create" ? "vocabCreated" : "vocabUpdated",
-          new_VOCAB
-        );
+        if (type === "create") {
+          Vocab_EVENTS.emit("created", new_VOCAB);
+        }
+
+        if (type === "update") {
+          Vocab_EVENTS.emit("updated", {
+            vocab: new_VOCAB,
+            type: "full",
+          });
+        }
 
         // Provide sensory user feedback
         celebrate(

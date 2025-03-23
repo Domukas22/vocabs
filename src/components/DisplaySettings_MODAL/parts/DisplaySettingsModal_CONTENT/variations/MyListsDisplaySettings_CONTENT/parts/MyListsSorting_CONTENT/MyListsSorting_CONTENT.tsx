@@ -17,22 +17,25 @@ import { t } from "i18next";
 import { DisplaySettingsModalContent_SCROLLVIEW } from "../../../../parts";
 
 export function MyListsSorting_CONTENT() {
-  const { sorting, sortDirection, z_SET_sorting, z_SET_sortDirection } =
-    z_USE_myListsDisplaySettings();
+  const {
+    sorting: { direction, type },
+    z_SET_sorting,
+    z_SET_sortDirection,
+  } = z_USE_myListsDisplaySettings();
 
   return (
     <DisplaySettingsModalContent_SCROLLVIEW>
       <Block row={false}>
         <Label>{t("label.sortLists")}</Label>
         <SortByDate_BTN
-          IS_active={sorting === "date"}
+          IS_active={type === "date"}
           onPress={() => {
             z_SET_sorting("date");
             z_SET_sortDirection("descending");
           }}
         />
         <SortByVocabCount_BTN
-          IS_active={sorting === "vocab-count"}
+          IS_active={type === "vocab-count"}
           onPress={() => {
             z_SET_sorting("vocab-count");
             z_SET_sortDirection("ascending");
@@ -42,25 +45,25 @@ export function MyListsSorting_CONTENT() {
 
       <Block>
         <Label>{t("label.sortDirection")}</Label>
-        {sorting === "date" ? (
+        {type === "date" ? (
           <>
             <NewToOld_BTN
-              IS_active={sortDirection === "descending"}
+              IS_active={direction === "descending"}
               onPress={() => z_SET_sortDirection("descending")}
             />
             <OldToNew_BTN
-              IS_active={sortDirection === "ascending"}
+              IS_active={direction === "ascending"}
               onPress={() => z_SET_sortDirection("ascending")}
             />
           </>
         ) : (
           <>
             <ManyToFew_BTN
-              IS_active={sortDirection === "ascending"}
+              IS_active={direction === "ascending"}
               onPress={() => z_SET_sortDirection("ascending")}
             />
             <FewToMany_BTN
-              IS_active={sortDirection === "descending"}
+              IS_active={direction === "descending"}
               onPress={() => z_SET_sortDirection("descending")}
             />
           </>

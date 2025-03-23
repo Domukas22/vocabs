@@ -25,8 +25,9 @@ import { DisplaySettings_MODAL } from "@/src/components/DisplaySettings_MODAL/Di
 import { UpdateMyVocab_MODAL } from "@/src/features_new/vocabs/components/modals/UpdateMyVocab_MODAL/UpdateMyVocab_MODAL";
 import { USE_vocabs } from "@/src/features_new/vocabs/hooks/USE_vocabs/USE_vocabs";
 import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
-import { Global_EVENTS } from "@/src/mitt/mitt";
+import { Vocab_EVENTS } from "@/src/mitt/mitt";
 import { Vocab_TYPE } from "@/src/features_new/vocabs/types";
+import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 
 export default function SingleList_PAGE() {
   const { urlParamsList_ID } = USE_listIdInParams();
@@ -38,6 +39,10 @@ export default function SingleList_PAGE() {
     "displaySettings",
     "deleteList",
   ]);
+
+  const { filters, sorting, z_GET_activeFilterCount } =
+    z_USE_myVocabsDisplaySettings();
+  const { z_user } = z_USE_user();
 
   const { showTitle, handleScroll } = USE_showListHeaderTitle();
   const { search, debouncedSearch, IS_debouncing, SET_search, RESET_search } =
@@ -58,9 +63,10 @@ export default function SingleList_PAGE() {
     IS_private: true,
     search,
     targetList_ID: urlParamsList_ID,
+    filters,
+    sorting,
+    user: z_user,
   });
-
-  const { z_GET_activeFilterCount } = z_USE_myVocabsDisplaySettings();
 
   return (
     <>

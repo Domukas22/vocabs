@@ -2,7 +2,11 @@
 //
 //
 
-import { privateOrPublic_TYPE } from "@/src/types/general_TYPES";
+import {
+  privateOrPublic_TYPE,
+  sortDirection_TYPE,
+} from "@/src/types/general_TYPES";
+import { MyListsSorting_TYPE } from "./hooks/zustand/displaySettings/z_USE_myListsDisplaySettings/z_USE_myListsDisplaySettings";
 
 export type List_TYPE = {
   id: string;
@@ -32,6 +36,11 @@ export type ListFilter_PROPS = {
   langs: string[];
   difficulties: (1 | 2 | 3)[];
   byMarked: boolean;
+};
+
+export type ListSorting_PROPS = {
+  type: MyListsSorting_TYPE;
+  direction: sortDirection_TYPE;
 };
 
 export type TinyList_TYPE = {

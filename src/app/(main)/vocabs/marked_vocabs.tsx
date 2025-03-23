@@ -22,6 +22,7 @@ import { z_USE_myVocabs } from "@/src/features_new/vocabs/hooks/zustand/z_USE_my
 import USE_controlMyVocabsFetch from "@/src/features_new/vocabs/hooks/fetchControls/USE_controlMyVocabsFetch/USE_controlMyVocabsFetch";
 import { UpdateMyVocab_MODAL } from "@/src/features_new/vocabs/components/modals/UpdateMyVocab_MODAL/UpdateMyVocab_MODAL";
 import { USE_vocabs } from "@/src/features_new/vocabs/hooks/USE_vocabs/USE_vocabs";
+import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 
 export default function SavedVocabs_PAGE() {
   const { modals } = USE_modalToggles([
@@ -33,6 +34,9 @@ export default function SavedVocabs_PAGE() {
   const { showTitle, handleScroll } = USE_showListHeaderTitle();
   const { search, debouncedSearch, IS_debouncing, SET_search, RESET_search } =
     USE_debounceSearch();
+
+  const { filters, sorting } = z_USE_myVocabsDisplaySettings();
+  const { z_user } = z_USE_user();
 
   const {
     error,
@@ -48,6 +52,9 @@ export default function SavedVocabs_PAGE() {
     fetch_TYPE: "marked",
     IS_private: true,
     search,
+    filters,
+    sorting,
+    user: z_user,
   });
 
   const { z_GET_activeFilterCount } = z_USE_myVocabsDisplaySettings();

@@ -17,17 +17,19 @@ export function BUILD_listSortingQuery(
       function_NAME,
     });
 
-  const SHOULD_ascend = args?.sortDirection === "ascending";
+  const { direction, type } = args.sorting;
 
-  if (args?.sorting === "date") {
+  const SHOULD_ascend = direction === "ascending";
+
+  if (type === "date") {
     return query.order("created_at", { ascending: SHOULD_ascend });
   }
 
-  if (args?.sorting === "vocab-count") {
+  if (type === "vocab-count") {
     return query.order("vocab_infos->>total", { ascending: !SHOULD_ascend });
   }
 
-  if (args?.sorting === "saved-count") {
+  if (type === "saved-count") {
     return query.order("saved_count", { ascending: !SHOULD_ascend });
   }
 
