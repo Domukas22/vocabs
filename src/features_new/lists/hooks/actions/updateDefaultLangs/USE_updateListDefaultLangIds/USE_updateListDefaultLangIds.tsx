@@ -12,19 +12,14 @@ import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user"
 import { USE_error, USE_loading, USE_celebrate } from "@/src/hooks";
 import USE_refetchStarterContent from "@/src/hooks/zustand/z_USE_myStarterContent/USE_refetchStarterContent/USE_refetchStarterContent";
 import { t } from "i18next";
+import { List_EVENTS } from "@/src/mitt/mitt";
 
 const function_NAME = "USE_updateListDefaultLangIds";
 
 export function USE_updateListDefaultLangIds() {
   const { z_user } = z_USE_user();
-
-  const { z_SET_myOneList } = z_USE_myOneList();
-  const { z_UPDATE_listInMyLists } = z_USE_myLists();
-
   const { loading, SET_loading } = USE_loading();
   const { error, SET_error, RESET_error } = USE_error<General_ERROR>();
-
-  const { REFETCH_myStarterContent } = USE_refetchStarterContent();
 
   const { celebrate } = USE_celebrate();
 
@@ -57,13 +52,12 @@ export function USE_updateListDefaultLangIds() {
               "'UPDATE_listDefaultLangIds' returned undefined 'updated_LIST', although no error was thrown",
           });
 
-        z_SET_myOneList(updated_LIST);
+        List_EVENTS.emit("updated", updated_LIST);
+
         onSuccess();
 
         celebrate(t("notification.listDefaultLangIdsUpdated"));
 
-        // Update starter page
-        await REFETCH_myStarterContent();
         // -----------------------------
       } catch (error: any) {
         const err = new General_ERROR({

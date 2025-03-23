@@ -75,9 +75,6 @@ export function USE_upsertOneVocab({
           user_ID: z_user?.id || "",
         });
 
-        // Update starter page
-        await REFETCH_myStarterContent();
-
         if (type === "create") {
           Vocab_EVENTS.emit("created", new_VOCAB);
         }

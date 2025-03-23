@@ -17,6 +17,7 @@ import { t } from "i18next";
 import { TOAST_FN_TYPE, USE_toast } from "@/src/hooks/USE_toast/USE_toast";
 import { List_TYPE } from "../../../types";
 import { useToast } from "react-native-toast-notifications";
+import { List_EVENTS } from "@/src/mitt/mitt";
 
 const function_NAME = "USE_createList";
 
@@ -63,11 +64,8 @@ export function USE_createList() {
           });
 
         // --------------------------------------------------
-        // Insert new list into the UI
-        z_PREPEND_listToMyLists(new_LIST);
 
-        // Refetch starter page content
-        await REFETCH_myStarterContent();
+        List_EVENTS.emit("created", new_LIST);
 
         // Provide sensory user feedback
         TOAST("success", t("notification.listCreated"));

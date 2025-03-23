@@ -25,7 +25,7 @@ export function USE_getListName({
 
     if (type === "public") {
       if (z_IS_publicOneListFetching) return t("header.fetchingOneList");
-      if (z_publicOneList?.name) return z_publicOneList?.name; // <-- FIXED (was incorrectly using `z_myOneList?.name`)
+      if (z_publicOneList?.name) return z_publicOneList?.name;
     }
 
     return t("header.noListFound") || "No list found";

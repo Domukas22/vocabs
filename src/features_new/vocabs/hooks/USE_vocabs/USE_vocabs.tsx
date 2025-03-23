@@ -10,15 +10,11 @@ import {
   sortDirection_TYPE,
 } from "@/src/types/general_TYPES";
 import { General_ERROR } from "@/src/types/error_TYPES";
-import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
-import {
-  myVocabsSorting_TYPE,
-  z_USE_myVocabsDisplaySettings,
-} from "../zustand/displaySettings/z_USE_myVocabsDisplaySettings/z_USE_myVocabsDisplaySettings";
+import { myVocabsSorting_TYPE } from "../zustand/displaySettings/z_USE_myVocabsDisplaySettings/z_USE_myVocabsDisplaySettings";
 import { USE_collectMyVocabsLangIds } from "../fetchControls/USE_controlMyVocabsFetch/USE_collectMyVocabsLangIds/USE_collectMyVocabsLangIds";
 import { USE_handleVocabFetch } from "./helpers/USE_handleVocabFetch/USE_handleVocabFetch";
 import { USE_highlighedId } from "@/src/hooks";
-import { USE_handleSideEffects } from "./helpers/USE_handleSideEffects/USE_handleSideEffects";
+import { USE_handleMyVocabsSideEffects } from "./helpers/";
 import { User_TYPE } from "@/src/features_new/user/types";
 
 export function USE_vocabs({
@@ -155,7 +151,7 @@ export function USE_vocabs({
 
   // -------------------------------------------------
 
-  USE_handleSideEffects({
+  USE_handleMyVocabsSideEffects({
     vocabs,
     highlight,
     SET_vocabs,

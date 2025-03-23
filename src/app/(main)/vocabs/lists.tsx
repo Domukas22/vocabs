@@ -50,7 +50,6 @@ export default function MyLists_PAGE() {
     highlighted_ID,
     HAS_reachedEnd,
     unpaginated_COUNT,
-
     LOAD_more,
   } = USE_lists({
     fetch_TYPE,

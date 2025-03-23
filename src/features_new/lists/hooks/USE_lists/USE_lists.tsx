@@ -12,9 +12,14 @@ import {
 import { User_TYPE } from "@/src/features_new/user/types";
 import { useCallback, useEffect, useState } from "react";
 import { General_ERROR } from "@/src/types/error_TYPES";
-import { USE_highlighedId } from "@/src/hooks";
+import {
+  USE_appendContent,
+  USE_highlighedId,
+  USE_prepareFetch,
+} from "@/src/hooks";
 import { USE_handleListsFetch } from "./helpers/USE_handleListsFetch/USE_handleListsFetch";
 import { listFetch_TYPES } from "../../functions/fetch/FETCH_lists/types";
+import { USE_handleMyListsSideEffects } from "./helpers/USE_handleMyListsSideEffects/USE_handleMyListsSideEffects";
 
 export function USE_lists({
   search = "",
@@ -48,41 +53,16 @@ export function USE_lists({
   const [error, SET_error] = useState<General_ERROR>();
   const { highlight, highlighted_ID } = USE_highlighedId();
 
-  const PREPARE_fetch = useCallback(
-    (_loading_STATE: loadingState_TYPES) => {
-      SET_error(undefined);
-      SET_loadingState(_loading_STATE);
-    },
-    [SET_error, SET_loadingState]
-  );
+  const { PREPARE_fetch } = USE_prepareFetch({ SET_error, SET_loadingState });
 
-  // TODO ==> modularie ethis function. The exact same thing is used for the USE_vocabs hook
-  const APPEND_content = useCallback(
-    (
-      incoming_LISTS: List_TYPE[],
-      unpaginated_COUNT: number,
-      loadMore: boolean
-    ) => {
-      if (loadMore) {
-        const withNewlyAppendedVocab_ARR = [...incoming_LISTS, ...lists];
-
-        SET_lists(withNewlyAppendedVocab_ARR);
-        SET_unpaginatedCount(unpaginated_COUNT);
-        SET_printedIds(new Set(withNewlyAppendedVocab_ARR.map((x) => x.id)));
-        SET_hasReachedEnd(
-          withNewlyAppendedVocab_ARR.length >= unpaginated_COUNT
-        );
-      } else {
-        SET_lists(incoming_LISTS);
-        SET_unpaginatedCount(unpaginated_COUNT);
-        SET_printedIds(new Set(incoming_LISTS.map((x) => x.id)));
-        SET_hasReachedEnd(incoming_LISTS.length >= unpaginated_COUNT);
-      }
-
-      SET_loadingState("none");
-    },
-    []
-  );
+  const { APPEND_content } = USE_appendContent({
+    current_ARR: lists,
+    SET_content: SET_lists,
+    SET_printedIds,
+    SET_loadingState,
+    SET_hasReachedEnd,
+    SET_unpaginatedCount,
+  });
 
   /////------------------------
 
@@ -118,6 +98,13 @@ export function USE_lists({
   const LOAD_more = useCallback(async () => {
     (async () => await _FETCH_lists(true))();
   }, [_FETCH_lists]);
+
+  USE_handleMyListsSideEffects({
+    lists,
+    highlight,
+    SET_lists,
+    SET_unpaginatedCount,
+  });
 
   return {
     lists,

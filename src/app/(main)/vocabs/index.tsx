@@ -2,47 +2,39 @@
 //
 //
 
-import React, { useEffect } from "react";
-import Header from "@/src/components/1_grouped/headers/regular/Header";
-import { ActivityIndicator, ScrollView } from "react-native";
+import React from "react";
+import { ScrollView } from "react-native";
 
 import { MyRecentLists_FLATLIST } from "@/src/features/lists/components";
 import { MyColors } from "@/src/constants/MyColors";
 import { VocabPageBigMain_BTNS } from "@/src/components/2_byPage/myVocabs";
-import USE_refetchStarterContent from "@/src/hooks/zustand/z_USE_myStarterContent/USE_refetchStarterContent/USE_refetchStarterContent";
-import { z_USE_myStarterContent } from "@/src/hooks/zustand/z_USE_myStarterContent/z_USE_myStarterContent";
-import { COLLECT_allListsLangIds } from "@/src/features_new/lists/functions/fetch/COLLECT_allListsLangIds/COLLECT_allListsLangIds";
-import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
-import { USE_abortController } from "@/src/hooks";
-import { z_USE_myLists } from "@/src/features_new/lists/hooks/zustand/z_USE_myLists/z_USE_myLists";
-import { supabase } from "@/src/lib/supabase";
-import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
+import { USE_myStarterContent } from "@/src/hooks/USE_myStarterContent/USE_myStarterContent";
 
 export default function Index_PAGE() {
-  const { z_IS_myStarterContentRefetching } = z_USE_myStarterContent();
-  const { REFETCH_myStarterContent } = USE_refetchStarterContent();
-
-  useEffect(() => {
-    REFETCH_myStarterContent(true);
-  }, []);
-
-  //////////////////////////////////////////////////
-  // const { z_user } = z_USE_user();
-  // const fetch = async () => {
-  //   const { data } = await supabase
-  //     .from("lists_extended")
-  //     .select("name, vocab_infos")
-  //     .eq("user_id", z_user?.id || "")
-  //     .ilike("name", "%vocabs%")
-  //     .order("vocab_infos->>total", { ascending: false });
-
-  // };
+  const {
+    top_LISTS,
+    totalList_COUNT,
+    savedVocab_COUNT,
+    allVocab_COUNT,
+    deletedVocab_COUNT,
+    error,
+    loading,
+  } = USE_myStarterContent();
 
   return (
     <>
       <ScrollView style={{ backgroundColor: MyColors.fill_bg }}>
-        <MyRecentLists_FLATLIST />
-        <VocabPageBigMain_BTNS />
+        <MyRecentLists_FLATLIST
+          top_LISTS={top_LISTS}
+          totalList_COUNT={totalList_COUNT}
+          loading={loading}
+        />
+        <VocabPageBigMain_BTNS
+          savedVocab_COUNT={savedVocab_COUNT}
+          allVocab_COUNT={allVocab_COUNT}
+          deletedVocab_COUNT={deletedVocab_COUNT}
+          loading={loading}
+        />
       </ScrollView>
     </>
   );

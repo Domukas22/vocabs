@@ -4,7 +4,6 @@
 
 import { Vocab_TYPE } from "@/src/features_new/vocabs/types";
 import { SetStateAction, useEffect } from "react";
-import { USE_createVocabInTheUi } from "../ui/USE_createVocabInTheUi/USE_createVocabInTheUi";
 import {
   USE_deleteOneVocabFromUi,
   USE_prependOneVocabIntoUi,
@@ -12,7 +11,7 @@ import {
 } from "./helpers";
 import { vocabUpdate_TYPES, Vocab_EVENTS } from "@/src/mitt/mitt";
 
-export function USE_handleSideEffects({
+export function USE_handleMyVocabsSideEffects({
   vocabs = [],
   SET_vocabs = () => {},
   SET_unpaginatedCount = () => {},

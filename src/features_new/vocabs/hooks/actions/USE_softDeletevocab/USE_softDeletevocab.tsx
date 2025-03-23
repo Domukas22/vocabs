@@ -83,9 +83,6 @@ export function USE_softDeletevocab() {
         // Update my lists page
         await REFECH_andReplaceMyListInLists(list_ID);
 
-        // Update starter page
-        await REFETCH_myStarterContent();
-
         await RECOLLECT_langIds({
           fetch_TYPE: z_fetch_TYPE,
           targetList_ID: list_ID,

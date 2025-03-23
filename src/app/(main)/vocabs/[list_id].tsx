@@ -25,9 +25,11 @@ import { DisplaySettings_MODAL } from "@/src/components/DisplaySettings_MODAL/Di
 import { UpdateMyVocab_MODAL } from "@/src/features_new/vocabs/components/modals/UpdateMyVocab_MODAL/UpdateMyVocab_MODAL";
 import { USE_vocabs } from "@/src/features_new/vocabs/hooks/USE_vocabs/USE_vocabs";
 import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
-import { Vocab_EVENTS } from "@/src/mitt/mitt";
+import { List_EVENTS, Vocab_EVENTS } from "@/src/mitt/mitt";
 import { Vocab_TYPE } from "@/src/features_new/vocabs/types";
 import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
+import { z_USE_myOneList } from "@/src/features_new/lists/hooks/zustand/z_USE_myOneList/z_USE_myOneList";
+import { List_TYPE } from "@/src/features_new/lists/types";
 
 export default function SingleList_PAGE() {
   const { urlParamsList_ID } = USE_listIdInParams();
@@ -47,6 +49,18 @@ export default function SingleList_PAGE() {
   const { showTitle, handleScroll } = USE_showListHeaderTitle();
   const { search, debouncedSearch, IS_debouncing, SET_search, RESET_search } =
     USE_debounceSearch();
+
+  const { z_SET_myOneList, z_myOneList } = z_USE_myOneList();
+
+  useEffect(() => {
+    const handler = (list: List_TYPE) =>
+      list?.id === z_myOneList?.id ? z_SET_myOneList(list) : null;
+    List_EVENTS.on("updated", handler);
+
+    return () => {
+      List_EVENTS.off("updated", handler);
+    };
+  }, []);
 
   const {
     error,

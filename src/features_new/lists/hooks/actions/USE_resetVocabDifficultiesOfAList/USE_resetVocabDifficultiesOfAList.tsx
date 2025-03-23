@@ -12,6 +12,7 @@ import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user"
 import { t } from "i18next";
 import { USE_toast } from "@/src/hooks/USE_toast/USE_toast";
 import USE_refetchStarterContent from "@/src/hooks/zustand/z_USE_myStarterContent/USE_refetchStarterContent/USE_refetchStarterContent";
+import { List_EVENTS } from "@/src/mitt/mitt";
 
 const function_NAME = "USE_resetVocabDifficultiesOfAList";
 
@@ -68,14 +69,12 @@ export function USE_resetVocabDifficultiesOfAList() {
           });
 
         z_SET_myOneList(updated_LIST);
-        z_UPDATE_listInMyLists(updated_LIST);
+        // z_UPDATE_listInMyLists(updated_LIST);
+        List_EVENTS.emit("updated", updated_LIST);
         onSuccess();
 
         TOAST("success", t("notification.vocabDifficultiesOfAListReset"));
         VIBRATE("soft");
-
-        // Update starter page
-        await REFETCH_myStarterContent();
 
         // -----------------------------
       } catch (error: any) {

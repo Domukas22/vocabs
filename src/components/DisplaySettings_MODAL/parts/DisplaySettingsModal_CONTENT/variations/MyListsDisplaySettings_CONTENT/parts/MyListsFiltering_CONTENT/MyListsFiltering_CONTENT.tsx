@@ -16,7 +16,11 @@ import { z_USE_myLists } from "@/src/features_new/lists/hooks/zustand/z_USE_myLi
 import { t } from "i18next";
 import { DisplaySettingsModalContent_SCROLLVIEW } from "../../../../parts";
 
-export function MyListsFiltering_CONTENT() {
+export function MyListsFiltering_CONTENT({
+  lang_IDS = [],
+}: {
+  lang_IDS: string[];
+}) {
   const { z_myListsCollectedLangIds } = z_USE_myLists();
   const {
     filters,
@@ -30,7 +34,7 @@ export function MyListsFiltering_CONTENT() {
   return (
     <DisplaySettingsModalContent_SCROLLVIEW>
       <LanguagesBtn_BLOCK
-        allLang_IDs={z_myListsCollectedLangIds}
+        allLang_IDs={lang_IDS}
         activeLang_IDs={langs}
         HANDLE_lang={(lang_ID) => z_HANDLE_langFilter(lang_ID)}
         label={t("label.filterByLanguage")}

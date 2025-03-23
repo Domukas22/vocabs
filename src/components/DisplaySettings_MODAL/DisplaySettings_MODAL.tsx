@@ -27,6 +27,7 @@ interface DisplaySettingsModal_PROPS {
   TOGGLE_open: () => void;
   starting_TAB: DisplaySettingsView_TYPES;
   type: The4Fetch_TYPES;
+  lang_IDS: string[];
 }
 
 export function DisplaySettings_MODAL({
@@ -34,6 +35,7 @@ export function DisplaySettings_MODAL({
   TOGGLE_open = () => {},
   starting_TAB = "sort",
   type,
+  lang_IDS = [],
 }: DisplaySettingsModal_PROPS) {
   const { t } = useTranslation();
   const [current_TAB, SET_currentTab] =
@@ -47,7 +49,11 @@ export function DisplaySettings_MODAL({
         current_TAB={current_TAB}
         SET_currentTab={SET_currentTab}
       />
-      <DisplaySettingsModal_CONTENT current_TAB={current_TAB} type={type} />
+      <DisplaySettingsModal_CONTENT
+        current_TAB={current_TAB}
+        type={type}
+        lang_IDS={lang_IDS}
+      />
 
       <TwoBtn_BLOCK
         btnLeft={

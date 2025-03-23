@@ -44,3 +44,5 @@ export type OneFilter_TYPE =
 export type Filters_TYPE = OneFilter_TYPE[];
 
 export type delete_TYPE = "soft" | "hard";
+
+export type starterContentLoading_TYPE = "none" | "initial" | "refetching";

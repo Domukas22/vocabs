@@ -27,3 +27,6 @@ export { USE_getPublicListName } from "./USE_getPublicListName/USE_getPublicList
 export { USE_error } from "./USE_error/USE_error";
 export { USE_loading } from "./USE_loading/USE_loading";
 export { USE_celebrate } from "./USE_celebrate/USE_celebrate";
+
+export { USE_appendContent } from "./USE_appendContent/USE_appendContent";
+export { USE_prepareFetch } from "./USE_prepareFetch/USE_prepareFetch";

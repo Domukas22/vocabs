@@ -14,19 +14,41 @@ import {
 export function DisplaySettingsModal_CONTENT({
   current_TAB,
   type,
+  lang_IDS = [],
 }: {
   current_TAB: DisplaySettingsView_TYPES;
   type: The4Fetch_TYPES;
+  lang_IDS: string[];
 }) {
   switch (type) {
     case "my-lists":
-      return <MyListsDisplaySettings_CONTENT current_TAB={current_TAB} />;
+      return (
+        <MyListsDisplaySettings_CONTENT
+          current_TAB={current_TAB}
+          lang_IDS={lang_IDS}
+        />
+      );
     case "public-lists":
-      return <PublicListsDisplaySettings_CONTENT current_TAB={current_TAB} />;
+      return (
+        <PublicListsDisplaySettings_CONTENT
+          current_TAB={current_TAB}
+          lang_IDS={lang_IDS}
+        />
+      );
     case "my-vocabs":
-      return <MyVocabsDisplaySettings_CONTENT current_TAB={current_TAB} />;
+      return (
+        <MyVocabsDisplaySettings_CONTENT
+          current_TAB={current_TAB}
+          lang_IDS={lang_IDS}
+        />
+      );
     case "public-vocabs":
-      return <PublicVocabsDisplaySettings_CONTENT current_TAB={current_TAB} />;
+      return (
+        <PublicVocabsDisplaySettings_CONTENT
+          current_TAB={current_TAB}
+          lang_IDS={lang_IDS}
+        />
+      );
     default:
       return null;
   }

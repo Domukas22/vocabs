@@ -13,6 +13,7 @@ import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user"
 import USE_refetchStarterContent from "@/src/hooks/zustand/z_USE_myStarterContent/USE_refetchStarterContent/USE_refetchStarterContent";
 import { USE_toast } from "@/src/hooks/USE_toast/USE_toast";
 import { t } from "i18next";
+import { List_EVENTS } from "@/src/mitt/mitt";
 
 const function_NAME = "USE_deleteList";
 
@@ -52,10 +53,8 @@ export function USE_deleteList() {
         // Proceed to delete
         await DELETE_list(list_ID, z_user?.id || "");
 
-        // Update starter page
-        await REFETCH_myStarterContent();
-
-        z_REMOVE_listFromMyLists(list_ID);
+        // z_REMOVE_listFromMyLists(list_ID);
+        List_EVENTS.emit("deleted", list_ID);
         onSuccess();
         z_RESET_myOneList();
 

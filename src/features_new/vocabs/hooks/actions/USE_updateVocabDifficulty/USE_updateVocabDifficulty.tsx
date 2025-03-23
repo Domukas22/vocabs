@@ -83,9 +83,6 @@ export function USE_updateVocabDifficulty() {
         // Update my lists page
         await REFECH_andReplaceMyListInLists(updated_VOCAB.list_id);
 
-        // Update starter page
-        await REFETCH_myStarterContent();
-
         Vocab_EVENTS.emit("updated", {
           vocab: updated_VOCAB,
           type: "difficulty",

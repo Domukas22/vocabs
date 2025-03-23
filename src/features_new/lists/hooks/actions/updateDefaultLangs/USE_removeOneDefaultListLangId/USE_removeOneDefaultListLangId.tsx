@@ -12,6 +12,7 @@ import { USE_error, USE_loading, USE_celebrate } from "@/src/hooks";
 import USE_refetchStarterContent from "@/src/hooks/zustand/z_USE_myStarterContent/USE_refetchStarterContent/USE_refetchStarterContent";
 import { t } from "i18next";
 import { UPDATE_listDefaultLangIds } from "../_UPDATE_listDefaultLangIds/UPDATE_listDefaultLangIds";
+import { List_EVENTS } from "@/src/mitt/mitt";
 
 const function_NAME = "USE_removeOneDefaultListLangId";
 
@@ -63,13 +64,12 @@ export function USE_removeOneDefaultListLangId() {
               "'UPDATE_listDefaultLangIds' returned undefined 'updated_LIST', although no error was thrown",
           });
 
-        z_SET_myOneList(updated_LIST);
+        List_EVENTS.emit("updated", updated_LIST);
+
         onSuccess();
 
         celebrate(t("notification.oneDefaultListLangRemoved"));
 
-        // Update starter page
-        await REFETCH_myStarterContent();
         // -----------------------------
       } catch (error: any) {
         const err = new General_ERROR({

@@ -8,6 +8,7 @@ import { List_TYPE } from "../features_new/lists/types";
 
 export type vocabUpdate_TYPES = "full" | "marked" | "difficulty";
 
+// 🔴🔴 Each vocab action should contain a list_ID so we know which list to update afterwards
 type VocabEvents_PROPS = {
   created: Vocab_TYPE;
   updated: { vocab: Vocab_TYPE; type: vocabUpdate_TYPES };

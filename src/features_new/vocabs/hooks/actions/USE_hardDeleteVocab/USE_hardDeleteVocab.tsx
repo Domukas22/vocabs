@@ -53,8 +53,6 @@ export function USE_hardDeleteVocab() {
       await HARDDELETE_vocab(vocab_ID, z_user?.id || "");
 
       // --------------------------------------------------
-      // Update starter page
-      await REFETCH_myStarterContent();
 
       // Update UI
       Vocab_EVENTS.emit("deleted", { vocab_ID, list_ID: "" });

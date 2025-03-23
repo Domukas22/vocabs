@@ -80,9 +80,6 @@ export function USE_markVocab() {
         // Update my lists page
         await REFECH_andReplaceMyListInLists(list_ID);
 
-        // Update starter page
-        await REFETCH_myStarterContent();
-
         // Update UI
         z_UPDATE_vocabInMyVocabsList(updated_VOCAB);
         z_REPLACE_vocab(updated_VOCAB);

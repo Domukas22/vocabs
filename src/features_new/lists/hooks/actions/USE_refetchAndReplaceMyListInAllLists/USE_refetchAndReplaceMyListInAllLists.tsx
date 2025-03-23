@@ -10,6 +10,7 @@ import { USE_zustand } from "@/src/hooks";
 import { General_ERROR } from "@/src/types/error_TYPES";
 import { SEND_internalError } from "@/src/utils";
 import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
+import { List_EVENTS } from "@/src/mitt/mitt";
 
 const function_NAME = "USE_refetchAndReplaceMyListInAllLists";
 
@@ -38,7 +39,9 @@ export default function USE_refetchAndReplaceMyListInAllLists() {
               "'FETCH_oneList' returned undefined 'list', although no error was thrown",
           });
 
-        z_UPDATE_listInMyLists(list);
+        List_EVENTS.emit("updated", list);
+
+        // z_UPDATE_listInMyLists(list);
       } catch (error: any) {
         throw new General_ERROR({
           function_NAME: error?.function_NAME || function_NAME,

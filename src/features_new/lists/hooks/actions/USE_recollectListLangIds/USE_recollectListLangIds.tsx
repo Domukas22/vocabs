@@ -7,6 +7,7 @@ import { General_ERROR } from "@/src/types/error_TYPES";
 import { useCallback } from "react";
 import { RECOLLECT_listLangIds } from "./RECOLLECT_listLangIds/RECOLLECT_listLangIds";
 import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
+import { List_EVENTS } from "@/src/mitt/mitt";
 
 const function_NAME = "USE_recollectListCollectedLangIds";
 
@@ -33,6 +34,8 @@ export function USE_recollectListLangIds() {
           list_ID,
           z_user?.id || ""
         );
+
+        List_EVENTS.emit("updated", updated_LIST);
 
         if (!updated_LIST)
           throw new General_ERROR({
