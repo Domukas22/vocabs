@@ -9,23 +9,30 @@ import {
   USE_prependOneVocabIntoUi,
   USE_updateOneVocabInUi,
 } from "./helpers";
-import { vocabUpdate_TYPES, Vocab_EVENTS } from "@/src/mitt/mitt";
+import {
+  vocabUpdate_TYPES,
+  Vocab_EVENTS,
+  VocabEvents_PROPS,
+} from "@/src/mitt/mitt";
 
 export function USE_handleMyVocabsSideEffects({
   vocabs = [],
   SET_vocabs = () => {},
   SET_unpaginatedCount = () => {},
   highlight = () => {},
+  targetList_ID = "",
 }: {
   vocabs: Vocab_TYPE[];
   SET_vocabs: (value: SetStateAction<Vocab_TYPE[]>) => void;
   SET_unpaginatedCount: (value: SetStateAction<number>) => void;
   highlight: (id: string | undefined) => void;
+  targetList_ID: string;
 }) {
   const { PREPEND_oneVocabIntoUi } = USE_prependOneVocabIntoUi({
     highlight,
     SET_unpaginatedCount,
     SET_vocabs,
+    targetList_ID,
   });
 
   const { DELETE_oneVocabFromUi } = USE_deleteOneVocabFromUi({
@@ -53,9 +60,25 @@ export function USE_handleMyVocabsSideEffects({
   }, []);
 
   useEffect(() => {
-    const handler = (vocab: Vocab_TYPE) => PREPEND_oneVocabIntoUi(vocab);
+    const handler = (vocab: Vocab_TYPE) =>
+      PREPEND_oneVocabIntoUi(vocab, vocab?.list_id);
     Vocab_EVENTS.on("created", handler);
     return () => Vocab_EVENTS.off("created", handler);
+  }, []);
+
+  useEffect(() => {
+    const handleCopied = ({
+      vocabs,
+      targetList_ID,
+    }: VocabEvents_PROPS["copied"]) => {
+      PREPEND_oneVocabIntoUi(vocabs[0], targetList_ID);
+    };
+
+    Vocab_EVENTS.on("copied", handleCopied);
+
+    return () => {
+      Vocab_EVENTS.off("copied", handleCopied);
+    };
   }, []);
 
   useEffect(() => {

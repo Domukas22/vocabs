@@ -18,6 +18,7 @@ import { Flashlist_HEADER } from "@/src/components/Flashlist_HEADER/Flashlist_HE
 import { z_USE_publicVocabsDisplaySettings } from "@/src/features_new/vocabs/hooks/zustand/displaySettings/z_USE_publicVocabsDisplaySettings/z_USE_publicVocabsDisplaySettings";
 import { DisplaySettings_MODAL } from "@/src/components/DisplaySettings_MODAL/DisplaySettings_MODAL";
 import { CopyListAndVocabs_MODAL } from "@/src/features/lists/components";
+import { SavePublicVocabToList_MODAL } from "@/src/features/vocabs/components";
 
 export default function PublicListVocabs_PAGE() {
   const { urlParamsList_ID } = USE_listIdInParams();
@@ -90,20 +91,20 @@ export default function PublicListVocabs_PAGE() {
           open={modals.displaySettings.IS_open}
           TOGGLE_open={() => modals.displaySettings.set(false)}
         />
-        {/* <SavePublicVocabToList_MODAL
-        vocab={target_VOCAB}
-        IS_open={modals.saveList.IS_open}
-        onSuccess={() => {
-          modals.saveList.set(false);
-          toast.show(t("notifications.savedVocab"), {
-            type: "success",
-            duration: 3000,
-          });
-        }}
-        TOGGLE_open={() => modals.saveList.set(false)}
-      />
-*/}
+        <SavePublicVocabToList_MODAL
+          vocab={target_VOCAB}
+          IS_open={modals.saveList.IS_open}
+          onSuccess={() => {
+            modals.saveList.set(false);
+            toast.show(t("notifications.savedVocab"), {
+              type: "success",
+              duration: 3000,
+            });
+          }}
+          TOGGLE_open={() => modals.saveList.set(false)}
+        />
 
+        {/*
         <CopyListAndVocabs_MODAL
           error={copyList_ERROR}
           IS_open={modals.saveList.IS_open}
@@ -111,7 +112,7 @@ export default function PublicListVocabs_PAGE() {
           copy={copy}
           RESET_error={RESET_copyListError}
           CLOSE_modal={() => modals.saveList.set(false)}
-        />
+        />*/}
       </Portal>
     </>
   );

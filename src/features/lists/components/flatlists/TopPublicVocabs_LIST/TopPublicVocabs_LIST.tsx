@@ -22,10 +22,12 @@ export function TopPublicVocabs_LIST({
   top_VOCABS = [],
   totalVocab_COUNT = 0,
   loading = "initial",
+  OPEN_saveVocabModal = () => {},
 }: {
   top_VOCABS: Vocab_TYPE[];
   totalVocab_COUNT: number;
   loading: starterContentLoading_TYPE;
+  OPEN_saveVocabModal: () => void;
 }) {
   const router = useRouter();
 
@@ -54,6 +56,7 @@ export function TopPublicVocabs_LIST({
           vocab={vocab}
           list_TYPE="public"
           fetch_TYPE="all"
+          OPEN_vocabCopyModal={OPEN_saveVocabModal}
         />
       ))}
 

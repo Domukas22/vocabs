@@ -156,6 +156,7 @@ export function USE_vocabs({
     highlight,
     SET_vocabs,
     SET_unpaginatedCount,
+    targetList_ID,
   });
 
   // -------------------------------------------------

@@ -348,7 +348,8 @@
     "listDefaultLangIdsUpdated": "Standartmäßige Sprachen aktualisiert",
     "oneDefaultListLangRemoved": "Sprache entfernt",
     "oneVocabCreated": "Vokabel erstellt",
-    "oneVocabUpdate": "Vokabel bearbeitet"
+    "oneVocabUpdate": "Vokabel bearbeitet",
+    "oneVocabSaved": "Vokabel gespeichert"
   },
   "emptyText": {
     "noLangsSelected": "Keine Sprachen ausgewählt"

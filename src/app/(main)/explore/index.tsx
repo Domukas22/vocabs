@@ -18,6 +18,14 @@ import { PopularPublicLists_LIST } from "@/src/features/lists/components/flatlis
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import { USE_publicStarterContent } from "@/src/hooks/starterContent/USE_publicStarterContent/USE_publicStarterContent";
 import { starterContentLoading_TYPE } from "@/src/types/general_TYPES";
+import { Portal } from "@gorhom/portal";
+import { SaveVocab_MODAL } from "@/src/features_new/vocabs/components/modals/SaveVocab_MODAL/SaveVocab_MODAL";
+import { USE_modalToggles } from "@/src/hooks";
+import {
+  CreateList_MODAL,
+  SelectMyList_MODAL,
+} from "@/src/features/lists/components";
+import { z_USE_myTargetSaveList } from "@/src/features_new/lists/hooks/zustand/z_USE_myTargetSaveList/z_USE_myTargetSaveList";
 
 export default function Explore_PAGE() {
   const {
@@ -28,6 +36,10 @@ export default function Explore_PAGE() {
     error,
     loading,
   } = USE_publicStarterContent();
+
+  const { modals } = USE_modalToggles(["saveVocab", "selectList"]);
+  const { z_myTargetSave_LIST } = z_USE_myTargetSaveList();
+
   return (
     <>
       <ScrollView style={{ backgroundColor: MyColors.fill_bg }}>
@@ -41,6 +53,7 @@ export default function Explore_PAGE() {
             top_VOCABS={top_VOCABS}
             totalVocab_COUNT={totalVocab_COUNT}
             loading={loading}
+            OPEN_saveVocabModal={() => modals.saveVocab.set(true)}
           />
         </View>
         <View
@@ -55,6 +68,28 @@ export default function Explore_PAGE() {
           />
         </View>
       </ScrollView>
+
+      <Portal>
+        <SaveVocab_MODAL
+          IS_open={modals.saveVocab.IS_open}
+          CLOSE_modal={() => modals.saveVocab.set(false)}
+        />
+        {/* <SelectMyList_MODAL
+                open={modals.chooseList.IS_open}
+                title="Choose a list"
+                submit_ACTION={(list: TinyList_TYPE) => {
+                  if (list) {
+                    setValue("list", { id: list?.id, name: list?.name });
+                    clearErrors("list");
+                 
+                    modals.selectList.set(false);
+                  }
+                }}
+                cancel_ACTION={() => modals.selectList.set(false)}
+                IS_inAction={false}
+                initial_LIST={z_myTargetSave_LIST}
+              /> */}
+      </Portal>
     </>
   );
 }

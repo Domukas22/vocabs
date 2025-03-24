@@ -15,6 +15,7 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 import { BlurView } from "expo-blur";
+import Error_TEXT from "../../texts/Error_TEXT/Error_TEXT";
 
 interface SimpleModal_PROPS {
   children?: React.ReactNode;
@@ -25,6 +26,8 @@ interface SimpleModal_PROPS {
   btnRight?: React.ReactNode;
   btnUpper?: React.ReactNode;
   z?: number;
+  error_MSG?: string;
+  modals?: React.ReactNode;
 }
 
 export default function Small_MODAL(props: SimpleModal_PROPS) {
@@ -37,6 +40,8 @@ export default function Small_MODAL(props: SimpleModal_PROPS) {
     btnRight,
     btnUpper,
     z,
+    error_MSG,
+    modals,
   } = props;
 
   return (
@@ -88,6 +93,7 @@ export default function Small_MODAL(props: SimpleModal_PROPS) {
                 </Styled_TEXT>
               )}
 
+              {error_MSG && <Error_TEXT text={error_MSG} />}
               {btnUpper && btnUpper}
               <View
                 style={{
@@ -102,6 +108,7 @@ export default function Small_MODAL(props: SimpleModal_PROPS) {
           </View>
         </KeyboardAvoidingView>
       </BlurView>
+      {modals && modals}
     </View>
   );
 }

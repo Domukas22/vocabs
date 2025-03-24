@@ -52,7 +52,6 @@ export { PublicVocabs_HEADER } from "./2_exploreVocabs/headers/PublicVocab_HEADE
 // modals
 export { PublicVocabDisplaySettings_MODAL } from "./2_exploreVocabs/modals/PublicVocabDisplaySettings_MODAL/PublicVocabDisplaySettings_MODAL";
 export { ReviveDeletedVocab_MODAL } from "./2_exploreVocabs/modals/ReviveDeletedVocab_MODAL/ReviveDeletedVocab_MODAL";
-export { SavePublicVocabToList_MODAL } from "./2_exploreVocabs/modals/SavePublicVocabToList_MODAL/SavePublicVocabToList_MODAL";
 
 // vocabCards
 export { SharedVocabBack_BTNS } from "./2_exploreVocabs/vocabCards/SharedVocabBack_BTNS/SharedVocabBack_BTNS";
