@@ -10,24 +10,28 @@ import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user"
 import { SAVE_vocab } from "./SAVE_vocab/SAVE_vocab";
 import { USE_celebrate, USE_error } from "@/src/hooks";
 import { Vocab_EVENTS } from "@/src/mitt/mitt";
-import { Vocab_TYPE } from "../../../types";
-import { CAN_userCreateThisAmountOfVocabs } from "../../../functions/CAN_userCreateThisAmountOfVocabs/CAN_userCreateThisAmountOfVocabs";
+import { CAN_userCreateThisAmountOfVocabs } from "@/src/features_new/vocabs/functions/CAN_userCreateThisAmountOfVocabs/CAN_userCreateThisAmountOfVocabs";
 
-const function_NAME = "USE_saveVocab";
+const function_NAME = "USE_saveList";
 
-export function USE_saveVocab() {
+export function USE_saveList() {
   const { z_user } = z_USE_user();
-
   const { celebrate } = USE_celebrate();
-
   const { error, SET_error, RESET_error } = USE_error<
     General_ERROR | FormInput_ERROR | undefined
   >();
-
   const [loading, SET_loading] = useState(false);
 
-  const _SAVE_vocab = useCallback(
-    async (vocab: Vocab_TYPE, list_id: string, onSuccess: () => void) => {
+  const _SAVE_list = useCallback(
+    async (publicList_ID: string, onSuccess: () => void) => {
+      // fetch the total vocab count of target list
+      // check if user can afford the vocabs with max_vocabs
+      // fetch the public list
+      // fetch the vocabs of the public list
+      // create list
+      // create vocabs
+      // increase max_user count
+
       try {
         if (loading) return;
         SET_error(undefined);
