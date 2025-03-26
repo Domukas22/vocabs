@@ -48,7 +48,11 @@ export function USE_handleMyListsSideEffects({
   useEffect(() => {
     const handler = (list: List_TYPE) => PREPEND_oneListIntoUi(list);
     List_EVENTS.on("created", handler);
-    return () => List_EVENTS.off("created", handler);
+    List_EVENTS.on("copied", handler);
+    return () => {
+      List_EVENTS.off("created", handler);
+      List_EVENTS.off("copied", handler);
+    };
   }, []);
 
   useEffect(() => {

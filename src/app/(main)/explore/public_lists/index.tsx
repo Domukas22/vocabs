@@ -17,6 +17,10 @@ import { z_USE_publicListsDisplaySettings } from "@/src/features_new/lists/hooks
 import { Portal } from "@gorhom/portal";
 import { DisplaySettings_MODAL } from "@/src/components/DisplaySettings_MODAL/DisplaySettings_MODAL";
 import { SaveVocab_MODAL } from "@/src/features_new/vocabs/components/modals/SaveVocab_MODAL/SaveVocab_MODAL";
+import { USE_lists } from "@/src/features_new/lists/hooks/USE_lists/USE_lists";
+import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
+
+const fetch_TYPE = "all";
 
 export default function PublicLists_PAGE() {
   const { modals } = USE_modalToggles(["displaySettings"]);
@@ -24,21 +28,29 @@ export default function PublicLists_PAGE() {
   const { search, debouncedSearch, IS_debouncing, SET_search, RESET_search } =
     USE_debounceSearch();
 
-  const {
-    z_publicListsLoading_STATE,
-    z_publicListsUnpaginated_COUNT,
-    z_publicLists_ERROR,
-    z_HAVE_publicListsReachedEnd,
-  } = z_USE_publicLists();
-
-  // Refetches on filter changes
-  const { LOAD_more } = USE_controlPublicListsFetch({
-    search: debouncedSearch,
-    fetch_TYPE: "all",
-    targetList_ID: "",
-  });
+  const { z_user } = z_USE_user();
+  const { filters, sorting } = z_USE_publicListsDisplaySettings();
 
   const { z_GET_activeFilterCount } = z_USE_publicListsDisplaySettings();
+
+  const {
+    error,
+    lists,
+    lang_IDS,
+    loading_STATE,
+    highlighted_ID,
+    HAS_reachedEnd,
+    unpaginated_COUNT,
+    LOAD_more,
+  } = USE_lists({
+    fetch_TYPE,
+    IS_private: false,
+    search,
+    targetList_ID: "",
+    filters,
+    sorting,
+    user: z_user,
+  });
 
   return (
     <>
@@ -51,14 +63,19 @@ export default function PublicLists_PAGE() {
       <PublicLists_FLASHLIST
         IS_debouncing={IS_debouncing}
         handleScroll={handleScroll}
+        lists={lists}
+        fetch_TYPE={fetch_TYPE}
+        loading_STATE={loading_STATE}
+        error={error}
+        highlighted_ID={highlighted_ID || ""}
         Header={
           <Flashlist_HEADER
             IS_debouncing={IS_debouncing}
             debouncedSearch={debouncedSearch}
             search={search}
-            loading_STATE={z_publicListsLoading_STATE}
+            loading_STATE={loading_STATE}
             list_NAME={t("header.publicLists")}
-            unpaginated_COUNT={z_publicListsUnpaginated_COUNT}
+            unpaginated_COUNT={unpaginated_COUNT}
             appliedFilter_COUNT={z_GET_activeFilterCount() || 0}
             type="public-lists"
           />
@@ -67,12 +84,12 @@ export default function PublicLists_PAGE() {
           <ListFlatlist_FOOTER
             LOAD_more={LOAD_more}
             RESET_search={RESET_search}
-            unpaginated_COUNT={z_publicListsUnpaginated_COUNT}
-            HAS_reachedEnd={z_HAVE_publicListsReachedEnd}
+            unpaginated_COUNT={unpaginated_COUNT}
+            HAS_reachedEnd={HAS_reachedEnd}
             IS_debouncing={IS_debouncing}
-            loading_STATE={z_publicListsLoading_STATE}
+            loading_STATE={loading_STATE}
             debouncedSearch={debouncedSearch}
-            error={z_publicLists_ERROR}
+            error={error}
           />
         }
       />
@@ -83,6 +100,7 @@ export default function PublicLists_PAGE() {
         <DisplaySettings_MODAL
           starting_TAB="filter"
           type="public-lists"
+          lang_IDS={lang_IDS}
           open={modals.displaySettings.IS_open}
           TOGGLE_open={() => modals.displaySettings.set(false)}
         />

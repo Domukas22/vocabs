@@ -7,19 +7,15 @@ import { SEND_internalError } from "@/src/utils";
 import { useCallback, useState } from "react";
 import { t } from "i18next";
 import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
-import { SAVE_vocab } from "./SAVE_vocab/SAVE_vocab";
 import { USE_celebrate, USE_error } from "@/src/hooks";
-import { Vocab_EVENTS } from "@/src/mitt/mitt";
 import { CAN_userCreateThisAmountOfVocabs } from "@/src/features_new/vocabs/functions/CAN_userCreateThisAmountOfVocabs/CAN_userCreateThisAmountOfVocabs";
-import { supabase } from "@/src/lib/supabase";
-import { List_TYPE } from "../../types";
-import {
-  FETCH_onePublicList,
-  FETCH_totalVocabsOfPublicList,
-  FETCH_vocabsOfPublicList,
-} from "./helpers";
+import { FETCH_onePublicList, FETCH_vocabsOfPublicList } from "./helpers";
 import { FETCH_vocabCountOfPublicList } from "./helpers/FETCH_vocabCountOfPublicList/FETCH_vocabCountOfPublicList";
 import { CREATE_copiedList } from "./helpers/CREATE_copiedList/CREATE_copiedList";
+import { supabase } from "@/src/lib/supabase";
+import { Vocab_TYPE } from "@/src/features_new/vocabs/types";
+import { COPY_vocabsOfAPublicList } from "./helpers/COPY_vocabsOfAPublicList/COPY_vocabsOfAPublicList";
+import { List_EVENTS, Vocab_EVENTS } from "@/src/mitt/mitt";
 
 const function_NAME = "USE_saveList";
 
@@ -74,27 +70,43 @@ export function USE_saveList() {
         const { vocabs } = await FETCH_vocabsOfPublicList(publicList_ID);
 
         // create list, and use it's id / name
-        const {} = CREATE_copiedList(
+        const { new_LIST } = await CREATE_copiedList(
           {
             collected_lang_ids: list.collected_lang_ids,
             default_lang_ids: list.default_lang_ids,
             description: list.description,
             name: list.name,
           },
-          z_user?.id | ""
+          z_user?.id || ""
         );
+
+        const toInsert_LIST = {
+          ...new_LIST,
+          vocab_infos: {
+            marked: 0,
+            diff_1: 0,
+            diff_2: 0,
+            diff_3: list.vocab_infos.total,
+            total: list.vocab_infos.total,
+          },
+        };
+
+        await COPY_vocabsOfAPublicList({
+          oldList_id: list.id,
+          newList_id: toInsert_LIST.id,
+          user_id: z_user?.id || "",
+        });
+
+        console.log("NEW LISTL ", toInsert_LIST);
 
         // create the vocabs, make sure to use the list id of the new lsit
 
         // --------------------------------------------------
 
-        Vocab_EVENTS.emit("copied", {
-          vocabs: [saved_VOCAB],
-          targetList_ID: saved_VOCAB.list_id,
-        });
+        List_EVENTS.emit("copied", toInsert_LIST);
 
-        onSuccess();
-        celebrate(t("notification.oneVocabSaved"));
+        // onSuccess();
+        celebrate(t("notification.listCopied"));
         // -----------------------------
       } catch (error: any) {
         // HANDLE_formInputError(error);
@@ -119,11 +131,9 @@ export function USE_saveList() {
   );
 
   return {
-    SAVE_vocab: _SAVE_vocab,
+    SAVE_list: _SAVE_list,
     loading,
     error,
     RESET_error,
   };
 }
-
-// -----------------------------------

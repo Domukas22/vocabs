@@ -9,8 +9,10 @@ import { create } from "zustand";
 export type publicListsSorting_TYPE = "date" | "vocab-count" | "saved-count";
 
 interface z_USE_publicListsDisplaySettings_PROPS {
-  sorting: publicListsSorting_TYPE;
-  sortDirection: sortDirection_TYPE;
+  sorting: {
+    type: publicListsSorting_TYPE;
+    direction: sortDirection_TYPE;
+  };
   filters: ListFilter_PROPS;
 
   z_SET_sorting: (sorting_TYPE: publicListsSorting_TYPE) => void;
@@ -25,7 +27,10 @@ interface z_USE_publicListsDisplaySettings_PROPS {
 
 export const z_USE_publicListsDisplaySettings =
   create<z_USE_publicListsDisplaySettings_PROPS>((set, get) => ({
-    sorting: "date",
+    sorting: {
+      type: "date",
+      direction: "descending",
+    },
     sortDirection: "descending",
     filters: {
       byMarked: false,
@@ -85,7 +90,14 @@ export const z_USE_publicListsDisplaySettings =
       get().filters?.difficulties?.length +
       (get().filters?.byMarked ? 1 : 0),
 
-    z_SET_sorting: (sorting_TYPE) => set({ sorting: sorting_TYPE }),
+    z_SET_sorting: (sorting_TYPE) =>
+      set((prev) => ({
+        ...prev,
+        sorting: { type: sorting_TYPE, direction: prev.sorting.direction },
+      })),
     z_SET_sortDirection: (sortDirection_TYPE) =>
-      set({ sortDirection: sortDirection_TYPE }),
+      set((prev) => ({
+        ...prev,
+        sorting: { type: prev.sorting.type, direction: sortDirection_TYPE },
+      })),
   }));

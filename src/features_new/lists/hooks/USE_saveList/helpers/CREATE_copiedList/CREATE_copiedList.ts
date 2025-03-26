@@ -36,16 +36,16 @@ export async function CREATE_copiedList(
       message: "'default_lang_ids' was undefined",
     });
 
-  if (!description)
+  if (typeof description !== "string")
     throw new General_ERROR({
       function_NAME,
-      message: "'description' was undefined",
+      message: "'description' was not a string",
     });
 
-  if (!name)
+  if (typeof name !== "string")
     throw new General_ERROR({
       function_NAME,
-      message: "'name' was undefined",
+      message: "'name' was not a string",
     });
 
   if (!user_id)
@@ -85,7 +85,7 @@ export async function CREATE_copiedList(
       });
 
     const { data: new_LIST, error } = await supabase
-      .from("lists")
+      .from("lists_extended")
       .insert({
         user_id,
         name,
@@ -93,8 +93,8 @@ export async function CREATE_copiedList(
         collected_lang_ids,
         description,
       })
-      .select(`*`)
-      // .select(`*, vocabs(difficulty, is_marked), vocab_count: vocabs(count)`)
+
+      .select(`*, vocabs(difficulty, is_marked), vocab_count: vocabs(count)`)
       .single();
 
     if (error)

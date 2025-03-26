@@ -2,11 +2,8 @@
 //
 //
 
-import React, { useEffect, useState } from "react";
-import {
-  DeleteList_MODAL,
-  ListSettings_MODAL,
-} from "@/src/features/lists/components";
+import React, { useEffect } from "react";
+import { ListSettings_MODAL } from "@/src/features/lists/components";
 
 import { USE_debounceSearch, USE_showListHeaderTitle } from "@/src/hooks";
 import { CreateMyVocab_MODAL } from "@/src/features_new/vocabs/components/modals/CreateMyVocab_MODAL/CreateMyVocab_MODAL";
@@ -14,19 +11,15 @@ import { Portal } from "@gorhom/portal";
 import { USE_modalToggles } from "@/src/hooks/index";
 import MyVocabs_FLASHLIST from "@/src/features_new/vocabs/components/flashlists/MyVocabs_FLASHLIST/MyVocabs_FLASHLIST";
 import { USE_getListName } from "@/src/features_new/lists/hooks/USE_getListName/USE_getListName";
-import { z_USE_myVocabs } from "@/src/features_new/vocabs/hooks/zustand/z_USE_myVocabs/z_USE_myVocabs";
 import { USE_listIdInParams } from "@/src/features/vocabs/vocabList/USE_listIdInParams/USE_listIdInParams";
 import { VocabFlatlist_FOOTER } from "@/src/features_new/vocabs/components/flashlists/_parts/VocabFlatlist_FOOTER/VocabFlatlist_FOOTER";
-import USE_controlMyVocabsFetch from "@/src/features_new/vocabs/hooks/fetchControls/USE_controlMyVocabsFetch/USE_controlMyVocabsFetch";
 import { MyOneList_NAV } from "@/src/features_new/lists/components/navs";
 import { Flashlist_HEADER } from "@/src/components/Flashlist_HEADER/Flashlist_HEADER";
 import { z_USE_myVocabsDisplaySettings } from "@/src/features_new/vocabs/hooks/zustand/displaySettings/z_USE_myVocabsDisplaySettings/z_USE_myVocabsDisplaySettings";
 import { DisplaySettings_MODAL } from "@/src/components/DisplaySettings_MODAL/DisplaySettings_MODAL";
 import { UpdateMyVocab_MODAL } from "@/src/features_new/vocabs/components/modals/UpdateMyVocab_MODAL/UpdateMyVocab_MODAL";
 import { USE_vocabs } from "@/src/features_new/vocabs/hooks/USE_vocabs/USE_vocabs";
-import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
-import { List_EVENTS, Vocab_EVENTS } from "@/src/mitt/mitt";
-import { Vocab_TYPE } from "@/src/features_new/vocabs/types";
+import { List_EVENTS } from "@/src/mitt/mitt";
 import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 import { z_USE_myOneList } from "@/src/features_new/lists/hooks/zustand/z_USE_myOneList/z_USE_myOneList";
 import { List_TYPE } from "@/src/features_new/lists/types";

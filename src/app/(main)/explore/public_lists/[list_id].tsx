@@ -6,8 +6,6 @@ import React from "react";
 // import FlashlistPage_NAV from "@/src/components/1_grouped/headers/listPage/FlashlistPage_NAV";
 import { USE_showListHeaderTitle, USE_debounceSearch } from "@/src/hooks";
 import { USE_modalToggles } from "@/src/hooks/index";
-import { z_USE_publicVocabs } from "@/src/features_new/vocabs/hooks/zustand/z_USE_publicVocabs/z_USE_publicVocabs";
-import USE_controlPublicVocabsFetch from "@/src/features_new/vocabs/hooks/fetchControls/USE_controlPublicVocabsFetch/USE_controlPublicVocabsFetch";
 import { USE_listIdInParams } from "@/src/features/vocabs/vocabList/USE_listIdInParams/USE_listIdInParams";
 import { USE_getListName } from "@/src/features_new/lists/hooks/USE_getListName/USE_getListName";
 import PublicVocabs_FLASHLIST from "@/src/features_new/vocabs/components/flashlists/PublicVocabs_FLASHLIST/PublicVocabs_FLASHLIST";
@@ -17,33 +15,49 @@ import { PublicOneList_NAV } from "@/src/features_new/lists/components/navs";
 import { Flashlist_HEADER } from "@/src/components/Flashlist_HEADER/Flashlist_HEADER";
 import { z_USE_publicVocabsDisplaySettings } from "@/src/features_new/vocabs/hooks/zustand/displaySettings/z_USE_publicVocabsDisplaySettings/z_USE_publicVocabsDisplaySettings";
 import { DisplaySettings_MODAL } from "@/src/components/DisplaySettings_MODAL/DisplaySettings_MODAL";
-import { CopyListAndVocabs_MODAL } from "@/src/features/lists/components";
-import { SavePublicVocabToList_MODAL } from "@/src/features/vocabs/components";
+import {} from "@/src/features/vocabs/components";
+import { USE_vocabs } from "@/src/features_new/vocabs/hooks/USE_vocabs/USE_vocabs";
+import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
+import { SaveVocab_MODAL } from "@/src/features_new/vocabs/components/modals/SaveVocab_MODAL/SaveVocab_MODAL";
+import { SaveList_MODAL } from "@/src/features_new/lists/components/modals/SaveList_MODAL/SaveList_MODAL";
 
 export default function PublicListVocabs_PAGE() {
   const { urlParamsList_ID } = USE_listIdInParams();
   const { list_NAME } = USE_getListName({ type: "public" });
-  const { modals } = USE_modalToggles(["saveList", "displaySettings"]);
+  const { modals } = USE_modalToggles([
+    "saveList",
+    "saveVocab",
+    "displaySettings",
+  ]);
 
   const { showTitle, handleScroll } = USE_showListHeaderTitle();
   const { search, debouncedSearch, IS_debouncing, SET_search, RESET_search } =
     USE_debounceSearch();
 
+  const { filters, sorting, z_GET_activeFilterCount } =
+    z_USE_publicVocabsDisplaySettings();
+
+  const { z_user } = z_USE_user();
+
   const {
-    z_publicVocabsLoading_STATE,
-    z_publicVocabsUnpaginated_COUNT,
-    z_publicVocabs_ERROR,
-    z_HAVE_publicVocabsReachedEnd,
-  } = z_USE_publicVocabs();
-
-  // Refetches on filter changes
-  const { LOAD_more } = USE_controlPublicVocabsFetch({
-    search: debouncedSearch,
+    error,
+    vocabs,
+    lang_IDS,
+    loading_STATE,
+    highlighted_ID,
+    HAS_reachedEnd,
+    unpaginated_COUNT,
+    refetch,
+    LOAD_more,
+  } = USE_vocabs({
     fetch_TYPE: "byTargetList",
+    IS_private: false,
+    search,
     targetList_ID: urlParamsList_ID,
+    filters,
+    sorting,
+    user: z_user,
   });
-
-  const { z_GET_activeFilterCount } = z_USE_publicVocabsDisplaySettings();
 
   return (
     <>
@@ -57,14 +71,20 @@ export default function PublicListVocabs_PAGE() {
       <PublicVocabs_FLASHLIST
         IS_debouncing={IS_debouncing}
         handleScroll={handleScroll}
+        vocabs={vocabs}
+        fetch_TYPE={"byTargetList"}
+        loading_STATE={loading_STATE}
+        error={error}
+        highlighted_ID={highlighted_ID || ""}
+        OPEN_copyVocabModal={() => modals.saveList.set(true)}
         Header={
           <Flashlist_HEADER
             IS_debouncing={IS_debouncing}
             debouncedSearch={debouncedSearch}
             search={search}
-            loading_STATE={z_publicVocabsLoading_STATE}
+            loading_STATE={loading_STATE}
             list_NAME={list_NAME}
-            unpaginated_COUNT={z_publicVocabsUnpaginated_COUNT}
+            unpaginated_COUNT={unpaginated_COUNT}
             appliedFilter_COUNT={z_GET_activeFilterCount() || 0}
             type="public-vocabs"
           />
@@ -73,12 +93,12 @@ export default function PublicListVocabs_PAGE() {
           <VocabFlatlist_FOOTER
             LOAD_more={LOAD_more}
             RESET_search={RESET_search}
-            unpaginated_COUNT={z_publicVocabsUnpaginated_COUNT}
-            HAS_reachedEnd={z_HAVE_publicVocabsReachedEnd}
+            unpaginated_COUNT={unpaginated_COUNT}
+            HAS_reachedEnd={HAS_reachedEnd}
             IS_debouncing={IS_debouncing}
-            loading_STATE={z_publicVocabsLoading_STATE}
+            loading_STATE={loading_STATE}
             debouncedSearch={debouncedSearch}
-            error={z_publicVocabs_ERROR}
+            error={error}
           />
         }
       />
@@ -88,9 +108,19 @@ export default function PublicListVocabs_PAGE() {
         <DisplaySettings_MODAL
           starting_TAB="vocab-preview"
           type="public-vocabs"
+          lang_IDS={lang_IDS}
           open={modals.displaySettings.IS_open}
           TOGGLE_open={() => modals.displaySettings.set(false)}
         />
+        <SaveVocab_MODAL
+          IS_open={modals.saveVocab.IS_open}
+          CLOSE_modal={() => modals.saveVocab.set(false)}
+        />
+        <SaveList_MODAL
+          IS_open={modals.saveList.IS_open}
+          CLOSE_modal={() => modals.saveList.set(false)}
+        />
+        {/*
         <SavePublicVocabToList_MODAL
           vocab={target_VOCAB}
           IS_open={modals.saveList.IS_open}
@@ -102,8 +132,7 @@ export default function PublicListVocabs_PAGE() {
             });
           }}
           TOGGLE_open={() => modals.saveList.set(false)}
-        />
-
+        /> */}
         {/*
         <CopyListAndVocabs_MODAL
           error={copyList_ERROR}

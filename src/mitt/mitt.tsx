@@ -20,7 +20,7 @@ type ListEvents_PROPS = {
   created: List_TYPE;
   updated: List_TYPE;
   deleted: string;
-  copied: { list: List_TYPE; vocabs: Vocab_TYPE[] };
+  copied: List_TYPE;
 };
 
 export const Vocab_EVENTS = mitt<VocabEvents_PROPS>();

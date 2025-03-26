@@ -2,15 +2,11 @@
 //
 //
 
-import Page_WRAP from "@/src/components/1_grouped/Page_WRAP/Page_WRAP";
 import { useRouter } from "expo-router";
-import React, { useEffect, useMemo } from "react";
-import { ActivityIndicator, View } from "react-native";
-import Header from "@/src/components/1_grouped/headers/regular/Header";
+import React, { useMemo } from "react";
+import { View } from "react-native";
 import BigPage_BTN from "@/src/components/1_grouped/buttons/BigPage_BTN/BigPage_BTN";
 import { MyColors } from "@/src/constants/MyColors";
-import USE_refetchPublicStarterContent from "@/src/hooks/zustand/z_USE_publicStarterContent/USE_refetchPublicStarterContent/USE_refetchPublicStarterContent";
-import { z_USE_publicStarterContent } from "@/src/hooks/zustand/z_USE_publicStarterContent/z_USE_publicStarterContent";
 import { t } from "i18next";
 import { TopPublicVocabs_LIST } from "@/src/features/lists/components/flatlists/TopPublicVocabs_LIST/TopPublicVocabs_LIST";
 import { ScrollView } from "react-native-gesture-handler";
@@ -21,11 +17,6 @@ import { starterContentLoading_TYPE } from "@/src/types/general_TYPES";
 import { Portal } from "@gorhom/portal";
 import { SaveVocab_MODAL } from "@/src/features_new/vocabs/components/modals/SaveVocab_MODAL/SaveVocab_MODAL";
 import { USE_modalToggles } from "@/src/hooks";
-import {
-  CreateList_MODAL,
-  SelectMyList_MODAL,
-} from "@/src/features/lists/components";
-import { z_USE_myTargetSaveList } from "@/src/features_new/lists/hooks/zustand/z_USE_myTargetSaveList/z_USE_myTargetSaveList";
 
 export default function Explore_PAGE() {
   const {
@@ -38,7 +29,6 @@ export default function Explore_PAGE() {
   } = USE_publicStarterContent();
 
   const { modals } = USE_modalToggles(["saveVocab", "selectList"]);
-  const { z_myTargetSave_LIST } = z_USE_myTargetSaveList();
 
   return (
     <>

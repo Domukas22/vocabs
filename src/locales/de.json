@@ -349,7 +349,8 @@
     "oneDefaultListLangRemoved": "Sprache entfernt",
     "oneVocabCreated": "Vokabel erstellt",
     "oneVocabUpdate": "Vokabel bearbeitet",
-    "oneVocabSaved": "Vokabel gespeichert"
+    "oneVocabSaved": "Vokabel gespeichert",
+    "listCopied": "Liste kopiert"
   },
   "emptyText": {
     "noLangsSelected": "Keine Sprachen ausgewählt"

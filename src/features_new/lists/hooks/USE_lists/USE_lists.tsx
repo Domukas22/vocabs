@@ -20,6 +20,7 @@ import {
 import { USE_handleListsFetch } from "./helpers/USE_handleListsFetch/USE_handleListsFetch";
 import { listFetch_TYPES } from "../../functions/fetch/FETCH_lists/types";
 import { USE_handleMyListsSideEffects } from "./helpers/USE_handleMyListsSideEffects/USE_handleMyListsSideEffects";
+import { publicListsSorting_TYPE } from "../zustand/displaySettings/z_USE_publicListsDisplaySettings/z_USE_publicListsDisplaySettings";
 
 export function USE_lists({
   search = "",
@@ -36,7 +37,7 @@ export function USE_lists({
   IS_private: boolean;
   filters: ListFilter_PROPS;
   sorting: {
-    type: MyListsSorting_TYPE;
+    type: MyListsSorting_TYPE | publicListsSorting_TYPE;
     direction: sortDirection_TYPE;
   };
   user: User_TYPE | undefined;

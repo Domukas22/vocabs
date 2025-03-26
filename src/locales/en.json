@@ -350,7 +350,8 @@
     "oneDefaultListLangRemoved": "Language removed",
     "oneVocabCreated": "Vocab created",
     "oneVocabUpdate": "Vocab updated",
-    "oneVocabSaved": "Vocab saved"
+    "oneVocabSaved": "Vocab saved",
+    "listCopied": "List copied"
   },
   "emptyText": {
     "noLangsSelected": "No languages selected"
