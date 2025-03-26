@@ -35,6 +35,7 @@ import { useToast } from "react-native-toast-notifications";
 import { USE_navigateUser } from "@/src/features/users/functions/general/hooks/USE_navigateUser/USE_navigateUser";
 import { USE_modalToggles } from "@/src/hooks/index";
 import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
+import { MyColors } from "@/src/constants/MyColors";
 
 export default function General_PAGE() {
   const { t } = useTranslation();
@@ -43,8 +44,11 @@ export default function General_PAGE() {
   const { navigate } = USE_navigateUser();
   const { logout } = USE_auth();
 
-  const { notification_COUNT, totalUserVocab_COUNT } =
-    USE_userObservables(z_user);
+  // const { notification_COUNT, totalUserVocab_COUNT } =
+  //   USE_userObservables(z_user);
+
+  const totalUserVocab_COUNT = 0;
+  const notification_COUNT = 0;
 
   const _logout = async () => {
     if (z_user) {
@@ -70,29 +74,22 @@ export default function General_PAGE() {
 
   const DELETE_p = async () => {
     if (!z_user) return;
-    await sync({ user: z_user });
+    // await sync({ user: z_user });
 
-    await SOFT_DELETE_userOnSupabase(z_user);
-    await z_user.HARD_DELETE_user();
-    const { error } = await logout();
+    // await SOFT_DELETE_userOnSupabase(z_user);
+    // await z_user.HARD_DELETE_user();
+    // const { error } = await logout();
 
-    toast.show(t("notifications.profileDeleted"), {
-      type: "warning",
-      duration: 20000,
-    });
-
-    if (error) {
-      Alert.alert("Logout error", "Error signing out");
-    }
-    await logout();
-    await navigate();
-    // await NAVIGATE_user({
-    //   navigateToWelcomeSreenOnError: true,
-    //   z_SET_user,
-    //   SET_error,
-    //   router,
-    //   sync,
+    // toast.show(t("notifications.profileDeleted"), {
+    //   type: "warning",
+    //   duration: 20000,
     // });
+
+    // if (error) {
+    //   Alert.alert("Logout error", "Error signing out");
+    // }
+    // await logout();
+    // await navigate();
   };
 
   const { modals } = USE_modalToggles(["logout", "deleteAccount"]);
@@ -104,15 +101,15 @@ export default function General_PAGE() {
   return (
     <>
       <Header title={t("page.general.header")} big={true} />
-      <Btn
+      {/* <Btn
         text="Sync"
         style={{ margin: 12 }}
         onPress={async () => {
           await sync_2({ user: z_user, PULL_EVERYTHING: true });
         }}
-      />
+      /> */}
 
-      <ScrollView>
+      <ScrollView style={{ backgroundColor: MyColors.fill_bg }}>
         <Block>
           <View>
             <Styled_TEXT type="text_18_semibold">
@@ -181,13 +178,6 @@ export default function General_PAGE() {
             text_STYLES={{ flex: 1, marginLeft: 4 }}
           />
 
-          <Btn
-            iconLeft={<ICON_inviteFriend />}
-            text={t("btn.inviteFriends")}
-            iconRight={<ICON_arrow direction="right" />}
-            onPress={() => router.push("/(main)/general/inviteFriends")}
-            text_STYLES={{ flex: 1, marginLeft: 4 }}
-          />
           <Btn
             iconLeft={<ICON_about />}
             text={t("page.general.btn.about")}

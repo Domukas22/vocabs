@@ -24,9 +24,6 @@ export function USE_deleteList() {
     z_USE_currentActions();
 
   const { z_RESET_myOneList } = z_USE_myOneList();
-  const { z_REMOVE_listFromMyLists } = z_USE_myLists();
-
-  const { REFETCH_myStarterContent } = USE_refetchStarterContent();
 
   const { TOAST } = USE_toast();
 

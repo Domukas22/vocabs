@@ -37,7 +37,9 @@ export function BUILD_vocabFilterQuery(
     query = query.filter("user_id", "eq", user_id);
   }
 
-  query = query.eq("type", list_TYPE);
+  if (list_TYPE === "public") {
+    query = query.eq("type", "public");
+  }
 
   // Filter by the 'fetch_TYPE' provided
   switch (fetch_TYPE) {

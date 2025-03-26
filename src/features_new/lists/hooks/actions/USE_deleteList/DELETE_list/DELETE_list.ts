@@ -26,8 +26,8 @@ export async function DELETE_list(
     // First, softDelete vocabs
     const { error: softDeleteVocabs_ERROR } = await supabase
       .from("vocabs")
-      .delete()
-      .eq("id", list_ID)
+      .update({ deleted_at: new Date().toISOString(), list_id: null })
+      .eq("list_id", list_ID)
       .eq("user_id", user_ID);
 
     if (softDeleteVocabs_ERROR)

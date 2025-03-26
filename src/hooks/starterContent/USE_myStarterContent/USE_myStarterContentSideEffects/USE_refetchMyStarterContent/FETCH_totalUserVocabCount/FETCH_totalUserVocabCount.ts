@@ -21,8 +21,8 @@ export async function FETCH_totalUserVocabCount(
       .from("vocabs")
       .select("id", { count: "exact" })
       .is("deleted_at", null)
-      .eq("user_id", user_id)
-      .eq("type", "private");
+      .eq("user_id", user_id);
+    // .eq("type", "private");
 
     if (error)
       throw new General_ERROR({
