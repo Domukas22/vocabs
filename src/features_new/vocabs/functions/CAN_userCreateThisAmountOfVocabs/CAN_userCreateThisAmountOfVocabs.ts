@@ -4,7 +4,8 @@
 
 import { supabase } from "@/src/lib/supabase";
 import { General_ERROR } from "@/src/types/error_TYPES";
-import { function_NAME } from "../COLLECT_myVocabLangIds/COLLECT_myVocabLangIds";
+
+const function_NAME = "CAN_userCreateThisAmountOfVocabs";
 
 export async function CAN_userCreateThisAmountOfVocabs(
   user_id: string,

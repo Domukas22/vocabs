@@ -23,10 +23,6 @@ const function_NAME = "USE_createList";
 
 export function USE_createList() {
   const { z_user } = z_USE_user();
-
-  const { z_PREPEND_listToMyLists, z_HIGHLIGHT_myList } = z_USE_myLists();
-  const { REFETCH_myStarterContent = () => {} } = USE_refetchStarterContent();
-
   const [IS_creatingList, SET_isCreatingList] = useState(false);
   const [createList_ERROR, SET_createListError] = useState<
     General_ERROR | FormInput_ERROR | undefined
@@ -70,12 +66,11 @@ export function USE_createList() {
         // Provide sensory user feedback
         TOAST("success", t("notification.listCreated"));
         VIBRATE("soft");
-        z_HIGHLIGHT_myList(new_LIST.id);
 
         onSuccess();
         // -----------------------------
       } catch (error: any) {
-        if (HANDLE_formInputError(error)) {
+        if (Object.hasOwn(error, "falsyForm_INPUTS")) {
           SET_createListError(error);
           return;
         }

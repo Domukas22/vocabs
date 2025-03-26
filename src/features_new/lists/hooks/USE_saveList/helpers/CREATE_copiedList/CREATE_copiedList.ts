@@ -8,19 +8,46 @@ import { FormInput_ERROR, General_ERROR } from "@/src/types/error_TYPES";
 import { HANDLE_formInputError } from "@/src/utils";
 import { t } from "i18next";
 
-export const function_NAME = "CREATE_list";
+export const function_NAME = "CREATE_copiedList";
 
-export async function CREATE_list(
-  list_NAME: string,
+type CreateCopiedListContent_TYPE = {
+  name: string;
+  description: string;
+  default_lang_ids: string[];
+  collected_lang_ids: string[];
+};
+
+export async function CREATE_copiedList(
+  list_CONTENT: CreateCopiedListContent_TYPE,
   user_id: string
 ): Promise<{ new_LIST: List_TYPE }> {
-  if (!list_NAME)
-    throw new FormInput_ERROR({
-      user_MSG: "Please correct the error above",
-      falsyForm_INPUTS: [
-        { input_NAME: "name", message: t("error.provideAListName") },
-      ],
+  const { collected_lang_ids, default_lang_ids, description, name } =
+    list_CONTENT;
+
+  if (!collected_lang_ids)
+    throw new General_ERROR({
+      function_NAME,
+      message: "'collected_lang_ids' was undefined",
     });
+
+  if (!default_lang_ids)
+    throw new General_ERROR({
+      function_NAME,
+      message: "'default_lang_ids' was undefined",
+    });
+
+  if (!description)
+    throw new General_ERROR({
+      function_NAME,
+      message: "'description' was undefined",
+    });
+
+  if (!name)
+    throw new General_ERROR({
+      function_NAME,
+      message: "'name' was undefined",
+    });
+
   if (!user_id)
     throw new General_ERROR({
       function_NAME,
@@ -32,9 +59,11 @@ export async function CREATE_list(
     const { count, error: listwithSameName_ERROR } = await supabase
       .from("lists")
       .select("*", { count: "exact", head: true })
-      .ilike("name", list_NAME)
+      .ilike("name", name)
       .eq("user_id", user_id)
       .eq("type", "private");
+
+    // name, dewscription, default_lang_ids, collected_lang_ids
 
     if (listwithSameName_ERROR)
       throw new General_ERROR({
@@ -50,15 +79,22 @@ export async function CREATE_list(
         falsyForm_INPUTS: [
           {
             input_NAME: "name",
-            message: `Your already have a list with named '${list_NAME}'`,
+            message: `Your already have a list with named '${name}'`,
           },
         ],
       });
 
     const { data: new_LIST, error } = await supabase
       .from("lists")
-      .insert({ user_id, name: list_NAME, default_lang_ids: ["en", "de"] })
-      .select(`*, vocabs(difficulty, is_marked), vocab_count: vocabs(count)`)
+      .insert({
+        user_id,
+        name,
+        default_lang_ids,
+        collected_lang_ids,
+        description,
+      })
+      .select(`*`)
+      // .select(`*, vocabs(difficulty, is_marked), vocab_count: vocabs(count)`)
       .single();
 
     if (error)

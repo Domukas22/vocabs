@@ -11,8 +11,19 @@ import { SAVE_vocab } from "./SAVE_vocab/SAVE_vocab";
 import { USE_celebrate, USE_error } from "@/src/hooks";
 import { Vocab_EVENTS } from "@/src/mitt/mitt";
 import { CAN_userCreateThisAmountOfVocabs } from "@/src/features_new/vocabs/functions/CAN_userCreateThisAmountOfVocabs/CAN_userCreateThisAmountOfVocabs";
+import { supabase } from "@/src/lib/supabase";
+import { List_TYPE } from "../../types";
+import {
+  FETCH_onePublicList,
+  FETCH_totalVocabsOfPublicList,
+  FETCH_vocabsOfPublicList,
+} from "./helpers";
+import { FETCH_vocabCountOfPublicList } from "./helpers/FETCH_vocabCountOfPublicList/FETCH_vocabCountOfPublicList";
+import { CREATE_copiedList } from "./helpers/CREATE_copiedList/CREATE_copiedList";
 
 const function_NAME = "USE_saveList";
+
+// 🔴🔴 TODO --> Finish
 
 export function USE_saveList() {
   const { z_user } = z_USE_user();
@@ -37,26 +48,43 @@ export function USE_saveList() {
         SET_error(undefined);
         SET_loading(true);
 
-        // ----------------------------------------
-        // Can the user create one more vocab?
+        // ------------------------------------------------------------
+        // Fetch total vocab count of a list
+        const { count } = await FETCH_vocabCountOfPublicList(publicList_ID);
+
+        // ------------------------------------------------------------
+        // Can the user afford to create that many vocabs?
         const { allow, max_vocabs } = await CAN_userCreateThisAmountOfVocabs(
           z_user?.id || "",
-          1
+          count
         );
 
+        // If not, throw error
         if (!allow)
           throw new FormInput_ERROR({
             user_MSG: `You have reached your vocabulary limit of ${max_vocabs}. Go to the "General" tab to get more vocabs.`,
             falsyForm_INPUTS: [{ input_NAME: "list", message: "..." }],
           });
 
-        // --------------------------------------------------
-        // Proceed to create vocab
-        const { saved_VOCAB } = await SAVE_vocab({
-          vocab,
-          list_id,
-          user_id: z_user?.id,
-        });
+        // ------------------------------------------------------------
+        // Fetch the public list
+        const { list } = await FETCH_onePublicList(publicList_ID);
+
+        // Fetch vocabs of target list
+        const { vocabs } = await FETCH_vocabsOfPublicList(publicList_ID);
+
+        // create list, and use it's id / name
+        const {} = CREATE_copiedList(
+          {
+            collected_lang_ids: list.collected_lang_ids,
+            default_lang_ids: list.default_lang_ids,
+            description: list.description,
+            name: list.name,
+          },
+          z_user?.id | ""
+        );
+
+        // create the vocabs, make sure to use the list id of the new lsit
 
         // --------------------------------------------------
 
@@ -97,3 +125,5 @@ export function USE_saveList() {
     RESET_error,
   };
 }
+
+// -----------------------------------
