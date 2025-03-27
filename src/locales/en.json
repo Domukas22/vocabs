@@ -379,7 +379,8 @@
     "hasMarked": "Marked"
   },
   "title": {
-    "noListNameProvided": "No list name provided"
+    "noListNameProvided": "No list name provided",
+    "selectedVocabs": "vocabs selected"
   },
   "confirmation": {
     "paragraph": {

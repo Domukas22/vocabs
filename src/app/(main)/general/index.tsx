@@ -145,7 +145,7 @@ export default function General_PAGE() {
             onPress={() => router.push("/(main)/general/settings")}
             text_STYLES={{ flex: 1, marginLeft: 4 }}
           />
-          <Btn
+          {/* <Btn
             iconLeft={
               <View style={{ flexDirection: "row", gap: 4 }}>
                 <ICON_notificationBell />
@@ -159,7 +159,7 @@ export default function General_PAGE() {
             iconRight={<ICON_arrow direction="right" />}
             onPress={() => router.push("/(main)/general/notifications")}
             text_STYLES={{ flex: 1, marginLeft: 4 }}
-          />
+          /> */}
           <Btn
             iconLeft={<ICON_checkMarkFull />}
             text={t("page.general.btn.payments")}
@@ -253,27 +253,3 @@ async function SOFT_DELETE_userOnSupabase(user: User_MODEL | undefined) {
   if (listAccessError) console.error(listAccessError);
   if (userError) console.error(userError);
 }
-
-const USE_userObservables = (user: User_MODEL | undefined) => {
-  const [observables, setObservables] = useState({
-    notification_COUNT: undefined as number | undefined,
-    totalUserVocab_COUNT: undefined as number | undefined,
-  });
-
-  useEffect(() => {
-    if (!user) return;
-
-    const subscriptions = [
-      user.unreadNotification_COUNT.subscribe((count) =>
-        setObservables((obs) => ({ ...obs, notification_COUNT: count }))
-      ),
-      user.totalVocab_COUNT.subscribe((count) =>
-        setObservables((obs) => ({ ...obs, totalUserVocab_COUNT: count }))
-      ),
-    ];
-
-    return () => subscriptions.forEach((sub) => sub.unsubscribe());
-  }, [user]);
-
-  return observables;
-};

@@ -2,10 +2,14 @@
 //
 //
 
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { ListSettings_MODAL } from "@/src/features/lists/components";
 
-import { USE_debounceSearch, USE_showListHeaderTitle } from "@/src/hooks";
+import {
+  USE_debounceSearch,
+  USE_showListHeaderTitle,
+  USE_toggle,
+} from "@/src/hooks";
 import { CreateMyVocab_MODAL } from "@/src/features_new/vocabs/components/modals/CreateMyVocab_MODAL/CreateMyVocab_MODAL";
 import { Portal } from "@gorhom/portal";
 import { USE_modalToggles } from "@/src/hooks/index";
@@ -23,6 +27,7 @@ import { List_EVENTS } from "@/src/mitt/mitt";
 import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 import { z_USE_myOneList } from "@/src/features_new/lists/hooks/zustand/z_USE_myOneList/z_USE_myOneList";
 import { List_TYPE } from "@/src/features_new/lists/types";
+import { Vocab_TYPE } from "@/src/features_new/vocabs/types";
 
 export default function SingleList_PAGE() {
   const { urlParamsList_ID } = USE_listIdInParams();
@@ -75,6 +80,32 @@ export default function SingleList_PAGE() {
     user: z_user,
   });
 
+  const [selected_VOCABS, SET_selectedVocabs] = useState<
+    Map<string, Vocab_TYPE>
+  >(new Map());
+
+  const HANDLE_vocabSelection = useCallback(
+    (id: string, vocab: Vocab_TYPE) => {
+      SET_selectedVocabs((prev) => {
+        const newMap = new Map(prev);
+        if (newMap.has(id)) {
+          newMap.delete(id); // Remove if already selected
+        } else {
+          newMap.set(id, vocab); // Add if not selected
+        }
+        return newMap;
+      });
+    },
+    [selected_VOCABS, SET_selectedVocabs]
+  );
+
+  const [IS_vocabSelectionOn, TOGGLE_isVocabSelectionOn] = USE_toggle(false);
+
+  const TOGGLE_vocabSelection = useCallback(() => {
+    SET_selectedVocabs(new Map());
+    TOGGLE_isVocabSelectionOn();
+  }, [TOGGLE_isVocabSelectionOn, SET_selectedVocabs]);
+
   return (
     <>
       <MyOneList_NAV
@@ -84,6 +115,8 @@ export default function SingleList_PAGE() {
         OPEN_createVocabModal={() => modals.createVocab.set(true)}
         OPEN_listSettings={() => modals.listSettings.set(true)}
         SHOW_listName={showTitle}
+        IS_vocabSelectionOn={IS_vocabSelectionOn}
+        selectedVocab_COUNT={selected_VOCABS.size}
       />
 
       <MyVocabs_FLASHLIST
@@ -95,6 +128,11 @@ export default function SingleList_PAGE() {
         loading_STATE={loading_STATE}
         error={error}
         highlighted_ID={highlighted_ID || ""}
+        showTitle={showTitle}
+        IS_vocabSelectionOn={IS_vocabSelectionOn}
+        TOGGLE_isVocabSelectionOn={TOGGLE_vocabSelection}
+        HANDLE_vocabSelection={HANDLE_vocabSelection}
+        selected_VOCABS={selected_VOCABS}
         Header={
           <Flashlist_HEADER
             IS_debouncing={IS_debouncing}
@@ -145,6 +183,7 @@ export default function SingleList_PAGE() {
           type="my-vocabs"
           open={modals.displaySettings.IS_open}
           TOGGLE_open={() => modals.displaySettings.set(false)}
+          lang_IDS={lang_IDS}
         />
       </Portal>
     </>

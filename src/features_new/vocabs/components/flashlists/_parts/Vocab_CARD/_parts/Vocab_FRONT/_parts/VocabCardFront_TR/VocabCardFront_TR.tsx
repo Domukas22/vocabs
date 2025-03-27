@@ -15,9 +15,13 @@ import { useMemo } from "react";
 export function VocabCardFront_TR({
   frontTrLang_ID = "en",
   vocab,
+  IS_vocabSelectionOn = false,
+  IS_selected = false,
 }: {
   frontTrLang_ID: string;
   vocab: Vocab_TYPE;
+  IS_vocabSelectionOn?: boolean;
+  IS_selected?: boolean;
 }) {
   const { trs = [] } = vocab;
   const { target_LANG } = USE_getOneTargetLang({
@@ -43,7 +47,15 @@ export function VocabCardFront_TR({
     <Highlighted_TEXT
       text={frontTr_OBJ?.text}
       highlights={frontTr_OBJ?.highlights || []}
-      diff={vocab.type === "private" ? vocab?.difficulty : 0}
+      diff={
+        IS_vocabSelectionOn && IS_selected
+          ? 0
+          : IS_vocabSelectionOn
+          ? 1
+          : vocab.type === "private"
+          ? vocab?.difficulty || 0
+          : 0
+      }
     />
   ) : (
     <Label>

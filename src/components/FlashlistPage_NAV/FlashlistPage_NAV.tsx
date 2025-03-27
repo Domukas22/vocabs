@@ -19,6 +19,8 @@ import { t } from "i18next";
 interface ListHeader_PROPS {
   list_NAME: string;
   SHOW_listName: boolean;
+  IS_vocabSelectionOn?: boolean;
+  selectedVocab_COUNT?: number;
   children: React.ReactNode;
 }
 
@@ -26,6 +28,8 @@ export default function FlashlistPage_NAV({
   list_NAME = t("header.noListFound"),
   SHOW_listName,
   children,
+  IS_vocabSelectionOn = false,
+  selectedVocab_COUNT = 0,
 }: ListHeader_PROPS) {
   const [IS_searchOpen, SET_searchOpen] = useState(false);
   const search_REF = useRef<TextInput>(null);
@@ -74,9 +78,16 @@ export default function FlashlistPage_NAV({
             <Styled_TEXT
               type="list_title"
               numberOfLines={1}
-              style={{ height: 34 }}
+              style={{
+                height: 34,
+                color: IS_vocabSelectionOn
+                  ? MyColors.text_primary
+                  : MyColors.text_white,
+              }}
             >
-              {list_NAME}
+              {IS_vocabSelectionOn
+                ? `${selectedVocab_COUNT} ${t("title.selectedVocabs")}`
+                : list_NAME}
             </Styled_TEXT>
           </Animated.View>
         </View>

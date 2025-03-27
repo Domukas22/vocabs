@@ -15,6 +15,11 @@ export function VocabCardFront_DESC({
   const { description = "" } = vocab;
 
   return description && SHOW_description ? (
-    <Styled_TEXT type="label_small">{description}</Styled_TEXT>
+    <Styled_TEXT
+      type="label_small"
+      style={{ marginRight: 44 /* for the vocab select checkbox*/ }}
+    >
+      {description}
+    </Styled_TEXT>
   ) : null;
 }

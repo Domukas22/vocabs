@@ -17,13 +17,17 @@ import {
 interface VocabFront_PROPS {
   vocab: Vocab_TYPE;
   highlighted?: boolean;
+  IS_selected?: boolean;
+  IS_vocabSelectionOn?: boolean;
   TOGGLE_open: () => void;
 }
 
 export const Vocab_FRONT = React.memo(function Vocab_FRONT({
   vocab,
   highlighted = false,
+  IS_vocabSelectionOn = false,
   TOGGLE_open,
+  IS_selected = false,
 }: VocabFront_PROPS) {
   const { appearance } = z_USE_myVocabsDisplaySettings();
 
@@ -40,13 +44,24 @@ export const Vocab_FRONT = React.memo(function Vocab_FRONT({
         s.parent,
         pressed && s.parentPressed,
         highlighted && s.parentHighlighted,
+        IS_selected && IS_vocabSelectionOn && s.selected,
       ]}
       onPress={TOGGLE_open}
     >
       <View style={s.content}>
-        <VocabCardFront_TR {...{ vocab, frontTrLang_ID }} />
+        <VocabCardFront_TR
+          {...{ vocab, frontTrLang_ID, IS_vocabSelectionOn, IS_selected }}
+        />
         <VocabCardFront_DESC {...{ vocab, SHOW_description }} />
-        <VocabCardFront_BOTTOM {...{ vocab, SHOW_difficulty, SHOW_flags }} />
+        <VocabCardFront_BOTTOM
+          {...{
+            vocab,
+            SHOW_difficulty,
+            SHOW_flags,
+            IS_vocabSelectionOn,
+            IS_selected,
+          }}
+        />
       </View>
     </Pressable>
   );
@@ -55,6 +70,9 @@ export const Vocab_FRONT = React.memo(function Vocab_FRONT({
 const s = StyleSheet.create({
   parent: {
     backgroundColor: MyColors.btn_2,
+  },
+  selected: {
+    backgroundColor: MyColors.btn_active,
   },
   parentPressed: {
     backgroundColor: MyColors.btn_3,

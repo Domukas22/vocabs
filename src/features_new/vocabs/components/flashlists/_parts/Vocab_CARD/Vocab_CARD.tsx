@@ -3,7 +3,7 @@
 //
 
 import { StyleSheet, View } from "react-native";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 
 import { MyColors } from "@/src/constants/MyColors";
 import { Vocab_TYPE } from "@/src/features_new/vocabs/types";
@@ -20,6 +20,9 @@ interface VocabProps {
   highlighted?: boolean;
   OPEN_updateVocabModal?: () => void;
   OPEN_vocabCopyModal?: () => void;
+  IS_vocabSelectionOn?: boolean;
+  HANDLE_vocabSelection: (id: string, vocab: Vocab_TYPE) => void;
+  selected_VOCABS: Map<string, Vocab_TYPE>;
 }
 
 export const Vocab_CARD = React.memo(function MyVocab_CARD({
@@ -27,19 +30,33 @@ export const Vocab_CARD = React.memo(function MyVocab_CARD({
   list_TYPE,
   fetch_TYPE,
   highlighted = false,
+  IS_vocabSelectionOn = false,
   OPEN_updateVocabModal = () => {},
   OPEN_vocabCopyModal = () => {},
+  HANDLE_vocabSelection = () => {},
+  selected_VOCABS = new Map(),
 }: VocabProps) {
   const [open, TOGGLE_vocabCard] = USE_toggle();
+
+  useEffect(() => {
+    if (open && IS_vocabSelectionOn) TOGGLE_vocabCard();
+  }, [IS_vocabSelectionOn]);
+
+  const IS_selected = useMemo(
+    () => selected_VOCABS.has(vocab.id),
+    [vocab.id, selected_VOCABS]
+  );
 
   const styles = useMemo(
     () => [
       s._vocab,
       open && s.vocab_open,
+      IS_vocabSelectionOn && s._vocab_selectable,
+      IS_vocabSelectionOn && IS_selected && s._vocab_selectable_selected,
       open && s[`difficulty_${vocab?.difficulty || 0}`],
       highlighted && s.highlighted,
     ],
-    [open, vocab?.difficulty, highlighted]
+    [open, vocab?.difficulty, highlighted, IS_vocabSelectionOn, IS_selected]
   );
 
   return (
@@ -48,8 +65,15 @@ export const Vocab_CARD = React.memo(function MyVocab_CARD({
         <Vocab_FRONT
           vocab={vocab}
           highlighted={highlighted}
-          TOGGLE_open={TOGGLE_vocabCard}
-         
+          TOGGLE_open={() => {
+            if (IS_vocabSelectionOn) {
+              HANDLE_vocabSelection(vocab.id, vocab);
+            } else {
+              TOGGLE_vocabCard();
+            }
+          }}
+          IS_vocabSelectionOn={IS_vocabSelectionOn}
+          IS_selected={IS_selected}
         />
       ) : (
         <Vocab_BACK
@@ -74,6 +98,12 @@ const s = StyleSheet.create({
     borderWidth: 1,
     borderColor: MyColors.border_white_005,
     overflow: "hidden",
+  },
+  _vocab_selectable: {
+    borderColor: "white",
+  },
+  _vocab_selectable_selected: {
+    borderColor: MyColors.border_primary,
   },
   vocab_open: {
     backgroundColor: MyColors.fill_bg,

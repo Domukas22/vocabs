@@ -6,13 +6,19 @@ import Styled_FLASHLIST from "@/src/components/3_other/Styled_FLASHLIST/Styled_F
 import { FlashList } from "@shopify/flash-list";
 import React, { useMemo, useRef } from "react";
 
-import { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
+import { NativeScrollEvent, NativeSyntheticEvent, View } from "react-native";
 import { Vocab_TYPE } from "../../../types";
 import { z_USE_currentActions } from "@/src/hooks/zustand/z_USE_currentActions/z_USE_currentActions";
 import { Vocab_CARD } from "../_parts/Vocab_CARD/Vocab_CARD";
 import { vocabFetch_TYPES } from "../../../functions/FETCH_vocabs/types";
 import { loadingState_TYPES } from "@/src/types/general_TYPES";
 import { General_ERROR } from "@/src/types/error_TYPES";
+import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
+import {
+  ICON_arrow,
+  ICON_multiSelect,
+} from "@/src/components/1_grouped/icons/icons";
+import { z_USE_myVocabsDisplaySettings } from "../../../hooks/zustand/displaySettings/z_USE_myVocabsDisplaySettings/z_USE_myVocabsDisplaySettings";
 
 export default function MyVocabs_FLASHLIST({
   IS_debouncing = false,
@@ -25,6 +31,11 @@ export default function MyVocabs_FLASHLIST({
   loading_STATE,
   error,
   highlighted_ID,
+  showTitle = false,
+  IS_vocabSelectionOn = false,
+  TOGGLE_isVocabSelectionOn = () => {},
+  HANDLE_vocabSelection = () => {},
+  selected_VOCABS = new Map(),
 }: {
   IS_debouncing: boolean;
   OPEN_updateVocabModal?: () => void;
@@ -36,9 +47,21 @@ export default function MyVocabs_FLASHLIST({
   loading_STATE: loadingState_TYPES;
   highlighted_ID: string;
   error: General_ERROR | undefined;
+  showTitle: boolean;
+  IS_vocabSelectionOn: boolean;
+  TOGGLE_isVocabSelectionOn: () => void;
+  HANDLE_vocabSelection: (id: string, vocab: Vocab_TYPE) => void;
+  selected_VOCABS: Map<string, Vocab_TYPE>;
 }) {
   const flashlist_REF = useRef<FlashList<any>>(null);
   const { z_currentActions } = z_USE_currentActions();
+  const { filters, z_GET_activeFilterCount, z_CLEAR_filters } =
+    z_USE_myVocabsDisplaySettings();
+
+  const filter_COUNT = useMemo(z_GET_activeFilterCount, [
+    filters,
+    z_GET_activeFilterCount,
+  ]);
 
   const data = useMemo(
     () =>
@@ -53,23 +76,69 @@ export default function MyVocabs_FLASHLIST({
   );
 
   return (
-    <Styled_FLASHLIST
-      onScroll={handleScroll}
-      data={data}
-      flashlist_REF={flashlist_REF}
-      renderItem={({ item }: { item: Vocab_TYPE }) => (
-        <Vocab_CARD
-          vocab={item}
-          list_TYPE="private"
-          fetch_TYPE={fetch_TYPE}
-          OPEN_updateVocabModal={OPEN_updateVocabModal}
-          highlighted={highlighted_ID === item.id}
+    <View style={{ flex: 1, position: "relative" }}>
+      <Styled_FLASHLIST
+        onScroll={handleScroll}
+        data={data}
+        flashlist_REF={flashlist_REF}
+        renderItem={({ item }: { item: Vocab_TYPE }) => (
+          <Vocab_CARD
+            vocab={item}
+            list_TYPE="private"
+            fetch_TYPE={fetch_TYPE}
+            OPEN_updateVocabModal={OPEN_updateVocabModal}
+            highlighted={highlighted_ID === item.id}
+            IS_vocabSelectionOn={IS_vocabSelectionOn}
+            HANDLE_vocabSelection={HANDLE_vocabSelection}
+            selected_VOCABS={selected_VOCABS}
+          />
+        )}
+        keyExtractor={(item) => "Vocab" + item.id}
+        extraData={[highlighted_ID, z_currentActions]}
+        ListHeaderComponent={Header}
+        ListFooterComponent={Footer}
+      />
+      <View
+        style={{
+          position: "absolute",
+          bottom: 12,
+          right: 12,
+          left: 12,
+          flexDirection: "row",
+          gap: 8,
+          justifyContent: "flex-end",
+        }}
+      >
+        {filter_COUNT > 0 && (
+          <Btn
+            text="Clear filters"
+            style={{ flex: 1 }}
+            text_STYLES={{ flex: 1 }}
+            onPress={z_CLEAR_filters}
+          />
+        )}
+
+        <Btn
+          type={IS_vocabSelectionOn ? "active" : "simple"}
+          iconRight={
+            <ICON_multiSelect
+              color={IS_vocabSelectionOn ? "primary" : "white"}
+            />
+          }
+          onPress={TOGGLE_isVocabSelectionOn}
         />
-      )}
-      keyExtractor={(item) => "Vocab" + item.id}
-      extraData={[highlighted_ID, z_currentActions]}
-      ListHeaderComponent={Header}
-      ListFooterComponent={Footer}
-    />
+        {showTitle && (
+          <Btn
+            iconRight={<ICON_arrow direction="up" color="white" />}
+            onPress={() =>
+              flashlist_REF?.current?.scrollToOffset({
+                animated: true,
+                offset: 0,
+              })
+            }
+          />
+        )}
+      </View>
+    </View>
   );
 }

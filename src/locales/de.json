@@ -378,7 +378,8 @@
     "hasMarked": "Gemerkt"
   },
   "title": {
-    "noListNameProvided": "Keine Listenname angegeben"
+    "noListNameProvided": "Keine Listenname angegeben",
+    "selectedVocabs": "Vokabel selektiert"
   },
   "confirmation": {
     "paragraph": {

@@ -26,6 +26,8 @@ export function MyOneList_NAV({
   OPEN_listSettings = () => {},
   OPEN_createVocabModal = () => {},
   SHOW_listName = false,
+  IS_vocabSelectionOn = false,
+  selectedVocab_COUNT = 0,
 }: {
   search: string;
   SHOW_listName: boolean;
@@ -33,6 +35,8 @@ export function MyOneList_NAV({
   OPEN_displaySettings: () => void;
   OPEN_listSettings: () => void;
   OPEN_createVocabModal: () => void;
+  IS_vocabSelectionOn: boolean;
+  selectedVocab_COUNT: number;
 }) {
   const [IS_searchOpen, SET_searchOpen] = useState(false);
   const search_REF = useRef<TextInput>(null);
@@ -42,7 +46,12 @@ export function MyOneList_NAV({
   const { list_NAME } = USE_getListName({ type: "private" });
 
   return (
-    <FlashlistPage_NAV SHOW_listName={SHOW_listName} list_NAME={list_NAME}>
+    <FlashlistPage_NAV
+      SHOW_listName={IS_vocabSelectionOn || SHOW_listName}
+      list_NAME={list_NAME}
+      IS_vocabSelectionOn={IS_vocabSelectionOn}
+      selectedVocab_COUNT={selectedVocab_COUNT}
+    >
       <NavBtn_WRAP>
         {!IS_searchOpen ? (
           <>
