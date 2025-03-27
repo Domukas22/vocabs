@@ -7,7 +7,7 @@ import Header from "@/src/components/1_grouped/headers/regular/Header";
 
 import { ICON_3dots, ICON_arrow } from "@/src/components/1_grouped/icons/icons";
 
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useState } from "react";
 import { ActivityIndicator, ScrollView, View } from "react-native";
 
 import { router, useRouter } from "expo-router";
@@ -18,44 +18,39 @@ import { MyColors } from "@/src/constants/MyColors";
 import { useTranslation } from "react-i18next";
 import CurrentVocabCount_BAR from "@/src/components/2_byPage/general/CurrentVocabCount_BAR";
 import { VOCAB_PRICING } from "@/src/constants/globalVars";
-import { PUSH_changes, USE_sync } from "@/src/hooks/USE_sync/USE_sync";
-import { supabase } from "@/src/lib/supabase";
 import Pricing_BTN from "@/src/components/1_grouped/buttons/Pricing_BTN/Pricing_BTN";
 
 import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
+import { USE_raiseUserVocabs } from "@/src/features_new/user/hooks/USE_user/USE_raiseUserVocabs/USE_raiseUserVocabs";
 
 export default function GetVocabs_PAGE() {
   const { t } = useTranslation();
   const { z_user } = z_USE_user();
-  const [loading, SET_loading] = useState(false);
-  const [IS_referringAFriend, SET_referringAFriend] = useState(false);
-
-  const totalUserVocab_COUNT = 0;
 
   const [purchase, SET_purchase] = useState({
     completed: false,
     vocab_COUNT: 0,
   });
 
-  const { sync } = USE_sync();
-
-  const { BUY_vocabs, error, RESET_error } = USE_buyVocabs();
+  const { RAISE_vocabs, RESET_error, error, loading } = USE_raiseUserVocabs();
 
   const buy = async (offer: 1 | 2 | 3) => {
     if (!z_user?.id) return;
+    const count = VOCAB_PRICING[offer].amount;
 
-    SET_loading(true);
-    await PUSH_changes();
-    await BUY_vocabs({ user_id: z_user?.id, offer });
-    await sync({ user: z_user, PULL_EVERYTHING: true });
-
-    if (!error) {
+    await RAISE_vocabs(count, () => {
       SET_purchase({
         completed: true,
         vocab_COUNT: VOCAB_PRICING[offer].amount,
       });
+    });
+
+    if (!error) {
+      SET_purchase({
+        completed: true,
+        vocab_COUNT: count,
+      });
     }
-    SET_loading(false);
   };
 
   return (
@@ -87,6 +82,7 @@ export default function GetVocabs_PAGE() {
             height: "100%",
             alignItems: "center",
             justifyContent: "center",
+            backgroundColor: MyColors.fill_bg,
           }}
         >
           <ActivityIndicator color="white" style={{ marginBottom: 8 }} />
@@ -97,8 +93,8 @@ export default function GetVocabs_PAGE() {
         <ScrollView
           style={{
             flex: 1,
-
             height: "100%",
+            backgroundColor: MyColors.fill_bg,
           }}
         >
           {purchase.completed && (
@@ -113,12 +109,12 @@ export default function GetVocabs_PAGE() {
               <Block styles={{ paddingBottom: 8 }}>
                 <Styled_TEXT type="label">
                   You have{" "}
-                  {(z_user?.max_vocabs || 200) - (totalUserVocab_COUNT || 0)}{" "}
+                  {(z_user?.max_vocabs || 200) - (z_user?.total_vocabs || 0)}{" "}
                   vocabs left
                 </Styled_TEXT>
 
                 <CurrentVocabCount_BAR
-                  totalUserVocab_COUNT={totalUserVocab_COUNT || 0}
+                  totalUserVocab_COUNT={z_user?.total_vocabs || 0}
                   max_vocabs={z_user?.max_vocabs || 0}
                   color="white"
                 />
@@ -130,6 +126,7 @@ export default function GetVocabs_PAGE() {
                   gap: 16,
                   borderBottomWidth: 1,
                   borderBottomColor: MyColors.border_white_005,
+                  marginBottom: 50,
                 }}
               >
                 {/* <Styled_TEXT type="label">Get yourself some vocabs!</Styled_TEXT> */}
@@ -139,7 +136,8 @@ export default function GetVocabs_PAGE() {
                 <Pricing_BTN offer={3} onPress={() => buy(3)} />
               </View>
 
-              <View
+              {/* Other ways tog et vocabs */}
+              {/* <View
                 style={{
                   padding: 12,
                   gap: 12,
@@ -188,149 +186,13 @@ export default function GetVocabs_PAGE() {
                   make a purchase, he can then select your username and you will
                   get
                 </Styled_TEXT>
-              </View>
+              </View> */}
             </>
           )}
         </ScrollView>
       )}
     </>
   );
-}
-
-export function USE_buyVocabs() {
-  const [loading, SET_loading] = useState(false);
-  const [error, SET_error] = useState<string | null>(null);
-  const RESET_error = useCallback(() => SET_error(null), []);
-
-  const errorMessage = useMemo(
-    () =>
-      "Some kind of error happened when trying to buy vocabs. This is an issue on our side. Please try to reload the app and see if the problem persists. The issue has been recorded and will be reviewed by developers. We apologize for the trouble.",
-    []
-  );
-
-  const BUY_vocabs = async ({
-    user_id,
-    offer,
-  }: {
-    user_id: string | undefined;
-    offer: 1 | 2 | 3;
-  }) => {
-    if (!user_id) {
-      SET_error(errorMessage);
-      return {
-        success: false,
-        msg: "🔴 User is required when buying vocabs 🔴",
-      };
-    }
-    if (offer !== 1 && offer !== 2 && offer !== 3) {
-      SET_error(errorMessage);
-      return {
-        success: false,
-        msg: "🔴 When buying vocabs, the offer must be 1 | 2 | 3. It was none of the values 🔴",
-      };
-    }
-
-    try {
-      const { data: user, error: fetchUser_ERROR } = await supabase
-        .from("users")
-        .select("*")
-        .eq("id", user_id)
-        .single();
-
-      if (fetchUser_ERROR) {
-        SET_error(errorMessage);
-        return {
-          success: false,
-          msg: "🔴 User not found on supabase when trying to buy vocabs 🔴",
-        };
-      }
-
-      const offerBundle = VOCAB_PRICING[offer];
-
-      // update max vocabs
-      const { error: updateMaxVocabs_ERROR } = await supabase
-        .from("users")
-        .update({ max_vocabs: user.max_vocabs + offerBundle.amount })
-        .eq("id", user_id);
-
-      if (updateMaxVocabs_ERROR) {
-        SET_error(errorMessage);
-        console.error(
-          `🔴Error updating user max_vocabs when trying to buy vocabs: 🔴`,
-          updateMaxVocabs_ERROR
-        );
-        return {
-          success: false,
-          msg: "🔴 Error updating user max_vocabs when trying to buy vocabs 🔴",
-        };
-      }
-
-      // create notification
-      const { data: notification, error: createNotification_ERROR } =
-        await supabase.from("notifications").insert({
-          user_id: user.id,
-          title: `You bought ${offerBundle.amount} vocabs`,
-          paragraph: `Your vocab limit has been increased by ${offerBundle.amount}. You can view your payment details in the 'General' tab under 'Payments'.`,
-          type: "vocabsAdded",
-          is_read: false,
-          // created_at: new Date().toDateString(),
-          // updated_at: new Date().toDateString(),
-        });
-
-      if (createNotification_ERROR) {
-        SET_error(errorMessage);
-        console.error(
-          `🔴 Error creating notification when trying to buy vocabs: 🔴`,
-          createNotification_ERROR
-        );
-        return {
-          success: false,
-          msg: "🔴 Error creating notification when trying to buy vocabs 🔴",
-        };
-      }
-
-      // create payment
-      const { error: createPayment_ERROR } = await supabase
-        .from("payments")
-        .insert({
-          user_id: user.id,
-          item: `${offerBundle.amount} vocabs`,
-          payment_method: "xxxxx",
-          amount: offerBundle.price,
-          transaction_id: "xxxxxx",
-          // created_at: new Date().toDateString(),
-          // updated_at: new Date().toDateString(),
-        });
-
-      if (createPayment_ERROR) {
-        SET_error(errorMessage);
-        console.error(
-          `🔴 Error creating payment when trying to buy vocabs: 🔴`,
-          createPayment_ERROR
-        );
-        return {
-          success: false,
-          msg: "🔴 Error creating payment when trying to buy vocabs 🔴",
-        };
-      }
-
-      // create a notification
-    } catch (error: any) {
-      if (error.message === "Failed to fetch") {
-        SET_error(
-          "It looks like there's an issue with your internet connection. Please check your connection and try again."
-        );
-      } else {
-        SET_error(errorMessage);
-      }
-      return {
-        success: false,
-        msg: `🔴 Unexpected error occurred during vocab creation 🔴: ${error.message}`,
-      };
-    }
-  };
-
-  return { BUY_vocabs, error, RESET_error };
 }
 
 function PurchaseCompleted_VIEW({

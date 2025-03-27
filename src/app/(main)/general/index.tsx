@@ -47,7 +47,6 @@ export default function General_PAGE() {
   // const { notification_COUNT, totalUserVocab_COUNT } =
   //   USE_userObservables(z_user);
 
-  const totalUserVocab_COUNT = 0;
   const notification_COUNT = 0;
 
   const _logout = async () => {
@@ -114,14 +113,13 @@ export default function General_PAGE() {
           <View>
             <Styled_TEXT type="text_18_semibold">
               You have{" "}
-              {(z_user?.max_vocabs || 200) - (totalUserVocab_COUNT || 0)} vocabs
+              {(z_user?.max_vocabs || 200) - (z_user?.total_vocabs || 0)} vocabs
               left
             </Styled_TEXT>
             <Styled_TEXT type="label">{z_user?.email}</Styled_TEXT>
-            <Styled_TEXT type="label">{z_user?.username}</Styled_TEXT>
           </View>
           <CurrentVocabCount_BAR
-            totalUserVocab_COUNT={totalUserVocab_COUNT || 0}
+            totalUserVocab_COUNT={z_user?.total_vocabs || 0}
             max_vocabs={z_user?.max_vocabs || 0}
           />
 

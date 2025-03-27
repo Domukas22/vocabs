@@ -36,10 +36,10 @@ export function USE_softDeletevocab() {
   const {
     z_REMOVE_vocab: z_REMOVE_vocabFromMyVocabsList,
     z_SET_error,
-
     z_SET_langIds,
     z_fetch_TYPE,
   } = z_USE_myVocabs();
+
   const { z_REMOVE_listFromMyLists } = z_USE_myLists();
   const { REFECH_andReplaceMyListInLists } =
     USE_refetchAndReplaceMyListInAllLists();

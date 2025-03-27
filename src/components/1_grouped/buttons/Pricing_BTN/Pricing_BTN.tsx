@@ -33,7 +33,6 @@ export default function Pricing_BTN({
           <Styled_TEXT
             type="text_20_bold"
             style={{ color: MyColors.text_primary }}
-            // style={{ textDecorationLine: "underline" }}
           >
             €{pricing.price}
           </Styled_TEXT>

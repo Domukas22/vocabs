@@ -34,7 +34,7 @@ export async function FETCH_mySupabaseProfile(
       };
     }
     const { data: user, error } = await supabase
-      .from("users")
+      .from("users_extended")
       .select("*")
       .eq("id", userId)
       .single();

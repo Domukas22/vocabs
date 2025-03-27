@@ -17,13 +17,11 @@ const function_NAME = "USE_saveVocab";
 
 export function USE_saveVocab() {
   const { z_user } = z_USE_user();
-
   const { celebrate } = USE_celebrate();
 
   const { error, SET_error, RESET_error } = USE_error<
     General_ERROR | FormInput_ERROR | undefined
   >();
-
   const [loading, SET_loading] = useState(false);
 
   const _SAVE_vocab = useCallback(

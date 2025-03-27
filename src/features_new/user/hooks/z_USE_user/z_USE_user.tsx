@@ -8,6 +8,7 @@ import { User_TYPE } from "../../types";
 interface z_USE_user_PROPS {
   z_user: User_TYPE | undefined;
   z_SET_user: (new_SETTINGS: Partial<User_TYPE | undefined>) => void;
+  z_SET_userMaxVocabCount: (count: number) => void;
 }
 
 export const z_USE_user = create<z_USE_user_PROPS>((set) => ({
@@ -19,6 +20,12 @@ export const z_USE_user = create<z_USE_user_PROPS>((set) => ({
         ...((state.z_user || {}) as User_TYPE), // Ensure we merge into a User_TYPE object
         ...new_SETTINGS,
       },
+    }));
+  },
+  z_SET_userMaxVocabCount: (count) => {
+    console.log(count);
+    set((state) => ({
+      z_user: state.z_user ? { ...state.z_user, max_vocabs: count } : undefined,
     }));
   },
 }));

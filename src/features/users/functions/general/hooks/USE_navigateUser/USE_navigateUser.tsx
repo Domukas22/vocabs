@@ -55,6 +55,7 @@ export function USE_navigateUser(SHOW_recoveryModal = () => {}) {
 
     // User found on supabase => insert into zustand state
     z_SET_user(supabase_USER);
+
     router.push("/(main)/vocabs");
   };
 
