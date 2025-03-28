@@ -116,7 +116,8 @@
     "seeAllPublicLists_POST": "öffentliche Listen sehen",
     "seeAllPublicVocabs_PRE": "Alle",
     "seeAllPublicVocabs_POST": "öffentliche Vokabeln sehen",
-    "resetAllVocabDifficultiesOfAList": "Vokabel Schwierigkeiten zurücksetzten"
+    "resetAllVocabDifficultiesOfAList": "Vokabel Schwierigkeiten zurücksetzten",
+    "performAnAction": "Aktion auswählen"
   },
   "pages": {
     "about": {
@@ -237,7 +238,8 @@
     "resetVocabDifficultiesInAList": "Die Schwierigkeit jedes Vokabulars in dieser Liste auf \"Schwer\" zurücksetzen",
     "allLanguages": "Alle Sprachen",
     "selectedLanguages": "Ausgewählte Sprachen",
-    "searchResultCount": "Suchergebnisse für"
+    "searchResultCount": "Suchergebnisse für",
+    "tapOnAVocab": "Tippe auf einen Vokabular"
   },
   "modal": {
     "displaySettings": {

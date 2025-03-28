@@ -16,8 +16,19 @@ import { z_USE_myListsDisplaySettings } from "@/src/features_new/lists/hooks/zus
 import { z_USE_myVocabsDisplaySettings } from "@/src/features_new/vocabs/hooks/zustand/displaySettings/z_USE_myVocabsDisplaySettings/z_USE_myVocabsDisplaySettings";
 import { t } from "i18next";
 import { useState, useRef } from "react";
-import { TextInput } from "react-native";
+import { TextInput, View } from "react-native";
 import { USE_getListName } from "../../../hooks/USE_getListName/USE_getListName";
+import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
+import { MyColors } from "@/src/constants/MyColors";
+import {
+  ICON_arrow,
+  ICON_checkMark,
+  ICON_delete,
+  ICON_download,
+  ICON_dropdownArrow,
+  ICON_X,
+} from "@/src/components/1_grouped/icons/icons";
+import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 
 export function MyOneList_NAV({
   search = "",
@@ -25,6 +36,9 @@ export function MyOneList_NAV({
   OPEN_displaySettings = () => {},
   OPEN_listSettings = () => {},
   OPEN_createVocabModal = () => {},
+
+  CANCEL_selection = () => {},
+
   SHOW_listName = false,
   IS_vocabSelectionOn = false,
   selectedVocab_COUNT = 0,
@@ -35,6 +49,8 @@ export function MyOneList_NAV({
   OPEN_displaySettings: () => void;
   OPEN_listSettings: () => void;
   OPEN_createVocabModal: () => void;
+
+  CANCEL_selection: () => void;
   IS_vocabSelectionOn: boolean;
   selectedVocab_COUNT: number;
 }) {

@@ -85,6 +85,7 @@ export function ICON_X({
   color = "grey",
   big = false,
   rotate = false,
+  minus = false,
 }: {
   color?:
     | "grey"
@@ -93,9 +94,11 @@ export function ICON_X({
     | "difficulty_2"
     | "difficulty_3"
     | "white"
-    | "green";
+    | "green"
+    | "red";
   big?: boolean;
   rotate?: boolean;
+  minus?: boolean;
 }) {
   const backgroundColor =
     color === "primary"
@@ -110,13 +113,20 @@ export function ICON_X({
       ? MyColors.icon_green
       : color === "white"
       ? "white"
+      : color === "red"
+      ? MyColors.icon_red
       : MyColors.icon_gray_light;
 
   return (
     <View
       style={[s.icon, { transform: [{ rotate: rotate ? "45deg" : "0deg" }] }]}
     >
-      <View style={[s.x_line, big && s.x_line_big, { backgroundColor }]}></View>
+      {minus ? null : (
+        <View
+          style={[s.x_line, big && s.x_line_big, { backgroundColor }]}
+        ></View>
+      )}
+
       <View
         style={[
           s.x_line,
@@ -153,7 +163,7 @@ export function ICON_arrow({
   color = "gray_light",
   ...props
 }: {
-  direction?: "left" | "right" | "up" | "down";
+  direction?: "left" | "right" | "up" | "down" | "right_up";
   color?: "gray_light" | "green" | "black" | "white";
 } & ViewProps) {
   const rotate =
@@ -161,6 +171,8 @@ export function ICON_arrow({
       ? "0deg"
       : direction === "right"
       ? "180deg"
+      : direction === "right_up"
+      ? "135deg"
       : direction === "up"
       ? "90deg"
       : "-90deg";

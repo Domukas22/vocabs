@@ -20,7 +20,7 @@ type Btn = PressableProps & {
   tiny?: boolean;
   topRightIconCount?: number;
   props?: PressableProps;
-  blurAndDisable?: boolean;
+  locked?: boolean;
 };
 
 export default function Btn({
@@ -34,7 +34,7 @@ export default function Btn({
   stayPressed = false,
   tiny = false,
   topRightIconCount = 0,
-  blurAndDisable = false,
+  locked = false,
   props,
 }: Btn) {
   return (
@@ -42,12 +42,12 @@ export default function Btn({
       onPress={onPress && !stayPressed ? onPress : null}
       style={({ pressed }) => [
         btnStyles.default,
-        blurAndDisable && { pointerEvents: "none" },
         pressed || stayPressed
           ? btnStyles[type].btn.press
           : btnStyles[type].btn.normal,
         tiny && btnStyles.tiny,
         style,
+        locked && { pointerEvents: "none", opacity: 0.25 },
       ]}
       {...props}
     >

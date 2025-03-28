@@ -99,7 +99,27 @@ export default function SingleList_PAGE() {
     [selected_VOCABS, SET_selectedVocabs]
   );
 
-  const [IS_vocabSelectionOn, TOGGLE_isVocabSelectionOn] = USE_toggle(false);
+  const SELECT_all = useCallback(
+    (vocabs: Map<string, Vocab_TYPE>) => {
+      SET_selectedVocabs(new Map(vocabs));
+    },
+    [SET_selectedVocabs]
+  );
+
+  const UNSELECT_all = useCallback(() => {
+    SET_selectedVocabs(new Map());
+  }, [SET_selectedVocabs]);
+
+  const [
+    IS_vocabSelectionOn,
+    TOGGLE_isVocabSelectionOn,
+    SET_isVocabSelectionOn,
+  ] = USE_toggle(false);
+
+  const CANCEL_selection = useCallback(() => {
+    SET_selectedVocabs(new Map());
+    SET_isVocabSelectionOn(false);
+  }, []);
 
   const TOGGLE_vocabSelection = useCallback(() => {
     SET_selectedVocabs(new Map());
@@ -117,6 +137,7 @@ export default function SingleList_PAGE() {
         SHOW_listName={showTitle}
         IS_vocabSelectionOn={IS_vocabSelectionOn}
         selectedVocab_COUNT={selected_VOCABS.size}
+        CANCEL_selection={CANCEL_selection}
       />
 
       <MyVocabs_FLASHLIST
@@ -133,6 +154,7 @@ export default function SingleList_PAGE() {
         TOGGLE_isVocabSelectionOn={TOGGLE_vocabSelection}
         HANDLE_vocabSelection={HANDLE_vocabSelection}
         selected_VOCABS={selected_VOCABS}
+        CANCEL_selection={CANCEL_selection}
         Header={
           <Flashlist_HEADER
             IS_debouncing={IS_debouncing}

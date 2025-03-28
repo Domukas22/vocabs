@@ -115,7 +115,8 @@
     "seeAllPublicLists_POST": "public lists",
     "seeAllPublicVocabs_PRE": "See all",
     "seeAllPublicVocabs_POST": "public vocabs",
-    "resetAllVocabDifficultiesOfAList": "Reset vocab difficulties"
+    "resetAllVocabDifficultiesOfAList": "Reset vocab difficulties",
+    "performAnAction": "Select action"
   },
   "pages": {
     "about": {
@@ -238,7 +239,8 @@
     "resetVocabDifficultiesInAList": "Reset the difficulty of each vocab in this to \"Difficult\"",
     "allLanguages": "All languages",
     "selectedLanguages": "Selected languages",
-    "searchResultCount": "search results for"
+    "searchResultCount": "search results for",
+    "tapOnAVocab": "Tap on a vocab"
   },
   "modal": {
     "displaySettings": {

@@ -80,14 +80,10 @@ export default function FlashlistPage_NAV({
               numberOfLines={1}
               style={{
                 height: 34,
-                color: IS_vocabSelectionOn
-                  ? MyColors.text_primary
-                  : MyColors.text_white,
+                color: MyColors.text_white,
               }}
             >
-              {IS_vocabSelectionOn
-                ? `${selectedVocab_COUNT} ${t("title.selectedVocabs")}`
-                : list_NAME}
+              {list_NAME}
             </Styled_TEXT>
           </Animated.View>
         </View>
