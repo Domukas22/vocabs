@@ -18,7 +18,7 @@ import {
   HANDLE_difficultyFilter,
 } from "../_helpers";
 
-export type myVocabsSorting_TYPE = "difficulty" | "date" | "marked";
+export type myVocabsSorting_TYPE = "difficulty" | "date" | "marked" | "shuffle";
 
 interface z_USE_myVocabsDisplaySettings_PROPS {
   sorting: {

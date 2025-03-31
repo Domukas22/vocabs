@@ -19,17 +19,23 @@ import { z_USE_myVocabsDisplaySettings } from "@/src/features_new/vocabs/hooks/z
 
 import { t } from "i18next";
 import { DisplaySettingsModalContent_SCROLLVIEW } from "../../../../parts";
+import { SortByShuffle_BTN } from "@/src/components/1_grouped/buttons/Btn/variations/SortByShuffle_BTN/SortByShuffle_BTN";
+import { useMemo } from "react";
 
 export function MyVocabsSorting_CONTENT() {
   const { sorting, z_SET_sorting, z_SET_sortDirection } =
     z_USE_myVocabsDisplaySettings();
 
   const { type = "date", direction = "descending" } = sorting;
+  const SHOW_sortDirectionBlock = useMemo(
+    () => type === "date" || type === "difficulty" || type === "marked",
+    [sorting]
+  );
 
   return (
     <DisplaySettingsModalContent_SCROLLVIEW>
       <Block row={false}>
-        <Label>{t("label.sortLists")}</Label>
+        <Label>{t("label.sortVocabs")}</Label>
         <SortByDate_BTN
           IS_active={type === "date"}
           onPress={() => {
@@ -51,45 +57,53 @@ export function MyVocabsSorting_CONTENT() {
             z_SET_sortDirection("descending");
           }}
         />
+        <SortByShuffle_BTN
+          IS_active={type === "shuffle"}
+          onPress={() => {
+            z_SET_sorting("shuffle");
+          }}
+        />
       </Block>
 
-      <Block>
-        <Label>{t("label.sortDirection")}</Label>
-        {type === "date" ? (
-          <>
-            <NewToOld_BTN
-              IS_active={direction === "descending"}
-              onPress={() => z_SET_sortDirection("descending")}
-            />
-            <OldToNew_BTN
-              IS_active={direction === "ascending"}
-              onPress={() => z_SET_sortDirection("ascending")}
-            />
-          </>
-        ) : type === "marked" ? (
-          <>
-            <MarkedToUnmarked_BTN
-              IS_active={direction === "descending"}
-              onPress={() => z_SET_sortDirection("descending")}
-            />
-            <UnmarkedToMarked_BTN
-              IS_active={direction === "ascending"}
-              onPress={() => z_SET_sortDirection("ascending")}
-            />
-          </>
-        ) : type === "difficulty" ? (
-          <>
-            <HardToEasy_BTN
-              IS_active={direction === "descending"}
-              onPress={() => z_SET_sortDirection("descending")}
-            />
-            <EasyToHard_BTN
-              IS_active={direction === "ascending"}
-              onPress={() => z_SET_sortDirection("ascending")}
-            />
-          </>
-        ) : null}
-      </Block>
+      {SHOW_sortDirectionBlock && (
+        <Block>
+          <Label>{t("label.sortDirection")}</Label>
+          {type === "date" ? (
+            <>
+              <NewToOld_BTN
+                IS_active={direction === "descending"}
+                onPress={() => z_SET_sortDirection("descending")}
+              />
+              <OldToNew_BTN
+                IS_active={direction === "ascending"}
+                onPress={() => z_SET_sortDirection("ascending")}
+              />
+            </>
+          ) : type === "marked" ? (
+            <>
+              <MarkedToUnmarked_BTN
+                IS_active={direction === "descending"}
+                onPress={() => z_SET_sortDirection("descending")}
+              />
+              <UnmarkedToMarked_BTN
+                IS_active={direction === "ascending"}
+                onPress={() => z_SET_sortDirection("ascending")}
+              />
+            </>
+          ) : type === "difficulty" ? (
+            <>
+              <HardToEasy_BTN
+                IS_active={direction === "descending"}
+                onPress={() => z_SET_sortDirection("descending")}
+              />
+              <EasyToHard_BTN
+                IS_active={direction === "ascending"}
+                onPress={() => z_SET_sortDirection("ascending")}
+              />
+            </>
+          ) : null}
+        </Block>
+      )}
     </DisplaySettingsModalContent_SCROLLVIEW>
   );
 }

@@ -112,6 +112,7 @@ export default function AllVocabs_PAGE() {
         />
 
         <DisplaySettings_MODAL
+          lang_IDS={lang_IDS}
           starting_TAB="vocab-preview"
           type="my-vocabs"
           open={modals.displaySettings.IS_open}

@@ -69,24 +69,69 @@ export function MyOneList_NAV({
       selectedVocab_COUNT={selectedVocab_COUNT}
     >
       <NavBtn_WRAP>
-        {!IS_searchOpen ? (
+        {!IS_vocabSelectionOn && (
           <>
-            <NavBack_BTN extra_ACTION={() => z_CLEAR_filters()} />
-            <NavListSettings_BTN OPEN_listSettings={OPEN_listSettings} />
-            <NavSearch_BTN OPEN_search={() => SET_searchOpen(true)} />
-            <NavDisplaySettings_BTN
-              OPEN_displaySettings={OPEN_displaySettings}
-              activeFilter_COUNT={z_GET_activeFilterCount() || 0}
-            />
-            <NavCreate_BTN OPEN_createModal={OPEN_createVocabModal} />
+            {!IS_searchOpen ? (
+              <>
+                <NavBack_BTN extra_ACTION={() => z_CLEAR_filters()} />
+                <NavListSettings_BTN OPEN_listSettings={OPEN_listSettings} />
+                <NavSearch_BTN OPEN_search={() => SET_searchOpen(true)} />
+                <NavDisplaySettings_BTN
+                  OPEN_displaySettings={OPEN_displaySettings}
+                  activeFilter_COUNT={z_GET_activeFilterCount() || 0}
+                />
+                <NavCreate_BTN OPEN_createModal={OPEN_createVocabModal} />
+              </>
+            ) : (
+              <NavOpenSearch_BTNS
+                search={search}
+                search_REF={search_REF}
+                CLOSE_search={() => SET_searchOpen(false)}
+                SET_search={SET_search}
+              />
+            )}
           </>
-        ) : (
-          <NavOpenSearch_BTNS
-            search={search}
-            search_REF={search_REF}
-            CLOSE_search={() => SET_searchOpen(false)}
-            SET_search={SET_search}
-          />
+        )}
+
+        {IS_vocabSelectionOn && (
+          <View style={{ flexDirection: "row", gap: 8, flex: 1 }}>
+            {selectedVocab_COUNT ? (
+              <View style={{ flex: 1, flexDirection: "row", gap: 8 }}>
+                <Btn
+                  text={t("btn.performAnAction")}
+                  text_STYLES={{ flex: 1 }}
+                  iconRight={<ICON_dropdownArrow />}
+                  style={{ flex: 1 }}
+                />
+                {/* <Btn
+                  iconRight={
+                    <Styled_TEXT type="text_18_bold">
+                      {selectedVocab_COUNT}
+                    </Styled_TEXT>
+                  }
+                  style={{ paddingHorizontal: 20 }}
+                  onPress={CANCEL_selection}
+                /> */}
+              </View>
+            ) : (
+              <View
+                style={{
+                  height: "auto",
+                  flex: 1,
+                  justifyContent: "center",
+                }}
+              >
+                <Styled_TEXT style={{ color: MyColors.text_white_06 }}>
+                  {t("label.tapOnAVocab")}
+                </Styled_TEXT>
+              </View>
+            )}
+
+            <Btn
+              iconRight={<ICON_X big rotate color="red" />}
+              onPress={CANCEL_selection}
+            />
+          </View>
         )}
       </NavBtn_WRAP>
     </FlashlistPage_NAV>

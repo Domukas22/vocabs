@@ -116,7 +116,8 @@
     "seeAllPublicVocabs_PRE": "See all",
     "seeAllPublicVocabs_POST": "public vocabs",
     "resetAllVocabDifficultiesOfAList": "Reset vocab difficulties",
-    "performAnAction": "Select action"
+    "performAnAction": "Select action",
+    "sortByShuffle": "Shuffle"
   },
   "pages": {
     "about": {

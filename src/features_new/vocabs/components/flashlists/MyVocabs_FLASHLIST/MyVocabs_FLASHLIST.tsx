@@ -107,106 +107,52 @@ export default function MyVocabs_FLASHLIST({
         ListHeaderComponent={Header}
         ListFooterComponent={Footer}
       />
-      {IS_vocabSelectionOn && (
-        <View
-          style={{
-            position: "absolute",
-            bottom: 0,
-            right: 0,
-            left: 0,
-            paddingHorizontal: 12,
-            paddingVertical: 12,
-            gap: 8,
-            justifyContent: "flex-end",
-            backgroundColor: MyColors.fill_bg,
-          }}
-        >
-          <Styled_TEXT type="list_title">{`${selected_VOCABS.size} ${t(
-            "title.selectedVocabs"
-          )}`}</Styled_TEXT>
-          <View style={{ flexDirection: "row", gap: 8 }}>
-            {selected_VOCABS.size ? (
-              <View style={{ flex: 1, flexDirection: "row", gap: 8 }}>
-                <Btn
-                  text={t("btn.performAnAction")}
-                  text_STYLES={{ flex: 1 }}
-                  iconRight={<ICON_dropdownArrow />}
-                  style={{ flex: 1 }}
-                />
-                <Btn
-                  iconRight={
-                    <Styled_TEXT type="text_18_bold">
-                      {selected_VOCABS.size}
-                    </Styled_TEXT>
-                  }
-                  style={{ paddingHorizontal: 20 }}
-                  onPress={CANCEL_selection}
-                />
-              </View>
-            ) : (
-              <View
-                style={{ height: "auto", flex: 1, justifyContent: "center" }}
-              >
-                <Styled_TEXT style={{ color: MyColors.text_white_06 }}>
-                  {t("label.tapOnAVocab")}
-                </Styled_TEXT>
-              </View>
-            )}
 
-            <Btn
-              iconRight={<ICON_X big rotate color="red" />}
-              onPress={CANCEL_selection}
-            />
-          </View>
-        </View>
-      )}
-      {!IS_vocabSelectionOn && (
-        <View
-          style={{
-            position: "absolute",
-            bottom: 12,
-            right: 12,
-            left: 12,
-            flexDirection: "row",
-            gap: 8,
-            justifyContent: "flex-end",
-          }}
-        >
-          {filter_COUNT > 0 && (
-            <Btn
-              text="Clear filters"
-              style={{ flex: 1 }}
-              text_STYLES={{ flex: 1 }}
-              onPress={z_CLEAR_filters}
-              iconRight={<ICON_X rotate big color="white" />}
-            />
-          )}
-
+      <View
+        style={{
+          position: "absolute",
+          bottom: 12,
+          right: 12,
+          left: 12,
+          flexDirection: "row",
+          gap: 8,
+          justifyContent: "flex-end",
+        }}
+      >
+        {filter_COUNT > 0 && (
           <Btn
-            type={IS_vocabSelectionOn ? "active" : "simple"}
-            iconLeft={
-              <ICON_multiSelect
-                color={IS_vocabSelectionOn ? "primary" : "white"}
-              />
-            }
-            iconRight={
-              IS_vocabSelectionOn ? <ICON_X color="primary" rotate big /> : null
-            }
-            onPress={TOGGLE_isVocabSelectionOn}
+            text="Clear filters"
+            style={{ flex: 1 }}
+            text_STYLES={{ flex: 1 }}
+            onPress={z_CLEAR_filters}
+            iconRight={<ICON_X rotate big color="white" />}
           />
-          {showTitle && (
-            <Btn
-              iconRight={<ICON_arrow direction="up" color="white" />}
-              onPress={() =>
-                flashlist_REF?.current?.scrollToOffset({
-                  animated: true,
-                  offset: 0,
-                })
-              }
+        )}
+
+        <Btn
+          type={IS_vocabSelectionOn ? "active" : "simple"}
+          iconLeft={
+            <ICON_multiSelect
+              color={IS_vocabSelectionOn ? "primary" : "white"}
             />
-          )}
-        </View>
-      )}
+          }
+          iconRight={
+            IS_vocabSelectionOn ? <ICON_X color="primary" rotate big /> : null
+          }
+          onPress={TOGGLE_isVocabSelectionOn}
+        />
+        {showTitle && (
+          <Btn
+            iconRight={<ICON_arrow direction="up" color="white" />}
+            onPress={() =>
+              flashlist_REF?.current?.scrollToOffset({
+                animated: true,
+                offset: 0,
+              })
+            }
+          />
+        )}
+      </View>
     </View>
   );
 }

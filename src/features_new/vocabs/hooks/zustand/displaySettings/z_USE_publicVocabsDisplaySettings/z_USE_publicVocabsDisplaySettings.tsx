@@ -6,7 +6,7 @@ import { VocabFilter_PROPS } from "@/src/features_new/vocabs/types";
 import { sortDirection_TYPE } from "@/src/types/general_TYPES";
 import { create } from "zustand";
 
-export type publicVocabsSorting_TYPE = "date" | "saved-count";
+export type publicVocabsSorting_TYPE = "date" | "saved-count" | "shuffle";
 
 interface z_USE_publicVocabsDisplaySettings_PROPS {
   sorting: {

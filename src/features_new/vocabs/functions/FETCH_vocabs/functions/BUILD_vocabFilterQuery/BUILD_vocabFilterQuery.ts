@@ -24,6 +24,7 @@ export function BUILD_vocabFilterQuery(
       difficulties: [],
       langs: [],
     },
+    sorting,
   } = args;
 
   if (!query)

@@ -117,7 +117,8 @@
     "seeAllPublicVocabs_PRE": "Alle",
     "seeAllPublicVocabs_POST": "öffentliche Vokabeln sehen",
     "resetAllVocabDifficultiesOfAList": "Vokabel Schwierigkeiten zurücksetzten",
-    "performAnAction": "Aktion auswählen"
+    "performAnAction": "Aktion auswählen",
+    "sortByShuffle": "Mischen"
   },
   "pages": {
     "about": {

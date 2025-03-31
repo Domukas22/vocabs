@@ -57,7 +57,8 @@ export type vocabSorting_TYPES =
   | "date"
   | "difficulty"
   | "saved-count"
-  | "marked";
+  | "marked"
+  | "shuffle";
 
 export type VocabSorting_PROPS = {
   type: vocabSorting_TYPES;
