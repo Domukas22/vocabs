@@ -5,7 +5,10 @@
 import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import Header from "@/src/components/1_grouped/headers/regular/Header";
 
-import { ICON_3dots, ICON_arrow } from "@/src/components/1_grouped/icons/icons";
+import {
+  ICON_3dots,
+  ICON_arrow2,
+} from "@/src/components/1_grouped/icons/icons";
 
 import React from "react";
 import { StyleSheet } from "react-native";
@@ -35,7 +38,7 @@ export default function Payments_PAGE() {
         btnLeft={
           <Btn
             type="seethrough"
-            iconLeft={<ICON_arrow />}
+            iconLeft={<ICON_arrow2 />}
             onPress={() => router.back()}
             style={{ borderRadius: 100 }}
           />

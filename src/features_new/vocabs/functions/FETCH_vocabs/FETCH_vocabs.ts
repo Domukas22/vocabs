@@ -43,6 +43,8 @@ export async function FETCH_vocabs(
     // Fetch final vocab results with excluded ids applied
     const { vocabs } = await FETCH_finalVocabs(query, args);
 
+    console.log(args);
+
     // ---------------------------------------------------
     // Return valid data if fetch was successful
     return { vocabs, unpaginated_COUNT };

@@ -7,7 +7,7 @@ import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import Block from "@/src/components/1_grouped/blocks/Block/Block";
 import {
   ICON_settings,
-  ICON_arrow,
+  ICON_arrow2,
   ICON_privacyPolicy,
   ICON_contact,
   ICON_about,
@@ -129,7 +129,7 @@ export default function General_PAGE() {
               type="action"
               style={{ flex: 1 }}
               text_STYLES={{ flex: 1 }}
-              iconRight={<ICON_arrow direction="right" color="black" />}
+              iconRight={<ICON_arrow2 direction="right" color="black" />}
               onPress={() => router.push("/(main)/general/getVocabs")}
             />
 
@@ -141,7 +141,7 @@ export default function General_PAGE() {
           <Btn
             iconLeft={<ICON_settings />}
             text={t("page.general.btn.settings")}
-            iconRight={<ICON_arrow direction="right" />}
+            iconRight={<ICON_arrow2 direction="right" />}
             onPress={() => router.push("/(main)/general/settings")}
             text_STYLES={{ flex: 1, marginLeft: 4 }}
           />
@@ -163,7 +163,7 @@ export default function General_PAGE() {
           <Btn
             iconLeft={<ICON_checkMarkFull />}
             text={t("page.general.btn.payments")}
-            iconRight={<ICON_arrow direction="right" />}
+            iconRight={<ICON_arrow2 direction="right" />}
             onPress={() => router.push("/(main)/general/payments")}
             text_STYLES={{ flex: 1, marginLeft: 4 }}
           />
@@ -171,7 +171,7 @@ export default function General_PAGE() {
           <Btn
             iconLeft={<ICON_contact />}
             text={t("page.general.btn.contact")}
-            iconRight={<ICON_arrow direction="right" />}
+            iconRight={<ICON_arrow2 direction="right" />}
             onPress={() => router.push("/(main)/general/contact")}
             text_STYLES={{ flex: 1, marginLeft: 4 }}
           />
@@ -179,14 +179,14 @@ export default function General_PAGE() {
           <Btn
             iconLeft={<ICON_about />}
             text={t("page.general.btn.about")}
-            iconRight={<ICON_arrow direction="right" />}
+            iconRight={<ICON_arrow2 direction="right" />}
             onPress={() => router.push("/(main)/general/about")}
             text_STYLES={{ flex: 1, marginLeft: 4 }}
           />
           <Btn
             iconLeft={<ICON_privacyPolicy />}
             text={t("page.general.btn.privacy")}
-            iconRight={<ICON_arrow direction="right" />}
+            iconRight={<ICON_arrow2 direction="right" />}
             onPress={() => router.push("/(main)/general/privacy")}
             text_STYLES={{ flex: 1, marginLeft: 4 }}
           />

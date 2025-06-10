@@ -7,7 +7,7 @@ import Header from "@/src/components/1_grouped/headers/regular/Header";
 
 import {
   ICON_3dots,
-  ICON_arrow,
+  ICON_arrow2,
   ICON_flag,
 } from "@/src/components/1_grouped/icons/icons";
 
@@ -59,7 +59,7 @@ export default function Settings_PAGE() {
         btnLeft={
           <Btn
             type="seethrough"
-            iconLeft={<ICON_arrow />}
+            iconLeft={<ICON_arrow2 />}
             onPress={() => router.back()}
             style={{ borderRadius: 100 }}
           />

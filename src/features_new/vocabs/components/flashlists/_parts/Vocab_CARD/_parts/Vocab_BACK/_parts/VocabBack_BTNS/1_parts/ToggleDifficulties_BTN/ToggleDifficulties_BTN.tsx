@@ -3,7 +3,10 @@
 //
 
 import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
-import { ICON_difficultyDot } from "@/src/components/1_grouped/icons/icons";
+import {
+  ICON_difficulty,
+  ICON_difficultyDot,
+} from "@/src/components/1_grouped/icons/icons";
 import { MyColors } from "@/src/constants/MyColors";
 import { Vocab_TYPE } from "@/src/features_new/vocabs/types";
 import { z_USE_currentActions } from "@/src/hooks/zustand/z_USE_currentActions/z_USE_currentActions";
@@ -32,9 +35,9 @@ export const ToggleDifficulties_BTN = memo(
           IS_updatingDifficulty ? (
             <ActivityIndicator color={MyColors.icon_gray} />
           ) : (
-            <ICON_difficultyDot
+            <ICON_difficulty
               difficulty={vocab?.difficulty || 3}
-              size="big"
+              size="medium"
             />
           )
         }

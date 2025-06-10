@@ -2,7 +2,7 @@
 //
 
 import { ActivityIndicator, View } from "react-native";
-import { ICON_arrow } from "@/src/components/1_grouped/icons/icons";
+import { ICON_arrow2 } from "@/src/components/1_grouped/icons/icons";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import Big_BTN from "../Big_BTN/Big_BTN";
 import { MyColors } from "@/src/constants/MyColors";
@@ -40,7 +40,7 @@ export default function BigPage_BTN({
         <Styled_TEXT type="label_small" style={{ opacity: IS_loading ? 0 : 1 }}>
           {description}
         </Styled_TEXT>
-        <ICON_arrow direction="right" style={{ alignItems: "flex-end" }} />
+        <ICON_arrow2 direction="right" style={{ alignItems: "flex-end" }} />
       </View>
     </Big_BTN>
   );

@@ -32,9 +32,9 @@ export function VocabCardFront_BOTTOM({
     <View style={s.contentWrap}>
       <View style={[s.iconWrap, { opacity: !IS_vocabSelectionOn ? 1 : 0 }]}>
         <VocabCardFront_SAVEDCOUNT {...{ vocab, SHOW_flags }} />
+        <VocabCardFront_MARKEDSTAR {...{ vocab }} />
         <VocabCardFront_FLAGS {...{ vocab, SHOW_flags }} />
         <VocabCardFront_DIFFDOT {...{ vocab, SHOW_difficulty }} />
-        <VocabCardFront_MARKEDSTAR {...{ vocab }} />
       </View>
       <View
         style={{

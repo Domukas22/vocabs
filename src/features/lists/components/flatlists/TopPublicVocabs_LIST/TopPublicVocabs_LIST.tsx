@@ -5,7 +5,7 @@
 import Block from "@/src/components/1_grouped/blocks/Block/Block";
 import { Skeleton_BLOCK } from "@/src/components/1_grouped/blocks/Skeleton_BLOCK";
 import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
-import { ICON_arrow } from "@/src/components/1_grouped/icons/icons";
+import { ICON_arrow2 } from "@/src/components/1_grouped/icons/icons";
 import Label from "@/src/components/1_grouped/texts/labels/Label/Label";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -64,7 +64,7 @@ export function TopPublicVocabs_LIST({
         text={`${t("btn.seeAllPublicVocabs_PRE")} ${totalVocab_COUNT} ${t(
           "btn.seeAllPublicVocabs_POST"
         )}`}
-        iconRight={<ICON_arrow direction="right" />}
+        iconRight={<ICON_arrow2 direction="right" />}
         text_STYLES={{ flex: 1 }}
         onPress={() => {
           router.push("/(main)/explore/all_public_vocabs");

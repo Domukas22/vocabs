@@ -2,16 +2,19 @@
 //
 //
 
-import React, { useCallback } from "react";
+import React from "react";
 import { ScrollView } from "react-native";
 
 import { MyRecentLists_FLATLIST } from "@/src/features/lists/components";
 import { MyColors } from "@/src/constants/MyColors";
 import { VocabPageBigMain_BTNS } from "@/src/components/2_byPage/myVocabs";
 import { USE_myStarterContent } from "@/src/hooks/starterContent/USE_myStarterContent/USE_myStarterContent";
-import { supabase } from "@/src/lib/supabase";
+import { MyDailyGoal_BLOCK } from "@/src/features/users/components/MyDailyGoal_BLOCK/MyDailyGoal_BLOCK";
 import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
+import { FETCH_vocabs } from "@/src/features_new/vocabs/functions/FETCH_vocabs/FETCH_vocabs";
 import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
+import { USE_abortController } from "@/src/hooks";
+import { supabase } from "@/src/lib/supabase";
 
 export default function Index_PAGE() {
   const {
@@ -24,33 +27,11 @@ export default function Index_PAGE() {
     loading,
   } = USE_myStarterContent();
 
-  const { z_user } = z_USE_user();
-
-  const test = useCallback(async () => {
-    const { data, error } = await supabase.rpc("fetch_filtered_random_vocabs", {
-      list_type: "private",
-      fetch_type: "all",
-      user_uuid: z_user?.id || null,
-      list_uuid: null,
-      search_text: "break",
-      exclude_ids: [],
-      marked: "false",
-      difficulties: [],
-      langs: [],
-    });
-
-    if (error) console.error(error);
-    else
-      console.log(
-        "HERE: ",
-        data.map((y) => y?.trs?.[0]?.text)
-      );
-  }, []);
-
   return (
     <>
       <ScrollView style={{ backgroundColor: MyColors.fill_bg }}>
-        <Btn text="Test" onPress={test} />
+        <MyDailyGoal_BLOCK />
+
         <MyRecentLists_FLATLIST
           top_LISTS={top_LISTS}
           totalList_COUNT={totalList_COUNT}

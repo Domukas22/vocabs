@@ -5,13 +5,21 @@
 import { GET_langFlagUrl } from "@/src/constants/globalVars";
 import { MyColors } from "@/src/constants/MyColors";
 import React from "react";
-import { Image, StyleSheet, Text, View, ViewProps } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TextProps,
+  View,
+  ViewProps,
+} from "react-native";
 import Svg, { Path, Circle, Rect } from "react-native-svg";
 import { Styled_TEXT } from "../texts/Styled_TEXT/Styled_TEXT";
 
-type sizing_TYPE = "tiny" | "medium" | "big";
+type sizing_TYPE = "teenyTiny" | "tiny" | "medium" | "big";
 
 const sizing = {
+  teenyTiny: 12,
   tiny: 16,
   medium: 20,
   big: 24,
@@ -77,6 +85,56 @@ export const ICON_difficultyDot = React.memo(function ICON_difficultyDot({
   return (
     <View {...props}>
       <View style={[_size, _color, { borderRadius: 100 }]} />
+    </View>
+  );
+});
+export const ICON_difficulty = React.memo(function ICON_difficulty({
+  difficulty = 1,
+  size = "medium",
+  ...props
+}: {
+  difficulty?: 1 | 2 | 3;
+  size?: sizing_TYPE;
+} & ViewProps) {
+  return (
+    <View {...props}>
+      {difficulty === 1 ? (
+        <Svg
+          width={sizing[size]}
+          height={sizing[size]}
+          viewBox="0 0 45 45"
+          fill="none"
+        >
+          <Path
+            d="M22.46 0C10.06 0 0 10.05 0 22.45C0 34.85 10.06 44.91 22.46 44.91C34.86 44.91 44.92 34.86 44.92 22.45C44.92 10.04 34.86 0 22.46 0ZM33.24 16.35L23.22 32.28C22.63 33.22 21.63 33.83 20.52 33.91C20.43 33.92 20.34 33.92 20.26 33.92C19.24 33.92 18.27 33.48 17.6 32.7L11.99 26.15C10.73 24.69 10.9 22.48 12.37 21.22C13.83 19.96 16.04 20.13 17.3 21.6L19.82 24.54L27.31 12.62C28.34 10.99 30.5 10.5 32.14 11.53C33.78 12.55 34.27 14.71 33.24 16.35Z"
+            fill={MyColors.icon_difficulty_1}
+          />
+        </Svg>
+      ) : difficulty === 2 ? (
+        <Svg
+          width={sizing[size]}
+          height={sizing[size]}
+          viewBox="0 0 46 45"
+          fill="none"
+        >
+          <Path
+            d="M22.45 0C10.05 0 0 10.06 0 22.46C0 34.86 10.05 44.92 22.45 44.92C34.85 44.92 44.91 34.86 44.91 22.46C44.91 10.06 34.86 0 22.45 0ZM22.45 36.92V8C30.43 8 36.91 14.49 36.91 22.46C36.91 30.43 30.43 36.92 22.45 36.92Z"
+            fill={MyColors.icon_difficulty_2}
+          />
+        </Svg>
+      ) : (
+        <Svg
+          width={sizing[size]}
+          height={sizing[size]}
+          viewBox="0 0 45 45"
+          fill="none"
+        >
+          <Path
+            d="M22.46 8C30.43 8 36.92 14.49 36.92 22.46C36.92 30.43 30.43 36.92 22.46 36.92C14.49 36.92 8 30.43 8 22.46C8 14.49 14.49 8 22.46 8ZM22.46 0C10.05 0 0 10.05 0 22.46C0 34.87 10.05 44.92 22.46 44.92C34.87 44.92 44.92 34.87 44.92 22.46C44.92 10.05 34.86 0 22.46 0Z"
+            fill={MyColors.icon_difficulty_3}
+          />
+        </Svg>
+      )}
     </View>
   );
 });
@@ -158,13 +216,13 @@ export function ICON_activeCount({ count = 1 }) {
     </View>
   );
 }
-export function ICON_arrow({
+export function ICON_arrow2({
   direction = "left",
   color = "gray_light",
   ...props
 }: {
   direction?: "left" | "right" | "up" | "down" | "right_up";
-  color?: "gray_light" | "green" | "black" | "white";
+  color?: "gray_light" | "green" | "black" | "white" | "primary";
 } & ViewProps) {
   const rotate =
     direction === "left"
@@ -184,6 +242,8 @@ export function ICON_arrow({
       ? MyColors.icon_gray_light
       : color === "white"
       ? MyColors.icon_white
+      : color === "primary"
+      ? MyColors.icon_primary
       : "black";
 
   return (
@@ -203,6 +263,47 @@ export function ICON_arrow({
     </View>
   );
 }
+export const ICON_arrow = React.memo(function ICON_arrow({
+  color = "gray",
+  size = "medium",
+  direction = "left",
+  ...props
+}: {
+  color?: "gray";
+  size?: sizing_TYPE;
+  direction?: "left" | "right" | "up" | "down" | "right_up";
+} & ViewProps) {
+  const fillColor =
+    color === "gray" ? MyColors.icon_gray_light : MyColors.icon_gray_light;
+
+  const rotate =
+    direction === "left"
+      ? "0deg"
+      : direction === "right"
+      ? "180deg"
+      : direction === "right_up"
+      ? "135deg"
+      : direction === "up"
+      ? "90deg"
+      : "-90deg";
+
+  return (
+    <View {...props}>
+      <Svg
+        width={sizing[size]}
+        height={sizing[size]}
+        viewBox="0 0 54 21"
+        fill="none"
+      >
+        <Path
+          d="M53.555 10.1259C53.555 10.8359 53.265 11.4959 52.795 11.9659C52.325 12.4359 51.675 12.7259 50.955 12.7259H19.925V18.5659C19.925 19.8159 18.605 20.6259 17.485 20.0559L0.915 11.6159C-0.305 10.9959 -0.305 9.24588 0.915 8.62588L17.485 0.185877C18.605 -0.384123 19.925 0.425877 19.925 1.67588V7.51588H50.955C52.395 7.51588 53.555 8.68588 53.555 10.1259Z"
+          fill={fillColor}
+        />
+      </Svg>
+    </View>
+  );
+});
+
 export function ICON_notificationBell({ ...props }: {} & ViewProps) {
   return (
     <View {...props}>
@@ -328,41 +429,38 @@ export const ICON_error = React.memo(function ICON_error({
   );
 });
 
-export function ICON_edit({
-  color = "gray_light",
-  big = false,
+export const ICON_edit = React.memo(function ICON_edit({
+  color = "gray",
+  size = "medium",
   ...props
 }: {
-  color?: "gray_light" | "gray" | "white" | "primary";
-  big?: boolean;
+  color?: "gray";
+  size?: sizing_TYPE;
 } & ViewProps) {
   const fillColor =
-    color === "gray"
-      ? MyColors.icon_gray
-      : color === "gray_light"
-      ? MyColors.icon_gray_light
-      : color === "primary"
-      ? MyColors.icon_primary
-      : color === "white"
-      ? MyColors.icon_white
-      : "white";
+    color === "gray" ? MyColors.icon_gray_light : MyColors.icon_gray_light;
 
   return (
     <View {...props}>
       <Svg
-        width={big ? sizing.big : sizing.medium}
-        height={big ? sizing.big : sizing.medium}
-        viewBox="0 0 18 18"
+        width={sizing[size]}
+        height={sizing[size]}
+        viewBox="0 0 46 46"
         fill="none"
       >
         <Path
-          d="M12.2486 0.986834C12.5614 0.673969 12.9328 0.425791 13.3416 0.25647C13.7503 0.0871485 14.1884 3.29657e-09 14.6309 0C15.0733 -3.29657e-09 15.5114 0.0871485 15.9202 0.25647C16.3289 0.425791 16.7004 0.673969 17.0132 0.986834C17.3261 1.2997 17.5742 1.67112 17.7435 2.0799C17.9129 2.48868 18 2.9268 18 3.36926C18 3.81172 17.9129 4.24984 17.7435 4.65862C17.5742 5.0674 17.3261 5.43882 17.0132 5.75169L16.0119 6.75299L11.2473 1.98813L12.2486 0.986834ZM10.3386 2.89689L2.13057 11.1052C1.65029 11.5863 1.30765 12.1873 1.13831 12.8456L0.0200898 17.1979C-0.00764043 17.3062 -0.00664756 17.4198 0.0229704 17.5276C0.0525883 17.6354 0.109807 17.7336 0.188976 17.8125C0.268146 17.8914 0.366528 17.9483 0.474409 17.9776C0.582289 18.0068 0.695937 18.0075 0.80413 17.9794L5.15491 16.8624C5.81348 16.6936 6.41457 16.3509 6.89523 15.8701L15.1032 7.66174L10.3386 2.89689Z"
+          d="M32.4157 12.7993C34.5857 14.9693 36.9357 16.8893 39.4457 18.5393L17.4557 40.5293C16.5457 41.4393 15.3957 42.0693 14.1357 42.3293L1.3357 45.1993C0.555704 45.3593 -0.144296 44.6693 0.0257044 43.8893L2.8857 31.0893C3.1557 29.8293 3.7857 28.6793 4.6957 27.7693L26.6757 5.7793C28.3257 8.2693 30.2357 10.6193 32.4157 12.7993Z"
+          fill={fillColor}
+        />
+        <Path
+          d="M45.2254 9.01919C45.2254 11.1192 44.5054 13.2092 43.0454 14.8992C40.5254 13.3392 38.1454 11.4592 35.9554 9.26919C33.7654 7.07919 31.8854 4.69919 30.3154 2.17919C33.8554 -0.870808 39.2154 -0.720808 42.5754 2.63919C44.3454 4.39919 45.2254 6.71919 45.2254 9.01919Z"
           fill={fillColor}
         />
       </Svg>
     </View>
   );
-}
+});
+
 export function ICON_restore({
   color = "green",
   big = false,
@@ -497,7 +595,10 @@ export const ICON_markedStar = React.memo(function ICON_bookmark_2({
   color = "gray",
   size = "medium",
   ...props
-}: { color?: "gray" | "green" | "primary"; size?: sizing_TYPE } & ViewProps) {
+}: {
+  color?: "gray" | "green" | "primary" | "white";
+  size?: sizing_TYPE;
+} & ViewProps) {
   const fillColor =
     color === "gray"
       ? MyColors.icon_gray_light
@@ -505,6 +606,8 @@ export const ICON_markedStar = React.memo(function ICON_bookmark_2({
       ? MyColors.icon_green
       : color === "primary"
       ? MyColors.icon_primary
+      : color === "white"
+      ? "white"
       : MyColors.icon_gray_light;
 
   return (
@@ -725,64 +828,105 @@ export function ICON_contact() {
     </Svg>
   );
 }
-export function ICON_vocabs({
-  color = "grey",
+
+export const ICON_exploreTab = React.memo(function ICON_exploreTab({
+  color = "gray_light",
+  size = "big",
   ...props
 }: {
-  color?: "grey" | "primary";
+  color?: "gray_light" | "primary";
+  size?: sizing_TYPE;
 } & ViewProps) {
+  const fillColor =
+    color === "gray_light"
+      ? MyColors.icon_gray_light
+      : color === "primary"
+      ? MyColors.icon_primary
+      : MyColors.icon_gray_light;
+
   return (
     <View {...props}>
       <Svg
-        width={sizing.big}
-        height={sizing.big}
-        viewBox="0 0 24 24"
+        width={sizing[size]}
+        height={sizing[size]}
+        viewBox="0 0 56 55"
         fill="none"
       >
-        <Rect
-          x="2"
-          y="2.5"
-          width="9"
-          height="8.5"
-          rx="3"
-          fill={
-            color === "grey" ? MyColors.icon_gray_light : MyColors.icon_primary
-          }
+        <Path
+          d="M32.02 31.04C30.07 32.99 26.9 32.99 24.95 31.04C22.99 29.08 22.99 25.92 24.95 23.97C26.9 22.01 30.07 22.01 32.02 23.97C33.97 25.92 33.97 29.08 32.02 31.04Z"
+          fill={fillColor}
         />
-        <Rect
-          x="13"
-          y="2.5"
-          width="9"
-          height="8.5"
-          rx="3"
-          fill={
-            color === "grey" ? MyColors.icon_gray_light : MyColors.icon_primary
-          }
-        />
-        <Rect
-          x="2"
-          y="13"
-          width="9"
-          height="8.5"
-          rx="3"
-          fill={
-            color === "grey" ? MyColors.icon_gray_light : MyColors.icon_primary
-          }
-        />
-        <Rect
-          x="13"
-          y="13"
-          width="9"
-          height="8.5"
-          rx="3"
-          fill={
-            color === "grey" ? MyColors.icon_gray_light : MyColors.icon_primary
-          }
+        <Path
+          d="M28.48 0C13.3 0 0.97998 12.31 0.97998 27.5C0.97998 42.69 13.3 55 28.48 55C43.66 55 55.98 42.69 55.98 27.5C55.98 12.31 43.67 0 28.48 0ZM43.88 13.92L38.12 37.14L14.9 42.9C13.8 43.18 12.81 42.18 13.08 41.09L18.84 17.86L42.07 12.1C43.17 11.83 44.16 12.82 43.88 13.92Z"
+          fill={fillColor}
         />
       </Svg>
     </View>
   );
-}
+});
+export const ICON_vocabularyTab = React.memo(function ICON_vocabularyTab({
+  color = "gray_light",
+  size = "big",
+  ...props
+}: {
+  color?: "gray_light" | "primary";
+  size?: sizing_TYPE;
+} & ViewProps) {
+  const fillColor =
+    color === "gray_light"
+      ? MyColors.icon_gray_light
+      : color === "primary"
+      ? MyColors.icon_primary
+      : MyColors.icon_gray_light;
+
+  return (
+    <View {...props}>
+      <Svg
+        width={sizing[size]}
+        height={sizing[size]}
+        viewBox="0 0 55 55"
+        fill="none"
+      >
+        <Path
+          d="M45 0H10C4.48 0 0 4.48 0 10V45C0 50.52 4.48 55 10 55H45C50.52 55 55 50.52 55 45V10C55 4.48 50.52 0 45 0ZM41.75 19.24L32.28 40.05C31.83 41.11 31.21 41.92 30.46 42.44C29.7 42.98 28.71 43.25 27.52 43.25C26.33 43.25 25.33 42.99 24.55 42.46C23.8 41.94 23.16 41.13 22.67 40.05L13.23 19.24C12.73 18.12 12.58 17.09 12.78 16.16C12.98 15.19 13.48 14.42 14.26 13.86C15.01 13.34 15.93 13.07 17 13.07C18.3 13.07 19.33 13.39 20.04 14.02C20.7 14.59 21.25 15.41 21.69 16.45L27.63 30.18L33.58 16.4C34.02 15.36 34.58 14.54 35.26 13.99C35.98 13.38 36.97 13.07 38.2 13.07C39.22 13.07 40.11 13.34 40.82 13.87C41.56 14.42 42.04 15.2 42.24 16.18C42.42 17.12 42.25 18.15 41.75 19.24Z"
+          fill={fillColor}
+        />
+      </Svg>
+    </View>
+  );
+});
+export const ICON_generalTab = React.memo(function ICON_generalTab({
+  color = "gray_light",
+  size = "big",
+  ...props
+}: {
+  color?: "gray_light" | "primary";
+  size?: sizing_TYPE;
+} & ViewProps) {
+  const fillColor =
+    color === "gray_light"
+      ? MyColors.icon_gray_light
+      : color === "primary"
+      ? MyColors.icon_primary
+      : MyColors.icon_gray_light;
+
+  return (
+    <View {...props}>
+      <Svg
+        width={sizing[size]}
+        height={sizing[size]}
+        viewBox="0 0 56 55"
+        fill="none"
+      >
+        <Path
+          d="M45.9702 0H10.9702C5.44021 0 0.970215 4.48 0.970215 10V45C0.970215 50.52 5.44021 55 10.9702 55H45.9702C51.4902 55 55.9702 50.52 55.9702 45V10C55.9702 4.48 51.4902 0 45.9702 0ZM9.18021 9.16C9.99021 8.34 11.1102 7.84 12.3602 7.84H38.3402C40.8202 7.84 42.8402 9.85 42.8402 12.34C42.8402 13.59 42.3302 14.71 41.5202 15.52C40.7102 16.34 39.5802 16.84 38.3402 16.84H12.3602C9.87021 16.84 7.86021 14.83 7.86021 12.34C7.86021 11.09 8.36021 9.97 9.18021 9.16ZM34.8602 45.84C34.0502 46.66 32.9202 47.16 31.6802 47.16H12.3602C9.87021 47.16 7.86021 45.15 7.86021 42.66C7.86021 41.42 8.36021 40.29 9.18021 39.48C9.99021 38.67 11.1102 38.16 12.3602 38.16H31.6802C34.1602 38.16 36.1802 40.18 36.1802 42.66C36.1802 43.91 35.6702 45.03 34.8602 45.84ZM49.7502 30.68C48.9402 31.5 47.8102 32 46.5702 32H12.3602C9.87021 32 7.86021 29.99 7.86021 27.5C7.86021 26.26 8.36021 25.13 9.18021 24.32C9.99021 23.51 11.1102 23 12.3602 23H46.5702C49.0602 23 51.0702 25.02 51.0702 27.5C51.0702 28.75 50.5702 29.87 49.7502 30.68Z"
+          fill={fillColor}
+        />
+      </Svg>
+    </View>
+  );
+});
+
 export function ICON_other({ color = "grey" }: { color?: "grey" | "primary" }) {
   const _color =
     color === "grey" ? MyColors.icon_gray_light : MyColors.icon_primary;
@@ -927,27 +1071,32 @@ export function ICON_image() {
   );
 }
 export function ICON_toastNotification({
+  style,
   type = "success",
   ...props
 }: {
   type: "success" | "error" | "warning";
-} & ViewProps) {
+} & ViewProps &
+  TextProps) {
   return (
     <View
-      style={{
-        borderRadius: 50,
-        width: sizing.big,
-        height: sizing.big,
-        justifyContent: "center",
-        alignItems: "center",
-        borderWidth: 2,
-        borderColor:
-          type === "error"
-            ? MyColors.border_red
-            : type === "warning"
-            ? MyColors.border_yellow
-            : MyColors.border_green,
-      }}
+      style={[
+        {
+          borderRadius: 50,
+          width: sizing.big,
+          height: sizing.big,
+          justifyContent: "center",
+          alignItems: "center",
+          borderWidth: 2,
+          borderColor:
+            type === "error"
+              ? MyColors.border_red
+              : type === "warning"
+              ? MyColors.border_yellow
+              : MyColors.border_green,
+        },
+        style,
+      ]}
       {...props}
     >
       {type === "success" && (
@@ -1001,21 +1150,87 @@ export function ICON_toastNotification({
 }
 export function ICON_checkMark({
   color = "grey_light",
+  size = "medium",
+  ...props
 }: {
-  color?: "grey_light" | "primary";
-}) {
+  color?: "grey_light" | "primary" | "black" | "green" | "white";
+  size?: sizing_TYPE;
+} & ViewProps) {
+  const _color =
+    color === "primary"
+      ? MyColors.icon_primary
+      : color === "grey_light"
+      ? MyColors.icon_gray_light
+      : color === "black"
+      ? MyColors.fill_bg
+      : color === "green"
+      ? MyColors.icon_green
+      : color === "white"
+      ? "white"
+      : "black";
+
   return (
-    <Svg width={18} height={18} viewBox="0 0 9 10" fill="none">
-      <Path
-        d="M1 5.21053L3.8 9L8 1"
-        stroke={
-          color === "primary" ? MyColors.icon_primary : MyColors.icon_gray_light
-        }
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </Svg>
+    <View {...props}>
+      <Svg
+        width={sizing[size]}
+        height={sizing[size]}
+        viewBox="0 0 9 10"
+        fill="none"
+      >
+        <Path
+          d="M1 5.21053L3.8 9L8 1"
+          stroke={_color}
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </Svg>
+    </View>
+  );
+}
+export function ICON_reload({
+  color = "white",
+  size = "medium",
+  ...props
+}: {
+  color?: "white" | "green" | "gray" | "primary";
+  size?: sizing_TYPE;
+} & ViewProps) {
+  const _color =
+    color === "white"
+      ? "white"
+      : color === "green"
+      ? MyColors.icon_green
+      : color === "gray"
+      ? MyColors.icon_gray_light
+      : color === "primary"
+      ? MyColors.icon_primary
+      : "white";
+
+  return (
+    <View {...props}>
+      <Svg
+        width={sizing[size]}
+        height={sizing[size]}
+        viewBox="0 0 18 18"
+        fill="none"
+      >
+        <Path
+          d="M15.2622 13.9818C14.3585 15.1186 13.1623 15.988 11.802 16.4966C10.4418 17.0053 8.96866 17.1341 7.54074 16.8692C6.11282 16.6043 4.78395 15.9557 3.69664 14.9929C2.60933 14.0302 1.8046 12.7896 1.36876 11.4043C0.932916 10.0189 0.882404 8.54106 1.22264 7.12919C1.56287 5.71733 2.28102 4.42471 3.30006 3.38996C4.3191 2.35522 5.60059 1.61739 7.00709 1.25561C10.9061 0.255608 14.9421 2.26261 16.4321 6.00261"
+          stroke={_color}
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <Path
+          d="M16.999 1.00259V6.00259H11.999"
+          stroke={_color}
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </Svg>
+    </View>
   );
 }
 
@@ -1048,34 +1263,6 @@ const s = StyleSheet.create({
 
   toast: {},
 });
-export function ICON_general({
-  color = "grey",
-  notification_COUNT = 0,
-}: {
-  color?: "grey" | "primary";
-  notification_COUNT: number | undefined;
-}) {
-  return (
-    <View style={{ flexDirection: "row", gap: 4 }}>
-      <Svg
-        viewBox="0 0 177 177"
-        fill="none"
-        width={sizing.big}
-        height={sizing.big}
-      >
-        <Path
-          d="M88.5 0C137.379 0 177 39.6215 177 88.5C177 137.379 137.379 177 88.5 177C39.6215 177 0 137.379 0 88.5C0 39.6215 39.6215 0 88.5 0ZM88.5 17.7C69.7227 17.7 51.7144 25.1593 38.4368 38.4368C25.1593 51.7144 17.7 69.7227 17.7 88.5C17.7 107.277 25.1593 125.286 38.4368 138.563C51.7144 151.841 69.7227 159.3 88.5 159.3C107.277 159.3 125.286 151.841 138.563 138.563C151.841 125.286 159.3 107.277 159.3 88.5C159.3 69.7227 151.841 51.7144 138.563 38.4368C125.286 25.1593 107.277 17.7 88.5 17.7ZM48.675 75.225C52.1958 75.225 55.5723 76.6236 58.0618 79.1132C60.5514 81.6027 61.95 84.9793 61.95 88.5C61.95 92.0208 60.5514 95.3973 58.0618 97.8868C55.5723 100.376 52.1958 101.775 48.675 101.775C45.1543 101.775 41.7777 100.376 39.2882 97.8868C36.7986 95.3973 35.4 92.0208 35.4 88.5C35.4 84.9793 36.7986 81.6027 39.2882 79.1132C41.7777 76.6236 45.1543 75.225 48.675 75.225ZM88.5 75.225C92.0208 75.225 95.3973 76.6236 97.8868 79.1132C100.376 81.6027 101.775 84.9793 101.775 88.5C101.775 92.0208 100.376 95.3973 97.8868 97.8868C95.3973 100.376 92.0208 101.775 88.5 101.775C84.9793 101.775 81.6027 100.376 79.1132 97.8868C76.6236 95.3973 75.225 92.0208 75.225 88.5C75.225 84.9793 76.6236 81.6027 79.1132 79.1132C81.6027 76.6236 84.9793 75.225 88.5 75.225ZM128.325 75.225C131.846 75.225 135.222 76.6236 137.712 79.1132C140.201 81.6027 141.6 84.9793 141.6 88.5C141.6 92.0208 140.201 95.3973 137.712 97.8868C135.222 100.376 131.846 101.775 128.325 101.775C124.804 101.775 121.428 100.376 118.938 97.8868C116.449 95.3973 115.05 92.0208 115.05 88.5C115.05 84.9793 116.449 81.6027 118.938 79.1132C121.428 76.6236 124.804 75.225 128.325 75.225Z"
-          fill={
-            color === "grey" ? MyColors.icon_gray_light : MyColors.icon_primary
-          }
-        />
-      </Svg>
-      {notification_COUNT > 0 && (
-        <ICON_activeCount count={notification_COUNT} />
-      )}
-    </View>
-  );
-}
 
 export function ICON_savedCount({ count = 0 }: { count: number }) {
   return (

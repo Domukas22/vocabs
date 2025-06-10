@@ -4,7 +4,7 @@
 
 import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import Header from "@/src/components/1_grouped/headers/regular/Header";
-import { ICON_arrow } from "@/src/components/1_grouped/icons/icons";
+import { ICON_arrow2 } from "@/src/components/1_grouped/icons/icons";
 import { useRouter } from "expo-router";
 
 export function PublicVocabs_HEADER() {
@@ -14,14 +14,14 @@ export function PublicVocabs_HEADER() {
       btnLeft={
         <Btn
           type="seethrough"
-          iconLeft={<ICON_arrow direction="left" />}
+          iconLeft={<ICON_arrow2 direction="left" />}
           style={{ borderRadius: 100 }}
           onPress={() => router.back()}
         />
       }
       btnRight={
         <Btn
-          iconLeft={<ICON_arrow direction="left" />}
+          iconLeft={<ICON_arrow2 direction="left" />}
           style={{ opacity: 0, pointerEvents: "none" }}
         />
       }

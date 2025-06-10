@@ -21,7 +21,7 @@ import { USE_getListName } from "../../../hooks/USE_getListName/USE_getListName"
 import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import { MyColors } from "@/src/constants/MyColors";
 import {
-  ICON_arrow,
+  ICON_arrow2,
   ICON_checkMark,
   ICON_delete,
   ICON_download,

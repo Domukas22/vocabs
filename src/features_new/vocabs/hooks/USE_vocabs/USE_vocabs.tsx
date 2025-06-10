@@ -123,10 +123,7 @@ export function USE_vocabs({
     [filters, sorting, user?.id, printed_IDS, search]
   );
 
-  ///////////
-  //
-  //
-
+  // refetch when filter / sorting params change
   useEffect(() => {
     (async () => await _FETCH_vocabs())();
   }, [search, filters, sorting, targetList_ID]);

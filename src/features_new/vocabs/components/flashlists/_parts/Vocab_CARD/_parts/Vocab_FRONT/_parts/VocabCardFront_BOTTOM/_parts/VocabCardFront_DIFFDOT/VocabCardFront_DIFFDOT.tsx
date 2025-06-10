@@ -2,7 +2,10 @@
 //
 //
 
-import { ICON_difficultyDot } from "@/src/components/1_grouped/icons/icons";
+import {
+  ICON_difficulty,
+  ICON_difficultyDot,
+} from "@/src/components/1_grouped/icons/icons";
 import { Vocab_TYPE } from "@/src/features_new/vocabs/types";
 
 export function VocabCardFront_DIFFDOT({
@@ -12,9 +15,9 @@ export function VocabCardFront_DIFFDOT({
   vocab: Vocab_TYPE;
   SHOW_difficulty: boolean;
 }) {
-  const { difficulty = 0, type = "private" } = vocab;
+  const { difficulty = 3, type = "private" } = vocab;
 
   return SHOW_difficulty && type === "private" ? (
-    <ICON_difficultyDot difficulty={difficulty} />
+    <ICON_difficulty difficulty={difficulty} size="tiny" />
   ) : null;
 }

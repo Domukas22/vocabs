@@ -5,7 +5,7 @@
 import Block from "@/src/components/1_grouped/blocks/Block/Block";
 import { Skeleton_BLOCK } from "@/src/components/1_grouped/blocks/Skeleton_BLOCK";
 import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
-import { ICON_arrow } from "@/src/components/1_grouped/icons/icons";
+import { ICON_arrow2 } from "@/src/components/1_grouped/icons/icons";
 import Label from "@/src/components/1_grouped/texts/labels/Label/Label";
 import { router } from "expo-router";
 import React from "react";
@@ -47,7 +47,7 @@ export function MyRecentLists_FLATLIST({
 
   return (
     <Block styles={{ gap: 12 }}>
-      <Styled_TEXT type="text_22_bold">{t("label.myLists")}</Styled_TEXT>
+      <Styled_TEXT type="title">{t("label.myLists")}</Styled_TEXT>
       {/* <Label>{t("label.recentLists")}</Label> */}
       {top_LISTS?.map((list) => (
         <List_CARD
@@ -66,7 +66,7 @@ export function MyRecentLists_FLATLIST({
         text={`${t("btn.seeAllMyLists_PRE")} ${totalList_COUNT} ${t(
           "btn.seeAllMyLists_POST"
         )}`}
-        iconRight={<ICON_arrow direction="right" />}
+        iconRight={<ICON_arrow2 direction="right" />}
         text_STYLES={{ flex: 1 }}
         onPress={() => PUSH_router("my-lists")}
       />

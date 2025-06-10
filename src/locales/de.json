@@ -118,7 +118,17 @@
     "seeAllPublicVocabs_POST": "öffentliche Vokabeln sehen",
     "resetAllVocabDifficultiesOfAList": "Vokabel Schwierigkeiten zurücksetzten",
     "performAnAction": "Aktion auswählen",
-    "sortByShuffle": "Mischen"
+    "sortByShuffle": "Mischen",
+    "noIForgot": "Hab's vergessen",
+    "yesIRemember": "Ich weiß es",
+    "yes": "Ja",
+    "no": "Nein",
+    "openRandomFlashcardModal": "Gemischte Flashcard Modus",
+    "flashcardMode": "Flashcard Modus",
+    "fetchAnotherFlashcardVocab": "Neue Karteikarte laden",
+    "seeNextVocab": "Nächste Vokabel",
+    "markVocab": "Vokabel markieren",
+    "undoFlashcardSelection": "Auswahl rückgängig machen"
   },
   "pages": {
     "about": {
@@ -240,7 +250,13 @@
     "allLanguages": "Alle Sprachen",
     "selectedLanguages": "Ausgewählte Sprachen",
     "searchResultCount": "Suchergebnisse für",
-    "tapOnAVocab": "Tippe auf einen Vokabular"
+    "tapOnAVocab": "Tippe auf einen Vokabular",
+    "myDailyGoal": "Tägliches Ziel",
+    "noVocabsLearnedToday": "Los gehts! Nur noch 8 Vokabeln 😁",
+    "randomVocab": "Zufällige Vokabel",
+    "doYouRememberThisVocab": "Kennst du noch die Vokabel?",
+    "forgotVocab": "Vokabel vergessen",
+    "rememberedVocab": "Vokabel gelernt"
   },
   "modal": {
     "displaySettings": {
@@ -382,7 +398,8 @@
   },
   "title": {
     "noListNameProvided": "Keine Listenname angegeben",
-    "selectedVocabs": "Vokabel selektiert"
+    "selectedVocabs": "Vokabel selektiert",
+    "flashcardMode": "Flashcard Modus"
   },
   "confirmation": {
     "paragraph": {

@@ -117,7 +117,17 @@
     "seeAllPublicVocabs_POST": "public vocabs",
     "resetAllVocabDifficultiesOfAList": "Reset vocab difficulties",
     "performAnAction": "Select action",
-    "sortByShuffle": "Shuffle"
+    "sortByShuffle": "Shuffle",
+    "noIForgot": "I forgot",
+    "yesIRemember": "I remember",
+    "yes": "Yes",
+    "no": "No",
+    "openRandomFlashcardModal": "Random flashcard mode",
+    "flashcardMode": "Flashcard mode",
+    "fetchAnotherFlashcardVocab": "Load new flashcard",
+    "seeNextVocab": "Next vocab",
+    "markVocab": "Mark vocab",
+    "undoFlashcardSelection": "Undo selection"
   },
   "pages": {
     "about": {
@@ -241,7 +251,13 @@
     "allLanguages": "All languages",
     "selectedLanguages": "Selected languages",
     "searchResultCount": "search results for",
-    "tapOnAVocab": "Tap on a vocab"
+    "tapOnAVocab": "Tap on a vocab",
+    "myDailyGoal": "Daily goal",
+    "noVocabsLearnedToday": "Lets get started! 5 vocabs to go 8️⃣",
+    "randomVocab": "Random vocab",
+    "doYouRememberThisVocab": "Do you still know this vocab?",
+    "forgotVocab": "Vocab forgotten",
+    "rememberedVocab": "Vocab learned"
   },
   "modal": {
     "displaySettings": {
@@ -383,7 +399,8 @@
   },
   "title": {
     "noListNameProvided": "No list name provided",
-    "selectedVocabs": "vocabs selected"
+    "selectedVocabs": "vocabs selected",
+    "flashcardMode": "Flashcard mode"
   },
   "confirmation": {
     "paragraph": {

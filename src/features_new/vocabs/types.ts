@@ -45,6 +45,12 @@ export type VocabFilter_PROPS = {
   difficulties: (1 | 2 | 3)[];
   byMarked: boolean;
 };
+export type FlashcardsFilter_PROPS = {
+  langs: string[];
+  difficulties: (1 | 2 | 3)[];
+  byMarked: boolean;
+  byList: string;
+};
 
 /////////////////////////////////
 export type MarkedVocabFilter_PROPS = {

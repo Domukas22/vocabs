@@ -15,7 +15,7 @@ import { loadingState_TYPES } from "@/src/types/general_TYPES";
 import { General_ERROR } from "@/src/types/error_TYPES";
 import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import {
-  ICON_arrow,
+  ICON_arrow2,
   ICON_dropdownArrow,
   ICON_multiSelect,
   ICON_X,
@@ -143,7 +143,7 @@ export default function MyVocabs_FLASHLIST({
         />
         {showTitle && (
           <Btn
-            iconRight={<ICON_arrow direction="up" color="white" />}
+            iconRight={<ICON_arrow2 direction="up" color="white" />}
             onPress={() =>
               flashlist_REF?.current?.scrollToOffset({
                 animated: true,

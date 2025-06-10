@@ -3,9 +3,9 @@
 //
 
 import {
-  ICON_general,
-  ICON_search,
-  ICON_vocabs,
+  ICON_exploreTab,
+  ICON_generalTab,
+  ICON_vocabularyTab,
 } from "@/src/components/1_grouped/icons/icons";
 
 import { MyColors } from "@/src/constants/MyColors";
@@ -30,7 +30,7 @@ export default function TabLayout() {
         headerShown: false,
         tabBarItemStyle: {
           height: tabBar_HEIGHT,
-          paddingTop: 8,
+          paddingTop: 7,
           paddingBottom: 4,
         },
 
@@ -42,11 +42,13 @@ export default function TabLayout() {
           alignContent: "flex-start",
           justifyContent: "flex-start",
         },
-        tabBarActiveTintColor: MyColors.text_primary,
         tabBarLabelStyle: {
           fontSize: 16,
           fontFamily: "Nunito-Bold",
         },
+
+        tabBarActiveTintColor: MyColors.text_primary,
+        tabBarInactiveTintColor: MyColors.text_white_06,
       }}
     >
       <Tabs.Screen
@@ -56,7 +58,7 @@ export default function TabLayout() {
 
           tabBarIcon: ({ focused }) => (
             <View>
-              <ICON_vocabs color={focused ? "primary" : "grey"} />
+              <ICON_vocabularyTab color={focused ? "primary" : "gray_light"} />
             </View>
           ),
         }}
@@ -66,10 +68,7 @@ export default function TabLayout() {
         options={{
           title: t("tabs.explore"),
           tabBarIcon: ({ focused }) => (
-            <ICON_search
-              big={true}
-              color={focused ? "primary" : "grey_light"}
-            />
+            <ICON_exploreTab color={focused ? "primary" : "gray_light"} />
           ),
         }}
       />
@@ -79,10 +78,7 @@ export default function TabLayout() {
         options={{
           title: t("tabs.general"),
           tabBarIcon: ({ focused }) => (
-            <ICON_general
-              color={focused ? "primary" : "grey"}
-              notification_COUNT={unreadNotifications_COUnt}
-            />
+            <ICON_generalTab color={focused ? "primary" : "gray_light"} />
           ),
         }}
       />

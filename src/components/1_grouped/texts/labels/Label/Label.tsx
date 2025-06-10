@@ -14,8 +14,8 @@ interface Label_PROPS {
 
 const Label = React.memo(function Label({
   icon,
-  children,
   styles,
+  children,
 }: Label_PROPS) {
   return (
     <View

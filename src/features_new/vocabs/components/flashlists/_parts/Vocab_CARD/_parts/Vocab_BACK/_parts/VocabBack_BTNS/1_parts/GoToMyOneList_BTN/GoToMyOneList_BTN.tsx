@@ -3,7 +3,7 @@
 //
 
 import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
-import { ICON_arrow } from "@/src/components/1_grouped/icons/icons";
+import { ICON_arrow2 } from "@/src/components/1_grouped/icons/icons";
 import { z_USE_myOneList } from "@/src/features_new/lists/hooks/zustand/z_USE_myOneList/z_USE_myOneList";
 import { z_USE_user } from "@/src/features_new/user/hooks/z_USE_user/z_USE_user";
 import { Vocab_TYPE } from "@/src/features_new/vocabs/types";
@@ -27,7 +27,7 @@ export const GoToMyOneList_BTN = memo(({ vocab }: props) => {
     <Btn
       type="simple"
       text={t("btn.goToListOfVocab")}
-      iconRight={<ICON_arrow direction="right" />}
+      iconRight={<ICON_arrow2 direction="right" />}
       text_STYLES={{ marginRight: "auto" }}
       onPress={() => {
         if (vocab?.list_id) {

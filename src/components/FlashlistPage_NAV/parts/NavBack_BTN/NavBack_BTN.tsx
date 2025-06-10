@@ -3,7 +3,10 @@
 //
 
 import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
-import { ICON_arrow } from "@/src/components/1_grouped/icons/icons";
+import {
+  ICON_arrow,
+  ICON_arrow2,
+} from "@/src/components/1_grouped/icons/icons";
 import { useRouter } from "expo-router";
 
 export function NavBack_BTN({

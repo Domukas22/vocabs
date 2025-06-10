@@ -10,7 +10,8 @@ type page =
   | "saved-vocabs"
   | "all-my-vocabs"
   | "deleted-vocabs"
-  | "back";
+  | "back"
+  | "flashcard-mode";
 
 export function USE_routerPush() {
   const router = useRouter();
@@ -31,6 +32,9 @@ export function USE_routerPush() {
         break;
       case "deleted-vocabs":
         router.push("/(main)/vocabs/deleted_vocabs");
+        break;
+      case "flashcard-mode":
+        router.push("/(main)/vocabs/flashcards");
         break;
       case "back":
         router.back();

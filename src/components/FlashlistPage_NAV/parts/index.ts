@@ -10,3 +10,4 @@ export { NavSearch_BTN } from "./NavSearch_BTN/NavSearch_BTN";
 export { NavBtn_WRAP } from "./NavBtn_WRAP/NavBtn_WRAP";
 export { NavListSettings_BTN } from "./NavListSettings_BTN/NavListSettings_BTN";
 export { NavSavePublicList_BTN } from "./NavSavePublicList_BTN/NavSavePublicList_BTN";
+export { NavReload_BTN } from "./NavReload_BTN/NavReload_BTN";

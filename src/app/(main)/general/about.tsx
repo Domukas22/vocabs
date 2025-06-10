@@ -5,7 +5,10 @@
 import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import Header from "@/src/components/1_grouped/headers/regular/Header";
 
-import { ICON_3dots, ICON_arrow } from "@/src/components/1_grouped/icons/icons";
+import {
+  ICON_3dots,
+  ICON_arrow2,
+} from "@/src/components/1_grouped/icons/icons";
 
 import React from "react";
 import { Image, ScrollView, StyleSheet } from "react-native";
@@ -27,7 +30,7 @@ export default function About_PAGE() {
         btnLeft={
           <Btn
             type="seethrough"
-            iconLeft={<ICON_arrow />}
+            iconLeft={<ICON_arrow2 />}
             onPress={() => router.back()}
             style={{ borderRadius: 100 }}
           />
@@ -84,7 +87,7 @@ export default function About_PAGE() {
           </Styled_TEXT>
           <Btn
             text={t("pages.about.contactBtn")}
-            iconRight={<ICON_arrow direction="right" />}
+            iconRight={<ICON_arrow2 direction="right" />}
             text_STYLES={{ flex: 1 }}
             onPress={() => router.push("/(main)/general/contact")}
           />

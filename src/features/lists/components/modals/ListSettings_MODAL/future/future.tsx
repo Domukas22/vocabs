@@ -3,7 +3,7 @@ import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import {
   ICON_X,
   ICON_questionMark,
-  ICON_arrow,
+  ICON_arrow2,
 } from "@/src/components/1_grouped/icons/icons";
 import Big_MODAL from "@/src/components/1_grouped/modals/Big_MODAL/Big_MODAL";
 import Error_TEXT from "@/src/components/1_grouped/texts/Error_TEXT/Error_TEXT";
@@ -154,7 +154,7 @@ export function ListSharing_BLOCK({
           <Btn
             text="Edit people z_myOneList"
             style={{ flex: 1 }}
-            iconRight={<ICON_arrow direction="right" />}
+            iconRight={<ICON_arrow2 direction="right" />}
             text_STYLES={{
               textAlign: "left",
               flex: 1,

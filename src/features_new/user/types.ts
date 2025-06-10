@@ -14,6 +14,13 @@ export type User_TYPE = {
   created_at: string;
   deleted_at: string;
 
+  // TODO ==> Implement this
+  random_vocabs_of_the_day: {
+    date: string;
+    completed: boolean;
+    vocabs: { id: string; completed: boolean }[];
+  };
+
   // extended props
   unread_notifications: number;
   total_vocabs: number;

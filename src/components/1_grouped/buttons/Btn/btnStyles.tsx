@@ -17,7 +17,9 @@ export type btnTypes =
   | "seethrough_primary"
   | "difficulty_3_active"
   | "difficulty_2_active"
-  | "difficulty_1_active";
+  | "difficulty_1_active"
+  | "sub_green"
+  | "sub_red";
 
 const s = StyleSheet.create({
   btn: {
@@ -97,6 +99,30 @@ const s = StyleSheet.create({
   },
   active_green_text: {
     color: MyColors.text_green,
+  },
+
+  sub_green: {
+    backgroundColor: MyColors.btn_green,
+    borderColor: MyColors.border_white_005,
+  },
+  sub_green_press: {
+    backgroundColor: MyColors.btn_green_press,
+    borderColor: MyColors.border_white_005,
+  },
+  sub_green_text: {
+    color: MyColors.text_green,
+  },
+
+  sub_red: {
+    backgroundColor: MyColors.btn_red,
+    borderColor: MyColors.border_white_005,
+  },
+  sub_red_press: {
+    backgroundColor: MyColors.btn_red_press,
+    borderColor: MyColors.border_white_005,
+  },
+  sub_red_text: {
+    color: MyColors.text_red,
   },
 
   delete: {
@@ -222,6 +248,20 @@ const btnStyles = {
       press: s.active_green_press,
     },
     text: s.active_green_text,
+  },
+  sub_green: {
+    btn: {
+      normal: s.sub_green,
+      press: s.sub_green_press,
+    },
+    text: s.sub_green_text,
+  },
+  sub_red: {
+    btn: {
+      normal: s.sub_red,
+      press: s.sub_red_press,
+    },
+    text: s.sub_red_text,
   },
   delete: {
     btn: {

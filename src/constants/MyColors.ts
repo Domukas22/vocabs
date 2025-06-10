@@ -66,7 +66,8 @@ export const MyColors = {
   icon_red: primitives.red1,
   icon_difficulty_3: primitives.red1,
   icon_difficulty_2: primitives.yellow0,
-  icon_difficulty_1: primitives.grey2,
+  // icon_difficulty_1: primitives.grey2,
+  icon_difficulty_1: primitives.white06,
   icon_white: primitives.white095,
 
   // Button colors

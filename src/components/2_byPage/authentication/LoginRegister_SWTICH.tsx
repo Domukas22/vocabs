@@ -4,7 +4,7 @@
 
 import Block from "@/src/components/1_grouped/blocks/Block/Block";
 import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
-import { ICON_arrow } from "@/src/components/1_grouped/icons/icons";
+import { ICON_arrow2 } from "@/src/components/1_grouped/icons/icons";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import { useRouter } from "expo-router";
 
@@ -33,7 +33,7 @@ export default function LoginRegister_SWITCH({
         onPress={() =>
           page === "login" ? router.push("/register") : router.push("/login")
         }
-        iconRight={<ICON_arrow direction="right" />}
+        iconRight={<ICON_arrow2 direction="right" />}
         text_STYLES={{ flex: 1 }}
       />
     </Block>

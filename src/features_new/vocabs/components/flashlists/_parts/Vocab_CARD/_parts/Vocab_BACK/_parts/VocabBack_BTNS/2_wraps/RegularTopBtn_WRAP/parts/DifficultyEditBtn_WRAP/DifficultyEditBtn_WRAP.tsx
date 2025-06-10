@@ -4,6 +4,7 @@
 
 import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import {
+  ICON_difficulty,
   ICON_difficultyDot,
   ICON_X,
 } from "@/src/components/1_grouped/icons/icons";
@@ -52,32 +53,31 @@ export function DifficultyEditBtn_WRAP({
         gap: 0,
         borderRadius: 12,
         overflow: "hidden",
+        height: 50,
       }}
     >
       <Btn
-        type={vocab?.difficulty === 1 ? "difficulty_1_active" : "simple"}
+        type={vocab?.difficulty === 3 ? "difficulty_3_active" : "simple"}
         style={[
           {
             flex: 1,
-            height: 50,
+            borderRadius: 0,
             borderBottomLeftRadius: 12,
             borderTopLeftRadius: 12,
-            borderRadius: 0,
           },
-          vocab?.difficulty !== 1 && { borderRightColor: "transparent" },
+          vocab?.difficulty !== 3 && { borderRightColor: "transparent" },
         ]}
         onPress={() => {
-          if (vocab?.difficulty !== 1) UPDATE_diff(1);
+          if (vocab?.difficulty !== 3) UPDATE_diff(3);
         }}
         iconLeft={
-          IS_updating && target_DIFFICULTY === 1 ? (
-            <ActivityIndicator color={MyColors.icon_difficulty_1} />
+          IS_updating && target_DIFFICULTY === 3 ? (
+            <ActivityIndicator color={MyColors.icon_difficulty_3} />
           ) : (
-            <ICON_difficultyDot difficulty={1} size="big" />
+            <ICON_difficulty difficulty={3} size="medium" />
           )
         }
       />
-
       <Btn
         type={vocab?.difficulty === 2 ? "difficulty_2_active" : "simple"}
         style={[
@@ -91,28 +91,32 @@ export function DifficultyEditBtn_WRAP({
           IS_updating && target_DIFFICULTY === 2 ? (
             <ActivityIndicator color={MyColors.icon_difficulty_2} />
           ) : (
-            <ICON_difficultyDot difficulty={2} size="big" />
+            <ICON_difficulty difficulty={2} size="medium" />
+          )
+        }
+      />
+      <Btn
+        type={vocab?.difficulty === 1 ? "difficulty_1_active" : "simple"}
+        style={[
+          {
+            flex: 1,
+
+            borderRadius: 0,
+          },
+          vocab?.difficulty !== 1 && { borderRightColor: "transparent" },
+        ]}
+        onPress={() => {
+          if (vocab?.difficulty !== 1) UPDATE_diff(1);
+        }}
+        iconLeft={
+          IS_updating && target_DIFFICULTY === 1 ? (
+            <ActivityIndicator color={MyColors.icon_difficulty_1} />
+          ) : (
+            <ICON_difficulty difficulty={1} size="medium" />
           )
         }
       />
 
-      <Btn
-        type={vocab?.difficulty === 3 ? "difficulty_3_active" : "simple"}
-        style={[
-          { flex: 1, borderRadius: 0 },
-          vocab?.difficulty !== 3 && { borderRightColor: "transparent" },
-        ]}
-        onPress={() => {
-          if (vocab?.difficulty !== 3) UPDATE_diff(3);
-        }}
-        iconLeft={
-          IS_updating && target_DIFFICULTY === 3 ? (
-            <ActivityIndicator color={MyColors.icon_difficulty_3} />
-          ) : (
-            <ICON_difficultyDot difficulty={3} size="big" />
-          )
-        }
-      />
       <Btn
         type="simple"
         style={{

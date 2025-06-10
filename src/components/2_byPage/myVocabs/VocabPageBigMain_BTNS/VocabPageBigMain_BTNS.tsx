@@ -3,6 +3,7 @@
 //
 
 import BigPage_BTN from "@/src/components/1_grouped/buttons/BigPage_BTN/BigPage_BTN";
+import Btn from "@/src/components/1_grouped/buttons/Btn/Btn";
 import { Styled_TEXT } from "@/src/components/1_grouped/texts/Styled_TEXT/Styled_TEXT";
 import { USE_routerPush } from "@/src/hooks";
 import { starterContentLoading_TYPE } from "@/src/types/general_TYPES";
@@ -27,6 +28,10 @@ export function VocabPageBigMain_BTNS({
   return (
     <View style={{ padding: 12, gap: 12, paddingBottom: 36 }}>
       <Styled_TEXT type="text_22_bold">{t("label.myVocabs")}</Styled_TEXT>
+      <Btn
+        text={t("btn.flashcardMode")}
+        onPress={() => PUSH_router("flashcard-mode")}
+      />
       <BigPage_BTN
         IS_loading={IS_loading}
         title={t("listName.savedVocabs")}
