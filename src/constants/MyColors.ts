@@ -11,7 +11,11 @@ const primitives = {
   transparent: "rgba(255, 255, 255, 0.00)",
   black: "rgba(0, 0, 0, 0.95)",
   dark_seethrough: "rgba(0, 0, 0, 0.75)",
+  darkTest1: "#161616",
+  darkTest1_2: "#1F1F1F",
   dark1: "#2d2d2d",
+  darkTest2: "#1D1D1D",
+  darkTest2_2: "rgba(41,41,41,1)",
   dark2: "#353535",
   dark3: "#3c3c3c",
   dark4: "#505050",
@@ -51,7 +55,8 @@ export const MyColors = {
 
   // Fill colors
   fill_primary: primitives.primary1,
-  fill_bg: primitives.dark1,
+  // fill_bg: primitives.dark1,
+  fill_bg: primitives.darkTest1_2,
   fill_bg_light: primitives.dark2,
   fill_bg_dark_seethrough: primitives.dark_seethrough,
   fill_green: primitives.green1,
@@ -72,7 +77,8 @@ export const MyColors = {
 
   // Button colors
   btn_1: primitives.dark1,
-  btn_2: primitives.dark2,
+  // btn_2: primitives.dark2,
+  btn_2: primitives.darkTest2_2,
   btn_3: primitives.dark3,
 
   btn_action: primitives.primary1,

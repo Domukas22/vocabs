@@ -57,8 +57,20 @@ export default function TabLayout() {
           title: t("tabs.vocabs"),
 
           tabBarIcon: ({ focused }) => (
-            <View>
+            <View style={{ position: "relative", alignItems: "center" }}>
               <ICON_vocabularyTab color={focused ? "primary" : "gray_light"} />
+              <View
+                style={{
+                  position: "absolute",
+                  width: 8,
+                  height: 8,
+                  backgroundColor: focused
+                    ? MyColors.icon_primary
+                    : MyColors.fill_bg,
+                  borderRadius: 100,
+                  bottom: -42,
+                }}
+              />
             </View>
           ),
         }}
@@ -68,7 +80,21 @@ export default function TabLayout() {
         options={{
           title: t("tabs.explore"),
           tabBarIcon: ({ focused }) => (
-            <ICON_exploreTab color={focused ? "primary" : "gray_light"} />
+            <View style={{ position: "relative", alignItems: "center" }}>
+              <ICON_exploreTab color={focused ? "primary" : "gray_light"} />
+              <View
+                style={{
+                  position: "absolute",
+                  width: 8,
+                  height: 8,
+                  backgroundColor: focused
+                    ? MyColors.icon_primary
+                    : MyColors.fill_bg,
+                  borderRadius: 100,
+                  bottom: -42,
+                }}
+              />
+            </View>
           ),
         }}
       />
@@ -78,7 +104,21 @@ export default function TabLayout() {
         options={{
           title: t("tabs.general"),
           tabBarIcon: ({ focused }) => (
-            <ICON_generalTab color={focused ? "primary" : "gray_light"} />
+            <View style={{ position: "relative", alignItems: "center" }}>
+              <ICON_generalTab color={focused ? "primary" : "gray_light"} />
+              <View
+                style={{
+                  position: "absolute",
+                  width: 8,
+                  height: 8,
+                  backgroundColor: focused
+                    ? MyColors.icon_primary
+                    : MyColors.fill_bg,
+                  borderRadius: 100,
+                  bottom: -42,
+                }}
+              />
+            </View>
           ),
         }}
       />
